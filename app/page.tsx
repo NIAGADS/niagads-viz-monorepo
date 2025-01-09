@@ -1,5 +1,5 @@
-import React from "react"
+import { MemoIGVBrowser as GenomeBrowser } from "@/components/IGVBrowser/IGVBrowser";
 
 export default function Home() {
-    return <h1>NIAGADS next.js template </h1>;
+    return <GenomeBrowser/>
 }

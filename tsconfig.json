@@ -17,6 +17,7 @@
         "isolatedModules": true,
         "jsx": "preserve",
         "incremental": true,
+        "typeRoots": ["./ambient_types", "node_modules/@types"],
         "plugins": [
             {
                 "name": "next"
