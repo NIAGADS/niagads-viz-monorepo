@@ -10,6 +10,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "igv": "github:NIAGADS/igv.js#NIAGADS-01102025",
+    "jquery": "^3.7.1",
+    "lodash.find": "^4.6.0",
+    "lodash.get": "^4.4.2",
+    "lodash.noop": "^3.0.1",
     "next": "15.1.4",
     "next-seo": "^6.6.0",
     "react": "^19.0.0",
@@ -17,6 +22,10 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/jquery": "^3.5.32",
+    "@types/lodash.find": "^4.6.9",
+    "@types/lodash.get": "^4.4.9",
+    "@types/lodash.noop": "^3.0.9",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

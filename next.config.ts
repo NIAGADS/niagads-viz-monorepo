@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
     /* config options here */
 
-    /* for accessing GenomicsDB services and static files; e.g., genome browser tracks
+    // for accessing GenomicsDB services and static files; e.g., genome browser tracks
     async rewrites() {
         return [
             {
@@ -16,7 +16,9 @@ const nextConfig: NextConfig = {
             }
         ]
     }
-    */
+    
 };
 
 export default nextConfig;
+
+

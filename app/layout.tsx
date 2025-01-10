@@ -4,22 +4,22 @@ import "./globals.css";
 
 
 export const metadata: Metadata = {
-  title: "NIAGADS Template next.js Application",
-  description: "https://github.com/NIAGADS/nextjs-template",
+    title: "NIAGADS Template next.js Application",
+    description: "https://github.com/NIAGADS/nextjs-template",
 };
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <body
-        className="antialiased"
-      >
-        {children}
-      </body>
-    </html>
-  );
+    return (
+        <html lang="en">
+            <body
+                className="antialiased"
+            >
+                {children}
+            </body>
+        </html>
+    );
 }
