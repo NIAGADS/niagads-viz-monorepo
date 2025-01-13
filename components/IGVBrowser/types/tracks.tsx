@@ -28,12 +28,3 @@ export interface IGVTrackOptions extends TrackBaseOptions {
     reader?: any;
     decode?: any;
 }
-
-export interface Session {
-    tracks: TrackBaseOptions[]
-
-    //TODO: currently optional because functionality isn't built yet but will be required in the future
-    reference?: any
-    roi?: any
-    locus?: any
-}

@@ -4,7 +4,7 @@ import {
   capitalize,
   numberFormatter,
   snakeToProperCase,
-} from "@/components/IGVBrowser/utils";
+} from "@/components/IGVBrowser/decoders/utils";
 import igv from "igv/dist/igv.esm";
 
 const EXPECTED_BED_FIELDS = [

@@ -1,7 +1,5 @@
 "use client";
 
-// TODO: streaming w/Suspense and fallback instead
-
 import React, {
     useLayoutEffect,
     useMemo,
@@ -9,28 +7,30 @@ import React, {
     useEffect,
     useRef,
 } from "react";
+
 import igv from "igv/dist/igv.esm";
+
 import noop from "lodash.noop";
 import find from "lodash.find";
+
 import {
     VariantPValueTrack,
     VariantServiceTrack as VariantTrack,
     trackPopover,
-} from "@/components/IGVBrowser/tracks";
-import { _genomes } from "@/components/IGVBrowser/data/_igvGenomes";
+} from "./tracks";
+
 import {
-    Session,
     TrackBaseOptions,
-} from "@/components/IGVBrowser/types/tracks";
+} from "./types/tracks";
+
 import {
     loadTracks,
-    createSessionSaveObj,
-    downloadObjectAsJson,
     getLoadedTracks,
     removeTrackById,
-} from "@/components/IGVBrowser/utils/index";
-import { DEFAULT_FLANK, FEATURE_SEARCH_ENDPOINT } from "./data/_constants";
+} from "./decoders/utils";
 
+import { DEFAULT_FLANK, FEATURE_SEARCH_ENDPOINT } from "./config/_constants";
+import { _genomes } from "./config/_igvGenomes";
 interface IGVBrowserProps {
     genome: string;
     locus?: string;
@@ -48,7 +48,6 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
 }) => {
     const [browserIsLoaded, setBrowserIsLoaded] = useState<boolean>(false);
     const [browser, setBrowser] = useState<any>(null);
-    const [sessionJSON, setSessionJSON] = useState<Session>({ tracks: tracks });
     const [isClient, setIsClient] = useState(false);
     const containerRef = useRef(null);
 
@@ -137,16 +136,6 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
             }
         }
     }, [isClient]);
-
-    //rearrange
-    const handleSaveSession = () => {
-        if (browserIsLoaded) {
-            const sessionObj = createSessionSaveObj(sessionJSON.tracks);
-            downloadObjectAsJson(sessionObj, "NIAGADS_IGV_session");
-        } else {
-            alert("Wait until the browser is loaded before saving");
-        }
-    };
 
     if (!isClient) {
         return <div>Loading...</div>;

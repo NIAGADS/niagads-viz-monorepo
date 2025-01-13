@@ -1,4 +1,4 @@
-import { FEATURE_INFO_BASE_URL } from "@/components/IGVBrowser/data/_constants";
+import { FEATURE_INFO_BASE_URL } from "@/components/IGVBrowser/config/_constants";
 
 const _geneSubFeaturePopoverData = (fields: string[], info: any, pData: any[]) => {
     // type

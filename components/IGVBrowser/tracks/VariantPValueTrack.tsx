@@ -3,7 +3,7 @@
 
 import igv from "igv/dist/igv.esm";
 import { ManhattanColors } from "@/components/IGVBrowser/tracks/color_scales"
-import { FEATURE_INFO_BASE_URL } from "@/components/IGVBrowser/data/_constants";
+import { FEATURE_INFO_BASE_URL } from "@/components/IGVBrowser/config/_constants";
 
 const DEFAULT_POPOVER_WINDOW = 100000000
 
