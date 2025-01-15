@@ -1,4 +1,4 @@
-export interface TrackBaseOptions {
+export default interface IGVBrowserTrack {
     // required properties from user
     id: string;
     type: string;
@@ -8,6 +8,11 @@ export interface TrackBaseOptions {
     url: string;
     indexURL?: string;
     indexed?: boolean;
+    removable?: boolean;
+    reader?: any;
+    decode?: any;
+
+    infoURL?: string;
 
     // optional from user for custom rendering
     height?: string;
@@ -22,9 +27,3 @@ export interface TrackBaseOptions {
     queryable?: boolean
 }
 
-export interface IGVTrackOptions extends TrackBaseOptions {
-    //IGVTrackOptions
-    removable?: boolean;
-    reader?: any;
-    decode?: any;
-}

@@ -2,8 +2,8 @@
 import igv from "igv/dist/igv.esm";
 import $ from "jquery";
 
-import { VCFInfo } from "@/components/IGVBrowser/types/files";
-import { FEATURE_INFO_BASE_URL } from "@/components/IGVBrowser/config/_constants";
+import { VCFInfo } from "../files/vcf";
+import { FEATURE_INFO_BASE_URL } from "../config/_constants";
 
 const DEFAULT_POPOVER_WINDOW = 100000000;
 const DEFAULT_VISIBILITY_WINDOW = 1000000;

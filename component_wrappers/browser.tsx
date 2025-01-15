@@ -1,7 +1,7 @@
 import {
     TrackBaseOptions,
     IGVTrackOptions,
-} from "@/components/IGVBrowser/types/tracks";
+} from "@/components/IGVBrowser/tracks/IGVBrowserTrack";
 import { decodeBedXY } from "@/components/IGVBrowser/decoders/bedDecoder";
 import GWASServiceReader from "@/components/IGVBrowser/readers/GWASServiceReader";
 import VariantServiceReader from "@/components/IGVBrowser/readers/VariantServiceReader";

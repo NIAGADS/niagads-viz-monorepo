@@ -1,9 +1,9 @@
 // modified from https://github.com/igvteam/igv.js/tree/master/js/gwas/gwasTrack.js
 // adapted to plot anything w/a p-value (e.g., xQTL as well as GWAS summary statistics)
-
+'use client'
 import igv from "igv/dist/igv.esm";
-import { ManhattanColors } from "@/components/IGVBrowser/tracks/color_scales"
-import { FEATURE_INFO_BASE_URL } from "@/components/IGVBrowser/config/_constants";
+import { ManhattanColors } from "./color_scales"
+import { FEATURE_INFO_BASE_URL } from "../config/_constants";
 
 const DEFAULT_POPOVER_WINDOW = 100000000
 
