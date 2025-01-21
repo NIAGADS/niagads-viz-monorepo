@@ -1,4 +1,3 @@
-import { FEATURE_INFO_BASE_URL } from "@/components/IGVBrowser/config/_constants";
 
 const _geneSubFeaturePopoverData = (fields: string[], info: any, pData: any[]) => {
     // type
@@ -37,50 +36,53 @@ const _geneSubFeaturePopoverData = (fields: string[], info: any, pData: any[]) =
     return pData;
 };
 
-const _geneTrackPopoverData = (info: any) => {
+const _geneTrackPopoverData = (trackInfo: any, infoURL: string) => {
     const regexp = / \[.+\]/i;
 
-    let fields = info.map((elem: any) => {
+    let fields = trackInfo.map((elem: any) => {
         return elem.hasOwnProperty("name") ? elem.name.toLowerCase().replace(":", "").replace(" ", "_") : "hr";
     });
     let pData: any = [];
 
-    const featureType = info[fields.indexOf("type")].value.replace('_', ' ');
+    const featureType = trackInfo[fields.indexOf("type")].value.replace('_', ' ');
     if (featureType === "gene" || featureType.endsWith("gene")) {  
-        const geneSymbol = info[fields.indexOf("name")].value;
+        const geneSymbol = trackInfo[fields.indexOf("name")].value;
         pData.push({ name: "Feature Type:", value: featureType });
         pData.push({ name: "Name:", value: geneSymbol });
 
         if (fields.includes("gene_id")) {
-            const geneId = info[fields.indexOf("gene_id")].value;
-            const recHref = FEATURE_INFO_BASE_URL + "/gene/" + geneId;
-
-            pData.push({
-                name: "More Info:",
-                html: '<a target="_blank" href="' + recHref + '" title="">' + geneId + "</a>",
-                title: "View NIAGADS GenomicsDB report for gene: " + geneSymbol,
-            });
+            const geneId = trackInfo[fields.indexOf("gene_id")].value;
+            if (infoURL) {
+                const recHref = infoURL + geneId;
+                pData.push({
+                    name: "Gene ID:",
+                    html: '<a target="_blank" href="' + recHref + '" title="">' + geneId + "</a>",
+                    title: "Learn more about gene: " + geneSymbol,
+                });
+            }
+            else {
+                pData.push({name: "Gene ID:", value: geneId} )
+            }
         }
-
         if (fields.includes("description")) {
-            const product = info[fields.indexOf("description")].value.replace(regexp, "");
+            const product = trackInfo[fields.indexOf("description")].value.replace(regexp, "");
             pData.push({ name: "Product:", value: product });
         }   
 
-        const biotype = info[fields.indexOf("biotype")];
+        const biotype = trackInfo[fields.indexOf("biotype")];
         if (biotype.hasOwnProperty("color")) {
             pData.push({ name: "Biotype:", value: biotype.value.replace(/_/g, " "), color: biotype.color });
         } else {
             pData.push({ name: "Biotype:", value: biotype.value.replace(/_/g, " ") });
         }
 
-        pData.push({ name: "Location:", value: info[fields.indexOf("location")].value });
+        pData.push({ name: "Location:", value: trackInfo[fields.indexOf("location")].value });
     } else {
-        pData = _geneSubFeaturePopoverData(fields, info, pData); // floating transcript
+        pData = _geneSubFeaturePopoverData(fields, trackInfo, pData); // floating transcript
     }
 
     // find first divider and take everything from that point as a component feature of the gene
-    let infoSlice = info;
+    let infoSlice = trackInfo;
     while (fields.includes("hr")) {
         const dividerIndex = fields.indexOf("hr"); // find next divider
         pData.push("<hr>"); // push the divider
@@ -104,7 +106,7 @@ const trackPopover = (track: any, popoverData: any) => {
         return false;
     }
 
-    popoverData = track.id === "ENSEMBL_GENE" ? _geneTrackPopoverData(popoverData) : popoverData;
+    popoverData = track.id === "ENSEMBL_GENE" ? _geneTrackPopoverData(popoverData, track.infoURL) : popoverData;
 
     const tableStartMarkup = '<table style="background: transparent; position: relative">';
 

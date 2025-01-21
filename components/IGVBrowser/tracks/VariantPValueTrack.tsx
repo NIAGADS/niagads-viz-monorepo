@@ -1,9 +1,8 @@
 // modified from https://github.com/igvteam/igv.js/tree/master/js/gwas/gwasTrack.js
 // adapted to plot anything w/a p-value (e.g., xQTL as well as GWAS summary statistics)
-'use client'
 import igv from "igv/dist/igv.esm";
 import { ManhattanColors } from "./color_scales"
-import { FEATURE_INFO_BASE_URL } from "../config/_constants";
+import { config } from "process";
 
 const DEFAULT_POPOVER_WINDOW = 100000000
 
@@ -42,6 +41,7 @@ class VariantPValueTrack extends igv.TrackBase {
 
         this.featureSource = igv.FeatureSource(config, this.browser.genome)
         this.type = config.type || "variant"
+        this.infoURL = config.infoURL || undefined
     }
 
     async postInit() {
@@ -165,7 +165,6 @@ class VariantPValueTrack extends igv.TrackBase {
 
     popupData(clickState: any, features: any) {
         const featureList = this.clickedFeatures(clickState, features);
-        const recHref = FEATURE_INFO_BASE_URL;
         const data:any = []
         if (featureList) {
             let count = 0
@@ -181,15 +180,26 @@ class VariantPValueTrack extends igv.TrackBase {
                         break
                     }
                     const pos = f.end; // IGV is zero-based, so end of the variant is the position
-                    let href = recHref + '/variant/' + f.record_pk;
-                        data.push({name: 'Location:', value: f.chr + ':' + pos})
-                        data.push({name: 'p-Value:', value: f.pvalue})  
-                        data.push({name: 'Variant:', html: `<a target="_blank" href="${href}">${f.variant}</a>`, title: "View GenomicsDB record for variant " + f.variant})
-                        if (f.hasOwnProperty('gene_id')) {
-                            href = recHref + '/gene/' + f.gene_id;
-                            const geneDisplay = f.hasOwnProperty('gene_symbol') ? f.gene_symbol : f.gene_id;
-                            data.push({name: 'Target', html: `<a target="_blank" href="${href}">${geneDisplay}</a>`, title: "View GenomicsDB record for gene " + geneDisplay})
+                    data.push({name: 'Location:', value: f.chr + ':' + pos})
+                    data.push({name: 'p-Value:', value: f.pvalue}) 
+
+                    if (this.infoURL) {
+                        const href = this.infoURL + '/variant/' + f.record_pk;
+                        data.push({name: 'Variant:', html: `<a target="_blank" href="${href}">${f.variant}</a>`, title: "Learn more about variant: " + f.variant})
+                    }
+                    else {
+                        data.push({name: 'Variant', value: f.variant})
+                    }
+                    if (f.hasOwnProperty('gene_id')) {
+                        const geneDisplay = f.hasOwnProperty('gene_symbol') ? f.gene_symbol : f.gene_id;
+                        if (this.infoURL) {
+                            const href = this.infoURL + '/gene/' + f.gene_id;
+                            data.push({name: 'Target', html: `<a target="_blank" href="${href}">${geneDisplay}</a>`, title: "Learn more about gene: " + geneDisplay})
                         }
+                        else {
+                            data.push({name: 'Target', value: geneDisplay})
+                        }
+                    }
                     count++
                 }
             }

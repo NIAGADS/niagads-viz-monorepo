@@ -3,7 +3,6 @@ import igv from "igv/dist/igv.esm";
 import $ from "jquery";
 
 import { VCFInfo } from "../files/vcf";
-import { FEATURE_INFO_BASE_URL } from "../config/_constants";
 
 const DEFAULT_POPOVER_WINDOW = 100000000;
 const DEFAULT_VISIBILITY_WINDOW = 1000000;
@@ -66,6 +65,7 @@ class VariantServiceTrack extends igv.TrackBase {
         this.hetvarColor = config.hetvarColor || "rgb(34,12,253)";
         this.sortDirection = "ASC";
         this.type = config.type || "variant";
+        this.infoURL = config.infoURL || undefined;
 
         this.colorBy = config.colorBy === undefined ? DEFAULT_COLOR_BY : config.colorBy; // Can be undefined => default
         this._initColorBy = config.colorBy === undefined ? DEFAULT_COLOR_BY : config.colorBy;
@@ -432,14 +432,19 @@ class VariantServiceTrack extends igv.TrackBase {
                     popupData.push("<hr/>");
                 } */
 
-                const recHref = FEATURE_INFO_BASE_URL;
                 const color = this.getVariantColor(call);
 
-                popupData.push({
-                    name: "Variant:",
-                    html: `<a target="_blank" href="${recHref}/variant/${call.id}">${call.info.display_id}</a>`,
-                    title: "View NIAGADS GenomicsDB record for variant " + call.info.display_id,
-                });
+                if (this.infoURL) {
+                    const recHref = this.infoURL + '/variant/' + call.id;
+                    popupData.push({
+                        name: "Variant:",
+                        html: `<a target="_blank" href="${recHref}">${call.info.display_id}</a>`,
+                        title: "Learn more about this variant: " + call.info.display_id,
+                    });
+                }
+                else {
+                    popupData.push({name: "Variant:", value: call.info.display_id});
+                }
 
                 if (call.info.ref_snp_id !== null) {
                     popupData.push({ name: "Ref SNP ID:", value: call.info.ref_snp_id });
@@ -519,11 +524,18 @@ class VariantServiceTrack extends igv.TrackBase {
                         });
                     }
                     if (msc.impacted_gene !== null) {
-                        popupData.push({
-                            name: "Impacted Gene:",
-                            html: `<a target="_blank" href="${recHref}/gene/${msc.impacted_gene}">${msc.impacted_gene_symbol}</a>`,
-                            title: "View GenomicsDB record for gene " + msc.impacted_gene_symbol,
-                        });
+
+                        if (this.infoURL) {
+                            const recHref = this.infoURL + '/gene/' + msc.impacted_gene
+                            popupData.push({
+                                name: "Impacted Gene:",
+                                html: `<a target="_blank" href="${recHref}">${msc.impacted_gene_symbol}</a>`,
+                                title: "Learn more about gene: " + msc.impacted_gene_symbol,
+                            });
+                        }
+                        else {
+                            popupData.push({name: "Impacted Gene:", value: msc.impacted_gene_symbol})
+                        }
                     }
                 }
             }
