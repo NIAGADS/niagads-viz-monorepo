@@ -14,10 +14,10 @@ import noop from "lodash.noop";
 import find from "lodash.find";
 
 import {
-    //VariantPValueTrack,
     VariantServiceTrack as VariantTrack,
     IGVBrowserTrack,
     trackPopover,
+    VariantPValueTrack,
 } from "./tracks";
 
 import { loadTracks, getLoadedTracks, removeTrackById } from "./decoders/utils";
@@ -25,13 +25,6 @@ import { loadTracks, getLoadedTracks, removeTrackById } from "./decoders/utils";
 import { DEFAULT_FLANK } from "./config/_constants";
 import { _genomes } from "./config/_igvGenomes";
 
-
-
-/* const igv = lazy(() =>
-    import("igv/dist/igv.esm").then((mod) => mod.igv)
-); */
-
-// import igv from "igv/dist/igv.esm";
 interface IGVBrowserProps {
     genome: string;
     featureSearchURI: string;
@@ -94,10 +87,6 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
         }
     }, [browserIsLoaded]);
 
-    async function loadTrackClass(trackClass: string) {
-        const { default: t} = await import("./tracks/" + trackClass);
-        return t
-    }
 
     useLayoutEffect(() => {
         if (isClient && containerRef.current) {
@@ -106,20 +95,17 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
                 const { default: mod } = await import("igv/dist/igv.esm");
                 setIGV(mod);
             }
-            async function loadTrackClasses() {
-                const t = await loadTrackClass('VariantPValueTrack')
-                setPvalueTrackClass(t);
-            }
+
 
             if (!igv) {
                 loadIGV();
-                loadTrackClasses();
             } else {
                 const targetDiv = containerRef.current;
 
                 if (opts != null) {
-                    igv.registerTrackClass("gwas_service", pvalueTrackClass);
-                    // igv.registerTrackClass("qtl", VariantPValueTrack);
+                    // register custom track classes
+                    igv.registerTrackClass("gwas_service", VariantPValueTrack);
+                    igv.registerTrackClass("qtl", VariantPValueTrack);
                     igv.registerTrackClass("variant_service", VariantTrack);
 
                     igv.createBrowser(targetDiv, opts).then(function (
