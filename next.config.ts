@@ -13,10 +13,25 @@ const nextConfig: NextConfig = {
             {
                 source: '/files/:path*',
                 destination: 'https://www.niagads.org/genomics/files/:path*'
+            },
+        ]
+    },
+
+    async redirects() {
+        return [
+            {
+                source: '/gene/:path*',
+                destination: 'https://www.niagads.org/genomics/app/record/gene/:path*',
+                permanent: true
+            },
+            {
+                source: '/variant/:path*',
+                destination: 'https://www.niagads.org/genomics/app/record/variant/:path*',
+                permanent: true
             }
         ]
     }
-    
+
 };
 
 export default nextConfig;
