@@ -47,7 +47,7 @@ export const _genomes = [
                 removable: false,
                 order: 1000000,
                 colorBy: "biotype",
-                infoURL: "https://www.niagads.org/genomics/app/record/gene/$$",
+                infoURL: "/gene/$$",
                 color: (feature: any) => {
                     const value = feature.geneObject ? feature.geneObject.getAttributeValue("biotype") : feature.getAttributeValue("biotype");
                     if (value === undefined) {
