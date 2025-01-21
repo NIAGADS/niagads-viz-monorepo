@@ -1,4 +1,14 @@
 
+const __extractGeneSymbol = ( featureName: string) => {
+     // catch qualified symbols from GFF file (e.g., APOE-202)
+     // and extract gene symbol
+     const pattern = /^.+-\d\d\d$/;
+     if (featureName.match(pattern)) {
+         return featureName.split('-')[0]
+     }
+     return featureName
+}
+
 const _geneSubFeaturePopoverData = (fields: string[], info: any, pData: any[]) => {
     // type
     // name
@@ -7,7 +17,11 @@ const _geneSubFeaturePopoverData = (fields: string[], info: any, pData: any[]) =
     // location
     // number -- catch outside
     pData.push({ name: "Feature Type:", value: info[fields.indexOf("type")].value.replace(/_/g, " ") });
-    if (fields.includes("name")) {
+    if (fields.includes("display_id")) {
+        const displayId = __extractGeneSymbol(info[fields.indexOf("display_id")].value);
+        pData.push({ name: "Name:", value: displayId });
+    }
+    else if (fields.includes("name")) {
         pData.push({ name: "Name:", value: info[fields.indexOf("name")].value });
     }
     if (fields.includes("biotype")) {
@@ -24,11 +38,13 @@ const _geneSubFeaturePopoverData = (fields: string[], info: any, pData: any[]) =
 
     idIndices.forEach((index: any) => {
         let idName = info[index].name.replace(":", "");
-        idName = idName.includes("_")
-            ? idName.charAt(0).toUpperCase() + idName.slice(1).replace("_id", " ID:")
-            : idName.toUpperCase().replace("ID", " ID:");
-
-        pData.push({ name: idName, value: info[index].value });
+        if (idName !== 'display_id') {
+            idName = idName.includes("_")
+                ? idName.charAt(0).toUpperCase() + idName.slice(1).replace("_id", " ID:")
+                : idName.toUpperCase().replace("ID", " ID:");
+            
+            pData.push({ name: idName, value: info[index].value });
+        }
     });
 
     pData.push({ name: "Location: ", value: info[fields.indexOf("location")].value });
@@ -45,19 +61,19 @@ const _geneTrackPopoverData = (trackInfo: any, infoURL: string) => {
     let pData: any = [];
 
     const featureType = trackInfo[fields.indexOf("type")].value.replace('_', ' ');
-    if (featureType === "gene" || featureType.endsWith("gene")) {  
-        const geneSymbol = trackInfo[fields.indexOf("name")].value;
+    if (featureType === "gene" || featureType.endsWith("gene")) {          
         pData.push({ name: "Feature Type:", value: featureType });
-        pData.push({ name: "Name:", value: geneSymbol });
+
+        const displayId = __extractGeneSymbol(trackInfo[fields.indexOf("display_id")].value);
+        pData.push({ name: "Name:", value: displayId });
 
         if (fields.includes("gene_id")) {
             const geneId = trackInfo[fields.indexOf("gene_id")].value;
             if (infoURL) {
-                const recHref = infoURL + geneId;
+                const recHref = infoURL.replace("$$", geneId);
                 pData.push({
                     name: "Gene ID:",
-                    html: '<a target="_blank" href="' + recHref + '" title="">' + geneId + "</a>",
-                    title: "Learn more about gene: " + geneSymbol,
+                    html: `<a target="_blank" href="${recHref}" title="Learn more about ${displayId}">${geneId}</a>`,
                 });
             }
             else {
@@ -106,7 +122,7 @@ const trackPopover = (track: any, popoverData: any) => {
         return false;
     }
 
-    popoverData = track.id === "ENSEMBL_GENE" ? _geneTrackPopoverData(popoverData, track.infoURL) : popoverData;
+    popoverData = track.id === "ENSEMBL_GENE" ? _geneTrackPopoverData(popoverData, track.config.infoURL) : popoverData;
 
     const tableStartMarkup = '<table style="background: transparent; position: relative">';
 
