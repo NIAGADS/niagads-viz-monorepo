@@ -99,7 +99,7 @@ class VariantPValueTrack extends igv.TrackBase {
 
                 const colorScale = this.getColorScale(variant._f ? variant._f.chr : variant.chr)
                 
-                const val = variant.neg_log10_pvalue > this.maxValue ? this.maxValue : variant.neg_log10_pvalue;
+                const val = (variant.neg_log10_pvalue > this.maxValue && !this.autoscale) ? this.maxValue : variant.neg_log10_pvalue;
                 const color = colorScale.getColor(val)
             
                 const px = Math.round((pos - bpStart) / bpPerPixel)
@@ -218,15 +218,16 @@ class VariantPValueTrack extends igv.TrackBase {
                 featureList.map(function (feature: any) {
                     return {value: feature.neg_log10_pvalue}
                 })
-            this.dataRange = igv.doAutoscale(features)
+            // this.dataRange = 
+            return igv.doAutoscale(features)
 
-        } else {
+        } /*else {
             // No features --  p-values
             this.dataRange.max = this.maxValue;
             this.dataRange.min = this.config.min || 0
-        }
-
-        return this.dataRange
+        } */
+        return { min: this.config.min || 0 , max: this.maxValue}
+        //return this.dataRange
     }
 
 }
