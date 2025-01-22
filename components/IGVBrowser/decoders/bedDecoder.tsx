@@ -1,3 +1,4 @@
+import { features } from "process";
 import {
     ignoreCaseIndexOf,
     isSimpleType,
@@ -23,8 +24,11 @@ const EXPECTED_BED_FIELDS = [
 
 // make column name lower then comapare
 const P_VALUE_FIELDS = ["pvalue", "p-value", "pval", "p_value"]; //TODO: check nominal pvalue
-const GENE_SYMBOL_FIELDS = ["gene", "gene_name", "target_gene_symbol"];
-const GENE_ID_FIELDS = ["gene_id", "target_gene_id", "target"];
+const TARGET_GENE_SYMBOL_FIELD = "target_gene_symbol";
+const TARGET_GENE_ID_FIELD = "target_ensembl_id";
+const VARIANT_ID_FIELD = "variant_id";
+const IGNORE_OPTIONAL_FIELDS = ["user_input", "target_info"];
+//const NEG_LOG10_P_CAP = 50;
 
 export function decodeBedXY(tokens: any, header: any) {
     // Get X (number of standard BED fields) and Y (number of optional BED fields) out of format
@@ -51,17 +55,10 @@ export function decodeBedXY(tokens: any, header: any) {
 
     // parse optional columns
     parseOptionalFields(feature, tokens, X, header.columnNames);
-    //parse out P-values
-    feature = parsePValues(feature, tokens, header.columnNames);
-    //parse out gene info
-    feature = parseGeneIds(feature, tokens, header.columnNames);
 
-    if (feature.name.startsWith("rs")) {
-        feature.setAdditionalAttributes({
-            variant: feature.name,
-            record_pk: feature.name,
-        });
-    }
+    feature.setP(tokens, header.columnNames);
+    feature.setTarget(tokens, header.columnNames);
+    feature.setVariant(tokens, header.columnNames);
 
     return feature;
 }
@@ -84,22 +81,19 @@ function extractPopupData(genomeId: any) {
     const data = [];
 
     for (const property in feature) {
-        if (
-            feature.hasOwnProperty(property) &&
-            !filteredProperties.has(property) &&
-            isSimpleType(feature[property])
-        ) {
-            const value = feature[property];
-            data.push({ name: capitalize(property), value: value });
-            //removed alleles code
-        }
         //If it's the info object
-        else if (feature.hasOwnProperty(property) && property === "info") {
+        if (property === "info") {
             //iterate over info and add it to data
             for (const infoProp in feature[property]) {
                 const value = feature[property][infoProp];
-                const name = formatInfoKey(infoProp);
-                if (value) data.push({ name: name, value: value });
+                if (value) {
+                    data.push({ name: formatInfoKey(infoProp), value: value });
+                }
+            }
+        } else {
+            if (!filteredProperties.has(property)) {
+                const value = feature[property];
+                data.push({ name: capitalize(property), value: value });
             }
         }
     }
@@ -118,83 +112,14 @@ function extractPopupData(genomeId: any) {
 }
 
 function formatInfoKey(key: string) {
-    //handle special cases
-    //should be updated as more are found
-    let result = "";
-    switch (key) {
-        case "FDR":
-            result = "FDR";
-            break;
-        case "qtl_dist_to_target":
-            result = "QTL dist to target";
-            break;
-        case "QC_info":
-            result = "QC info";
-            break;
-        default:
-            result = key.replace(/_/g, " ");
-            result =
-                result.charAt(0).toUpperCase() + result.slice(1).toLowerCase();
-    }
-
+    let result = key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
+    result = result
+        .replace(/FDR_/gi, "FDR_")
+        .replace(/QC_/gi, "QC_")
+        .replace(/qtl_/gi, "QTL_")
+        .replace(/_/g, " ")
+        .replace("non ref", "(non ref)");
     return result;
-}
-
-function parseGeneIds(
-    feature: BedXYFeature,
-    tokens: any,
-    columnNames: string[]
-) {
-    let geneSymbol = null;
-    let geneId = null;
-    for (const field of GENE_SYMBOL_FIELDS) {
-        const index = ignoreCaseIndexOf(columnNames, field);
-        if (index !== -1) {
-            geneSymbol = tokens[index];
-            feature.setAdditionalAttributes({ gene_symbol: geneSymbol });
-        }
-    }
-    for (const field of GENE_ID_FIELDS) {
-        const index = ignoreCaseIndexOf(columnNames, field);
-        if (index !== -1) {
-            geneId = tokens[index];
-            geneId = geneId.replace(/\.\d+/, ""); // remove the versioning in Ensembl Gene IDs
-            feature.setAdditionalAttributes({ gene_id: geneId });
-        }
-    }
-
-    if (geneId === null && geneSymbol !== null) {
-        feature.setAdditionalAttributes({ gene_id: geneSymbol });
-    }
-
-    return feature;
-}
-
-function parseGeneInfo(feature: BedXYFeature) {
-    let IDStatus = false;
-    let symbolStatus = false;
-    for (const field in feature.info) {
-        if (
-            field === "gene" ||
-            field === "gene_name" ||
-            field === "target_gene_symbol"
-        ) {
-            feature.info.gene_symbol = feature.info[field];
-            delete feature.info[field];
-            symbolStatus = true;
-        } else if (field === "gene_id") {
-            IDStatus = true;
-        }
-    }
-    if (!IDStatus && symbolStatus) {
-        //if there is a symbol but no id, change the symbol name to id
-        //make the symbol name field null
-        //gene id becomes gene
-        feature.info.gene = feature.info.gene_symbol;
-        feature.info.gene_symbol = null;
-    }
-
-    return feature;
 }
 
 function parseBedToken(field: string, token: string) {
@@ -233,10 +158,8 @@ function parseStandardFields(feature: BedXYFeature, X: number, tokens: any) {
 
         // add to the feature and return
         feature.setAdditionalAttributes(attributes);
-        return;
     } catch (e) {
         console.error(e);
-        return;
     }
 }
 
@@ -244,50 +167,23 @@ function parseOptionalFields(
     feature: BedXYFeature,
     tokens: any,
     X: number,
-    columns: any
+    fields: any
 ) {
     //go through tokens and perform minimal parsing add optional columns to feature.info
-    const optionalFields: any = {};
-    for (let i = X; i < columns.length; i++) {
-        let optField = tokens[i];
-        //check to see if the feature is a number in a string and convert it
-        if (!isNaN(optField) && typeof optField !== "number") {
-            const num = parseFloat(optField);
-            if (Number.isInteger(num)) {
-                parseInt(optField);
-            } else {
-                optField = num;
+    const infoProps: any = {};
+    for (let i = X; i < fields.length; i++) {
+        const propKey = fields[i];
+        if (IGNORE_OPTIONAL_FIELDS.indexOf(propKey) === -1) {
+            let value = tokens[i];
+            //check to see if the feature is a number in a string and convert it
+            if (!isNaN(value) && typeof value !== "number") {
+                value = value * 1;
             }
-        }
-        if (optField === ".") optField = null;
-
-        optionalFields[columns[i]] = optField;
-    }
-
-    feature.setAdditionalAttributes({ info: optionalFields });
-    return;
-}
-
-function parsePValues(
-    feature: BedXYFeature,
-    tokens: any,
-    columnNames: string[]
-) {
-    for (const field of P_VALUE_FIELDS) {
-        const pIndex = ignoreCaseIndexOf(columnNames, field);
-        if (pIndex !== -1) {
-            const pValue = parseFloat(tokens[pIndex]);
-            const neg_log10_pvalue = -1 * Math.log10(pValue);
-
-            feature.setAdditionalAttributes({
-                pvalue: pValue,
-                neg_log10_pvalue: neg_log10_pvalue,
-            });
-
-            return feature;
+            if (value === ".") value = null;
+            infoProps[propKey] = value;
         }
     }
-    return feature;
+    feature.setAdditionalAttributes({ info: infoProps });
 }
 
 class BedXYFeature {
@@ -309,6 +205,12 @@ class BedXYFeature {
         Object.assign(this, attributes);
     }
 
+    removeAttributes(attributes: any) {
+        for (const attr in attributes) {
+            delete this[attr];
+        }
+    }
+
     getAttributeValue(attributeName: string): any {
         const key = attributeName as keyof BedXYFeature;
         if (this.hasOwnProperty(key)) {
@@ -318,5 +220,51 @@ class BedXYFeature {
         } else {
             return null;
         }
+    }
+
+    setVariant(tokens: any, fields: string[]) {
+        const index = fields.indexOf(VARIANT_ID_FIELD);
+        this.setAdditionalAttributes({
+            variant: tokens[index],
+            record_pk: tokens[index],
+        });
+
+        if (!this.name) {
+            this.setAdditionalAttributes({ name: tokens[index] });
+        }
+
+        this.removeAttributes([VARIANT_ID_FIELD]);
+    }
+
+    setP(tokens: any, fields: string[]) {
+        for (const field of P_VALUE_FIELDS) {
+            const index = ignoreCaseIndexOf(fields, field);
+            if (index !== -1) {
+                const pValue = parseFloat(tokens[index]);
+                const neg_log10_pvalue = -1 * Math.log10(pValue);
+
+                this.setAdditionalAttributes({
+                    pvalue: pValue,
+                    neg_log10_pvalue: neg_log10_pvalue //> NEG_LOG10_P_CAP ? NEG_LOG10_P_CAP : neg_log10_pvalue,
+                });
+
+                this.removeAttributes([field]);
+                break;
+            }
+        }
+    }
+
+    setTarget(tokens: any, fields: string[]) {
+        let index = fields.indexOf(TARGET_GENE_SYMBOL_FIELD);
+        const targetGeneSymbol = tokens[index];
+
+        index = fields.indexOf(TARGET_GENE_ID_FIELD);
+        const targetGeneId = index === -1 ? targetGeneSymbol : tokens[index];
+
+        this.setAdditionalAttributes({
+            gene_symbol: targetGeneSymbol,
+            gene_id: targetGeneId,
+        });
+        this.removeAttributes([TARGET_GENE_ID_FIELD, TARGET_GENE_SYMBOL_FIELD]);
     }
 }
