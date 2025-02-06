@@ -10,7 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@bug_sam/table": "^0.0.8",
+    "@bug_sam/table": "^0.0.9",
     "@bug_sam/ui": "^0.0.3",
     "igv": "github:NIAGADS/igv.js#NIAGADS-01102025",
     "jquery": "^3.7.1",
