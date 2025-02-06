@@ -4,8 +4,8 @@ import "./globals.css";
 
 
 export const metadata: Metadata = {
-    title: "NIAGADS Template next.js Application",
-    description: "https://github.com/NIAGADS/nextjs-template",
+    title: "NIAGADS IGVBrowser",
+    description: "interactive genome visualization developed by the IGV team and customized by NIAGADS to display Alzheimer's disease relevant annotated variant, GWAS summary statistics, and xQTLs",
 };
 
 export default function RootLayout({
