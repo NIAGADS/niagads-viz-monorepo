@@ -20,7 +20,7 @@ const _reference = [
         url: "/service/track/variant",
         type: "variant_service",
         format: "webservice",
-        visibilityWindow: 1000000,
+        visibilityWindow: 100000,
         supportsWholeGenome: false,
         queryable: true,
         description:
