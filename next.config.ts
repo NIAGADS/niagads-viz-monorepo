@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
     /* config options here */
 
-    // for accessing GenomicsDB services and static files; e.g., genome browser tracks
+    // TEMP for accessing GenomicsDB services and static files; e.g., genome browser tracks
     async rewrites() {
         return [
             {
@@ -14,6 +14,10 @@ const nextConfig: NextConfig = {
                 source: '/files/:path*',
                 destination: 'https://www.niagads.org/genomics/files/:path*'
             },
+            {
+                source: '/api/:path*',
+                destination: 'http://localhost:8000/:path*'
+            }
         ]
     },
 
@@ -28,7 +32,7 @@ const nextConfig: NextConfig = {
                 source: '/variant/:path*',
                 destination: 'https://www.niagads.org/genomics/app/record/variant/:path*',
                 permanent: true
-            },
+            }, 
             {
                 source: '/record/:path*',
                 destination: 'https://www.niagads.org/genomics/app/record/:path*',

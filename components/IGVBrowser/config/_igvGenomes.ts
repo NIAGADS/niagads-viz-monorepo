@@ -36,7 +36,6 @@ export const _genomes = [
             {
                 name: "Genes",
                 id: "ENSEMBL_GENE",
-                track: "ENSEMBL_GENE",
                 description: "Gene models from ENSEMBL",
                 format: "gff3",
                 filterTypes: ["chromosome"],

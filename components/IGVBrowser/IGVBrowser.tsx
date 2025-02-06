@@ -7,7 +7,6 @@ import React, {
     useEffect,
     useRef,
     Suspense,
-    lazy
 } from "react";
 
 import noop from "lodash.noop";
@@ -20,12 +19,16 @@ import {
     VariantPValueTrack,
 } from "./tracks";
 
-import { loadTracks, getLoadedTracks, removeTrackById } from "./decoders/utils";
+import {
+    loadTracks,
+    getLoadedTracks,
+    removeTrackById,
+} from "./tracks/utils";
 
 import { DEFAULT_FLANK } from "./config/_constants";
 import { _genomes } from "./config/_igvGenomes";
 
-interface IGVBrowserProps {
+export interface IGVBrowserProps {
     genome: string;
     featureSearchURI: string;
     tracks?: IGVBrowserTrack[];
@@ -64,7 +67,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
             loadDefaultGenomes: false,
             genomeList: _genomes,
         };
-    }, [genome, locus]);
+    }, [genome, locus, igv]);
 
     useEffect(() => {
         setIsClient(true);
@@ -87,7 +90,6 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
         }
     }, [browserIsLoaded]);
 
-
     useLayoutEffect(() => {
         if (isClient && containerRef.current) {
             // lazy load of igv library to avoid `window is not defined` ReferenceError
@@ -95,7 +97,6 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
                 const { default: mod } = await import("igv/dist/igv.esm");
                 setIGV(mod);
             }
-
 
             if (!igv) {
                 loadIGV();
