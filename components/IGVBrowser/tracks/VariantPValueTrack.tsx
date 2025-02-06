@@ -1,236 +1,329 @@
 // modified from https://github.com/igvteam/igv.js/tree/master/js/gwas/gwasTrack.js
 // adapted to plot anything w/a p-value (e.g., xQTL as well as GWAS summary statistics)
 import igv from "igv/dist/igv.esm";
-import { ManhattanColors } from "./color_scales"
+import { ManhattanColors } from "./color_scales";
 import { config } from "process";
+import { info } from "console";
 
-const DEFAULT_POPOVER_WINDOW = 100000000
+const DEFAULT_POPOVER_WINDOW = 100000000;
 
 //const type = "gwas";
 
 class VariantPValueTrack extends igv.TrackBase {
-
     constructor(config: any, browser: any) {
-        super(config, browser)
+        super(config, browser);
     }
 
     init(config: any) {
+        super.init(config);
 
-        super.init(config)
-
-        this.useChrColors = false // config.useChrColors === undefined ? true : config.useChrColors
-        this.valueProperty = "value"
-        this.height = config.height || 100   // The preferred height
-        this.autoscale = config.autoscale
-        this.background = config.background    // No default
-        this.divider = config.divider || "rgb(225,225,225)"
-        this.dotSize = config.dotSize || 3
-        this.popoverWindow = (config.popoverWindow === undefined ? DEFAULT_POPOVER_WINDOW : config.popoverWindow)
-        this.maxValue = config.max || 25
+        this.useChrColors = false; // config.useChrColors === undefined ? true : config.useChrColors
+        this.valueProperty = "value";
+        this.height = config.height || 100; // The preferred height
+        this.autoscale = config.autoscale;
+        this.background = config.background; // No default
+        this.divider = config.divider || "rgb(225,225,225)";
+        this.dotSize = config.dotSize || 3;
+        this.popoverWindow =
+            config.popoverWindow === undefined
+                ? DEFAULT_POPOVER_WINDOW
+                : config.popoverWindow;
+        this.maxValue = config.max || 100;
         // this.minThreshold = 1 * (10**(this.maxValue * -1))
 
-        this.colorScales = config.color ?
-            new igv.ConstantColorScale(config.color) :
-            {
-                "*": new igv.BinnedColorScale(config.colorScale || {
-                    // -log10p of [.5, 1e-3, 1e-6, 5e-8]
-                    thresholds: [0.3, 3, 6, 7.3, this.maxValue],
-                    colors: ["rgb(227,238,249)", "rgb(251,170,170)", "rgb(245, 12, 12)", "rgb(255,166,0)", "rgb(20, 186, 59)", "rgb(16,151,230)"]
-                })
-            }
+        this.colorScales = config.color
+            ? new igv.ConstantColorScale(config.color)
+            : this.config.type === "qtl"
+                ? {
+                    "*": new igv.GradientColorScale(
+                        config.colorScale || 
+                        {
+                            low: 10,
+                            high: 100,
+                            lowColor: "rgb(135,206,250)",
+                            highColor:  "rgb(255,165,0)"
+                        }
+                        
+                    )
+                }
+                : {
+                    "*": new igv.BinnedColorScale(
+                        config.colorScale || {
+                            // -log10p of [.5, 1e-3, 1e-6, 5e-8]
+                            thresholds: [0.3, 3, 6, 7.3, this.maxValue],
+                            colors: [
+                                "rgb(227,238,249)",
+                                "rgb(251,170,170)",
+                                "rgb(245, 12, 12)",
+                                "rgb(255,166,0)",
+                                "rgb(20, 186, 59)",
+                                "rgb(16,151,230)",
+                            ],
+                        }
+                    ),
+                };
 
-        this.featureSource = igv.FeatureSource(config, this.browser.genome)
-        this.type = config.type || "variant"
-        this.infoURL = config.infoURL || undefined
+        this.featureSource = igv.FeatureSource(config, this.browser.genome);
+        this.type = config.type || "variant";
+        this.infoURL = config.infoURL || undefined;
     }
 
     async postInit() {
-
         if (typeof this.featureSource.getHeader === "function") {
-            this.header = await this.featureSource.getHeader()
+            this.header = await this.featureSource.getHeader();
         }
 
         // Set properties from track line
         if (this.header) {
-            this.setTrackProperties(this.header)   // setTrackProperties defined in TrackBase
+            this.setTrackProperties(this.header); // setTrackProperties defined in TrackBase
         }
 
         // Set initial range if specfied, unless autoscale == true
         if (!this.autoscale) {
             this.dataRange = {
                 min: this.config.min === undefined ? 0 : this.config.min,
-                max: this.maxValue
-            }           
+                max: this.maxValue,
+            };
         }
 
-        return this
-
+        return this;
     }
 
     supportsWholeGenome() {
-        return false
+        return false;
     }
 
     async getFeatures(chr: string, start: number, end: number) {
-        const visibilityWindow = this.visibilityWindow
-        return this.featureSource.getFeatures({chr, start, end, visibilityWindow});
+        const visibilityWindow = this.visibilityWindow;
+        return this.featureSource.getFeatures({
+            chr,
+            start,
+            end,
+            visibilityWindow,
+        });
     }
 
-    draw(options:any) {
-        const featureList = options.features
-        const ctx = options.context
-        const pixelWidth = options.pixelWidth
-        const pixelHeight = options.pixelHeight
-        const yScale = (this.dataRange.max - this.dataRange.min) / pixelHeight
+    draw(options: any) {
+        const featureList = options.features;
+        const ctx = options.context;
+        const pixelWidth = options.pixelWidth;
+        const pixelHeight = options.pixelHeight;
+        const yScale = (this.dataRange.max - this.dataRange.min) / pixelHeight;
 
         if (this.background) {
-            igv.IGVGraphics.fillRect(ctx, 0, 0, pixelWidth, pixelHeight, {'fillStyle': this.background})
+            igv.IGVGraphics.fillRect(ctx, 0, 0, pixelWidth, pixelHeight, {
+                fillStyle: this.background,
+            });
         }
-        igv.IGVGraphics.strokeLine(ctx, 0, pixelHeight - 1, pixelWidth, pixelHeight - 1, {'strokeStyle': this.divider})
+        igv.IGVGraphics.strokeLine(
+            ctx,
+            0,
+            pixelHeight - 1,
+            pixelWidth,
+            pixelHeight - 1,
+            { strokeStyle: this.divider }
+        );
 
         if (featureList) {
-            const bpPerPixel = options.bpPerPixel
-            const bpStart = options.bpStart
-            const bpEnd = bpStart + pixelWidth * bpPerPixel + 1
+            const bpPerPixel = options.bpPerPixel;
+            const bpStart = options.bpStart;
+            const bpEnd = bpStart + pixelWidth * bpPerPixel + 1;
             for (const variant of featureList) {
-                const pos = variant.start
-                if (pos < bpStart) continue
-                if (pos > bpEnd) break
+                const pos = variant.start;
+                if (pos < bpStart) continue;
+                if (pos > bpEnd) break;
 
-                const colorScale = this.getColorScale(variant._f ? variant._f.chr : variant.chr)
-                
-                const val = (variant.neg_log10_pvalue > this.maxValue && !this.autoscale) ? this.maxValue : variant.neg_log10_pvalue;
-                const color = colorScale.getColor(val)
-            
-                const px = Math.round((pos - bpStart) / bpPerPixel)
-                const py = Math.max(this.dotSize, pixelHeight - Math.round((val - this.dataRange.min) / yScale))
+                const colorScale = this.getColorScale(
+                    variant._f ? variant._f.chr : variant.chr
+                );
+
+                const val =
+                    variant.neg_log10_pvalue > this.maxValue && !this.autoscale
+                        ? this.maxValue
+                        : variant.neg_log10_pvalue;
+                const color = colorScale.getColor(val);
+
+                const px = Math.round((pos - bpStart) / bpPerPixel);
+                const py = Math.max(
+                    this.dotSize,
+                    pixelHeight -
+                    Math.round((val - this.dataRange.min) / yScale)
+                );
 
                 if (color) {
-                    igv.IGVGraphics.setProperties(ctx, {fillStyle: color, strokeStyle: "black"})
+                    igv.IGVGraphics.setProperties(ctx, {
+                        fillStyle: color,
+                        strokeStyle: "black",
+                    });
                 }
-                igv.IGVGraphics.fillCircle(ctx, px, py, this.dotSize)
-                variant.px = px
-                variant.py = py
+                igv.IGVGraphics.fillCircle(ctx, px, py, this.dotSize);
+                variant.px = px;
+                variant.py = py;
             }
         }
     }
 
     getColorScale(chr: string) {
         if (this.useChrColors) {
-            let cs = this.colorScales[chr]
+            let cs = this.colorScales[chr];
             if (!cs) {
                 //@ts-expect-error: list indexes
-                const color = ManhattanColors[chr] || igv.randomColorPalette()
-                cs = new igv.ConstantColorScale(color)
-                this.colorScales[chr] = cs
+                const color = ManhattanColors[chr] || igv.randomColorPalette();
+                cs = new igv.ConstantColorScale(color);
+                this.colorScales[chr] = cs;
             }
-            return cs
+            return cs;
         } else {
-            return this.colorScales["*"]
+            return this.colorScales["*"];
         }
     }
 
-    paintAxis(ctx: number, pixelWidth: number, pixelHeight:number) {
-        igv.IGVGraphics.fillRect(ctx, 0, 0, pixelWidth, pixelHeight, {'fillStyle': "rgb(255, 255, 255)"})
+    paintAxis(ctx: number, pixelWidth: number, pixelHeight: number) {
+        igv.IGVGraphics.fillRect(ctx, 0, 0, pixelWidth, pixelHeight, {
+            fillStyle: "rgb(255, 255, 255)",
+        });
         const font = {
-            'font': 'normal 10px Arial',
-            'textAlign': 'right',
-            'strokeStyle': "black"
-        }
+            font: "normal 10px Arial",
+            textAlign: "right",
+            strokeStyle: "black",
+        };
 
-        const yScale = (this.dataRange.max - this.dataRange.min) / pixelHeight
+        const yScale = (this.dataRange.max - this.dataRange.min) / pixelHeight;
         if (this.posteriorProbability) {
-            const n = 0.1
+            const n = 0.1;
             for (let p = this.dataRange.min; p < this.dataRange.max; p += n) {
-                const yp = pixelHeight - Math.round((p - this.dataRange.min) / yScale)
-                igv.IGVGraphics.strokeLine(ctx, 45, yp - 2, 50, yp - 2, font) // Offset dashes up by 2 pixel
-                igv.IGVGraphics.fillText(ctx, p.toFixed(1), 44, yp + 2, font) // Offset numbers down by 2 pixels;
+                const yp =
+                    pixelHeight - Math.round((p - this.dataRange.min) / yScale);
+                igv.IGVGraphics.strokeLine(ctx, 45, yp - 2, 50, yp - 2, font); // Offset dashes up by 2 pixel
+                igv.IGVGraphics.fillText(ctx, p.toFixed(1), 44, yp + 2, font); // Offset numbers down by 2 pixels;
             }
         } else {
-            const n = Math.ceil((this.dataRange.max - this.dataRange.min) * 10 / pixelHeight)
+            const n = Math.ceil(
+                ((this.dataRange.max - this.dataRange.min) * 10) / pixelHeight
+            );
             for (let p = this.dataRange.min; p < this.dataRange.max; p += n) {
-                const yp = pixelHeight - Math.round((p - this.dataRange.min) / yScale)
-                igv.IGVGraphics.strokeLine(ctx, 45, yp, 50, yp, font) // Offset dashes up by 2 pixel
-                igv.IGVGraphics.fillText(ctx, Math.floor(p), 44, yp + 4, font) // Offset numbers down by 2 pixels;
+                const yp =
+                    pixelHeight - Math.round((p - this.dataRange.min) / yScale);
+                igv.IGVGraphics.strokeLine(ctx, 45, yp, 50, yp, font); // Offset dashes up by 2 pixel
+                igv.IGVGraphics.fillText(ctx, Math.floor(p), 44, yp + 4, font); // Offset numbers down by 2 pixels;
             }
         }
 
-        font['textAlign'] = 'center'
+        font["textAlign"] = "center";
         if (this.posteriorProbability) {
-            igv.IGVGraphics.fillText(ctx, "PPA", pixelWidth / 2, pixelHeight / 2, font, {rotate: {angle: -90}})
+            igv.IGVGraphics.fillText(
+                ctx,
+                "PPA",
+                pixelWidth / 2,
+                pixelHeight / 2,
+                font,
+                { rotate: { angle: -90 } }
+            );
         } else {
-            igv.IGVGraphics.fillText(ctx, "-log10(pvalue)", pixelWidth / 2, pixelHeight / 2, font, {rotate: {angle: -90}})
+            igv.IGVGraphics.fillText(
+                ctx,
+                "-log10(pvalue)",
+                pixelWidth / 2,
+                pixelHeight / 2,
+                font,
+                { rotate: { angle: -90 } }
+            );
         }
     }
 
     popupData(clickState: any, features: any) {
         const featureList = this.clickedFeatures(clickState, features);
-        const data:any = []
+        const data: any = [];
         if (featureList) {
-            let count = 0
+            let count = 0;
             for (const f of featureList) {
-                const xDelta = Math.abs(clickState.canvasX - f.px)
-                const yDelta = Math.abs(clickState.canvasY - f.py)
+                const xDelta = Math.abs(clickState.canvasX - f.px);
+                const yDelta = Math.abs(clickState.canvasY - f.py);
                 if (xDelta < this.dotSize && yDelta < this.dotSize) {
                     if (count > 0) {
-                        data.push("<HR/>")
+                        data.push("<HR/>");
                     }
                     if (count == 5) {
                         data.push("...");
-                        break
+                        break;
                     }
                     const pos = f.end; // IGV is zero-based, so end of the variant is the position
-                    data.push({name: 'Location:', value: f.chr + ':' + pos})
-                    data.push({name: 'p-Value:', value: f.pvalue}) 
+                    data.push({ name: "Location:", value: f.chr + ":" + pos });
+                    data.push({ name: "p-Value:", value: f.pvalue });
 
                     if (this.infoURL) {
-                        const href = this.infoURL + '/variant/' + f.record_pk;
-                        data.push({name: 'Variant:', html: `<a target="_blank" href="${href}">${f.variant}</a>`, title: "Learn more about variant: " + f.variant})
+                        const href = this.infoURL + "/variant/" + f.record_pk;
+                        data.push({
+                            name: "Variant:",
+                            html: `<a target="_blank" href="${href}">${f.variant}</a>`,
+                            title: "Learn more about variant: " + f.variant,
+                        });
+                    } else {
+                        data.push({ name: "Variant", value: f.variant });
                     }
-                    else {
-                        data.push({name: 'Variant', value: f.variant})
-                    }
-                    if (f.hasOwnProperty('gene_id')) {
-                        const geneDisplay = f.hasOwnProperty('gene_symbol') ? f.gene_symbol : f.gene_id;
+                    if (f.hasOwnProperty("gene_id")) {
+                        const geneDisplay = f.hasOwnProperty("gene_symbol")
+                            ? f.gene_symbol
+                            : f.gene_id;
                         if (this.infoURL) {
-                            const href = this.infoURL + '/gene/' + f.gene_id;
-                            data.push({name: 'Target', html: `<a target="_blank" href="${href}">${geneDisplay}</a>`, title: "Learn more about gene: " + geneDisplay})
-                        }
-                        else {
-                            data.push({name: 'Target', value: geneDisplay})
+                            const href = this.infoURL + "/gene/" + f.gene_id;
+                            data.push({
+                                name: "Target",
+                                html: `<a target="_blank" href="${href}">${geneDisplay}</a>`,
+                                title: "Learn more about gene: " + geneDisplay,
+                            });
+                        } else {
+                            data.push({ name: "Target", value: geneDisplay });
                         }
                     }
-                    count++
+
+                    if (f.hasOwnProperty("info")) {
+                        if (f.info.hasOwnProperty("qtl_dist_to_target")) {
+                            data.push({
+                                name: "Dist. to Target",
+                                value:
+                                    f.info.qtl_dist_to_target === null
+                                        ? "Not reported"
+                                        : f.info.qtl_dist_to_target,
+                            });
+                        }
+                        if (f.info.hasOwnProperty("z_score_non_ref")) {
+                            data.push({
+                                name: "Z-score",
+                                value:
+                                    f.info.z_score_non_ref === null
+                                        ? "Not reported"
+                                        : f.info.z_score_non_ref,
+                            });
+                        }
+                    }
+                    count++;
                 }
             }
         }
 
-        return data
+        return data;
     }
 
     menuItemList() {
-        return igv.MenuUtils.numericDataMenuItems(this.trackView)
+        return igv.MenuUtils.numericDataMenuItems(this.trackView);
     }
 
     doAutoscale(featureList: any) {
         if (featureList.length > 0) {
-            const features =
-                featureList.map(function (feature: any) {
-                    return {value: feature.neg_log10_pvalue}
-                })
-            // this.dataRange = 
-            return igv.doAutoscale(features)
-
+            const features = featureList.map(function (feature: any) {
+                return { value: feature.neg_log10_pvalue };
+            });
+            // this.dataRange =
+            return igv.doAutoscale(features);
         } /*else {
             // No features --  p-values
             this.dataRange.max = this.maxValue;
             this.dataRange.min = this.config.min || 0
         } */
-        return { min: this.config.min || 0 , max: this.maxValue}
+        return { min: this.config.min || 0, max: this.maxValue };
         //return this.dataRange
     }
-
 }
 
-export default VariantPValueTrack
-
+export default VariantPValueTrack;
