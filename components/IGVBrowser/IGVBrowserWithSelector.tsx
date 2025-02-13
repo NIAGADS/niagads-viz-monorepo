@@ -3,9 +3,15 @@ import dynamic from "next/dynamic";
 
 import { IGVBrowserProps } from "./IGVBrowser";
 import { IGVBrowserTrack } from "./tracks";
-import { TableProps as Table } from "@bug_sam/table";
 import TrackSelectorTable from "./TrackSelectorTable";
 import { getLoadedTracks, loadTracks, removeTrackById } from "./tracks/utils";
+
+interface Table {
+    id: string;
+    options?: any;
+    columns: any;
+    data: any;
+}
 
 const GenomeBrowser = dynamic(
     () =>
@@ -36,7 +42,6 @@ const fetchCollection = cache(
             const response: any = await fetch(requestUrl);
             if (response.ok) {
                 data = await response.json();
-                data = data.response;
             } else {
                 throw new Error(`Error fetching collection ${collection}`);
             }
