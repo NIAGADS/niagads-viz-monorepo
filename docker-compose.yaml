@@ -1,5 +1,5 @@
 services:
-  client-app:
+  nextjs-template-app:
     container_name: ${CONTAINER_NAME}_${BUILD}
     image: ${CONTAINER_NAME}_${VERSION}
     build:
@@ -17,12 +17,11 @@ services:
       # and keep the docker container from finding node_modules installed on the host
       # https://github.com/Kartikdot/TS-Node-Docker-Starter/blob/main/docker-compose.yaml
       - ignore:/app/node_modules
-    # network_mode: bridge
     networks:
-      - client-app
+      - nextjs-app
 
 networks:
-  client-app:
+  nextjs-app:
 
 
 volumes:

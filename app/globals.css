@@ -17,31 +17,6 @@
     }
 }
 
-@layer components {
-	.icon-button {
-		@apply size-4 stroke-2;
-	} /* button that only contains an icon */
-	.icon-disabled {
-		@apply stroke-slate-500;
-	}
-	.info-bubble {
-		@apply text-blue-600 size-5;
-	} /* info bubble */
-	.info-link {
-		@apply cursor-pointer underline decoration-dashed decoration-blue-600 underline-offset-4;
-	}
-	/*.dropdown {
-        
-    }
-
-    .dropdown-menu {
-    }*/
-	.dropdown:focus-within .dropdown-menu {
-		@apply block;
-		/* display:block; */
-	}
-}
-
 /* for pretty-printing json */
 .json {@apply m-3}
 .string { @apply text-green-800 }
