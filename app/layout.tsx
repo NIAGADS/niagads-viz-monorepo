@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Providers } from "./provider";
 
 import "./globals.css";
+import NavigationMenu from "@/components/Navigation";
 
 export const metadata: Metadata = {
     title: "NIAGADS IGVBrowser",
@@ -17,6 +18,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className="antialiased">
+                <NavigationMenu></NavigationMenu>
                 <Providers>{children}</Providers>
             </body>
         </html>
