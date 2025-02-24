@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
     /* config options here */
-    // assetPrefix: '/igvbrowser-static',
+    assetPrefix: '/igvbrowser-static',
     // TEMP for accessing GenomicsDB services and static files; e.g., genome browser tracks
     async rewrites() {
         return [
