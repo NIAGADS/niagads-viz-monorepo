@@ -202,10 +202,10 @@ const IGVBrowserWithSelector: React.FC<
                         color="primary"
                         items={trackSelectorTable}>
                         {(item) => (
-                            <Tab key={item.id}  title={`${item.id} Tracks`}>
-                                <Card shadow="none" radius="none">
-                                    <CardBody>
-                                        <TrackSelectorTable
+                            <Tab key={`tab-${item.id}`}  title={`${item.id} Tracks`}>
+                                <Card key={`card-${item.id}`} shadow="none" radius="none">
+                                    <CardBody key={`cb-${item.id}`}>
+                                        <TrackSelectorTable key={`table-${item.id}`}
                                             table={item}
                                             handleRowSelect={
                                                 toggleTracks
