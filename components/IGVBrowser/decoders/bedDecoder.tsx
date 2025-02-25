@@ -225,8 +225,8 @@ class BedXYFeature {
     setVariant(tokens: any, fields: string[]) {
         const index = fields.indexOf(VARIANT_ID_FIELD);
         this.setAdditionalAttributes({
-            variant: tokens[index],
-            record_pk: tokens[index],
+            variant: tokens[index].replace('chr', ''),
+            record_pk: tokens[index].replace('chr', ''),
         });
 
         if (!this.name) {
