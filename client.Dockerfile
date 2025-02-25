@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM node:20.18.0-bookworm-slim as builder
+FROM node:20.18.0-bullseye-slim as builder
 
 ARG GIT_DEPENDENCIES
 
@@ -22,7 +22,7 @@ COPY . .
 COPY .env.local .
 COPY .env .
 
-FROM node:bookworm-slim as runner
+FROM node:20.18.0-bullseye-slim AS runner
 
 ARG BUILD
 
