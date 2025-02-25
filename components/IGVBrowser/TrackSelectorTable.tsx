@@ -1,12 +1,19 @@
 'use client'
 import { useEffect, useState } from "react";
 
-import Table, { TableProps } from "@bug_sam/table"
+import Table from "@bug_sam/table"
 
 //import { Alert } from "@bug_sam/ui/Alert"
 //import { Button } from "@bug_sam/ui/Button";
 
 export type RowSelectionState = Record<string, boolean>
+
+export interface TableProps {
+    id: string;
+    options?: any;
+    columns: any;
+    data: any;
+}
 
 interface WrapperProps {
     table: TableProps,

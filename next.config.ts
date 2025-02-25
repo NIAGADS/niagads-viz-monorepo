@@ -2,7 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
     /* config options here */
-
+    assetPrefix: '/igvbrowser-static',
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
     // TEMP for accessing GenomicsDB services and static files; e.g., genome browser tracks
     async rewrites() {
         return [
@@ -16,7 +19,7 @@ const nextConfig: NextConfig = {
             },
             {
                 source: '/api/:path*',
-                destination: 'http://localhost:8000/:path*'
+                destination: 'https://api.niagads.org/:path*'
             }
         ]
     },

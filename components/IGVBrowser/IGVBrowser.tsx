@@ -56,7 +56,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
     const opts: any = useMemo(() => {
         const referenceTrackConfig: any = find(_genomes, { id: genome });
         return {
-            locus: locus || "APOE",
+            locus: locus || "ABCA7",
             showAllChromosomes: false,
             flanking: DEFAULT_FLANK,
             minimumBases: 40,
