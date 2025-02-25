@@ -1,7 +1,7 @@
 services:
-  nextjs-template-app:
-    container_name: ${CONTAINER_NAME}_${BUILD}
-    image: ${CONTAINER_NAME}_${VERSION}
+  igvbrowser-microservice:
+    container_name: ${CONTAINER_NAME}
+    image: ${CONTAINER_NAME}
     build:
       context: .
       dockerfile: ./client.Dockerfile     

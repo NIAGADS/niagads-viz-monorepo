@@ -11,7 +11,8 @@ WORKDIR /src
 # node modules installed in parent directory;
 # see https://github.com/Kartikdot/TS-Node-Docker-Starter/tree/main
 COPY package.json ./
-RUN npm install --legacy-peer-deps --loglevel verbose --force && npm cache clean --force
+RUN npm install  && npm cache clean --force
+# --legacy-peer-deps --loglevel verbose --force && npm cache clean --force
 ENV PATH=/src/node_modules/.bin:$PATH
 
 # this is separated to take advantage of caching unless package.json / package-lock.json changes
@@ -19,6 +20,7 @@ ENV PATH=/src/node_modules/.bin:$PATH
 WORKDIR /src
 COPY . .
 COPY .env.local .
+COPY .env .
 
 FROM node:bookworm-slim as runner
 
