@@ -50,7 +50,5 @@ export const Select = ({ fields, id, label, name, defaultValue, inline=false, on
                     </select>
                 </div>
             </div>
-
     </>
-
 }

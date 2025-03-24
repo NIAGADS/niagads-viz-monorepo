@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 const __TAILWIND_CSS = {
     label: "block mb-2 text-sm font-medium text-gray-900",
@@ -8,7 +8,7 @@ const __TAILWIND_CSS = {
 interface SliderProps {
     name: string;
     label?: string;
-    initialValue: number;
+    value: number;
     min: number;
     max: number;
     step: number;
@@ -18,21 +18,13 @@ interface SliderProps {
 export const Slider = ({
     name,
     label,
-    initialValue,
+    value,
     min,
     max,
     step,
     onChange,
 }: SliderProps) => {
-    const [value, setValue] = useState<number>(initialValue);
-
-    const valueChanged = (v: number) => {
-        if (v !== value) {
-            setValue(v);
-            onChange(v);
-        }
-    }
-
+    const valueChanged = (v: number) => v !== value && onChange(v)
     return (
         <div>
             {label && (
