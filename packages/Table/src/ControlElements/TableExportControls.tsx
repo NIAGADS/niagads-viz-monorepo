@@ -1,4 +1,3 @@
-'use client'
 import React, { useState, useEffect, useId } from "react"
 import { Table as ReactTable } from "@tanstack/react-table"
 import exportFromJSON from "export-from-json"

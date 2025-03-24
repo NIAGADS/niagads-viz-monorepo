@@ -1,4 +1,3 @@
-'use client'
 import React, { useState, useEffect, useId } from "react";
 
 import { Button, Checkbox } from "@bug_sam/ui";
