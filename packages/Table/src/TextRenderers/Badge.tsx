@@ -13,12 +13,6 @@ import {
 
 export type BadgeIconType = keyof typeof ICONS;
 
-const __TAILWIND_CSS = {
-    root: "px-2 rounded-full py-1",
-    icon: "size-5 py-1",
-    icon_only_badge: "size-5 m-auto" 
-}
-
 export const Badge = <T,>({ props }: TextRenderer<T>) => {
     const value = _get('value', props)
 
@@ -33,14 +27,14 @@ export const Badge = <T,>({ props }: TextRenderer<T>) => {
     const badgeStyle = buildElementStyle(props)
     const textStyle = buildElementStyle(props, 'color')
     const backgroundIsStyled = _hasOwnProperty('backgroundColor', badgeStyle) || _hasOwnProperty('borderColor', badgeStyle)
-    const className = backgroundIsStyled ? __TAILWIND_CSS.root : ""
+    const className = "tr-badge";
 
     let textElement = renderStyledText(value, textStyle, className)
 
     if (_hasOwnProperty('icon', props)) {
         const iconOnly = _get('iconOnly', props, false)
         const iconStyle =  _get('iconStyle', props, false)
-        const iconClassName = iconOnly ? __TAILWIND_CSS.icon_only_badge : __TAILWIND_CSS.icon
+        const iconClassName = iconOnly ? "tr-icon-only-badge" : "tr-badge-icon"
         textElement = renderWithIcon(textElement, _get('icon', props),
             {
                 iconOnly: iconOnly,
