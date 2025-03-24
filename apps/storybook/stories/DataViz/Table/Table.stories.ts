@@ -1,18 +1,18 @@
 //@ts-nocheck
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from "@storybook/react";
 
-import Table from '@bug_sam/table'; 
+import Table from "@bug_sam/table";
 import { TABLE_DEFINTION as table } from "../../../exampleTables/table_text_fields_only";
 
 const meta: Meta<typeof Table> = {
-    title: 'NIAGADS-VIZ/Data Vizualization/Table/Table',
+    title: "NIAGADS-VIZ/Data Vizualization/Table/Table",
     component: Table,
     parameters: {
         // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
-        layout: 'fullscreen',
+        layout: "fullscreen",
     },
     // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
-    tags: ['autodocs'],
+    tags: ["autodocs"],
 };
 
 export default meta;
@@ -23,6 +23,6 @@ export const Default: Story = {
         id: table.id,
         columns: table.columns,
         options: table.options,
-        data: table.data
-    }
+        data: table.data,
+    },
 };

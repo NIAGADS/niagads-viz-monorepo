@@ -2,9 +2,7 @@ export * from "./tracks";
 export * from "./browser";
 
 export const downloadObjectAsJson = (exportObj: any, exportName: string) => {
-    const dataStr =
-        "data:text/json;charset=utf-8," +
-        encodeURIComponent(JSON.stringify(exportObj));
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
     const downloadAnchorNode = document.createElement("a");
     downloadAnchorNode.setAttribute("href", dataStr);
     downloadAnchorNode.setAttribute("download", exportName + ".json");
@@ -18,10 +16,7 @@ export const ignoreCaseIndexOf = (arr: any[], lookup: any) =>
 export const isSimpleType = (value: any) => {
     const simpleTypes = new Set(["boolean", "number", "string", "symbol"]);
     const valueType = typeof value;
-    return (
-        value !== undefined &&
-        (simpleTypes.has(valueType) || value.substring || value.toFixed)
-    );
+    return value !== undefined && (simpleTypes.has(valueType) || value.substring || value.toFixed);
 };
 
 export const capitalize = (str: string) => {

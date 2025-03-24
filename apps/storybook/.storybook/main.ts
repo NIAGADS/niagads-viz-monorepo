@@ -6,36 +6,38 @@ const config: StorybookConfig = {
         disableTelemetry: true, // Disables telemetry (tracking / usage stats)
     },
     typescript: {
-		reactDocgen: 'react-docgen-typescript'
-	},
+        reactDocgen: "react-docgen-typescript",
+    },
     addons: [
         "@storybook/addon-links",
         "@storybook/addon-essentials",
         "@storybook/addon-interactions",
-        ({
+        {
             name: "@storybook/addon-styling-webpack",
             options: {
-                rules: [{
-                    test: /\.css$/,
-                    sideEffects: true,
-                    use: [
-                        require.resolve("style-loader"),
-                        {
-                            loader: require.resolve("css-loader"),
-                            options: {
-
-                                importLoaders: 1,
+                rules: [
+                    {
+                        test: /\.css$/,
+                        sideEffects: true,
+                        use: [
+                            require.resolve("style-loader"),
+                            {
+                                loader: require.resolve("css-loader"),
+                                options: {
+                                    importLoaders: 1,
+                                },
                             },
-                        }, {
-                            loader: require.resolve("postcss-loader"),
-                            options: {
-                                implementation: require.resolve("postcss"),
+                            {
+                                loader: require.resolve("postcss-loader"),
+                                options: {
+                                    implementation: require.resolve("postcss"),
+                                },
                             },
-                        },
-                    ],
-                },],
-            }
-        }),
+                        ],
+                    },
+                ],
+            },
+        },
     ],
     framework: {
         name: "@storybook/nextjs",

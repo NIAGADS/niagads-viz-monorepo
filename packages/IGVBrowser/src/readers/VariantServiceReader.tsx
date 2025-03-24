@@ -1,14 +1,14 @@
 import igv from "igv/dist/igv.esm";
-import { VCFInfo } from "../types/files" 
+import { VCFInfo } from "../types/files";
 
 interface VariantServiceResponse {
-   chrom: string;
-   pos: number;
-   ref: string;
-   alt: string;
-   qual: string;
-   filter: number;
-   info: VCFInfo;
+    chrom: string;
+    pos: number;
+    ref: string;
+    alt: string;
+    qual: string;
+    filter: number;
+    info: VCFInfo;
 }
 
 class VariantServiceReader {
@@ -33,21 +33,25 @@ class VariantServiceReader {
 
         const response = await igv.igvxhr.loadJson(this.endpoint + "?" + queryString, {
             withCredentials: this.config.withCredentials,
-        }); 
+        });
 
         //const response = await fetchJson(this.endpoint + '?' + queryString);
         if (response && response.data) {
             return response.data.map((entry: VariantServiceResponse) => {
-                const start = entry.info.location.includes("-") ? parseInt(entry.info.location.split(" - ")[0]): entry.pos;
-                const end = entry.info.location.includes("-") ? parseInt(entry.info.location.split(" - ")[1]) - 1: entry.pos;
-                
-            return {
-                ...entry,
-                start: start - 1, // IGV is zero-based
-                end: end,
-                chr: entry.chrom // needed by cache
-            }}
-            );
+                const start = entry.info.location.includes("-")
+                    ? parseInt(entry.info.location.split(" - ")[0])
+                    : entry.pos;
+                const end = entry.info.location.includes("-")
+                    ? parseInt(entry.info.location.split(" - ")[1]) - 1
+                    : entry.pos;
+
+                return {
+                    ...entry,
+                    start: start - 1, // IGV is zero-based
+                    end: end,
+                    chr: entry.chrom, // needed by cache
+                };
+            });
         } else {
             return undefined;
         }

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useState, useEffect, useId } from "react";
 
 import { Button, Checkbox } from "@bug_sam/ui";
@@ -25,16 +25,25 @@ export const ColumnControls = ({ columns, onSelect }: ColumnControlsProps) => {
             </Button>
 
             <div className="hidden dropdown-menu">
-                <div role="menu" className="z-50 absolute left-0 w-56 mt-2 origin-top-left bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none">
+                <div
+                    role="menu"
+                    className="z-50 absolute left-0 w-56 mt-2 origin-top-left bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none"
+                >
                     <div className="flex flex-col px-4 py-3">
                         {columns.map((col) => {
                             // console.log(col.columnDef.id)
-                            return col.getCanHide() &&
-                                <Checkbox name='show_columns' variant='accent'
-                                    key={`toggle_${col.columnDef.id}`}
-                                    label={col.columnDef.header?.toString()}
-                                    checked={col.getIsVisible()}
-                                    onChange={col.getToggleVisibilityHandler()} />
+                            return (
+                                col.getCanHide() && (
+                                    <Checkbox
+                                        name="show_columns"
+                                        variant="accent"
+                                        key={`toggle_${col.columnDef.id}`}
+                                        label={col.columnDef.header?.toString()}
+                                        checked={col.getIsVisible()}
+                                        onChange={col.getToggleVisibilityHandler()}
+                                    />
+                                )
+                            );
                         })}
                     </div>
                 </div>

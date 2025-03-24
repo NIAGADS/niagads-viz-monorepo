@@ -1,5 +1,5 @@
-import { Column } from "@tanstack/react-table"
-import React, { useMemo } from "react"
+import { Column } from "@tanstack/react-table";
+import React, { useMemo } from "react";
 import { _get } from "@bug_sam/common";
 import { SearchInput } from "@bug_sam/ui";
 
@@ -12,18 +12,18 @@ export const Filter = ({ column }: Filter) => {
     const colType = column.columnDef.meta?.type;
 
     const sortedUniqueValues = useMemo(() => {
-        return Array.from(column.getFacetedUniqueValues().keys()).sort()
-    }, [column.getFacetedUniqueValues()])
+        return Array.from(column.getFacetedUniqueValues().keys()).sort();
+    }, [column.getFacetedUniqueValues()]);
 
-    const minValue = useMemo(() => sortedUniqueValues[0], [sortedUniqueValues]); 
-    const maxValue = useMemo(() => sortedUniqueValues.at(-1), [sortedUniqueValues]); 
+    const minValue = useMemo(() => sortedUniqueValues[0], [sortedUniqueValues]);
+    const maxValue = useMemo(() => sortedUniqueValues.at(-1), [sortedUniqueValues]);
 
     console.log(sortedUniqueValues);
 
     return colType === "float" ? (
         //TODO: if faceted unique values length is 5 or more use slider otherwise use dropdown
         <div>
-          {/*  <Slider
+            {/*  <Slider
                 className="max-w-mid"
                 label="Filter Range"
                 minValue={+minValue}

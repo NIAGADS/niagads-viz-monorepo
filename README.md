@@ -4,7 +4,7 @@ React Component Library for NIAGADS Visualizations: including Tanstack React-Tab
 
 > **WARNING: for third-party developers. This toolkit is still under development and not ready or recommended for general usage**
 
-> **NOTE: until `Material-UI` is removed,  `npm install` must be run with the `--legacy-peer-deps` option.**
+> **NOTE: until `Material-UI` is removed, `npm install` must be run with the `--legacy-peer-deps` option.**
 
 ## Developing
 
@@ -78,7 +78,6 @@ Then you can publish the packages
 npx lerna package from-package
 ```
 
-
 > OLD README:
 
 ## Import Component Library into 3rd-Party App
@@ -96,13 +95,13 @@ npm install git+https://github.com/NIAGADS/niagads-viz-js.git#BRANCH --legacy-pe
 ## StoryBook
 
 ```bash
-git clone https://github.com/NIAGADS/niagads-viz-js.git 
+git clone https://github.com/NIAGADS/niagads-viz-js.git
 cd niagads-viz-js
 npm install --legacy-peer-deps
 npm run storybook
 ```
 
-* TODO: generate story hierarchy from project hierarchy: https://storybook.js.org/docs/configure#configure-story-loading
+- TODO: generate story hierarchy from project hierarchy: https://storybook.js.org/docs/configure#configure-story-loading
 
 ### Auto-Doc
 
@@ -110,13 +109,12 @@ npm run storybook
 npm run storybook-doc
 ```
 
-
 ## Run `example` app
 
 > NOTE: Requires `next.js`: you may need to pre-install `next` npm package
 
 ```bash
-git clone https://github.com/NIAGADS/niagads-viz-js.git 
+git clone https://github.com/NIAGADS/niagads-viz-js.git
 cd niagads-viz-js/example
 npm install --legacy-peer-deps
 ```
@@ -141,18 +139,18 @@ npm run start
 
 > VSCode will not understand `tailwind` @ directives (`@tailwind`) out of the box. Recommendations are as follows:
 
-* install [Tailwind CSS IntelliSense Extension](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
-* edit `settings.json` as follows:
+- install [Tailwind CSS IntelliSense Extension](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
+- edit `settings.json` as follows:
 
 ```json
 {
-  "files.associations": {
-    "*.css": "tailwindcss"
-  }
+    "files.associations": {
+        "*.css": "tailwindcss"
+    }
 }
 ```
 
-* if you do not want to install the extension, there are [other possible solutions](https://byby.dev/at-rule-tailwind).
+- if you do not want to install the extension, there are [other possible solutions](https://byby.dev/at-rule-tailwind).
 
 ### JavaScript Configuration
 
@@ -166,4 +164,4 @@ TODOs: proxy for example app
 
 ### TODOs/Issues
 
-* `table.js` example throws a runtime error in the `highcharts` `exporting.js` module due to attempting to use `hasOwnProperty` on a `null` -- may go away when filtering is in place; otherwise may need to re-evaluate dependency rollup
+- `table.js` example throws a runtime error in the `highcharts` `exporting.js` module due to attempting to use `hasOwnProperty` on a `null` -- may go away when filtering is in place; otherwise may need to re-evaluate dependency rollup

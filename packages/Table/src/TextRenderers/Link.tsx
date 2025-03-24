@@ -1,44 +1,49 @@
-import React from "react"
+import React from "react";
 
-import { TextRenderer, renderWithInfo} from "./TextRenderer"
-import { Text } from "./BasicText"
+import { TextRenderer, renderWithInfo } from "./TextRenderer";
+import { Text } from "./BasicText";
 
 import { _get, _hasOwnProperty, _isNull } from "@bug_sam/common";
 
-const _renderLink = (displayText: string, url: string, newWindow: boolean=false) => {
+const _renderLink = (displayText: string, url: string, newWindow: boolean = false) => {
     if (newWindow) {
-        return <a href={url}  target="_blank" rel="noopener noreferrer">{displayText}</a>
+        return (
+            <a href={url} target="_blank" rel="noopener noreferrer">
+                {displayText}
+            </a>
+        );
     }
-    return <a href={url}>{displayText}</a>
-}
+    return <a href={url}>{displayText}</a>;
+};
 
 export const LinkList = <T,>({ props }: TextRenderer<T>) => {
-    const items = _get('items', props)
+    const items = _get("items", props);
     if (items) {
-        const numItems = items.length - 1
+        const numItems = items.length - 1;
         return items.map((iProps: any, index: number) => (
             <div key={index}>
                 <Link props={iProps}></Link>
-                {index < numItems ? ` // ` : ''}
+                {index < numItems ? ` // ` : ""}
             </div>
-        ))
+        ));
     }
-    return <Text props={{value:null}}/>
-}
+    return <Text props={{ value: null }} />;
+};
 
 export const Link = <T,>({ props }: TextRenderer<T>) => {
-    const url = _get('url', props)
-    const value = _get('value', props)
-    
-    if (_isNull(url)) { // render as text
-        return <Text props={props} />
+    const url = _get("url", props);
+    const value = _get("value", props);
+
+    if (_isNull(url)) {
+        // render as text
+        return <Text props={props} />;
     }
 
-    const linkElement = _renderLink(value ? value : url, url)
-    const hasTooltip = _hasOwnProperty('tooltip', props)
+    const linkElement = _renderLink(value ? value : url, url);
+    const hasTooltip = _hasOwnProperty("tooltip", props);
     if (hasTooltip) {
-        return renderWithInfo(linkElement, _get('tooltip', props), true)
+        return renderWithInfo(linkElement, _get("tooltip", props), true);
     }
-    
-    return linkElement
-}
+
+    return linkElement;
+};

@@ -1,9 +1,8 @@
 /* UI ELEMENTS */
 
 .icon-disabled {
-	@apply stroke-slate-300;
+    @apply stroke-slate-300;
 }
-
 
 /* FIXME: probably should move these directly into UI package */
 .info-bubble {

@@ -1,14 +1,14 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from "@storybook/react";
 
-import { RadioButton } from '@bug_sam/ui'
+import { RadioButton } from "@bug_sam/ui";
 
 const meta: Meta<typeof RadioButton> = {
-    title: 'NIAGADS-VIZ/UI/RadioButton',
+    title: "NIAGADS-VIZ/UI/RadioButton",
     component: RadioButton,
     parameters: {
-        layout: 'centered',
+        layout: "centered",
     },
-    tags: ['autodocs'],
+    tags: ["autodocs"],
 };
 
 export default meta;
@@ -17,8 +17,8 @@ type Story = StoryObj<typeof RadioButton>;
 export const Default: Story = {
     args: {
         variant: "primary",
-        label: 'Option A',
+        label: "Option A",
         disabled: false,
-        onChange: (event) => alert("I've been selected!")
+        onChange: (event) => alert("I've been selected!"),
     },
 };

@@ -1,4 +1,3 @@
-
 const _populations = [
     { display_name: "ADSP 17K", value: "ADSP" },
     /*{ display_name: 'AFR', value: 'AFR' },
@@ -11,5 +10,5 @@ const _populations = [
 export default {
     DEFAULT_LD_POPULATION: "ADSP",
     DEFAULT_FLANK: 100000,
-    populations: _populations
+    populations: _populations,
 };

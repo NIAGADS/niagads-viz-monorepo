@@ -1,2 +1,2 @@
-export * from "./PaginationControls"
-export * from "./TableToolbar"
+export * from "./PaginationControls";
+export * from "./TableToolbar";

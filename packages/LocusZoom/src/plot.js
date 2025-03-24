@@ -1,11 +1,6 @@
 import LocusZoom from "locuszoom";
 
-import {
-    CustomAssociationAdapter,
-    CustomGeneAdapter,
-    CustomRecombAdapter,
-    CustomLDServerAdapter,
-} from "./adapters";
+import { CustomAssociationAdapter, CustomGeneAdapter, CustomRecombAdapter, CustomLDServerAdapter } from "./adapters";
 
 import {
     standard_association_toolbar,
@@ -15,14 +10,7 @@ import {
     _ldLegend,
 } from "./layouts";
 
-export function initialize (
-    selector,
-    lzState,
-    track,
-    endpoint,
-    width,
-    genomeBuild
-) {
+export function initialize(selector, lzState, track, endpoint, width, genomeBuild) {
     // Register Adaptors
     LocusZoom.Adapters.add("NIAGADS_assoc", CustomAssociationAdapter, true); //override if exists
     LocusZoom.Adapters.add("NIAGADS_gene", CustomGeneAdapter, true);
@@ -31,22 +19,10 @@ export function initialize (
 
     // set data sources
     const dataSources = new LocusZoom.DataSources();
-    dataSources.add("assoc", [
-        "NIAGADS_assoc",
-        { url: endpoint, initial_state: lzState, track: track },
-    ]);
-    dataSources.add("ld", [
-        "NIAGADS_ldserver",
-        { url: endpoint, initial_state: lzState },
-    ]);
-    dataSources.add("gene", [
-        "NIAGADS_gene",
-        { url: endpoint, initial_state: lzState },
-    ]);
-    dataSources.add("recomb", [
-        "NIAGADS_recomb",
-        { url: endpoint, initial_state: lzState },
-    ]);
+    dataSources.add("assoc", ["NIAGADS_assoc", { url: endpoint, initial_state: lzState, track: track }]);
+    dataSources.add("ld", ["NIAGADS_ldserver", { url: endpoint, initial_state: lzState }]);
+    dataSources.add("gene", ["NIAGADS_gene", { url: endpoint, initial_state: lzState }]);
+    dataSources.add("recomb", ["NIAGADS_recomb", { url: endpoint, initial_state: lzState }]);
 
     // LocusZoomshould ignore if build is GRCh38, will decide later if to host locally for GRCh37
     // see https://statgen.github.io/locuszoom/docs/api/data_adapters.js.html#line403
@@ -85,8 +61,7 @@ const initializeLayout = (state, containerWidth) => {
             for (const [dindex, dataLayer] of panel.data_layers.entries()) {
                 if (dataLayer.id == "associationpvalues") {
                     layout.panels[pindex].data_layers[dindex].legend = _ldLegend;
-                    layout.panels[pindex].data_layers[dindex].tooltip =
-                        standard_association_tooltip;
+                    layout.panels[pindex].data_layers[dindex].tooltip = standard_association_tooltip;
                 }
             }
         }
@@ -94,8 +69,7 @@ const initializeLayout = (state, containerWidth) => {
         if (panel.id == "genes") {
             for (const [dindex, dataLayer] of panel.data_layers.entries()) {
                 if (dataLayer.id == "genes") {
-                    layout.panels[pindex].data_layers[dindex].tooltip =
-                        standard_genes_tooltip;
+                    layout.panels[pindex].data_layers[dindex].tooltip = standard_genes_tooltip;
                 }
             }
         }

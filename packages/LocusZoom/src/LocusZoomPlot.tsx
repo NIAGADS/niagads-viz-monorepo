@@ -1,12 +1,11 @@
 import React, { useLayoutEffect, useRef, useState, useEffect } from "react";
 
-import { useWindowSize } from "@uidotdev/usehooks"
+import { useWindowSize } from "@uidotdev/usehooks";
 
 import { initialize } from "./plot";
 import config from "./config";
 
 import "locuszoom/dist/locuszoom.css";
-
 
 export const DEFAULT_FLANK = 100000;
 
@@ -30,11 +29,10 @@ interface LocusZoomPlotProps {
     span?: string;
     flank?: number;
     track: string;
-    setPlotState?: any
+    setPlotState?: any;
     className?: string;
     serviceBaseUrl: string;
 }
-
 
 export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
     chromosome,
@@ -49,7 +47,8 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
     flank,
     genomeBuild,
     setPlotState,
-    className, serviceBaseUrl
+    className,
+    serviceBaseUrl,
 }) => {
     const [plot, setPlot] = useState<any>(null);
     //const interval: NodeJS.Timeout = useRef().current;
@@ -63,7 +62,6 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
         initializeLocusZoomPlot();
         layoutRendered.current = true;
     }, []);
-
 
     useEffect(() => {
         plot && setPlot(plot);
@@ -98,13 +96,7 @@ export const LocusZoomPlot: React.FC<LocusZoomPlotProps> = ({
         setPlot(plot);
     };
 
-    return (
-        <div id={divId ? divId : "locus-zoom"} className={className ? className : undefined} />
-    );
+    return <div id={divId ? divId : "locus-zoom"} className={className ? className : undefined} />;
 };
-
-
-
-
 
 export const MemoLocusZoomPlot = React.memo(LocusZoomPlot);

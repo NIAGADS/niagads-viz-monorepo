@@ -11,5 +11,5 @@ export interface BedXYFeature {
     blockCount?: number;
     blockSizes?: any; //TODO: could be list?
     blockStarts?: any; //TODO: could be list?
-    info?: {[key: string]: string | number | boolean}
+    info?: { [key: string]: string | number | boolean };
 }

@@ -1,7 +1,7 @@
-import React, { useState } from "react"
+import React, { useState } from "react";
 
-import { TableRow } from "./TableProperties"
-import { flexRender, Header } from "@tanstack/react-table"
+import { TableRow } from "./TableProperties";
+import { flexRender, Header } from "@tanstack/react-table";
 
 import { ArrowDownIcon, ArrowUpIcon, ArrowsUpDownIcon, InformationCircleIcon } from "@heroicons/react/24/solid";
 import { FunnelIcon } from "@heroicons/react/24/outline";
@@ -11,22 +11,21 @@ import { _get } from "@bug_sam/common";
 import { Filter } from "./Filter";
 
 interface TableColumnHeader {
-    header: Header<TableRow, unknown>
+    header: Header<TableRow, unknown>;
 }
 
 const __ICONS = {
     sort: ArrowsUpDownIcon,
     asc: ArrowUpIcon,
-    desc: ArrowDownIcon
-}
-
+    desc: ArrowDownIcon,
+};
 
 export const TableColumnHeader = ({ header }: TableColumnHeader) => {
-    const isSorted = header.column.getIsSorted()
-    const SortIcon = __ICONS[isSorted !== false ? isSorted : 'sort']
-    const description = _get('description', header.column.columnDef.meta)
+    const isSorted = header.column.getIsSorted();
+    const SortIcon = __ICONS[isSorted !== false ? isSorted : "sort"];
+    const description = _get("description", header.column.columnDef.meta);
     const [filterOpen, setFilterOpen] = useState(false);
-    
+
     return (
         <th key={header.id} scope="col" className="column-header column-header-text">
             <div className="inline-flex">
@@ -42,11 +41,7 @@ export const TableColumnHeader = ({ header }: TableColumnHeader) => {
                         )}
                     {header.column.getCanSort() ? (
                         SortIcon ? (
-                            <SortIcon
-                                className={`${
-                                    isSorted ? "visible" : "invisible"
-                                } column-header-icon`}
-                            />
+                            <SortIcon className={`${isSorted ? "visible" : "invisible"} column-header-icon`} />
                         ) : (
                             <div className="h-[19px] w-[20px]"></div>
                         )
@@ -61,10 +56,7 @@ export const TableColumnHeader = ({ header }: TableColumnHeader) => {
                     </div>
                 )}
             </div>
-            {filterOpen && (
-                <Filter column={header.column} />
-            )}
+            {filterOpen && <Filter column={header.column} />}
         </th>
     );
-}
-
+};

@@ -3,7 +3,7 @@ import React from "react";
 const __TAILWIND_CSS = {
     label: "block mb-2 text-sm font-medium text-gray-900",
     slider: "w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer",
-}
+};
 
 interface SliderProps {
     name: string;
@@ -15,16 +15,8 @@ interface SliderProps {
     onChange: (v: number) => void;
 }
 
-export const Slider = ({
-    name,
-    label,
-    value,
-    min,
-    max,
-    step,
-    onChange,
-}: SliderProps) => {
-    const valueChanged = (v: number) => v !== value && onChange(v)
+export const Slider = ({ name, label, value, min, max, step, onChange }: SliderProps) => {
+    const valueChanged = (v: number) => v !== value && onChange(v);
 
     return (
         <div>
