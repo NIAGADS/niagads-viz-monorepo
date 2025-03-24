@@ -10,4 +10,5 @@
 }
 
 @import "./table.css";
+@import "./text-renderers";
 @import "./ui.css";

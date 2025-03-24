@@ -12,12 +12,6 @@ import {
 
 export type BadgeIconType = keyof typeof ICONS;
 
-const __TAILWIND_CSS = {
-    root: "px-2 rounded-full py-1",
-    icon: "size-5 py-1",
-    icon_only_badge: "size-5 m-auto",
-};
-
 export const Badge = <T,>({ props }: TextRenderer<T>) => {
     const value = _get("value", props);
 
@@ -28,25 +22,24 @@ export const Badge = <T,>({ props }: TextRenderer<T>) => {
     if (_isNA(value)) {
         return renderNullValue();
     }
+    const badgeStyle = buildElementStyle(props)
+    const textStyle = buildElementStyle(props, 'color')
+    const backgroundIsStyled = _hasOwnProperty('backgroundColor', badgeStyle) || _hasOwnProperty('borderColor', badgeStyle)
+    const className = "tr-badge";
 
-    const badgeStyle = buildElementStyle(props);
-    const textStyle = buildElementStyle(props, "color");
-    const backgroundIsStyled =
-        _hasOwnProperty("backgroundColor", badgeStyle) || _hasOwnProperty("borderColor", badgeStyle);
-    const className = backgroundIsStyled ? __TAILWIND_CSS.root : "";
+    let textElement = renderStyledText(value, textStyle, className)
 
-    let textElement = renderStyledText(value, textStyle, className);
-
-    if (_hasOwnProperty("icon", props)) {
-        const iconOnly = _get("iconOnly", props, false);
-        const iconStyle = _get("iconStyle", props, false);
-        const iconClassName = iconOnly ? __TAILWIND_CSS.icon_only_badge : __TAILWIND_CSS.icon;
-        textElement = renderWithIcon(textElement, _get("icon", props), {
-            iconOnly: iconOnly,
-            iconClassName: iconClassName,
-            className: className,
-            style: badgeStyle,
-        });
+    if (_hasOwnProperty('icon', props)) {
+        const iconOnly = _get('iconOnly', props, false)
+        const iconStyle =  _get('iconStyle', props, false)
+        const iconClassName = iconOnly ? "tr-icon-only-badge" : "tr-badge-icon"
+        textElement = renderWithIcon(textElement, _get('icon', props),
+            {
+                iconOnly: iconOnly,
+                iconClassName: iconClassName,
+                className: className,
+                style: badgeStyle
+            })
     }
 
     const hasTooltip = _hasOwnProperty("tooltip", props);

@@ -5,14 +5,6 @@ import { _deepCopy, _get, _hasOwnProperty, _isJSON, _isNA, _isNull } from "@bug_
 import { TextRenderer, renderNullValue } from "./TextRenderer";
 import { formatFloat } from "./Number";
 
-const __TAILWIND_CSS = {
-    bar: "h-[20px] inline-block",
-    percentage: {
-        observed: "bg-green-600",
-        remainder: "bg-gray-300",
-    },
-};
-
 export const PercentageBar = <T,>({ props }: TextRenderer<T>) => {
     const value = _get("value", props);
 
@@ -24,24 +16,18 @@ export const PercentageBar = <T,>({ props }: TextRenderer<T>) => {
         return renderNullValue();
     }
 
-    const formattedValue = formatFloat(value, _get("precision", props, 2));
+    const formattedValue = formatFloat(value, _get('precision', props, 2));
     const observed = value > 1 ? value : value * 100.0;
     const remainder = 100.0 - observed;
-
-    return (
-        <>
-            <div className="inline-flex">
-                <div className={`${__TAILWIND_CSS.bar} w-[35px]`}>{`${formattedValue} `}</div>
-                <div className="inline-block w-[100px] mr-2">
-                    <div
-                        className={`${__TAILWIND_CSS.bar} ${__TAILWIND_CSS.percentage.observed}`}
-                        style={{ width: observed }}
-                    />
-                    <div
-                        className={`${__TAILWIND_CSS.bar} ${__TAILWIND_CSS.percentage.remainder}`}
-                        style={{ width: remainder }}
-                    />
-                </div>
+    
+    return <>
+        <div className="flex flex-row">
+            <div className="tr-spark-value">{`${formattedValue}`}</div>
+            <div className="tr-spark tr-spark-bar">
+                <div className="tr-spark tr-spark-bar-observed"
+                    style={{ width: observed }} />
+                <div className="tr-spark tr-spark-bar-remainder"
+                    style={{ width: remainder }} />
             </div>
         </>
     );

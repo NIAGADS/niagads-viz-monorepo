@@ -1,5 +1,4 @@
-"use client";
-import React from "react";
+import React from "react"
 
 import { TextRenderer, renderNullValue } from "./TextRenderer";
 import { Text } from "./BasicText";
