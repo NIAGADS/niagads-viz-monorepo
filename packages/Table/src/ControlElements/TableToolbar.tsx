@@ -1,4 +1,3 @@
-'use client'
 import React, { useMemo, useCallback } from "react"
 
 import { Column as ReactTableColumn, Table as ReactTable } from "@tanstack/react-table"
