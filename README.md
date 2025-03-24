@@ -103,6 +103,15 @@ npm run storybook
 
 - TODO: generate story hierarchy from project hierarchy: https://storybook.js.org/docs/configure#configure-story-loading
 
+## prettier
+
+To format all files using prettier, simply run the following command:
+
+```bash
+npx prettier . --write
+```
+
+
 ### Auto-Doc
 
 ```bash
