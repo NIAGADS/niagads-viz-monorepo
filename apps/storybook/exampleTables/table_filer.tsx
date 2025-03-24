@@ -1,4 +1,4 @@
-import { TableProps as Table } from '../../components/components/Table/Table'
+import { TableProps as Table } from '@bug_sam/table'
 
 export const TABLE_DEFINTION: Table = {
     id: 'metadata_query_by_region_and_filter',
