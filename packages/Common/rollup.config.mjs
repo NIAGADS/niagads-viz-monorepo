@@ -6,7 +6,6 @@ import external from "rollup-plugin-peer-deps-external";
 import postcss from "rollup-plugin-postcss";
 import { dts } from "rollup-plugin-dts";
 import del from "rollup-plugin-delete";
-import tailwindcss from 'tailwindcss';
 
 export default [
     {
@@ -35,12 +34,6 @@ export default [
                 config: {
                     path: './postcss.config.js',
                 },
-                extensions: ['.css'],
-                minimize: true,
-                inject: {
-                    insertAt: 'top',
-                },
-                plugins: [tailwindcss('./tailwind.config.js')],
             }),
             terser(),
         ],

@@ -1,5 +1,4 @@
-"use client";
-import "./main.css";
+
 import React, {
     useMemo,
     useState,
@@ -7,7 +6,7 @@ import React, {
     useEffect,
     useRef,
 } from "react";
-import { withErrorBoundary } from "react-error-boundary";
+
 import {
     flexRender,
     getCoreRowModel,
@@ -31,16 +30,17 @@ import {
 import { TrashIcon } from "@heroicons/react/24/outline";
 
 import { _get, _hasOwnProperty, toTitleCase } from "@bug_sam/common";
-import { errorFallback } from "@bug_sam/common";
 
 import {
     Cell,
+    CellType,
     GenericCell,
     getCellValue,
     renderCell,
     resolveCell,
     validateCellType,
 } from "./Cell";
+
 import { TableConfig, TableData, TableRow } from "./TableProperties";
 import { GenericColumn, getColumn } from "./Column";
 import { TableColumnHeader } from "./TableColumnHeader";
@@ -58,19 +58,6 @@ import {
     RadioButton,
     SearchInput,
 } from "@bug_sam/ui";
-import { HeroUIProvider } from "@heroui/system";
-
-const __TAILWIND_CSS = {
-    container: "block mx-2 max-w-full", //"block max-w-full relative shadow-md",
-    table_border:
-        "border-collapse border-0 border-t-[4px] border-solid border-black",
-    table_layout: "w-full overflow-x-scroll",
-    table_text: "text-sm text-left rtl:text-right text-gray-700",
-    td: "py-1.5 pr-6 pl-4 text-xs font-roboto border-solid border-slate-200 border-0 border-b-[1px] border-r-[1px]",
-    dtr: "hover:bg-gray-50 bg-white border-b odd:border-gray-700",
-};
-
-const TABLE_CLASSES = `${__TAILWIND_CSS.table_border} ${__TAILWIND_CSS.table_layout} ${__TAILWIND_CSS.table_text}`;
 
 const __resolveSortingFn = (col: GenericColumn) => {
     if (col.type === "boolean") {
@@ -164,7 +151,7 @@ export interface TableProps {
 }
 
 // TODO: use table options to initialize the state (e.g., initial sort, initial filter)
-export const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
+const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [globalFilter, setGlobalFilter] = useState("");
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -244,7 +231,7 @@ export const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
 
         columns.forEach((col: GenericColumn) => {
             try {
-                col.type = validateCellType(col.type);
+                col.type = validateCellType(col.type as string);
             } catch (e: any) {
                 throw Error(
                     "Error processing column definition for `" +
@@ -399,7 +386,7 @@ export const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
     }, [rowSelection]);
 
     return table ? (
-        <div className={__TAILWIND_CSS.container}>
+        <div className="table-container">
             <div className="flex justify-between items-center">
                 <TableToolbar
                     table={table}
@@ -409,14 +396,14 @@ export const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
                 <PaginationControls table={table} />
             </div>
             <div className="overflow-auto">
-                <table className={TABLE_CLASSES}>
+                <table className="table-layout table-border table-text">
                     {__renderTableHeader(table.getHeaderGroups())}
                     <tbody>
                         {table.getRowModel().rows.map((row) => (
-                            <tr key={row.id} className={__TAILWIND_CSS.dtr}>
+                            <tr key={row.id} className="table-dtr">
                                 {row.getVisibleCells().map((cell) => (
                                     <td
-                                        className={__TAILWIND_CSS.td}
+                                        className="table-td"
                                         key={cell.id}>
                                         {flexRender(
                                             cell.column.columnDef.cell,
@@ -435,11 +422,5 @@ export const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
     );
 };
 
-const TableWithErrorBoundary = withErrorBoundary(Table, {
-    FallbackComponent: errorFallback,
-    onError(error, info) {
-        console.error(error);
-    },
-});
 
-export default TableWithErrorBoundary;
+export default Table;

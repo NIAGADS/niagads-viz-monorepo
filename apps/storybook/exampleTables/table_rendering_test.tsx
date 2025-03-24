@@ -1,4 +1,4 @@
-import { TableProps as Table } from '../../components/components/Table/Table'
+import { TableProps as Table } from '@bug_sam/table'
 
 
 export const TABLE_DEFINTION: Table = {
@@ -94,7 +94,7 @@ export const TABLE_DEFINTION: Table = {
             header: "p-Value",
             id: "p_value",
             description: "numeric test",
-            type: "float",
+            type: "p_value",
             format: {
                 precision: 1,
             }

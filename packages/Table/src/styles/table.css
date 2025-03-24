@@ -1,0 +1,51 @@
+/* TABLE */
+
+.table-container {
+	@apply block mx-2 max-w-full font-[Open_Sans];
+}
+
+.table-border {
+	@apply border-collapse border-t-[4px] border-solid border-primary;
+}
+
+.table-text {
+	@apply text-sm text-left rtl:text-right text-primary;
+}
+
+.table-layout {
+	@apply w-full overflow-x-scroll;
+}
+
+.table-td {
+	@apply font-[Noto_Sans] py-1.5 pr-6 pl-4 text-xs border-solid border-slate-200 border-0 border-b-[1px] border-r-[1px];
+}
+
+.table-dtr {
+	@apply hover:bg-gray-50 bg-white border-b odd:border-gray-700;
+}
+
+/* TABLE COLUMN HEADERS */
+
+.column-header {
+	@apply bg-primary/20 px-6 py-3 border-0 border-r-[1px] border-solid border-slate-50;
+}
+
+.column-header-text {
+	@apply text-sm text-nowrap text-slate-700  font-bold;
+}
+
+.column-header-icon {
+	@apply ml-1 text-slate-700 pl-px size-5;
+}
+
+/* TABLE CELLS */
+/* overriding html element `a` causes issues when importing 
+from package; may override application or other package settings */
+.table-cell-link,
+.info-link {
+	@apply text-blue-700 hover:underline visited:text-purple-900 active:text-red-950;
+}
+
+.info-link {
+	@apply cursor-pointer underline decoration-dashed decoration-blue-700 underline-offset-4;
+}

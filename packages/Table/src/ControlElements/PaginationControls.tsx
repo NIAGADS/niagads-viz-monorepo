@@ -1,4 +1,3 @@
-'use client'
 import React, { useState, useMemo } from "react"
 
 import { Table as ReactTable } from "@tanstack/react-table"
@@ -44,11 +43,11 @@ export const PaginationControls = ({ table }: PaginationControlsProps) => {
     }
 
     return <>
-        <div className="flex gap-2 m-2">
+        <div className="flex flex-row gap-4" aria-label="pagination">
             <Select defaultValue={pageSize.toString()} fields={pageSizeOptions}
                 onChange={(e: any) => { onChangePageSize(Number(e.target.value)) }}
                 label="Results per page" id="pages" inline variant='plain' />
-            <p className="text-sm text-gray-900 px-2">{minDisplayedRow} - {maxDisplayedRow} of {nRows}</p>
+            <div className="self-center text-sm text-gray-900 px-2">{minDisplayedRow} - {maxDisplayedRow} of {nRows}</div>
             <Button variant="white" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
                 <ChevronLeftIcon className={`icon-button stroke-1 ${!table.getCanPreviousPage() ? 'icon-disabled' : 'stroke-black'}`}></ChevronLeftIcon>
             </Button>

@@ -2,9 +2,6 @@ import { Column } from "@tanstack/react-table"
 import React, { useMemo } from "react"
 import { _get } from "@bug_sam/common";
 import { SearchInput } from "@bug_sam/ui";
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/dropdown";
-import { Slider } from "@heroui/slider";
-import { Button } from "@heroui/button";
 
 interface Filter {
     column: Column<any, unknown>;
@@ -26,7 +23,7 @@ export const Filter = ({ column }: Filter) => {
     return colType === "float" ? (
         //TODO: if faceted unique values length is 5 or more use slider otherwise use dropdown
         <div>
-            <Slider
+          {/*  <Slider
                 className="max-w-mid"
                 label="Filter Range"
                 minValue={+minValue}
@@ -34,12 +31,12 @@ export const Filter = ({ column }: Filter) => {
                 defaultValue={[+minValue, +maxValue]}
                 step={(maxValue - minValue) / 50}
                 onChange={(val) => column.setFilterValue(val)}
-            />
+            />*/}
         </div>
     ) : colType === "p_value" ? (
         //TODO: filter based on neg_log10_pvalue maybe
         <div>
-            <Slider
+            {/*<Slider
                 className="max-w-mid"
                 label="Filter Range"
                 minValue={0}
@@ -47,11 +44,11 @@ export const Filter = ({ column }: Filter) => {
                 defaultValue={+maxValue}
                 step={(maxValue - minValue) / 50}
                 onChange={(val) => column.setFilterValue([0, val])}
-            />
+            />*/}
         </div>
     ) : sortedUniqueValues.length < 11 ? (
         <div>
-            <Dropdown>
+            {/*<Dropdown>
                 <DropdownTrigger>
                     <Button variant="bordered">Select Filter</Button>
                 </DropdownTrigger>
@@ -68,6 +65,7 @@ export const Filter = ({ column }: Filter) => {
                     ))}
                 </DropdownMenu>
             </Dropdown>
+            */}
         </div>
     ) : (
         <div>
