@@ -79,7 +79,7 @@ export const LargeText = <T,>({ props }: TextRenderer<T>) => {
         <div className="max-w-[300px] break-words">
             {textElement}
             {"   "}
-            <a className="text-xs info-link" onClick={toggleIsExpanded}>
+            <a className="text-xs ui-info-link" onClick={toggleIsExpanded}>
                 {action}
             </a>
         </div>
