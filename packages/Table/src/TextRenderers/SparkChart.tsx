@@ -16,19 +16,17 @@ export const PercentageBar = <T,>({ props }: TextRenderer<T>) => {
         return renderNullValue();
     }
 
-    const formattedValue = formatFloat(value, _get('precision', props, 2));
+    const formattedValue = formatFloat(value, _get("precision", props, 2));
     const observed = value > 1 ? value : value * 100.0;
     const remainder = 100.0 - observed;
-    
-    return <>
+
+    return (
         <div className="flex flex-row">
             <div className="tr-spark-value">{`${formattedValue}`}</div>
             <div className="tr-spark tr-spark-bar">
-                <div className="tr-spark tr-spark-bar-observed"
-                    style={{ width: observed }} />
-                <div className="tr-spark tr-spark-bar-remainder"
-                    style={{ width: remainder }} />
+                <div className="tr-spark tr-spark-bar-observed" style={{ width: observed }} />
+                <div className="tr-spark tr-spark-bar-remainder" style={{ width: remainder }} />
             </div>
-        </>
+        </div>
     );
 };
