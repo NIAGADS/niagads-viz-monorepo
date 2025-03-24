@@ -8,12 +8,12 @@ import { _get, _hasOwnProperty, _isNull } from "@bug_sam/common";
 const _renderLink = (displayText: string, url: string, newWindow: boolean = false) => {
     if (newWindow) {
         return (
-            <a href={url} target="_blank" rel="noopener noreferrer">
+            <a className="table-cell-link" href={url} target="_blank" rel="noopener noreferrer">
                 {displayText}
             </a>
         );
     }
-    return <a href={url}>{displayText}</a>;
+    return <a className="table-cell-link" href={url}>{displayText}</a>;
 };
 
 export const LinkList = <T,>({ props }: TextRenderer<T>) => {
