@@ -33,7 +33,7 @@ export const PercentageBar = <T,>({ props }: TextRenderer<T>) => {
 
     return <>
         <div className="flex flex-row">
-            <div className="tr-spark tr-spark-value">{`${formattedValue} `}</div>
+            <div className="tr-spark-value">{`${formattedValue}`}</div>
             <div className="tr-spark tr-spark-bar">
                 <div className="tr-spark tr-spark-bar-observed"
                     style={{ width: observed }} />

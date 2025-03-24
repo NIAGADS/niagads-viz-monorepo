@@ -19,11 +19,11 @@
     @apply w-[35px] self-center;
 }
 
-.tr-spar-bar {
-    @apply w-[100px] mr-2;
-}
+.tr-spark-bar {
+    @apply w-[100px];
+}   
 
-.tr-spark-bar-observerd {
+.tr-spark-bar-observed {
     @apply bg-green-600;
 }
 
