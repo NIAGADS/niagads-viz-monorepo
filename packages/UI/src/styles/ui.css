@@ -1,0 +1,21 @@
+/* UI ELEMENTS */
+
+.icon-disabled {
+	@apply stroke-slate-300;
+}
+
+/* UI ELEMENTS */
+
+/* FIXME: currently duplicated in Table package */
+.info-bubble {
+    @apply text-blue-600 size-5;
+}
+
+/* FIXME: for formatting icon in a button icon */
+.icon-button {
+    @apply size-4 stroke-4;
+}
+
+.dropdown:focus-within .dropdown-menu {
+    @apply block;
+}
