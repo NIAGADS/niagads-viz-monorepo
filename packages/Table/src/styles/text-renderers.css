@@ -20,7 +20,7 @@
 }
 
 .tr-spar-bar {
-    @apply w-1[100px] mr-2;
+    @apply w-[100px] mr-2;
 }
 
 .tr-spark-bar-observerd {
