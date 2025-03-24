@@ -25,6 +25,7 @@ export const Slider = ({
     onChange,
 }: SliderProps) => {
     const valueChanged = (v: number) => v !== value && onChange(v)
+
     return (
         <div>
             {label && (
