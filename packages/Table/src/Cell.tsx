@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react'
 
-
 import { BasicType, Modify, TypeMapper, Expand, NAString } from "@bug_sam/common"
 import { _isJSON, _deepCopy, _hasOwnProperty, _get, _isNull, _isNA } from '@bug_sam/common'
 import { Color } from '@bug_sam/common';
@@ -256,6 +255,7 @@ export const renderCell = (cell: Cell) => {
         case "badge":
             return <Badge props={cell}></Badge>
         case "float":
+        case "p_value":
             return <Float props={cell}></Float>
         case "percentage_bar":
             return <PercentageBar props={cell}></PercentageBar>
