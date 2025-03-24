@@ -7,3 +7,5 @@ export * from "./RadioButton";
 export * from "./SearchInput";
 export * from "./Select";
 export * from "./Tooltip";
+export * from "./Dropdown";
+export * from "./Slider";

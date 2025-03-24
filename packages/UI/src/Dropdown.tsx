@@ -8,22 +8,35 @@ const __TAILWIND_CSS = {
 }
 
 export interface DropdownOption<T> {
-    item: T
+    value: T
     name: string
 }
 
 interface DropdownProps<T> {
-    dropdownOptions: DropdownOption<T>[];
+    options: DropdownOption<T>[];
     closeOnSelect: boolean;
-    onSelect: (option: T) => void;
+    onSelect: (option: T[]) => void;
 }
 
 export const Dropdown = <T,>({
-    dropdownOptions,
+    options,
     closeOnSelect,
     onSelect
 }: DropdownProps<T>) => {
     const [visible, setVisible] = useState<boolean>(false);
+    const [selected, setSelected] = useState<DropdownOption<T>[]>([]);
+
+    const handleSelect = (x: DropdownOption<T>) => {
+        let updated = [];
+        if (selected.find(o => o.value === x.value)) {
+            updated = selected.filter(o => o.value !== x.value);
+        } else {
+            updated = [...selected, x];
+        }
+        setSelected(updated);
+        onSelect(updated.map(o => o.value));
+        closeOnSelect && setVisible(false);
+    }
 
     return (
         <div className="relative inline-block text-left">
@@ -31,13 +44,13 @@ export const Dropdown = <T,>({
                 className={__TAILWIND_CSS.button}
                 onClick={() => setVisible(!visible)}
             >
-                button
+                {selected.length === 0 ? "Select..." : selected.map(o => o.name).join(", ")}
             </div>
             {visible ? (
                 <div className={__TAILWIND_CSS.dropdown}>
-                    {dropdownOptions.map((option) => {
+                    {options.map((option) => {
                         return (
-                            <div onClick={() => onSelect(option.item)}>
+                            <div onClick={() => handleSelect(option)}>
                                 {option.name}
                             </div>
                         );
