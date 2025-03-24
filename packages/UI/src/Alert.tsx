@@ -41,4 +41,3 @@ export const Alert = ({ variant = 'default', message, children, }: Alert) => {
         </div>
     )
 }
-
