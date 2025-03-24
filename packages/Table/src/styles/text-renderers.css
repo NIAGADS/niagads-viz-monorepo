@@ -1,0 +1,33 @@
+
+.tr-badge {
+    @apply px-2 py-1 rounded-full
+}
+
+.tr-badge-icon {
+    @apply size-5 py-1;
+}
+
+.tr-icon-only-badge {
+    @apply size-5 m-auto;
+}
+
+.tr-spark {
+    @apply h-[20px] inline-block;
+}
+
+.tr-spark-value {
+    @apply w-[35px] self-center;
+}
+
+.tr-spar-bar {
+    @apply w-1[100px] mr-2;
+}
+
+.tr-spark-bar-observerd {
+    @apply bg-green-600;
+}
+
+.tr-spark-bar-remainder {
+    @apply bg-gray-300;
+}
+
