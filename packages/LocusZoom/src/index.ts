@@ -1,1 +1,1 @@
-export * from "./LocusZoomPlot"
+export * from "./LocusZoomPlot";

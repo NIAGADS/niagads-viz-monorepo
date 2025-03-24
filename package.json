@@ -4,7 +4,7 @@
     "author": "fossilfriend,bug-sam",
     "scripts": {
         "watch": "npx lerna watch -- lerna run build --scope=\\$LERNA_PACKAGE_NAME",
-        "storybook": "npm run watch & npx lerna run storybook & wait"
+        "storybook": "concurrently \"npm run watch\" \"npx lerna run storybook\""
     },
     "workspaces": [
         "packages/Common",
@@ -15,8 +15,9 @@
         "packages/UI",
         "apps/storybook"
     ],
-    "dependencies": {},
     "devDependencies": {
-        "lerna": "^8.1.9"
+        "concurrently": "^9.1.2",
+        "lerna": "^8.1.9",
+        "prettier": "^3.5.3"
     }
 }

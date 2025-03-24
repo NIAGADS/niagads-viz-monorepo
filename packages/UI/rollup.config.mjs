@@ -29,7 +29,7 @@ export default [
             postcss({
                 config: {
                     path: "./postcss.config.js",
-                }
+                },
             }),
             {
                 name: "Custom Rollup Plugin`",

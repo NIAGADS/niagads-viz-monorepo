@@ -1,5 +1,5 @@
-import LocusZoom from "locuszoom"
-import config from "./config"
+import LocusZoom from "locuszoom";
+import config from "./config";
 
 // copied from https://github.com/statgen/locuszoom/blob/a271a0321339fb223721476244ece2fa7dec9820/esm/helpers/layouts.js#L106
 // fossilfriend: b/c I couldn't figure out how to import it from the node_modules!! ... even though it is there, so
@@ -60,7 +60,7 @@ export const standard_genes_tooltip = {
     hide: { and: ["unhighlighted", "unselected"] },
     html:
         "<h4><strong><i>{{gene_name|htmlescape}}</i></strong></h4><br>" +
-        '<a href="../../record/gene/{{gene_id|htmlescape}}" target="_blank" rel="noopener">{{gene_id|htmlescape}}</a><br>'
+        '<a href="../../record/gene/{{gene_id|htmlescape}}" target="_blank" rel="noopener">{{gene_id|htmlescape}}</a><br>',
 };
 
 export const _ldLegend = [

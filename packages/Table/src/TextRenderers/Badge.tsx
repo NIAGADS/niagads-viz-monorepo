@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import { _get, _hasOwnProperty, _isNA, _isNull } from "@bug_sam/common";
 import {
     TextRenderer,
@@ -7,23 +7,21 @@ import {
     renderStyledText,
     renderWithIcon,
     renderWithInfo,
-    ICONS
-} from "./TextRenderer"
-
+    ICONS,
+} from "./TextRenderer";
 
 export type BadgeIconType = keyof typeof ICONS;
 
 export const Badge = <T,>({ props }: TextRenderer<T>) => {
-    const value = _get('value', props)
+    const value = _get("value", props);
 
     if (_isNull(value)) {
-        return renderNullValue(_get('nullValue', props))
+        return renderNullValue(_get("nullValue", props));
     }
 
     if (_isNA(value)) {
-        return renderNullValue()
+        return renderNullValue();
     }
-
     const badgeStyle = buildElementStyle(props)
     const textStyle = buildElementStyle(props, 'color')
     const backgroundIsStyled = _hasOwnProperty('backgroundColor', badgeStyle) || _hasOwnProperty('borderColor', badgeStyle)
@@ -44,34 +42,31 @@ export const Badge = <T,>({ props }: TextRenderer<T>) => {
             })
     }
 
-    const hasTooltip = _hasOwnProperty('tooltip', props)
-    return hasTooltip
-        ? renderWithInfo(textElement, _get('tooltip', props), true)
-        : textElement
-}
+    const hasTooltip = _hasOwnProperty("tooltip", props);
+    return hasTooltip ? renderWithInfo(textElement, _get("tooltip", props), true) : textElement;
+};
 
 export const BooleanBadge = <T,>({ props }: TextRenderer<T>) => {
-    let value = _get('displayText', props, _get('value', props))
+    let value = _get("displayText", props, _get("value", props));
 
     if (_isNull(value)) {
-        value = _get('nullValue', props, 'NA')
+        value = _get("nullValue", props, "NA");
     }
 
     const displayProps = {
-        'value': value.toString(),
-    }
+        value: value.toString(),
+    };
 
-    if (value === false && !_hasOwnProperty('color', props)) {
+    if (value === false && !_hasOwnProperty("color", props)) {
         Object.assign(displayProps, {
-            'color': 'rgb(229, 231, 235)' // same as the n/a color
-        })
+            color: "rgb(229, 231, 235)", // same as the n/a color
+        });
     }
 
-    if (_hasOwnProperty('icon', props)) {
-        const iconStyle = buildElementStyle(props, 'color')
-        Object.assign(displayProps, { 'iconOnly': true, iconStyle: iconStyle})
+    if (_hasOwnProperty("icon", props)) {
+        const iconStyle = buildElementStyle(props, "color");
+        Object.assign(displayProps, { iconOnly: true, iconStyle: iconStyle });
     }
 
-    return <Badge props={Object.assign(props as any, displayProps)} />
-
-}
+    return <Badge props={Object.assign(props as any, displayProps)} />;
+};

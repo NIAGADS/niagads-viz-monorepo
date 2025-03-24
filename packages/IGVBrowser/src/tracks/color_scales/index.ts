@@ -1,3 +1,3 @@
-import ManhattanColors from "./manhattan_colors"
+import ManhattanColors from "./manhattan_colors";
 
-export { ManhattanColors }
+export { ManhattanColors };

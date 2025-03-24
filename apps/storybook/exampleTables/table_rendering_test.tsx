@@ -1,8 +1,7 @@
-import { TableProps as Table } from '@bug_sam/table'
-
+import { TableProps as Table } from "@bug_sam/table";
 
 export const TABLE_DEFINTION: Table = {
-    id: 'rendering_test',
+    id: "rendering_test",
     data: [
         {
             label: { color: "blue", value: "r1" },
@@ -10,22 +9,27 @@ export const TABLE_DEFINTION: Table = {
             valid: true,
             count: 5,
             percent: 0.5,
-            p_value: { value: 0.000001, color: 'red' },
+            p_value: { value: 0.000001, color: "red" },
             website: { url: "https://amazon.com", value: "Amazon" },
-            state: { value: 'PASS', color: 'white', backgroundColor: 'green', icon: "solidCheck" }
+            state: {
+                value: "PASS",
+                color: "white",
+                backgroundColor: "green",
+                icon: "solidCheck",
+            },
         },
         {
             label: { value: "r2", tooltip: "my favorite group" },
             population: {
                 value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Turpis massa sed elementum tempus. Aenean sed adipiscing diam donec adipiscing tristique. Maecenas sed enim ut sem viverra aliquet.",
-                color: 'purple'
+                color: "purple",
             },
-            valid: { value: false, color: 'green' },
+            valid: { value: false, color: "green" },
             count: 6,
             p_value: { value: 0.0000510001, precision: 3 },
             percent: 0.2,
             website: null,
-            state: { value: 'PASS', backgroundColor: 'green' }
+            state: { value: "PASS", backgroundColor: "green" },
         },
         {
             label: "r3",
@@ -42,47 +46,53 @@ export const TABLE_DEFINTION: Table = {
             valid: { value: true, icon: "solidCheck", color: "orange" },
             count: null,
             population: {
-                color: "teal", value: "other",
-                tooltip: "non-standard population"
+                color: "teal",
+                value: "other",
+                tooltip: "non-standard population",
             },
             percent: null,
-            p_value: { value: .222, precision: 2 },
+            p_value: { value: 0.222, precision: 2 },
             website: { value: "FedEx" },
-            state: { value: 'FAIL', icon: 'xMark', color: 'red', borderColor: 'red', tooltip: "This one did't pass :(" }
+            state: {
+                value: "FAIL",
+                icon: "xMark",
+                color: "red",
+                borderColor: "red",
+                tooltip: "This one did't pass :(",
+            },
         },
     ],
 
     columns: [
         {
             header: "Label",
-            id: "label"
+            id: "label",
         },
         {
             header: "State",
             id: "state",
             description: "badge test",
-            type: "badge"
+            type: "badge",
         },
         {
             header: "Population",
             id: "population",
             description: "sample population",
             format: {
-                nullValue: "NA"
-            }
-
+                nullValue: "NA",
+            },
         },
         {
             header: "Is Valid?",
             id: "valid",
             description: "boolean test",
             type: "boolean",
-            format: { nullValue: 'NA', trueValue: "Yes" }
+            format: { nullValue: "NA", trueValue: "Yes" },
         },
         {
             header: "Count",
             id: "count",
-            description: "integer test"
+            description: "integer test",
         },
         {
             header: "Percent",
@@ -97,15 +107,12 @@ export const TABLE_DEFINTION: Table = {
             type: "p_value",
             format: {
                 precision: 1,
-            }
+            },
         },
         {
             header: "Website",
             id: "website",
             // type: "link"
-        }
-
+        },
     ],
-
-
-}
+};

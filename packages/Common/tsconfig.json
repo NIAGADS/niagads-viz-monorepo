@@ -1,53 +1,35 @@
 {
-  "compilerOptions": {
-    "module": "esnext",
-    "target": "es6",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "sourceMap": true,
-    "jsx": "react",
-    "moduleResolution": "node",
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "esModuleInterop": true,
-    "allowJs": true,
-    "removeComments": true,
-    "preserveConstEnums": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "alwaysStrict": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "isolatedModules": true,
-    "experimentalDecorators": true,
-    "resolveJsonModule": true,
-    "noErrorTruncation": true,
-    "typeRoots": [
-      "node_modules/@types",
-      "node_modules/niagads-ambient-types"
-    ],
-    "outDir": "dist",
-    "baseUrl": ".",
-    "paths": {
-      "@/*": [
-        "./*"
-      ]
-    }
-  },
-  "exclude": [
-    "node_modules",
-    "build",
-    "dist",
-    "scripts",
-    "webpack",
-    "examples",
-    "postcss.config.js",
-    "**/*.scss"
-  ]
+    "compilerOptions": {
+        "module": "esnext",
+        "target": "es6",
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "sourceMap": true,
+        "jsx": "react",
+        "moduleResolution": "node",
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "esModuleInterop": true,
+        "allowJs": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "alwaysStrict": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "noEmit": true,
+        "isolatedModules": true,
+        "experimentalDecorators": true,
+        "resolveJsonModule": true,
+        "noErrorTruncation": true,
+        "typeRoots": ["node_modules/@types", "node_modules/niagads-ambient-types"],
+        "outDir": "dist",
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["./*"]
+        }
+    },
+    "exclude": ["node_modules", "build", "dist", "scripts", "webpack", "examples", "postcss.config.js", "**/*.scss"]
 }

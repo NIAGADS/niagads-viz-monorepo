@@ -1,16 +1,16 @@
 {
-  "targetDefaults": {
-    "storybook": {
-      "dependsOn": []
-    },
-    "build-storybook": {
-      "dependsOn": []
-    },
-    "storybook-docs": {
-      "dependsOn": []
-    },
-    "build": {
-      "dependsOn": []
+    "targetDefaults": {
+        "storybook": {
+            "dependsOn": []
+        },
+        "build-storybook": {
+            "dependsOn": []
+        },
+        "storybook-docs": {
+            "dependsOn": []
+        },
+        "build": {
+            "dependsOn": []
+        }
     }
-  }
 }

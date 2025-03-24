@@ -17,9 +17,9 @@ export interface TrackBaseOptions {
     minHeight?: number;
     maxHeight?: number;
     order?: number;
-    color?: string; //if a function, don't export 
+    color?: string; //if a function, don't export
 
-    queryable?: boolean
+    queryable?: boolean;
 }
 
 export interface IGVTrackOptions extends TrackBaseOptions {
@@ -30,23 +30,23 @@ export interface IGVTrackOptions extends TrackBaseOptions {
 }
 
 export interface Session {
-    tracks: TrackBaseOptions[]
+    tracks: TrackBaseOptions[];
 
-    reference?: any
-    roi?: ROISet[]
-    locus?: any
+    reference?: any;
+    roi?: ROISet[];
+    locus?: any;
 }
 
 export interface ROISet {
-    features: ROIFeature[],
+    features: ROIFeature[];
 
-    name?: string,
-    color?: string,
-    isUserDefined?: boolean
+    name?: string;
+    color?: string;
+    isUserDefined?: boolean;
 }
 
 export interface ROIFeature {
-    chr: string,
-    start: number,
-    end: number,
+    chr: string;
+    start: number;
+    end: number;
 }

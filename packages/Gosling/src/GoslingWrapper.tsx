@@ -1,11 +1,11 @@
-'use client'
+"use client";
 import React, { useRef, useLayoutEffect, useEffect } from "react";
-import { GoslingComponent } from 'gosling.js';
+import { GoslingComponent } from "gosling.js";
 
 interface GoslingProps {
-    id: string,
-    specification: any,
-    ref: any // comes from the specialized component so can customize controls
+    id: string;
+    specification: any;
+    ref: any; // comes from the specialized component so can customize controls
 }
 
 export const GoslingWrapper: React.FC<GoslingProps> = ({ id, specification, ref }) => {
@@ -15,9 +15,9 @@ export const GoslingWrapper: React.FC<GoslingProps> = ({ id, specification, ref 
                 <link rel="stylesheet" href="https://unpkg.com/higlass@[1.12]/dist/hglib.css">
             </head>
         */
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = 'https://unpkg.com/higlass@[1.12]/dist/hglib.css';
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = "https://unpkg.com/higlass@[1.12]/dist/hglib.css";
         document.head.appendChild(link);
 
         return () => {
@@ -26,17 +26,18 @@ export const GoslingWrapper: React.FC<GoslingProps> = ({ id, specification, ref 
     }, []);
 
     return (
-        <GoslingComponent ref={ref} spec={specification}
+        <GoslingComponent
+            ref={ref}
+            spec={specification}
             margin={0}
             padding={30}
-            border={'none'}
+            border={"none"}
             id={id}
-            className={'gosling-component'}
-            theme={'light'}
-        />)
-}
-
-
+            className={"gosling-component"}
+            theme={"light"}
+        />
+    );
+};
 
 /*  layout effect?
 

@@ -4,7 +4,7 @@ React Component Library for NIAGADS Visualizations: including Tanstack React-Tab
 
 > **WARNING: for third-party developers. This toolkit is still under development and not ready or recommended for general usage**
 
-> **NOTE: until `Material-UI` is removed,  `npm install` must be run with the `--legacy-peer-deps` option.**
+> **NOTE: until `Material-UI` is removed, `npm install` must be run with the `--legacy-peer-deps` option.**
 
 ## Developing
 
@@ -82,4 +82,4 @@ npx lerna package from-package
 
 * nx causing "Daemon is not running" error
 
-  Try removing `.nx/workspace-data/d/disabled` (<https://github.com/lerna/lerna/issues/4054#issuecomment-2378029441>)
+Try removing `.nx/workspace-data/d/disabled` (<https://github.com/lerna/lerna/issues/4054#issuecomment-2378029441>)
