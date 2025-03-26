@@ -80,6 +80,6 @@ npx lerna package from-package
 
 ### Troubleshooting Lerna/NX
 
-* nx causing "Daemon is not running" error
+- nx causing "Daemon is not running" error
 
 Try removing `.nx/workspace-data/d/disabled` (<https://github.com/lerna/lerna/issues/4054#issuecomment-2378029441>)
