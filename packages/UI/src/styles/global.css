@@ -10,4 +10,5 @@
 }
 
 @import "./ui.css";
-@import "./alert.css"
+@import "./alert.css";
+@import "./button.css";
