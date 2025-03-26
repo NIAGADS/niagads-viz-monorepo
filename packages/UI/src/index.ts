@@ -1,5 +1,7 @@
 import "./styles/global.css";
 
+export * from "./Alert";
+export * from "./Alert";
 export * from "./Button";
 export * from "./Checkbox";
 export * from "./HelpIcon";
