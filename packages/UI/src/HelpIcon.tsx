@@ -12,9 +12,9 @@ interface HelpIcon {
 export const HelpIcon = ({ message, type }: HelpIcon) => {
     const icon =
         type === "info" ? (
-            <InformationCircleIcon className="ml-1 size-3 text-blue-600" />
+            <InformationCircleIcon className="ml-1 size-4 text-blue-600" />
         ) : (
-            <QuestionMarkCircleIcon className="ml-1 size-3 text-blue-600" />
+            <QuestionMarkCircleIcon className="ml-1 size-4 text-blue-600" />
         );
 
     return <Tooltip message={message}>{icon}</Tooltip>;
