@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 
 type Variants = "default" | "primary" | "secondary" | "light" | "accent";

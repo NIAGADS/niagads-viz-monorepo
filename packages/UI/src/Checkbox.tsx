@@ -1,6 +1,5 @@
 import React from "react";
 
-
 export type CheckboxVariants = "default" | "primary" | "secondary" | "pink" | "accent";
 export interface CheckboxProps {
     variant?: CheckboxVariants;
