@@ -18,6 +18,6 @@ type Story = StoryObj<typeof Skeleton>;
 
 export const Default: Story = {
     args: {
-        type: "default"
+        type: "default",
     },
 };

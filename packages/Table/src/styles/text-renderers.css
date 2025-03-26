@@ -1,6 +1,5 @@
-
 .tr-badge {
-    @apply px-2 py-1 rounded-full
+    @apply px-2 py-1 rounded-full;
 }
 
 .tr-badge-icon {
@@ -21,7 +20,7 @@
 
 .tr-spark-bar {
     @apply w-[100px];
-}   
+}
 
 .tr-spark-bar-observed {
     @apply bg-green-600;
@@ -30,4 +29,3 @@
 .tr-spark-bar-remainder {
     @apply bg-gray-300;
 }
-
