@@ -1,0 +1,15 @@
+
+.ui-checkbox, .ui-radio {
+    &.primary {
+        @apply accent-primary;
+    }
+    &.secondary {
+        @apply accent-secondary;
+    }
+    &.accent {
+        @apply accent-accent;
+    }
+    &.pink {
+        @apply accent-pink-500;
+    }
+}
