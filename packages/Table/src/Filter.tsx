@@ -1,7 +1,7 @@
 import { Column } from "@tanstack/react-table";
 import React, { useMemo } from "react";
-import { _get } from "@bug_sam/common";
-import { TextInput } from "@bug_sam/ui";
+import { _get } from "@niagads/common";
+import { TextInput } from "@niagads/ui";
 
 interface Filter {
     column: Column<any, unknown>;

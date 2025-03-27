@@ -1,8 +1,8 @@
 import React, { ReactNode } from "react";
 
-import { BasicType, Modify, TypeMapper, Expand, NAString } from "@bug_sam/common";
-import { _isJSON, _deepCopy, _hasOwnProperty, _get, _isNull, _isNA } from "@bug_sam/common";
-import { Color } from "@bug_sam/common";
+import { BasicType, Modify, TypeMapper, Expand, NAString } from "@niagads/common";
+import { _isJSON, _deepCopy, _hasOwnProperty, _get, _isNull, _isNA } from "@niagads/common";
+import { Color } from "@niagads/common";
 
 import { Text, TextList } from "./TextRenderers/BasicText";
 import { Link, LinkList } from "./TextRenderers/Link";

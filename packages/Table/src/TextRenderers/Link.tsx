@@ -3,7 +3,7 @@ import React from "react";
 import { TextRenderer, renderWithInfo } from "./TextRenderer";
 import { Text } from "./BasicText";
 
-import { _get, _hasOwnProperty, _isNull } from "@bug_sam/common";
+import { _get, _hasOwnProperty, _isNull } from "@niagads/common";
 
 const _renderLink = (displayText: string, url: string, newWindow: boolean = false) => {
     if (newWindow) {

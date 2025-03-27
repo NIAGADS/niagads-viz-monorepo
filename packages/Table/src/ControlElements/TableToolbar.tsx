@@ -2,10 +2,10 @@ import React, { useMemo, useCallback } from "react";
 
 import { Column as ReactTableColumn, Table as ReactTable } from "@tanstack/react-table";
 
-import { TextInput } from "@bug_sam/ui";
+import { TextInput } from "@niagads/ui";
 import { TableRow } from "../TableProperties";
 import { TableExportControls, exportTable } from "./TableExportControls";
-import { _get } from "@bug_sam/common";
+import { _get } from "@niagads/common";
 import { ColumnControls } from "./ColumnControls";
 
 interface ToolbarProps {

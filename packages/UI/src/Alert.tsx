@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { _get } from "@bug_sam/common";
+import { _get } from "@niagads/common";
 
 
 type AlertVariants = "info" | "warning" | "danger" | "success" | "default";

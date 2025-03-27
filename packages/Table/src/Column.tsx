@@ -1,4 +1,4 @@
-import { BasicType, NAString } from "@bug_sam/common";
+import { BasicType, NAString } from "@niagads/common";
 import { CellType } from "./Cell";
 
 export interface ColumnSortConfig {

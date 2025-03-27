@@ -1,5 +1,5 @@
 import React from "react";
-import { _get, _hasOwnProperty, _isNA, _isNull } from "@bug_sam/common";
+import { _get, _hasOwnProperty, _isNA, _isNull } from "@niagads/common";
 import {
     TextRenderer,
     buildElementStyle,

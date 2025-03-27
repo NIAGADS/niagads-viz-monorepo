@@ -6,8 +6,8 @@ import { flexRender, Header } from "@tanstack/react-table";
 import { ArrowDownIcon, ArrowUpIcon, ArrowsUpDownIcon, InformationCircleIcon } from "@heroicons/react/24/solid";
 import { FunnelIcon } from "@heroicons/react/24/outline";
 
-import { Button, renderTooltip } from "@bug_sam/ui";
-import { _get } from "@bug_sam/common";
+import { Button, renderTooltip } from "@niagads/ui";
+import { _get } from "@niagads/common";
 import { Filter } from "./Filter";
 
 interface TableColumnHeader {

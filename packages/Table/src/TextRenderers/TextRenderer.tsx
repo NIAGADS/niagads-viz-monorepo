@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 
-import { _get, _hasOwnProperty, _isNA, _isNull } from "@bug_sam/common";
-import { renderTooltip } from "@bug_sam/ui";
+import { _get, _hasOwnProperty, _isNA, _isNull } from "@niagads/common";
+import { renderTooltip } from "@niagads/ui";
 
 import {
     CheckIcon,

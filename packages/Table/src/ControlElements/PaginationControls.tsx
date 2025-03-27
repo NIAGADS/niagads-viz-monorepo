@@ -4,7 +4,7 @@ import { Table as ReactTable } from "@tanstack/react-table";
 import range from "lodash.range";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 
-import { Select, Button } from "@bug_sam/ui";
+import { Select, Button } from "@niagads/ui";
 
 interface PaginationControlsProps {
     table: ReactTable<any>;

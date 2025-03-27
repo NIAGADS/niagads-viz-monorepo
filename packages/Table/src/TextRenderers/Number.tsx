@@ -3,7 +3,7 @@ import React from "react";
 import { TextRenderer, renderNullValue } from "./TextRenderer";
 import { Text } from "./BasicText";
 
-import { _get, _isNA, _isNull, toExponential, toFixedWithoutZeros } from "@bug_sam/common";
+import { _get, _isNA, _isNull, toExponential, toFixedWithoutZeros } from "@niagads/common";
 
 export const formatFloat = (value: number, precision: number = 2) => {
     const formattedValue: any = toExponential(value, precision);

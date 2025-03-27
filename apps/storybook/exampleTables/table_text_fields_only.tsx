@@ -1,4 +1,4 @@
-import { TableProps as Table } from "@bug_sam/table";
+import { TableProps as Table } from "@niagads/table";
 
 export const TABLE_DEFINTION: Table = {
     id: "text_fields_only",

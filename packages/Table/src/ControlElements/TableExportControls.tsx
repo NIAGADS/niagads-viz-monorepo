@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useId } from "react";
 import { Table as ReactTable } from "@tanstack/react-table";
 import exportFromJSON from "export-from-json";
-import { Button, Checkbox, Select, Tooltip } from "@bug_sam/ui";
+import { Button, Checkbox, Select, Tooltip } from "@niagads/ui";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
-import { FileFormat, EXPORT_FILE_FORMATS } from "@bug_sam/common";
+import { FileFormat, EXPORT_FILE_FORMATS } from "@niagads/common";
 
 export const exportTable = (table: ReactTable<any>, tableId: string, filteredRowsOnly: boolean, format: FileFormat) => {
     const isFiltered: boolean =

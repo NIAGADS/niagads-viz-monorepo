@@ -22,7 +22,7 @@ import {
 
 import { TrashIcon } from "@heroicons/react/24/outline";
 
-import { _get, _hasOwnProperty, toTitleCase } from "@bug_sam/common";
+import { _get, _hasOwnProperty, toTitleCase } from "@niagads/common";
 
 import { Cell, CellType, GenericCell, getCellValue, renderCell, resolveCell, validateCellType } from "./Cell";
 
@@ -33,7 +33,7 @@ import { CustomSortingFunctions } from "./TableSortingFunctions";
 
 import { PaginationControls, TableToolbar } from "./ControlElements";
 
-import { Button, Tooltip, Checkbox, RadioButton, TextInput } from "@bug_sam/ui";
+import { Button, Tooltip, Checkbox, RadioButton, TextInput } from "@niagads/ui";
 
 const __resolveSortingFn = (col: GenericColumn) => {
     if (col.type === "boolean") {
