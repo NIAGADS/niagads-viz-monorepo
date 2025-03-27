@@ -173,7 +173,7 @@ const __resolveListCell = (cells: GenericCell[]) => {
 // does some error checking:
 // 1. makes sure user specified a cell type to the parent column if cell value is an object/JSON
 
-export const resolveCell = (cell: GenericCell | GenericCell[], column: GenericColumn): GenericCell | GenericCell[] => {
+export const resolveCell = (cell: GenericCell | GenericCell[], column: GenericColumn, rowId: number): GenericCell | GenericCell[] => {
     let resolvedCellType = _get("type", column, "abstract");
     let resolvedCell: GenericCell = {};
 
@@ -186,7 +186,7 @@ export const resolveCell = (cell: GenericCell | GenericCell[], column: GenericCo
             );
         }
 
-        const cellList = cell.map((c: GenericCell) => resolveCell(c, column) as GenericCell);
+        const cellList = cell.map((c: GenericCell) => resolveCell(c, column, rowId) as GenericCell);
         if (resolvedCellType == "text") {
             resolvedCell = __resolveListCell(cellList);
             resolvedCellType = "text_list";
@@ -262,6 +262,8 @@ export const resolveCell = (cell: GenericCell | GenericCell[], column: GenericCo
             naValue: _get("naValue", fOptions, DEFAULT_NA_VALUE),
         });
     }
+
+    Object.assign(resolvedCell as any, {columnId: column.id, rowId: rowId});
 
     return resolvedCell;
 };

@@ -42,7 +42,8 @@ export const Link = <T,>({ props }: TextRenderer<T>) => {
     const linkElement = _renderLink(value ? value : url, url);
     const hasTooltip = _hasOwnProperty("tooltip", props);
     if (hasTooltip) {
-        return renderWithInfo(linkElement, _get("tooltip", props), true);
+        const anchorId = `${_get("rowId", props)}-${_get("columnId", props)}`;
+        return renderWithInfo(linkElement, _get("tooltip", props), anchorId, true);
     }
 
     return linkElement;

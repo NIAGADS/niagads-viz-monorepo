@@ -10,8 +10,9 @@ import { Button, renderTooltip } from "@niagads/ui";
 import { _get } from "@niagads/common";
 import { Filter } from "./Filter";
 
-interface TableColumnHeader {
+interface TableColumnHeaderProps {
     header: Header<TableRow, unknown>;
+    tableId: string;
 }
 
 const __ICONS = {
@@ -20,7 +21,7 @@ const __ICONS = {
     desc: ArrowDownIcon,
 };
 
-export const TableColumnHeader = ({ header }: TableColumnHeader) => {
+export const TableColumnHeader = ({ header, tableId }: TableColumnHeaderProps) => {
     const isSorted = header.column.getIsSorted();
     const SortIcon = __ICONS[isSorted !== false ? isSorted : "sort"];
     const description = _get("description", header.column.columnDef.meta);
@@ -36,6 +37,7 @@ export const TableColumnHeader = ({ header }: TableColumnHeader) => {
                     <span>{flexRender(header.column.columnDef.header, header.getContext())}</span>
                     {description &&
                         renderTooltip(
+                            `${tableId}-${header.column.id}-info`,
                             <InformationCircleIcon className="info-bubble ml-1 text-slate-500" />,
                             description
                         )}

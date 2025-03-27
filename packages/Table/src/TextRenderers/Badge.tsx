@@ -43,7 +43,14 @@ export const Badge = <T,>({ props }: TextRenderer<T>) => {
     }
 
     const hasTooltip = _hasOwnProperty("tooltip", props);
-    return hasTooltip ? renderWithInfo(textElement, _get("tooltip", props), true) : textElement;
+    return hasTooltip
+        ? renderWithInfo(
+              textElement,
+              _get("tooltip", props),
+              `${_get("rowId", props)}-${_get("columnId", props)}`,
+              true
+          )
+        : textElement;
 };
 
 export const BooleanBadge = <T,>({ props }: TextRenderer<T>) => {
