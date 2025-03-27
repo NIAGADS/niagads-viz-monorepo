@@ -47,12 +47,12 @@ const __resolveSortingFn = (col: GenericColumn) => {
 
 // wrapper to catch any errors thrown during cell type and properties validation so that
 // user can more easily identify the problematic table cell by row/column
-const __resolveCell = (userCell: GenericCell | GenericCell[], column: GenericColumn, index: number) => {
+const __resolveCell = (userCell: GenericCell | GenericCell[], column: GenericColumn, rowId: number) => {
     try {
-        return resolveCell(userCell, column);
+        return resolveCell(userCell, column, rowId);
     } catch (e: any) {
         throw Error(
-            "Validation Error parsing field value for row " + index + " column `" + column.id + "`.\n" + e.message
+            "Validation Error parsing field value for row " + rowId + " column `" + column.id + "`.\n" + e.message
         );
     }
 };
@@ -62,12 +62,12 @@ const __resolveCell = (userCell: GenericCell | GenericCell[], column: GenericCol
 // the HeaderGroup API will take column visibility into account
 
 // render the table header
-const __renderTableHeader = (hGroups: HeaderGroup<TableRow>[]) => (
+const __renderTableHeader = (hGroups: HeaderGroup<TableRow>[], tableId: string) => (
     <thead>
         {hGroups.map((headerGroup: HeaderGroup<TableRow>) => (
             <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
-                    return <TableColumnHeader key={header.id} header={header} />;
+                    return <TableColumnHeader key={header.id} header={header} tableId={tableId} />;
                 })}
             </tr>
         ))}
@@ -138,7 +138,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
                     multiSelect ? (
                         <div className="inline-flex">
                             <div className="group relative inline-block bottom-[2px]">
-                                <Tooltip message="Reset selected rows">
+                                <Tooltip anchorId={`${id}-select-col-button}`} content="Reset selected rows">
                                     <Button
                                         size="sm"
                                         variant="primary"
@@ -324,7 +324,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
             </div>
             <div className="overflow-auto">
                 <table className="table-layout table-border table-text">
-                    {__renderTableHeader(table.getHeaderGroups())}
+                    {__renderTableHeader(table.getHeaderGroups(), id)}
                     <tbody>
                         {table.getRowModel().rows.map((row) => (
                             <tr key={row.id} className="table-dtr">

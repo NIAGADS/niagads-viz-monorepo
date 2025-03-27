@@ -41,8 +41,14 @@ export const Text = <T,>({ props }: TextRenderer<T>) => {
     const style = buildElementStyle(props);
 
     const textElement = renderStyledText(value, style, hasTooltip && useInfoLink ? "info-link" : "");
-
-    return hasTooltip ? renderWithInfo(textElement, _get("tooltip", props), useInfoLink) : textElement;
+    return hasTooltip
+        ? renderWithInfo(
+              textElement,
+              _get("tooltip", props),
+              `${_get("rowId", props)}-${_get("columnId", props)}`,
+              useInfoLink
+          )
+        : textElement;
 };
 
 export const LargeText = <T,>({ props }: TextRenderer<T>) => {

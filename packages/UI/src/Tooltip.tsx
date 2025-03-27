@@ -1,22 +1,36 @@
 import React, { ReactNode } from "react";
 
+import { Tooltip as ReactTooltip, PlacesType, VariantType } from "react-tooltip";
+
 interface TooltipProps {
-    message: string | ReactNode;
+    anchorId: string;
+    content: string | ReactNode;
     children: string | ReactNode;
+    variant?: VariantType;
+    place?: PlacesType;
+    openOnClick?: boolean; // tooltip opens on click instead of hover
 }
 
-export function Tooltip({ message, children }: TooltipProps) {
+export function Tooltip({
+    anchorId,
+    content,
+    children,
+    place = "top",
+    variant = "dark",
+    openOnClick = false,
+}: TooltipProps) {
+    const friendlyAnchorId = 'tooltip-' + anchorId.replace(' ', '_');
     return (
-        <div className="group relative flex">
-            {children}
-            <span className="z-50 absolute top-10 scale-0 transition-all rounded bg-gray-800 p-2 text-xs text-white group-hover:scale-100">
-                {message}
-            </span>
-        </div>
+        <>
+            <div data-tooltip-id={friendlyAnchorId} data-tooltip-variant={variant}>
+                {children}
+            </div>
+            <ReactTooltip id={friendlyAnchorId} openOnClick={openOnClick} place={place}>{content}</ReactTooltip>
+        </>
     );
 }
 
-// function that renders default (bottom) tooltip
-export const renderTooltip = (children: any, message: any) => {
-    return <Tooltip message={message}>{children}</Tooltip>;
+// function that renders simple text only tooltip
+export const renderTooltip = (anchorId: string, children: any, message: any) => {
+    return <Tooltip anchorId={anchorId} content={message}>{children}</Tooltip>;
 };

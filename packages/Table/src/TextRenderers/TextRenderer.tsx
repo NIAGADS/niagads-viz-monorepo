@@ -1,7 +1,7 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useMemo } from "react";
 
 import { _get, _hasOwnProperty, _isNA, _isNull } from "@niagads/common";
-import { renderTooltip } from "@niagads/ui";
+import { renderTooltip, Tooltip } from "@niagads/ui";
 
 import {
     CheckIcon,
@@ -45,20 +45,27 @@ export const renderNullValue = (value: string = DEFAULT_NA_STRING) => {
 /**
  * Add tooltip to textElement
  * @param textElement element to be wrapped
+ * @param anchorId tooltip anchor
  * @param infoMessage tooltip message
  * @param useInfoLink flag indicating whether to create info link; if false returns tooltip wrapped info icon
  * @returns textElement with tooltip either as info icon or info link
  */
-export const renderWithInfo = (textElement: ReactNode | string, infoMessage: string, useInfoLink: boolean) => {
+export const renderWithInfo = (
+    textElement: ReactNode | string,
+    infoMessage: string,
+    anchorId: string,
+    useInfoLink: boolean = false
+) => {
     if (useInfoLink) {
-        return renderTooltip(textElement, infoMessage);
+        return renderTooltip(anchorId, textElement, infoMessage);
     }
     // otherwise draw info icon and attach the tooltip to the icon
-    return renderWithIcon(
-        textElement,
-        renderTooltip(<InformationCircleIcon className="info-bubble size-3 ml-1" />, infoMessage),
-        { prefix: false, iconOnly: false }
-    );
+    return renderWithIcon(textElement, <InformationCircleIcon className="info-bubble size-3 ml-1" />, {
+        prefix: false,
+        iconOnly: false,
+        tooltip: infoMessage,
+        tooltipAnchor: anchorId,
+    });
 };
 
 /**
@@ -90,6 +97,8 @@ interface RenderIconOptions {
     iconClassName?: string;
     style?: any;
     iconStyle?: any;
+    tooltip?: string;
+    tooltipAnchor?: string;
 }
 
 export const renderWithIcon = (
@@ -105,15 +114,20 @@ export const renderWithIcon = (
     const style = _get("style", options, {});
     const iconStyle = _get("iconStyle", options);
 
+    const renderIcon = useMemo(
+        () => (IconComponent ? <IconComponent className={iconClassName} style={iconStyle} /> : icon),
+        []
+    );
+
     return prefix ? (
         <div className={`flex ${className}`} style={style}>
-            {IconComponent ? <IconComponent className={iconClassName} style={iconStyle} /> : icon}
+            {options.tooltip ? renderTooltip(options.tooltipAnchor!, renderIcon, options.tooltip) : renderIcon}
             {!iconOnly && textElement}
         </div>
     ) : (
         <div className={`flex ${className}`} style={style}>
             {!iconOnly && textElement}
-            {IconComponent ? <IconComponent className={iconClassName} style={iconStyle} /> : icon}
+            {options.tooltip ? renderTooltip(options.tooltipAnchor!, renderIcon, options.tooltip) : renderIcon}
         </div>
     );
 };
