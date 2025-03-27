@@ -3,7 +3,7 @@ import { _get } from "@niagads/common";
 
 type ButtonVariants = "default" | "primary" | "secondary" | "white" | "accent";
 type ButtonSizes = "sm" | "md" | "lg";
-interface Button {
+interface ButtonProps {
     variant?: ButtonVariants;
     size?: ButtonSizes;
     children: ReactNode | string;
@@ -11,7 +11,7 @@ interface Button {
     onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void | null;
 }
 
-export const Button = ({ variant = "default", size = "md", children, onClick, disabled = false }: Button) => {
+export const Button = ({ variant = "default", size = "md", children, onClick, disabled = false }: ButtonProps) => {
     const classes = `ui-button ${variant} ${size}`
 
     return (

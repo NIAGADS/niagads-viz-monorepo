@@ -1,3 +1,8 @@
+.ui-link {
+    @apply text-blue-700 hover:underline visited:text-purple-900 active:text-red-950;
+}
+
+
 .ui-info-link {
     @apply text-blue-700 cursor-pointer underline decoration-dashed decoration-blue-700 underline-offset-4;
 }
@@ -19,8 +24,4 @@
 /* FIXME: for formatting icon in a button icon */
 .icon-button {
     @apply size-4 stroke-4;
-}
-
-.dropdown:focus-within .dropdown-menu {
-    @apply block;
 }

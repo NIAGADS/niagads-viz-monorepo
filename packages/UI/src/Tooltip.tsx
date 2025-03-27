@@ -1,11 +1,11 @@
 import React, { ReactNode } from "react";
 
-interface Tooltip {
+interface TooltipProps {
     message: string | ReactNode;
     children: string | ReactNode;
 }
 
-export function Tooltip({ message, children }: Tooltip) {
+export function Tooltip({ message, children }: TooltipProps) {
     return (
         <div className="group relative flex">
             {children}
