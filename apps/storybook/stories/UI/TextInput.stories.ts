@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { SearchInput } from "@bug_sam/ui";
+import { TextInput } from "@bug_sam/ui";
 
-const meta: Meta<typeof SearchInput> = {
-    title: "NIAGADS-VIZ/UI/SearchInput",
-    component: SearchInput,
+const meta: Meta<typeof TextInput> = {
+    title: "NIAGADS-VIZ/UI/TextInput",
+    component: TextInput,
     parameters: {
         layout: "centered",
     },
@@ -12,7 +12,7 @@ const meta: Meta<typeof SearchInput> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof SearchInput>;
+type Story = StoryObj<typeof TextInput>;
 
 export const Default: Story = {
     args: {

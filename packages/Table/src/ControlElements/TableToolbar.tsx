@@ -2,7 +2,7 @@ import React, { useMemo, useCallback } from "react"
 
 import { Column as ReactTableColumn, Table as ReactTable } from "@tanstack/react-table";
 
-import { SearchInput } from "@bug_sam/ui";
+import { TextInput } from "@bug_sam/ui";
 import { TableRow } from "../TableProperties";
 import { TableExportControls, exportTable } from "./TableExportControls";
 import { _get } from "@bug_sam/common";
@@ -33,7 +33,7 @@ export const TableToolbar = ({ table, tableId, enableExport }: ToolbarProps) => 
 
     return (
         <div className="relative flex justify-end gap-2 m-2">
-            <SearchInput value={table.getState().globalFilter} onChange={(val) => table.setGlobalFilter(val)} />
+            <TextInput value={table.getState().globalFilter} onChange={(val) => table.setGlobalFilter(val)} />
             {canToggleColumns && (
                 <ColumnControls columns={table.getAllLeafColumns()} onSelect={() => console.log("selected")} />
             )}

@@ -33,7 +33,7 @@ import { CustomSortingFunctions } from "./TableSortingFunctions";
 
 import { PaginationControls, TableToolbar } from "./ControlElements";
 
-import { Button, Tooltip, Checkbox, RadioButton, SearchInput } from "@bug_sam/ui";
+import { Button, Tooltip, Checkbox, RadioButton, TextInput } from "@bug_sam/ui";
 
 const __resolveSortingFn = (col: GenericColumn) => {
     if (col.type === "boolean") {

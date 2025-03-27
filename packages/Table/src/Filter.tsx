@@ -1,7 +1,7 @@
 import { Column } from "@tanstack/react-table";
 import React, { useMemo } from "react";
 import { _get } from "@bug_sam/common";
-import { SearchInput } from "@bug_sam/ui";
+import { TextInput } from "@bug_sam/ui";
 
 interface Filter {
     column: Column<any, unknown>;
@@ -69,7 +69,7 @@ export const Filter = ({ column }: Filter) => {
         </div>
     ) : (
         <div>
-            <SearchInput
+            <TextInput
                 onChange={(value) => column.setFilterValue(value)}
                 placeholder={`Search...`}
                 value={(columnFilterValue ?? "") as string}
