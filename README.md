@@ -60,6 +60,40 @@ npx lerna run bar --scope=foo
 Right now, packages are published to sam's personal npm repo.
 In the future we will set up a niagads npm organization and publish there instead.
 
+* login to npm
+
+```bash
+npm login
+```
+> on WSL2 add `--auth-type=legacy` option
+
+* check login status with `npm whoami`
+
+### Initial release
+
+* in `package.json`
+  * manually set version
+  * add the following:
+ 
+ ```json
+  "publishConfig": {
+        "access": "public"
+    }
+ ```
+
+ * remove `"private":"true" when present
+
+* run the build to generate dist files
+* and then use `lerna publish` to make the initial commit 
+```bash
+npx lerna run build --concurrency 1
+npx lerna publish <initial_version>
+```
+
+### Subsequent releases
+
+* Create and publish (push) a temporary branch for the release
+
 To publish first increment the versions using lerna
 
 ```bash
@@ -75,7 +109,7 @@ npx lerna run build
 Then you can publish the packages
 
 ```bash
-npx lerna package from-package
+npx lerna publish from-package
 ```
 
 ### Troubleshooting Lerna/NX
