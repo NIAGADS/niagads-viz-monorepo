@@ -1,6 +1,6 @@
 import React from "react";
 
-interface Select {
+interface SelectProps {
     fields: string[] | { [key: string]: string } | number[];
     id: string;
     name?: string;
@@ -20,7 +20,7 @@ export const Select = ({
     inline = false,
     onChange,
     variant = "outline",
-}: Select) => {
+}: SelectProps) => {
     const _optionsFromArray = (values: string[] | number[]) =>
         values.map((v) => (
             <option key={v.toString()} value={v}>

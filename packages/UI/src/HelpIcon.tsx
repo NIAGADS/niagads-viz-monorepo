@@ -4,12 +4,12 @@ import { InformationCircleIcon, QuestionMarkCircleIcon } from "@heroicons/react/
 
 import { Tooltip } from "./Tooltip";
 
-interface HelpIcon {
+interface HelpIconProps {
     message: ReactNode | string;
     type: "question" | "info";
 }
 
-export const HelpIcon = ({ message, type }: HelpIcon) => {
+export const HelpIcon = ({ message, type }: HelpIconProps) => {
     const icon =
         type === "info" ? (
             <InformationCircleIcon className="ml-1 size-4 text-blue-600" />
