@@ -1,5 +1,5 @@
 {
-    "name": "@bug_sam/locuszoom",
+    "name": "@niagads/locuszoom",
     "dependencies": {
         "locuszoom": "^0.14.0"
     },

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Badge } from "@bug_sam/table";
+import { Badge } from "@niagads/table";
 
 const meta: Meta<typeof Badge> = {
     title: "NIAGADS-VIZ/Text/Badge",

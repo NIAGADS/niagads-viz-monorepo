@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Button } from "@bug_sam/ui";
+import { Button } from "@niagads/ui";
 
 const meta: Meta<typeof Button> = {
     title: "NIAGADS-VIZ/UI/Button",

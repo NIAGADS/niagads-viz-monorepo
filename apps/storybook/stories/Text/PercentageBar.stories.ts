@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { PercentageBar } from "@bug_sam/table";
+import { PercentageBar } from "@niagads/table";
 
 const meta: Meta<typeof PercentageBar> = {
     title: "NIAGADS-VIZ/Text/PercentageBar",

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Skeleton } from "@bug_sam/ui";
+import { Skeleton } from "@niagads/ui";
 
 const meta: Meta<typeof Skeleton> = {
     title: "NIAGADS-VIZ/UI/Skeleton",

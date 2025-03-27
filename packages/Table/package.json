@@ -1,5 +1,5 @@
 {
-    "name": "@bug_sam/table",
+    "name": "@niagads/table",
     "version": "0.0.1-alpha.0",
     "scripts": {
         "build": "rollup -c"
@@ -36,8 +36,8 @@
         "tailwindcss": "^4.0"
     },
     "dependencies": {
-        "@bug_sam/common": "^0.0.1-alpha.0",
-        "@bug_sam/ui": "^0.0.1-alpha.0",
+        "@niagads/common": "^0.0.1-alpha.0",
+        "@niagads/ui": "^0.0.1-alpha.0",
         "@heroicons/react": "^2.2.0",
         "@tanstack/react-table": "^8.11.8",
         "export-from-json": "github:NIAGADS/export-from-json#niagads",

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { TextInput } from "@bug_sam/ui";
+import { TextInput } from "@niagads/ui";
 
 const meta: Meta<typeof TextInput> = {
     title: "NIAGADS-VIZ/UI/TextInput",

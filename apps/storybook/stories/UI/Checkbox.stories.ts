@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Checkbox } from "@bug_sam/ui";
+import { Checkbox } from "@niagads/ui";
 
 const meta: Meta<typeof Checkbox> = {
     title: "NIAGADS-VIZ/UI/Checkbox",
