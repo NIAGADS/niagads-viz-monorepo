@@ -60,7 +60,9 @@ npx lerna run bar --scope=foo
 Right now, packages are published to sam's personal npm repo.
 In the future we will set up a niagads npm organization and publish there instead.
 
-To publish first increment the versions using lerna
+### Overview of Commands
+
+To publish, first increment the versions using lerna
 
 ```bash
 npx lerna version
@@ -77,6 +79,22 @@ Then you can publish the packages
 ```bash
 npx lerna package from-package
 ```
+
+### Publishing Flow
+
+When it's time to do a release, create a new release branch
+
+Then run lerna's `version` command to increment to the desired version
+
+```bash
+npx lerna version
+```
+
+This will automatically create a version commit and push version tags to github
+
+Now create a pull request for your release branch
+
+When merged into main, a github action will push every package to npm if the version has increased for that package
 
 ### Troubleshooting Lerna/NX
 
