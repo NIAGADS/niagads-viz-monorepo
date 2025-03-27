@@ -18,8 +18,8 @@
         "tailwindcss": "^4.0"
     },
     "dependencies": {
-        "@niagads/common": "^0.0.2",
-        "@heroicons/react": "^2.2.0"
+        "@heroicons/react": "^2.2.0",
+        "@niagads/common": "^0.0.2"
     },
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
