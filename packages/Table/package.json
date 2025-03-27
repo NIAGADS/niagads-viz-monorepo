@@ -30,15 +30,15 @@
         "rollup-plugin-dts": "^6.1.1",
         "rollup-plugin-peer-deps-external": "^2.2.4",
         "rollup-plugin-postcss": "^4.0.2",
+        "tailwindcss": "^4.0",
         "ts-interface-builder": "^0.3.3",
         "ts-loader": "^9.4.4",
-        "typescript": "^4.9.5",
-        "tailwindcss": "^4.0"
+        "typescript": "^4.9.5"
     },
     "dependencies": {
+        "@heroicons/react": "^2.2.0",
         "@niagads/common": "^0.0.1-alpha.0",
         "@niagads/ui": "^0.0.1-alpha.0",
-        "@heroicons/react": "^2.2.0",
         "@tanstack/react-table": "^8.11.8",
         "export-from-json": "github:NIAGADS/export-from-json#niagads",
         "lodash.countby": "^4.6.0",
@@ -52,5 +52,8 @@
     "types": "dist/index.d.ts",
     "files": [
         "dist"
-    ]
+    ],
+    "publishConfig": {
+        "access": "public"
+    }
 }

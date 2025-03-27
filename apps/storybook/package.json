@@ -1,6 +1,5 @@
 {
     "name": "niagads-viz-js.storybook",
-    "version": "0.0.0",
     "scripts": {
         "storybook": "npx storybook dev -p 6006",
         "build-storybook": "storybook build",
