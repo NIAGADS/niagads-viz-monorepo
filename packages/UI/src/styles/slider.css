@@ -1,0 +1,33 @@
+.ui-slider {
+    @apply w-full h-2 rounded-lg appearance-none cursor-pointer;
+
+    &.primary {
+        @apply bg-primary;
+    }
+    &.secondary {
+        @apply bg-secondary;
+    }
+    &.accent {
+        @apply bg-accent;
+    }
+    &.default {
+        @apply bg-blue-500;
+    }
+
+}
+
+.ui-slider-label {
+    @apply block mb-2 text-sm font-medium;
+}
+
+.ui-slider-range-label {
+    @apply text-sm absolute ;
+
+    &.start {
+        @apply start-2 -bottom-2;
+    }
+
+    &.end {
+        @apply end-2 -bottom-2;
+    }
+}
