@@ -1,15 +1,5 @@
 import React from "react";
 
-export const CHECKBOX_TAILWIND_CSS = {
-    root: "",
-    default: "",
-    primary: "accent-primary",
-    secondary: "accent-secondary",
-    accent: "accent-accent",
-    pink: "accent-pink-500",
-    alignCenter: "text-center align-middle",
-};
-
 export type CheckboxVariants = "default" | "primary" | "secondary" | "pink" | "accent";
 export interface CheckboxProps {
     variant?: CheckboxVariants;
@@ -34,9 +24,9 @@ export const Checkbox = ({
     defaultChecked = false,
     alignCenter = false,
 }: CheckboxProps) => {
-    const className = CHECKBOX_TAILWIND_CSS[variant];
+    const className = `ui-checkbox ${variant}`
     return (
-        <div className={alignCenter ? CHECKBOX_TAILWIND_CSS.alignCenter : ""}>
+        <div className={alignCenter ? "text-center align-middle" : ""}>
             {defaultChecked ? (
                 <input
                     type="checkbox"

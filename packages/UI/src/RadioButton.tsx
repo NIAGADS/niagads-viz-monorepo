@@ -1,6 +1,6 @@
 import React from "react";
 
-import { CheckboxProps as RadioButtonProps, CHECKBOX_TAILWIND_CSS as __TAILWIND_CSS } from "./Checkbox";
+import { CheckboxProps as RadioButtonProps } from "./Checkbox";
 
 export const RadioButton = ({
     variant = "default",
@@ -10,9 +10,9 @@ export const RadioButton = ({
     checked = false,
     alignCenter = false,
 }: RadioButtonProps) => {
-    const className = __TAILWIND_CSS[variant];
+    const className = `ui-radio ${variant}`
     return (
-        <div className={alignCenter ? __TAILWIND_CSS.alignCenter : ""}>
+        <div className={alignCenter ? "text-center align-middle" : ""}>
             <input type="radio" className={className} onChange={onChange} checked={checked} disabled={disabled} />
             {label && <label className="text-sm ml-2">{label}</label>}
         </div>

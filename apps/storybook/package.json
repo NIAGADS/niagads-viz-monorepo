@@ -10,6 +10,7 @@
         "@bug_sam/common": "0.0.1-alpha.0",
         "@bug_sam/table": "0.0.1-alpha.0",
         "@bug_sam/ui": "0.0.1-alpha.0",
+        "@storybook/addon-controls": "^8.6.10",
         "@storybook/addon-essentials": "^8.2.8",
         "@storybook/addon-interactions": "^8.2.8",
         "@storybook/addon-links": "^8.2.8",

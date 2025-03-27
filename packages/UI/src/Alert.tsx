@@ -1,17 +1,6 @@
 import React, { ReactNode } from "react";
 import { _get } from "@bug_sam/common";
 
-const __TAILWIND_CSS = {
-    root: "flex p-4 mb-4 text-sm rounded-lg",
-
-    // variants
-    info: "text-blue-800 border-blue-300 bg-blue-50 dark:border-blue-800 dark:bg-gray-800 dark:text-blue-400",
-    warning:
-        "text-yellow-800 border-yellow-300 bg-yellow-50 dark:border-yellow-800 dark:bg-gray-800 dark:text-yellow-300",
-    danger: "text-red-800 border-red-300 bg-red-50 dark:border-red-800 dark:bg-gray-800 dark:text-red-400",
-    success: "text-green-800 border-green-300 bg-green-50 dark:bg-gray-800 dark:border-green-800 dark:text-green-400",
-    default: "text-gray-800 border-gray-300 bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400",
-};
 
 type AlertVariants = "info" | "warning" | "danger" | "success" | "default";
 interface Alert {
@@ -21,7 +10,7 @@ interface Alert {
 }
 
 export const Alert = ({ variant = "default", message, children }: Alert) => {
-    const classes = `${__TAILWIND_CSS.root} ${__TAILWIND_CSS[variant]}`;
+    const classes = `ui-alert ${variant}`;
 
     return (
         <div className={classes} role="alert">
