@@ -2,6 +2,7 @@ import "./styles/global.css";
 
 export * from "./Alert";
 export * from "./Button";
+export * from "./Card";
 export * from "./Checkbox";
 export * from "./Dropdown";
 export * from "./HelpIcon";
