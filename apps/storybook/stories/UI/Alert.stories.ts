@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Alert } from "@bug_sam/ui";
+import { Alert } from "@niagads/ui";
 
 const meta: Meta<typeof Alert> = {
     title: "NIAGADS-VIZ/UI/Alert",

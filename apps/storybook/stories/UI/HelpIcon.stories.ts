@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { HelpIcon } from "@bug_sam/ui";
+import { HelpIcon } from "@niagads/ui";
 
 const meta: Meta<typeof HelpIcon> = {
     title: "NIAGADS-VIZ/UI/HelpIcon",

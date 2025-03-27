@@ -1,7 +1,7 @@
 //@ts-nocheck
 import type { Meta, StoryObj } from "@storybook/react";
 
-import Table from "@bug_sam/table";
+import Table from "@niagads/table";
 import { TABLE_DEFINTION as table } from "../../../exampleTables/table_text_fields_only";
 
 const meta: Meta<typeof Table> = {

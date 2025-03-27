@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Text } from "@bug_sam/table";
+import { Text } from "@niagads/table";
 
 const meta: Meta<typeof Text> = {
     title: "NIAGADS-VIZ/Text/Annotated Text",

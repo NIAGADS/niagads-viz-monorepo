@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { RadioButton } from "@bug_sam/ui";
+import { RadioButton } from "@niagads/ui";
 
 const meta: Meta<typeof RadioButton> = {
     title: "NIAGADS-VIZ/UI/RadioButton",

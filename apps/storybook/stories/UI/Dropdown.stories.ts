@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Dropdown } from "@bug_sam/ui";
+import { Dropdown } from "@niagads/ui";
 
 const meta: Meta<typeof Dropdown> = {
     title: "NIAGADS-VIZ/UI/Dropdown",
