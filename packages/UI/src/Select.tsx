@@ -1,19 +1,5 @@
 import React from "react";
 
-const __TAILWIND_CSS = {
-    root: "bg-gray-50 text-gray-900 text-sm block w-full p-2.5",
-
-    // variants
-    outline: "border border-solid border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500",
-    plain: "bg-white border-0 focus:bg-gray-100",
-    underline:
-        "bg-white border-t-0 border-l-0 border-r-0 border-b-[1px] border-solid border-black focus:border-blue-500",
-
-    // label
-    label: "block p-2 text-sm font-medium text-gray-900",
-    inline: "md:flex md:items-center",
-};
-
 interface Select {
     fields: string[] | { [key: string]: string } | number[];
     id: string;
@@ -51,9 +37,9 @@ export const Select = ({
 
     return (
         <>
-            <div className={inline ? __TAILWIND_CSS.inline : ""}>
+            <div className={inline ? "md:flex md:items-center" : ""}>
                 <div>
-                    <label htmlFor={id} className={__TAILWIND_CSS.label}>
+                    <label htmlFor={id} className="ui-select-label">
                         {label}
                     </label>
                 </div>
@@ -63,7 +49,7 @@ export const Select = ({
                         defaultValue={defaultValue}
                         id={id}
                         onChange={onChange}
-                        className={`${__TAILWIND_CSS.root} ${__TAILWIND_CSS[variant]}`}
+                        className={`ui-select ${variant}`}
                     >
                         {Array.isArray(fields) ? _optionsFromArray(fields) : _optionsFromObj(fields)}
                     </select>
