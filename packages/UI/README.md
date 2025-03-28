@@ -1,6 +1,24 @@
-# NIAGADS-UI Component Library
+# NIAGADS Common UI React Component Library
 
-Basic UI Elements
+Basic UI Elements for NIAGADS Javascript/React/next.js Applications
+
+> NOTE: this library not recommended for general usaage outside NIAGADS and ADSP applications.
+
+## Usage
+
+Install:
+
+```bash
+npm i @niagads/ui
+```
+
+Import packages as needed:
+
+```js
+from { Button, Alert, Checkbox } from "@niagads/ui";
+```
+
+A Storybook with example component usage can be built from the Monorepo source on GitHub.  More extensive component documentation is coming soon.
 
 ## Completed
 
