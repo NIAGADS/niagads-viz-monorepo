@@ -109,7 +109,7 @@ npx lerna run build
 Then you can publish the packages
 
 ```bash
-npx lerna publish
+npx lerna publish from-package
 ```
 
 ### Troubleshooting Lerna/NX
