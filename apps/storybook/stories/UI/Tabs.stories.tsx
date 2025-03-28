@@ -2,7 +2,7 @@
 // b/c of https://github.com/storybookjs/storybook/issues/23170 issue w/subcomponets w/children
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { TABLE_DEFINTION as table } from "../../exampleTables/table_rendering_test";
+import { TABLE_DEFINTION as table } from "../../examples/tables/table_rendering_test";
 import Table  from "@niagads/table";
 
 import { Tabs, TabDef } from "@niagads/ui";
