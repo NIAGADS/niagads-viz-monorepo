@@ -12,3 +12,4 @@ export * from "./Slider";
 export * from "./Select";
 export * from "./TextInput";
 export * from "./Tooltip";
+export * from "./Tabs";

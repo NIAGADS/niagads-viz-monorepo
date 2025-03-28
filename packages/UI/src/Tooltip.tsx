@@ -25,7 +25,7 @@ export function Tooltip({
             <div data-tooltip-id={friendlyAnchorId} data-tooltip-variant={variant}>
                 {children}
             </div>
-            <ReactTooltip id={friendlyAnchorId} openOnClick={openOnClick} place={place}>{content}</ReactTooltip>
+            <ReactTooltip className="font-normal text-xs" id={friendlyAnchorId} openOnClick={openOnClick} place={place}>{content}</ReactTooltip>
         </>
     );
 }
