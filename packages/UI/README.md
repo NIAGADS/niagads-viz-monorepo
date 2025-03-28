@@ -14,10 +14,11 @@ Basic UI Elements
 * TextInput
 * Tooltip
 
-### Needs Revision
+### Needs Styling Revision
 
-#### Button
-* FIXME: styling, especially hover & focus could be improved
+* Button
+* Tabs
+* Card
 
 ### Proof of Concept or currently Under Revision
 
@@ -26,7 +27,6 @@ see [Components in Queue](https://github.com/NIAGADS/niagads-viz-monorepo/issues
 * Dropdown
 * Skeleton
 * Slider
-* NavigationBar
 
 ### Planned
 
