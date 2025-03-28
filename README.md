@@ -94,6 +94,8 @@ npx lerna publish <initial_version>
 
 * Create and publish (push) a temporary branch for the release
 
+Edit the `Storybook` `package.json` versions for the `@niagads` packages with new releases to match new versioning and commit.  This must be done first, otherwise the old storybook `package.json` will be in the tag.
+
 To publish first increment the versions using lerna
 
 ```bash
