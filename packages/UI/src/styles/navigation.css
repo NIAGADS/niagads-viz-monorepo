@@ -1,0 +1,59 @@
+.ui-nav {
+    @apply fixed w-full z-20 top-0 start-0 border-b border-secondary;
+
+    &.white {
+        @apply bg-white;
+    }
+
+    &.primary {
+        @apply bg-primary border-accent-dark;
+    }
+
+    &.secondary {
+        @apply bg-secondary;
+    }
+
+    &.default {
+        @apply bg-gray-500;
+    }
+}
+
+.ui-nav-inner-container {
+    @apply max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4
+}
+
+.ui-nav-brand {
+    @apply flex items-center space-x-3 rtl:space-x-reverse;
+}
+
+.ui-nav-brand-label {
+    @apply self-center text-2xl font-semibold whitespace-nowrap;
+}
+
+.ui-nav-item-container {
+    @apply items-center justify-between hidden w-full md:flex md:w-auto md:order-1;
+}
+
+.ui-nav-item-list {
+    @apply flex flex-col p-4 md:p-0 mt-4 font-medium border rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0;
+}
+
+.ui-nav-link {
+    @apply block py-2 px-3 text-lg text-white;
+
+    &.white {
+        @apply text-primary hover:bg-secondary hover:rounded-sm;
+    }
+
+    &.primary {
+        @apply text-white;
+    }
+
+    &.secondary {
+        @apply text-primary;
+    }
+
+    &.default {
+        @apply bg-gray-500;
+    }
+}

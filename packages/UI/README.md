@@ -24,6 +24,7 @@ Basic UI Elements
 
 see [Components in Queue](https://github.com/NIAGADS/niagads-viz-monorepo/issues/23) for specific issues related to these UI Elements
 
+* Navigation - see _TODOs_ in issue [#63](https://github.com/NIAGADS/niagads-viz-monorepo/issues/63)
 * Dropdown
 * Skeleton
 * Slider
