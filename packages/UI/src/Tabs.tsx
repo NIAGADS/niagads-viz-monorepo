@@ -1,5 +1,4 @@
-import React, { ReactNode, useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import React, { ReactNode, useEffect, useState } from "react";
 
 import { renderWithHelpIcon } from "./HelpIcon";
 
