@@ -18,6 +18,6 @@
 @import "./forms.css";
 @import "./slider.css";
 @import "./select.css";
-
+@import "./tabs.css";
 
 @import "react-tooltip/dist/react-tooltip.css";

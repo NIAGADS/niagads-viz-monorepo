@@ -4,9 +4,8 @@
     @apply stroke-slate-300;
 }
 
-/* FIXME: probably should move these directly into UI package */
 .info-bubble {
-    @apply text-blue-600 size-5;
+    @apply  text-transparent size-4 stroke-primary;
 }
 
 /* FIXME: for formatting icon in a button icon */

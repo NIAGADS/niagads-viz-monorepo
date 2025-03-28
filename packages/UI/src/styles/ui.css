@@ -16,9 +16,13 @@
 
 /* UI ELEMENTS */
 
-/* FIXME: currently duplicated in Table package */
-.info-bubble {
-    @apply text-blue-600 size-5;
+
+.info-bubble, .inline-info-bubble {
+    @apply text-transparent size-4 stroke-primary;
+}
+
+.inline-info-bubble {
+    @apply ml-1
 }
 
 /* FIXME: for formatting icon in a button icon */

@@ -5,7 +5,6 @@ import { InformationCircleIcon, ExclamationCircleIcon, QuestionMarkCircleIcon } 
 import { renderTooltip, Tooltip } from "./Tooltip";
 import { _get } from "@niagads/common";
 
-
 interface HelpIconProps {
     anchorId: string;
     message: ReactNode | string;
@@ -15,28 +14,25 @@ interface HelpIconProps {
 export const HelpIcon = ({ anchorId, message, type }: HelpIconProps) => {
     const icon =
         type === "info" ? (
-            <InformationCircleIcon className="ml-1 size-4 text-blue-600" />
+            <InformationCircleIcon className="inline-info-bubble" />
         ) : (
-            <QuestionMarkCircleIcon className="ml-1 size-4 text-blue-600" />
+            <QuestionMarkCircleIcon className="inline-info-bubble" />
         );
 
-    return <Tooltip anchorId={`help-${anchorId}`} content={message}>{icon}</Tooltip>;
+    return (
+        <Tooltip anchorId={`help-${anchorId}`} content={message}>
+            {icon}
+        </Tooltip>
+    );
 };
 
-export const renderHelpIcon = (anchorId: string, message: ReactNode | string, type: "question" | "info" = "question") => {
+export const renderHelpIcon = (
+    anchorId: string,
+    message: ReactNode | string,
+    type: "question" | "info" = "question"
+) => {
     return <HelpIcon anchorId={anchorId} message={message} type={type} />;
 };
-
-interface RenderIconOptions {
-    iconOnly?: boolean;
-    prefix?: boolean;
-    className?: string;
-    iconClassName?: string;
-    style?: any;
-    iconStyle?: any;
-    tooltip?: string;
-    tooltipAnchor?: string;
-}
 
 const ICONS = {
     info: ExclamationCircleIcon,
@@ -57,33 +53,17 @@ export const getIconElement = (key: string) => {
     return icon;
 };
 
+
 export const renderWithHelpIcon = (
     textElement: ReactNode | string,
-    icon: ReactNode | string,
-    options: RenderIconOptions
+    type: "question" | "info",
+    message: string,
+    anchorId: string
 ) => {
-    const IconComponent = typeof icon === "string" ? getIconElement(icon) : undefined;
-    const prefix = _get("prefix", options, true);
-    const iconOnly = _get("iconOnly", options, false);
-    const className = _get("className", options, "");
-    const iconClassName = _get("iconClassName", options, "");
-    const style = _get("style", options, {});
-    const iconStyle = _get("iconStyle", options);
-
-    const renderIcon = useMemo(
-        () => (IconComponent ? <IconComponent className={iconClassName} style={iconStyle} /> : icon),
-        []
-    );
-
-    return prefix ? (
-        <div className={`flex ${className}`} style={style}>
-            {options.tooltip ? renderTooltip(options.tooltipAnchor!, renderIcon, options.tooltip) : renderIcon}
-            {!iconOnly && textElement}
-        </div>
-    ) : (
-        <div className={`flex ${className}`} style={style}>
-            {!iconOnly && textElement}
-            {options.tooltip ? renderTooltip(options.tooltipAnchor!, renderIcon, options.tooltip) : renderIcon}
+    return (
+        <div className="inline-flex">
+            {textElement}
+            {renderHelpIcon(anchorId, message, type)}
         </div>
     );
 };

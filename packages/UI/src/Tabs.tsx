@@ -1,129 +1,85 @@
-import React, { ReactNode, useMemo, useState } from "react";
+import React, { ReactNode, useEffect, useMemo, useState } from "react";
+import { motion } from "framer-motion";
 
 import { renderWithHelpIcon } from "./HelpIcon";
 
-/*
-      <Tabs isDisabled aria-label="Options">
-        <Tab key="photos" title="Photos">
-          <Card>
-            <CardBody>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-              incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-              exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            </CardBody>
-          </Card>
-        </Tab>
-*/
-
-interface TabStylingProps {
-    variant?: "primary" | "secondary" | "accent" | "default" | "white";
-    radius?: "none" | "sm" | "md" | "lg" | "xl";
-    size?: "sm" | "md" | "lg";
-}
-
-interface TabConfig {
+export interface TabDef {
     label: string;
+    id: string;
     info?: string;
+    content: ReactNode;
 }
 
-interface TabProps extends TabConfig {
-    index: number;
+interface TabsProps {
+    sectionId?: string;
+    tabs: TabDef[];
+    width: string; // tailwind width class
+}
+
+type TabButtonProps = Omit<TabDef, "content"> & {
+    sectionId?: string;
     isActive: boolean;
-    setActiveTab: any;
-}
-
-interface TabListProps {
-    fullWidth?: boolean;
-    tabs: TabConfig[];
-    defaultActiveTab?: number;
-    setActiveTab: any;
-}
-
-interface TabList {
-    setActiveTab: any;
-    activeTab: number;
-    children: ReactNode;
-}
-
-interface TabPanelProps {
-    anchorId: string;
-    children: ReactNode;
-}
-
-interface TabContainerProps {
-    shadow?: boolean;
-    activeTab?: number;
-}
-
-export const TabButton = ({
-    label,
-    index,
-    info,
-    variant,
-    radius,
-    size,
-    isActive,
-    setActiveTab,
-}: TabProps & TabStylingProps) => {
-    const renderTabButton = useMemo(
-        () => (
-            <button
-                className={`ui-tab-button ${isActive ? "selected" : ""}`}
-                key={`tab-${index}`}
-                onClick={setActiveTab(index)}
-            >
-                {label}
-            </button>
-        ),
-        [label, info]
-    );
-    return info
-        ? renderWithHelpIcon(renderTabButton, "question", {
-              tooltip: info,
-              tooltipAnchor: `tab-${label}-${index}-info`,
-          })
-        : renderTabButton;
+    onClick: any;
 };
 
-export const TabList = ({
-    defaultActiveTab = 0,
-    tabs,
-    setActiveTab,
-    fullWidth,
-    variant,
-    radius,
-    size,
-}: TabListProps & TabStylingProps) => {
-    const [currentTab, setCurrentTab] = useState<number>(defaultActiveTab);
+const TabButton = ({ label, id, info, sectionId, isActive, onClick }: TabButtonProps) => {
+    const [isSelected, setIsSelected] = useState<boolean>(false);
+
+    useEffect(() => {
+        setIsSelected(isActive);
+    }, [isActive]);
+
+    const onSelect = () => {
+        setIsSelected(true);
+        onClick(id);
+    };
 
     return (
-        <div className="ui-tabs">
-            {tabs.map((tab, index) => (
-                <Tab
-                    label={tab.label}
-                    index={index}
-                    info={tab.info}
-                    variant={variant}
-                    radius={radius}
-                    size={size}
-                    isActive={index === currentTab}
-                    setActiveTab={setActiveTab}
-                ></Tab>
-            ))}
-        </div>
+        <button className={`ui-tab-button ${isSelected ? "ui-active-tab" : ""}`} key={id} onClick={onSelect}>
+            {info
+                ? renderWithHelpIcon(label, "question", info, `${sectionId ? sectionId + "_" : ""}-${id}-info`)
+                : label}
+        </button>
     );
 };
 
+export const Tabs = ({ sectionId, tabs, width = "full" }: TabsProps) => {
+    const [selectedKey, setSelectedKey] = useState<string>(tabs[0].id);
+    const [activeTab, setActiveTab] = useState<TabDef>(tabs[0]);
 
-export const TabPanel = () => {
+    useEffect(() => {
+        const selectedTab = tabs.find((tab) => tab.id === selectedKey);
+        setActiveTab(selectedTab!);
+    }, [selectedKey]);
 
-    return <div className="ui-tab-panel">
+    const onTabSelect = (tabId: string) => {
+        setSelectedKey(tabId);
+    };
 
-    </div>
-}
-
-export const TabPanelContainer {
-
-}
-
-
+    return (
+        activeTab && (
+            <div className={`w-${width}`}>
+                <div className="ui-tabs-container">
+                    <ul className="ui-tab-list" role="tablist">
+                        {tabs.map((tab) => (
+                            <li className="ui-tab-list-item" key={`li-${tab.id}`}>
+                                <TabButton
+                                    key={`button-${tab.id}`}
+                                    label={tab.label}
+                                    sectionId={sectionId}
+                                    id={tab.id}
+                                    info={tab.info}
+                                    isActive={tab.id === activeTab.id}
+                                    onClick={onTabSelect}
+                                ></TabButton>
+                            </li>
+                        ))}
+                    </ul>
+                    <div className="ui-tab-panel" key={activeTab.id}>
+                        {activeTab.content}
+                    </div>
+                </div>
+            </div>
+        )
+    );
+};

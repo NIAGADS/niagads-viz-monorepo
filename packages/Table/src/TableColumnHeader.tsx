@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { TableRow } from "./TableProperties";
 import { flexRender, Header } from "@tanstack/react-table";
 
-import { ArrowDownIcon, ArrowUpIcon, ArrowsUpDownIcon, InformationCircleIcon } from "@heroicons/react/24/solid";
+import { ArrowDownIcon, ArrowUpIcon, ArrowsUpDownIcon, InformationCircleIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/solid";
 import { FunnelIcon } from "@heroicons/react/24/outline";
 
 import { Button, renderTooltip } from "@niagads/ui";
@@ -38,7 +38,7 @@ export const TableColumnHeader = ({ header, tableId }: TableColumnHeaderProps) =
                     {description &&
                         renderTooltip(
                             `${tableId}-${header.column.id}-info`,
-                            <InformationCircleIcon className="info-bubble ml-1 text-slate-500" />,
+                            <QuestionMarkCircleIcon className="info-bubble ml-1" />,
                             description
                         )}
                     {header.column.getCanSort() ? (
