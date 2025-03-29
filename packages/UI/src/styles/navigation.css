@@ -57,3 +57,11 @@
         @apply bg-gray-500;
     }
 }
+
+.ui-nav-mobile {
+    @apply md:hidden;
+}
+
+.ui-nav-mobile-menu {
+    @apply space-y-1 px-2 pt-2 pb-3 sm:px-3;
+}
