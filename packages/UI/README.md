@@ -2,7 +2,7 @@
 
 Basic UI Elements for NIAGADS Javascript/React/next.js Applications
 
-> NOTE: this library not recommended for general usaage outside NIAGADS and ADSP applications.
+> NOTE: this library not recommended for general usage outside NIAGADS and ADSP applications.
 
 ## Usage
 
