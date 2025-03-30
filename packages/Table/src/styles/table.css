@@ -1,7 +1,7 @@
 /* TABLE */
 
 .table-container {
-    @apply block mx-2 max-w-full font-[Open_Sans];
+    @apply block mx-2 max-w-full font-[Inter];
 }
 
 .table-border {
@@ -38,14 +38,3 @@
     @apply ml-1 text-slate-700 pl-px size-5;
 }
 
-/* TABLE CELLS */
-/* overriding html element `a` causes issues when importing 
-from package; may override application or other package settings */
-.table-cell-link,
-.info-link {
-    @apply text-blue-700 hover:underline visited:text-purple-900 active:text-red-950;
-}
-
-.info-link {
-    @apply cursor-pointer underline decoration-dashed decoration-blue-700 underline-offset-4;
-}

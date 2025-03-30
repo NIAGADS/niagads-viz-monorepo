@@ -8,12 +8,12 @@ import { _get, _hasOwnProperty, _isNull } from "@niagads/common";
 const _renderLink = (displayText: string, url: string, newWindow: boolean = false) => {
     if (newWindow) {
         return (
-            <a className="table-cell-link" href={url} target="_blank" rel="noopener noreferrer">
+            <a className="cell cell-link" href={url} target="_blank" rel="noopener noreferrer">
                 {displayText}
             </a>
         );
     }
-    return <a className="table-cell-link" href={url}>{displayText}</a>;
+    return <a className="cell cell-link" href={url}>{displayText}</a>;
 };
 
 export const LinkList = <T,>({ props }: TextRenderer<T>) => {

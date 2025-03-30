@@ -32,14 +32,14 @@ const DEFAULT_NA_STRING = "n/a";
 
 export const renderStyledText = (value: any, style: any, className: string) => {
     return (
-        <span className={className} style={style}>
+        <span className={`cell ${className}`} style={style}>
             {value}
         </span>
     );
 };
 
 export const renderNullValue = (value: string = DEFAULT_NA_STRING) => {
-    return <span className="text-gray-200">{_isNA(value) || !value ? DEFAULT_NA_STRING : value}</span>;
+    return <span className="cell text-gray-200">{_isNA(value) || !value ? DEFAULT_NA_STRING : value}</span>;
 };
 
 /**
