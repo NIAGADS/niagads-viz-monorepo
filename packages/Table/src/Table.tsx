@@ -33,7 +33,8 @@ import { CustomSortingFunctions } from "./TableSortingFunctions";
 
 import { PaginationControls, TableToolbar } from "./ControlElements";
 
-import { Button, Tooltip, Checkbox, RadioButton, TextInput } from "@niagads/ui";
+import { Button, Checkbox, RadioButton } from "@niagads/ui";
+import { Tooltip } from "@niagads/ui/client";
 
 const __resolveSortingFn = (col: GenericColumn) => {
     if (col.type === "boolean") {

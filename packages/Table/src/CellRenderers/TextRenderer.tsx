@@ -1,7 +1,7 @@
 import React, { ReactNode, useMemo } from "react";
 
 import { _get, _hasOwnProperty, _isNA, _isNull } from "@niagads/common";
-import { renderTooltip, Tooltip } from "@niagads/ui";
+import { renderTooltip } from "@niagads/ui/client";
 
 import {
     CheckIcon,
