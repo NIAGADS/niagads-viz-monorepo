@@ -1,6 +1,6 @@
 {
     "name": "@niagads/table",
-    "version": "0.1.4-alpha.0",
+    "version": "0.2.0-alpha.0",
     "scripts": {
         "build": "rollup -c"
     },
@@ -37,7 +37,7 @@
     },
     "dependencies": {
         "@heroicons/react": "^2.2.0",
-        "@niagads/common": "^0.1.4-alpha.0",
+        "@niagads/common": "^0.2.0-alpha.0",
         "@niagads/ui": "^0.1.4-alpha.0",
         "@tanstack/react-table": "^8.11.8",
         "export-from-json": "github:NIAGADS/export-from-json#niagads",
