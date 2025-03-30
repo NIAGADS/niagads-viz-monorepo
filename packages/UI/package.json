@@ -45,8 +45,11 @@
             "default": "./dist/layouts/index.js",
             "types": "./dist/layouts/index.d.ts"
         },
-        "./client": "./src/client/index.ts",
+        "./client": {
+            "default": "./dist/client/index.js",
+            "types": "./dist/client/index.d.ts"
+        },
         "./package.json": "./package.json",
-        "./css": "./dist/css/global.min.css"
+        "./css": "./dist/niagads-ui.css"
     }
 }
