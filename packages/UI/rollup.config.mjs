@@ -30,9 +30,7 @@ export default [
                 config: {
                     path: "./postcss.config.js",
                 },
-                inject: {
-                    insertAt: 'top',
-                },
+                extract: 'niagads-ui.css',
                 extensions: [".css"],
                 minimize: true,
                 sourceMap: true
