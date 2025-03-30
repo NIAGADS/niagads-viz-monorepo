@@ -3,7 +3,9 @@ import { Table as ReactTable } from "@tanstack/react-table";
 import exportFromJSON from "export-from-json";
 import { Button, Checkbox, Select, Tooltip } from "@niagads/ui";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
-import { FileFormat, EXPORT_FILE_FORMATS } from "@niagads/common";
+
+const EXPORT_FILE_FORMATS = Object.keys(exportFromJSON.types).filter((f) => !["css", "html"].includes(f));
+type FileFormat = Exclude<keyof typeof exportFromJSON.types, "css" | "html">;
 
 export const exportTable = (table: ReactTable<any>, tableId: string, filteredRowsOnly: boolean, format: FileFormat) => {
     const isFiltered: boolean =
