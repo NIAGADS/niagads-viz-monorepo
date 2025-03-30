@@ -6,6 +6,7 @@ export * from "./Card";
 export * from "./Checkbox";
 export * from "./Dropdown";
 export * from "./HelpIcon";
+export * from "./Layouts";
 export * from "./Navigation";
 export * from "./RadioButton";
 export * from "./Skeleton";
