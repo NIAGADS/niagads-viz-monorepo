@@ -1,4 +1,4 @@
-import { BasicType, FileFormat } from "@niagads/common";
+import { BasicType } from "@niagads/common";
 import { CellType, GenericCell } from "./Cell";
 import { RowSelectionState, RowData } from "@tanstack/react-table";
 
