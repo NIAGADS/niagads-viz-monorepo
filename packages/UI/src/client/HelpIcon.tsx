@@ -1,8 +1,8 @@
-import React, { ReactNode, useMemo } from "react";
+import React, { ReactNode } from "react";
 
 import { InformationCircleIcon, ExclamationCircleIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 
-import { renderTooltip, Tooltip } from "./Tooltip";
+import { Tooltip } from "./Tooltip";
 import { _get } from "@niagads/common";
 
 interface HelpIconProps {
@@ -52,7 +52,6 @@ export const getIconElement = (key: string) => {
     }
     return icon;
 };
-
 
 export const renderWithHelpIcon = (
     textElement: ReactNode | string,

@@ -9,7 +9,7 @@ import del from "rollup-plugin-delete";
 
 export default [
     {
-        input: ["./src/index.ts"],
+        input: ["./src/index.ts", "./src/layouts/index.ts", "./src/client/index.ts"],
         output: [
             {
                 format: "esm",
@@ -57,6 +57,18 @@ export default [
     {
         input: ["./dist/dts/index.d.ts"],
         output: [{ file: "./dist/index.d.ts", format: "es" }],
+        plugins: [dts()],
+        external: [/\.css$/u], // HACK: Fix for this problem https://github.com/Swatinem/rollup-plugin-dts/issues/165]
+    },
+    {
+        input: ["./dist/dts/layouts/index.d.ts"],
+        output: [{ file: "./dist/layouts/index.d.ts", format: "es" }],
+        plugins: [dts()],
+        external: [/\.css$/u], // HACK: Fix for this problem https://github.com/Swatinem/rollup-plugin-dts/issues/165]
+    },
+    {
+        input: ["./dist/dts/client/index.d.ts"],
+        output: [{ file: "./dist/client/index.d.ts", format: "es" }],
         plugins: [dts(), del({ hook: "buildEnd", targets: "./dist/dts" })],
         external: [/\.css$/u], // HACK: Fix for this problem https://github.com/Swatinem/rollup-plugin-dts/issues/165]
     },

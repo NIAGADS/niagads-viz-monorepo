@@ -1,6 +1,5 @@
 import React from "react";
 
-
 interface TextInputProps {
     value: string;
     onChange: (val: string) => void;
@@ -10,7 +9,6 @@ interface TextInputProps {
 
 export const TextInput = ({ value, onChange, placeholder }: TextInputProps) => {
     const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => onChange(evt.currentTarget.value);
-
     return (
         <input
             className="ui-text-input"

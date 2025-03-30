@@ -30,12 +30,22 @@
         "react-tooltip": "^5.28.0",
         "style-inject": "^0.3.0"
     },
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
     "files": [
         "dist"
     ],
     "publishConfig": {
         "access": "public"
+    },
+    "exports": {
+        ".": {
+            "default": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        },
+        "./layouts": {
+            "default": "./dist/layouts/index.js",
+            "types": "./dist/layouts/index.d.ts"
+        },
+        "./client": "./src/client/index.ts",
+        "./package.json": "./package.json"
     }
 }

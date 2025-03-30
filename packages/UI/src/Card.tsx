@@ -34,9 +34,7 @@ export const Card = ({ shadow = false, radius = "md", href, onClick, children }:
                 <a href={href}>{children}</a>
             ) : onClick ? (
                 <Button onClick={onClick} variant="white">
-                    <div className="flex col">
-                    {children}
-                    </div>
+                    <div className="flex col">{children}</div>
                 </Button>
             ) : (
                 <div>{children}</div>
