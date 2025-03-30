@@ -22,7 +22,8 @@
         "rollup-plugin-dts": "^6.1.1",
         "rollup-plugin-peer-deps-external": "^2.2.4",
         "rollup-plugin-postcss": "^4.0.2",
-        "tailwindcss": "^4.0"
+        "tailwindcss": "^4.0",
+        "style-inject": "^0.3.0"
     },
     "dependencies": {
         "@heroicons/react": "^2.2.0",
