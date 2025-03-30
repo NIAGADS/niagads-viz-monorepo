@@ -4,12 +4,12 @@ import { BasicType, Modify, TypeMapper, Expand, NAString } from "@niagads/common
 import { _isJSON, _deepCopy, _hasOwnProperty, _get, _isNull, _isNA } from "@niagads/common";
 import { Color } from "@niagads/common";
 
-import { Text, TextList } from "./TextRenderers/BasicText";
-import { Link, LinkList } from "./TextRenderers/Link";
-import { Float } from "./TextRenderers/Number";
+import { Text, TextList } from "./CellRenderers/BasicText";
+import { Link, LinkList } from "./CellRenderers/Link";
+import { Float } from "./CellRenderers/Number";
 import { GenericColumn } from "./Column";
-import { Badge, BooleanBadge, BadgeIconType } from "./TextRenderers/Badge";
-import { PercentageBar } from "./TextRenderers/SparkChart";
+import { Badge, BooleanBadge, BadgeIconType } from "./CellRenderers/Badge";
+import { PercentageBar } from "./CellRenderers/SparkChart";
 
 export const DEFAULT_NA_VALUE = "NA";
 

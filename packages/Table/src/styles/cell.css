@@ -1,0 +1,45 @@
+
+.cell {
+    @apply font-[Inter]
+}
+
+.cell-badge {
+    @apply px-2 py-1 rounded-full;
+}
+
+.cell-badge-icon {
+    @apply size-5 py-1;
+}
+
+.cell-icon-only-badge {
+    @apply size-5 m-auto;
+}
+
+.cell-spark {
+    @apply h-[20px] inline-block;
+}
+
+.cell-spark-value {
+    @apply w-[35px] self-center;
+}
+
+.cell-spark-bar {
+    @apply w-[100px];
+}
+
+.cell-spark-bar-observed {
+    @apply bg-green-600;
+}
+
+.cell-spark-bar-remainder {
+    @apply bg-gray-300;
+}
+
+.cell-link,
+.info-link {
+    @apply text-blue-700 hover:underline visited:text-purple-900 active:text-red-950;
+}
+
+.info-link {
+    @apply cursor-pointer underline decoration-dashed decoration-blue-700 underline-offset-4;
+}

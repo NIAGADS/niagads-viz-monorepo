@@ -1,7 +1,7 @@
 .ui-nav {
-    @apply fixed w-full z-20 top-0 start-0 border-b border-secondary;
+    @apply fixed w-full z-20 top-0 start-0 border-b-2 border-secondary;
 
-    &.white {
+    &.light {
         @apply bg-white;
     }
 
@@ -13,13 +13,13 @@
         @apply bg-secondary;
     }
 
-    &.default {
-        @apply bg-gray-500;
+    &.dark {
+        @apply bg-accent-dark;
     }
 }
 
 .ui-nav-inner-container {
-    @apply max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4
+    @apply max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2
 }
 
 .ui-nav-brand {
@@ -27,7 +27,10 @@
 }
 
 .ui-nav-brand-label {
-    @apply self-center text-2xl font-semibold whitespace-nowrap;
+    @apply self-center text-2xl font-semibold whitespace-nowrap text-white;
+    &.light, &.secondary {
+        @apply text-accent-dark;
+    }
 }
 
 .ui-nav-item-container {
@@ -39,21 +42,22 @@
 }
 
 .ui-nav-link {
-    @apply block py-2 px-3 text-lg text-white;
+    @apply block py-2 px-3 text-lg text-white  hover:bg-secondary hover:rounded-sm hover:text-primary;
 
-    &.white {
-        @apply text-primary hover:bg-secondary hover:rounded-sm;
-    }
-
-    &.primary {
-        @apply text-white;
-    }
-
-    &.secondary {
+    &.light {
         @apply text-primary;
     }
 
-    &.default {
-        @apply bg-gray-500;
+    &.secondary {
+        @apply text-primary hover:text-white;
     }
+
+}
+
+.ui-nav-mobile {
+    @apply md:hidden;
+}
+
+.ui-nav-mobile-menu {
+    @apply space-y-1 px-2 pt-2 pb-3 sm:px-3;
 }

@@ -2,17 +2,11 @@
 // b/c of https://github.com/storybookjs/storybook/issues/23170 issue w/subcomponets w/children
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { TABLE_DEFINTION as table } from "../../examples/tables/table_rendering_test";
+
 import Table  from "@niagads/table";
+import { Default as TableStory } from "../DataViz/Table/RenderingTestTable.stories";
 
 import { Tabs, TabDef } from "@niagads/ui";
-
-const tableArgs = {
-    id: table.id,
-    columns: table.columns,
-    options: table.options,
-    data: table.data,
-};
 
 const meta: Meta<typeof Tabs> = {
     title: "NIAGADS-VIZ/UI/Tabs",
@@ -40,7 +34,7 @@ const tabs: TabDef[] = [
         ),
     },
     { id: "short-text", label: "Short Text", info: "short text", content: <p>test</p> },
-    { id: "table", label: "Table", info: "tab with table", content: <Table {...tableArgs}></Table>},
+    { id: "table", label: "Table", info: "tab with table", content: <Table {...TableStory.args}></Table>},
 ];
 
 // 

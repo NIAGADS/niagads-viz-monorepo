@@ -26,14 +26,14 @@ export const Badge = <T,>({ props }: TextRenderer<T>) => {
     const textStyle = buildElementStyle(props, "color");
     const backgroundIsStyled =
         _hasOwnProperty("backgroundColor", badgeStyle) || _hasOwnProperty("borderColor", badgeStyle);
-    const className = "tr-badge";
+    const className = "cell cell-badge";
 
     let textElement = renderStyledText(value, textStyle, className);
 
     if (_hasOwnProperty("icon", props)) {
         const iconOnly = _get("iconOnly", props, false);
         const iconStyle = _get("iconStyle", props, false);
-        const iconClassName = iconOnly ? "tr-icon-only-badge" : "tr-badge-icon";
+        const iconClassName = iconOnly ? "cell cell-icon-only-badge" : "cell cell-badge-icon";
         textElement = renderWithIcon(textElement, _get("icon", props), {
             iconOnly: iconOnly,
             iconClassName: iconClassName,

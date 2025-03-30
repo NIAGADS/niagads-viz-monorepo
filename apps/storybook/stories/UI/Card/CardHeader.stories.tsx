@@ -5,7 +5,7 @@ import { CardHeader } from "@niagads/ui";
 
 
 const meta: Meta<typeof CardHeader> = {
-    title: "NIAGADS-VIZ/UI/CardHeader",
+    title: "NIAGADS-VIZ/UI/Card/CardHeader",
     component: CardHeader,
     parameters: {
         layout: "centered",
