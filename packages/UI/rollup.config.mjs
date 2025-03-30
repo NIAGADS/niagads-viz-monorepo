@@ -32,8 +32,9 @@ export default [
                 },
                 extract: 'niagads-ui.css',
                 extensions: [".css"],
-                minimize: true,
-                sourceMap: true
+                minimize: false,
+                sourceMap: true,
+                modules: false, // set this option to false
             }),
             {
                 name: "Custom Rollup Plugin`",
