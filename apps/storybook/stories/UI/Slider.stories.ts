@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Slider } from "@niagads/ui";
+import { Slider } from "@niagads/ui/client";
 
 const meta: Meta<typeof Slider> = {
     title: "NIAGADS-VIZ/UI/Slider",

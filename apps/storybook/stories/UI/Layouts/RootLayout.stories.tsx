@@ -6,21 +6,19 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Default as NavigationStory } from "../Navigation.stories";
 import { Default as TableStory } from "../../DataViz/Table/FilerTable.stories";
 
-import { RootLayout } from "@niagads/ui";
+import { RootLayout } from "@niagads/ui/layouts";
 import Table from "@niagads/table";
 
 const meta: Meta<typeof RootLayout> = {
     title: "NIAGADS-VIZ/UI/Layouts/RootLayout",
     component: RootLayout,
-    parameters: {
-    },
+    parameters: {},
     tags: ["autodocs"],
 };
 
 export default meta;
 
 type Story = StoryObj<typeof RootLayout>;
-
 
 export const Default: Story = {
     args: {
@@ -35,10 +33,12 @@ export const Default: Story = {
                     cillum dolore eu fugiat nulla pariatur.
                 </p>
 
-                <a className="ui-link" href="#">More information...</a>
+                <a className="ui-link" href="#">
+                    More information...
+                </a>
 
-                <Table {...TableStory.args}/>
+                <Table {...TableStory.args} />
             </>
-        ), 
+        ),
     },
 };

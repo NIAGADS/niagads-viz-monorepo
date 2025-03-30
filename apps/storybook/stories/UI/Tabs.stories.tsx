@@ -3,16 +3,15 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
-import Table  from "@niagads/table";
+import Table from "@niagads/table";
 import { Default as TableStory } from "../DataViz/Table/RenderingTestTable.stories";
 
-import { Tabs, TabDef } from "@niagads/ui";
+import { Tabs, TabDef } from "@niagads/ui/client";
 
 const meta: Meta<typeof Tabs> = {
     title: "NIAGADS-VIZ/UI/Tabs",
     component: Tabs,
-    parameters: {
-    },
+    parameters: {},
     tags: ["autodocs"],
 };
 
@@ -34,10 +33,10 @@ const tabs: TabDef[] = [
         ),
     },
     { id: "short-text", label: "Short Text", info: "short text", content: <p>test</p> },
-    { id: "table", label: "Table", info: "tab with table", content: <Table {...TableStory.args}></Table>},
+    { id: "table", label: "Table", info: "tab with table", content: <Table {...TableStory.args}></Table> },
 ];
 
-// 
+//
 export const Default: Story = {
     args: {
         tabs: tabs,
