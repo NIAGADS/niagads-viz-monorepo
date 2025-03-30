@@ -47,6 +47,7 @@ see [Components in Queue](https://github.com/NIAGADS/niagads-viz-monorepo/issues
 * Dropdown
 * Skeleton
 * Slider
+* Layout/RootLayout (needs _Footer_)
 
 ### Planned
 
