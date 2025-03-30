@@ -46,6 +46,7 @@
             "types": "./dist/layouts/index.d.ts"
         },
         "./client": "./src/client/index.ts",
-        "./package.json": "./package.json"
+        "./package.json": "./package.json",
+        "./css": "./dist/css/global.min.css"
     }
 }

@@ -30,6 +30,12 @@ export default [
                 config: {
                     path: "./postcss.config.js",
                 },
+                inject: {
+                    insertAt: 'top',
+                },
+                extensions: [".css"],
+                minimize: true,
+                sourceMap: true
             }),
             {
                 name: "Custom Rollup Plugin`",
