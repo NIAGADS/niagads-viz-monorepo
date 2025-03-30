@@ -37,6 +37,7 @@ A Storybook with example component usage can be built from the Monorepo source o
 * Button
 * Tabs
 * Card
+* Badge (fit to width and contents & align icon and text)
 
 ### Proof of Concept or currently Under Revision
 
