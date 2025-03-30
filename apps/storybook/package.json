@@ -6,9 +6,9 @@
         "storybook-docs": "storybook dev --docs"
     },
     "devDependencies": {
-        "@niagads/common": "0.1.4-alpha.0",
-        "@niagads/table": "0.1.4-alpha.0",
-        "@niagads/ui": "0.1.4-alpha.0",
+        "@niagads/common": "0.2.0-alpha.0",
+        "@niagads/table": "0.2.0-alpha.0",
+        "@niagads/ui": "0.2.0-alpha.0",
         "@storybook/addon-controls": "^8.6.10",
         "@storybook/addon-essentials": "^8.2.8",
         "@storybook/addon-interactions": "^8.2.8",
