@@ -19,7 +19,7 @@ interface BrandItemConfig extends MenuItemConfig {
 
 export interface NavigationConfig {
     brand: BrandItemConfig;
-    variant?: "primary" | "secondary" | "white" | "default";
+    variant?: "primary" | "secondary" | "light" | "dark" ;
     items: MenuItemConfig[];
     publicHostUrl?: string;
 }
@@ -113,14 +113,14 @@ const MobileMenuButton = ({}) => (
     </div>
 );
 
-export const Navigation = ({ variant = "white", items, brand, publicHostUrl }: NavigationConfig) => {
+export const Navigation = ({ variant = "light", items, brand, publicHostUrl }: NavigationConfig) => {
     return (
         <nav className={`ui-nav ${variant}`}>
             <div className="ui-nav-inner-container">
                 {brand && (
                     <a href={brand.href} target={brand.target} className="ui-nav-brand">
                         {brand.logo && brand.logo}
-                        <span className="ui-nav-brand-label">{brand.label}</span>
+                        <span className={`ui-nav-brand-label ${variant}`}>{brand.label}</span>
                     </a>
                 )}
 
