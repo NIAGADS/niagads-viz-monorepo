@@ -19,7 +19,7 @@ interface BrandItemConfig extends MenuItemConfig {
 
 export interface NavigationConfig {
     brand: BrandItemConfig;
-    variant?: "primary" | "secondary" | "light" | "dark" ;
+    variant?: "primary" | "secondary" | "light" | "dark";
     items: MenuItemConfig[];
     publicHostUrl?: string;
 }
@@ -51,7 +51,9 @@ const MenuItem = ({
     variant: string;
 }) => {
     return (
-        <li key={`nav-menu-item_${index}`}>{renderMenuLink(item, hostUrl, variant, `nav-menu-item-link_${index}`)}</li>
+        <li key={`nav-menu-list-item_${index}`}>
+            {renderMenuLink(item, hostUrl, variant, `nav-menu-item-link_${index}`)}
+        </li>
     );
 };
 
@@ -128,7 +130,13 @@ export const Navigation = ({ variant = "light", items, brand, publicHostUrl }: N
                     {items && (
                         <ul className="ui-nav-item-list">
                             {items.map((item, index) => (
-                                <MenuItem index={index} item={item} hostUrl={publicHostUrl} variant={variant} />
+                                <MenuItem
+                                    key={`ui-menu-item-${index}`}
+                                    index={index}
+                                    item={item}
+                                    hostUrl={publicHostUrl}
+                                    variant={variant}
+                                />
                             ))}
                         </ul>
                     )}
