@@ -15,7 +15,8 @@ const Config: NavigationConfig = {
             href: "/docs"
         }
     ],
-    variant: "dark"
+    variant: "dark",
+    publicHostUrl: process.env.NEXT_PUBLIC_PROJECT_PUBLIC_URL
 }
 
 export default Config;
