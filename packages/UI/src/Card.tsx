@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 import { _get } from "@niagads/common";
 import { Button } from "./Button";
+import { StylingProps } from "./types";
 
 interface CardBodyProps {
     children: ReactNode | string;
@@ -26,10 +27,17 @@ export const CardHeader = ({ children }: CardHeaderProps) => {
     return <h5 className="ui-card-header">{children}</h5>;
 };
 
-export const Card = ({ shadow = false, radius = "md", href, onClick, children }: CardProps) => {
-    const className = `${href || onClick ? "ui-card-link" : "ui-card"} ${shadow ? "shadow-sm" : ""} rounded-${radius}`;
+export const Card = ({
+    shadow = false,
+    radius = "md",
+    href,
+    onClick,
+    children,
+    className,
+}: CardProps & StylingProps) => {
+    const cName = `${href || onClick ? "ui-card-link" : "ui-card"} ${shadow ? "shadow-sm" : ""} rounded-${radius} ${className}`;
     return (
-        <div className={className}>
+        <div className={cName}>
             {href ? (
                 <a href={href}>{children}</a>
             ) : onClick ? (
