@@ -32,9 +32,9 @@ export default [
                 },
                 extract: 'niagads-ui.css',
                 extensions: [".css"],
-                minimize: false,
+                minimize: false,  // when minimized not all the tailwind classes get exported
                 sourceMap: true,
-                modules: false, // set this option to false
+                modules: false
             }),
             {
                 name: "Custom Rollup Plugin`",

@@ -9,7 +9,7 @@ import { Navigation } from "../Navigation";
 export function RootLayout({ children, navConfig, fullWidth = false }: RootLayoutProps) {
     return (
         <div className="min-h-full">
-            <header className="bg-white shadow-sm">
+            <header className="bg-white shadow-accent shadow-md">
                 <Navigation {...navConfig} />
             </header>
             <main className="mt-[60px] p-2">
