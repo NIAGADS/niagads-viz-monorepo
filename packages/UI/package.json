@@ -1,6 +1,6 @@
 {
     "name": "@niagads/ui",
-    "version": "0.1.4-alpha.0",
+    "version": "0.2.5-alpha.0",
     "description": "NIAGADS Common UI React Component Library",
     "repository": {
         "type": "git",
@@ -26,16 +26,30 @@
     },
     "dependencies": {
         "@heroicons/react": "^2.2.0",
-        "@niagads/common": "^0.1.4-alpha.0",
+        "@niagads/common": "^0.2.0-alpha.0",
         "react-tooltip": "^5.28.0",
         "style-inject": "^0.3.0"
     },
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
     "files": [
         "dist"
     ],
     "publishConfig": {
         "access": "public"
+    },
+    "exports": {
+        ".": {
+            "default": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        },
+        "./layouts": {
+            "default": "./dist/layouts/index.js",
+            "types": "./dist/layouts/index.d.ts"
+        },
+        "./client": {
+            "default": "./dist/client/index.js",
+            "types": "./dist/client/index.d.ts"
+        },
+        "./package.json": "./package.json",
+        "./css": "./dist/niagads-ui.css"
     }
 }

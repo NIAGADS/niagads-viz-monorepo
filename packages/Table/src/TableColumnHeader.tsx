@@ -3,10 +3,11 @@ import React, { useState } from "react";
 import { TableRow } from "./TableProperties";
 import { flexRender, Header } from "@tanstack/react-table";
 
-import { ArrowDownIcon, ArrowUpIcon, ArrowsUpDownIcon, InformationCircleIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/solid";
+import { ArrowDownIcon, ArrowUpIcon, ArrowsUpDownIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/solid";
 import { FunnelIcon } from "@heroicons/react/24/outline";
 
-import { Button, renderTooltip } from "@niagads/ui";
+import { Button } from "@niagads/ui";
+import { renderTooltip } from "@niagads/ui/client";
 import { _get } from "@niagads/common";
 import { Filter } from "./Filter";
 

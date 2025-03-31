@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useId } from "react";
 import { Table as ReactTable } from "@tanstack/react-table";
 import exportFromJSON from "export-from-json";
-import { Button, Checkbox, Select, Tooltip } from "@niagads/ui";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
+
+import { Button, Checkbox, Select } from "@niagads/ui";
 
 const EXPORT_FILE_FORMATS = Object.keys(exportFromJSON.types).filter((f) => !["css", "html"].includes(f));
 type FileFormat = Exclude<keyof typeof exportFromJSON.types, "css" | "html">;
