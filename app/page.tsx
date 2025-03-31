@@ -1,13 +1,14 @@
 "use client";
 import dynamic from "next/dynamic";
 import { useMemo, useState } from "react";
-import { Collection, fetchTrackConfiguration, fetchTrackSelector } from "@/components/IGVBrowser/IGVBrowserWithSelector";
+import {
+    Collection,
+    fetchTrackConfiguration,
+    fetchTrackSelector,
+} from "@/components/IGVBrowser/IGVBrowserWithSelector";
 
 const GenomeBrowser = dynamic(
-    () =>
-        import("@/components/IGVBrowser/IGVBrowserWithSelector").then(
-            (mod) => mod.MemoIGVBrowserWithSelector
-        ),
+    () => import("@/components/IGVBrowser/IGVBrowserWithSelector").then((mod) => mod.MemoIGVBrowserWithSelector),
     {
         ssr: false,
     }
@@ -29,22 +30,19 @@ const _reference = [
         order: 1,
         infoURL: "/record",
         removable: false,
-    }
-]
-
+    },
+];
 
 export default function Home() {
     const [loading, setLoading] = useState<boolean>(true);
-    
+
     const collections = useMemo<Collection[]>(() => {
         let c: Collection[] = [];
         try {
-            c = process.env
-                .NEXT_PUBLIC_TRACK_COLLECTIONS!.split(",")
-                .map((pair) => {
-                    const [route, name] = pair.split(":");
-                    return { route: route, name: name } as Collection;
-                });
+            c = process.env.NEXT_PUBLIC_TRACK_COLLECTIONS!.split(",").map((pair) => {
+                const [route, name] = pair.split(":");
+                return { route: route, name: name } as Collection;
+            });
         } catch (err) {
             console.error(
                 "Error parsing track collections; NEXT_PUBLIC_TRACK_COLLECTIONS (set in application .env file) and a comma separated list of API route:collection_name pairs."
@@ -56,7 +54,6 @@ export default function Home() {
 
     fetchTrackConfiguration(collections);
     fetchTrackSelector(collections);
-
 
     return (
         collections && (

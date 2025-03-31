@@ -4,6 +4,8 @@
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
 docker.env
+# project config
+navigation.config.ts
 
 # nextjs
 .next

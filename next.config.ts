@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+    compiler: { styledComponents: true },
     /* config options here */
     assetPrefix: '/igvbrowser-static',
     eslint: {
@@ -19,8 +20,9 @@ const nextConfig: NextConfig = {
             },
             {
                 source: '/api/:path*',
-                destination: 'https://api.niagads.org/:path*'
-            }
+                destination: `${process.env.NIAGADS_API_HOST}/:path*`,
+                basePath: false
+            },
         ]
     },
 
@@ -35,7 +37,7 @@ const nextConfig: NextConfig = {
                 source: '/variant/:path*',
                 destination: 'https://www.niagads.org/genomics/app/record/variant/:path*',
                 permanent: true
-            }, 
+            },
             {
                 source: '/record/:path*',
                 destination: 'https://www.niagads.org/genomics/app/record/:path*',
