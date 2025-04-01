@@ -10,6 +10,7 @@
         "lint": "next lint"
     },
     "dependencies": {
+        "@niagads/common": "^0.2.0-alpha.0",
         "@niagads/table": "^0.2.5-alpha.0",
         "@niagads/ui": "^0.2.5-alpha.0",
         "@tailwindcss/postcss": "^4.0.17",

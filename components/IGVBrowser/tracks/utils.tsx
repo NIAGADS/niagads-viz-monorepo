@@ -1,8 +1,9 @@
 "use client";
 
-import get from "lodash.get";
+import get from "lodash.get"; // FIXME: deprecated
 import { ALWAYS_ON_TRACKS } from "../config/_constants";
 import IGVBrowserTrack from "./IGVBrowserTrack";
+import { config } from "process";
 
 export const getTrackConfig = (trackIds: string[], config: IGVBrowserTrack[]) =>
     config.filter((c) => trackIds.includes(c.id));
@@ -29,12 +30,6 @@ export const removeTrackById = (trackId: string, browser: any) => {
 
 // functions for maninpulating IGV browser object
 export const loadTrack = async (track: IGVBrowserTrack, browser: any) => {
-    if (track.type.includes("_service")) {
-        track.reader = await resolveTrackReader(track.type, {
-            endpoint: track.url,
-            track: track.id,
-        });
-    }
     if ("format" in track) {
         // does it match bedX+Y?
         if (track.format.match("^bed\\d{1,2}\\+\\d+$") != null) {
@@ -42,6 +37,17 @@ export const loadTrack = async (track: IGVBrowserTrack, browser: any) => {
             track.decode = decodeBedXY;
         }
     }
+    if (track.url.includes("$CHR")) {
+        const { default: ShardedBedReader } = await import("../readers/ShardedBedReader");
+        track.reader = new ShardedBedReader(track, browser.genome);
+    }
+    if (track.type.includes("_service")) {
+        track.reader = await resolveServiceTrackReader(track.type, {
+            endpoint: track.url,
+            track: track.id,
+        });
+    }
+
     await browser.loadTrack(track);
 };
 
@@ -49,10 +55,11 @@ export const loadTracks = async (tracks: IGVBrowserTrack[], browser: any) => {
     for await (const _ of tracks.map((t) => loadTrack(t, browser)));
 };
 
-export const resolveTrackReader = async (trackType: string, config: any) => {
+export const resolveServiceTrackReader = async (trackType: string, config: any) => {
     // this dynamic importing allows us to deal with the `window does not exist` reference error from igv.js
     const { default: GWASServiceReader } = await import("../readers/GWASServiceReader");
     const { default: VariantServiceReader } = await import("../readers/VariantServiceReader");
+
     switch (trackType) {
         case "gwas_service":
             return new GWASServiceReader(config);

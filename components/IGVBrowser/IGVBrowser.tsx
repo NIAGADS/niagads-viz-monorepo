@@ -87,7 +87,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
 
             async function registerTracks() {
                 const { default: VariantServiceTrack } = await import("./tracks/VariantServiceTrack");
-                const { default: VariantPValueTrack } = await import("./tracks/VariantServiceTrack");
+                const { default: VariantPValueTrack } = await import("./tracks/VariantPValueTrack");
                 igv.registerTrackClass("gwas_service", VariantPValueTrack);
                 igv.registerTrackClass("qtl", VariantPValueTrack);
                 igv.registerTrackClass("variant_service", VariantServiceTrack);
