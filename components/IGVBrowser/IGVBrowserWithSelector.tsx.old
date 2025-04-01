@@ -1,0 +1,120 @@
+"use client";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
+
+import { Tabs, TabDef } from "@niagads/ui/client";
+
+import { IGVBrowserProps } from "./IGVBrowser";
+import { IGVBrowserTrack } from "./tracks";
+import { TrackSelectorTable } from "./TrackSelectorTable";
+import { getLoadedTracks, loadTracks, removeTrackById } from "./tracks/utils";
+import { Collection, CollectionInfo } from "@/common/types";
+import { TableProps } from "@niagads/table";
+import { fetchCollectionInfo, fetchTrackConfiguration, fetchTrackSelector } from "@/utils/getCollectionData";
+import { Skeleton } from "@niagads/ui";
+
+const GenomeBrowser = dynamic(() => import("@/components/IGVBrowser/IGVBrowser").then((mod) => mod.MemoIGVBrowser), {
+    ssr: false,
+});
+
+interface BrowserWithSelectorProps {
+    collection: Collection[];
+}
+
+const IGVBrowserWithSelector: React.FC<
+    Omit<IGVBrowserProps, "onBrowserLoad" | "onTrackRemoved"> & BrowserWithSelectorProps
+> = ({ genome, featureSearchURI, locus, collection, tracks = [] }) => {
+    // track config
+    const [browserTrackConfig, setBrowserTrackConfig] = useState<IGVBrowserTrack[]>([]);
+    const [tConfigIsLoading, setTConfigIsLoading] = useState<boolean>(true);
+
+    // track selector
+    const [trackSelectorTable, setTrackSelectorTable] = useState<TableProps[]>([]);
+    const [tsSelectorIsLoading, setTSelectorIsLoading] = useState<boolean>(true);
+
+    // collection metadata
+    const [collectionInfo, setCollectionInfo] = useState<CollectionInfo[]>([]);
+    const [cInfoIsLoading, setCInfoIsLoading] = useState<boolean>(true);
+
+    // browser
+    const [browser, setBrowser] = useState<any>(null);
+    const [browserIsLoading, setBrowserIsLoading] = useState<boolean>(true);
+
+    const extractTrackConfig = (trackIds: string[]) =>
+        browserTrackConfig.filter((config) => trackIds.includes(config.id));
+
+    const toggleTracks = async (selectedTracks: string[]) => {
+        if (browser && browserTrackConfig) {
+            const loadedTracks = getLoadedTracks(browser);
+            const addedTracks = await __loadTracks(selectedTracks, loadedTracks);
+            const removedTracks = await __unloadTracks(selectedTracks, loadedTracks);
+            //await addTracksToSession(addedTracks);
+            //await removeTracksFromSession(removedTracks);
+        }
+    };
+
+    const initializeBrowser = useCallback((b: any) => {
+        setBrowser(b);
+    }, []);
+
+    useEffect(() => {
+        if (browser) {
+            setBrowserIsLoading(false);
+        }
+    }, [browser]);
+
+    useEffect(() => {
+        fetchTrackConfiguration(collection).then((result) => setBrowserTrackConfig(result));
+    }, [collection]);
+
+    useEffect(() => {
+        if (browserTrackConfig) {
+            setTConfigIsLoading(false);
+        }
+    }, [browserTrackConfig]);
+
+    useEffect(() => {
+        fetchTrackSelector(collection).then((result) => setTrackSelectorTable(result));
+    }, [collection]);
+
+    useEffect(() => {
+        if (trackSelectorTable) {
+            setTSelectorIsLoading(false);
+        }
+    }, [trackSelectorTable]);
+
+    useEffect(() => {
+        fetchCollectionInfo(collection).then((result) => setCollectionInfo(result));
+    }, [collection]);
+
+    useEffect(() => {
+        if (collectionInfo) {
+            setCInfoIsLoading(false);
+        }
+    }, [collectionInfo]);
+
+    return (
+        <>
+            {browserIsLoading ? (
+                <Skeleton type="default" />
+            ) : (
+                <GenomeBrowser
+                    genome={genome}
+                    featureSearchURI={featureSearchURI}
+                    locus={locus}
+                    tracks={tracks}
+                    onBrowserLoad={initializeBrowser}
+                ></GenomeBrowser>
+            )}
+
+            {/* <div className="bg-gray-100 mx-2 mt-20 mb-2 border-t-2 border-primary text-primary p-2 text-2x1">
+                <h1>Select Tracks</h1>
+            </div> */}
+
+            {tsSelectorIsLoading ? <Skeleton type="table"></Skeleton> : <Tabs tabs={tabItems} width="w-full" />}
+        </>
+    );
+};
+
+export const MemoIGVBrowserWithSelector = React.memo(IGVBrowserWithSelector);
+export default IGVBrowserWithSelector;
