@@ -173,7 +173,11 @@ const __resolveListCell = (cells: GenericCell[]) => {
 // does some error checking:
 // 1. makes sure user specified a cell type to the parent column if cell value is an object/JSON
 
-export const resolveCell = (cell: GenericCell | GenericCell[], column: GenericColumn, rowId: number): GenericCell | GenericCell[] => {
+export const resolveCell = (
+    cell: GenericCell | GenericCell[],
+    column: GenericColumn,
+    rowId: number
+): GenericCell | GenericCell[] => {
     let resolvedCellType = _get("type", column, "abstract");
     let resolvedCell: GenericCell = {};
 
@@ -214,12 +218,12 @@ export const resolveCell = (cell: GenericCell | GenericCell[], column: GenericCo
             } else {
                 resolvedCellType = "text";
             }
-            console.warn(
+            /* console.warn(
                 "`type` must be specified in the column defintion to correctly interpret structured values; assuming `" +
                     resolvedCellType +
                     "` cell: " +
                     JSON.stringify(cell)
-            );
+            ); */
         }
 
         if (_get("value", resolvedCell) == null) {
@@ -263,7 +267,7 @@ export const resolveCell = (cell: GenericCell | GenericCell[], column: GenericCo
         });
     }
 
-    Object.assign(resolvedCell as any, {columnId: column.id, rowId: rowId});
+    Object.assign(resolvedCell as any, { columnId: column.id, rowId: rowId });
 
     return resolvedCell;
 };
@@ -272,22 +276,22 @@ export const renderCell = (cell: Cell) => {
     switch (cell.type) {
         case "abstract":
         case "text":
-            return <Text props={cell}></Text>;
+            return <Text key={`cell-${cell.rowId}-${cell.columnId}`} props={cell}></Text>;
         case "link":
-            return <Link props={cell}></Link>;
+            return <Link key={`cell-${cell.rowId}-${cell.columnId}`} props={cell}></Link>;
         case "boolean":
-            return <BooleanBadge props={cell}></BooleanBadge>;
+            return <BooleanBadge key={`cell-${cell.rowId}-${cell.columnId}`} props={cell}></BooleanBadge>;
         case "badge":
-            return <Badge props={cell}></Badge>;
+            return <Badge key={`cell-${cell.rowId}-${cell.columnId}`} props={cell}></Badge>;
         case "float":
         case "p_value":
-            return <Float props={cell}></Float>;
+            return <Float key={`cell-${cell.rowId}-${cell.columnId}`} props={cell}></Float>;
         case "percentage_bar":
-            return <PercentageBar props={cell}></PercentageBar>;
+            return <PercentageBar key={`cell-${cell.rowId}-${cell.columnId}`} props={cell}></PercentageBar>;
         case "text_list":
-            return <TextList props={cell}></TextList>;
+            return <TextList key={`cell-${cell.rowId}-${cell.columnId}`} props={cell}></TextList>;
         case "link_list":
-            return <LinkList props={cell}></LinkList>;
+            return <LinkList key={`cell-${cell.rowId}-${cell.columnId}`} props={cell}></LinkList>;
         default:
             throw Error(`Unknown cell type for rendering: ${JSON.stringify(cell as Cell)}`);
     }

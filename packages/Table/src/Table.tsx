@@ -330,7 +330,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
                         {table.getRowModel().rows.map((row) => (
                             <tr key={row.id} className="table-dtr">
                                 {row.getVisibleCells().map((cell) => (
-                                    <td className="table-td" key={cell.id}>
+                                    <td className="table-td" key={`${row.id}-${cell.id}`}>
                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                     </td>
                                 ))}
