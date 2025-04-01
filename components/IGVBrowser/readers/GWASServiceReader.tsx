@@ -1,3 +1,4 @@
+"use client";
 import igv from "igv/dist/igv.esm";
 
 interface GWASServiceResponse {
@@ -29,7 +30,7 @@ class GWASServiceReader {
 
         const response = await igv.igvxhr.loadJson(this.endpoint + "?" + queryString, {
             withCredentials: this.config.withCredentials,
-        }); 
+        });
 
         if (response && response.data) {
             return response.data.map((entry: GWASServiceResponse) => {
@@ -39,7 +40,7 @@ class GWASServiceReader {
                     start: position - 1, // IGV is zero-based
                     end: position,
                     //value: entry.pvalue,
-                    chr: chr // needed by cache
+                    chr: chr, // needed by cache
                 };
             });
         } else {

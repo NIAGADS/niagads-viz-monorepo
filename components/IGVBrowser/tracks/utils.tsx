@@ -1,28 +1,18 @@
+"use client";
+
 import get from "lodash.get";
 import { ALWAYS_ON_TRACKS } from "../config/_constants";
-import GWASServiceReader from "../readers/GWASServiceReader";
-import VariantServiceReader from "../readers/VariantServiceReader";
 import IGVBrowserTrack from "./IGVBrowserTrack";
-import { decodeBedXY } from "../decoders/bedDecoder";
 
-
-export const resolveTrackReader = (trackType: string, config: any): any => {
-    switch (trackType) {
-        case "gwas_service":
-            return new GWASServiceReader(config);
-        case "variant_service":
-            return new VariantServiceReader(config);
-        default:
-            return null;
-    }
-};
+export const getTrackConfig = (trackIds: string[], config: IGVBrowserTrack[]) =>
+    config.filter((c) => trackIds.includes(c.id));
 
 export const getTrackID = (trackView: any) => {
     const track = trackView.track;
     return "id" in track ? track.id : track.config.id;
 };
 
-export const getLoadedTracks = (browser: any, alwaysOnTracks:string[]=ALWAYS_ON_TRACKS): string[] =>
+export const getLoadedTracks = (browser: any, alwaysOnTracks: string[] = ALWAYS_ON_TRACKS): string[] =>
     get(browser, "trackViews", [])
         .map((view: any) => getTrackID(view))
         .filter((track: string) => !alwaysOnTracks.includes(track));
@@ -38,16 +28,17 @@ export const removeTrackById = (trackId: string, browser: any) => {
 };
 
 // functions for maninpulating IGV browser object
-const __loadTrack = async (track: IGVBrowserTrack, browser: any) => {
+export const loadTrack = async (track: IGVBrowserTrack, browser: any) => {
     if (track.type.includes("_service")) {
-        track.reader = resolveTrackReader(track.type, {
+        track.reader = await resolveTrackReader(track.type, {
             endpoint: track.url,
             track: track.id,
         });
     }
     if ("format" in track) {
+        // does it match bedX+Y?
         if (track.format.match("^bed\\d{1,2}\\+\\d+$") != null) {
-            // does it match bedX+Y?
+            const { default: decodeBedXY } = await import("../decoders/bedDecoder");
             track.decode = decodeBedXY;
         }
     }
@@ -55,6 +46,19 @@ const __loadTrack = async (track: IGVBrowserTrack, browser: any) => {
 };
 
 export const loadTracks = async (tracks: IGVBrowserTrack[], browser: any) => {
-    for await (const _ of tracks.map((t) => __loadTrack(t, browser)));
+    for await (const _ of tracks.map((t) => loadTrack(t, browser)));
 };
 
+export const resolveTrackReader = async (trackType: string, config: any) => {
+    // this dynamic importing allows us to deal with the `window does not exist` reference error from igv.js
+    const { default: GWASServiceReader } = await import("../readers/GWASServiceReader");
+    const { default: VariantServiceReader } = await import("../readers/VariantServiceReader");
+    switch (trackType) {
+        case "gwas_service":
+            return new GWASServiceReader(config);
+        case "variant_service":
+            return new VariantServiceReader(config);
+        default:
+            return null;
+    }
+};

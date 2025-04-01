@@ -6,8 +6,8 @@ import NavigationConfig from "@/config/navigation.config";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
-    title: "NIAGADS Template next.js Application",
-    description: "https://github.com/NIAGADS/nextjs-template",
+    title: process.env.NEXT_PUBLIC_SERVICE_NAME,
+    description: process.env.NEXT_PUBLIC_SERVICE_DESCRIPTION,
 };
 
 export default function RootLayout({

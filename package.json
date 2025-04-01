@@ -10,7 +10,9 @@
         "lint": "next lint"
     },
     "dependencies": {
+        "@niagads/table": "^0.2.5-alpha.0",
         "@niagads/ui": "^0.2.5-alpha.0",
+        "@tailwindcss/postcss": "^4.0.17",
         "igv": "github:NIAGADS/igv.js#NIAGADS-01102025",
         "jquery": "^3.7.1",
         "lodash.find": "^4.6.0",
@@ -23,13 +25,13 @@
     },
     "devDependencies": {
         "@eslint/eslintrc": "^3",
-        "@types/node": "^20",
-        "@types/react": "^19",
-        "@types/react-dom": "^19",
         "@types/jquery": "^3.5.32",
         "@types/lodash.find": "^4.6.9",
         "@types/lodash.get": "^4.4.9",
         "@types/lodash.noop": "^3.0.9",
+        "@types/node": "^20",
+        "@types/react": "^19",
+        "@types/react-dom": "^19",
         "eslint": "^9",
         "eslint-config-next": "15.1.4",
         "postcss": "^8",

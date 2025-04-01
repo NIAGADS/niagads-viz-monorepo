@@ -1,12 +1,10 @@
-'use client'
+"use client";
 import { useEffect, useState } from "react";
 
-import Table from "@bug_sam/table"
+import Table from "@niagads/table";
+import "@niagads/table/css";
 
-//import { Alert } from "@bug_sam/ui/Alert"
-//import { Button } from "@bug_sam/ui/Button";
-
-export type RowSelectionState = Record<string, boolean>
+export type RowSelectionState = Record<string, boolean>;
 
 export interface TableProps {
     id: string;
@@ -16,19 +14,18 @@ export interface TableProps {
 }
 
 interface WrapperProps {
-    table: TableProps,
-    handleRowSelect: any,
-    onTableLoad?: any
+    table: TableProps;
+    handleRowSelect: any;
+    onTableLoad?: any;
 }
 
-export default function TrackSelectorTable({ table, handleRowSelect }:  WrapperProps) {
+export function TrackSelectorTable({ table, handleRowSelect }: WrapperProps) {
     const [selectedRows, setSelectedRows] = useState<RowSelectionState>({});
-    const [disableRowSelectAction, setDisableRowSelectAction] =
-        useState<boolean>(true);
+    const [disableRowSelectAction, setDisableRowSelectAction] = useState<boolean>(true);
 
     const onRowSelect = (rows: RowSelectionState) => {
         setSelectedRows(rows);
-    }
+    };
 
     table.options && (table.options.disableColumnFilters = true);
     Object.assign(table.options!.rowSelect!, { onRowSelect: onRowSelect });
@@ -40,19 +37,13 @@ export default function TrackSelectorTable({ table, handleRowSelect }:  WrapperP
             setDisableRowSelectAction(true);
         } else {
             setDisableRowSelectAction(false);
-            handleRowSelect(Object.keys(selectedRows))
+            handleRowSelect(Object.keys(selectedRows));
         }
     }, [selectedRows]);
 
-
     return (
         <main>
-            <Table
-                id={table.id}
-                data={table.data}
-                columns={table.columns}
-                options={table.options}
-            />
+            <Table id={table.id} data={table.data} columns={table.columns} options={table.options} />
         </main>
-    )
+    );
 }
