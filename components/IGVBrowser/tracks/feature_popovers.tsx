@@ -1,13 +1,12 @@
-
-const __extractGeneSymbol = ( featureName: string) => {
-     // catch qualified symbols from GFF file (e.g., APOE-202)
-     // and extract gene symbol
-     const pattern = /^.+-\d\d\d$/;
-     if (featureName.match(pattern)) {
-         return featureName.split('-')[0]
-     }
-     return featureName
-}
+const __extractGeneSymbol = (featureName: string) => {
+    // catch qualified symbols from GFF file (e.g., APOE-202)
+    // and extract gene symbol
+    const pattern = /^.+-\d\d\d$/;
+    if (featureName.match(pattern)) {
+        return featureName.split("-")[0];
+    }
+    return featureName;
+};
 
 const _geneSubFeaturePopoverData = (fields: string[], info: any, pData: any[]) => {
     // type
@@ -20,8 +19,7 @@ const _geneSubFeaturePopoverData = (fields: string[], info: any, pData: any[]) =
     if (fields.includes("display_id")) {
         const displayId = __extractGeneSymbol(info[fields.indexOf("display_id")].value);
         pData.push({ name: "Name:", value: displayId });
-    }
-    else if (fields.includes("name")) {
+    } else if (fields.includes("name")) {
         pData.push({ name: "Name:", value: info[fields.indexOf("name")].value });
     }
     if (fields.includes("biotype")) {
@@ -38,11 +36,11 @@ const _geneSubFeaturePopoverData = (fields: string[], info: any, pData: any[]) =
 
     idIndices.forEach((index: any) => {
         let idName = info[index].name.replace(":", "");
-        if (idName !== 'display_id') {
+        if (idName !== "display_id") {
             idName = idName.includes("_")
                 ? idName.charAt(0).toUpperCase() + idName.slice(1).replace("_id", " ID:")
                 : idName.toUpperCase().replace("ID", " ID:");
-            
+
             pData.push({ name: idName, value: info[index].value });
         }
     });
@@ -60,8 +58,8 @@ const _geneTrackPopoverData = (trackInfo: any, infoURL: string) => {
     });
     let pData: any = [];
 
-    const featureType = trackInfo[fields.indexOf("type")].value.replace('_', ' ');
-    if (featureType === "gene" || featureType.endsWith("gene")) {          
+    const featureType = trackInfo[fields.indexOf("type")].value.replace("_", " ");
+    if (featureType === "gene" || featureType.endsWith("gene")) {
         pData.push({ name: "Feature Type:", value: featureType });
 
         const displayId = __extractGeneSymbol(trackInfo[fields.indexOf("display_id")].value);
@@ -75,15 +73,14 @@ const _geneTrackPopoverData = (trackInfo: any, infoURL: string) => {
                     name: "Gene ID:",
                     html: `<a target="_blank" href="${recHref}" title="Learn more about ${displayId}">${geneId}</a>`,
                 });
-            }
-            else {
-                pData.push({name: "Gene ID:", value: geneId} )
+            } else {
+                pData.push({ name: "Gene ID:", value: geneId });
             }
         }
         if (fields.includes("description")) {
             const product = trackInfo[fields.indexOf("description")].value.replace(regexp, "");
             pData.push({ name: "Product:", value: product });
-        }   
+        }
 
         const biotype = trackInfo[fields.indexOf("biotype")];
         if (biotype.hasOwnProperty("color")) {
@@ -116,7 +113,7 @@ const _geneTrackPopoverData = (trackInfo: any, infoURL: string) => {
     return pData;
 };
 
-const trackPopover = (track: any, popoverData: any) => {
+export const trackPopover = (track: any, popoverData: any) => {
     // Don't show a pop-over when there's no data.
     if (!popoverData || !popoverData.length) {
         return false;
@@ -135,8 +132,7 @@ const trackPopover = (track: any, popoverData: any) => {
             const color = item.color ? item.color : null;
 
             if (color !== null) {
-                value =
-                    '<span style="padding-left: 8px; border-left: 4px solid ' + color + '">' + value + "</span>";
+                value = '<span style="padding-left: 8px; border-left: 4px solid ' + color + '">' + value + "</span>";
             }
 
             const title = item.title ? item.title : null;
@@ -160,5 +156,3 @@ const trackPopover = (track: any, popoverData: any) => {
     // By returning a string from the trackclick handler we're asking IGV to use our custom HTML in its pop-over.
     return markup;
 };
-
-export default trackPopover;

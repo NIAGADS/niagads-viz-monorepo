@@ -1,10 +1,5 @@
 import { features } from "process";
-import {
-    ignoreCaseIndexOf,
-    isSimpleType,
-    capitalize,
-    numberFormatter,
-} from "./utils";
+import { ignoreCaseIndexOf, isSimpleType, capitalize, numberFormatter } from "./utils";
 import igv from "igv/dist/igv.esm";
 
 const EXPECTED_BED_FIELDS = [
@@ -30,7 +25,7 @@ const VARIANT_ID_FIELD = "variant_id";
 const IGNORE_OPTIONAL_FIELDS = ["user_input", "target_info"];
 //const NEG_LOG10_P_CAP = 50;
 
-export function decodeBedXY(tokens: any, header: any) {
+function decodeBedXY(tokens: any, header: any) {
     // Get X (number of standard BED fields) and Y (number of optional BED fields) out of format
     const match = header.format.match(/bed(\d{1,2})\+(\d+)/);
     const X = parseInt(match[1]);
@@ -67,17 +62,7 @@ function extractPopupData(genomeId: any) {
     //@ts-expect-error: using `this` as local variable
     const feature: BedXYFeature = this; // FIXME: investigate ts error
 
-    const filteredProperties = new Set([
-        "row",
-        "color",
-        "chr",
-        "start",
-        "end",
-        "cdStart",
-        "cdEnd",
-        "strand",
-        "alpha",
-    ]);
+    const filteredProperties = new Set(["row", "color", "chr", "start", "end", "cdStart", "cdEnd", "strand", "alpha"]);
     const data = [];
 
     for (const property in feature) {
@@ -99,9 +84,7 @@ function extractPopupData(genomeId: any) {
     }
 
     // final chr position
-    let posString = `${feature.chr}:${numberFormatter(
-        feature.start + 1
-    )}-${numberFormatter(feature.end)}`;
+    let posString = `${feature.chr}:${numberFormatter(feature.start + 1)}-${numberFormatter(feature.end)}`;
     if (feature.strand) {
         posString += ` (${feature.strand})`;
     }
@@ -163,12 +146,7 @@ function parseStandardFields(feature: BedXYFeature, X: number, tokens: any) {
     }
 }
 
-function parseOptionalFields(
-    feature: BedXYFeature,
-    tokens: any,
-    X: number,
-    fields: any
-) {
+function parseOptionalFields(feature: BedXYFeature, tokens: any, X: number, fields: any) {
     //go through tokens and perform minimal parsing add optional columns to feature.info
     const infoProps: any = {};
     for (let i = X; i < fields.length; i++) {
@@ -225,8 +203,8 @@ class BedXYFeature {
     setVariant(tokens: any, fields: string[]) {
         const index = fields.indexOf(VARIANT_ID_FIELD);
         this.setAdditionalAttributes({
-            variant: tokens[index].replace('chr', ''),
-            record_pk: tokens[index].replace('chr', ''),
+            variant: tokens[index].replace("chr", ""),
+            record_pk: tokens[index].replace("chr", ""),
         });
 
         if (!this.name) {
@@ -245,7 +223,7 @@ class BedXYFeature {
 
                 this.setAdditionalAttributes({
                     pvalue: pValue,
-                    neg_log10_pvalue: neg_log10_pvalue //> NEG_LOG10_P_CAP ? NEG_LOG10_P_CAP : neg_log10_pvalue,
+                    neg_log10_pvalue: neg_log10_pvalue, //> NEG_LOG10_P_CAP ? NEG_LOG10_P_CAP : neg_log10_pvalue,
                 });
 
                 this.removeAttributes([field]);
@@ -268,3 +246,5 @@ class BedXYFeature {
         this.removeAttributes([TARGET_GENE_ID_FIELD, TARGET_GENE_SYMBOL_FIELD]);
     }
 }
+
+export default decodeBedXY;

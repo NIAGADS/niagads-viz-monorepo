@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import { Providers } from "./provider";
 
-import "./globals.css";
-import NavigationMenu from "@/components/Navigation";
+import { RootLayout as StandardRootLayout } from "@niagads/ui/layouts";
+import NavigationConfig from "@/config/navigation.config";
+
+import "@/styles/globals.css";
 
 export const metadata: Metadata = {
-    title: "NIAGADS IGVBrowser",
-    description:
-        "interactive genome visualization developed by the IGV team and customized by NIAGADS to display Alzheimer's disease relevant annotated variant, GWAS summary statistics, and xQTLs",
+    title: process.env.NEXT_PUBLIC_SERVICE_NAME,
+    description: process.env.NEXT_PUBLIC_SERVICE_DESCRIPTION,
 };
 
 export default function RootLayout({
@@ -16,10 +16,11 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
-            <body className="antialiased">
-                <NavigationMenu></NavigationMenu>
-                <Providers>{children}</Providers>
+        <html>
+            <body>
+                <StandardRootLayout navConfig={NavigationConfig} fullWidth={false}>
+                    {children}
+                </StandardRootLayout>
             </body>
         </html>
     );

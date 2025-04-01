@@ -1,32 +1,18 @@
 "use client";
 
-import React, {
-    useLayoutEffect,
-    useMemo,
-    useState,
-    useEffect,
-    useRef,
-    Suspense,
-} from "react";
+import React, { useLayoutEffect, useMemo, useState, useEffect, useRef, Suspense } from "react";
 
 import noop from "lodash.noop";
 import find from "lodash.find";
 
-import {
-    VariantServiceTrack as VariantTrack,
-    IGVBrowserTrack,
-    trackPopover,
-    VariantPValueTrack,
-} from "./tracks";
+import IGVBrowserTrack from "./tracks/IGVBrowserTrack";
+import { trackPopover } from "./tracks/feature_popovers";
 
-import {
-    loadTracks,
-    getLoadedTracks,
-    removeTrackById,
-} from "./tracks/utils";
+import { loadTracks, getLoadedTracks, removeTrackById } from "./tracks/utils";
 
 import { DEFAULT_FLANK } from "./config/_constants";
 import { _genomes } from "./config/_igvGenomes";
+import { Skeleton } from "@niagads/ui";
 
 export interface IGVBrowserProps {
     genome: string;
@@ -45,11 +31,12 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
     onTrackRemoved,
     tracks,
 }) => {
-    const [browserIsLoaded, setBrowserIsLoaded] = useState<boolean>(false);
-    const [browser, setBrowser] = useState<any>(null);
     const [isClient, setIsClient] = useState(false);
+
     const [igv, setIGV] = useState<any>(null);
-    const [pvalueTrackClass, setPvalueTrackClass] = useState<any>(null);
+
+    const [browserIsLoading, setBrowserIsLoading] = useState<boolean>(true);
+    const [browser, setBrowser] = useState<any>(null);
 
     const containerRef = useRef(null);
 
@@ -67,15 +54,15 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
             loadDefaultGenomes: false,
             genomeList: _genomes,
         };
-    }, [genome, locus, igv]);
+    }, [genome, locus]);
 
     useEffect(() => {
         setIsClient(true);
     }, []);
 
     useEffect(() => {
-        // setting initial session due to component load/reload
-        if (browserIsLoaded && opts && tracks) {
+        // create clean session
+        if (!browserIsLoading) {
             const loadedTracks = getLoadedTracks(browser);
 
             // if any tracks are loaded, remove them
@@ -86,9 +73,9 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
             }
 
             // load initial tracks
-            loadTracks(tracks, browser);
+            tracks && loadTracks(tracks, browser);
         }
-    }, [browserIsLoaded]);
+    }, [browserIsLoading]);
 
     useLayoutEffect(() => {
         if (isClient && containerRef.current) {
@@ -98,20 +85,23 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
                 setIGV(mod);
             }
 
+            async function registerTracks() {
+                const { default: VariantServiceTrack } = await import("./tracks/VariantServiceTrack");
+                const { default: VariantPValueTrack } = await import("./tracks/VariantPValueTrack");
+                igv.registerTrackClass("gwas_service", VariantPValueTrack);
+                igv.registerTrackClass("qtl", VariantPValueTrack);
+                igv.registerTrackClass("variant_service", VariantServiceTrack);
+            }
+
             if (!igv) {
                 loadIGV();
             } else {
+                // register custom track classes
                 const targetDiv = containerRef.current;
+                registerTracks();
 
                 if (opts != null) {
-                    // register custom track classes
-                    igv.registerTrackClass("gwas_service", VariantPValueTrack);
-                    igv.registerTrackClass("qtl", VariantPValueTrack);
-                    igv.registerTrackClass("variant_service", VariantTrack);
-
-                    igv.createBrowser(targetDiv, opts).then(function (
-                        browser: any
-                    ) {
+                    igv.createBrowser(targetDiv, opts).then(function (browser: any) {
                         // custom track popovers
                         browser.on("trackclick", trackPopover);
 
@@ -124,7 +114,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
 
                         // add browser to state
                         setBrowser(browser);
-                        setBrowserIsLoaded(true);
+                        setBrowserIsLoading(false);
 
                         // callback to parent component, if exist
                         if (onBrowserLoad) {
@@ -136,22 +126,12 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
                 }
             }
         }
-    }, [isClient, igv, pvalueTrackClass]);
+    }, [isClient, igv]);
 
-    if (!isClient && !igv) {
-        return <div>Loading...</div>;
-    }
-
-    return (
-        <>
-            <Suspense fallback={<div>Loading...</div>}>
-                <span
-                    ref={containerRef}
-                    style={{ width: "100%" }}
-                    id="genome-browser"
-                />
-            </Suspense>
-        </>
+    return !isClient && browserIsLoading ? (
+        <Skeleton type="table" />
+    ) : (
+        <div ref={containerRef} className="w-full" id="genome-browser"></div>
     );
 };
 

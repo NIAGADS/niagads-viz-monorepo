@@ -1,42 +1,42 @@
 {
-  "name": "niagads-igvbrowser-service",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev -H 0.0.0.0 --turbopack",
-    "build": "next build",
-    "prod": "next build && next start -H 0.0.0.0",
-    "start": "next build && next start  -H 0.0.0.0",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@heroui/react": "^2.7.2",
-    "framer-motion": "^12.4.5",
-    "@bug_sam/table": "^0.0.9",
-    "@bug_sam/ui": "^0.0.3",
-    "igv": "github:NIAGADS/igv.js#NIAGADS-01102025",
-    "jquery": "^3.7.1",
-    "lodash.find": "^4.6.0",
-    "lodash.get": "^4.4.2",
-    "lodash.noop": "^3.0.1",
-    "next": "15.1.4",
-    "next-seo": "^6.6.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
-  },
-  "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@types/jquery": "^3.5.32",
-    "@types/lodash.find": "^4.6.9",
-    "@types/lodash.get": "^4.4.9",
-    "@types/lodash.noop": "^3.0.9",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "15.1.4",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5"
-  }
+    "name": "igvbrowser-microservice",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev --turbopack",
+        "build": "next build",
+        "prod": "next start",
+        "start": "next start",
+        "lint": "next lint"
+    },
+    "dependencies": {
+        "@niagads/common": "^0.2.0-alpha.0",
+        "@niagads/table": "^0.2.5-alpha.0",
+        "@niagads/ui": "^0.2.5-alpha.0",
+        "@tailwindcss/postcss": "^4.0.17",
+        "igv": "github:NIAGADS/igv.js#NIAGADS-01102025",
+        "jquery": "^3.7.1",
+        "lodash.find": "^4.6.0",
+        "lodash.get": "^4.4.2",
+        "lodash.noop": "^3.0.1",
+        "next": "15.1.4",
+        "next-seo": "^6.6.0",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0"
+    },
+    "devDependencies": {
+        "@eslint/eslintrc": "^3",
+        "@types/jquery": "^3.5.32",
+        "@types/lodash.find": "^4.6.9",
+        "@types/lodash.get": "^4.4.9",
+        "@types/lodash.noop": "^3.0.9",
+        "@types/node": "^20",
+        "@types/react": "^19",
+        "@types/react-dom": "^19",
+        "eslint": "^9",
+        "eslint-config-next": "15.1.4",
+        "postcss": "^8",
+        "tailwindcss": "^4.0",
+        "typescript": "^5"
+    }
 }

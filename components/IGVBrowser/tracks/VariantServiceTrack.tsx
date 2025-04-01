@@ -1,3 +1,4 @@
+"use client";
 // modified from https://github.com/igvteam/igv.js/tree/master/js/variant/variantTrack.js
 import igv from "igv/dist/igv.esm";
 import $ from "jquery";
@@ -14,7 +15,6 @@ interface ColorByCategory {
     label: string;
     default: string;
 }
-
 
 const COLOR_BY_FIELDS: ColorByCategory[] = [
     { field: "type", label: "Variant Type", default: "SNV" },
@@ -216,7 +216,7 @@ class VariantServiceTrack extends igv.TrackBase {
                 }
                 // context.fillStyle = this.getVariantColor(variant);
                 // context.fillRect(x, y, w, h);
-                igv.IGVGraphics.fillRect(context, x, y, w, h, {'fillStyle': this.getVariantColor(variant)});
+                igv.IGVGraphics.fillRect(context, x, y, w, h, { fillStyle: this.getVariantColor(variant) });
                 variant.pixelRect = { x, y, w, h };
 
                 // Loop though the calls for this variant.  There will potentially be a call for each sample.
@@ -262,7 +262,7 @@ class VariantServiceTrack extends igv.TrackBase {
                                 fillStyle = this.hetvarColor;
                             }
 
-                            igv.IGVGraphics.fillRect(context, x, py, w, callHeight, {'fillStyle': fillStyle});
+                            igv.IGVGraphics.fillRect(context, x, py, w, callHeight, { fillStyle: fillStyle });
 
                             callSet.pixelRect = { x, y: py, w, h: callHeight };
                         }
@@ -435,15 +435,14 @@ class VariantServiceTrack extends igv.TrackBase {
                 const color = this.getVariantColor(call);
 
                 if (this.infoURL) {
-                    const recHref = this.infoURL + '/variant/' + call.id;
+                    const recHref = this.infoURL + "/variant/" + call.id;
                     popupData.push({
                         name: "Variant:",
                         html: `<a target="_blank" href="${recHref}">${call.info.display_id}</a>`,
                         title: "Learn more about this variant: " + call.info.display_id,
                     });
-                }
-                else {
-                    popupData.push({name: "Variant:", value: call.info.display_id});
+                } else {
+                    popupData.push({ name: "Variant:", value: call.info.display_id });
                 }
 
                 if (call.info.ref_snp_id !== null) {
@@ -524,17 +523,15 @@ class VariantServiceTrack extends igv.TrackBase {
                         });
                     }
                     if (msc.impacted_gene !== null) {
-
                         if (this.infoURL) {
-                            const recHref = this.infoURL + '/gene/' + msc.impacted_gene
+                            const recHref = this.infoURL + "/gene/" + msc.impacted_gene;
                             popupData.push({
                                 name: "Impacted Gene:",
                                 html: `<a target="_blank" href="${recHref}">${msc.impacted_gene_symbol}</a>`,
                                 title: "Learn more about gene: " + msc.impacted_gene_symbol,
                             });
-                        }
-                        else {
-                            popupData.push({name: "Impacted Gene:", value: msc.impacted_gene_symbol})
+                        } else {
+                            popupData.push({ name: "Impacted Gene:", value: msc.impacted_gene_symbol });
                         }
                     }
                 }
