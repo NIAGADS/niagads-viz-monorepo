@@ -1,6 +1,7 @@
 import type { Preview } from "@storybook/react";
 
 import "@niagads/table/css";
+import "@niagads/ui/css";
 
 const preview: Preview = {
     parameters: {
