@@ -3,21 +3,6 @@ import { Collection, CollectionMetadata, RESPONSE_TYPE } from "@/common/types";
 import IGVBrowserTrack from "@/components/IGVBrowser/tracks/IGVBrowserTrack";
 import { TableProps } from "@niagads/table";
 
-export const parseCollectionList = cache((collections: string) => {
-    let c: Collection[] = [];
-    try {
-        c = collections!.split(",").map((pair) => {
-            const [route, name] = pair.split(":");
-            return { route: route, name: name } as Collection;
-        });
-    } catch (err) {
-        console.error(
-            `Error parsing track collections: ${collections}$; 'NEXT_PUBLIC_TRACK_COLLECTIONS' in '.env.local' should be set to a comma separated list of API route:collection_name pairs.`
-        );
-    } finally {
-        return c;
-    }
-});
 
 const fetchCollection = cache(async (collection: Collection, responseType: RESPONSE_TYPE) => {
     const requestUrl =

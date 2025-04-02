@@ -1,13 +1,9 @@
-import { Collection } from "@/common/types";
-import {
-    fetchCollectionMetadata,
-    fetchTrackConfiguration,
-    fetchTrackSelector,
-    parseCollectionList,
-} from "@/utils/getCollectionData";
-
 import { Suspense } from "react";
 import { Skeleton } from "@niagads/ui";
+
+import { Collection } from "@/common/types";
+import { fetchCollectionMetadata, fetchTrackConfiguration, fetchTrackSelector } from "@/utils/fetch";
+import { parseCollectionList } from "@/utils/utils";
 import { IGVBrowserWithSelector } from "@/components/IGVBrowser/IGVBrowserWithSelector";
 
 export default async function Page() {
