@@ -5,7 +5,7 @@ name: PR Build
 
 on:
     pull_request:
-        types: [opened, edited]
+        types: [opened, synchronize, reopened]
 
 jobs:
     lint-and-build:
