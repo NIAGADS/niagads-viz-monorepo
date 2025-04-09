@@ -1,5 +1,5 @@
-
-.ui-checkbox, .ui-radio {
+.ui-checkbox,
+.ui-radio {
     &.primary {
         @apply accent-primary;
     }

@@ -18,6 +18,6 @@ export const Default: Story = {
     args: {
         onChange: undefined,
         placeholder: undefined,
-        value: ""
+        value: "",
     },
 };

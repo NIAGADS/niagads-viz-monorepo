@@ -13,7 +13,6 @@
     &.default {
         @apply bg-blue-500;
     }
-
 }
 
 .ui-slider-label {
@@ -21,7 +20,7 @@
 }
 
 .ui-slider-range-label {
-    @apply text-sm absolute ;
+    @apply text-sm absolute;
 
     &.start {
         @apply start-2 -bottom-2;

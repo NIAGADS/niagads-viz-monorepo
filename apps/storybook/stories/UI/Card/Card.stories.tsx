@@ -1,11 +1,11 @@
 //@ts-nocheck
 // b/c of https://github.com/storybookjs/storybook/issues/23170 issue w/subcomponets w/children
-import React from "react"
+import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { Card, CardHeader, CardBody } from "@niagads/ui";
-import { Default as CardHeaderStory} from "./CardHeader.stories"
-import { Default as CardBodyStory} from './CardBody.stories';
+import { Default as CardHeaderStory } from "./CardHeader.stories";
+import { Default as CardBodyStory } from "./CardBody.stories";
 
 const meta: Meta<typeof Card> = {
     title: "NIAGADS-VIZ/UI/Card",
@@ -14,7 +14,7 @@ const meta: Meta<typeof Card> = {
         layout: "centered",
     },
     tags: ["autodocs"],
-}; 
+};
 
 export default meta;
 
@@ -30,10 +30,9 @@ export const Default: Story = {
     ),
     args: {
         shadow: true,
-        radius: "md"
+        radius: "md",
     },
 };
-
 
 export const LinkCard: Story = {
     ...Default,
@@ -41,10 +40,9 @@ export const LinkCard: Story = {
     args: {
         shadow: true,
         radius: "md",
-        href:"#"
+        href: "#",
     },
 };
-
 
 export const ButtonCard: Story = {
     ...Default,
@@ -52,6 +50,6 @@ export const ButtonCard: Story = {
     args: {
         shadow: true,
         radius: "md",
-        onClick: (event) => alert("I've been clicked!")
+        onClick: (event) => alert("I've been clicked!"),
     },
 };

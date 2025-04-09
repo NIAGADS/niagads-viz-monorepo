@@ -1,7 +1,6 @@
 import React, { ReactNode } from "react";
 import { _get } from "@niagads/common";
 
-
 type AlertVariants = "info" | "warning" | "danger" | "success" | "default";
 interface Alert {
     variant?: AlertVariants;

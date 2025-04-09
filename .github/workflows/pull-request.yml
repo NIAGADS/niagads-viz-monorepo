@@ -1,0 +1,20 @@
+# This workflow lints and builds all packages whenever a pull request is created
+# we should only allow PRs with good formatting and successful builds be be merged into main
+
+name: PR Build
+
+on:
+    pull_request:
+        types: [opened, synchronize, reopened]
+
+jobs:
+    lint-and-build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+            - run: npm ci
+            - run: npx prettier . --check
+            - run: npx lerna run build

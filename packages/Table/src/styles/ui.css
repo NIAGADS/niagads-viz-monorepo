@@ -5,7 +5,7 @@
 }
 
 .info-bubble {
-    @apply  text-transparent size-4 stroke-primary;
+    @apply text-transparent size-4 stroke-primary;
 }
 
 /* FIXME: for formatting icon in a button icon */

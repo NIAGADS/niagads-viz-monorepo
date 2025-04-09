@@ -60,31 +60,33 @@ npx lerna run bar --scope=foo
 Right now, packages are published to sam's personal npm repo.
 In the future we will set up a niagads npm organization and publish there instead.
 
-* login to npm
+- login to npm
 
 ```bash
 npm login
 ```
+
 > on WSL2 add `--auth-type=legacy` option
 
-* check login status with `npm whoami`
+- check login status with `npm whoami`
 
 ### Initial release
 
-* in `package.json`
-  * manually set version
-  * add the following:
- 
- ```json
-  "publishConfig": {
-        "access": "public"
-    }
- ```
+- in `package.json`
+    - manually set version
+    - add the following:
 
- * remove `"private":"true" when present
+```json
+ "publishConfig": {
+       "access": "public"
+   }
+```
 
-* run the build to generate dist files
-* and then use `lerna publish` to make the initial commit 
+- remove `"private":"true" when present
+
+- run the build to generate dist files
+- and then use `lerna publish` to make the initial commit
+
 ```bash
 npx lerna run build --concurrency 1
 npx lerna publish <initial_version>
@@ -92,9 +94,9 @@ npx lerna publish <initial_version>
 
 ### Subsequent releases
 
-* Create and publish (push) a temporary branch for the release
+- Create and publish (push) a temporary branch for the release
 
-Edit the `Storybook` `package.json` versions for the `@niagads` packages with new releases to match new versioning and commit.  This must be done first, otherwise the old storybook `package.json` will be in the tag.
+Edit the `Storybook` `package.json` versions for the `@niagads` packages with new releases to match new versioning and commit. This must be done first, otherwise the old storybook `package.json` will be in the tag.
 
 To publish first increment the versions using lerna
 

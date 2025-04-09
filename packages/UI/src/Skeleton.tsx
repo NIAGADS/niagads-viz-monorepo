@@ -55,7 +55,7 @@ export const Skeleton = ({ type }: SkeletonProps) => {
                 role="status"
                 className="flex justify-between p-4 border border-gray-200 divide-x space-x-2 divide-gray-200 rounded-sm shadow-sm animate-pulse md:p-6 "
             >
-                {[...Array(5)].map(x => (
+                {[...Array(5)].map((x) => (
                     <div key={x} className="flex flex-col divide-y space-y-2 divide-gray-200 pr-2">
                         <div className="h-2.5 bg-gray-300 rounded-full w-24 mb-2.5"></div>
                         <div>

@@ -30,7 +30,7 @@ export default [
                 config: {
                     path: "./postcss.config.js",
                 },
-                extract: 'niagads-table.css',
+                extract: "niagads-table.css",
                 extensions: [".css"],
                 minimize: false, // when minimized not all the tailwind classes get exported
                 sourceMap: true,

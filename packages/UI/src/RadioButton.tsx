@@ -10,7 +10,7 @@ export const RadioButton = ({
     checked = false,
     alignCenter = false,
 }: RadioButtonProps) => {
-    const className = `ui-radio ${variant}`
+    const className = `ui-radio ${variant}`;
     return (
         <div className={alignCenter ? "text-center align-middle" : ""}>
             <input type="radio" className={className} onChange={onChange} checked={checked} disabled={disabled} />

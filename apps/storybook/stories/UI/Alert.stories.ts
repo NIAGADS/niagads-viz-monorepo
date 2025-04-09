@@ -18,6 +18,6 @@ export const Default: Story = {
     args: {
         variant: "default",
         message: "Pay attention!",
-        children: "This is an alert"
+        children: "This is an alert",
     },
 };

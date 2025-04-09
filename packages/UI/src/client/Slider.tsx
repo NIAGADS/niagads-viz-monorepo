@@ -13,7 +13,7 @@ interface SliderProps {
 
 type SliderVariants = "default" | "primary" | "secondary" | "accent";
 
-export const Slider = ({ variant="default", name, label, value, min, max, step, onChange }: SliderProps) => {
+export const Slider = ({ variant = "default", name, label, value, min, max, step, onChange }: SliderProps) => {
     const valueChanged = (v: number) => v !== value && onChange(v);
 
     return (

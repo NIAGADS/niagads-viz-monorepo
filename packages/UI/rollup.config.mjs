@@ -30,11 +30,11 @@ export default [
                 config: {
                     path: "./postcss.config.js",
                 },
-                extract: 'niagads-ui.css',
+                extract: "niagads-ui.css",
                 extensions: [".css"],
-                minimize: false,  // when minimized not all the tailwind classes get exported
+                minimize: false, // when minimized not all the tailwind classes get exported
                 sourceMap: true,
-                modules: false
+                modules: false,
             }),
             {
                 name: "Custom Rollup Plugin`",
