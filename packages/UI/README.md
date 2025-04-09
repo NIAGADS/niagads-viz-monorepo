@@ -18,36 +18,36 @@ Import packages as needed:
 from { Button, Alert, Checkbox } from "@niagads/ui";
 ```
 
-A Storybook with example component usage can be built from the Monorepo source on GitHub.  More extensive component documentation is coming soon.
+A Storybook with example component usage can be built from the Monorepo source on GitHub. More extensive component documentation is coming soon.
 
 ## Completed
 
-* Alert
-* Button
-* Card
-* Checkbox
-* HelpIcon
-* RadioButton
-* Select
-* TextInput
-* Tooltip
+- Alert
+- Button
+- Card
+- Checkbox
+- HelpIcon
+- RadioButton
+- Select
+- TextInput
+- Tooltip
 
 ### Needs Styling Revision
 
-* Button
-* Tabs
-* Card
-* Badge (fit to width and contents & align icon and text)
+- Button
+- Tabs
+- Card
+- Badge (fit to width and contents & align icon and text)
 
 ### Proof of Concept or currently Under Revision
 
 see [Components in Queue](https://github.com/NIAGADS/niagads-viz-monorepo/issues/23) for specific issues related to these UI Elements
 
-* Navigation - see _TODOs_ in issue [#63](https://github.com/NIAGADS/niagads-viz-monorepo/issues/63)
-* Dropdown
-* Skeleton
-* Slider
-* Layout/RootLayout (needs _Footer_)
+- Navigation - see _TODOs_ in issue [#63](https://github.com/NIAGADS/niagads-viz-monorepo/issues/63)
+- Dropdown
+- Skeleton
+- Slider
+- Layout/RootLayout (needs _Footer_)
 
 ### Planned
 

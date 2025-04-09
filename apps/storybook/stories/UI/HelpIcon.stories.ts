@@ -17,6 +17,6 @@ type Story = StoryObj<typeof HelpIcon>;
 export const Default: Story = {
     args: {
         message: "Pay attention!",
-        type: "info"
+        type: "info",
     },
 };

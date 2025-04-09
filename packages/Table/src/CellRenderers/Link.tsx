@@ -13,7 +13,11 @@ const _renderLink = (displayText: string, url: string, newWindow: boolean = fals
             </a>
         );
     }
-    return <a className="cell cell-link" href={url}>{displayText}</a>;
+    return (
+        <a className="cell cell-link" href={url}>
+            {displayText}
+        </a>
+    );
 };
 
 export const LinkList = <T,>({ props }: TextRenderer<T>) => {

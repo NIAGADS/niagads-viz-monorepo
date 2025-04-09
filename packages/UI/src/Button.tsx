@@ -12,7 +12,7 @@ interface ButtonProps {
 }
 
 export const Button = ({ variant = "default", size = "md", children, onClick, disabled = false }: ButtonProps) => {
-    const classes = `ui-button ${variant} ${size}`
+    const classes = `ui-button ${variant} ${size}`;
 
     return (
         <button disabled={disabled} className={classes} onClick={onClick}>

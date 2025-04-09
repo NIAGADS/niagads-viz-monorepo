@@ -8,5 +8,5 @@ export interface LayoutProps {
 
 export interface RootLayoutProps extends LayoutProps {
     navConfig: NavigationConfig;
-    fullWidth?: boolean
+    fullWidth?: boolean;
 }

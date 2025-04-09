@@ -1,6 +1,5 @@
-
 .cell {
-    @apply font-[Inter]
+    @apply font-[Inter];
 }
 
 .cell-badge {

@@ -27,7 +27,9 @@ export const Default: Story = {
                     cillum dolore eu fugiat nulla pariatur.
                 </p>
 
-                <a className="ui-link" href="#">More information...</a>
+                <a className="ui-link" href="#">
+                    More information...
+                </a>
             </div>
         ),
     },

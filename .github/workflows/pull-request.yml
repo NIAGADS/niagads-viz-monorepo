@@ -4,17 +4,17 @@
 name: PR Build
 
 on:
-  pull_request:
-    types: [opened, edited]
+    pull_request:
+        types: [opened, edited]
 
 jobs:
-  lint-and-build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm ci
-      - run: npx prettier . --check
-      - run: npx lerna run build
+    lint-and-build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+            - run: npm ci
+            - run: npx prettier . --check
+            - run: npx lerna run build

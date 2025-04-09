@@ -24,7 +24,7 @@ export const Checkbox = ({
     defaultChecked = false,
     alignCenter = false,
 }: CheckboxProps) => {
-    const className = `ui-checkbox ${variant}`
+    const className = `ui-checkbox ${variant}`;
     return (
         <div className={alignCenter ? "text-center align-middle" : ""}>
             {defaultChecked ? (

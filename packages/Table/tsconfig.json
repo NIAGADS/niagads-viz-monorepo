@@ -2,11 +2,7 @@
     "compilerOptions": {
         "module": "esnext",
         "target": "es6",
-        "lib": [
-            "dom",
-            "dom.iterable",
-            "esnext"
-        ],
+        "lib": ["dom", "dom.iterable", "esnext"],
         "sourceMap": true,
         "jsx": "react",
         "moduleResolution": "bundler",
@@ -28,26 +24,12 @@
         "experimentalDecorators": true,
         "resolveJsonModule": true,
         "noErrorTruncation": true,
-        "typeRoots": [
-            "node_modules/@types",
-            "node_modules/niagads-ambient-types"
-        ],
+        "typeRoots": ["node_modules/@types", "node_modules/niagads-ambient-types"],
         "outDir": "dist",
         "baseUrl": ".",
         "paths": {
-            "@/*": [
-                "./*"
-            ]
+            "@/*": ["./*"]
         }
     },
-    "exclude": [
-        "node_modules",
-        "build",
-        "dist",
-        "scripts",
-        "webpack",
-        "examples",
-        "postcss.config.js",
-        "**/*.scss"
-    ]
+    "exclude": ["node_modules", "build", "dist", "scripts", "webpack", "examples", "postcss.config.js", "**/*.scss"]
 }
