@@ -1,5 +1,15 @@
+input[type=range]::-webkit-slider-thumb {
+    @apply pointer-events-auto w-5 h-5
+}
+input[type=range]::-moz-range-thumb {
+    @apply pointer-events-auto w-5 h-5
+}
+input[type="range"] {
+    @apply pointer-events-none h-2 w-full;
+}
+
 .ui-slider {
-    @apply w-full h-2 rounded-lg appearance-none cursor-pointer;
+    @apply absolute w-full h-2 rounded-lg appearance-none cursor-pointer;
 
     &.primary {
         @apply bg-primary;
@@ -12,6 +22,9 @@
     }
     &.default {
         @apply bg-blue-500;
+    }
+    &.ui-second-thumb {
+        @apply h-0 z-1; 
     }
 }
 

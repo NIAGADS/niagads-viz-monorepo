@@ -21,7 +21,7 @@ export const Default: Story = {
         name: "test slider",
         label: "Test Slider",
         variant: "default",
-        value: 50,
+        value: [20, 50],
         min: 0,
         max: 100,
         step: 10,
