@@ -14,14 +14,8 @@ jobs:
     deploy:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
-            - uses: actions/setup-node@v4
-              with:
-                  node-version: 20
-            - run: npm ci
-            - run: npx lerna run build
             - id: build-publish-storybook
               uses: bitovi/github-actions-storybook-to-github-pages@v1.0.3
               with:
                   path: apps/storybook/storybook-static
-                  build_command: npx lerna run build-storybook
+                  build_command: npx lerna run build && npx lerna run build-storybook
