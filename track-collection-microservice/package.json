@@ -1,0 +1,44 @@
+{
+    "name": "niagads-nextjs-template",
+    "version": "0.0.1",
+    "license": "MIT",
+    "private": true,
+    "bugs": {
+        "url": "https://github.com/NIAGADS/nextjs-template/issues",
+        "email": "betatesting@niagads.org"
+    },
+    "author": {
+        "name": "fossilfriend"
+    },
+    "contributors": [],
+    "scripts": {
+        "dev": "next dev --turbopack",
+        "dev-no-turbo": "next dev",
+        "build": "next build",
+        "prod": "next build && next start -H 0.0.0.0",
+        "start": "next build && next start -H 0.0.0.0",
+        "lint": "next lint"
+    },
+    "dependencies": {
+        "@niagads/table": "^0.2.5-alpha.0",
+        "@niagads/ui": "^0.2.5-alpha.0",
+        "highcharts": "^12.1.2",
+        "highcharts-react-official": "^3.2.1",
+        "next": "15.1.4",
+        "next-seo": "^6.6.0",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0"
+    },
+    "devDependencies": {
+        "@eslint/eslintrc": "^3",
+        "@tailwindcss/postcss": "^4.0.9",
+        "@types/node": "^20",
+        "@types/react": "^19",
+        "@types/react-dom": "^19",
+        "eslint": "^9",
+        "eslint-config-next": "15.1.4",
+        "postcss": "^8",
+        "tailwindcss": "^4.0",
+        "typescript": "^5"
+    }
+}
