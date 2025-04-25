@@ -4,7 +4,8 @@
     "author": "fossilfriend,bug-sam",
     "scripts": {
         "watch": "npx lerna watch -- lerna run build --scope=\\$LERNA_PACKAGE_NAME",
-        "storybook": "concurrently \"npm run watch\" \"npx lerna run storybook\""
+        "storybook": "concurrently \"npm run watch\" \"npx lerna run storybook\"",
+        "microservice": "source start_microservice.sh"
     },
     "workspaces": [
         "packages/Common",
@@ -13,11 +14,15 @@
         "packages/LocusZoom",
         "packages/Table",
         "packages/UI",
-        "apps/storybook"
+        "apps/storybook",
+        "apps/track-collection-microservice"
     ],
     "devDependencies": {
         "concurrently": "^9.1.2",
         "lerna": "^8.1.9",
         "prettier": "^3.5.3"
+    },
+    "publishConfig": {
+        "access": "restricted"
     }
 }

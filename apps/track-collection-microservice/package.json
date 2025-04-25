@@ -1,11 +1,10 @@
 {
-    "name": "niagads-nextjs-template",
-    "version": "0.0.1",
+    "name": "niagads-track-collection-microservice",
+    "version": "0.1.0",
     "license": "MIT",
     "private": true,
     "bugs": {
-        "url": "https://github.com/NIAGADS/nextjs-template/issues",
-        "email": "betatesting@niagads.org"
+        "url": "https://github.com/NIAGADS/track-collection-microservice/issues"
     },
     "author": {
         "name": "fossilfriend"
@@ -16,7 +15,6 @@
         "dev-no-turbo": "next dev",
         "build": "next build",
         "prod": "next build && next start -H 0.0.0.0",
-        "start": "next build && next start -H 0.0.0.0",
         "lint": "next lint"
     },
     "dependencies": {
@@ -24,7 +22,7 @@
         "@niagads/ui": "^0.2.5-alpha.0",
         "highcharts": "^12.1.2",
         "highcharts-react-official": "^3.2.1",
-        "next": "15.1.4",
+        "next": "^15.2.0",
         "next-seo": "^6.6.0",
         "react": "^19.0.0",
         "react-dom": "^19.0.0"
