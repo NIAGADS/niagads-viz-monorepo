@@ -13,7 +13,8 @@
         "packages/LocusZoom",
         "packages/Table",
         "packages/UI",
-        "apps/storybook"
+        "apps/storybook",
+        "apps/open-access-api-client"
     ],
     "devDependencies": {
         "concurrently": "^9.1.2",
