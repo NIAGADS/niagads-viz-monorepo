@@ -1,6 +1,6 @@
 "use client";
-import { Alert } from "@/components/UI/Alert";
-import { Button } from "@/components/UI/Button";
+import { Alert } from "@niagads/ui/Alert";
+import { Button } from "@niagads/ui/Button";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
