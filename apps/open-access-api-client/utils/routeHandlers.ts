@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { backendFetchFromRequest, userAgentIsBrowser } from "@niagads/common";
+
+import { backendFetchFromRequest } from "@niagads/common";
 
 export async function backendFetchResponseHandler(
     request: NextRequest,
@@ -8,7 +9,7 @@ export async function backendFetchResponseHandler(
 ) {
     const incomingRequestUrl = new URL(request.url);
     const queryParams = incomingRequestUrl.search;
-    const response = await backendFetchFromRequest(request, process.env.API_SERVICE_URL, asText);
+    const response = await backendFetchFromRequest(request, "/api", asText);
 
     if (queryParams.includes("view") && !asText) {
         /*
