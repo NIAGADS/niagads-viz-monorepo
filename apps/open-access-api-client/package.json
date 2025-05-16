@@ -15,7 +15,7 @@
     },
     "dependencies": {
         "@niagads/ui": "^0.2.5-alpha.0",
-        "@niagads/common": "^0.2.5-alpha.0",
+        "@niagads/common": "^0.2.0-alpha.0",
         "@niagads/table": "^0.2.5-alpha.0",
         "next": "15.3.2",
         "react": "^19.0.0",

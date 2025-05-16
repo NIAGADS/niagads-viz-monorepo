@@ -3,7 +3,7 @@ import { backendFetchFromRequest, userAgentIsBrowser } from "@niagads/common"
 
 import { headers } from 'next/headers'
 
-export async function backendFetchResponseHandler(request: NextRequest, apiServiceUrl: string) {
+export async function backendFetchResponseHandler(request: NextRequest, apiServiceUrl: string | undefined = process.env.API_SERVICE_URL) {
     const incomingRequestUrl = new URL(request.url)
     const queryParams = incomingRequestUrl.search
     const response = await backendFetchFromRequest(request, apiServiceUrl)
