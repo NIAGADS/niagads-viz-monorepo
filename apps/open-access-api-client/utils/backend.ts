@@ -1,29 +1,37 @@
-import { NextRequest } from 'next/server'
-import path from 'path'
+import { NextRequest, NextResponse } from 'next/server'
+import { backendFetchFromRequest, userAgentIsBrowser } from "@niagads/common"
 
-export async function backendFetch(apiServiceUrl: string, request: NextRequest) {
+import { headers } from 'next/headers'
+
+export async function backendFetchResponseHandler(request: NextRequest, apiServiceUrl: string) {
     const incomingRequestUrl = new URL(request.url)
-    const path = incomingRequestUrl.pathname
     const queryParams = incomingRequestUrl.search
-    const requestUri:string = apiServiceUrl! + path + queryParams
-    const response = await(fetch(requestUri))
-    const data = await response.json()
-    return data
-}
+    const response = await backendFetchFromRequest(request, apiServiceUrl)
+    if (queryParams.includes('view')) {
+        const userAgent = (await headers()).get('User-Agent')
+        const validUserAgent: boolean = userAgentIsBrowser(userAgent!)
+        if (!validUserAgent) {
+            // FIXME: raise an error instead
+            return Response.json({
+                error: 'Invalid parameter',
+                msg: 'interactive data views can only be generated if request is made in a web-browser; set `format=JSON`'
+            })
+        }
 
-export async function backendFetchFromPath(apiServiceUrl: string, path: string, relative:boolean=false) {
-    const requestUri:string = apiServiceUrl + path
-    const response = await(fetch(requestUri))
-    const data = await response.json()
-    return data
-}
+        return Response.json({
+            error: 'Not Yet Implemented',
+            msg: 'interactive data views are currently being updated.  Please check back soon.'
+        })
+        /*
+        // extract view type from query params and build the redirect URL
+        // below is the old code
+        const redirectEndpoint = `${response['redirect']}/${response['queryId']}`
+        const redirectUrl = new URL(redirectEndpoint, redirectRequestUrl)
 
-export async function backendFetchText(apiServiceUrl: string, request: NextRequest) {
-    const incomingRequestUrl = new URL(request.url)
-    const path = incomingRequestUrl.pathname
-    const queryParams = incomingRequestUrl.search
-    const requestUri:string = apiServiceUrl + path + queryParams
-    const response = await(fetch(requestUri))
-    const data = await response.text()
-    return data
-}
+        return NextResponse.redirect(redirectUrl)
+        */
+    }
+    else {
+        return Response.json(response)
+    }
+} 
