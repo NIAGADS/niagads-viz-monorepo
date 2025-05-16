@@ -1,12 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { backendFetchText } from '@/utils/backend'
+import { NextRequest } from "next/server";
+import { backendFetchResponseHandler } from "@/utils/routeHandlers";
 
 export async function GET(request: NextRequest) {
-    const response = await backendFetchText(request)
-    return new NextResponse(response, {
-        status: 200,
-        headers: {
-            'Content-Type': 'text/yaml',
-        },
+    return await backendFetchResponseHandler(request, true, {
+        "Content-Type": "text/yaml",
     });
 }

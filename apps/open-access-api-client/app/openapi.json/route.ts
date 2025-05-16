@@ -1,8 +1,7 @@
-// TEMPLATE route
-import { NextRequest } from 'next/server'
-import { get_with_redirect } from "@/utils/requestHandlers"
+import { NextRequest, NextResponse } from "next/server";
+
+import { backendFetchResponseHandler } from "@/utils/routeHandlers";
 
 export async function GET(request: NextRequest) {
-    return get_with_redirect(request);
-} 
-
+    return await backendFetchResponseHandler(request);
+}
