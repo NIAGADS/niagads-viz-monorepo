@@ -38,8 +38,10 @@ fi
 
 # Merge the three files using Redocly CLI
 redocly join docs/root.yaml docs/genomics.yaml docs/filer.yaml \
-  --output docs/openapi.yaml 
-  --prefix-tags-with-filenames
-
+  --output docs/openapi.yaml \
+  --prefix-tags-with-filename \
+  --prefix-components-with-info-prop title
+  
+  # or without-x-tag-groups to prevent naming conflicts.
 
 echo "Bundled OpenAPI file created as openapi.yaml"
