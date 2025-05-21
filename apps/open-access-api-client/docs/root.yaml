@@ -1,0 +1,45 @@
+info:
+  contact:
+    email: betatesting@niagads.org
+    name: NIAGADS Support
+  description: Query or browse data from NIAGADS Open Access Resources
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  summary: NIAGADS Open Access API
+  termsOfService: http://localhost:8000/terms
+  title: NIAGADS Open Access API
+  version: 0.1.0
+openapi: 3.1.0
+paths:
+  /v0/openapi.yaml:
+    get:
+      description: Get API Specificiation in `YAML` format
+      operationId: Specification___YAML__v0_openapi_yaml_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '404':
+          description: Item not found
+        '422':
+          description: Validation Error
+        '429':
+          description: Too many requests
+        '500':
+          description: Internal Server Error
+        '501':
+          description: Not Implemented
+      summary: 'Specification: `Yaml`'
+      tags:
+      - OpenAPI Specification
+servers:
+- url: http://localhost:8000
+tags:
+- description: Query or browse data from NIAGADS Open Access Resources
+  externalDocs:
+    description: NIAGADS Home
+    url: https://www.niagads.org/
+  name: NIAGADS Open Access API

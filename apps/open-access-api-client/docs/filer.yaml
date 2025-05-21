@@ -1,0 +1,1945 @@
+components:
+  schemas:
+    Assembly:
+      description: enum for genome builds
+      enum:
+      - GRCh37
+      - GRCh38
+      title: Assembly
+      type: string
+    BEDFeature:
+      additionalProperties: true
+      properties:
+        chrom:
+          description: name of the chromosome or scaffold
+          title: Chromosome
+          type: string
+        chromEnd:
+          description: ending position of the feature; not included in the display
+          title: End
+          type: integer
+        chromStart:
+          description: starting position of the feature in the chromosomse. 0-based
+          title: Start
+          type: integer
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: .
+          description: display label for the feature
+          title: Name
+        score:
+          anyOf:
+          - type: string
+          - type: integer
+          - type: number
+          - type: 'null'
+          default: .
+          description: a score between 0 and 1000
+          title: Score
+        strand:
+          anyOf:
+          - type: string
+          - type: 'null'
+          default: .
+          description: forward (+) or reverse (-) direction
+          title: Strand
+      required:
+      - chrom
+      - chromStart
+      - chromEnd
+      title: BEDFeature
+      type: object
+    BEDResponse:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/BEDFeature'
+          title: Data
+          type: array
+        pagination:
+          $ref: '#/components/schemas/PaginationDataModel'
+          description: pagination details, if the result is paged
+        request:
+          $ref: '#/components/schemas/RequestDataModel'
+          description: details about the originating request that generated the response
+      required:
+      - data
+      - request
+      - pagination
+      title: BEDResponse
+      type: object
+    BiosampleCharacteristics:
+      properties:
+        biomarker:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Biomarker
+        biosample:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/OntologyTerm'
+            type: array
+          - type: 'null'
+          description: ontology term/id pairs describing the biosample
+          title: Biosample
+        biosample_type:
+          anyOf:
+          - $ref: '#/components/schemas/BiosampleType'
+          - type: string
+          - type: 'null'
+          title: Biosample Type
+        life_stage:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: donor or sample life stage
+          title: 'Biosample: Life Stage'
+        system:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: 'Biosample: Anatomical System'
+        tissue:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: 'Biosample: Tissue'
+      title: BiosampleCharacteristics
+      type: object
+    BiosampleType:
+      enum:
+      - definition: A cell in vitro that has undergone physical changes as a consequence
+          of a deliberate and specific experimental procedure
+        ontology: Cell Ontology
+        term: experimentally modified cell in vitro
+        term_id: CL_0000578
+        term_iri: http://purl.obolibrary.org/obo/CL_0000578
+      - definition: A cultured cell population that represents a genetically stable
+          and homogenous population of cultured cells that shares a common propagation
+          history.
+        ontology: Cell Line Ontology
+        term: cell line
+        term_id: CLO_0000031
+        term_iri: http://purl.obolibrary.org/obo/CLO_0000031
+      - definition: A stem cell line cell that is dervied from an embryotic stem cell,  a
+          pluripotent stem cell derived from the inner cell mass of a blastocyst,
+          an early-stage perimplantation embryo.
+        ontology: Cell Line Ontology
+        term: embryonic stem cell line cell
+        term_id: CLO_0037279
+        term_iri: http://purl.obolibrary.org/obo/CLO_0037279
+      - definition: A stem cell line cell that is pluripotent and is generated from
+          an adult somatic cell.
+        ontology: Cell Line Ontology
+        term: induced pluripotent stem cell line cell
+        term_id: CLO_0037307
+        term_iri: http://purl.obolibrary.org/obo/CLO_0037307
+      - definition: A material entity of anatomical origin (part of or deriving from
+          an organism) that has as its parts a maximally connected cell compartment
+          surrounded by a plasma membrane.)
+        ontology: Cell Ontology
+        term: cell
+        term_id: CL:0000000
+        term_iri: http://purl.obolibrary.org/obo/CL_0000000
+      - ontology: Experimental Factor Ontology
+        term: primary cell
+        term_id: EFO_0002660
+      - definition: A relatively undifferentiated cell that retains the ability to
+          divide and proliferate throughout life to provide progenitor cells that
+          can differentiate into specialized cells.
+        ontology: Cell Ontology
+        term: stem cell
+        term_id: CL_0000034
+        term_iri: http://purl.obolibrary.org/obo/CL_0000034
+      - ontology: Cell Ontology
+        term: primary cell culture
+        term_id: CL_0000001
+        term_iri: http://purl.obolibrary.org/obo/CL_0000001
+      - definition: Multicellular anatomical structure that consists of many cells
+          of one or a few types, arranged in an extracellular matrix such that their
+          long-range organisation is at least partly a repetition of their short-range
+          organisation.
+        ontology: UBERON
+        term: tissue
+        term_id: UBERON_0000479
+        term_iri: http://purl.obolibrary.org/obo/UBERON_0000479
+      - definition: A three dimensional mass comprised of a cultured cell or tissue
+          sample that resembles an in vivo tissue or organ. Organoids are grown in
+          vitro from a combination of cells or tissue fragments cultured in medium
+          containing a variety of biochemical factors.
+        ontology: NCIT
+        term: organoid
+        term_id: NCIT_C172259
+        term_iri: http://purl.obolibrary.org/obo/NCIT_C172259
+      title: BiosampleType
+    Collection:
+      properties:
+        description:
+          title: Description
+          type: string
+        name:
+          title: Name
+          type: string
+        num_tracks:
+          title: Num Tracks
+          type: integer
+      required:
+      - name
+      - description
+      - num_tracks
+      title: Collection
+      type: object
+    CollectionResponse:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Collection'
+          title: Data
+          type: array
+        request:
+          $ref: '#/components/schemas/RequestDataModel'
+          description: details about the originating request that generated the response
+      required:
+      - data
+      - request
+      title: CollectionResponse
+      type: object
+    ExperimentalDesign:
+      properties:
+        analysis:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Analysis
+        antibody_target:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Antibody Target
+        assay:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Assay
+        classification:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Classification
+        covariates:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Covariates
+        data_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Data Category
+        is_lifted:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: data are lifted from earlier genome build
+          title: Is Lifted?
+        output_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Output Type
+      title: ExperimentalDesign
+      type: object
+    FileProperties:
+      properties:
+        bp_covered:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Bp Covered
+        file_format:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: File Format
+        file_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: File Name
+        file_schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: File Schema
+        file_size:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: File Size
+        md5sum:
+          anyOf:
+          - pattern: ^[a-fA-F0-9]{32}$
+            type: string
+          - type: 'null'
+          title: Md5Sum
+        num_intervals:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Num Intervals
+        release_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Release Date
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+      title: FileProperties
+      type: object
+    IGVBrowserTrackConfig:
+      properties:
+        autoscale:
+          readOnly: true
+          title: Autoscale
+          type: boolean
+        description:
+          title: Description
+          type: string
+        format:
+          description: extract file schema from file format
+          readOnly: true
+          title: Format
+          type: string
+        id:
+          title: Id
+          type: string
+        indexURL:
+          readOnly: true
+          title: Indexurl
+          type: string
+        infoURL:
+          default: /record
+          title: Infourl
+          type: string
+        name:
+          title: Name
+          type: string
+        type:
+          description: extract track type from file schema
+          readOnly: true
+          title: Type
+          type: string
+        url:
+          title: Url
+          type: string
+      required:
+      - id
+      - name
+      - url
+      - description
+      - format
+      - type
+      - indexURL
+      - autoscale
+      title: IGVBrowserTrackConfig
+      type: object
+    OntologyTerm:
+      properties:
+        definition:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Definition
+        ontology:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ontology
+        term:
+          description: ontology term describing biosample material
+          title: Biosample
+          type: string
+        term_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: mapped ontology term ID
+          title: 'Biosample: Term ID'
+        term_iri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: mapped ontology term IRI
+          title: 'Biosample: Term IRI'
+      required:
+      - term
+      title: OntologyTerm
+      type: object
+    PagedResponseModel:
+      properties:
+        data:
+          description: result (data) from the request
+          title: Data
+        pagination:
+          $ref: '#/components/schemas/PaginationDataModel'
+          description: pagination details, if the result is paged
+        request:
+          $ref: '#/components/schemas/RequestDataModel'
+          description: details about the originating request that generated the response
+      required:
+      - data
+      - request
+      - pagination
+      title: PagedResponseModel
+      type: object
+    PaginationDataModel:
+      description: Captures pagination status.
+      properties:
+        page:
+          default: 1
+          description: if result is paged, indicates the current page of the result;
+            defaults to 1
+          title: Page
+          type: integer
+        paged_num_records:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: number of records in the current paged result set (response)
+          title: Paged Num Records
+        total_num_pages:
+          default: 1
+          description: if the result is paged, reports total number of pages in the
+            full result set (response); defaults to 1
+          title: Total Num Pages
+          type: integer
+        total_num_records:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: total number of records in the full result set (response)
+          title: Total Num Records
+      title: PaginationDataModel
+      type: object
+    Phenotype:
+      properties:
+        disease:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Disease
+        ethnicity:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Ethnicity
+        neuropathology:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Neuropathology
+        race:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Race
+        study_diagnosis:
+          anyOf:
+          - $ref: '#/components/schemas/StudyDiagnosis'
+          - type: 'null'
+          description: status of individual in the study as a case or control
+          title: Study Diagnosis
+      title: Phenotype
+      type: object
+    Provenance:
+      properties:
+        accession:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Accession
+        attribution:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Attribution
+        consortia:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Consortia
+        data_source:
+          description: original file data source
+          title: Data Source
+          type: string
+        data_source_url:
+          readOnly: true
+          title: Data Source Url
+          type: string
+        doi:
+          anyOf:
+          - items:
+              type: string
+            type: array
+            uniqueItems: true
+          - type: 'null'
+          title: Doi
+        download_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Download Date
+        download_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Download Url
+        project:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Project
+        pubmed_id:
+          anyOf:
+          - items:
+              pattern: ^([0-9]{8}|PMID:[0-9]{8})$
+              type: string
+            type: array
+            uniqueItems: true
+          - type: 'null'
+          title: Pubmed Id
+        release_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Release Date
+        release_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Release Version
+        study:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Study
+      required:
+      - data_source
+      - data_source_url
+      title: Provenance
+      type: object
+    RequestDataModel:
+      description: Captures cleaned user-centric information about the origining request.
+      properties:
+        endpoint:
+          description: queried endpoint
+          title: Endpoint
+          type: string
+        message:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          description: warning or info message qualifying the response
+          title: Message
+        parameters:
+          additionalProperties:
+            anyOf:
+            - type: integer
+            - type: string
+            - type: boolean
+          description: request path and query parameters, includes unspecified defaults
+          title: Parameters
+          type: object
+        request_id:
+          description: unique request identifier
+          title: Request Id
+          type: string
+      required:
+      - request_id
+      - endpoint
+      - parameters
+      title: RequestDataModel
+      type: object
+    ResponseModel:
+      properties:
+        data:
+          description: result (data) from the request
+          title: Data
+        request:
+          $ref: '#/components/schemas/RequestDataModel'
+          description: details about the originating request that generated the response
+      required:
+      - data
+      - request
+      title: ResponseModel
+      type: object
+    StudyDiagnosis:
+      enum:
+      - CASE
+      - CONTROL
+      - OTHER
+      title: StudyDiagnosis
+      type: string
+    TableCellType:
+      enum:
+      - boolean
+      - abstract
+      - float
+      - p_value
+      - text
+      - text_list
+      - badge
+      - link
+      - link_list
+      - percentage_bar
+      title: TableCellType
+      type: string
+    TableColumn:
+      properties:
+        canFilter:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Canfilter
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        disableGlobalFilter:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Disableglobalfilter
+        disableSorting:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Disablesorting
+        header:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Header
+        id:
+          title: Id
+          type: string
+        required:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Required
+        type:
+          anyOf:
+          - $ref: '#/components/schemas/TableCellType'
+          - type: 'null'
+          default: abstract
+      required:
+      - id
+      title: TableColumn
+      type: object
+    TableViewModel:
+      properties:
+        columns:
+          items:
+            $ref: '#/components/schemas/TableColumn'
+          title: Columns
+          type: array
+        data:
+          items:
+            additionalProperties: true
+            type: object
+          title: Data
+          type: array
+        id:
+          title: Id
+          type: string
+      required:
+      - data
+      - columns
+      - id
+      title: TableViewModel
+      type: object
+    TableViewResponse:
+      properties:
+        pagination:
+          anyOf:
+          - $ref: '#/components/schemas/PaginationDataModel'
+          - type: 'null'
+          description: pagination details, if the result is paged
+        request:
+          $ref: '#/components/schemas/RequestDataModel'
+          description: details about the originating request that generated the response
+        table:
+          $ref: '#/components/schemas/TableViewModel'
+      required:
+      - request
+      - pagination
+      - table
+      title: TableViewResponse
+      type: object
+    Track:
+      properties:
+        biosample_characteristics:
+          anyOf:
+          - $ref: '#/components/schemas/BiosampleCharacteristics'
+          - type: 'null'
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        experimental_design:
+          anyOf:
+          - $ref: '#/components/schemas/ExperimentalDesign'
+          - type: 'null'
+        feature_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Feature
+        file_properties:
+          anyOf:
+          - $ref: '#/components/schemas/FileProperties'
+          - type: 'null'
+        genome_build:
+          title: Genome Build
+          type: string
+        is_download_only:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: File is available for download only; data cannot be queried
+            using the NIAGADS Open Access API.
+          title: Download Only
+        is_shard:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: Flag indicateing whether track is part of a result set sharded
+            by chromosome.
+          title: Is Shard?
+        name:
+          title: Name
+          type: string
+        provenance:
+          anyOf:
+          - $ref: '#/components/schemas/Provenance'
+          - type: 'null'
+        subject_phenotypes:
+          anyOf:
+          - $ref: '#/components/schemas/Phenotype'
+          - type: 'null'
+        track_id:
+          title: Track
+          type: string
+      required:
+      - track_id
+      - name
+      - genome_build
+      - is_download_only
+      - is_shard
+      - biosample_characteristics
+      - subject_phenotypes
+      - experimental_design
+      - provenance
+      - file_properties
+      title: Track
+      type: object
+    TrackResponse:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Track'
+          title: Data
+          type: array
+        pagination:
+          $ref: '#/components/schemas/PaginationDataModel'
+          description: pagination details, if the result is paged
+        request:
+          $ref: '#/components/schemas/RequestDataModel'
+          description: details about the originating request that generated the response
+      required:
+      - data
+      - request
+      - pagination
+      title: TrackResponse
+      type: object
+    TrackSummary:
+      additionalProperties: true
+      properties:
+        data_category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: data category; may be analysis type
+          title: Category
+        data_source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: original data source for the track
+          title: Data Source
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        feature_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Feature
+        genome_build:
+          title: Genome Build
+          type: string
+        is_download_only:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          default: false
+          description: File is available for download only; data cannot be queried
+            using the NIAGADS Open Access API.
+          title: Download Only
+        is_shard:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          default: false
+          description: Flag indicateing whether track is part of a result set sharded
+            by chromosome.
+          title: Is Shard?
+        name:
+          title: Name
+          type: string
+        track_id:
+          title: Track
+          type: string
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: URL for NIAGADS-standardized file
+          title: Download URL
+      required:
+      - track_id
+      - name
+      - genome_build
+      title: TrackSummary
+      type: object
+    TrackSummaryResponse:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/TrackSummary'
+          title: Data
+          type: array
+        pagination:
+          $ref: '#/components/schemas/PaginationDataModel'
+          description: pagination details, if the result is paged
+        request:
+          $ref: '#/components/schemas/RequestDataModel'
+          description: details about the originating request that generated the response
+      required:
+      - data
+      - request
+      - pagination
+      title: TrackSummaryResponse
+      type: object
+info:
+  contact:
+    email: betatesting@niagads.org
+    name: NIAGADS Support
+  description: Query tracks and track data in FILER, a functional genomics database
+    developed by NIAGADS built on a comprehensive harmonized, extensible, indexed,
+    searchable human functional genomics data collection across >20 data sources.
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  summary: 'NIAGADS Open Access API: FILER'
+  termsOfService: http://localhost:8000/terms
+  title: FILER Functional Genomics Repository
+  version: 0.1.0
+openapi: 3.1.0
+paths:
+  /v0/:
+    get:
+      description: brief summary about the FILER Functional Genomics Repository
+      operationId: get_database_description_v0__get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseModel'
+          description: Successful Response
+        '404':
+          description: Item not found
+        '422':
+          description: Validation Error
+        '429':
+          description: Too many requests
+        '500':
+          description: Internal Server Error
+        '501':
+          description: Not Implemented
+      summary: Get Database Description
+      tags:
+      - Service Information
+  /v0/collection/:
+    get:
+      description: list available collections of related FILER tracks
+      operationId: Get_Track_Collections_v0_collection__get
+      parameters:
+      - description: 'Response format.  If a non-text `view` is specified, the response
+          format will default to `JSON` Allowable values are: JSON,TEXT.'
+        in: query
+        name: format
+        required: false
+        schema:
+          default: JSON
+          description: 'Response format.  If a non-text `view` is specified, the response
+            format will default to `JSON` Allowable values are: JSON,TEXT.'
+          title: Format
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponse'
+          description: Successful Response
+        '404':
+          description: Item not found
+        '422':
+          description: Validation Error
+        '429':
+          description: Too many requests
+        '500':
+          description: Internal Server Error
+        '501':
+          description: Not Implemented
+      summary: Get Track Collections
+      tags:
+      - Collections
+      - Service Information
+  /v0/collection/{collection}:
+    get:
+      description: retrieve full metadata for FILER track records associated with
+        a collection
+      operationId: Get_track_metadata_by_collection_v0_collection__collection__get
+      parameters:
+      - description: track collection name
+        in: path
+        name: collection
+        required: true
+        schema:
+          description: track collection name
+          title: Collection
+          type: string
+      - description: 'Type of information returned by the query. Allowable values
+          are: FULL,COUNTS,IDS,SUMMARY,URLS.'
+        in: query
+        name: content
+        required: false
+        schema:
+          default: FULL
+          description: 'Type of information returned by the query. Allowable values
+            are: FULL,COUNTS,IDS,SUMMARY,URLS.'
+          title: Content
+          type: string
+      - description: 'Response format.  If a non-text `view` is specified, the response
+          format will default to `JSON` Allowable values are: JSON,TEXT.'
+        in: query
+        name: format
+        required: false
+        schema:
+          default: JSON
+          description: 'Response format.  If a non-text `view` is specified, the response
+            format will default to `JSON` Allowable values are: JSON,TEXT.'
+          title: Format
+          type: string
+      - description: 'Visual representation of the data.  Select `DEFAULT` for TEXT
+          or JSON response. Allowable values are: TABLE,DEFAULT.'
+        in: query
+        name: view
+        required: false
+        schema:
+          default: DEFAULT
+          description: 'Visual representation of the data.  Select `DEFAULT` for TEXT
+            or JSON response. Allowable values are: TABLE,DEFAULT.'
+          title: View
+          type: string
+      - description: a track identifier
+        in: query
+        name: track
+        required: false
+        schema:
+          description: a track identifier
+          title: Track
+          type: string
+      - description: specify which page of the response to return, if response is
+          paginated
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          description: specify which page of the response to return, if response is
+            paginated
+          title: Page
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/ResponseModel'
+                - $ref: '#/components/schemas/TrackSummaryResponse'
+                - $ref: '#/components/schemas/TrackResponse'
+                - $ref: '#/components/schemas/TableViewResponse'
+                title: Response Get Track Metadata By Collection V0 Collection  Collection  Get
+          description: Successful Response
+        '404':
+          description: Item not found
+        '422':
+          description: Validation Error
+        '429':
+          description: Too many requests
+        '500':
+          description: Internal Server Error
+        '501':
+          description: Not Implemented
+      summary: Get Track Metadata By Collection
+      tags:
+      - Collections
+  /v0/data:
+    get:
+      description: retrieve data from one or more FILER tracks in the specified region
+      operationId: Get_data_from_multiple_tracks_v0_data_get
+      parameters:
+      - description: 'Type of information returned by the query. Allowable values
+          are: FULL,COUNTS,SUMMARY.'
+        in: query
+        name: content
+        required: false
+        schema:
+          default: FULL
+          description: 'Type of information returned by the query. Allowable values
+            are: FULL,COUNTS,SUMMARY.'
+          title: Content
+          type: string
+      - description: 'Response format.  If a non-text `view` is specified, the response
+          format will default to `JSON` Allowable values are: JSON,TEXT,BED.'
+        in: query
+        name: format
+        required: false
+        schema:
+          default: JSON
+          description: 'Response format.  If a non-text `view` is specified, the response
+            format will default to `JSON` Allowable values are: JSON,TEXT,BED.'
+          title: Format
+          type: string
+      - description: 'Visual representation of the data.  Select `DEFAULT` for TEXT
+          or JSON response. Allowable values are: TABLE,IGV_BROWSER,DEFAULT.'
+        in: query
+        name: view
+        required: false
+        schema:
+          default: DEFAULT
+          description: 'Visual representation of the data.  Select `DEFAULT` for TEXT
+            or JSON response. Allowable values are: TABLE,IGV_BROWSER,DEFAULT.'
+          title: View
+          type: string
+      - description: a comma separated list of one or more track identifiers
+        in: query
+        name: track
+        required: true
+        schema:
+          description: a comma separated list of one or more track identifiers
+          title: Track
+          type: string
+      - description: 'genomic region to query; '
+        in: query
+        name: span
+        required: true
+        schema:
+          description: 'genomic region to query; '
+          examples:
+          - chr19:10000-40000
+          - 19:10000-40000
+          title: Span
+          type: string
+      - description: specify which page of the response to return, if response is
+          paginated
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          description: specify which page of the response to return, if response is
+            paginated
+          title: Page
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/BEDResponse'
+                - $ref: '#/components/schemas/PagedResponseModel'
+                - $ref: '#/components/schemas/TrackSummaryResponse'
+                - $ref: '#/components/schemas/TableViewResponse'
+                title: Response Get Data From Multiple Tracks V0 Data Get
+          description: Successful Response
+        '404':
+          description: Item not found
+        '422':
+          description: Validation Error
+        '429':
+          description: Too many requests
+        '500':
+          description: Internal Server Error
+        '501':
+          description: Not Implemented
+      summary: Get Data From Multiple Tracks
+      tags:
+      - Record(s) by ID
+      - Data Retrieval by Region
+  /v0/metadata:
+    get:
+      description: retrieve full metadata for one or more FILER track records by identifier
+      operationId: Get_metadata_for_multiple_tracks_v0_metadata_get
+      parameters:
+      - description: 'Type of information returned by the query. Allowable values
+          are: FULL,SUMMARY,URLS.'
+        in: query
+        name: content
+        required: false
+        schema:
+          default: FULL
+          description: 'Type of information returned by the query. Allowable values
+            are: FULL,SUMMARY,URLS.'
+          title: Content
+          type: string
+      - description: 'Response format.  If a non-text `view` is specified, the response
+          format will default to `JSON` Allowable values are: JSON,TEXT.'
+        in: query
+        name: format
+        required: false
+        schema:
+          default: JSON
+          description: 'Response format.  If a non-text `view` is specified, the response
+            format will default to `JSON` Allowable values are: JSON,TEXT.'
+          title: Format
+          type: string
+      - description: 'Visual representation of the data.  Select `DEFAULT` for TEXT
+          or JSON response. Allowable values are: TABLE,DEFAULT.'
+        in: query
+        name: view
+        required: false
+        schema:
+          default: DEFAULT
+          description: 'Visual representation of the data.  Select `DEFAULT` for TEXT
+            or JSON response. Allowable values are: TABLE,DEFAULT.'
+          title: View
+          type: string
+      - description: a comma separated list of one or more track identifiers
+        in: query
+        name: track
+        required: true
+        schema:
+          description: a comma separated list of one or more track identifiers
+          title: Track
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/TrackResponse'
+                - $ref: '#/components/schemas/TrackSummaryResponse'
+                - $ref: '#/components/schemas/TableViewResponse'
+                - $ref: '#/components/schemas/ResponseModel'
+                title: Response Get Metadata For Multiple Tracks V0 Metadata Get
+          description: Successful Response
+        '404':
+          description: Item not found
+        '422':
+          description: Validation Error
+        '429':
+          description: Too many requests
+        '500':
+          description: Internal Server Error
+        '501':
+          description: Not Implemented
+      summary: Get Metadata For Multiple Tracks
+      tags:
+      - Record(s) by ID
+  /v0/openapi.yaml:
+    get:
+      description: Get API Specificiation in `YAML` format
+      operationId: Specification___YAML__v0_openapi_yaml_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '404':
+          description: Item not found
+        '422':
+          description: Validation Error
+        '429':
+          description: Too many requests
+        '500':
+          description: Internal Server Error
+        '501':
+          description: Not Implemented
+      summary: 'Specification: `Yaml`'
+      tags:
+      - OpenAPI Specification
+  /v0/qtl/{track}:
+    get:
+      description: retrieve xQTL data from FILER for the specified genomic region
+        or sequence feature
+      operationId: Get_QTLs_by_Region_v0_qtl__track__get
+      parameters:
+      - description: data track identifier
+        in: path
+        name: track
+        required: true
+        schema:
+          description: data track identifier
+          title: Track
+          type: string
+      - description: 'Type of information returned by the query. Allowable values
+          are: FULL,COUNTS.'
+        in: query
+        name: content
+        required: false
+        schema:
+          default: FULL
+          description: 'Type of information returned by the query. Allowable values
+            are: FULL,COUNTS.'
+          title: Content
+          type: string
+      - description: 'Response format.  If a non-text `view` is specified, the response
+          format will default to `JSON` Allowable values are: JSON,TEXT,BED.'
+        in: query
+        name: format
+        required: false
+        schema:
+          default: JSON
+          description: 'Response format.  If a non-text `view` is specified, the response
+            format will default to `JSON` Allowable values are: JSON,TEXT,BED.'
+          title: Format
+          type: string
+      - description: 'Visual representation of the data.  Select `DEFAULT` for TEXT
+          or JSON response. Allowable values are: TABLE,IGV_BROWSER,DEFAULT.'
+        in: query
+        name: view
+        required: false
+        schema:
+          default: DEFAULT
+          description: 'Visual representation of the data.  Select `DEFAULT` for TEXT
+            or JSON response. Allowable values are: TABLE,IGV_BROWSER,DEFAULT.'
+          title: View
+          type: string
+      - description: "genomic region to query, may be one of the following:\n    \
+          \            Official Gene Symbol, Ensembl ID, Entrez ID, refSNP ID, variant\
+          \ positional ID (chr:pos:ref:alt),\n                or genomic span. Please\
+          \ specific genomic spans as chrN:start-end or N:start-end"
+        in: query
+        name: loc
+        required: true
+        schema:
+          description: "genomic region to query, may be one of the following:\n  \
+            \              Official Gene Symbol, Ensembl ID, Entrez ID, refSNP ID,\
+            \ variant positional ID (chr:pos:ref:alt),\n                or genomic\
+            \ span. Please specific genomic spans as chrN:start-end or N:start-end"
+          title: Loc
+          type: string
+      - description: specify which page of the response to return, if response is
+          paginated
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          description: specify which page of the response to return, if response is
+            paginated
+          title: Page
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/BEDResponse'
+                - $ref: '#/components/schemas/TableViewResponse'
+                - $ref: '#/components/schemas/ResponseModel'
+                title: Response Get Qtls By Region V0 Qtl  Track  Get
+          description: Successful Response
+        '404':
+          description: Item not found
+        '422':
+          description: Validation Error
+        '429':
+          description: Too many requests
+        '500':
+          description: Internal Server Error
+        '501':
+          description: Not Implemented
+      summary: Get Qtls By Region
+      tags:
+      - Data Retrieval by Region
+      - xQTL Track Record
+  /v0/search/data:
+    get:
+      description: find functional genomics tracks with data in specified region;
+        qualify using category filters or by a keyword search against all text fields
+        in the track metadata
+      operationId: Search_tracks_and_retrieve_data_v0_search_data_get
+      parameters:
+      - description: 'Type of information returned by the query. Allowable values
+          are: FULL,COUNTS,SUMMARY.'
+        in: query
+        name: content
+        required: false
+        schema:
+          default: FULL
+          description: 'Type of information returned by the query. Allowable values
+            are: FULL,COUNTS,SUMMARY.'
+          title: Content
+          type: string
+      - description: 'Response format.  If a non-text `view` is specified, the response
+          format will default to `JSON` Allowable values are: JSON,TEXT,BED.'
+        in: query
+        name: format
+        required: false
+        schema:
+          default: JSON
+          description: 'Response format.  If a non-text `view` is specified, the response
+            format will default to `JSON` Allowable values are: JSON,TEXT,BED.'
+          title: Format
+          type: string
+      - description: 'Visual representation of the data.  Select `DEFAULT` for TEXT
+          or JSON response. Allowable values are: TABLE,IGV_BROWSER,DEFAULT.'
+        in: query
+        name: view
+        required: false
+        schema:
+          default: DEFAULT
+          description: 'Visual representation of the data.  Select `DEFAULT` for TEXT
+            or JSON response. Allowable values are: TABLE,IGV_BROWSER,DEFAULT.'
+          title: View
+          type: string
+      - description: reference genome build (assembly)
+        in: query
+        name: assembly
+        required: false
+        schema:
+          $ref: '#/components/schemas/Assembly'
+          default: GRCh38
+          description: reference genome build (assembly)
+      - description: 'genomic region to query; '
+        in: query
+        name: span
+        required: true
+        schema:
+          description: 'genomic region to query; '
+          examples:
+          - chr19:10000-40000
+          - 19:10000-40000
+          title: Span
+          type: string
+      - description: filter expresssion string
+        in: query
+        name: filter
+        required: false
+        schema:
+          description: filter expresssion string
+          title: Filter
+          type: string
+      - description: Search all text annotations by keyword.  Matches are exact and
+          case-sensitive.
+        in: query
+        name: keyword
+        required: false
+        schema:
+          description: Search all text annotations by keyword.  Matches are exact
+            and case-sensitive.
+          title: Keyword
+          type: string
+      - description: specify which page of the response to return, if response is
+          paginated
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          description: specify which page of the response to return, if response is
+            paginated
+          title: Page
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/PagedResponseModel'
+                - $ref: '#/components/schemas/TrackSummaryResponse'
+                - $ref: '#/components/schemas/BEDResponse'
+                - $ref: '#/components/schemas/TableViewResponse'
+                title: Response Search Tracks And Retrieve Data V0 Search Data Get
+          description: Successful Response
+        '404':
+          description: Item not found
+        '422':
+          description: Validation Error
+        '429':
+          description: Too many requests
+        '500':
+          description: Internal Server Error
+        '501':
+          description: Not Implemented
+      summary: Search Tracks And Retrieve Data
+      tags:
+      - Record(s) by Text Search
+      - Record(s) by Region
+      - Data Retrieval by Record Text Search
+      - Data Retrieval by Region
+  /v0/search/metadata:
+    get:
+      description: find functional genomics tracks by a keyword search against all
+        text fields in the track metadata
+      operationId: Search_for_tracks_v0_search_metadata_get
+      parameters:
+      - description: 'Type of information returned by the query. Allowable values
+          are: FULL,COUNTS,IDS,SUMMARY,URLS.'
+        in: query
+        name: content
+        required: false
+        schema:
+          default: FULL
+          description: 'Type of information returned by the query. Allowable values
+            are: FULL,COUNTS,IDS,SUMMARY,URLS.'
+          title: Content
+          type: string
+      - description: 'Response format.  If a non-text `view` is specified, the response
+          format will default to `JSON` Allowable values are: JSON,TEXT.'
+        in: query
+        name: format
+        required: false
+        schema:
+          default: JSON
+          description: 'Response format.  If a non-text `view` is specified, the response
+            format will default to `JSON` Allowable values are: JSON,TEXT.'
+          title: Format
+          type: string
+      - description: 'Visual representation of the data.  Select `DEFAULT` for TEXT
+          or JSON response. Allowable values are: TABLE,DEFAULT.'
+        in: query
+        name: view
+        required: false
+        schema:
+          default: DEFAULT
+          description: 'Visual representation of the data.  Select `DEFAULT` for TEXT
+            or JSON response. Allowable values are: TABLE,DEFAULT.'
+          title: View
+          type: string
+      - description: filter expresssion string
+        in: query
+        name: filter
+        required: false
+        schema:
+          description: filter expresssion string
+          title: Filter
+          type: string
+      - description: Search all text annotations by keyword.  Matches are exact and
+          case-sensitive.
+        in: query
+        name: keyword
+        required: false
+        schema:
+          description: Search all text annotations by keyword.  Matches are exact
+            and case-sensitive.
+          title: Keyword
+          type: string
+      - description: reference genome build (assembly)
+        in: query
+        name: assembly
+        required: false
+        schema:
+          $ref: '#/components/schemas/Assembly'
+          default: GRCh38
+          description: reference genome build (assembly)
+      - description: specify which page of the response to return, if response is
+          paginated
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          description: specify which page of the response to return, if response is
+            paginated
+          title: Page
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/PagedResponseModel'
+                - $ref: '#/components/schemas/TrackSummaryResponse'
+                - $ref: '#/components/schemas/TrackResponse'
+                - $ref: '#/components/schemas/TableViewResponse'
+                title: Response Search For Tracks V0 Search Metadata Get
+          description: Successful Response
+        '404':
+          description: Item not found
+        '422':
+          description: Validation Error
+        '429':
+          description: Too many requests
+        '500':
+          description: Internal Server Error
+        '501':
+          description: Not Implemented
+      summary: Search For Tracks
+      tags:
+      - Record(s) by Text Search
+  /v0/service/igvbrowser/config:
+    get:
+      description: retrieve NIAGADS Genome Browser track configuration for one or
+        more FILER `track`(s) by ID or collection
+      operationId: Get_Genome_Browser_Configuration_v0_service_igvbrowser_config_get
+      parameters:
+      - description: a comma separated list of one or more track identifiers
+        in: query
+        name: track
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: a comma separated list of one or more track identifiers
+          title: Track
+      - description: reference genome build (assembly)
+        in: query
+        name: assembly
+        required: false
+        schema:
+          $ref: '#/components/schemas/Assembly'
+          default: GRCh38
+          description: reference genome build (assembly)
+      - description: track collection name
+        in: query
+        name: collection
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: track collection name
+          title: Collection
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/IGVBrowserTrackConfig'
+                title: Response Get Genome Browser Configuration V0 Service Igvbrowser
+                  Config Get
+                type: array
+          description: Successful Response
+        '404':
+          description: Item not found
+        '422':
+          description: Validation Error
+        '429':
+          description: Too many requests
+        '500':
+          description: Internal Server Error
+        '501':
+          description: Not Implemented
+      summary: Get Genome Browser Configuration
+      tags:
+      - NIAGADS Genome Browser
+  /v0/service/igvbrowser/selector:
+    get:
+      description: retrieve NIAGADS Genome Browser track selector table for one or
+        more FILER `track`(s) by ID or collection
+      operationId: Get_Genome_Browser_Track_Selector_Table_v0_service_igvbrowser_selector_get
+      parameters:
+      - description: a comma separated list of one or more track identifiers
+        in: query
+        name: track
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: a comma separated list of one or more track identifiers
+          title: Track
+      - description: reference genome build (assembly)
+        in: query
+        name: assembly
+        required: false
+        schema:
+          $ref: '#/components/schemas/Assembly'
+          default: GRCh38
+          description: reference genome build (assembly)
+      - description: track collection name
+        in: query
+        name: collection
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: track collection name
+          title: Collection
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TableViewModel'
+          description: Successful Response
+        '404':
+          description: Item not found
+        '422':
+          description: Validation Error
+        '429':
+          description: Too many requests
+        '500':
+          description: Internal Server Error
+        '501':
+          description: Not Implemented
+      summary: Get Genome Browser Track Selector Table
+      tags:
+      - NIAGADS Genome Browser
+  /v0/service/lookup/filters:
+    get:
+      description: List allowable fields for text search filter expressions.
+      operationId: Get_text_search_filter_fields_v0_service_lookup_filters_get
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseModel'
+          description: Successful Response
+        '404':
+          description: Item not found
+        '422':
+          description: Validation Error
+        '429':
+          description: Too many requests
+        '500':
+          description: Internal Server Error
+        '501':
+          description: Not Implemented
+      summary: Get Text Search Filter Fields
+      tags:
+      - Lookup Services
+      - Service Information
+  /v0/service/lookup/shard:
+    get:
+      description: Some tracks are sharded by chromosome.  Use this query to find
+        a shard-specific track given a chromosome and related track identifier.
+      operationId: Get_shard_metadata_v0_service_lookup_shard_get
+      parameters:
+      - description: 'Type of information returned by the query. Allowable values
+          are: FULL,SUMMARY,URLS.'
+        in: query
+        name: content
+        required: false
+        schema:
+          default: FULL
+          description: 'Type of information returned by the query. Allowable values
+            are: FULL,SUMMARY,URLS.'
+          title: Content
+          type: string
+      - description: 'Response format.  If a non-text `view` is specified, the response
+          format will default to `JSON` Allowable values are: JSON,TEXT.'
+        in: query
+        name: format
+        required: false
+        schema:
+          default: JSON
+          description: 'Response format.  If a non-text `view` is specified, the response
+            format will default to `JSON` Allowable values are: JSON,TEXT.'
+          title: Format
+          type: string
+      - description: a track identifier
+        in: query
+        name: track
+        required: false
+        schema:
+          description: a track identifier
+          title: Track
+          type: string
+      - description: chromosome, specificed as 1..22,X,Y,M,MT or chr1...chr22,chrX,chrY,chrM,chrMT
+        in: query
+        name: chromosome
+        required: false
+        schema:
+          default: '19'
+          description: chromosome, specificed as 1..22,X,Y,M,MT or chr1...chr22,chrX,chrY,chrM,chrMT
+          enum:
+          - chr1
+          - chr2
+          - chr3
+          - chr4
+          - chr5
+          - chr6
+          - chr7
+          - chr8
+          - chr9
+          - chr10
+          - chr11
+          - chr12
+          - chr13
+          - chr14
+          - chr15
+          - chr16
+          - chr17
+          - chr18
+          - chr19
+          - chr20
+          - chr21
+          - chr22
+          - chrX
+          - chrY
+          - chrM
+          title: Chromosome
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/TrackResponse'
+                - $ref: '#/components/schemas/TrackSummaryResponse'
+                - $ref: '#/components/schemas/ResponseModel'
+                title: Response Get Shard Metadata V0 Service Lookup Shard Get
+          description: Successful Response
+        '404':
+          description: Item not found
+        '422':
+          description: Validation Error
+        '429':
+          description: Too many requests
+        '500':
+          description: Internal Server Error
+        '501':
+          description: Not Implemented
+      summary: Get Shard Metadata
+      tags:
+      - Lookup Services
+  /v0/track/{track}:
+    get:
+      description: retrieve track metadata for the FILER record identified by the
+        `track` specified in the path; use `content=summary` for a brief response
+      operationId: Get_track_metadata_v0_track__track__get
+      parameters:
+      - description: data track identifier
+        in: path
+        name: track
+        required: true
+        schema:
+          description: data track identifier
+          title: Track
+          type: string
+      - description: 'Type of information returned by the query. Allowable values
+          are: FULL,SUMMARY.'
+        in: query
+        name: content
+        required: false
+        schema:
+          default: SUMMARY
+          description: 'Type of information returned by the query. Allowable values
+            are: FULL,SUMMARY.'
+          title: Content
+          type: string
+      - description: 'Response format.  If a non-text `view` is specified, the response
+          format will default to `JSON` Allowable values are: JSON,TEXT.'
+        in: query
+        name: format
+        required: false
+        schema:
+          default: JSON
+          description: 'Response format.  If a non-text `view` is specified, the response
+            format will default to `JSON` Allowable values are: JSON,TEXT.'
+          title: Format
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/TrackSummaryResponse'
+                - $ref: '#/components/schemas/TrackResponse'
+                - $ref: '#/components/schemas/ResponseModel'
+                title: Response Get Track Metadata V0 Track  Track  Get
+          description: Successful Response
+        '404':
+          description: Item not found
+        '422':
+          description: Validation Error
+        '429':
+          description: Too many requests
+        '500':
+          description: Internal Server Error
+        '501':
+          description: Not Implemented
+      summary: Get Track Metadata
+      tags:
+      - Track Records
+      - Record(s) by ID
+  /v0/track/{track}/data:
+    get:
+      description: retrieve functional genomics track data from FILER in the specified
+        region; specify `content=counts` to just retrieve a count of the number of
+        hits in the specified region
+      operationId: Get_track_data_v0_track__track__data_get
+      parameters:
+      - description: data track identifier
+        in: path
+        name: track
+        required: true
+        schema:
+          description: data track identifier
+          title: Track
+          type: string
+      - description: 'Type of information returned by the query. Allowable values
+          are: FULL,COUNTS,SUMMARY.'
+        in: query
+        name: content
+        required: false
+        schema:
+          default: FULL
+          description: 'Type of information returned by the query. Allowable values
+            are: FULL,COUNTS,SUMMARY.'
+          title: Content
+          type: string
+      - description: 'Response format.  If a non-text `view` is specified, the response
+          format will default to `JSON` Allowable values are: JSON,TEXT,BED.'
+        in: query
+        name: format
+        required: false
+        schema:
+          default: JSON
+          description: 'Response format.  If a non-text `view` is specified, the response
+            format will default to `JSON` Allowable values are: JSON,TEXT,BED.'
+          title: Format
+          type: string
+      - description: 'Visual representation of the data.  Select `DEFAULT` for TEXT
+          or JSON response. Allowable values are: TABLE,IGV_BROWSER,DEFAULT.'
+        in: query
+        name: view
+        required: false
+        schema:
+          default: DEFAULT
+          description: 'Visual representation of the data.  Select `DEFAULT` for TEXT
+            or JSON response. Allowable values are: TABLE,IGV_BROWSER,DEFAULT.'
+          title: View
+          type: string
+      - description: 'genomic region to query; '
+        in: query
+        name: span
+        required: true
+        schema:
+          description: 'genomic region to query; '
+          examples:
+          - chr19:10000-40000
+          - 19:10000-40000
+          title: Span
+          type: string
+      - description: specify which page of the response to return, if response is
+          paginated
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          description: specify which page of the response to return, if response is
+            paginated
+          title: Page
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/BEDResponse'
+                - $ref: '#/components/schemas/TrackSummaryResponse'
+                - $ref: '#/components/schemas/TableViewResponse'
+                - $ref: '#/components/schemas/PagedResponseModel'
+                title: Response Get Track Data V0 Track  Track  Data Get
+          description: Successful Response
+        '404':
+          description: Item not found
+        '422':
+          description: Validation Error
+        '429':
+          description: Too many requests
+        '500':
+          description: Internal Server Error
+        '501':
+          description: Not Implemented
+      summary: Get Track Data
+      tags:
+      - Track Records
+      - Record(s) by ID
+      - Data Retrieval by Region
+servers:
+- url: /filer
+- url: http://localhost:8000
+tags:
+- description: Query tracks and track data in FILER, a functional genomics database
+    developed by NIAGADS built on a comprehensive harmonized, extensible, indexed,
+    searchable human functional genomics data collection across >20 data sources.
+  externalDocs:
+    description: FILER Website
+    url: https://tf.lisanwanglab.org/FILER/
+  name: FILER Functional Genomics Repository
