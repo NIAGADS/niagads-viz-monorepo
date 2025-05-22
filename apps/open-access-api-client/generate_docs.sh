@@ -22,8 +22,8 @@ fi
 
 # Define URLs using HOST_NAME from .env
 ROOT="${API_PUBLIC_URL}/v${API_MAJOR_VERSION}/openapi.yaml"
-FILER="${API_PUBLIC_URL}/filer/v${API_MAJOR_VERSION}/openapi.yaml"
-GENOMICS="${API_PUBLIC_URL}/genomics/v${API_MAJOR_VERSION}/openapi.yaml"
+FILER="${API_PUBLIC_URL}/v${API_MAJOR_VERSION}/filer/openapi.yaml"
+GENOMICS="${API_PUBLIC_URL}/v${API_MAJOR_VERSION}/genomics/openapi.yaml"
 
 # Download the OpenAPI YAML files
 wget -O docs/root.yaml "$ROOT"
@@ -37,11 +37,11 @@ fi
 
 
 # Merge the three files using Redocly CLI
-redocly join docs/root.yaml docs/genomics.yaml docs/filer.yaml \
-  --output docs/openapi.yaml \
-  --prefix-tags-with-filename \
-  --prefix-components-with-info-prop title
-  
-  # or without-x-tag-groups to prevent naming conflicts.
-
-echo "Bundled OpenAPI file created as openapi.yaml"
+if redocly join docs/root.yaml docs/genomics.yaml docs/filer.yaml \
+    --output docs/openapi.yaml \
+    --prefix-components-with-info-prop x-namespace \
+    --prefix-tags-with-info-prop x-namespace; then
+    echo "SUCCESS"
+else
+    echo "FAIL"
+fi
