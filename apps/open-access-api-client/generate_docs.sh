@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Generating bundled OpenAPI documentation"
+
 # Load environment variables from .env file
 if [ -f .env.local ]; then
     export $(grep -v '^#' .env.local | xargs)
@@ -20,28 +22,42 @@ if [ -z "$API_MAJOR_VERSION" ]; then
     exit 1
 fi
 
-# Define URLs using HOST_NAME from .env
-ROOT="${API_PUBLIC_URL}/v${API_MAJOR_VERSION}/openapi.yaml"
-FILER="${API_PUBLIC_URL}/v${API_MAJOR_VERSION}/filer/openapi.yaml"
-GENOMICS="${API_PUBLIC_URL}/v${API_MAJOR_VERSION}/genomics/openapi.yaml"
-
-# Download the OpenAPI YAML files
-wget -O docs/root.yaml "$ROOT"
-wget -O docs/filer.yaml "$FILER"
-wget -O docs/genomics.yaml "$GENOMICS"
-
 # Check if redocly is installed, install if not
 if ! command -v redocly &> /dev/null; then
+    echo "Installing redocly."
     npm install -g @redocly/cli
 fi
 
+mkdir public/docs
 
-# Merge the three files using Redocly CLI
-if redocly join docs/root.yaml docs/genomics.yaml docs/filer.yaml \
-    --output docs/openapi.yaml \
-    --prefix-components-with-info-prop x-namespace \
-    --prefix-tags-with-info-prop x-namespace; then
-    echo "SUCCESS"
+# Define URLs using HOST_NAME from .env
+ROOT="${API_PUBLIC_URL}/v${API_MAJOR_VERSION}/openapi"
+FILER="${API_PUBLIC_URL}/v${API_MAJOR_VERSION}/filer/openapi"
+GENOMICS="${API_PUBLIC_URL}/v${API_MAJOR_VERSION}/genomics/openapi"
+
+# Download the OpenAPI YAML files
+# and erge the three files using Redocly CLI
+if wget -O public/docs/root.yaml "$ROOT.yaml" \
+    && wget -O public/docs/filer.yaml "$FILER.yaml" \
+    && wget -O public/docs/genomics.yaml "$GENOMICS.yaml" \
+    && redocly join public/docs/root.yaml public/docs/genomics.yaml public/docs/filer.yaml \
+        --output public/docs/openapi.yaml \
+        --without-x-tag-groups; then
+    echo "Bundled public/docs/openapi.yaml created."
 else
-    echo "FAIL"
+    echo "FAILED to create openapi.yaml bundle."
+fi
+
+
+# Download the OpenAPI JSON files
+# and merge the three files using Redocly CLI
+if wget -O public/docs/root.json "$ROOT.json" \
+    && wget -O public/docs/filer.json "$FILER.json" \
+    && wget -O public/docs/genomics.json "$GENOMICS.json" \
+    && redocly join public/docs/root.json public/docs/genomics.json public/docs/filer.json \
+        --output public/docs/openapi.json \
+        --without-x-tag-groups; then
+    echo "Bundled public/docs/openapi.json created."
+else
+    echo "FAILED to create openapi.json bundle."
 fi
