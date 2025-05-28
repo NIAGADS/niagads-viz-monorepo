@@ -30,38 +30,22 @@ export const Display: Story = {
     },
 };
 
-
 export const OneThumb = () => {
     const [value, setValue] = useState([50]);
 
     return (
         <div>
-            <Slider 
-                name="testSlider"
-                value={value}
-                min={0}
-                max={100}
-                step={5}
-                onChange={v => setValue(v)}
-            />
+            <Slider name="testSlider" value={value} min={0} max={100} step={5} onChange={(v) => setValue(v)} />
         </div>
-    )
-}
+    );
+};
 
 export const TwoThumbs: React.FC = () => {
-    const [value, setValue] = useState([25, 75])
+    const [value, setValue] = useState([25, 75]);
 
     return (
         <div>
-            <Slider 
-                name="testSlider"
-                value={value}
-                min={0}
-                max={100}
-                step={5}
-                onChange={v => setValue(v)}
-            />
+            <Slider name="testSlider" value={value} min={0} max={100} step={5} onChange={(v) => setValue(v)} />
         </div>
-    )
-}
-
+    );
+};

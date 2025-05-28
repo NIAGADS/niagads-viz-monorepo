@@ -3,7 +3,7 @@ import React from "react";
 interface SliderProps {
     name: string;
     label?: string;
-    value: number[]; 
+    value: number[];
     min: number;
     max: number;
     step: number;
@@ -30,7 +30,7 @@ export const Slider = ({ variant = "default", name, label, value, min, max, step
                         type="range"
                         onChange={(e) => {
                             const val = +e.target.value;
-                            val < value[1] && valueChanged([val, value[1]])
+                            val < value[1] && valueChanged([val, value[1]]);
                         }}
                         value={value[0]}
                         min={min}
@@ -43,7 +43,7 @@ export const Slider = ({ variant = "default", name, label, value, min, max, step
                         type="range"
                         onChange={(e) => {
                             const val = +e.target.value;
-                            val > value[0] && valueChanged([value[0], val])
+                            val > value[0] && valueChanged([value[0], val]);
                         }}
                         value={value[1]}
                         min={min}
