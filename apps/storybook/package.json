@@ -5,6 +5,10 @@
         "build-storybook": "storybook build",
         "storybook-docs": "storybook dev --docs"
     },
+    "dependencies": {
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0"
+    },
     "devDependencies": {
         "@niagads/common": "0.2.0-alpha.0",
         "@niagads/table": "0.2.5-alpha.0",

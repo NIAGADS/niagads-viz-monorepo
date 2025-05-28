@@ -1,6 +1,6 @@
 # NIAGADS Front-End Visualization Monorepo
 
-This project **will** contain React component libraries, JavaScript visualization tools, and front-end microservices powering the NIAGADS Alzheimer's Genomics Database and related NIAGADS Open Access resources.  
+This project **will** contain React component libraries, JavaScript visualization tools, and front-end microservices powering the NIAGADS Alzheimer's Genomics Database and related NIAGADS Open Access resources.
 
 > **WARNING: for third-party developers. This toolkit is still under development and not ready or recommended for general usage**
 
@@ -10,7 +10,7 @@ See project [storybook](https://niagads.github.io/niagads-viz-monorepo/) for doc
 
 ## Packages
 
-Components and Component Libraries.  
+Components and Component Libraries.
 
 ### Published
 
@@ -24,7 +24,7 @@ npm i @niagads/common
 
 #### UI
 
-Component library of UI elements (e.g., buttons, dropdowns, alert boxes, etc.) and page layout templates.  See the project [storybook](https://niagads.github.io/niagads-viz-monorepo/) for documentation.
+Component library of UI elements (e.g., buttons, dropdowns, alert boxes, etc.) and page layout templates. See the project [storybook](https://niagads.github.io/niagads-viz-monorepo/) for documentation.
 
 ```bash
 npm i @niagads/ui
@@ -32,7 +32,7 @@ npm i @niagads/ui
 
 #### Table
 
-Dynamic table component.  See project [storybook](https://niagads.github.io/niagads-viz-monorepo/) for documentation and usage examples.
+Dynamic table component. See project [storybook](https://niagads.github.io/niagads-viz-monorepo/) for documentation and usage examples.
 
 ```bash
 npm i @niagads/table
@@ -46,7 +46,7 @@ Components wrapping [gosling.js](https://gosling-lang.org/) genomics visualizati
 
 #### IGVBrowser
 
-Components wrapping a customized [igv.js](igv.js) genome browser that pull data directly from files hosted on FILER or through data adapters that query the NIAGADS Open Access API.  Also includes customized track selectors and filtering using the `@niagads/table` component.
+Components wrapping a customized [igv.js](igv.js) genome browser that pull data directly from files hosted on FILER or through data adapters that query the NIAGADS Open Access API. Also includes customized track selectors and filtering using the `@niagads/table` component.
 
 #### LocusZoom
 
@@ -54,13 +54,13 @@ Components wrapping a customized [locuszoom.js](https://statgen.github.io/locusz
 
 ## Applications
 
-More information to be added later.  
+More information to be added later.
 
-See the [for developers section](#for-developers) for information on deploying each application in a development environment.  Each application is dockerized for production deployment; see application-specific Dockerfile and/or docker-compose.yaml files.
+See the [for developers section](#for-developers) for information on deploying each application in a development environment. Each application is dockerized for production deployment; see application-specific Dockerfile and/or docker-compose.yaml files.
 
 ### Storybook
 
-While developing, you can use the storybook app to see and test your changes in real time.  Production storybook is available on github.io.
+While developing, you can use the storybook app to see and test your changes in real time. Production storybook is available on github.io.
 
 The following command will run storybook and automatically build packages as you change them, after following developer's instructions below to initialize your `lerna`/`nx` workspace.
 
@@ -69,7 +69,6 @@ npm run storybook
 ```
 
 ### niagads-api-client
-
 
 ### track-collection-microservice
 
@@ -96,10 +95,10 @@ You can build all packages by running the following command:
 npx lerna run build --concurrency 1
 ```
 
-> **Note**: The `--concurrency 1` flag is not required, but stops the lerna command from trying to build each package in parallel, avoiding race conditions and build failures when a dependent package builds faster than a dependency.  This sort of race condition can occur randomly.
+> **Note**: The `--concurrency 1` flag is not required, but stops the lerna command from trying to build each package in parallel, avoiding race conditions and build failures when a dependent package builds faster than a dependency. This sort of race condition can occur randomly.
 
 > **Note**: `npx` should come with `npm` 5.2+, but sometimes it does not get installed if you use `nvm` to manage node versions.  
-If you get a message that `npx` is not found, install globally with the following command: `npm i -g npx`.  Depending on your system setup, you may need to use `sudo`.
+> If you get a message that `npx` is not found, install globally with the following command: `npm i -g npx`. Depending on your system setup, you may need to use `sudo`.
 
 ### Run an app
 
@@ -113,7 +112,7 @@ To ensure that storybook starts with `nx` watch, please run as follows:
 npm run storybook
 ```
 
-> **Note:** if you get a message that `nx` is not found, install globally with the following command: `npm i -g nx`.  Depending on your system setup, you may need to use `sudo`.
+> **Note:** if you get a message that `nx` is not found, install globally with the following command: `npm i -g nx`. Depending on your system setup, you may need to use `sudo`.
 
 #### Run a microservice
 
@@ -187,8 +186,8 @@ npm login
 #### Initial release
 
 - in `package.json`
-  - manually set version
-  - add the following:
+    - manually set version
+    - add the following:
 
 ```json
  "publishConfig": {
@@ -234,7 +233,7 @@ npx lerna publish from-package
 
 - "hot-reloads" not reflecting code changes
 
-Sometimes the `watch` fails.  Stop or kill the running application and then manually run the `lerna build` command to rebuild all packages.
+Sometimes the `watch` fails. Stop or kill the running application and then manually run the `lerna build` command to rebuild all packages.
 
 - nx causing "Daemon is not running" error
 
