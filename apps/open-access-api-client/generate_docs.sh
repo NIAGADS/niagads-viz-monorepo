@@ -10,9 +10,9 @@ else
     exit 1
 fi
 
-# Check if API_PUBLIC_URL variable is set
-if [ -z "$API_PUBLIC_URL" ]; then
-    echo "API_PUBLIC_URL variable not set in .env file!"
+# Check if API_INTERNAL_URL variable is set
+if [ -z "$API_INTERNAL_URL" ]; then
+    echo "API_INTERNAL_URL variable not set in .env file!"
     exit 1
 fi
 
@@ -31,9 +31,9 @@ fi
 mkdir public/docs
 
 # Define URLs using HOST_NAME from .env
-ROOT="${API_PUBLIC_URL}/v${API_MAJOR_VERSION}/openapi"
-FILER="${API_PUBLIC_URL}/v${API_MAJOR_VERSION}/filer/openapi"
-GENOMICS="${API_PUBLIC_URL}/v${API_MAJOR_VERSION}/genomics/openapi"
+ROOT="${API_INTERNAL_URL}/v${API_MAJOR_VERSION}/openapi"
+FILER="${API_INTERNAL_URL}/v${API_MAJOR_VERSION}/filer/openapi"
+GENOMICS="${API_INTERNAL_URL}/v${API_MAJOR_VERSION}/genomics/openapi"
 
 # Download the OpenAPI YAML files
 # and erge the three files using Redocly CLI
