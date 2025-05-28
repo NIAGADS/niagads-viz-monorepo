@@ -3,18 +3,18 @@ import React from "react";
 interface SliderProps {
     name: string;
     label?: string;
-    value: number | [number, number];
+    value: number[]; 
     min: number;
     max: number;
     step: number;
     variant?: SliderVariants;
-    onChange: (v: number | [number, number]) => void;
+    onChange: (v: number[]) => void;
 }
 
 type SliderVariants = "default" | "primary" | "secondary" | "accent";
 
 export const Slider = ({ variant = "default", name, label, value, min, max, step, onChange }: SliderProps) => {
-    const valueChanged = (v: number | [number, number]) => v !== value && onChange(v);
+    const valueChanged = (v: number[]) => v !== value && onChange(v);
 
     return (
         <div>
@@ -23,7 +23,7 @@ export const Slider = ({ variant = "default", name, label, value, min, max, step
                     {label}
                 </label>
             )}
-            {Array.isArray(value) ? (
+            {value.length > 1 ? (
                 <div>
                     <input
                         id={name}
@@ -56,8 +56,8 @@ export const Slider = ({ variant = "default", name, label, value, min, max, step
                 <input
                     id={name}
                     type="range"
-                    onChange={(e) => valueChanged(+e.target.value)}
-                    value={value}
+                    onChange={(e) => valueChanged([+e.target.value])}
+                    value={value[0]}
                     min={min}
                     max={max}
                     step={step}
