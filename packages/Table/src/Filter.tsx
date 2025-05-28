@@ -1,13 +1,14 @@
 import { Column } from "@tanstack/react-table";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { _get } from "@niagads/common";
 import { TextInput } from "@niagads/ui";
+import { Slider, Dropdown } from "@niagads/ui/client";
 
-interface Filter {
+interface FilterProps {
     column: Column<any, unknown>;
 }
 
-export const Filter = ({ column }: Filter) => {
+export const Filter = ({ column }: FilterProps) => {
     const columnFilterValue = column.getFilterValue();
     const colType = column.columnDef.meta?.type;
 
@@ -15,58 +16,14 @@ export const Filter = ({ column }: Filter) => {
         return Array.from(column.getFacetedUniqueValues().keys()).sort();
     }, [column.getFacetedUniqueValues()]);
 
-    const minValue = useMemo(() => sortedUniqueValues[0], [sortedUniqueValues]);
-    const maxValue = useMemo(() => sortedUniqueValues.at(-1), [sortedUniqueValues]);
-
     console.log(sortedUniqueValues);
 
     return colType === "float" ? (
-        //TODO: if faceted unique values length is 5 or more use slider otherwise use dropdown
-        <div>
-            {/*  <Slider
-                className="max-w-mid"
-                label="Filter Range"
-                minValue={+minValue}
-                maxValue={+maxValue}
-                defaultValue={[+minValue, +maxValue]}
-                step={(maxValue - minValue) / 50}
-                onChange={(val) => column.setFilterValue(val)}
-            />*/}
-        </div>
+        <FloatFilter sortedValues={sortedUniqueValues} onChange={val => column.setFilterValue(val)} />
     ) : colType === "p_value" ? (
-        //TODO: filter based on neg_log10_pvalue maybe
-        <div>
-            {/*<Slider
-                className="max-w-mid"
-                label="Filter Range"
-                minValue={0}
-                maxValue={+maxValue}
-                defaultValue={+maxValue}
-                step={(maxValue - minValue) / 50}
-                onChange={(val) => column.setFilterValue([0, val])}
-            />*/}
-        </div>
+        <PValueFilter sortedValues={sortedUniqueValues} onChange={val => column.setFilterValue(val)} />
     ) : sortedUniqueValues.length < 11 ? (
-        <div>
-            {/*<Dropdown>
-                <DropdownTrigger>
-                    <Button variant="bordered">Select Filter</Button>
-                </DropdownTrigger>
-                <DropdownMenu
-                    onSelectionChange={key => column.setFilterValue(key)}
-                    //TODO: handle filtering based on mutiple selections
-                    // selectionMode="multiple"
-                    // closeOnSelect={false}
-                >
-                    {sortedUniqueValues.map((val) => (
-                        <DropdownItem key={val}>
-                            {val}
-                        </DropdownItem>
-                    ))}
-                </DropdownMenu>
-            </Dropdown>
-            */}
-        </div>
+        <DropdownFilter  values={sortedUniqueValues} onChange={val => column.setFilterValue(val)} />
     ) : (
         <div>
             <TextInput
@@ -77,3 +34,76 @@ export const Filter = ({ column }: Filter) => {
         </div>
     );
 };
+
+interface FloatFilterProps {
+    sortedValues: number[];
+    onChange: (val: number[]) => void;
+}
+
+const FloatFilter = ({ sortedValues, onChange }: FloatFilterProps) => {
+    const minValue = useMemo(() => sortedValues[0], [sortedValues]);
+    const maxValue = useMemo(() => sortedValues.at(-1), [sortedValues]) || 100;
+
+    const [value, setValue] = useState([minValue, maxValue])
+
+    useEffect(() => onChange(value), [value])
+
+    return (
+        //TODO: if faceted unique values length is 5 or more use slider otherwise use dropdown
+        <div>
+             <Slider
+                name="Filter Range"
+                min={+minValue}
+                max={+maxValue}
+                value={value}
+                step={(maxValue - minValue) / 50}
+                onChange={val => setValue(val)}
+            />
+        </div>
+    );
+};
+
+const PValueFilter = ({ sortedValues, onChange }: FloatFilterProps) => {
+    const minValue = useMemo(() => sortedValues[0], [sortedValues]);
+    const maxValue = useMemo(() => sortedValues.at(-1), [sortedValues]) || 100;
+
+    const [value, setValue] = useState([minValue, maxValue])
+
+    useEffect(() => onChange(value), [value])
+
+    return (
+        //TODO: if faceted unique values length is 5 or more use slider otherwise use dropdown
+        <div>
+             <Slider
+                name="Filter Range"
+                min={0}
+                max={+maxValue}
+                value={value}
+                step={(maxValue - minValue) / 50}
+                onChange={val => setValue(val)}
+            />
+        </div>
+    );
+};
+
+interface DropdownFilterProps {
+    values: any[];
+    onChange: (val: any[]) => void;
+}
+
+const DropdownFilter = ({ values, onChange }: DropdownFilterProps) => {
+    const [selected, setSelected] = useState<any[]>([]);
+
+    useEffect(() => onChange(selected), [selected]);
+
+    return (
+        <div>
+            <Dropdown 
+                options={values}
+                closeOnSelect={false}
+                onSelect={opt => setSelected(prev => prev.includes(opt) ? prev.filter(x => x !== opt) : [...prev, opt])}
+            />
+        </div>
+    )
+};
+
