@@ -1,0 +1,39 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "OpenAccess API Client: debug server-side",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "npx lerna run dev --scope='open-access-api-client'"
+        },
+        {
+            "name": "Next.js: debug client-side (Chrome)",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:3000",
+        },
+        {
+            "name": "Next.js: debug client-side (Firefox)",
+            "type": "firefox",
+            "request": "launch",
+            "url": "http://localhost:3000",
+            "reAttach": true,
+            "pathMappings": [
+                {
+                    "url": "webpack://_N_E",
+                    "path": "${workspaceFolder}"
+                }
+            ]
+        },
+    ],
+    "compounds": [
+        {
+            "name": "Launch OpenAccessAPI Server & Client",
+            "configurations": [
+                "OpenAccess API Client: debug server-side",
+                "Next.js: debug client-side (Chrome)"
+            ]
+        }
+    ]
+}
