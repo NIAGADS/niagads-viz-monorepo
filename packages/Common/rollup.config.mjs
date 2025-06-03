@@ -1,11 +1,11 @@
-import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
-import typescript from "@rollup/plugin-typescript";
-import terser from "@rollup/plugin-terser";
+import del from "rollup-plugin-delete";
+import { dts } from "rollup-plugin-dts";
 import external from "rollup-plugin-peer-deps-external";
 import postcss from "rollup-plugin-postcss";
-import { dts } from "rollup-plugin-dts";
-import del from "rollup-plugin-delete";
+import resolve from "@rollup/plugin-node-resolve";
+import terser from "@rollup/plugin-terser";
+import typescript from "@rollup/plugin-typescript";
 
 export default [
     {
@@ -19,7 +19,7 @@ export default [
                 preserveModulesRoot: "src",
             },
         ],
-        external: [/node_modules/],
+        external: [/node_modules/, "tslib"],
         plugins: [
             resolve(),
             commonjs(),
