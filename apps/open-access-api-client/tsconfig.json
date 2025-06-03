@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
-        "target": "ES2017",
+        "module": "esnext",
+        "target": "es6",
         "lib": [
             "dom",
             "dom.iterable",
@@ -11,13 +12,16 @@
         "strict": true,
         "noEmit": true,
         "esModuleInterop": true,
-        "module": "esnext",
         "moduleResolution": "bundler",
         "resolveJsonModule": true,
         "isolatedModules": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
         "jsx": "preserve",
         "incremental": true,
-        "typeRoots": ["node_modules/@types"],
+        "typeRoots": [
+            "node_modules/@types"
+        ],
         "plugins": [
             {
                 "name": "next"
@@ -36,6 +40,8 @@
         ".next/types/**/*.ts"
     ],
     "exclude": [
-        "node_modules", "__deprecated__", "templates"
+        "node_modules",
+        "__deprecated__",
+        "templates"
     ]
 }
