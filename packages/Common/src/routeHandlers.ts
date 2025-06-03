@@ -1,5 +1,6 @@
+import * as path from "path"
+
 import { NextRequest } from "next/server";
-import { pathJoin } from "./utils";
 
 export function userAgentIsBrowser(userAgent: string): boolean {
     // checks if the user-agent for the request was a web browser
@@ -27,7 +28,7 @@ export async function backendFetchFromRequest(
     const incomingRequestUrl = new URL(request.url);
     const pathname = incomingRequestUrl.pathname;
     const queryParams = incomingRequestUrl.search;
-    const requestUri: string = pathJoin(apiBaseUrl, pathname, queryParams);
+    const requestUri: string = path.join(apiBaseUrl, pathname, queryParams);
     return await __fetch(requestUri, asText);
 }
 
@@ -39,6 +40,6 @@ export async function backendFetch(
     if (!apiBaseUrl) {
         throw new Error("`apiBaseUrl` cannot be null.  Please specify explicitly or set API_PUBLIC_URL in .env.local");
     }
-    const requestUri: string = pathJoin(apiBaseUrl, pathname);
+    const requestUri: string = path.join(apiBaseUrl, pathname);
     return await __fetch(requestUri);
 }
