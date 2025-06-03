@@ -14,6 +14,11 @@ export const _get = (key: string, object: any, alt: any = null) => {
     return alt;
 };
 
+export function pathJoin(...items: string[]) {
+    const pattern = new RegExp("/" + "{1,}", "g"); // matches +1 occurrences of the separator
+    return items.join("/").replace(pattern, "/");
+}
+
 // trick for deep copy
 // see https://developer.mozilla.org/en-US/docs/Glossary/Deep_copy
 export const _deepCopy = (obj: any) => JSON.parse(JSON.stringify(obj));
