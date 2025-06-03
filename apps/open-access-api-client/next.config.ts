@@ -1,6 +1,14 @@
+import * as path from "path"
+
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+    turbopack: {
+        //root: path.join(__dirname, '..'), // include files outside of app
+    },
+    experimental: {
+        serverSourceMaps: true,
+    },
     // for accessing GenomicsDB services and static files; e.g., genome browser tracks
     async rewrites() {
         return [
