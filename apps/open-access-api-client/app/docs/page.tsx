@@ -1,12 +1,12 @@
 "use client";
 
-import { RedocStandalone } from "redoc";
-//https://redocly.com/docs/redoc/deployment/react
-//<RedocStandalone spec={/* spec as an object */} 
+import dynamic from "next/dynamic";
+
+const RapiDoc = dynamic(() => import("@/component_wrappers/RapiDocWrapper"), { ssr: false });
 export default function Page() {
     return (
         <main>
-            <RedocStandalone specUrl="docs/openapi.json" />
+            <RapiDoc specUrl="/openapi.json" />
         </main>
     );
 }
