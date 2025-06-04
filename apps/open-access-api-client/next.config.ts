@@ -1,5 +1,3 @@
-import * as path from "path"
-
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -9,7 +7,7 @@ const nextConfig: NextConfig = {
     experimental: {
         serverSourceMaps: true,
     },
-    transpilePackages: ['@niagads/common', '@niagads/ui', '@niagads/table'],
+    //transpilePackages: ['@niagads/common', '@niagads/ui', '@niagads/table'],
     // for accessing GenomicsDB services and static files; e.g., genome browser tracks
     async rewrites() {
         return [
@@ -21,11 +19,7 @@ const nextConfig: NextConfig = {
                 source: "/files/:path*",
                 destination: "https://www.niagads.org/genomics/files/:path*",
             },
-            {
-                source: "/api/:path*",
-                destination: `${process.env.API_INTERNAL_URL}/:path*`,
-                basePath: false,
-            },
+
         ];
     },
 
