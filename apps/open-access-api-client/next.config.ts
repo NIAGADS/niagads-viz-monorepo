@@ -22,7 +22,7 @@ const nextConfig: NextConfig = {
             },
             {
                 source: "/api/:path*",
-                destination: `${process.env.API_PUBLIC_URL}/:path*`,
+                destination: `${process.env.API_INTERNAL_URL}/:path*`,
                 basePath: false,
             },
         ];
