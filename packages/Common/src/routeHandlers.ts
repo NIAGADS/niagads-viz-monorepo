@@ -28,7 +28,8 @@ export async function backendFetchFromRequest(
     const incomingRequestUrl = new URL(request.url);
     const pathname = incomingRequestUrl.pathname;
     const queryParams = incomingRequestUrl.search;
-    const requestUri: string = path.join(apiBaseUrl, pathname, queryParams);
+    const baseUrl = (apiBaseUrl.startsWith('http')) ? apiBaseUrl : path.join(incomingRequestUrl.origin, apiBaseUrl)
+    const requestUri: string = path.join(baseUrl, pathname, queryParams);
     return await __fetch(requestUri, asText);
 }
 
