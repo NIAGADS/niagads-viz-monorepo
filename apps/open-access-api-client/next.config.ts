@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
     experimental: {
         serverSourceMaps: true,
     },
+    transpilePackages: ['@niagads/common', '@niagads/ui', '@niagads/table'],
     // for accessing GenomicsDB services and static files; e.g., genome browser tracks
     async rewrites() {
         return [
