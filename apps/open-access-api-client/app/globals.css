@@ -2,28 +2,4 @@
 
 @import "@niagads/ui/css";
 
-/* for pretty-printing json 
-.json {
-    @apply m-3
-}
-
-.string {
-    @apply text-green-800
-}
-
-.number {
-    color: darkorange;
-}
-
-.boolean {
-    color: blue;
-}
-
-.null {
-    @apply text-gray-700
-}
-
-.key {
-    @apply text-yellow-700
-}
-    */
+@import "@niagads/common/assets/styles/pretty-print-json.css";
