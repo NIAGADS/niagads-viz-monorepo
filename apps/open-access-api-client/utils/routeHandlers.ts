@@ -1,18 +1,34 @@
 import { NextRequest, NextResponse } from "next/server";
+import { backendFetchFromRequest, caseInsensitiveIncludes } from "@niagads/common";
 
-import { backendFetchFromRequest } from "@niagads/common";
+const TEXT_RESPONSES: string[] = ['TEXT', 'VCF', 'BED'];
 
 export async function backendFetchResponseHandler(
     request: NextRequest,
-    asText: boolean = false,
     headers: any | undefined = null
 ) {
-    const incomingRequestUrl = new URL(request.url);
-    const queryParams = incomingRequestUrl.search;
-    const response = await backendFetchFromRequest(request, process.env.API_INTERNAL_URL, asText);
-    //"/api", asText);
 
-    if (queryParams.includes("view") && !asText) {
+    let asText = false; // default to expect JSON response
+    const incomingRequestUrl = new URL(request.url);
+
+    const queryParams = Object.fromEntries(incomingRequestUrl.searchParams.entries());
+    if (queryParams.hasOwnProperty('format')) {
+        if (caseInsensitiveIncludes(TEXT_RESPONSES, queryParams['format'])) {
+            asText = true;
+        }
+    }
+
+    // handle yaml files
+    if (incomingRequestUrl.pathname.endsWith('yaml')) {
+        headers = {
+            "Content-Type": "text/yaml",
+        }
+        asText = true;
+    }
+
+    const response = await backendFetchFromRequest(request, process.env.API_INTERNAL_URL, asText);
+
+    if (queryParams.hasOwnProperty('view')) {
         /*
         // FIXME: does this matter anymore? just return the JSON for the view
         const userAgent = (await headers()).get("User-Agent");
