@@ -2,4 +2,25 @@
 
 @import "@niagads/ui/css";
 
+@import "@niagads/common/assets/styles/theme.css";
 @import "@niagads/common/assets/styles/pretty-print-json.css";
+@import "@niagads/common/assets/styles/text-mixins.css";
+
+@import "mixins.css";
+/*
+<footer className="bg-primary text-white">
+<div className="flex flex-row justify-between items-center text-lg p-4">
+*/
+.footer-bg-primary {
+    background-color: var(--primary); /* Example Tailwind bg-primary (blue-600), adjust as needed */
+    color: #fff; /* text-white */
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.125rem; /* text-lg */
+    padding: 1rem; /* p-4 */
+}
