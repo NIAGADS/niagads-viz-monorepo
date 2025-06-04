@@ -1,4 +1,5 @@
 import commonjs from "@rollup/plugin-commonjs";
+import copy from "rollup-plugin-copy";
 import del from "rollup-plugin-delete";
 import { dts } from "rollup-plugin-dts";
 import external from "rollup-plugin-peer-deps-external";
@@ -34,6 +35,13 @@ export default [
                 },
             }),
             terser(),
+            copy({
+                targets: [
+                    { src: "assets/**/*", dest: "dist/assets" }, // copies all files from assets to dist/assets
+                ],
+                // Optional: set copyOnce: true to only copy on first build (for watch mode)
+                // copyOnce: true,
+            })
         ],
     },
     {
