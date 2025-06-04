@@ -9,7 +9,8 @@ export async function backendFetchResponseHandler(
 ) {
     const incomingRequestUrl = new URL(request.url);
     const queryParams = incomingRequestUrl.search;
-    const response = await backendFetchFromRequest(request, "/api", asText);
+    const response = await backendFetchFromRequest(request, process.env.API_INTERNAL_URL, asText);
+    //"/api", asText);
 
     if (queryParams.includes("view") && !asText) {
         /*
@@ -48,11 +49,11 @@ export async function backendFetchResponseHandler(
                 headers: headers
                     ? headers
                     : {
-                          "Content-Type": "text/plain",
-                      },
+                        "Content-Type": "text/plain",
+                    },
             });
         }
 
-        return new NextResponse(response, { status: 200 });
+        return NextResponse.json(response, { status: 200 });
     }
 }
