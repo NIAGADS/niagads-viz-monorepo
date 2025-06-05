@@ -1,3 +1,6 @@
+
+export type ThemeVariant = "primary" | "secondary" | "light" | "dark";
+
 export interface StylingProps {
     colorVariant?: "primary" | "secondary" | "accent" | "default" | "transparent";
     size?: "sm" | "md" | "lg";
@@ -10,3 +13,4 @@ export interface AriaProps {
     ariaLabeledBy?: string;
     ariaDescribedBy?: string;
 }
+

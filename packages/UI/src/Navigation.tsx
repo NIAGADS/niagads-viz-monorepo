@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+import { ThemeVariant } from "./types";
 
 /** TODO:
  * theme-based variants
@@ -19,9 +20,14 @@ interface BrandItemConfig extends MenuItemConfig {
 
 export interface NavigationConfig {
     brand: BrandItemConfig;
-    variant?: "primary" | "secondary" | "light" | "dark";
     items: MenuItemConfig[];
     publicHostUrl?: string;
+}
+
+interface NavigationProps {
+    variant?: ThemeVariant;
+    config?: NavigationConfig;
+    children?: ReactNode;
 }
 
 const buildRouterLink = (url: string, hostUrl: string | undefined) => {
@@ -115,35 +121,41 @@ const MobileMenuButton = ({}) => (
     </div>
 );
 
-export const Navigation = ({ variant = "light", items, brand, publicHostUrl }: NavigationConfig) => {
+const renderNavigationFromConfig = (variant: ThemeVariant, { items, brand, publicHostUrl }: NavigationConfig) => (
+    <>
+        {brand && (
+            <a href={brand.href} target={brand.target} className="ui-nav-brand">
+                {brand.logo && brand.logo}
+                <span className={`ui-nav-brand-label ${variant}`}>{brand.label}</span>
+            </a>
+        )}
+
+        <div className="ui-nav-item-container">
+            {items && (
+                <ul className="ui-nav-item-list">
+                    {items.map((item, index) => (
+                        <MenuItem
+                            key={`ui-menu-item-${index}`}
+                            index={index}
+                            item={item}
+                            hostUrl={publicHostUrl}
+                            variant={variant}
+                        />
+                    ))}
+                </ul>
+            )}
+        </div>
+        {/*<MobileMenuButton />*/}
+        <MobileMenu items={items} hostUrl={publicHostUrl} variant={variant} />
+    </>
+);
+
+export const Navigation = ({ variant = "light", children, config }: NavigationProps) => {
     return (
         <nav className={`ui-nav ${variant}`}>
             <div className="ui-nav-inner-container">
-                {brand && (
-                    <a href={brand.href} target={brand.target} className="ui-nav-brand">
-                        {brand.logo && brand.logo}
-                        <span className={`ui-nav-brand-label ${variant}`}>{brand.label}</span>
-                    </a>
-                )}
-
-                <div className="ui-nav-item-container">
-                    {items && (
-                        <ul className="ui-nav-item-list">
-                            {items.map((item, index) => (
-                                <MenuItem
-                                    key={`ui-menu-item-${index}`}
-                                    index={index}
-                                    item={item}
-                                    hostUrl={publicHostUrl}
-                                    variant={variant}
-                                />
-                            ))}
-                        </ul>
-                    )}
-                </div>
+                {config ? renderNavigationFromConfig(variant, config) : children}
             </div>
-            {/*<MobileMenuButton />*/}
-            <MobileMenu items={items} hostUrl={publicHostUrl} variant={variant} />
         </nav>
     );
 };

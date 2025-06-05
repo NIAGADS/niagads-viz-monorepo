@@ -1,8 +1,8 @@
 import "./globals.css";
 
 import type { Metadata } from "next";
-import NavigationConfig from "@/config/navigation.config";
-import { RootLayout as StandardRootLayout } from "@niagads/ui/layouts";
+import __navConfig from "@/config/navigation.config";
+import { RootLayout as StandardRootLayout, ThemeVariant } from "@niagads/ui/layouts";
 import favicon from "@niagads/common/assets/images/favicon.ico";
 
 // import { MenuItem, NavigationBar } from "@niagads/ui";
@@ -15,22 +15,18 @@ export const metadata: Metadata = {
     },
 };
 
-const NAV_MENU_ITEMS = [
-    { label: "Documentation", href: "/docs" },
-    { label: "NIAGADS Home", href: "https://www.niagads.org" },
-    { label: "Open Access", href: "https://www.niagads.org/open-access" },
-    { label: "Usage", href: "https://github.com/NIAGADS/example" },
-];
-
 export default function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const theme: ThemeVariant = process.env.NEXT_PUBLIC_THEME
+        ? (process.env.NEXT_PUBLIC_THEME as ThemeVariant)
+        : "primary";
     return (
         <html>
             <body>
-                <StandardRootLayout navConfig={NavigationConfig} fullWidth={true}>
+                <StandardRootLayout variant={theme} navigationContent={__navConfig} fullWidth={true}>
                     {children}
                     <footer className="footer-bg-primary">
                         <div className="footer-content">

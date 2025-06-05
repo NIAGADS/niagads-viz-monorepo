@@ -2,21 +2,21 @@ import type { NavigationConfig } from "@niagads/ui";
 
 const Config: NavigationConfig = {
     brand: {
-        label: "NIAGADS",
-        href: "https://www.niagads.org",
+        label: "NIAGADS Open Access API",
+        href: process.env.NEXT_PUBLIC_HOST_URL!,
     },
     items: [
         {
-            label: "Open Access API",
-            href: "/",
-        },
-        {
             label: "Documentation",
             href: "/docs"
-        }
+        },
+        {
+            label: "NIAGADS Home",
+            href: "https://www.niagads.org",
+        },
+
     ],
-    variant: "dark",
-    publicHostUrl: ""
+    publicHostUrl: process.env.NEXT_PUBLIC_HOST_URL
 }
 
 export default Config;
