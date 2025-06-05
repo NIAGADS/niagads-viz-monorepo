@@ -26,7 +26,7 @@ export default function RootLayout({
     return (
         <html>
             <body>
-                <StandardRootLayout variant={theme} navigationContent={__navConfig} fullWidth={true}>
+                <StandardRootLayout theme={theme} navigationContent={__navConfig} fullWidth={true}>
                     {children}
                     <footer className="footer-bg-primary">
                         <div className="footer-content">
