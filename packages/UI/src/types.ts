@@ -1,5 +1,5 @@
 
-export type ThemeVariant = "primary" | "secondary" | "light" | "dark";
+export type ThemeVariant = "secondary" | "light" | "dark" | "accent";
 
 export interface StylingProps {
     colorVariant?: "primary" | "secondary" | "accent" | "default" | "transparent";
