@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
 import { ThemeVariant } from "./types";
+import { renderInfoIcon } from "./Alert";
 
 /** TODO:
  * theme-based variants
@@ -28,6 +29,7 @@ interface NavigationProps {
     variant?: ThemeVariant;
     config?: NavigationConfig;
     children?: ReactNode;
+    bannerMsg?: string;
 }
 
 const buildRouterLink = (url: string, hostUrl: string | undefined) => {
@@ -150,12 +152,21 @@ const renderNavigationFromConfig = (variant: ThemeVariant, { items, brand, publi
     </>
 );
 
-export const Navigation = ({ variant = "light", children, config }: NavigationProps) => {
+const renderBanner = (message: string) => (
+    <div className="ui-nav-banner">
+        {renderInfoIcon()} {message}
+    </div>
+);
+
+export const Navigation = ({ variant = "light", children, config, bannerMsg }: NavigationProps) => {
     return (
-        <nav className={`ui-nav ${variant}`}>
-            <div className="ui-nav-inner-container">
-                {config ? renderNavigationFromConfig(variant, config) : children}
-            </div>
-        </nav>
+        <>
+            <nav className={`ui-nav ${variant}`}>
+                {bannerMsg && renderBanner(bannerMsg)}
+                <div className="ui-nav-inner-container">
+                    {config ? renderNavigationFromConfig(variant, config) : children}
+                </div>
+            </nav>
+        </>
     );
 };

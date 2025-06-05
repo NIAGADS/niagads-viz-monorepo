@@ -4,3 +4,11 @@
     --accent: #618eb5;
     --accent-dark: #27333f;
 }
+
+.bg-primary {
+    background-color: var(--primary);
+}
+
+.bg-secondary {
+    background-color: var(--secondary);
+}

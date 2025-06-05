@@ -1,14 +1,5 @@
 /* Standard CSS equivalents for Tailwind classes used in page.tsx */
 
-.w-full {
-    width: 100%;
-}
-.m-0 {
-    margin: 0;
-}
-.p-0 {
-    padding: 0;
-}
 .bg-slate-900 {
     background-color: #0f172a;
 }
@@ -18,28 +9,12 @@
 .pb-48 {
     padding-bottom: 12rem; /* 48 * 0.25rem */
 }
-.flex {
-    display: flex;
-}
-.flex-col {
-    flex-direction: column;
-}
-.justify-center {
-    justify-content: center;
-}
-.items-center {
-    align-items: center;
-}
-.text-secondary {
-    color: #64748b; /* Adjust to your secondary color if different */
-}
+
 .text-6xl {
     font-size: 3.75rem;
     line-height: 1;
 }
-.text-white {
-    color: #fff;
-}
+
 .text-lg {
     font-size: 1.125rem;
     line-height: 1.75rem;
@@ -57,9 +32,7 @@
     font-size: 2.25rem;
     line-height: 2.5rem;
 }
-.font-normal {
-    font-weight: 400;
-}
+
 .max-w-\[750px\] {
     max-width: 750px;
 }

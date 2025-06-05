@@ -12,74 +12,54 @@ export default function Home() {
         router.push("/docs");
     };
     return (
-        <main className="p-0">
-            <div className="w-full m-0 p-0">
-                <div className="bg-slate-900 pt-52 pb-48 flex flex-col justify-center items-center">
+        <main>
+            <div className="w-full">
+                <div className="mt-2 flex flex-col justify-center items-center">
                     <Alert variant="info" message="THE NIAGADS Open Access API is being updated!">
                         <div>
                             <p>
-                                From 3/8/2025-4/1/2025 we will be rolling out an extended set of endpoints for the NIAGADS Open Access API.
-                            </p>
-                            <p>
-                                During this time some endpoints may fail and <strong>VIEWS</strong> (e.g., tables, IGV browser) will be unavailable, and requests to generate views against the API will only return JSON responses.
+                                During this time some endpoints may fail and <strong>VIEWS</strong> (e.g., tables, IGV
+                                browser) will be unavailable, and requests to generate views against the API will only
+                                return JSON responses.
                             </p>
                             <p>Our apologies for the inconvenience.</p>
                         </div>
                     </Alert>
-                    <div className="text-secondary text-6xl">
-                        NIAGADS Open Access API
-                    </div>
-                    <div className="text-white text-lg mt-8">
-                        version 0.9.0a
-                    </div>
+                    <div className="text-secondary text-6xl">NIAGADS Open Access API</div>
+                    <div className="text-white text-lg mt-8">version 0.9.0a</div>
                     <div className="mt-8">
-                        <Button
-                            size="lg"
-                            variant="default"
-                            onClick={handleReadTheDocsClick}>
+                        <Button size="lg" variant="default" onClick={handleReadTheDocsClick}>
                             Read the Docs
                         </Button>
                     </div>
                 </div>
                 <div className="pt-8 pb-8 flex flex-col justify-center items-center">
-                    <h1 className="text-4xl font-normal">
-                        About NIAGADS Open Access
-                    </h1>
+                    <h1 className="text-4xl font-normal">About NIAGADS Open Access</h1>
                     <div className="-p-3 max-w-[750px]">
-                        The National Institute on Aging Genetics of
-                        Alzheimer&apos;s Disease Data Storage Site (
+                        The National Institute on Aging Genetics of Alzheimer&apos;s Disease Data Storage Site (
                         <a href="https://www.niagads.org/" target="_blank">
                             NIAGADS
                         </a>
-                        ) stores and distributes genetics and genomics data from
-                        studies on Alzheimer&apos;s disease, related dementias,
-                        and aging to qualified researchers globally.
+                        ) stores and distributes genetics and genomics data from studies on Alzheimer&apos;s disease,
+                        related dementias, and aging to qualified researchers globally.
                     </div>
                     <div className="p-3 max-w-[750px]">
-                        <a
-                            href="https://www.niagads.org/open-access/"
-                            target="_blank">
+                        <a href="https://www.niagads.org/open-access/" target="_blank">
                             NIAGADS Open Access
                         </a>{" "}
-                        is a collection of files and web-based knowledgebases
-                        made available to the public with no data access
-                        restrictions. Our application programming interface
-                        (API) provides programmatic accesses to these resources,
-                        allowing users to integrate our data and annotations
-                        into their own analysis pipelines, facilitating
-                        investigations at chromosome- and genome-wide scales.{" "}
+                        is a collection of files and web-based knowledgebases made available to the public with no data
+                        access restrictions. Our application programming interface (API) provides programmatic accesses
+                        to these resources, allowing users to integrate our data and annotations into their own analysis
+                        pipelines, facilitating investigations at chromosome- and genome-wide scales.{" "}
                     </div>
                     <div className="max-w-[750px]">
-                        The NIAGADS API uses HTTP requests to access and
-                        disseminate data from unrestricted, public NIAGADS
-                        knowledgebases. It has predictable resource- and
-                        genomic-feature oriented URLs and returns JSON-encoded
-                        responses, associated with standard HTTP response codes.
+                        The NIAGADS API uses HTTP requests to access and disseminate data from unrestricted, public
+                        NIAGADS knowledgebases. It has predictable resource- and genomic-feature oriented URLs and
+                        returns JSON-encoded responses, associated with standard HTTP response codes.
                     </div>
                     <div className="mt-8">
                         <Alert variant="warning" message="Resource in Alpha">
-                            More information and expanded functionality coming
-                            soon.
+                            More information and expanded functionality coming soon.
                         </Alert>
                     </div>
                 </div>

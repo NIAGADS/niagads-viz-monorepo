@@ -22,6 +22,7 @@ export const Default: Story = {
     args: {
         variant: "dark",
         config: menuConfig,
+        bannerMsg: "Site message or alert",
     },
 };
 
@@ -34,5 +35,6 @@ export const CustomNavigation: Story = {
                 <div>Content TBA Later</div>
             </>
         ),
+        bannerMsg: "",
     },
 };

@@ -10,17 +10,28 @@ interface RootLayoutProps extends LayoutProps {
     navigationContent: NavigationConfig | ReactNode;
     fullWidth?: boolean;
 }
+
+// FIXME: CSS -> main relative to "fixed" header, so that main adjusts appropriately when a site-banner is present
+
 /**
  * RootLayout provides basic navigation and a container for the <main> section
  */
-export function RootLayout({ theme = "light", children, navigationContent, fullWidth = false }: RootLayoutProps) {
+export function RootLayout({
+    theme = "light",
+    children,
+    navigationContent,
+    fullWidth = false,
+    bannerMsg,
+}: RootLayoutProps) {
     return (
         <div className="min-h-full">
             <header className="bg-white shadow-accent shadow-md">
                 {isNavigationConfig(navigationContent) ? (
-                    <Navigation variant={theme} config={navigationContent}></Navigation>
+                    <Navigation variant={theme} config={navigationContent} bannerMsg={bannerMsg}></Navigation>
                 ) : (
-                    <Navigation variant={theme}>{navigationContent}</Navigation>
+                    <Navigation variant={theme} bannerMsg={bannerMsg}>
+                        {navigationContent}
+                    </Navigation>
                 )}
             </header>
             <main className="mt-[60px]">

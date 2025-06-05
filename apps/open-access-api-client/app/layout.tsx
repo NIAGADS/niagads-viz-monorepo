@@ -20,13 +20,19 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const theme: ThemeVariant = process.env.NEXT_PUBLIC_THEME
-        ? (process.env.NEXT_PUBLIC_THEME as ThemeVariant)
-        : "primary";
+    const theme: ThemeVariant = (process.env.NEXT_PUBLIC_THEME as ThemeVariant) || "primary";
+
+    const bannerMsg = process.env.NEXT_PUBLIC_MESSAGE || undefined;
+
     return (
         <html>
             <body>
-                <StandardRootLayout theme={theme} navigationContent={__navConfig} fullWidth={true}>
+                <StandardRootLayout
+                    theme={theme}
+                    navigationContent={__navConfig}
+                    fullWidth={true}
+                    bannerMsg={bannerMsg}
+                >
                     {children}
                     <footer className="footer-bg-primary">
                         <div className="footer-content">
