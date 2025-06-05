@@ -1,8 +1,5 @@
 /* Standard CSS equivalents for Tailwind classes used in page.tsx */
 
-.bg-slate-900 {
-    background-color: #0f172a;
-}
 .pt-52 {
     padding-top: 13rem; /* 52 * 0.25rem */
 }
