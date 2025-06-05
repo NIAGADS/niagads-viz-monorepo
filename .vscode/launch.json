@@ -5,7 +5,8 @@
             "name": "open-access-api-client: server-side",
             "type": "node-terminal",
             "request": "launch",
-            "command": "npm run open-access-api-client"
+            // "command": "npx lerna run dev --scope='open-access-api-client'"
+            "command": "npm run open-access-api-client" // FIXME: lerna runs a production build on hot reload
         },
         {
             "name": "nextjs-app: client-side (Chrome)",
@@ -29,7 +30,7 @@
                 }
             ],
             // uncomment the following if you get a message that the firefox profile does not exist
-            // "tmpDir": "${workspaceFolder}/tmp"
+            "tmpDir": "${workspaceFolder}/tmp"
             // note: configuration will automatically use the next available port if :3000
             // is in use, so you can deploy multiple microservice "compounds launches" in parallel
             // without manually changing the port
