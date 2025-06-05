@@ -12,8 +12,8 @@
             "type": "chrome",
             "request": "launch",
             "url": "http://localhost:3000",
-            // note: configuration will automatically use the +1 port (e.g., :3001) if :3000
-            // is in use, so you can deploy multiple microservice-compounds in parallel
+            // note: configuration will automatically use the next available port if :3000
+            // is in use, so you can deploy multiple microservice "compound launches" in parallel
             // without manually changing the port
         },
         {
@@ -28,8 +28,8 @@
                     "path": "${workspaceFolder}"
                 }
             ],
-            // note: configuration will automatically use the +1 port (e.g., :3001) if :3000
-            // is in use, so you can deploy multiple microservice-compounds in parallel
+            // note: configuration will automatically use the next available port if :3000
+            // is in use, so you can deploy multiple microservice "compounds launches" in parallel
             // without manually changing the port
         },
     ],
