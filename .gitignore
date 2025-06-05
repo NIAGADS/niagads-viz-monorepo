@@ -18,6 +18,7 @@ dist/
 
 # testing
 /coverage
+/tmp
 
 # production
 /build

@@ -28,6 +28,8 @@
                     "path": "${workspaceFolder}"
                 }
             ],
+            // uncomment the following if you get a message that the firefox profile does not exist
+            // "tmpDir": "${workspaceFolder}/tmp"
             // note: configuration will automatically use the next available port if :3000
             // is in use, so you can deploy multiple microservice "compounds launches" in parallel
             // without manually changing the port
