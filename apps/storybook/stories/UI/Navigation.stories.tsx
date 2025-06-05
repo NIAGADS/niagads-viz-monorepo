@@ -18,7 +18,21 @@ export default meta;
 type Story = StoryObj<typeof Navigation>;
 
 export const Default: Story = {
+    name: "Templated Navigation: Content defined by NavigationConfig",
     args: {
-        ...menuConfig,
+        variant: "dark",
+        config: menuConfig,
+    },
+};
+
+export const CustomNavigation: Story = {
+    name: "Custom Navigation: Content defined by {children} ReactNode",
+    args: {
+        variant: "primary",
+        children: (
+            <>
+                <div>Content TBA Later</div>
+            </>
+        ),
     },
 };

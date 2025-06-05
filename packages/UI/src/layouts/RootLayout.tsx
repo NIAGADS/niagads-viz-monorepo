@@ -6,24 +6,24 @@ import { ThemeVariant } from "../types";
 import { isNavigationConfig } from "./utils";
 
 interface RootLayoutProps extends LayoutProps {
-    variant?: ThemeVariant;
+    theme?: ThemeVariant;
     navigationContent: NavigationConfig | ReactNode;
     fullWidth?: boolean;
 }
 /**
  * RootLayout provides basic navigation and a container for the <main> section
  */
-export function RootLayout({ variant = "light", children, navigationContent, fullWidth = false }: RootLayoutProps) {
+export function RootLayout({ theme = "light", children, navigationContent, fullWidth = false }: RootLayoutProps) {
     return (
         <div className="min-h-full">
             <header className="bg-white shadow-accent shadow-md">
                 {isNavigationConfig(navigationContent) ? (
-                    <Navigation variant={variant} config={navigationContent}></Navigation>
+                    <Navigation variant={theme} config={navigationContent}></Navigation>
                 ) : (
-                    <Navigation variant={variant}>{navigationContent}</Navigation>
+                    <Navigation variant={theme}>{navigationContent}</Navigation>
                 )}
             </header>
-            <main className="mt-[60px] p-2">
+            <main className="mt-[60px]">
                 <div className={`ui-container ${fullWidth ? "full" : ""}`}>{children}</div>
             </main>
         </div>

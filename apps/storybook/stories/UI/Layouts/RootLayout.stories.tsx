@@ -22,7 +22,8 @@ type Story = StoryObj<typeof RootLayout>;
 
 export const Default: Story = {
     args: {
-        navConfig: NavigationStory.args,
+        theme: "light",
+        navigationContent: NavigationStory.args?.config,
         fullWidth: true,
         children: (
             <>
