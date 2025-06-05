@@ -2,19 +2,22 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "OpenAccess API Client: debug server-side",
+            "name": "open-access-api-client: server-side",
             "type": "node-terminal",
             "request": "launch",
             "command": "npm run open-access-api-client"
         },
         {
-            "name": "Next.js: debug client-side (Chrome)",
+            "name": "nextjs-app: client-side (Chrome)",
             "type": "chrome",
             "request": "launch",
             "url": "http://localhost:3000",
+            // note: configuration will automatically use the +1 port (e.g., :3001) if :3000
+            // is in use, so you can deploy multiple microservice-compounds in parallel
+            // without manually changing the port
         },
         {
-            "name": "Next.js: debug client-side (Firefox)",
+            "name": "nextjs-app: client-side (Firefox)",
             "type": "firefox",
             "request": "launch",
             "url": "http://localhost:3000",
@@ -24,15 +27,25 @@
                     "url": "webpack://_N_E",
                     "path": "${workspaceFolder}"
                 }
-            ]
+            ],
+            // note: configuration will automatically use the +1 port (e.g., :3001) if :3000
+            // is in use, so you can deploy multiple microservice-compounds in parallel
+            // without manually changing the port
         },
     ],
     "compounds": [
         {
-            "name": "Launch OpenAccessAPI Server & Client",
+            "name": "open-access-api-client: full stack (Chrome)",
             "configurations": [
-                "OpenAccess API Client: debug server-side",
-                "Next.js: debug client-side (Chrome)"
+                "open-access-api-client: server-side",
+                "nextjs-app: client-side (Chrome)"
+            ]
+        },
+        {
+            "name": "open-access-api-client: full stack (Firefox)",
+            "configurations": [
+                "open-access-api-client: server-side",
+                "nextjs-app: client-side (Firefox)"
             ]
         }
     ]
