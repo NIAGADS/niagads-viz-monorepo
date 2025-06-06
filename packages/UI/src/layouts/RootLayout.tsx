@@ -34,7 +34,7 @@ export function RootLayout({
                     </Navigation>
                 )}
             </header>
-            <main className="pt-[60px]">
+            <main>
                 <div className={`ui-container ${fullWidth ? "full" : ""}`}>{children}</div>
             </main>
         </div>

@@ -7,21 +7,22 @@
 @import "@niagads/common/assets/styles/text-mixins.css";
 @import "@niagads/common/assets/styles/layout-mixins.css";
 
-@import "mixins.css";
-/*
-<footer className="bg-primary text-white">
-<div className="flex flex-row justify-between items-center text-lg p-4">
-*/
-.footer-bg-primary {
-    background-color: var(--primary); /* Example Tailwind bg-primary (blue-600), adjust as needed */
-    color: #fff; /* text-white */
+@import "layout.css";
+@import "home.css";
+
+/* FIXME: not sure why this is necessary but without it the links in the open-access-api-client
+did not get styled; also, if I try to use :link or a, it is affecting the Navigation menu items; e.g. text-decoration on hover */
+
+.link {
+    color: #0000ee;
+    &:hover {
+        text-decoration: underline;
+    }
 }
 
-.footer-content {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 1.125rem; /* text-lg */
-    padding: 1rem; /* p-4 */
+.page-wrapper {
+    margin-top: 50px;
+    &.with-banner {
+        margin-top: 100px;
+    }
 }
