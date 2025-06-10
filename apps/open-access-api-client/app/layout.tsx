@@ -5,6 +5,7 @@ import { RootLayout as StandardRootLayout, ThemeVariant } from "@niagads/ui/layo
 import type { Metadata } from "next";
 import __navConfig from "@/config/navigation.config";
 import favicon from "@niagads/common/assets/images/favicon.ico";
+import { getPageWrapperClass } from "@/utils/pageConfig";
 
 // import { MenuItem, NavigationBar } from "@niagads/ui";
 
@@ -23,6 +24,7 @@ export default function RootLayout({
 }>) {
     const theme: ThemeVariant = (process.env.NEXT_PUBLIC_THEME as ThemeVariant) || "primary";
     const bannerMsg = process.env.NEXT_PUBLIC_MESSAGE || undefined;
+    const pageWrapperClass: string = getPageWrapperClass();
     return (
         <html>
             <body>
@@ -32,7 +34,7 @@ export default function RootLayout({
                     fullWidth={true}
                     bannerMsg={bannerMsg}
                 >
-                    <div>
+                    <div className={pageWrapperClass}>
                         <main>{children}</main>
                         <footer className="footer-bg-primary">
                             <div className="footer-content">
