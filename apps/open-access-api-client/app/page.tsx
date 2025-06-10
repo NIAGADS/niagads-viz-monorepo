@@ -1,6 +1,5 @@
 "use client";
 
-import { getPageWrapperClass } from "@/utils/pageConfig";
 import { getCurrentVersion } from "@/utils/versioning";
 import { Button } from "@niagads/ui";
 
@@ -14,10 +13,8 @@ export default function Home() {
         router.push("/docs");
     };
 
-    const pageWrapperClass: string = getPageWrapperClass();
-
     return (
-        <div className={pageWrapperClass}>
+        <>
             <div className="hero section">
                 <div className="hero-header">NIAGADS Open Access API</div>
                 <div className="hero-subheader">version {currentVersion}</div>
@@ -50,6 +47,6 @@ export default function Home() {
                     JSON-encoded responses, associated with standard HTTP response codes.
                 </div>
             </div>
-        </div>
+        </>
     );
 }
