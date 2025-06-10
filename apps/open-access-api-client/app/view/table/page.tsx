@@ -21,7 +21,8 @@ const __buildQuery = (params: { [key: string]: string | string[] | undefined }) 
 };
 
 export default async function Page({ searchParams }: PageProps) {
-    const query = __buildQuery(await searchParams);
+    const params = await searchParams;
+    const query = __buildQuery(params);
     const response = await backendFetch(query, process.env.API_INTERNAL_URL);
 
     const page = response?.pagination?.page;
@@ -67,7 +68,7 @@ export default async function Page({ searchParams }: PageProps) {
                     <pre
                         className="json"
                         dangerouslySetInnerHTML={{
-                            __html: jsonSyntaxHighlight(JSON.stringify(searchParams, undefined, 4)),
+                            __html: jsonSyntaxHighlight(JSON.stringify(params, undefined, 4)),
                         }}
                     ></pre>
                 </Alert>
