@@ -18,10 +18,13 @@
         "@niagads/common": "^0.2.0-alpha.0",
         "@niagads/table": "^0.2.5-alpha.0",
         "@niagads/ui": "^0.2.5-alpha.0",
+        "core-js": "^3.43.0",
+        "mobx": "^6.13.7",
         "next": "15.3.2",
-        "rapidoc": "^9.3.8",
-        "react": "^19.0.0",
-        "react-dom": "^19.0.0"
+        "react": "^19.1.0",
+        "react-dom": "^19.1.0",
+        "redoc": "^2.5.0",
+        "styled-components": "^6.1.18"
     },
     "devDependencies": {
         "@eslint/eslintrc": "^3",

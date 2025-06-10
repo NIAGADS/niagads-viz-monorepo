@@ -1,8 +1,9 @@
 import "./styles/globals.css";
 
+import { RootLayout as StandardRootLayout, ThemeVariant } from "@niagads/ui/layouts";
+
 import type { Metadata } from "next";
 import __navConfig from "@/config/navigation.config";
-import { RootLayout as StandardRootLayout, ThemeVariant } from "@niagads/ui/layouts";
 import favicon from "@niagads/common/assets/images/favicon.ico";
 
 // import { MenuItem, NavigationBar } from "@niagads/ui";
@@ -32,7 +33,7 @@ export default function RootLayout({
                     bannerMsg={bannerMsg}
                 >
                     <div>
-                        {children}
+                        <main>{children}</main>
                         <footer className="footer-bg-primary">
                             <div className="footer-content">
                                 <div>

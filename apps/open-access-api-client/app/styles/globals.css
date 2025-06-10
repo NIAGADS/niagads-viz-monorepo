@@ -11,7 +11,8 @@
 @import "home.css";
 
 /* FIXME: not sure why this is necessary but without it the links in the open-access-api-client
-did not get styled; also, if I try to use :link or a, it is affecting the Navigation menu items; e.g. text-decoration on hover */
+did not get styled; also, if I try to use :link or a, it is affecting the Navigation menu items in the imported component
+; e.g. text-decoration on hover */
 
 .link {
     color: #0000ee;

@@ -1,17 +1,24 @@
 "use client";
-import React, { Suspense } from "react";
-import dynamic from "next/dynamic";
-import { Skeleton } from "@niagads/ui";
-// test yaml
-// https://raw.githubusercontent.com/OpenAPITools/openapi-generator/refs/heads/master/modules/openapi-generator/src/test/resources/3_0/petstore.yaml
-//FIXME: hardcoded version
-const RapiDoc = dynamic(() => import("@/component_wrappers/RapiDocWrapper"), { ssr: false });
+
+import { RedocStandalone, SideNavStyleEnum } from "redoc";
+
+import React from "react";
+
+//https://github.com/Redocly/redoc/blob/HEAD/docs/config.md
+
 export default function Page() {
     return (
-        <main>
-            <Suspense fallback={<Skeleton type="default" />}>
-                <RapiDoc specUrl="/v0/openapi.yaml" />
-            </Suspense>
-        </main>
+        <RedocStandalone
+            specUrl="v0/openapi.json"
+            options={{
+                nativeScrollbars: true,
+                pathInMiddlePanel: false,
+                downloadDefinitionUrl: "v0/openapi.yaml",
+                sideNavStyle: SideNavStyleEnum.PathOnly,
+                // hideSchemaTitles: false,
+                // menuToggle: true,
+                theme: { colors: { primary: { main: "#dd5522" } } },
+            }}
+        />
     );
 }
