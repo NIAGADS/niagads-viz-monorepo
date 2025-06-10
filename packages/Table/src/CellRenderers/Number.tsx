@@ -24,6 +24,11 @@ export const Float = <T,>({ props }: TextRenderer<T>) => {
         return renderNullValue();
     }
 
+    const cellType = _get("type", props);
+    if (cellType == "integer") {
+        return <Text props={Object.assign(props as any, { value: value })} />;
+    }
+
     const precision = _get("precision", props, null);
     value = formatFloat(value, precision);
 
