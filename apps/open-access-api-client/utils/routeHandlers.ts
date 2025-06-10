@@ -22,7 +22,7 @@ export async function backendFetchResponseHandler(
         if (!caseInsensitiveIncludes(['DEFAULT'], queryParams['view'])) {
             if (caseInsensitiveIncludes(['TABLE'], queryParams['view'])) {
                 // redirect to the correct view, passing the original query as an arg
-                const redirectEndpoint = `/view/table?query=${incomingRequestUrl.pathname}/${incomingRequestUrl.search.replace('?', '&')}`
+                const redirectEndpoint = `/view/table?endpoint=${incomingRequestUrl.pathname}/${incomingRequestUrl.search.replace('?', '&')}`
                 const redirectUrl = new URL(redirectEndpoint, process.env.NEXT_PUBLIC_HOST_URL)
                 return NextResponse.redirect(redirectUrl)
             }

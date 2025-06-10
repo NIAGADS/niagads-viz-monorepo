@@ -27,3 +27,12 @@ did not get styled; also, if I try to use :link or a, it is affecting the Naviga
         margin-top: 100px;
     }
 }
+
+.alert {
+    max-width: 1000px;
+    margin: auto;
+
+    &.padded {
+        padding: 2rem;
+    }
+}
