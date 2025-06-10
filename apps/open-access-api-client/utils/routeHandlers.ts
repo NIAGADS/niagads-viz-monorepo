@@ -17,18 +17,16 @@ export async function backendFetchResponseHandler(
             asText = true;
         }
     }
-
-    // handle yaml files
-    if (incomingRequestUrl.pathname.endsWith('yaml')) {
-        headers = {
-            "Content-Type": "text/yaml",
-        }
-        asText = true;
-    }
-
-    const response = await backendFetchFromRequest(request, process.env.API_INTERNAL_URL, asText);
-
     if (queryParams.hasOwnProperty('view')) {
+        // not default (i.e., JSON response)
+        if (!caseInsensitiveIncludes(['DEFAULT'], queryParams['view'])) {
+            if (caseInsensitiveIncludes(['TABLE'], queryParams['view'])) {
+                // redirect to the correct view, passing the original query as an arg
+                const redirectEndpoint = `/view/table?query=${incomingRequestUrl.pathname}/${incomingRequestUrl.search.replace('?', '&')}`
+                const redirectUrl = new URL(redirectEndpoint, process.env.NEXT_PUBLIC_HOST_URL)
+                return NextResponse.redirect(redirectUrl)
+            }
+        }
         /*
         // FIXME: does this matter anymore? just return the JSON for the view
         const userAgent = (await headers()).get("User-Agent");
@@ -43,33 +41,33 @@ export async function backendFetchResponseHandler(
             );
         } */
 
-        return Response.json(
-            {
-                error: "Not Yet Implemented",
-                msg: "interactive data views are currently being updated.  Please check back soon.",
-            },
-            { status: 501 }
-        );
+
         /*
-        // extract view type from query params and build the redirect URL
-        // below is the old code
-        const redirectEndpoint = `${response['redirect']}/${response['queryId']}`
-        const redirectUrl = new URL(redirectEndpoint, redirectRequestUrl)
-
-        return NextResponse.redirect(redirectUrl)
+    
         */
-    } else {
-        if (asText) {
-            return new NextResponse(response, {
-                status: 200,
-                headers: headers
-                    ? headers
-                    : {
-                        "Content-Type": "text/plain",
-                    },
-            });
-        }
-
-        return NextResponse.json(response, { status: 200 });
     }
+    // handle yaml files
+    if (incomingRequestUrl.pathname.endsWith('yaml')) {
+        headers = {
+            "Content-Type": "text/yaml",
+        }
+        asText = true;
+    }
+
+    const response = await backendFetchFromRequest(request, process.env.API_INTERNAL_URL, asText);
+
+    // add text headers if text response expected
+    if (asText) {
+        return new NextResponse(response, {
+            status: 200,
+            headers: headers
+                ? headers
+                : {
+                    "Content-Type": "text/plain",
+                },
+        });
+    }
+    // otherwise return JSON
+    return NextResponse.json(response, { status: 200 });
 }
+
