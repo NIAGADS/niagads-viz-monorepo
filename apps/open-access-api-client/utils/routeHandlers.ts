@@ -62,8 +62,8 @@ export async function backendFetchResponseHandler(request: NextRequest, headers:
             headers: headers
                 ? headers
                 : {
-                    "Content-Type": "text/plain",
-                },
+                      "Content-Type": "text/plain",
+                  },
         });
     }
     // otherwise return JSON
