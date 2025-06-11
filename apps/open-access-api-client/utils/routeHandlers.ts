@@ -7,7 +7,7 @@ export async function backendFetchResponseHandler(request: NextRequest, headers:
     let asText = false; // default to expect JSON response
     const incomingRequestUrl = new URL(request.url);
 
-    if (!process.env.NEXT_PUBLIC_URL) {
+    if (!process.env.NEXT_PUBLIC_HOST_URL) {
         throw Error("Please specify `NEXT_PUBLIC_HOST_URL` in the .env.local file.");
     }
 
