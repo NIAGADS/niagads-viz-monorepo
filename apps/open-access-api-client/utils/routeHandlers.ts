@@ -7,6 +7,10 @@ export async function backendFetchResponseHandler(request: NextRequest, headers:
     let asText = false; // default to expect JSON response
     const incomingRequestUrl = new URL(request.url);
 
+    if (!process.env.NEXT_PUBLIC_URL) {
+        throw Error("Please specify `NEXT_PUBLIC_HOST_URL` in the .env.local file.");
+    }
+
     const queryParams = Object.fromEntries(incomingRequestUrl.searchParams.entries());
     if (queryParams.hasOwnProperty("format")) {
         if (caseInsensitiveIncludes(TEXT_RESPONSES, queryParams["format"])) {
@@ -58,8 +62,8 @@ export async function backendFetchResponseHandler(request: NextRequest, headers:
             headers: headers
                 ? headers
                 : {
-                      "Content-Type": "text/plain",
-                  },
+                    "Content-Type": "text/plain",
+                },
         });
     }
     // otherwise return JSON
