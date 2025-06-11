@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
     },
     //transpilePackages: ['@niagads/common', '@niagads/ui', '@niagads/table'],
     // for accessing GenomicsDB services and static files; e.g., genome browser tracks
-    async rewrites() {
+    /* async rewrites() {
         return [
             {
                 source: "/service/:path*",
@@ -42,7 +42,7 @@ const nextConfig: NextConfig = {
                 permanent: true,
             },
         ];
-    },
+    },*/
 };
 
 export default nextConfig;
