@@ -29,7 +29,7 @@ import { jsonSyntaxHighlight } from "@/common/utils";
 
 type props = { locus: string; tracks: string };
 
-const BROWSER_CONFIG_ENDPOINT='config/igvbrowser/?track'
+const BROWSER_CONFIG_ENDPOINT = "config/igvbrowser/?track";
 
 export default async function Page({
     params,
@@ -38,29 +38,25 @@ export default async function Page({
     params: Promise<{ slug: string }>;
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-    const qp = await searchParams
-    const locus: string = qp.locus as string
+    const qp = await searchParams;
+    const locus: string = qp.locus as string;
 
     //FIXME: need to extract the /db path from the route
-    const configEndpoint = `${process.env.API_SERVICE_URL}/filer/${BROWSER_CONFIG_ENDPOINT}=${qp.tracks}`
+    const configEndpoint = `${process.env.API_SERVICE_URL}/filer/${BROWSER_CONFIG_ENDPOINT}=${qp.tracks}`;
     const response = await fetch(configEndpoint);
-    const config = (await response.json()).response 
+    const config = (await response.json()).response;
 
     return (
         <main>
             {config ? (
-                <GenomeBrowser
-                    locus={locus}
-                    tracks={config}
-                    genome="hg38"></GenomeBrowser>
+                <GenomeBrowser locus={locus} tracks={config} genome="hg38"></GenomeBrowser>
             ) : (
                 <Alert variant="info" message="Loading">
                     {configEndpoint}
                 </Alert>
             )}
         </main>
-    ); 
-    
+    );
 }
 
 //

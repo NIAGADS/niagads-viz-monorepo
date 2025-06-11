@@ -1,9 +1,6 @@
 import { ReactNode } from "react";
 
-
 export interface LayoutProps {
     children: ReactNode;
-    bannerMsg?: string
+    bannerMsg?: string;
 }
-
-

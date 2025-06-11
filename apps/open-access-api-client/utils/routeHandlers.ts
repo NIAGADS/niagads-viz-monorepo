@@ -1,30 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import { backendFetchFromRequest, caseInsensitiveIncludes } from "@niagads/common";
 
-const TEXT_RESPONSES: string[] = ['TEXT', 'VCF', 'BED'];
+const TEXT_RESPONSES: string[] = ["TEXT", "VCF", "BED"];
 
-export async function backendFetchResponseHandler(
-    request: NextRequest,
-    headers: any | undefined = null
-) {
-
+export async function backendFetchResponseHandler(request: NextRequest, headers: any | undefined = null) {
     let asText = false; // default to expect JSON response
     const incomingRequestUrl = new URL(request.url);
 
     const queryParams = Object.fromEntries(incomingRequestUrl.searchParams.entries());
-    if (queryParams.hasOwnProperty('format')) {
-        if (caseInsensitiveIncludes(TEXT_RESPONSES, queryParams['format'])) {
+    if (queryParams.hasOwnProperty("format")) {
+        if (caseInsensitiveIncludes(TEXT_RESPONSES, queryParams["format"])) {
             asText = true;
         }
     }
-    if (queryParams.hasOwnProperty('view')) {
+    if (queryParams.hasOwnProperty("view")) {
         // not default (i.e., JSON response)
-        if (!caseInsensitiveIncludes(['DEFAULT'], queryParams['view'])) {
-            if (caseInsensitiveIncludes(['TABLE'], queryParams['view'])) {
+        if (!caseInsensitiveIncludes(["DEFAULT"], queryParams["view"])) {
+            if (caseInsensitiveIncludes(["TABLE"], queryParams["view"])) {
                 // redirect to the correct view, passing the original query as an arg
-                const redirectEndpoint = `/view/table?endpoint=${incomingRequestUrl.pathname}/${incomingRequestUrl.search.replace('?', '&')}`
-                const redirectUrl = new URL(redirectEndpoint, process.env.NEXT_PUBLIC_HOST_URL)
-                return NextResponse.redirect(redirectUrl)
+                const redirectEndpoint = `/view/table?endpoint=${incomingRequestUrl.pathname}/${incomingRequestUrl.search.replace("?", "&")}`;
+                const redirectUrl = new URL(redirectEndpoint, process.env.NEXT_PUBLIC_HOST_URL);
+                return NextResponse.redirect(redirectUrl);
             }
         }
         /*
@@ -41,16 +37,15 @@ export async function backendFetchResponseHandler(
             );
         } */
 
-
         /*
     
         */
     }
     // handle yaml files
-    if (incomingRequestUrl.pathname.endsWith('yaml')) {
+    if (incomingRequestUrl.pathname.endsWith("yaml")) {
         headers = {
             "Content-Type": "text/yaml",
-        }
+        };
         asText = true;
     }
 
@@ -63,11 +58,10 @@ export async function backendFetchResponseHandler(
             headers: headers
                 ? headers
                 : {
-                    "Content-Type": "text/plain",
-                },
+                      "Content-Type": "text/plain",
+                  },
         });
     }
     // otherwise return JSON
     return NextResponse.json(response, { status: 200 });
 }
-

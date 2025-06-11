@@ -1,4 +1,3 @@
-
 export type ThemeVariant = "secondary" | "light" | "dark" | "accent";
 
 export interface StylingProps {
@@ -13,4 +12,3 @@ export interface AriaProps {
     ariaLabeledBy?: string;
     ariaDescribedBy?: string;
 }
-

@@ -12,7 +12,7 @@
             "name": "nextjs-app: client-side (Chrome)",
             "type": "chrome",
             "request": "launch",
-            "url": "http://localhost:3000",
+            "url": "http://localhost:3000"
             // note: configuration will automatically use the next available port if :3000
             // is in use, so you can deploy multiple microservice "compound launches" in parallel
             // without manually changing the port
@@ -34,22 +34,16 @@
             // note: configuration will automatically use the next available port if :3000
             // is in use, so you can deploy multiple microservice "compounds launches" in parallel
             // without manually changing the port
-        },
+        }
     ],
     "compounds": [
         {
             "name": "open-access-api-client: full stack (Chrome)",
-            "configurations": [
-                "open-access-api-client: server-side",
-                "nextjs-app: client-side (Chrome)"
-            ]
+            "configurations": ["open-access-api-client: server-side", "nextjs-app: client-side (Chrome)"]
         },
         {
             "name": "open-access-api-client: full stack (Firefox)",
-            "configurations": [
-                "open-access-api-client: server-side",
-                "nextjs-app: client-side (Firefox)"
-            ]
+            "configurations": ["open-access-api-client: server-side", "nextjs-app: client-side (Firefox)"]
         }
     ]
 }

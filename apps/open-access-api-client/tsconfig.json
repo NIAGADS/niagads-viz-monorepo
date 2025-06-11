@@ -2,11 +2,7 @@
     "compilerOptions": {
         "module": "esnext",
         "target": "es6",
-        "lib": [
-            "dom",
-            "dom.iterable",
-            "esnext"
-        ],
+        "lib": ["dom", "dom.iterable", "esnext"],
         "sourceMap": true,
         "allowJs": true,
         "skipLibCheck": true,
@@ -20,29 +16,16 @@
         "preserveConstEnums": true,
         "jsx": "preserve",
         "incremental": true,
-        "typeRoots": [
-            "node_modules/@types"
-        ],
+        "typeRoots": ["node_modules/@types"],
         "plugins": [
             {
                 "name": "next"
             }
         ],
         "paths": {
-            "@/*": [
-                "./*"
-            ]
+            "@/*": ["./*"]
         }
     },
-    "include": [
-        "next-env.d.ts",
-        "**/*.ts",
-        "**/*.tsx",
-        ".next/types/**/*.ts"
-    ],
-    "exclude": [
-        "node_modules",
-        "__deprecated__",
-        "templates"
-    ]
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+    "exclude": ["node_modules", "__deprecated__", "templates"]
 }

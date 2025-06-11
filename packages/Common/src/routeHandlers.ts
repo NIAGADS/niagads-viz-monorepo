@@ -1,4 +1,4 @@
-import * as path from "path"
+import * as path from "path";
 
 import { NextRequest } from "next/server";
 
@@ -9,8 +9,8 @@ export function userAgentIsBrowser(userAgent: string): boolean {
 }
 
 /**
- * 
- * @param requestUri 
+ *
+ * @param requestUri
  * @param asText - if 'true' returns text response else returns jso response
  * @param skipErrorCheck  - defaults to 'true' b/c NIAGADS API calls will handle errors and return a JSON message
  * @returns - the response
@@ -35,7 +35,9 @@ export async function backendFetchFromRequest(
     const incomingRequestUrl = new URL(request.url);
     const pathname = incomingRequestUrl.pathname;
     const queryParams = incomingRequestUrl.search;
-    const baseUrl = (apiBaseUrl.startsWith('http')) ? apiBaseUrl : new URL(apiBaseUrl, incomingRequestUrl.origin).toString()
+    const baseUrl = apiBaseUrl.startsWith("http")
+        ? apiBaseUrl
+        : new URL(apiBaseUrl, incomingRequestUrl.origin).toString();
     const requestUri: string = new URL(path.join(pathname, queryParams), baseUrl).toString();
     return await __fetch(requestUri, asText);
 }
@@ -48,6 +50,6 @@ export async function backendFetch(
     if (!apiBaseUrl) {
         throw new Error("`apiBaseUrl` cannot be null.  Please specify explicitly or set API_INTERAL_URL in .env.local");
     }
-    const requestUri: string = new URL(pathname, apiBaseUrl).toString()
+    const requestUri: string = new URL(pathname, apiBaseUrl).toString();
     return await __fetch(requestUri);
 }

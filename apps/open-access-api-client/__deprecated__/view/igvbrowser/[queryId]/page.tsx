@@ -6,14 +6,10 @@ import { MemoIGVBrowser as GenomeBrowser } from "@/components/IGVBrowser/IGVBrow
 import { config } from "@/components/IGVBrowser/test/_tracks";
 import { getJsonValueFromCache } from "@/utils/cache";
 
-
 type props = { params: any };
 export default async function Page({ params }: props) {
     const { queryId } = await params;
-    const originatingRequest = await getJsonValueFromCache(
-        `${queryId}_request`,
-        "VIEW"
-    );
+    const originatingRequest = await getJsonValueFromCache(`${queryId}_request`, "VIEW");
 
     // console.log(originatingRequest)
     //const originatingRequest = null;
@@ -22,19 +18,16 @@ export default async function Page({ params }: props) {
 
     return (
         <main>
-            <Alert message="Not yet implemented" variant="danger">Test render.  Full genome browser coming soon.</Alert>
+            <Alert message="Not yet implemented" variant="danger">
+                Test render. Full genome browser coming soon.
+            </Alert>
             {browserConfig ? (
-                <GenomeBrowser
-                    tracks={config}
-                    genome="hg38"></GenomeBrowser>
+                <GenomeBrowser tracks={config} genome="hg38"></GenomeBrowser>
             ) : (
                 <Alert variant="warning" message="Original response not found">
                     <div>
                         <p>Cached query responses expire after one hour.</p>
-                        <p>
-                            To regenerate this view, please re-run your original
-                            API request.
-                        </p>
+                        <p>To regenerate this view, please re-run your original API request.</p>
                     </div>
                 </Alert>
             )}
@@ -43,10 +36,9 @@ export default async function Page({ params }: props) {
                     <pre
                         className="json"
                         dangerouslySetInnerHTML={{
-                            __html: jsonSyntaxHighlight(
-                                JSON.stringify(originatingRequest, undefined, 4)
-                            ),
-                        }}></pre>
+                            __html: jsonSyntaxHighlight(JSON.stringify(originatingRequest, undefined, 4)),
+                        }}
+                    ></pre>
                 </Alert>
             )}
         </main>
