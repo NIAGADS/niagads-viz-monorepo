@@ -1,11 +1,12 @@
-import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
-import typescript from "@rollup/plugin-typescript";
-import terser from "@rollup/plugin-terser";
+import copy from "rollup-plugin-copy";
+import del from "rollup-plugin-delete";
+import { dts } from "rollup-plugin-dts";
 import external from "rollup-plugin-peer-deps-external";
 import postcss from "rollup-plugin-postcss";
-import { dts } from "rollup-plugin-dts";
-import del from "rollup-plugin-delete";
+import resolve from "@rollup/plugin-node-resolve";
+import terser from "@rollup/plugin-terser";
+import typescript from "@rollup/plugin-typescript";
 
 export default [
     {
@@ -19,7 +20,7 @@ export default [
                 preserveModulesRoot: "src",
             },
         ],
-        external: [/node_modules/],
+        external: [/node_modules/, "tslib"],
         plugins: [
             resolve(),
             commonjs(),
@@ -34,6 +35,13 @@ export default [
                 },
             }),
             terser(),
+            copy({
+                targets: [
+                    { src: "assets/**/*", dest: "dist/assets" }, // copies all files from assets to dist/assets
+                ],
+                // Optional: set copyOnce: true to only copy on first build (for watch mode)
+                // copyOnce: true,
+            }),
         ],
     },
     {

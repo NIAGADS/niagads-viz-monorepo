@@ -5,7 +5,9 @@
     "scripts": {
         "watch": "npx lerna watch -- lerna run build --scope=\\$LERNA_PACKAGE_NAME",
         "storybook": "concurrently \"npm run watch\" \"npx lerna run storybook\"",
-        "lint": "npx prettier . --write"
+        "open-access-api-client": "concurrently \"npm run watch\" \"npx lerna run open-access-api-client\"",
+        "lint": "npx prettier . --write",
+        "build": "npx lerna run build --concurrency 1"
     },
     "workspaces": [
         "packages/Common",
@@ -14,7 +16,8 @@
         "packages/LocusZoom",
         "packages/Table",
         "packages/UI",
-        "apps/storybook"
+        "apps/storybook",
+        "apps/open-access-api-client"
     ],
     "devDependencies": {
         "concurrently": "^9.1.2",

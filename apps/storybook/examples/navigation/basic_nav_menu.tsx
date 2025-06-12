@@ -7,6 +7,5 @@ export const NAV_DEFINTION: NavigationConfig = {
         { label: "GenomicsDB", href: "https://www.niagads.org/genomics", target: "_blank" },
         { label: "Documentation", href: "/docs", target: "_self" },
     ],
-    variant: "dark",
     publicHostUrl: "http://localhost:6006",
 };

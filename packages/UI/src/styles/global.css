@@ -3,7 +3,7 @@
 @import "tailwindcss";
 @import "react-tooltip/dist/react-tooltip.css";
 @theme {
-    --color-primary: #3d5263;
+    --color-primary: #030112;
     --color-secondary: #f9c664;
     --color-accent: #618eb5;
     --color-accent-dark: #27333f;

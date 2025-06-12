@@ -34,6 +34,10 @@
     }
 }
 
+.ui-nav-banner {
+    @apply bg-secondary py-1 px-4 text-lg flex items-center justify-center;
+}
+
 .ui-nav-item-container {
     @apply items-center justify-between hidden w-full md:flex md:w-auto md:order-1;
 }

@@ -65,6 +65,11 @@ export const toExponential = (value: string | number, precision: number = 2) => 
     return value;
 };
 
+export function caseInsensitiveIncludes(array: string[], value: string) {
+    const lcValue = value.toLowerCase();
+    return array.some((item) => item.toLowerCase().includes(lcValue));
+}
+
 // adapted from: https://stackoverflow.com/a/196991
 export const toTitleCase = (value: string) =>
     value.replace(/\w\S*/g, (text) => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase());
