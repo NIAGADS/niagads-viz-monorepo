@@ -10,7 +10,7 @@
     "scripts": {
         "open-access-api-client": "npm run dev",
         "dev": "next dev --turbopack",
-        "build": "next build",
+        "build-app": "next build",
         "start": "next build && next start",
         "lint": "next lint"
     },
