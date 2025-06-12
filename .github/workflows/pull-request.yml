@@ -17,4 +17,4 @@ jobs:
                   node-version: 20
             - run: npm ci
             - run: npx prettier . --check
-            - run: npx lerna run build
+            - run: npx lerna run build --concurrency 1
