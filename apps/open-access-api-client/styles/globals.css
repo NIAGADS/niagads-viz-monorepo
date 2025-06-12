@@ -22,7 +22,7 @@ did not get styled; also, if I try to use :link or a, it is affecting the Naviga
 }
 
 .page-wrapper {
-    margin-top: 50px;
+    margin-top: 60px;
     &.with-banner {
         margin-top: 100px;
     }
