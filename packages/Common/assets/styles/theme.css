@@ -1,0 +1,18 @@
+:root {
+    --primary: #030112;
+    --secondary: #f9c664;
+    --accent: #618eb5;
+    --accent-dark: #27333f;
+}
+
+.bg-primary {
+    background-color: var(--primary);
+}
+
+.bg-secondary {
+    background-color: var(--secondary);
+}
+
+.bg-accent {
+    background-color: var(--accent);
+}

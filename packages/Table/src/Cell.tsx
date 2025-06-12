@@ -26,6 +26,8 @@ export type AbstractCell = {
 
 export type StringCell = Expand<Modify<AbstractCell, { type: "string"; value: string }>>;
 
+export type IntegerCell = Expand<Modify<AbstractCell, { type: "integer"; value: number | null }>>;
+
 export type FloatCell = Expand<Modify<AbstractCell, { type: "float"; value: number | null; precision?: number }>>;
 
 export type PValueCell = Expand<Modify<FloatCell, { type: "p_value" }>>;
@@ -68,6 +70,7 @@ export type PercentageBarCell = Expand<Modify<FloatCell, { type: "percentage_bar
 export type Cell =
     | PercentageBarCell
     | FloatCell
+    | IntegerCell
     | PValueCell
     | AbstractCell
     | TextCell
@@ -91,6 +94,7 @@ const CELL_TYPE_VALIDATION_REFERENCE = [
     "annotated_text",
     "badge",
     "link",
+    "integer",
     "percentage_bar",
 ];
 
@@ -285,6 +289,8 @@ export const renderCell = (cell: Cell) => {
             return <Badge key={`cell-${cell.rowId}-${cell.columnId}`} props={cell}></Badge>;
         case "float":
         case "p_value":
+            return <Float key={`cell-${cell.rowId}-${cell.columnId}`} props={cell}></Float>;
+        case "integer":
             return <Float key={`cell-${cell.rowId}-${cell.columnId}`} props={cell}></Float>;
         case "percentage_bar":
             return <PercentageBar key={`cell-${cell.rowId}-${cell.columnId}`} props={cell}></PercentageBar>;

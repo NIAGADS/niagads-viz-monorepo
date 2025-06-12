@@ -19,7 +19,7 @@ export default [
                 preserveModulesRoot: "src",
             },
         ],
-        external: [/node_modules/],
+        external: [/node_modules/, "tslib"],
         plugins: [
             commonjs(),
             typescript({

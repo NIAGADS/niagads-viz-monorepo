@@ -11,6 +11,7 @@
         "@rollup/plugin-typescript": "^12.1.2",
         "react": "^18.2.0",
         "rollup": "^4.28.1",
+        "rollup-plugin-copy": "^3.5.0",
         "rollup-plugin-delete": "^2.1.0",
         "rollup-plugin-dts": "^6.1.1",
         "rollup-plugin-peer-deps-external": "^2.2.4",
@@ -24,6 +25,7 @@
     "files": [
         "dist"
     ],
+    "type": "module",
     "publishConfig": {
         "access": "public"
     }

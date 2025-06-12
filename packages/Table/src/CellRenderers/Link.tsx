@@ -35,12 +35,16 @@ export const LinkList = <T,>({ props }: TextRenderer<T>) => {
 };
 
 export const Link = <T,>({ props }: TextRenderer<T>) => {
-    const url = _get("url", props);
-    const value = _get("value", props);
+    let url: string = _get("url", props);
+    const value: string = _get("value", props);
 
     if (_isNull(url)) {
-        // render as text
-        return <Text props={props} />;
+        if (value.startsWith("http")) {
+            url = value;
+        } else {
+            // render as text
+            return <Text props={props} />;
+        }
     }
 
     const linkElement = _renderLink(value ? value : url, url);

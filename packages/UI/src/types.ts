@@ -1,3 +1,5 @@
+export type ThemeVariant = "secondary" | "light" | "dark" | "accent";
+
 export interface StylingProps {
     colorVariant?: "primary" | "secondary" | "accent" | "default" | "transparent";
     size?: "sm" | "md" | "lg";

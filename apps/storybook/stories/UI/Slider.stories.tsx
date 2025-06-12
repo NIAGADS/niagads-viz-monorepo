@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { Slider } from "@niagads/ui/client";
@@ -16,15 +17,35 @@ const meta: Meta<typeof Slider> = {
 export default meta;
 type Story = StoryObj<typeof Slider>;
 
-export const Default: Story = {
+export const Display: Story = {
     args: {
         name: "test slider",
         label: "Test Slider",
         variant: "default",
-        value: 50,
+        value: [20, 50],
         min: 0,
         max: 100,
         step: 10,
         onChange: (n) => console.log(n),
     },
+};
+
+export const OneThumb = () => {
+    const [value, setValue] = useState([50]);
+
+    return (
+        <div>
+            <Slider name="testSlider" value={value} min={0} max={100} step={5} onChange={(v) => setValue(v)} />
+        </div>
+    );
+};
+
+export const TwoThumbs: React.FC = () => {
+    const [value, setValue] = useState([25, 75]);
+
+    return (
+        <div>
+            <Slider name="testSlider" value={value} min={0} max={100} step={5} onChange={(v) => setValue(v)} />
+        </div>
+    );
 };
