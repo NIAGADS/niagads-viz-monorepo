@@ -1,15 +1,17 @@
 // /view/table/page.tsx
+
 import { backendFetch, jsonSyntaxHighlight } from "@niagads/common";
+
 import { Alert } from "@niagads/ui";
 import TableWrapper from "@/component_wrappers/TableWrapper";
 
-// TODO: error handling
+type ParameterObj = { [key: string]: string | string[] | undefined };
 
 interface PageProps {
-    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+    searchParams: Promise<ParameterObj>;
 }
 
-const __buildQuery = (params: { [key: string]: string | string[] | undefined }) => {
+const __buildQuery = (params: ParameterObj) => {
     const { endpoint, ...queryParams } = params;
 
     const paramStrings: string[] = [];
@@ -21,8 +23,8 @@ const __buildQuery = (params: { [key: string]: string | string[] | undefined }) 
 };
 
 export default async function Page({ searchParams }: PageProps) {
-    const params = await searchParams;
-    const query = __buildQuery(params);
+    const params: ParameterObj = await searchParams;
+    const query: string = __buildQuery(params);
     const response = await backendFetch(query, process.env.API_INTERNAL_URL);
 
     const page = response?.pagination?.page;
@@ -39,6 +41,7 @@ export default async function Page({ searchParams }: PageProps) {
                         {response?.request?.message ||
                             "Runtime Error: please report this issue to the NIAGADS Open Access API Issue Tracker at https://github.com/NIAGADS/niagads-api"}
                     </p>
+                    <p>Unable to render table for: {query}</p>
                 </Alert>
             </div>
         );
@@ -75,24 +78,4 @@ export default async function Page({ searchParams }: PageProps) {
             </div>
         </>
     );
-
-    /*
-    return (
-        <main>
-            
-            {response ? (
-                <Alert variant="danger" message="View not yet implemented"></Alert>
-            ) : (
-                <Alert variant="warning" message="Original response not found">
-                    <div>
-                        <p>Cached query responses expire after one hour.</p>
-                        <p>To regenerate this view, please re-run your original API request.</p>
-                    </div>
-                </Alert>
-            )}
-            
-        </main> 
-    ); */
 }
-
-//
