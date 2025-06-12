@@ -1,4 +1,4 @@
-import "./styles/globals.css";
+import "@/styles/globals.css";
 
 import { RootLayout as StandardRootLayout, ThemeVariant } from "@niagads/ui/layouts";
 
@@ -6,8 +6,6 @@ import type { Metadata } from "next";
 import __navConfig from "@/config/navigation.config";
 import favicon from "@niagads/common/assets/images/favicon.ico";
 import { getPageWrapperClass } from "@/utils/pageConfig";
-
-// import { MenuItem, NavigationBar } from "@niagads/ui";
 
 export const metadata: Metadata = {
     title: "NIAGADS Open Access API",
