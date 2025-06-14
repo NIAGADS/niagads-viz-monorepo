@@ -10,9 +10,9 @@
         "react-dom": "^18.2.0"
     },
     "devDependencies": {
-        "@niagads/common": "0.2.0-alpha.0",
-        "@niagads/table": "0.2.5-alpha.0",
-        "@niagads/ui": "0.2.5-alpha.0",
+        "@niagads/common": "^1.0.0-alpha.0",
+        "@niagads/table": "^1.0.0-alpha.0",
+        "@niagads/ui": "^1.0.0-alpha.0",
         "@storybook/addon-controls": "^8.6.10",
         "@storybook/addon-essentials": "^8.2.8",
         "@storybook/addon-interactions": "^8.2.8",
@@ -24,5 +24,6 @@
         "@storybook/test": "^8.2.8",
         "http-proxy-middleware": "^3.0.3"
     },
-    "private": "true"
+    "private": "true",
+    "version": "1.0.0-alpha.0"
 }
