@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
     experimental: {
         serverSourceMaps: true,
     },
+    transpilePackages: ["next-mdx-remote"],
     //transpilePackages: ['@niagads/common', '@niagads/ui', '@niagads/table'],
     // for accessing GenomicsDB services and static files; e.g., genome browser tracks
     /* async rewrites() {
