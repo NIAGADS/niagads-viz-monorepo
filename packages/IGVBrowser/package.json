@@ -1,6 +1,5 @@
 {
     "name": "@niagads/igv",
-    "devDependencies": {},
-    "dependencies": {},
-    "private": "true"
+    "private": "true",
+    "version": "1.0.0-alpha.0"
 }

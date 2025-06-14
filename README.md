@@ -169,9 +169,7 @@ npx lerna run bar --scope=foo
 
 ### Publishing
 
-Packages are published to the NIAGADS organization. GitHub actions have been added to automate the publication process upon PR approval.
-
-However, an initial release needs to be done manually as follows:
+Packages are published to the NIAGADS organization. GitHub actions will be added to automate the publication process upon PR approval.  In the meantime, to publish manually:
 
 - login to npm
 
@@ -186,8 +184,8 @@ npm login
 #### Initial release
 
 - in `package.json`
-    - manually set version
-    - add the following:
+  - manually set version
+  - add the following:
 
 ```json
  "publishConfig": {
@@ -209,21 +207,21 @@ npx lerna publish <initial_version>
 
 - Create and publish (push) a temporary branch for the release
 
-Edit the `Storybook` `package.json` versions for the `@niagads` packages with new releases to match new versioning and commit. This must be done first, otherwise the old storybook `package.json` will be in the tag.
+- Edit the `Storybook` `package.json` versions for the `@niagads` packages with new releases to match new versioning and commit. This must be done first, otherwise the old storybook `package.json` will be in the tag.
 
-To publish first increment the versions using lerna
+- Increment the versions using lerna
 
 ```bash
 npx lerna version
 ```
 
-Then rebuild the packages using lerna
+- Rebuild the packages using lerna
 
 ```bash
 npx lerna run build
 ```
 
-Then you can publish the packages
+- Publish the packages
 
 ```bash
 npx lerna publish from-package
