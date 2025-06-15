@@ -1,6 +1,6 @@
 {
     "name": "@niagads/ui",
-    "version": "1.0.0-alpha.0",
+    "version": "1.0.1-alpha.0",
     "description": "NIAGADS Common UI React Component Library",
     "repository": {
         "type": "git",
@@ -26,7 +26,7 @@
     },
     "dependencies": {
         "@heroicons/react": "^2.2.0",
-        "@niagads/common": "^1.0.0-alpha.0",
+        "@niagads/common": "^1.0.1-alpha.0",
         "react-tooltip": "^5.28.0",
         "style-inject": "^0.3.0"
     },
