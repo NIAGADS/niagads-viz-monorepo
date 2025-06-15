@@ -1,0 +1,71 @@
+---
+title: Getting Started with the NIAGADS-OA API
+description: This guide explains how to construct and execute API requests and interpret responses.
+---
+
+The NIAGADS-OA API establishes a simple framework for sharing and integration of NIAGADS datasets
+and annotated gene and variant records into analysis pipelines. Use of the API requires either a
+(command line) tool or requests library that supports the HTTP protocol to transfer data,
+permitting large-scale programmatic access independent of any specific platform or programming language.
+
+<Note title="Contribute">
+    Interested in helping us improve? Check out our [GitHub repository](https://github.com/NIAGADS/niagads-api) to get
+    started! From feature suggestions to code-wrappers to bug reports, all contributions are welcome.
+</Note>
+
+## Tools and Libraries
+
+Third-party tools can be used for communicating with the API and for exploring JSON responses.
+
+These include:
+
+| **Tool**                                                      | **Type**                                     |
+| ------------------------------------------------------------- | -------------------------------------------- |
+| [curl](https://curl.se/)                                      | command line                                 |
+| [HTTPie](https://httpie.io/)                                  | command line // desktop (Windows) // web app |
+| [Google Chrome](https://www.google.com/chrome/)               | web browser                                  |
+| [Mozilla Firefox](https://www.mozilla.org/en-US/firefox/new/) | web browser                                  |
+| [Safari](https://www.apple.com/safari/)                       | web browser (Mac)                            |
+
+As well as any programming language package that supports the HTTP protocol, such as:
+
+| **Package**                                                                                                          | **Language** |
+| -------------------------------------------------------------------------------------------------------------------- | ------------ |
+| [requests](https://pypi.org/project/requests/)                                                                       | Python       |
+| [aiohttp](https://pypi.org/project/aiohttp/)\*                                                                       | Python       |
+| [request](https://cran.r-project.org/web/packages/request/index.html)                                                | R            |
+| [httr2](https://httr2.r-lib.org/)\*                                                                                  | R            |
+| [Faraday](https://github.com/lostisland/faraday)                                                                     | ruby         |
+| [net/http](https://pkg.go.dev/net/http)                                                                              | go           |
+| [java.net.http](https://docs.oracle.com/en/java/javase/21/docs/api/java.net.http/java/net/http/package-summary.html) | Java         |
+| [Fetch API](https://www.w3schools.com/jsref/api_fetch.asp)                                                           | Javascript   |
+| [HTTP::Tiny](https://perldoc.perl.org/HTTP::Tiny)                                                                    | Perl         |
+| [LWP::UserAgent](https://metacpan.org/release/GAAS/libwww-perl-5.69/view/lib/LWP/UserAgent.pm)                       | Perl         |
+
+\*recommended
+
+## API Endpoints
+
+Communicating with the NIAGADS-OA API involves making calls to API endpoints.
+
+Each endpoint represents both the resource being queried and specific API functionality.
+
+as summarized in the following table:
+
+| **Endpoint** | **Resource** | **Type** | **Description** |
+| ------------ | ------------ | -------- | --------------- |
+| metadata     |              |          |                 |
+| data         |              |          |                 |
+| gene         |              |          |                 |
+| variant      |              |          |                 |
+| track        |              |          |                 |
+| service      |              |          |                 |
+| search       |              |          |                 |
+
+The HTTP URL that corresponds to the latest version of an API endpoint is
+`https://api.niagads.org/<resource>/<endpoint>`, where `<resource>` is the
+name of the NIAGADS knowledge base and `<endpoint>` is the name of the endpoint.
+
+The HTTP URL of an endpoint corresponding to a specific major version of the
+API is `https://api.niagads.org/<version>/<resource>/<endpoint>`,
+where `<version>` is the NIAGADS-OA API version.

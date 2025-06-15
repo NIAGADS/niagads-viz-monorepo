@@ -15,7 +15,7 @@ export const ROUTES: EachRoute[] = [
         noLink: true,
         items: [
             { title: "NIAGADS Open Access", href: "/niagads-open-access" },
-            { title: "API Overview", href: "/api-overview" },
+            { title: "Getting Started", href: "/getting-started" },
         ],
     },
 ];
