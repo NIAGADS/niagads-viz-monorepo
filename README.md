@@ -95,6 +95,12 @@ You can build all packages by running the following command:
 npx lerna run build --concurrency 1
 ```
 
+or in short-hand:
+   
+```bash
+npm run build
+```
+	
 > **Note**: The `--concurrency 1` flag is not required, but stops the lerna command from trying to build each package in parallel, avoiding race conditions and build failures when a dependent package builds faster than a dependency. This sort of race condition can occur randomly.
 
 > **Note**: `npx` should come with `npm` 5.2+, but sometimes it does not get installed if you use `nvm` to manage node versions.  
@@ -206,8 +212,6 @@ npx lerna publish <initial_version>
 #### Subsequent releases
 
 - Create and publish (push) a temporary branch for the release
-
-- Edit the `Storybook` `package.json` versions for the `@niagads` packages with new releases to match new versioning and commit. This must be done first, otherwise the old storybook `package.json` will be in the tag.
 
 - Increment the versions using lerna
 
