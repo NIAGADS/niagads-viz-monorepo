@@ -5,7 +5,6 @@ import { Space_Grotesk, Space_Mono } from "next/font/google";
 import { Footer } from "@/components/footer";
 import type { Metadata } from "next";
 import { Navbar } from "@/components/navbar";
-import { ThemeProvider } from "@/components/contexts/theme-provider";
 import favicon from "@niagads/common/assets/images/favicon.ico";
 
 const sansFont = Space_Grotesk({
