@@ -9,20 +9,20 @@ const nextConfig: NextConfig = {
     },
     //transpilePackages: ['@niagads/common', '@niagads/ui', '@niagads/table'],
     // for accessing GenomicsDB services and static files; e.g., genome browser tracks
-    /* async rewrites() {
+    /*
+    async rewrites() {
         return [
             {
-                source: "/service/:path*",
-                destination: "https://www.niagads.org/genomics/service/:path*",
+                source: "/docs/:path*",
+                destination: "http://localhost:3000/docs/:path*",
             },
             {
-                source: "/files/:path*",
-                destination: "https://www.niagads.org/genomics/files/:path*",
+                source: "/",
+                destination: "http://localhost:3001/",
             },
-
         ];
-    },
-
+    },*/
+    /*
     // for redirects to the GenomicsDB; e.g., record links
     async redirects() {
         return [
