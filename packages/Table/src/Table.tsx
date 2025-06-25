@@ -24,7 +24,7 @@ import { TrashIcon } from "@heroicons/react/24/outline";
 
 import { _get, _hasOwnProperty, toTitleCase } from "@niagads/common";
 
-import { Cell, CellType, GenericCell, getCellValue, renderCell, resolveCell, validateCellType } from "./Cell";
+import { Cell, GenericCell, getCellValue, renderCell, resolveCell, validateCellType } from "./Cell";
 
 import { TableConfig, TableData, TableRow } from "./TableProperties";
 import { GenericColumn, getColumn } from "./Column";
@@ -35,6 +35,7 @@ import { PaginationControls, TableToolbar } from "./ControlElements";
 
 import { Button, Checkbox, RadioButton } from "@niagads/ui";
 import { Tooltip } from "@niagads/ui/client";
+import { RowSelectionControls } from "./ControlElements/RowSelectionControls";
 
 const __resolveSortingFn = (col: GenericColumn) => {
     if (col.type === "boolean") {
@@ -122,6 +123,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
         __setInitialColumnVisibility(options?.defaultColumns, columns)
     );
+    const [showOnlySelected, setShowOnlySelected] = useState(false);
     const initialRender = useRef(true); // to regulate callbacks affected by the initial state
     const enableRowSelect = !!options?.rowSelect;
     const disableColumnFilters = !!options?.disableColumnFilters;
@@ -299,6 +301,8 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
 
     const table = useReactTable(reactTableOptions);
 
+    const rowModel = showOnlySelected ? table.getSelectedRowModel() : table.getRowModel();
+
     useLayoutEffect(() => {
         if (options?.onTableLoad) {
             // TODO: if (initialRender.current)  // not sure if necessary - initialRender is a useRef / from GenomicsDB code; has to do w/pre-selected rows
@@ -323,11 +327,25 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
                 <TableToolbar table={table} tableId={id} enableExport={!!!options?.disableExport} />
                 <PaginationControls table={table} />
             </div>
+            {enableRowSelect && (
+                <div>
+                    <RowSelectionControls 
+                        selectedRows={table.getSelectedRowModel().rows}
+                        displayColumn={options.rowSelect?.rowId!} // if row select is enabled, rowId must be defined
+                        onToggleShowSelected={() => {
+                            if (showOnlySelected) {
+                                setColumnFilters([]);
+                            }
+                            setShowOnlySelected(!showOnlySelected);
+                        }}
+                    />
+                </div>
+            )}
             <div className="overflow-auto">
                 <table className="table-layout table-border table-text">
                     {__renderTableHeader(table.getHeaderGroups(), id)}
                     <tbody>
-                        {table.getRowModel().rows.map((row) => (
+                        {rowModel.rows.map((row) => (
                             <tr key={row.id} className="table-dtr">
                                 {row.getVisibleCells().map((cell) => (
                                     <td className="table-td" key={`${row.id}-${cell.id}`}>
