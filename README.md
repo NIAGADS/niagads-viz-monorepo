@@ -1,36 +1,175 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NIAGADS GenomicsDB 
+
+A comprehensive genomics data portal for Alzheimer's disease research, built with Next.js and pure CSS.
+
+## Features
+
+## Tech Stack
+
+- **Next.js 15** - React framework with App Router
+- **TypeScript** - Type-safe development
+- **Pure CSS** - Custom design system with CSS variables
+- **Lucide React** - Icon library (only external dependency)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
+- Node.js 18+ 
+- npm or yarn
+
+### Installation
+
+1. Create a new Next.js project:
+\`\`\`bash
+npx create-next-app@latest niagads-genomics-db --typescript --eslint --app --src-dir=false --import-alias="@/*"
+cd niagads-genomics-db
+\`\`\`
+
+2. Install the icon library:
+\`\`\`bash
+npm install lucide-react@^0.263.1
+\`\`\`
+
+3. Replace the generated files with the ones from this project
+
+4. Run the development server:
+\`\`\`bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+\`\`\`
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+\`\`\`
+├── app
+│   ├── about
+│   │   └── page.tsx
+│   ├── browse-datasets
+│   │   └── page.tsx
+│   ├── genome-browser
+│   │   └── page.tsx
+│   ├── globals.css
+│   ├── layout.tsx
+│   ├── page.tsx
+│   ├── records
+│   │   └── [type]
+│   │       └── [id]
+│   ├── search
+│   │   └── page.tsx
+│   └── tutorials
+│       └── page.tsx
+├── components
+│   ├── about-page.css
+│   ├── about-page.tsx
+│   ├── action-button.css
+│   ├── browse-datasets-page.tsx
+│   ├── conditional-main-layout.tsx
+│   ├── enhanced-search-component.css
+│   ├── enhanced-search-component.tsx
+│   ├── error-page.css
+│   ├── error-page.tsx
+│   ├── footer.css
+│   ├── footer.tsx
+│   ├── genome-browser-page.tsx
+│   ├── header.css
+│   ├── header.tsx
+│   ├── home-page.css
+│   ├── home-page.tsx
+│   ├── inline-error.tsx
+│   ├── loading-context.tsx
+│   ├── loading-spinner.tsx
+│   ├── main-layout.tsx
+│   ├── mobile-menu.css
+│   ├── mobile-menu.tsx
+│   ├── records
+│   │   ├── gene-record.tsx
+│   │   ├── placeholder.css
+│   │   ├── placeholder.tsx
+│   │   ├── record-page.tsx
+│   │   ├── record-sidebar.css
+│   │   ├── record-sidebar.tsx
+│   │   ├── record.css
+│   │   ├── records-list.css
+│   │   ├── records-page.tsx
+│   │   ├── span-record.tsx
+│   │   ├── track-record.tsx
+│   │   ├── types.ts
+│   │   └── variant-record.tsx
+│   ├── sidebar.css
+│   ├── sidebar.tsx
+│   ├── tab-navigation.css
+│   ├── table.css
+│   ├── tabs.tsx
+│   ├── tooltip.css
+│   ├── tooltip.tsx
+│   ├── tutorials-page.css
+│   └── tutorials-page.tsx
+├── components.json
+├── eslint.config.mjs
+├── lib
+│   ├── api
+│   │   └── fetch-record-data.ts
+│   └── search-router.ts
+├── next-env.d.ts
+├── next.config.ts
+├── package-lock.json
+├── package.json
+├── pnpm-lock.yaml
+├── public
+│   ├── genomicsdb_logo.svg
+│   ├── logo.png
+│   ├── placeholder-logo.png
+│   ├── placeholder-logo.svg
+│   ├── placeholder-user.jpg
+│   ├── placeholder.jpg
+│   └── placeholder.svg
+├── README.md
+└── tsconfig.json
+\`\`\`
 
-## Learn More
+### Navigation Flow
 
-To learn more about Next.js, take a look at the following resources:
+1. **Home Page**: Landing page with search and feature highlights
+2. **Browse Datasets Page**: Dataset selection and search interface
+3. **Search Action**: Triggers navigation to Records page
+4. **Records Page**: Shows search results with sidebar navigation
+5. **Sidebar**: Only appears on Records page for filtering results
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Key Features
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Pure CSS Design System**: No Tailwind or external CSS frameworks
+- **Light Theme**: Professional white background with blue accents
+- **Responsive Layout**: Works on all device sizes
+- **Accessibility**: Full keyboard navigation and screen reader support
+- **Minimal Dependencies**: Only essential packages included
 
-## Deploy on Vercel
+## Development
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Styling Philosophy
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **CSS Custom Properties**: Consistent theming and easy customization
+- **Semantic Class Names**: Clear, descriptive CSS classes
+- **Mobile-First**: Responsive design starting from mobile
+- **Performance**: Minimal CSS bundle size
+
+### Adding New Features
+
+1. Create component in `components/`
+2. Add to routing logic in `app/page.tsx`
+3. Update navigation if needed
+4. Follow existing CSS patterns
+
+## Deployment
+
+Standard Next.js deployment:
+
+\`\`\`bash
+npm run build
+npm start
+\`\`\`
+
+## License
+
+MIT License

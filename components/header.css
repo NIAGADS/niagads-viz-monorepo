@@ -1,0 +1,121 @@
+.header {
+  /* height: var(--header-height); */
+  background-color: var(--dark-blue);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1.5rem;
+  box-shadow: var(--shadow-sm);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+
+/* .logo-image {
+  width: 40px;
+  height: 40px;
+  color: var(--accent-teal);
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+} */
+
+/* .logo-text .primary {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+} */
+
+/* .logo-text .secondary {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+} */
+.header-search {
+  display: none;
+  flex: 1;
+  max-width: 600px;
+  margin: 0 1rem;
+}
+.mobile-menu-search .search-input,
+.header-search .search-input {
+  background-color: transparent;
+  color: var(--gray-50);
+  border: 1px solid var(--gray-400);
+}
+.mobile-menu-search .search-input:focus,
+.header-search .search-input:focus {
+  border-color: var(--gray-50);
+  box-shadow: var(--focus-ring);
+}
+.mobile-menu-search .search-input::placeholder,
+.header-search .search-input::placeholder {
+  color: var(--gray-400);
+}
+@media screen and (min-width: 960px) {
+  .logo-container {
+    width: 45%;
+  }
+ .header-search {
+    display: block;
+ }
+  
+}
+.main-nav {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-link {
+  color: var(--gray-50);
+  padding: 0.5rem 0.5rem;
+  border-radius: var(--border-radius);
+  transition: all var(--transition-fast);
+  font-weight: 500;
+  position: relative;
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  text-decoration: none;
+  color: var(--gray-300);
+
+}
+
+.nav-link.active {
+  color: var(--gray-400);
+}
+
+/* Mobile menu button */
+.mobile-menu-button {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--gray-300);
+  padding: 0.5rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+
+
+@media (max-width: 768px) {
+  .mobile-menu-button {
+    display: block;
+  }
+  .main-nav {
+    display: none;
+  }
+}
