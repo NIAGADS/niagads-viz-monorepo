@@ -1,0 +1,519 @@
+.record-container {
+  padding: 1rem;
+}
+
+/* Action Bar Styling - NOT sticky */
+.action-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  margin-bottom: 1.5rem;
+}
+
+.gene-identifier {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.gene-identifier .gene-symbol {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-blue, #2563eb);
+  line-height: 1.2;
+}
+
+.gene-identifier .gene-name {
+  font-size: 0.875rem;
+  color: var(--text-secondary, #6b7280);
+  font-weight: 500;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary, #374151);
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border, #d1d5db);
+  border-radius: var(--border-radius, 0.375rem);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.action-button:hover {
+  background: var(--gray-50, #f9fafb);
+  border-color: var(--border-hover, #9ca3af);
+  color: var(--text-primary, #111827);
+}
+
+.action-button:focus {
+  outline: 2px solid var(--primary-blue, #2563eb);
+  outline-offset: 2px;
+}
+
+.action-button:active {
+  background: var(--gray-100, #f3f4f6);
+  transform: translateY(1px);
+}
+
+.record-header {
+  margin-bottom: 1.5rem;
+}
+
+.record-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+.record-description {
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+.record-metadata {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+  background-color: var(--gray-50);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+}
+
+.metadata-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.metadata-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.metadata-value {
+  font-size: 0.875rem;
+}
+
+.record-content-section {
+  margin-top: 0;
+}
+
+/* Section title styling */
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary, #1f2937);
+  margin-bottom: 1rem;
+  padding-bottom: 0;
+}
+
+/* Content tabs styling - ONLY active tab has bottom border */
+.content-tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 2rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.content-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.content-tab {
+  position: relative;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary, #6b7280);
+  background: transparent;
+  border: none;
+  border-radius: var(--border-radius, 0.375rem) var(--border-radius, 0.375rem) 0 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  min-width: fit-content;
+}
+
+.content-tab:hover {
+  color: var(--text-primary, #374151);
+  background: var(--gray-50, #f9fafb);
+}
+
+.content-tab.active {
+  color: var(--primary-blue, #2563eb);
+  background: var(--surface, #ffffff);
+  border-bottom: 2px solid var(--primary-blue, #2563eb);
+}
+
+.content-tab:focus {
+  outline: 2px solid var(--primary-blue, #2563eb);
+  outline-offset: -2px;
+}
+
+.card {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.card h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.external-ids {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.external-id {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.external-id-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.external-id a {
+  color: var(--primary-blue);
+  text-decoration: none;
+  font-family: var(--font-family-mono);
+  font-size: 0.875rem;
+}
+
+.external-id a:hover {
+  text-decoration: underline;
+}
+
+.impact-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--border-radius);
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.impact-high {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.impact-moderate {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.impact-low {
+  background-color: #d1fae5;
+  color: #047857;
+}
+
+.impact-modifier {
+  background-color: #e0f2fe;
+  color: #0369a1;
+}
+
+.findings-list {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+}
+
+.findings-list li {
+  margin-bottom: 0.5rem;
+}
+
+.download-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.download-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background-color: var(--gray-50);
+  border-radius: var(--border-radius);
+}
+
+.download-name {
+  font-weight: 500;
+}
+
+.download-button {
+  background-color: var(--primary-blue);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.download-button:hover {
+  background-color: var(--secondary-blue);
+}
+
+.placeholder-chart,
+.placeholder-table,
+.placeholder-list {
+  height: 300px;
+  background-color: var(--gray-50);
+  border: 1px dashed var(--border);
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholder-text {
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* Overview grid layout */
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Card size variants */
+.card-third {
+  grid-column: span 1;
+}
+
+.card-half {
+  grid-column: span 1.5;
+}
+
+.card-two-thirds {
+  grid-column: span 2;
+}
+
+.card-full {
+  grid-column: span 3;
+}
+
+/* Gene information specific styling */
+.gene-info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.gene-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1f2937;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+}
+
+.gene-symbol {
+  color: var(--primary-blue, #2563eb);
+  font-weight: 700;
+}
+
+.gene-name {
+  color: var(--text-secondary, #4b5563);
+  font-weight: 500;
+}
+
+.gene-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.gene-id {
+  font-family: var(--font-family-mono, "Monaco", "Menlo", "Ubuntu Mono", monospace);
+  font-size: 0.9rem;
+  color: var(--text-secondary, #6b7280);
+  background: var(--gray-50, #f3f4f6);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--border-radius, 0.25rem);
+  width: fit-content;
+}
+
+.gene-synonyms,
+.gene-type,
+.gene-location {
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.info-label {
+  font-weight: 600;
+  color: var(--text-primary, #374151);
+}
+
+/* External links styling */
+.external-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.external-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: var(--border-radius, 0.375rem);
+  text-decoration: none;
+  color: var(--primary-blue, #2563eb);
+  background: var(--gray-50, #f8fafc);
+  border: 1px solid var(--border, #e2e8f0);
+  transition: all 0.2s;
+}
+
+.external-link:hover {
+  background: var(--gray-100, #e2e8f0);
+  border-color: var(--border-hover, #cbd5e1);
+}
+
+/* Info grid for database IDs */
+.info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--gray-100, #f3f4f6);
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-value {
+  font-family: var(--font-family-mono, "Monaco", "Menlo", "Ubuntu Mono", monospace);
+  font-size: 0.85rem;
+  color: var(--text-secondary, #6b7280);
+  background: var(--gray-50, #f9fafb);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--border-radius, 0.25rem);
+}
+
+
+@media (max-width: 1024px) {
+  .overview-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .card-third {
+    grid-column: span 1;
+  }
+
+  .card-half {
+    grid-column: span 1;
+  }
+
+  .card-two-thirds {
+    grid-column: span 2;
+  }
+
+  .action-buttons {
+    gap: 0.5rem;
+  }
+
+  .action-button {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .record-metadata {
+    grid-template-columns: 1fr;
+  }
+
+  .external-ids {
+    grid-template-columns: 1fr;
+  }
+
+  .overview-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .card-third,
+  .card-half,
+  .card-two-thirds,
+  .card-full {
+    grid-column: span 1;
+  }
+
+  .content-tabs {
+    gap: 0.125rem;
+  }
+
+  .content-tab {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  .section-title {
+    font-size: 1.25rem;
+  }
+
+  .action-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .action-buttons {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .action-button {
+    flex: 1;
+    justify-content: center;
+    padding: 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .action-button span {
+    display: none;
+  }
+}

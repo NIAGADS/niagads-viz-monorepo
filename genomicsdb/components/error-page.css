@@ -1,0 +1,19 @@
+/* error-page.css */
+.error-page {
+  padding: 4rem;
+  text-align: center;
+}
+.error-page h1 {
+  font-size: 2rem;
+  color: var(--error-red);
+}
+.error-page p {
+  color: var(--text-gray);
+  font-size: 1.125rem;
+}
+.inline-error p {
+  background: var(--error-red-light);
+  padding: 0.75rem;
+  border: 1px solid var(--error-red);
+  border-radius: 0.5rem;
+}
