@@ -1,0 +1,65 @@
+.about-section {
+    margin-bottom: 3rem;
+}
+
+.about-section h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.about-section h3 {
+    font-size: 1.25rem;
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.about-section p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.link {
+    color: var(--primary-blue);
+    text-decoration: underline;
+}
+
+.link:hover {
+    text-decoration: none;
+}
+
+blockquote {
+    font-style: italic;
+    background-color: var(--gray-50);
+    padding: 1rem;
+    border-left: 4px solid var(--primary-blue);
+    margin: 1rem 0;
+}
+
+details {
+    margin-bottom: 1rem;
+    background: var(--gray-50);
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border);
+}
+
+details summary {
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 0.5rem;
+}
+
+.table-placeholder {
+    padding: 1rem;
+    border: 1px dashed var(--gray-300);
+    background: var(--gray-50);
+    font-style: italic;
+    margin-bottom: 1rem;
+    border-radius: var(--border-radius);
+    text-align: center;
+}
