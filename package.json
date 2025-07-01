@@ -6,6 +6,7 @@
         "watch": "npx lerna watch -- lerna run build --scope=\\$LERNA_PACKAGE_NAME",
         "storybook": "concurrently \"npm run watch\" \"npx lerna run storybook\"",
         "open-access-api-client": "concurrently \"npm run watch\" \"npx lerna run open-access-api-client\"",
+        "genomicsdb": "concurrently \"npm run watch\" \"npx lerna run genomicsdb\"",
         "lint": "npx prettier . --write",
         "build": "npx lerna run build --concurrency 1"
     },
