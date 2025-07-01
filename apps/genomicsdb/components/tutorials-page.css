@@ -1,0 +1,72 @@
+.tutorials-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.tutorials-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.tutorials-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.tutorials-subtitle {
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+.tutorials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+}
+
+.tutorial-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tutorial-video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 0.75rem;
+}
+
+.tutorial-video-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+}
+
+.playlist-section {
+    margin-top: 3rem;
+    text-align: center;
+}
+
+.playlist-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--primary-blue);
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid var(--primary-blue);
+    border-radius: var(--border-radius);
+    padding: 0.5rem 1rem;
+    transition: background-color 0.2s;
+}
+
+.playlist-link:hover {
+    background-color: var(--primary-blue);
+    color: white;
+}

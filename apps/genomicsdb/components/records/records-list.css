@@ -1,0 +1,34 @@
+.record-type-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.record-type-badge.gene {
+    background-color: #e0f2fe;
+    color: #0369a1;
+}
+
+.record-type-badge.variant {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.record-type-badge.study {
+    background-color: #d1fae5;
+    color: #047857;
+}
+
+.view-details-link {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.view-details-link:hover {
+    text-decoration: underline;
+}
