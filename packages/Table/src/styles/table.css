@@ -41,7 +41,7 @@
 /* ROW SELECTION CONTROLS */
 
 .row-selection-controls {
-    display: flex
+    display: flex;
 }
 
 .row-selection-sidebar {

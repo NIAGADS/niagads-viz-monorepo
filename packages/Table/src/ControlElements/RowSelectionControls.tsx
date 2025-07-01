@@ -1,8 +1,8 @@
-import { Row } from "@tanstack/react-table"
-import React, { useState } from "react"
-import { TableRow } from "../TableProperties"
+import { Row } from "@tanstack/react-table";
+import React, { useState } from "react";
+import { TableRow } from "../TableProperties";
 
-import { XMarkIcon } from "@heroicons/react/16/solid"
+import { XMarkIcon } from "@heroicons/react/16/solid";
 
 interface RowSelectionControlsProps {
     selectedRows: Row<TableRow>[];
@@ -10,13 +10,17 @@ interface RowSelectionControlsProps {
     onToggleShowSelected: () => void;
 }
 
-export const RowSelectionControls = ({ selectedRows, displayColumn, onToggleShowSelected }: RowSelectionControlsProps) => {
+export const RowSelectionControls = ({
+    selectedRows,
+    displayColumn,
+    onToggleShowSelected,
+}: RowSelectionControlsProps) => {
     const [showingSelected, setShowingSelected] = useState(false);
 
     const handleToggle = () => {
         setShowingSelected(!showingSelected);
         onToggleShowSelected();
-    }
+    };
 
     return selectedRows.length > 0 ? (
         <div className="row-selection-controls">
@@ -27,7 +31,7 @@ export const RowSelectionControls = ({ selectedRows, displayColumn, onToggleShow
                 </div>
             </div>
             <div className="row-selection-items">
-                {selectedRows.map(row => {
+                {selectedRows.map((row) => {
                     return (
                         <div className="pill" key={row.id}>
                             {row.renderValue(displayColumn)}
@@ -39,5 +43,5 @@ export const RowSelectionControls = ({ selectedRows, displayColumn, onToggleShow
         </div>
     ) : (
         <></>
-    )
-}
+    );
+};

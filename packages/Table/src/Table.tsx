@@ -329,7 +329,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
             </div>
             {enableRowSelect && (
                 <div>
-                    <RowSelectionControls 
+                    <RowSelectionControls
                         selectedRows={table.getSelectedRowModel().rows}
                         displayColumn={options.rowSelect?.rowId!} // if row select is enabled, rowId must be defined
                         onToggleShowSelected={() => {
