@@ -17,7 +17,8 @@
         "packages/Table",
         "packages/UI",
         "apps/storybook",
-        "apps/open-access-api-client"
+        "apps/open-access-api-client",
+        "apps/genomicsdb"
     ],
     "devDependencies": {
         "concurrently": "^9.1.2",
