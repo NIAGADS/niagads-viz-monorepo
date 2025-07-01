@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import { useState, type ReactNode } from "react"
+import { useState, type ReactNode } from "react";
 
 interface TabsProps {
-  defaultValue: string
-  children: ReactNode
+    defaultValue: string;
+    children: ReactNode;
 }
 
 export function Tabs({ defaultValue, children }: TabsProps) {
-  const [activeTab, setActiveTab] = useState(defaultValue)
+    const [activeTab, setActiveTab] = useState(defaultValue);
 
-  return <div className="tabs-container">{children}</div>
+    return <div className="tabs-container">{children}</div>;
 }
