@@ -2,7 +2,7 @@
 
 import { Database, Search, BarChart3, Users, Dna, Brain } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { EnhancedSearchComponent } from "@/components/enhanced-search-component";
+import { EnhancedSearchComponent } from "./enhanced-search-component";
 import "./home-page.css";
 import "./action-button.css";
 

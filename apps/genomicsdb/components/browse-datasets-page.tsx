@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Download, Filter, Search } from "lucide-react";
-import { EnhancedSearchComponent } from "@/components/enhanced-search-component";
+import { EnhancedSearchComponent } from "./enhanced-search-component";
 import "./table.css";
 import "./action-button.css";
 

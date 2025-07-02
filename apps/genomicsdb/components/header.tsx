@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import logo from "@public/genomicsdb_logo.svg";
 import { usePathname, useRouter } from "next/navigation";
-import { EnhancedSearchComponent } from "@/components/enhanced-search-component";
+import { EnhancedSearchComponent } from "./enhanced-search-component";
 import "./header.css";
 
 interface HeaderProps {

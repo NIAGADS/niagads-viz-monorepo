@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Download, ChevronLeft, ChevronRight, Filter } from "lucide-react";
-import { EnhancedSearchComponent } from "@/components/enhanced-search-component";
+import { EnhancedSearchComponent } from "../enhanced-search-component";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { Tooltip } from "@/components/tooltip";
 import { useLoading } from "@/components/loading-context";
