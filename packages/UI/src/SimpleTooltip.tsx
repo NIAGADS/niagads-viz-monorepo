@@ -15,4 +15,4 @@ export const SimpleTooltip = ({ children, content }: SimpleTooltipProps) => {
             </div>
         </div>
     );
-}
+};

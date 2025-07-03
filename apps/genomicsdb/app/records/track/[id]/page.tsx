@@ -14,5 +14,5 @@ export default async function RecordDetailPage({ params, searchParams }: RecordP
     const { id } = await params;
     const resolvedSearchParams = await searchParams;
 
-    return <RecordPage type={'track'} id={id} searchParams={resolvedSearchParams} />;
+    return <RecordPage type={"track"} id={id} searchParams={resolvedSearchParams} />;
 }

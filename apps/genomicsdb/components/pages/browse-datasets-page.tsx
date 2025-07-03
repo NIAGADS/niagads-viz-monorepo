@@ -80,9 +80,7 @@ export function BrowseDatasetsPage() {
                         <Download size={16} aria-hidden="true" />
                         Export
                     </ActionButton>
-                    <ActionButton>
-                        Share
-                    </ActionButton>
+                    <ActionButton>Share</ActionButton>
                 </div>
             </div>
 

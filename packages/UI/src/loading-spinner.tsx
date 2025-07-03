@@ -20,4 +20,4 @@ export const LoadingSpinner = ({ message = "Loading...", size = "md" }: LoadingS
             </p>
         </div>
     );
-}
+};

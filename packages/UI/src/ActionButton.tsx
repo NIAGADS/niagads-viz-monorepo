@@ -1,7 +1,6 @@
-
 import React, { ReactNode } from "react";
 import { _get } from "@niagads/common";
-import "./styles/action-button.css"
+import "./styles/action-button.css";
 
 type ButtonVariants = "primary";
 interface ActionButtonProps {

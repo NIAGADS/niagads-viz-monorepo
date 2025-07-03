@@ -23,6 +23,12 @@
             "@public/*": ["./public/*"]
         }
     },
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/enhanced-search-component.tsx"],
+    "include": [
+        "next-env.d.ts",
+        "**/*.ts",
+        "**/*.tsx",
+        ".next/types/**/*.ts",
+        "components/enhanced-search-component.tsx"
+    ],
     "exclude": ["node_modules"]
 }
