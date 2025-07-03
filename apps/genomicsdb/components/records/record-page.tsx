@@ -17,7 +17,7 @@ import type {
     ContentTabType,
 } from "./types";
 import { fetchRecordData, ApiError } from "@/lib/api/fetch-record-data";
-import { ErrorPage } from "@/components/error-page";
+import { ErrorPage } from "@/components/pages/error-page";
 
 interface RecordPageProps {
     type: string;

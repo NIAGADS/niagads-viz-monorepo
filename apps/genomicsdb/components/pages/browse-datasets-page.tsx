@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Download, Filter, Search } from "lucide-react";
-import { EnhancedSearchComponent } from "@/components/enhanced-search-component";
-import "./table.css";
-import "./action-button.css";
+import { EnhancedSearchComponent } from "../enhanced-search-component";
+import { ActionButton } from "@niagads/ui";
+import "../table.css";
 
 export function BrowseDatasetsPage() {
     const [selectedDatasets, setSelectedDatasets] = useState<Set<string>>(new Set());
@@ -76,11 +76,11 @@ export function BrowseDatasetsPage() {
                     </p>
                 </div>
                 <div className="action-buttons">
-                    <button className="action-button">
+                    <ActionButton>
                         <Download size={16} aria-hidden="true" />
                         Export
-                    </button>
-                    <button className="action-button">Share</button>
+                    </ActionButton>
+                    <ActionButton>Share</ActionButton>
                 </div>
             </div>
 

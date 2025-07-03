@@ -4,7 +4,7 @@ import { useState, useEffect, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { Header } from "@/components/header";
 import { Sidebar } from "@/components/sidebar";
-import { Footer } from "./footer";
+import { Footer } from "@niagads/ui/client";
 import { MobileMenu } from "@/components/mobile-menu";
 
 interface MainLayoutProps {

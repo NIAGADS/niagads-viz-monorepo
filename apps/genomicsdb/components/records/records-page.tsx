@@ -3,14 +3,12 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Download, ChevronLeft, ChevronRight, Filter } from "lucide-react";
-import { EnhancedSearchComponent } from "@/components/enhanced-search-component";
-import { LoadingSpinner } from "@/components/loading-spinner";
-import { Tooltip } from "@/components/tooltip";
+import { EnhancedSearchComponent } from "../enhanced-search-component";
+import { ActionButton, LoadingSpinner } from "@niagads/ui";
 import { useLoading } from "@/components/loading-context";
 import Link from "next/link";
 import "../table.css";
 import "../tab-navigation.css";
-import "../action-button.css";
 import "./records-list.css";
 
 interface RecordsPageProps {
@@ -141,10 +139,10 @@ export function RecordsPage({ searchResults }: RecordsPageProps) {
                         showTypeHints={true}
                         autoRoute={true}
                     />
-                    <button className="action-button">
+                    <ActionButton>
                         <Filter size={16} aria-hidden="true" />
                         Search
-                    </button>
+                    </ActionButton>
                 </div>
             </div>
 
@@ -174,15 +172,15 @@ export function RecordsPage({ searchResults }: RecordsPageProps) {
                     </div>
                     <div className="flex gap-2">
                         {selectedRows.size > 0 && (
-                            <button className="action-button primary">
+                            <ActionButton>
                                 <Download size={16} aria-hidden="true" />
                                 Export Selected
-                            </button>
+                            </ActionButton>
                         )}
-                        <button className="action-button">
+                        <ActionButton>
                             <Download size={16} aria-hidden="true" />
                             Export All
-                        </button>
+                        </ActionButton>
                     </div>
                 </div>
 

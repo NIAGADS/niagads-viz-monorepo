@@ -29,7 +29,7 @@ export function EnhancedSearchComponent({
     const router = useRouter();
 
     // Get dynamic suggestions based on input
-    const dynamicSuggestions = query.length > 0 ? getSearchSuggestions(query, 5) : suggestions;
+    const dynamicSuggestions: string[] = query.length > 0 ? getSearchSuggestions(query, 5) : suggestions;
 
     const filteredSuggestions = dynamicSuggestions
         .filter((suggestion) => suggestion.toLowerCase().includes(query.toLowerCase()))

@@ -1,6 +1,6 @@
 import { RecordsPage } from "@/components/records/records-page";
 import { Suspense } from "react";
-import { LoadingSpinner } from "@/components/loading-spinner";
+import { LoadingSpinner } from "@niagads/ui";
 
 interface SearchPageProps {
     searchParams: { q?: string; type?: string };
