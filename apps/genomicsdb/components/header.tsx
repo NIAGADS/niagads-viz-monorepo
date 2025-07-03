@@ -1,6 +1,6 @@
 "use client";
 
-import { Network, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import logo from "@public/genomicsdb_logo.svg";

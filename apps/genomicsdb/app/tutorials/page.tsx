@@ -1,5 +1,4 @@
-import { MainLayout } from "@/components/main-layout";
-import { TutorialsPage } from "@/components/tutorials-page";
+import { TutorialsPage } from "@/components/pages/tutorials-page";
 
 export default function About() {
     return <TutorialsPage />;

@@ -1,5 +1,4 @@
 import { RecordPage } from "@/components/records/record-page";
-import { notFound } from "next/navigation";
 
 interface RecordPageProps {
     params: Promise<{

@@ -2,9 +2,9 @@
 
 import { Database, Search, BarChart3, Users, Dna, Brain } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { EnhancedSearchComponent } from "./enhanced-search-component";
+import { EnhancedSearchComponent } from "../enhanced-search-component";
+import { ActionButton } from "@niagads/ui";
 import "./home-page.css";
-import "./action-button.css";
 
 export function HomePage() {
     const router = useRouter();
@@ -65,14 +65,14 @@ export function HomePage() {
                     </div>
 
                     <div className="hero-buttons">
-                        <button className="action-button primary" onClick={() => router.push("/browse-datasets")}>
+                        <ActionButton variant="primary" onClick={() => router.push("/browse-datasets")}>
                             <Search size={20} />
                             Start Exploring
-                        </button>
-                        <button className="action-button" onClick={() => router.push("/browse-datasets")}>
+                        </ActionButton>
+                        <ActionButton onClick={() => router.push("/browse-datasets")}>
                             <Database size={20} />
                             Browse Datasets
-                        </button>
+                        </ActionButton>
                     </div>
                 </div>
             </section>

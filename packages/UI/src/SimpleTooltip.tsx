@@ -1,12 +1,12 @@
-import type { ReactNode } from "react";
-import "./tooltip.css";
+import React, { ReactNode } from "react";
+import "./styles/tooltip.css";
 
-interface TooltipProps {
+interface SimpleTooltipProps {
     children: ReactNode;
     content: string;
 }
 
-export function Tooltip({ children, content }: TooltipProps) {
+export const SimpleTooltip = ({ children, content }: SimpleTooltipProps) => {
     return (
         <div className="tooltip">
             {children}
