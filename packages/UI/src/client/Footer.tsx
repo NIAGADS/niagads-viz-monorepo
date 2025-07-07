@@ -1,6 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import "../styles/footer.css";
 
 export const Footer = () => {
     const currentYear = new Date().getFullYear();

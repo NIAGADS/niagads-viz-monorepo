@@ -6,7 +6,7 @@ import { GeneRecord } from "@/components/records/gene-record";
 import { VariantRecord } from "@/components/records/variant-record";
 import { SpanRecord } from "@/components/records/span-record";
 import { TrackRecord } from "@/components/records/track-record";
-import { LoadingSpinner } from "@/components/loading-spinner";
+import { LoadingSpinner } from "@niagads/ui";
 import { useLoading } from "@/components/loading-context";
 import type {
     Record as RecordType,
