@@ -2,7 +2,17 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Home, BarChart2, Link, FileText, GitBranch, Database, ChevronDown, ChevronRight, ChevronLeft } from "lucide-react";
+import {
+    Home,
+    BarChart2,
+    Link,
+    FileText,
+    GitBranch,
+    Database,
+    ChevronDown,
+    ChevronRight,
+    ChevronLeft,
+} from "lucide-react";
 import "./sidebar.css";
 
 interface SidebarProps {
@@ -19,13 +29,13 @@ export interface SidebarItem {
 }
 
 const iconMap = {
-    "home": Home,
-    "barChart": BarChart2,
-    "link": Link,
-    "file": FileText,
-    "gitBranch": GitBranch,
-    "database": Database,
-}
+    home: Home,
+    barChart: BarChart2,
+    link: Link,
+    file: FileText,
+    gitBranch: GitBranch,
+    database: Database,
+};
 
 export function Sidebar({ title, sidebarConfig }: SidebarProps) {
     const [isOpen, setIsOpen] = useState(true);
@@ -36,7 +46,7 @@ export function Sidebar({ title, sidebarConfig }: SidebarProps) {
 
     const handleCollapse = () => {
         setIsOpen(!isOpen);
-    }
+    };
 
     const handleItemClick = (itemId: string, hasChildren = false) => {
         if (hasChildren) {
@@ -94,9 +104,7 @@ export function Sidebar({ title, sidebarConfig }: SidebarProps) {
     return (
         <aside className={`sidebar ${isOpen ? "open" : ""}`} role="navigation" aria-label="Secondary navigation">
             <div className="sidebar-header">
-                <h2 className="sidebar-title">
-                    {title}
-                </h2>
+                <h2 className="sidebar-title">{title}</h2>
                 <button
                     className="sidebar-toggle"
                     onClick={() => handleCollapse()}

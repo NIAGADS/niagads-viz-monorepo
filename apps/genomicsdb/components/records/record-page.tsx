@@ -146,9 +146,7 @@ export function RecordPage({ type, id, searchParams }: RecordPageProps) {
 
         switch (type) {
             case "gene":
-                return (
-                    <></>
-                );
+                return <></>;
             case "variant":
                 return <VariantRecord record={record as VariantRecordType} activeSection={activeSection} />;
             case "span":

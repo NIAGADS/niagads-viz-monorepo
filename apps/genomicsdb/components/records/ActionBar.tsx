@@ -1,6 +1,6 @@
 "use client";
 
-import { RecordType } from "./types"
+import { RecordType } from "./types";
 import { Eye, Download, Share2 } from "lucide-react";
 
 interface ActionBarProps {
@@ -32,11 +32,7 @@ export const ActionBar = ({ record, id }: ActionBarProps) => {
                 {record.name && <span className="gene-name">{record.name}</span>}
             </div>
             <div className="action-buttons">
-                <button
-                    className="action-button"
-                    onClick={handleViewInGenomeBrowser}
-                    title="View in Genome Browser"
-                >
+                <button className="action-button" onClick={handleViewInGenomeBrowser} title="View in Genome Browser">
                     <Eye size={16} />
                     View in Genome Browser
                 </button>
@@ -50,5 +46,5 @@ export const ActionBar = ({ record, id }: ActionBarProps) => {
                 </button>
             </div>
         </div>
-    )
-}
+    );
+};

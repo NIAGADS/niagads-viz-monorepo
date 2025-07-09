@@ -35,7 +35,6 @@ const sidebarItems: SidebarItem[] = [
     { id: "genetic-variation", label: "Genetic variation", icon: "barChart" },
 ];
 
-
 export default async function RecordDetailPage({ params, searchParams }: RecordPageProps) {
     const { id } = await params;
 
@@ -64,7 +63,7 @@ export default async function RecordDetailPage({ params, searchParams }: RecordP
         <div className="record-page-container capped">
             <Sidebar title={id} sidebarConfig={sidebarItems} />
             <div className={`record-content`}>
-                <ActionBar id="action-bar" record={record}/>
+                <ActionBar id="action-bar" record={record} />
                 <div className="record-container">
                     <div className="record-content-section">
                         <h2 className="section-title">Test</h2>
@@ -91,12 +90,14 @@ export default async function RecordDetailPage({ params, searchParams }: RecordP
                                             </div>
                                             {formatSynonyms() && (
                                                 <div className="gene-synonyms">
-                                                    <span className="info-label">Also known as:</span> {formatSynonyms()}
+                                                    <span className="info-label">Also known as:</span>{" "}
+                                                    {formatSynonyms()}
                                                 </div>
                                             )}
                                             <div className="gene-type">
                                                 <span className="info-label">Gene Type:</span>{" "}
-                                                {record.hgnc_annotation?.locus_group?.replace("-", " ") || "protein coding"}
+                                                {record.hgnc_annotation?.locus_group?.replace("-", " ") ||
+                                                    "protein coding"}
                                             </div>
                                             <div className="gene-location">
                                                 <span className="info-label">Location:</span> {formatLocation()}
@@ -108,7 +109,9 @@ export default async function RecordDetailPage({ params, searchParams }: RecordP
                                 <div className="card card-two-thirds">
                                     <h3>Expression Profile</h3>
                                     <Placeholder type="chart" height={300}>
-                                        <div className="placeholder-text">Gene expression chart will be displayed here</div>
+                                        <div className="placeholder-text">
+                                            Gene expression chart will be displayed here
+                                        </div>
                                     </Placeholder>
                                 </div>
                                 <div className="card card-full">
@@ -137,7 +140,7 @@ export default async function RecordDetailPage({ params, searchParams }: RecordP
                                                     </div>
                                                 </Placeholder>
                                             </div>
-                                        )
+                                        ),
                                     },
                                     {
                                         id: "niagads-neuropathologies",
@@ -151,7 +154,7 @@ export default async function RecordDetailPage({ params, searchParams }: RecordP
                                                     </div>
                                                 </Placeholder>
                                             </div>
-                                        )
+                                        ),
                                     },
                                 ]}
                             />
@@ -172,7 +175,7 @@ export default async function RecordDetailPage({ params, searchParams }: RecordP
                                                     </div>
                                                 </Placeholder>
                                             </div>
-                                        )
+                                        ),
                                     },
                                     {
                                         id: "gwas-other-traits",
@@ -186,7 +189,7 @@ export default async function RecordDetailPage({ params, searchParams }: RecordP
                                                     </div>
                                                 </Placeholder>
                                             </div>
-                                        )
+                                        ),
                                     },
                                 ]}
                             />
@@ -202,10 +205,12 @@ export default async function RecordDetailPage({ params, searchParams }: RecordP
                                             <div className="card">
                                                 <h3>Related Gene Records</h3>
                                                 <Placeholder type="list">
-                                                    <div className="placeholder-text">Related gene records will be displayed here</div>
+                                                    <div className="placeholder-text">
+                                                        Related gene records will be displayed here
+                                                    </div>
                                                 </Placeholder>
                                             </div>
-                                        )
+                                        ),
                                     },
                                     {
                                         id: "clinical",
@@ -219,7 +224,7 @@ export default async function RecordDetailPage({ params, searchParams }: RecordP
                                                     </div>
                                                 </Placeholder>
                                             </div>
-                                        )
+                                        ),
                                     },
                                     {
                                         id: "proteins",
@@ -233,7 +238,7 @@ export default async function RecordDetailPage({ params, searchParams }: RecordP
                                                     </div>
                                                 </Placeholder>
                                             </div>
-                                        )
+                                        ),
                                     },
                                     {
                                         id: "nucleotide-sequences",
@@ -247,7 +252,7 @@ export default async function RecordDetailPage({ params, searchParams }: RecordP
                                                     </div>
                                                 </Placeholder>
                                             </div>
-                                        )
+                                        ),
                                     },
                                     {
                                         id: "transcripts",
@@ -256,10 +261,12 @@ export default async function RecordDetailPage({ params, searchParams }: RecordP
                                             <div className="card">
                                                 <h3>Transcript Information</h3>
                                                 <Placeholder type="list">
-                                                    <div className="placeholder-text">Transcript data will be displayed here</div>
+                                                    <div className="placeholder-text">
+                                                        Transcript data will be displayed here
+                                                    </div>
                                                 </Placeholder>
                                             </div>
-                                        )
+                                        ),
                                     },
                                 ]}
                             />

@@ -3,7 +3,7 @@
     border-top: 1px solid var(--gray-800);
     margin-top: auto;
     color: var(--gray-300);
-    height: var(--footer-height)
+    height: var(--footer-height);
 }
 
 .footer-container {
