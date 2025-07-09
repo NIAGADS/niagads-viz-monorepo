@@ -37,3 +37,30 @@
 .column-header-icon {
     @apply ml-1 text-slate-700 pl-px size-5;
 }
+
+/* ROW SELECTION CONTROLS */
+
+.row-selection-controls {
+    display: flex;
+}
+
+.row-selection-sidebar {
+    width: 200px;
+
+    .toggle {
+        cursor: pointer;
+    }
+}
+
+.row-selection-items {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    overflow-x: scroll;
+
+    margin-top: 5px;
+    margin-bottom: 5px;
+
+    font-size: 0.875rem;
+}
