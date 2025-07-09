@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { RecordSidebar } from "@/components/records/record-sidebar";
-import { GeneRecord } from "@/components/records/gene-record";
 import { VariantRecord } from "@/components/records/variant-record";
 import { SpanRecord } from "@/components/records/span-record";
 import { TrackRecord } from "@/components/records/track-record";
@@ -148,12 +147,7 @@ export function RecordPage({ type, id, searchParams }: RecordPageProps) {
         switch (type) {
             case "gene":
                 return (
-                    <GeneRecord
-                        record={record as GeneRecordType}
-                        activeSection={activeSection}
-                        activeContentTab={activeContentTab}
-                        onContentTabChange={handleContentTabChange}
-                    />
+                    <></>
                 );
             case "variant":
                 return <VariantRecord record={record as VariantRecordType} activeSection={activeSection} />;

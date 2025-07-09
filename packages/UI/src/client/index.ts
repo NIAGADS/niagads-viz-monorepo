@@ -1,3 +1,5 @@
+"use client";
+
 import "../styles/global.css";
 
 export * from "./Dropdown";
