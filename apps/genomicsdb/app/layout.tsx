@@ -1,8 +1,9 @@
 import type React from "react";
 import type { Metadata } from "next";
-import { Inter, Roboto_Mono, Lato, Source_Sans_3 } from "next/font/google";
+import { Inter, Roboto_Mono, Lato } from "next/font/google";
 import { LoadingProvider } from "@/components/loading-context";
 import { ConditionalMainLayout } from "@/components/conditional-main-layout";
+import "@niagads/ui/css";
 import "./globals.css";
 
 // Add viewport export for better mobile performance

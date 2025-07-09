@@ -2,54 +2,58 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Home, BarChart2, Link, FileText, GitBranch, Database, ChevronDown, ChevronRight } from "lucide-react";
+import {
+    Home,
+    BarChart2,
+    Link,
+    FileText,
+    GitBranch,
+    Database,
+    ChevronDown,
+    ChevronRight,
+    ChevronLeft,
+} from "lucide-react";
 import "./sidebar.css";
 
 interface SidebarProps {
-    isOpen: boolean;
-    onClose: () => void;
+    title: string;
+    sidebarConfig: SidebarItem[];
 }
 
-interface SidebarItem {
+export interface SidebarItem {
     id: string;
     label: string;
-    icon: any;
+    icon: "home" | "barChart" | "link" | "file" | "gitBranch" | "database";
+    anchor?: string;
     children?: SidebarItem[];
 }
 
-export function Sidebar({ isOpen, onClose }: SidebarProps) {
+const iconMap = {
+    home: Home,
+    barChart: BarChart2,
+    link: Link,
+    file: FileText,
+    gitBranch: GitBranch,
+    database: Database,
+};
+
+export function Sidebar({ title, sidebarConfig }: SidebarProps) {
+    const [isOpen, setIsOpen] = useState(true);
     const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(["trait-associations"]));
     const [activeFilter, setActiveFilter] = useState("overview");
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const sidebarItems: SidebarItem[] = [
-        { id: "overview", label: "Overview", icon: Home },
-        {
-            id: "trait-associations",
-            label: "Trait associations",
-            icon: BarChart2,
-            children: [
-                { id: "niagads-gwas", label: "NIAGADS GWAS", icon: Database },
-                { id: "gwas-catalog", label: "GWAS Catalog", icon: Database },
-            ],
-        },
-        { id: "link-outs", label: "Link outs", icon: Link },
-        { id: "function-prediction", label: "Function prediction", icon: FileText },
-        { id: "pathways", label: "Pathways and interactions", icon: GitBranch },
-        { id: "genetic-variation", label: "Genetic variation", icon: BarChart2 },
-    ];
+    const handleCollapse = () => {
+        setIsOpen(!isOpen);
+    };
 
     const handleItemClick = (itemId: string, hasChildren = false) => {
         if (hasChildren) {
             toggleSection(itemId);
         } else {
-            setActiveFilter(itemId);
-            // Update URL with filter parameter
-            const params = new URLSearchParams(searchParams.toString());
-            params.set("filter", itemId);
-            router.push(`/search?${params.toString()}`);
-            onClose();
+            const element = document.getElementById(itemId);
+            element?.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
         }
     };
 
@@ -68,6 +72,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         const isExpanded = expandedSections.has(item.id);
         const isActive = activeFilter === item.id;
         const isChild = level > 0;
+        const Icon = iconMap[item.icon];
 
         return (
             <div key={item.id}>
@@ -77,7 +82,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     aria-current={isActive ? "page" : undefined}
                     aria-expanded={hasChildren ? isExpanded : undefined}
                 >
-                    <item.icon className="sidebar-item-icon" size={18} aria-hidden="true" />
+                    <Icon className="sidebar-item-icon" size={18} aria-hidden="true" />
                     <span className="flex-1 text-left">{item.label}</span>
                     {hasChildren && (
                         <span className="ml-auto">
@@ -98,7 +103,17 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
     return (
         <aside className={`sidebar ${isOpen ? "open" : ""}`} role="navigation" aria-label="Secondary navigation">
-            <nav className="sidebar-nav">{sidebarItems.map((item) => renderSidebarItem(item))}</nav>
+            <div className="sidebar-header">
+                <h2 className="sidebar-title">{title}</h2>
+                <button
+                    className="sidebar-toggle"
+                    onClick={() => handleCollapse()}
+                    aria-label={isOpen ? "Collapse sidebar" : "Expand sidebar"}
+                >
+                    {isOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
+                </button>
+            </div>
+            <nav className="sidebar-nav">{sidebarConfig.map((item) => renderSidebarItem(item))}</nav>
         </aside>
     );
 }
