@@ -1,7 +1,7 @@
+import React from "react";
 import Link from "next/link";
-import "./footer.css";
 
-export function Footer() {
+export const Footer = () => {
     const currentYear = new Date().getFullYear();
 
     return (
@@ -33,4 +33,4 @@ export function Footer() {
             </div>
         </footer>
     );
-}
+};

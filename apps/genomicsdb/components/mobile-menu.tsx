@@ -3,7 +3,7 @@
 import { X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { EnhancedSearchComponent } from "@/components/enhanced-search-component";
+import { EnhancedSearchComponent } from "./enhanced-search-component";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import "./mobile-menu.css";

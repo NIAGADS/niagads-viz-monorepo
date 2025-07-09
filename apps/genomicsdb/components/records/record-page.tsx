@@ -2,11 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { RecordSidebar } from "@/components/records/record-sidebar";
-import { GeneRecord } from "@/components/records/gene-record";
 import { VariantRecord } from "@/components/records/variant-record";
 import { SpanRecord } from "@/components/records/span-record";
 import { TrackRecord } from "@/components/records/track-record";
-import { LoadingSpinner } from "@/components/loading-spinner";
+import { LoadingSpinner } from "@niagads/ui";
 import { useLoading } from "@/components/loading-context";
 import type {
     Record as RecordType,
@@ -17,7 +16,7 @@ import type {
     ContentTabType,
 } from "./types";
 import { fetchRecordData, ApiError } from "@/lib/api/fetch-record-data";
-import { ErrorPage } from "@/components/error-page";
+import { ErrorPage } from "@/components/pages/error-page";
 
 interface RecordPageProps {
     type: string;
@@ -147,14 +146,7 @@ export function RecordPage({ type, id, searchParams }: RecordPageProps) {
 
         switch (type) {
             case "gene":
-                return (
-                    <GeneRecord
-                        record={record as GeneRecordType}
-                        activeSection={activeSection}
-                        activeContentTab={activeContentTab}
-                        onContentTabChange={handleContentTabChange}
-                    />
-                );
+                return <></>;
             case "variant":
                 return <VariantRecord record={record as VariantRecordType} activeSection={activeSection} />;
             case "span":
