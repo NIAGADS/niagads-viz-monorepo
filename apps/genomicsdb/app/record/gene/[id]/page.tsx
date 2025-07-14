@@ -1,12 +1,13 @@
-import { fetchRecordData, ApiError } from "@/lib/api/fetch-record-data";
+import "@/components/records/record-sidebar.css";
+import "@/components/records/record.css";
+
 import { Sidebar, SidebarItem } from "@/components/sidebar";
+
+import { ActionBar } from "@/components/records/ActionBar";
 import { GeneRecord } from "@/components/records/types";
 import Placeholder from "@/components/records/placeholder";
 import { Tabs } from "@/lib/client-wrapper";
-import { ActionBar } from "@/components/records/ActionBar";
-
-import "@/components/records/record-sidebar.css";
-import "@/components/records/record.css";
+import { fetchRecordData } from "@/lib/api/fetch-record-data";
 
 interface RecordPageProps {
     params: Promise<{
