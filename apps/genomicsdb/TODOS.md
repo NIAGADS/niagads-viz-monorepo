@@ -2,6 +2,11 @@
 
 ## `/components/sidebar`
 
-Commented out sidebar navigation button b/c it doesn't work and it hides the whole side bar, including the navigation.  This may be an effect of removing the client side-states at hte page level.
+Commented out sidebar navigation button b/c it doesn't work and it hides the whole side bar, including the navigation.
+This is an effect of removing the client side-states at the page level.
 
-Check original code and update component.
+Review whether media queries are sufficient or if we want to reinstate this.  Will it work w/new record/layout.tsx?
+
+## action button css
+
+resolve action-button.css and record.css

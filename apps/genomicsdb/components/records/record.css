@@ -24,11 +24,14 @@
     line-height: 1.2;
 }
 
+/*
+
 .record-identifier .record-description {
     font-size: 0.875rem;
     color: var(--text-secondary, #6b7280);
     font-weight: 500;
 }
+    */
 
 .action-buttons {
     display: flex;
@@ -158,20 +161,6 @@
     outline-offset: -2px;
 }
 
-.card {
-    background-color: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--border-radius);
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.card h3 {
-    font-size: 1.125rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-}
-
 .external-ids {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -298,23 +287,6 @@
     margin-bottom: 2rem;
 }
 
-/* Card size variants */
-.card-third {
-    grid-column: span 1;
-}
-
-.card-half {
-    grid-column: span 1.5;
-}
-
-.card-two-thirds {
-    grid-column: span 2;
-}
-
-.card-full {
-    grid-column: span 3;
-}
-
 .record-info-content {
     display: flex;
     flex-direction: column;
@@ -322,13 +294,18 @@
 }
 
 .record-title {
-    font-size: 1.75rem !important;
+    /*font-size: 1.75rem !important;
     font-weight: 700 !important;
-    color: #1f2937;
+    color: #1f2937; */
     border-bottom: 1px solid #e5e7eb;
     padding-bottom: 0.5rem;
     line-height: 1.2;
-    /*     margin-bottom: 0.5rem;*/
+    min-width: 100%;
+    display: flex;
+    align-items: center;
+    /*  margin-bottom: 0.5rem;
+ 
+    */
 }
 
 .record-display-identifier {
@@ -339,6 +316,8 @@
 .record-description {
     color: var(--text-secondary, #4b5563);
     font-weight: 500;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .record-details {
@@ -356,10 +335,11 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    flex-grow: 0;
 }
 
 .record-external-identifier-text {
-    flex: 1;
+    flex-grow: 0;
     font-family: var(--font-family-mono, "Monaco", "Menlo", "Ubuntu Mono", monospace);
     font-size: 1.2rem;
     color: var(--text-secondary, #6b7280);
@@ -373,7 +353,7 @@
 }
 
 .record-attribute {
-    font-size: 1rem;
+    font-size: 0.9rem;
     line-height: 1.4;
 }
 
@@ -477,13 +457,6 @@
     .overview-grid {
         grid-template-columns: 1fr;
         gap: 1rem;
-    }
-
-    .card-third,
-    .card-half,
-    .card-two-thirds,
-    .card-full {
-        grid-column: span 1;
     }
 
     .content-tabs {
