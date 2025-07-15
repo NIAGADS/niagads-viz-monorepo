@@ -10,7 +10,7 @@ interface Alert {
 
 export const renderInfoIcon = () => (
     <svg
-        className="flex-shrink-0 inline w-4 h-4 me-3 mt-[2px]"
+        className="ui-alert-icon"
         aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
         fill="currentColor"
@@ -26,7 +26,7 @@ export const Alert = ({ variant = "default", message, children }: Alert) => {
     return (
         <div className={classes} role="alert">
             {renderInfoIcon()}
-            <span className="sr-only">Info</span>
+            <span className="sr-only">{variant}</span>
             <div>
                 <span className="font-bold">{message}</span>
                 {children && (typeof children === `string` ? <div>{children}</div> : children)}
