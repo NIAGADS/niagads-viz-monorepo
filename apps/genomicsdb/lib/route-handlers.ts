@@ -23,7 +23,7 @@ export async function fetchRecord(endpoint: string) {
     return response.data[0]; // record is a list of one item
 }
 
-export async function fetchRecordAttribute(endpoint: string, dataOnly: boolean = false) {
+export async function _fetch(endpoint: string, dataOnly: boolean = false) {
     const response: APIResponse | APIErrorResponse = await backendFetch(endpoint, get_public_url());
 
     // errors have to be handled in-line
