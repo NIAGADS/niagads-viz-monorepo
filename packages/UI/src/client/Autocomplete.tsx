@@ -13,6 +13,7 @@ const useDebounce = (value: string) => {
         }
 
         setWaiting(true);
+
         setTimeoutID(
             setTimeout(() => {
                 setWaiting(false);
@@ -24,9 +25,15 @@ const useDebounce = (value: string) => {
     return { waiting, debouncedValue };
 };
 
+interface Suggestion {
+    id: string;
+    display: string;
+    record_type: "gene" | "variant" | "span" | "track";
+}
 interface AutocompleteProps {
-    suggestions: string[];
+    suggestions: Suggestion[];
     onSearch: (query: string) => void;
+    onClick: (suggestion: Suggestion) => void;
     onValueChange: (value: string) => void;
     placeholder?: string;
     showTypeHints?: boolean;
@@ -36,6 +43,7 @@ interface AutocompleteProps {
 export const Autocomplete = ({
     suggestions,
     onSearch,
+    onClick,
     onValueChange,
     placeholder = "Search genes, variants, tissues...",
     showTypeHints = true,
@@ -85,11 +93,12 @@ export const Autocomplete = ({
     }, [debouncedValue]);
 
     const handleSearch = () => {
-        setShowSuggestions(false);
+        console.log(query);
+        //onSearch(query);
     };
 
-    const handleSuggestionClick = (suggestion: string) => {
-        onSearch(suggestion);
+    const handleSuggestionClick = (suggestion: Suggestion) => {
+        onClick(suggestion);
     };
 
     return (
@@ -116,23 +125,23 @@ export const Autocomplete = ({
                 />
 
                 {/* Suggestions dropdown */}
-                {showSuggestions && suggestions.length > 0 && (
+                {showSuggestions && (
                     <div className="autocomplete-suggestions" role="listbox">
-                        {waiting ? (
+                        {waiting || !(suggestions.length > 0) ? (
                             <LoadingSpinner />
                         ) : (
                             <div>
-                                {suggestions.map((suggestion, index) => {
+                                {suggestions.slice(0, 8).map((suggestion, index) => {
                                     return (
                                         <div
-                                            key={suggestion}
+                                            key={suggestion.id}
                                             className={`autocomplete-suggestion ${index === highlightedIndex ? "highlighted" : ""}`}
                                             onClick={() => handleSuggestionClick(suggestion)}
                                             role="option"
                                             aria-selected={index === highlightedIndex}
                                         >
                                             <div className="suggestion-content">
-                                                <span className="suggestion-text">{suggestion}</span>
+                                                <span className="suggestion-text">{suggestion.display}</span>
                                             </div>
                                             <ArrowRight size={14} className="suggestion-arrow" />
                                         </div>

@@ -73,7 +73,7 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
                             </ActionButton>
                         </div>
                     </div>
-                    <div className="tab-navigation" role="tablist">
+                    {/* <div className="tab-navigation" role="tablist">
                         {tabs.map((tab) => (
                             <button
                                 key={tab}
@@ -85,7 +85,7 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
                                 {tab}
                             </button>
                         ))}
-                    </div>
+                    </div> */}
                     <div className="card" role="tabpanel" id={`tabpanel-${type}`}>
                         <div className="card-header">
                             <div>
@@ -110,11 +110,10 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
                                         <th
                                             role="columnheader"
                                             className="sortable"
-                                            onClick={() => console.log("sort id")}
                                         >
                                             ID
                                         </th>
-                                        <th role="columnheader" className="sortable" onClick={() => console.log("sort type")}>
+                                        <th role="columnheader" className="sortable">
                                             Type
                                         </th>
                                         <th role="columnheader">Description</th>

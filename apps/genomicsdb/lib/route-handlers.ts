@@ -1,6 +1,6 @@
 import { APIError } from "./errors";
-import { APIErrorResponse, APIResponse } from "./types";
-import { get_public_url, is_error_response } from "./utils";
+import { APIErrorResponse, APIResponse, SearchResult } from "./types";
+import { get_internal_url, get_public_url, is_error_response } from "./utils";
 
 import { backendFetch } from "@niagads/common";
 import { notFound } from "next/navigation";
@@ -24,7 +24,7 @@ export async function fetchRecord(endpoint: string) {
 }
 
 export async function _fetch(endpoint: string, dataOnly: boolean = false) {
-    const response: APIResponse | APIErrorResponse = await backendFetch(endpoint, get_public_url());
+    const response: APIResponse | APIErrorResponse | SearchResult[] = await backendFetch(endpoint, get_internal_url());
 
     // errors have to be handled in-line
     return is_error_response(response) || !dataOnly ? response : response.data;
