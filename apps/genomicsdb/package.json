@@ -15,7 +15,8 @@
         "react": "^19.1.0",
         "react-dom": "^19.1.0",
         "recharts": "^3.0.0",
-        "@niagads/ui": "^1.0.1-alpha.0"
+        "@niagads/ui": "^1.0.1-alpha.0",
+        "@niagads/common": "^1.0.1-alpha.0"
     },
     "devDependencies": {
         "@eslint/eslintrc": "^3",

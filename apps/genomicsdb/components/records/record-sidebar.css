@@ -1,26 +1,13 @@
-.record-sidebar {
+.sidebar {
+    width: var(--sidebar-width);
     background-color: var(--surface);
     border-right: 1px solid var(--border);
-    height: calc(100vh - var(--header-height));
-    position: sticky;
-    top: 0;
-    display: flex;
-    flex-direction: column;
-    transition: width var(--transition-normal);
-    overflow: hidden;
+    /*padding: 1.5rem 0;*/
+    overflow-y: auto;
+    transition: transform var(--transition-normal);
 }
 
-.record-sidebar.expanded {
-    width: var(--sidebar-width);
-    min-width: var(--sidebar-width);
-}
-
-.record-sidebar.collapsed {
-    width: 60px;
-    min-width: 60px;
-}
-
-.record-sidebar-header {
+.sidebar-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -28,7 +15,7 @@
     border-bottom: 1px solid var(--border);
 }
 
-.record-sidebar-title {
+.sidebar-title {
     font-size: 1.125rem;
     font-weight: 600;
     white-space: nowrap;
@@ -36,7 +23,11 @@
     text-overflow: ellipsis;
 }
 
-.record-sidebar-toggle {
+.sidebar-title .record-type-badge {
+    margin-right: 0.5rem;
+}
+
+.sidebar-toggle {
     background: none;
     border: none;
     color: var(--text-secondary);
@@ -49,151 +40,74 @@
     transition: all var(--transition-fast);
 }
 
-.record-sidebar-toggle:hover {
+.sidebar-toggle:hover {
     background-color: var(--hover-bg);
     color: var(--text-primary);
 }
 
-.record-sidebar-nav {
-    flex: 1;
-    overflow-y: auto;
-    padding: 1rem 0;
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
 }
 
-.record-sidebar-item {
+.sidebar-item {
     display: flex;
     align-items: center;
-    width: 100%;
-    padding: 0.75rem 1rem;
+    padding: 0.75rem 1.5rem;
     color: var(--text-primary);
     cursor: pointer;
     transition: all var(--transition-fast);
     border-left: 3px solid transparent;
+    position: relative;
     background: none;
     border: none;
+    width: 100%;
     text-align: left;
     font-size: 0.875rem;
-    font-weight: 500; /* Fixed weight to prevent jumping */
-    position: relative; /* Added for chevron positioning */
 }
 
-.record-sidebar-item:hover {
+.sidebar-item:hover {
     background-color: var(--hover-bg);
+    color: var(--primary-blue);
 }
 
-.record-sidebar-item.active {
+.sidebar-item.active {
     background-color: var(--active-bg);
     color: var(--primary-blue);
     font-weight: 600;
     border-left-color: var(--primary-blue);
 }
 
-.record-sidebar-item.child {
+.sidebar-item.child {
     padding-left: 2.5rem;
     font-size: 0.8rem;
 }
 
-.record-sidebar-item-icon {
+.sidebar-item-icon {
     margin-right: 0.75rem;
     width: 18px;
     height: 18px;
     flex-shrink: 0;
 }
 
-/* New: Text wrapper to prevent jumping */
-.record-sidebar-item-text {
+.sidebar-item-text {
     flex: 1;
     text-align: left;
     font-weight: inherit; /* Inherit from parent to prevent jumping */
-}
-
-/* Chevron positioning */
-.record-sidebar-chevron {
-    position: absolute;
-    right: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-secondary, #9ca3af);
-}
-
-.record-sidebar-item.active .record-sidebar-chevron {
-    color: var(--primary-blue, #2563eb);
-}
-
-.record-sidebar-footer {
-    padding: 1rem;
-    border-top: 1px solid var(--border);
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-}
-
-.record-type-badge {
-    display: inline-block;
-    padding: 0.25rem 0.5rem;
-    background-color: var(--gray-100);
-    border-radius: var(--border-radius);
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-    text-transform: capitalize;
-}
-
-.record-id {
-    font-family: var(--font-family-mono);
-}
-
-.record-page-container {
-    display: flex;
-    min-height: calc(100vh - var(--header-height) - var(--footer-height));
-    margin-top: 0;
-}
-
-.record-page-container.capped {
-    height: calc(100vh - var(--header-height));
-}
-
-.record-content {
-    flex: 1;
-    padding: 0 2rem;
-    transition: margin-left var(--transition-normal);
-
-    overflow-y: scroll;
-}
-
-.record-content.with-sidebar {
-    margin-left: 0;
-}
-
-.record-content.sidebar-collapsed {
-    margin-left: 0;
-}
-
-.gene-symbol {
-    font-weight: 600;
-    color: var(--primary-blue);
-    font-style: italic;
-}
-
-.variant-id {
-    font-family: var(--font-family-mono);
-    font-weight: 600;
+    color: var(--text-primary);
 }
 
 @media (max-width: 768px) {
-    .record-sidebar {
+    .sidebar {
         position: fixed;
-        z-index: 40;
+        top: var(--header-height);
         left: 0;
-        top: var(--header-height); /* Header offset for mobile overlay */
         height: calc(100vh - var(--header-height));
+        z-index: 50;
         transform: translateX(-100%);
     }
 
-    .record-sidebar.expanded {
+    /*.open {
         transform: translateX(0);
-    }
-
-    .record-content {
-        margin-left: 0 !important;
-    }
+    }*/
 }

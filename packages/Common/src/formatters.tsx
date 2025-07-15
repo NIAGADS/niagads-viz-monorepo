@@ -1,4 +1,4 @@
-import React from "react";
+import React, { JSX } from "react";
 
 /** Create a React Element using preformatted HTML */
 export function safeHtml<P>(str: string, props?: P, Component?: React.ComponentClass<P>): JSX.Element;

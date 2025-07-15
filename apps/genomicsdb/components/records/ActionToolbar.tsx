@@ -1,23 +1,27 @@
 "use client";
 
-import { RecordType } from "./types";
-import { Eye, Download, Share2 } from "lucide-react";
+import { Download, Eye, Share2 } from "lucide-react";
+import { GenomicFeatureRecord, Record, TrackRecord } from "@/lib/types";
 
-interface ActionBarProps {
-    record: RecordType;
-    id?: string;
+import { genomic_location_to_span } from "@/lib/utils";
+import { toTitleCase } from "@niagads/common";
+
+interface ActionToolbarProps {
+    id: string;
+    record: Record;
 }
 
-export const ActionBar = ({ record, id }: ActionBarProps) => {
+export const GenomicFeatureActionToolbar = ({ id, record }: ActionToolbarProps) => {
+    const span = genomic_location_to_span((record as GenomicFeatureRecord).location);
+
     const handleViewInGenomeBrowser = () => {
-        const { chr, start, end } = record.location;
         // Navigate to genome browser with gene coordinates
-        window.open(`/genome-browser?region=${chr}:${start}-${end}&gene=${record.symbol}`, "_blank");
+        window.open(`/genome-browser?loc=${span}`, "_blank");
     };
 
     const handleExport = () => {
         // Navigate to export page with gene context
-        window.open(`/export?type=gene&id=${record.symbol}`, "_blank");
+        window.open(`/export?type=gene&id=${record.id}`, "_blank");
     };
 
     const handleShare = () => {
@@ -27,16 +31,16 @@ export const ActionBar = ({ record, id }: ActionBarProps) => {
 
     return (
         <div id={id} className="action-bar">
-            <div className="gene-identifier">
-                <span className="gene-symbol">{record.symbol}</span>
-                {record.name && <span className="gene-name">{record.name}</span>}
-            </div>
             <div className="action-buttons">
                 <button className="action-button" onClick={handleViewInGenomeBrowser} title="View in Genome Browser">
                     <Eye size={16} />
                     View in Genome Browser
                 </button>
-                <button className="action-button" onClick={handleExport} title="Export Gene Data">
+                <button
+                    className="action-button"
+                    onClick={handleExport}
+                    title={`Export ${toTitleCase(record.type)} Data`}
+                >
                     <Download size={16} />
                     Export
                 </button>
