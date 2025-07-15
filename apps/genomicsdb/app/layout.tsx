@@ -1,10 +1,12 @@
-import type React from "react";
-import type { Metadata } from "next";
-import { Inter, Roboto_Mono, Lato } from "next/font/google";
-import { LoadingProvider } from "@/components/loading-context";
-import { ConditionalMainLayout } from "@/components/conditional-main-layout";
 import "@niagads/ui/css";
 import "./globals.css";
+
+import { Inter, Lato, Roboto_Mono } from "next/font/google";
+
+import { ConditionalMainLayout } from "@/components/conditional-main-layout";
+import { LoadingProvider } from "@/components/loading-context";
+import type { Metadata } from "next";
+import type React from "react";
 
 // Add viewport export for better mobile performance
 export const viewport = {
@@ -24,12 +26,6 @@ const robotoMono = Roboto_Mono({
     variable: "--font-roboto-mono",
 });
 
-// const sourceSans = Source_Sans_3({
-//   subsets: ["latin"],
-//   display: "swap",
-//   variable: "--font-source-sans",
-//   weight: ["300", "400", "500", "600", "700"],
-// })
 const sourceSans = Lato({
     subsets: ["latin"],
     display: "swap",
