@@ -11,8 +11,9 @@
 
 @import "./ui.css";
 
-@import "./alert.css";
 @import "./action-button.css";
+@import "./alert.css";
+@import "./autocomplete.css";
 @import "./button.css";
 @import "./card.css";
 @import "./checkbox.css";
@@ -20,6 +21,6 @@
 @import "./forms.css";
 @import "./layout.css";
 @import "./navigation.css";
-@import "./slider.css";
 @import "./select.css";
+@import "./slider.css";
 @import "./tabs.css";
