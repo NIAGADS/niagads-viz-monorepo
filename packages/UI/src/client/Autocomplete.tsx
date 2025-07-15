@@ -10,13 +10,15 @@ const useDebounce = (value: string) => {
     useEffect(() => {
         if (waiting) {
             clearTimeout(timeoutID);
-        } 
+        }
 
         setWaiting(true);
-        setTimeoutID(setTimeout(() => {
-            setWaiting(false);
-            setDebouncedValue(value);
-        }, 1000));
+        setTimeoutID(
+            setTimeout(() => {
+                setWaiting(false);
+                setDebouncedValue(value);
+            }, 1000)
+        );
     }, [value]);
 
     return { waiting, debouncedValue };
@@ -80,7 +82,7 @@ export const Autocomplete = ({
 
     useEffect(() => {
         onValueChange(debouncedValue);
-    }, [debouncedValue])
+    }, [debouncedValue]);
 
     const handleSearch = () => {
         setShowSuggestions(false);
@@ -143,4 +145,4 @@ export const Autocomplete = ({
             </div>
         </div>
     );
-}
+};
