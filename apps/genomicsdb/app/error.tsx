@@ -1,35 +1,47 @@
 "use client";
 import "./error-page.css";
 import { APIError } from "@/lib/errors";
-import { formatMultiline, linkify, safeHtml } from "@niagads/common";
+import { _isJSON, formatMultiline, linkify, safeHtml } from "@niagads/common";
 import { Alert } from "@niagads/ui";
 import { useEffect } from "react";
 
-export default function Error({ error, reset }: { error: APIError & { digest?: string }; reset: () => void }) {
+export default function ErrorPage({ error, reset }: { error: APIError & { digest?: string }; reset: () => void }) {
     useEffect(() => {
         // Optionally log the error to an error reporting service
         console.error(error);
     }, [error]);
 
-    const errorResponse = JSON.parse(error.message);
+    const issueTrackerMsg = `An unexpected error occurred. Please submit a bug GitHub issue containing this full error response at: ${process.env.NEXT_PUBLIC_ISSUE_TRACKER}`;
 
-    return (
+    const errorJSON = _isJSON(error.message) ? JSON.parse(error.message) : null;
+
+    return errorJSON ? (
         <div className="error-page">
-            <Alert variant="danger" message={`${errorResponse.status} - ${errorResponse.detail}`}>
-                <div>{errorResponse.message && <div>{safeHtml(linkify(errorResponse.message))}</div>}</div>
+            <Alert variant="danger" message={`${errorJSON.status} - ${errorJSON.detail}`}>
+                <div>{errorJSON.message && <div>{safeHtml(linkify(errorJSON.message))}</div>}</div>
             </Alert>
             <div>
-                {errorResponse.stack_trace && (
+                {errorJSON.stack_trace && (
                     <div className="mb-15">
                         <h3 className="error-page-section-header">Stack Trace</h3>
-                        <div className="error-page-code-block">{formatMultiline(errorResponse.stack_trace)}</div>
+                        <div className="error-page-code-block">{formatMultiline(errorJSON.stack_trace)}</div>
                     </div>
                 )}
-                {errorResponse.request && (
+                {errorJSON.request && (
                     <p>
-                        <strong>Originating Request</strong>: {errorResponse.request}
+                        <strong>Originating Request</strong>: {errorJSON.request}
                     </p>
                 )}
+            </div>
+        </div>
+    ) : (
+        <div className="error-page">
+            <Alert variant="danger" message={`Runtime Error - ${error.message}`}>
+                <div className="mb-15">{safeHtml(linkify(issueTrackerMsg))}</div>
+            </Alert>
+            <div>
+                <h3 className="error-page-section-header">Stack Trace</h3>
+                <div className="error-page-code-block">{formatMultiline(error.stack!)}</div>
             </div>
         </div>
     );
