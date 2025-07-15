@@ -1,5 +1,6 @@
-import type React from "react";
 import "./placeholder.css";
+
+import type React from "react";
 
 interface PlaceholderProps {
     type: "table" | "list" | "chart" | "network";
@@ -7,7 +8,7 @@ interface PlaceholderProps {
     children?: React.ReactNode;
 }
 
-const Placeholder: React.FC<PlaceholderProps> = ({ type, height }) => {
+const Placeholder = ({ type, height }: PlaceholderProps) => {
     const getPlaceholderContent = () => {
         switch (type) {
             case "table":
