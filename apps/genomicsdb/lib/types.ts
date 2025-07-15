@@ -51,6 +51,17 @@ export interface APIErrorResponse {
     request?: string;
 }
 
+// Search Results
+
+export interface SearchResult {
+    id: string;
+    description: string;
+    display: string;
+    record_type: RecordType;
+    matched_term: string;
+    match_rank: number;
+}
+
 // Page Request Parameters
 
 export interface PageProps {

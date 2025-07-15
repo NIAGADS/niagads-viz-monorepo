@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Download, Filter, Search } from "lucide-react";
-import { EnhancedSearchComponent } from "../enhanced-search-component";
+import { EnhancedSearch } from "../EnhancedSearch";
 import { ActionButton } from "@niagads/ui";
 import "../table.css";
 
@@ -93,10 +93,8 @@ export function BrowseDatasetsPage() {
                     </div>
                 </div>
                 <div className="flex flex-col md:flex-row gap-4 mb-4">
-                    <EnhancedSearchComponent
+                    <EnhancedSearch
                         placeholder="Search genes, variants, tissues (e.g., APOE, rs429358, chr19:44905791-44909393)"
-                        suggestions={suggestions}
-                        showTypeHints={true}
                         autoRoute={true}
                     />
                     <button className="action-button">

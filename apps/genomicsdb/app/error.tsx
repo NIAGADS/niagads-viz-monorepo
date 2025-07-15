@@ -11,7 +11,7 @@ export default function Error({ error, reset }: { error: APIError & { digest?: s
         console.error(error);
     }, [error]);
 
-    const errorResponse = JSON.parse(error.message);
+    const errorResponse = error.message;
 
     return (
         <div className="error-page">

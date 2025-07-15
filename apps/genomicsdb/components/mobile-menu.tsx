@@ -3,7 +3,7 @@
 import { X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { EnhancedSearchComponent } from "./enhanced-search-component";
+import { EnhancedSearch } from "./EnhancedSearch";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import "./mobile-menu.css";
@@ -64,9 +64,8 @@ export function MobileMenu({
 
                 {showSearch && (
                     <div className="mobile-menu-search">
-                        <EnhancedSearchComponent
+                        <EnhancedSearch
                             placeholder={searchPlaceholder}
-                            suggestions={searchSuggestions}
                             autoRoute={true}
                         />
                     </div>
