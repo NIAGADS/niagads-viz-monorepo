@@ -17,8 +17,13 @@ export function userAgentIsBrowser(userAgent: string): boolean {
  */
 async function __fetch(requestUri: string, asText: boolean = false, skipErrorCheck: boolean = true) {
     const response = await fetch(requestUri);
-    if (!skipErrorCheck && !response.ok) {
-        throw new Error(`Fetch from ${requestUri} failed with status ${response.status}: ${response.statusText}`);
+    if (!response.ok) {
+        if (skipErrorCheck) {
+            const error = await response.json();
+            return Object.assign({}, error, { status: response.status });
+        } else {
+            throw new Error(`Fetch from ${requestUri} failed with status ${response.status}: ${response.statusText}`);
+        }
     }
     const data = asText ? await response.text() : await response.json();
     return data;
@@ -35,5 +40,5 @@ export async function backendFetchFromRequest(request: NextRequest, base: string
 
 export async function backendFetch(pathname: string, base: string | undefined, skipErrorCheck: boolean = true) {
     const requestUri: string = base ? new URL(pathname, base).toString() : new URL(pathname).toString();
-    return await __fetch(requestUri, skipErrorCheck);
+    return await __fetch(requestUri, false, skipErrorCheck);
 }
