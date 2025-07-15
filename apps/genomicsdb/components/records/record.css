@@ -461,6 +461,9 @@
 }
 
 @media (max-width: 768px) {
+    .record-content {
+        margin-left: 0 !important;
+    }
     .record-metadata {
         grid-template-columns: 1fr;
     }
@@ -515,4 +518,34 @@
     .action-button span {
         display: none;
     }
+}
+
+.record-id {
+    font-family: var(--font-family-mono);
+}
+
+.record-page-container {
+    display: flex;
+    min-height: calc(100vh - var(--header-height) - var(--footer-height));
+    margin-top: 0;
+}
+
+.record-page-container.capped {
+    height: calc(100vh - var(--header-height));
+}
+
+.record-content {
+    flex: 1;
+    padding: 0 2rem;
+    transition: margin-left var(--transition-normal);
+
+    overflow-y: scroll;
+}
+
+.record-content.with-sidebar {
+    margin-left: 0;
+}
+
+.record-content.sidebar-collapsed {
+    margin-left: 0;
 }
