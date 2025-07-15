@@ -24,32 +24,16 @@ async function __fetch(requestUri: string, asText: boolean = false, skipErrorChe
     return data;
 }
 
-export async function backendFetchFromRequest(
-    request: NextRequest,
-    apiBaseUrl: string | undefined = process.env.API_INTERAL_URL,
-    asText = false
-) {
-    if (!apiBaseUrl) {
-        throw new Error("`apiBaseUrl` cannot be null.  Please specify explicitly or set API_INTERAL_URL in .env.local");
-    }
+export async function backendFetchFromRequest(request: NextRequest, base: string, asText = false) {
     const incomingRequestUrl = new URL(request.url);
     const pathname = incomingRequestUrl.pathname;
     const queryParams = incomingRequestUrl.search;
-    const baseUrl = apiBaseUrl.startsWith("http")
-        ? apiBaseUrl
-        : new URL(apiBaseUrl, incomingRequestUrl.origin).toString();
+    const baseUrl = base.startsWith("http") ? base : new URL(base, incomingRequestUrl.origin).toString();
     const requestUri: string = new URL(path.join(pathname, queryParams), baseUrl).toString();
     return await __fetch(requestUri, asText);
 }
 
-export async function backendFetch(
-    pathname: string,
-    apiBaseUrl: string | undefined = process.env.API_INTERAL_URL,
-    relative: boolean = false
-) {
-    if (!apiBaseUrl) {
-        throw new Error("`apiBaseUrl` cannot be null.  Please specify explicitly or set API_INTERAL_URL in .env.local");
-    }
-    const requestUri: string = new URL(pathname, apiBaseUrl).toString();
-    return await __fetch(requestUri);
+export async function backendFetch(pathname: string, base: string | undefined, skipErrorCheck: boolean = true) {
+    const requestUri: string = base ? new URL(pathname, base).toString() : new URL(pathname).toString();
+    return await __fetch(requestUri, skipErrorCheck);
 }
