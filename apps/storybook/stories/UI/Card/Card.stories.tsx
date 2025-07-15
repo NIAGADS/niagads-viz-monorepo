@@ -29,8 +29,7 @@ export const Default: Story = {
         </Card>
     ),
     args: {
-        shadow: true,
-        radius: "md",
+        variant = "half",
     },
 };
 
