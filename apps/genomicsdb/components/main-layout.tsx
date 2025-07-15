@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect, type ReactNode } from "react";
+import React, { useState, useEffect, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { Header } from "@/components/header";
-import { Sidebar } from "@/components/sidebar";
+import Sidebar from "@/components/records/RecordSidebar";
 import { Footer } from "@niagads/ui/client";
 import { MobileMenu } from "@/components/mobile-menu";
 
@@ -62,13 +62,13 @@ export function MainLayout({
             />
 
             <div className="content-container">
-                {shouldShowSidebar && <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />}
-                {shouldShowSidebar && sidebarOpen && (
+                {/*shouldShowSidebar && <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />*/}
+                {/*shouldShowSidebar && sidebarOpen && (
                     <div
                         className={`mobile-menu-overlay ${sidebarOpen ? "open" : ""}`}
                         onClick={() => setSidebarOpen(false)}
                     />
-                )}
+                )*/}
                 <main className={`main-content ${shouldShowSidebar ? "with-sidebar" : "without-sidebar"}`}>
                     {children}
                 </main>

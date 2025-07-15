@@ -2,11 +2,18 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "genomicsdb: server-side",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "npm run genomicsdb"
+            // "command": "npm run open-access-api-client" // FIXME: lerna runs a production build on hot reload
+        },
+        {
             "name": "open-access-api-client: server-side",
             "type": "node-terminal",
             "request": "launch",
-            "command": "npx lerna run dev --scope='open-access-api-client'"
-            // "command": "npm run open-access-api-client" // FIXME: lerna runs a production build on hot reload
+            //"command": "npx lerna run dev --scope='open-access-api-client'"
+            "command": "npm run open-access-api-client"
         },
         {
             "name": "nextjs-app: client-side (Chrome)",
@@ -44,6 +51,14 @@
         {
             "name": "open-access-api-client: full stack (Firefox)",
             "configurations": ["open-access-api-client: server-side", "nextjs-app: client-side (Firefox)"]
+        },
+        {
+            "name": "genomicsdb: full stack (Chrome)",
+            "configurations": ["genomicsdb: server-side", "nextjs-app: client-side (Chrome)"]
+        },
+        {
+            "name": "genomicsdb: full stack (Firefox)",
+            "configurations": ["genomicsdb: server-side", "nextjs-app: client-side (Firefox)"]
         }
     ]
 }

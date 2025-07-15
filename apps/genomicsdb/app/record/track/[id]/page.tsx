@@ -1,6 +1,6 @@
 import { RecordPage } from "@/components/records/record-page";
 
-interface RecordPageProps {
+interface PageProps {
     params: Promise<{
         type: string;
         id: string;
@@ -10,7 +10,7 @@ interface RecordPageProps {
     }>;
 }
 
-export default async function RecordDetailPage({ params, searchParams }: RecordPageProps) {
+export default async function RecordDetailPage({ params, searchParams }: PageProps) {
     const { id } = await params;
     const resolvedSearchParams = await searchParams;
 

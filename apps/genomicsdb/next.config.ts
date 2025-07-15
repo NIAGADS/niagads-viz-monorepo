@@ -16,7 +16,6 @@ const nextConfig: NextConfig = {
             {
                 source: "/api/:path*",
                 destination: `${process.env.INTERNAL_BACKEND_SERVICE_URL}/:path*`,
-                basePath: false,
             },
         ];
     },

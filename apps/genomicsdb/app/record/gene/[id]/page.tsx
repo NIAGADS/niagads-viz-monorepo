@@ -1,130 +1,28 @@
-import "@/components/records/record-sidebar.css";
-import "@/components/records/record.css";
+import { GeneRecord, PageProps } from "@/lib/types";
+import { GeneRecordOverview, RecordOverviewSection } from "@/components/records/RecordOverviewSection";
 
-import { Sidebar, SidebarItem } from "@/components/sidebar";
+import { fetchRecord } from "@/lib/route-handlers";
 
-import { ActionBar } from "@/components/records/ActionBar";
-import { GeneRecord } from "@/components/records/types";
-import Placeholder from "@/components/records/placeholder";
-import { Tabs } from "@/lib/client-wrapper";
-import { fetchRecordData } from "@/lib/api/fetch-record-data";
-
-interface RecordPageProps {
-    params: Promise<{
-        type: string;
-        id: string;
-    }>;
-    searchParams: Promise<{
-        [key: string]: string | string[] | undefined;
-    }>;
-}
-
-const sidebarItems: SidebarItem[] = [
-    { id: "overview", label: "Overview", icon: "home" },
-    {
-        id: "trait-associations",
-        label: "Trait associations",
-        icon: "barChart",
-        children: [
-            { id: "niagads-gwas", label: "NIAGADS GWAS", icon: "database" },
-            { id: "gwas-catalog", label: "GWAS Catalog", icon: "database" },
-        ],
-    },
-    { id: "link-outs", label: "Link outs", icon: "link" },
-    { id: "function-prediction", label: "Function prediction", icon: "file" },
-    { id: "pathways", label: "Pathways and interactions", icon: "gitBranch" },
-    { id: "genetic-variation", label: "Genetic variation", icon: "barChart" },
-];
-
-export default async function RecordDetailPage({ params, searchParams }: RecordPageProps) {
+export default async function GeneDetailPage({ params, searchParams }: PageProps) {
     const { id } = await params;
 
-    const fetch = async () => {
-        const result = await fetchRecordData("gene", id);
-        return result as GeneRecord;
-    };
+    const record: GeneRecord = (await fetchRecord(`/api/record/gene/${id}?content=brief`)) as GeneRecord;
 
-    const record = await fetch();
+    /*
 
-    // Format location string as per README: chr:start-end:strand / cytogenic_location
-    const formatLocation = () => {
-        const { chr, start, end, strand } = record.location;
-        const cytogenic = record.hgnc_annotation?.location;
-        const baseLocation = `${chr}:${start.toLocaleString()}-${end.toLocaleString()}:${strand}`;
-        return cytogenic ? `${baseLocation} / ${cytogenic}` : baseLocation;
-    };
-
-    // Format synonyms as comma-space delimited string
-    const formatSynonyms = () => {
-        if (!record.synonyms || record.synonyms.length === 0) return null;
-        return record.synonyms.join(", ");
-    };
-
+   
+    */
     return (
-        <div className="record-page-container capped">
-            <Sidebar title={id} sidebarConfig={sidebarItems} />
-            <div className={`record-content`}>
-                <ActionBar id="action-bar" record={record} />
-                <div className="record-container">
-                    <div className="record-content-section">
-                        <h2 className="section-title">Test</h2>
-                        <div id="overview" className="overview-section">
-                            {/* Grid layout for overview cards */}
-                            <div className="overview-grid">
-                                {/* Gene Information Card - 1/3 width */}
-                                <div className="card card-third">
-                                    <h3>Gene Information</h3>
-                                    <div className="gene-info-content">
-                                        <div className="gene-title">
-                                            <span className="gene-symbol">{record.symbol}</span>
-                                            {record.name && <span className="gene-name"> - {record.name}</span>}
-                                        </div>
-                                        <div className="gene-details">
-                                            <div className="gene-id">
-                                                <a
-                                                    href={`https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=${record.id}`}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                >
-                                                    {record.id}
-                                                </a>
-                                            </div>
-                                            {formatSynonyms() && (
-                                                <div className="gene-synonyms">
-                                                    <span className="info-label">Also known as:</span>{" "}
-                                                    {formatSynonyms()}
-                                                </div>
-                                            )}
-                                            <div className="gene-type">
-                                                <span className="info-label">Gene Type:</span>{" "}
-                                                {record.hgnc_annotation?.locus_group?.replace("-", " ") ||
-                                                    "protein coding"}
-                                            </div>
-                                            <div className="gene-location">
-                                                <span className="info-label">Location:</span> {formatLocation()}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {/* Chart placeholders - 2/3 width */}
-                                <div className="card card-two-thirds">
-                                    <h3>Expression Profile</h3>
-                                    <Placeholder type="chart" height={300}>
-                                        <div className="placeholder-text">
-                                            Gene expression chart will be displayed here
-                                        </div>
-                                    </Placeholder>
-                                </div>
-                                <div className="card card-full">
-                                    <h3>Variant Distribution</h3>
-                                    <Placeholder type="chart" height={300}>
-                                        <div className="placeholder-text">
-                                            Variant distribution chart will be displayed here
-                                        </div>
-                                    </Placeholder>
-                                </div>
-                            </div>
-                        </div>
+        <RecordOverviewSection>
+            <GeneRecordOverview record={record}></GeneRecordOverview>
+        </RecordOverviewSection>
+    );
+}
+
+/*
+  
+
+                      
                         <div className="niagads-gwas-section">
                             <Tabs
                                 width="full"
@@ -332,6 +230,7 @@ export default async function RecordDetailPage({ params, searchParams }: RecordP
                     </div>
                 </div>
             </div>
-        </div>
+        
     );
 }
+*/

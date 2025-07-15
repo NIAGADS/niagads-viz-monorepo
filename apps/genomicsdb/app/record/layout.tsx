@@ -1,5 +1,5 @@
-import "@/components/records/record.css";
 import "@/components/records/records-list.css";
+import "@/components/records/record.css";
 
 import { get_record_id_from_path, get_record_type_from_path } from "@/lib/utils";
 

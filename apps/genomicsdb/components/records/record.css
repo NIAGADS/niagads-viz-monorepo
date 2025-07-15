@@ -11,20 +11,20 @@
     margin-bottom: 1.5rem;
 }
 
-.gene-identifier {
+.record-identifier {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
 }
 
-.gene-identifier .gene-symbol {
+.record-identifier .record-display-identifier {
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--primary-blue, #2563eb);
     line-height: 1.2;
 }
 
-.gene-identifier .gene-name {
+.record-identifier .record-description {
     font-size: 0.875rem;
     color: var(--text-secondary, #6b7280);
     font-weight: 500;
@@ -70,18 +70,6 @@
 
 .record-header {
     margin-bottom: 1.5rem;
-}
-
-.record-title {
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    line-height: 1.2;
-}
-
-.record-description {
-    color: var(--text-secondary);
-    font-size: 1rem;
 }
 
 .record-metadata {
@@ -327,51 +315,65 @@
     grid-column: span 3;
 }
 
-/* Gene information specific styling */
-.gene-info-content {
+.record-info-content {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
-.gene-title {
-    font-size: 1.1rem;
-    font-weight: 600;
+.record-title {
+    font-size: 1.75rem !important;
+    font-weight: 700 !important;
     color: #1f2937;
     border-bottom: 1px solid #e5e7eb;
     padding-bottom: 0.5rem;
+    line-height: 1.2;
+    /*     margin-bottom: 0.5rem;*/
 }
 
-.gene-symbol {
+.record-display-identifier {
     color: var(--primary-blue, #2563eb);
     font-weight: 700;
 }
 
-.gene-name {
+.record-description {
     color: var(--text-secondary, #4b5563);
     font-weight: 500;
 }
 
-.gene-details {
+.record-details {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    font-size: 0.9rem;
 }
 
-.gene-id {
-    font-family: var(--font-family-mono, "Monaco", "Menlo", "Ubuntu Mono", monospace);
-    font-size: 0.9rem;
-    color: var(--text-secondary, #6b7280);
+.record-external-identifier {
     background: var(--gray-50, #f3f4f6);
     padding: 0.25rem 0.5rem;
     border-radius: var(--border-radius, 0.25rem);
     width: fit-content;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
-.gene-synonyms,
-.gene-type,
-.gene-location {
-    font-size: 0.9rem;
+.record-external-identifier-text {
+    flex: 1;
+    font-family: var(--font-family-mono, "Monaco", "Menlo", "Ubuntu Mono", monospace);
+    font-size: 1.2rem;
+    color: var(--text-secondary, #6b7280);
+}
+
+.record-external-link-icon {
+    margin-right: 0.75rem;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.record-attribute {
+    font-size: 1rem;
     line-height: 1.4;
 }
 

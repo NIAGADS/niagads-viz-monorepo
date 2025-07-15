@@ -84,7 +84,7 @@ const RecordSidebar = ({ title, recordType, items }: SidebarProps) => {
                 <h2 className="sidebar-title">
                     {" "}
                     <div className={`record-type-badge ${recordType}`}>{recordType}</div>
-                    {title}
+                    {/*title*/} Annotation
                 </h2>
                 {/*<button
                     className="sidebar-toggle"
