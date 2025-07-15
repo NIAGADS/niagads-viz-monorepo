@@ -39,7 +39,7 @@ export const GenomicFeatureActionToolbar = ({ id, record }: ActionToolbarProps) 
                 <button
                     className="action-button"
                     onClick={handleExport}
-                    title={`Export ${toTitleCase(record.type)} Data`}
+                    title={`Export ${toTitleCase(record.record_type)} Data`}
                 >
                     <Download size={16} />
                     Export
