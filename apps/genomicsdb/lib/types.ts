@@ -43,6 +43,14 @@ export interface APIResponse {
     message: string;
 }
 
+export interface APIErrorResponse {
+    status: number;
+    detail: string;
+    message?: string;
+    stack_trace?: string;
+    request?: string;
+}
+
 // Page Request Parameters
 
 export interface PageProps {
@@ -59,7 +67,7 @@ export interface PageProps {
 
 export interface BaseRecord {
     id: string;
-    type: RecordType;
+    record_type: RecordType;
 }
 
 export interface GenomicLocation {
@@ -71,14 +79,14 @@ export interface GenomicLocation {
 }
 
 interface GeneFeature extends BaseRecord {
-    type: "gene";
-    gene_symbo: string;
+    record_type: "gene";
+    symbol: string;
 }
 
 export interface GeneRecord extends GeneFeature {
-    type: "gene";
-    gene_type: string;
-    gene_name: string | null;
+    record_type: "gene";
+    type: string;
+    name: string | null;
     synonyms: string[] | null;
     location: GenomicLocation;
     cytogenic_location: string | null;
@@ -95,7 +103,7 @@ export interface PredictedConsequence {
 }
 
 export interface VariantRecord extends BaseRecord {
-    type: "variant";
+    record_type: "variant";
     variant_class: string;
     id: string;
     ref_snp_id: string;
@@ -107,12 +115,12 @@ export interface VariantRecord extends BaseRecord {
 }
 
 export interface SpanRecord extends BaseRecord {
-    type: "span";
+    record_type: "span";
     location: GenomicLocation;
 }
 
 export interface TrackRecord extends BaseRecord {
-    type: "track";
+    record_type: "track";
     id: string;
     name: string;
     description: string;
