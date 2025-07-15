@@ -1,3 +1,4 @@
+import React from "react";
 import { GeneRecord, PageProps } from "@/lib/types";
 import { GeneRecordOverview, RecordOverviewSection } from "@/components/records/RecordOverviewSection";
 
@@ -8,10 +9,6 @@ export default async function GeneDetailPage({ params, searchParams }: PageProps
 
     const record: GeneRecord = (await fetchRecord(`/api/record/gene/${id}?content=brief`)) as GeneRecord;
 
-    /*
-
-   
-    */
     return (
         <RecordOverviewSection>
             <GeneRecordOverview record={record}></GeneRecordOverview>
