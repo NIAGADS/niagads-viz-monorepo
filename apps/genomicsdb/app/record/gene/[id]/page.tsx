@@ -1,13 +1,13 @@
-import React from "react";
-import { GeneRecord, PageProps } from "@/lib/types";
-import { GeneRecordOverview, RecordOverviewSection } from "@/components/records/RecordOverviewSection";
-
+import { GeneRecordOverview } from "@/components/records/gene/GeneRecordOverview";
+import { RecordOverviewSection } from "@/components/records/RecordOverviewSection";
 import { fetchRecord } from "@/lib/route-handlers";
+import { GeneRecord, PageProps } from "@/lib/types";
 
 export default async function GeneDetailPage({ params, searchParams }: PageProps) {
     const { id } = await params;
 
     const record: GeneRecord = (await fetchRecord(`/api/record/gene/${id}?content=brief`)) as GeneRecord;
+    Object.assign(record, { record_type: "gene" });
 
     return (
         <RecordOverviewSection>
@@ -17,9 +17,6 @@ export default async function GeneDetailPage({ params, searchParams }: PageProps
 }
 
 /*
-  
-
-                      
                         <div className="niagads-gwas-section">
                             <Tabs
                                 width="full"

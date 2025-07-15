@@ -141,8 +141,11 @@ interface AnchoredSectionBase {
     description?: string | React.ReactNode;
 }
 
+// TODO: table wrapper "types"
+
 export interface TableSection extends AnchoredSectionBase {
     endpoint: string;
+    wrapper?: string;
 }
 
 export interface AnchoredPageSection extends AnchoredSectionBase {
