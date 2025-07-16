@@ -74,7 +74,7 @@ export const Autocomplete = ({
                     if (highlightedIndex >= 0) {
                         handleSuggestionClick(suggestions[highlightedIndex]);
                     } else {
-                        handleSearch();
+                        handleSearch(query);
                     }
                     break;
                 case "Escape":
@@ -86,15 +86,14 @@ export const Autocomplete = ({
 
         document.addEventListener("keydown", handleKeyDown);
         return () => document.removeEventListener("keydown", handleKeyDown);
-    }, [showSuggestions, highlightedIndex, suggestions]);
+    }, [showSuggestions, highlightedIndex, suggestions, query]);
 
     useEffect(() => {
         onValueChange(debouncedValue);
     }, [debouncedValue]);
 
-    const handleSearch = () => {
-        console.log(query);
-        //onSearch(query);
+    const handleSearch = (q: string) => {
+        onSearch(query);
     };
 
     const handleSuggestionClick = (suggestion: Suggestion) => {

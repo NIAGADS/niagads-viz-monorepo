@@ -5,7 +5,10 @@ import { Filter, Download, ChevronLeft, ChevronRight } from "lucide-react";
 import { _fetch } from "@/lib/route-handlers";
 import { SearchResult } from "@/lib/types";
 import Link from "next/link";
-import { RecordType } from "@/lib/types";
+
+import "@/components/table.css";
+import "@/components/tab-navigation.css";
+import "@/components/records/records-list.css";
 
 interface SearchPageProps {
     searchParams: { q?: string; type?: string };
@@ -14,13 +17,13 @@ interface SearchPageProps {
 const SearchPage = async ({ searchParams }: SearchPageProps) => {
     const params = await searchParams;
     const query = params.q || "";
-    const type = params.type || "all";
+    const type = params.type;
 
     const tabs = ["gene", "variant", "span", "track"];
 
     const results: SearchResult[] = (await _fetch(`/service/search?keyword=${query}`)) as SearchResult[];
 
-    const filteredRecords = results.filter((result) => result.record_type === type);
+    const filteredRecords = type ? results.filter((result) => result.record_type === type) : results;
 
     return (
         <Suspense fallback={<LoadingSpinner message="Loading search results..." />}>
@@ -109,32 +112,32 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
                                             Type
                                         </th>
                                         <th role="columnheader">Description</th>
-                                        <th role="columnheader">Location</th>
                                         <th role="columnheader"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {filteredRecords.map((item: any) => (
+                                    {filteredRecords.map((item: SearchResult) => (
                                         <tr key={item.id} role="row">
                                             <td role="gridcell">
                                                 <input type="checkbox" aria-label={`Select row ${item.id}`} />
                                             </td>
                                             <td role="gridcell" className="scientific-notation">
                                                 <Link
-                                                    href={`/records/${item.type}/${item.id}`}
+                                                    href={`/records/${item.record_type}/${item.id}`}
                                                     className="text-primary-blue hover:underline"
                                                 >
                                                     {item.id}
                                                 </Link>
                                             </td>
                                             <td role="gridcell">
-                                                <span className={`record-type-badge ${item.type}`}>{item.type}</span>
+                                                <span className={`record-type-badge ${item.record_type}`}>
+                                                    {item.record_type}
+                                                </span>
                                             </td>
                                             <td role="gridcell">{item.description}</td>
-                                            <td role="gridcell">{item.location}</td>
                                             <td role="gridcell">
                                                 <Link
-                                                    href={`/records/${item.type}/${item.id}`}
+                                                    href={`/records/${item.record_type}/${item.id}`}
                                                     className="view-details-link"
                                                 >
                                                     View Details
