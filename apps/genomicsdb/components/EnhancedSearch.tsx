@@ -1,9 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search, ArrowRight } from "lucide-react";
-import { detectSearchType, analyzeSearchQuery, getSearchSuggestions } from "@/lib/search-router";
 import "./enhanced-search-component.css";
 import { Autocomplete } from "@niagads/ui/client";
 import { _fetch } from "@/lib/route-handlers";
