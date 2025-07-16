@@ -10,3 +10,5 @@ Review whether media queries are sufficient or if we want to reinstate this.  Wi
 ## action button css
 
 resolve action-button.css and record.css
+
+## create genomicsdb issue tracking project on github and update sample.env.local
