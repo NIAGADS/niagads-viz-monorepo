@@ -42,10 +42,7 @@ export function Header({
 
                 {showSearch && (
                     <div className="header-search">
-                        <EnhancedSearch
-                            placeholder={searchPlaceholder}
-                            autoRoute={true}
-                        />
+                        <EnhancedSearch placeholder={searchPlaceholder} autoRoute={true} />
                     </div>
                 )}
             </div>

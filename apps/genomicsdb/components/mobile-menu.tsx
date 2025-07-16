@@ -64,10 +64,7 @@ export function MobileMenu({
 
                 {showSearch && (
                     <div className="mobile-menu-search">
-                        <EnhancedSearch
-                            placeholder={searchPlaceholder}
-                            autoRoute={true}
-                        />
+                        <EnhancedSearch placeholder={searchPlaceholder} autoRoute={true} />
                     </div>
                 )}
 

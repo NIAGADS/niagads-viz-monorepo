@@ -14,16 +14,14 @@ interface EnhancedSearchProps {
     autoRoute?: boolean; // If true, automatically route to record pages
 }
 
-export function EnhancedSearch({
-    placeholder,
-    autoRoute,
-}: EnhancedSearchProps) {
+export function EnhancedSearch({ placeholder, autoRoute }: EnhancedSearchProps) {
     const [suggestions, setSuggestions] = useState<SearchResult[]>([]);
     const router = useRouter();
 
     const getSuggestions = (value: string) => {
         setSuggestions([]);
-        _fetch(`/service/search?keyword=${value}`).then((results: SearchResult[]) => setSuggestions(results));
+        !!value &&
+            _fetch(`/service/search?keyword=${value}`).then((results: SearchResult[]) => setSuggestions(results));
     };
 
     const handleSearch = (searchTerm: string) => {
@@ -31,12 +29,11 @@ export function EnhancedSearch({
     };
 
     const handleClick = (suggestion: Partial<SearchResult>) => {
-        router.push(`/record/${suggestion.record_type}/${suggestion.id}`)
-
+        router.push(`/record/${suggestion.record_type}/${suggestion.id}`);
     };
 
     return (
-        <Autocomplete 
+        <Autocomplete
             suggestions={suggestions}
             onSearch={(term) => handleSearch(term)}
             onClick={(suggestion) => handleClick(suggestion)}

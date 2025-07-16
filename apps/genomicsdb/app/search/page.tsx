@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { LoadingSpinner, ActionButton, } from "@niagads/ui";
+import { LoadingSpinner, ActionButton } from "@niagads/ui";
 import { EnhancedSearch } from "@/components/EnhancedSearch";
 import { Filter, Download, ChevronLeft, ChevronRight } from "lucide-react";
 import { _fetch } from "@/lib/route-handlers";
@@ -20,11 +20,11 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
 
     const results: SearchResult[] = (await _fetch(`/service/search?keyword=${query}`)) as SearchResult[];
 
-    const filteredRecords = results.filter(result => result.record_type === type);
+    const filteredRecords = results.filter((result) => result.record_type === type);
 
     return (
         <Suspense fallback={<LoadingSpinner message="Loading search results..." />}>
-            {(!results || results.length === 0) ? (
+            {!results || results.length === 0 ? (
                 <div className="loading-container">
                     <div className="text-center text-secondary">
                         <div className="text-lg mb-2">No results found</div>
@@ -42,9 +42,7 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
                     <div className="content-header">
                         <div>
                             <h1 className="content-title">Search Results</h1>
-                            <p className="content-subtitle">
-                                Found X results for "{query}"
-                            </p>
+                            <p className="content-subtitle">Found X results for "{query}"</p>
                         </div>
                         {/*
                             <div className="action-buttons">
@@ -90,9 +88,7 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
                         <div className="card-header">
                             <div>
                                 <div className="card-title">Records</div>
-                                <div className="card-subtitle">
-                                    Showing {filteredRecords.length} results
-                                </div>
+                                <div className="card-subtitle">Showing {filteredRecords.length} results</div>
                             </div>
                             <div className="flex gap-2">
                                 <ActionButton>
@@ -105,12 +101,8 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
                             <table className="data-table" role="table">
                                 <thead>
                                     <tr role="row">
-                                        <th role="columnheader">
-                                        </th>
-                                        <th
-                                            role="columnheader"
-                                            className="sortable"
-                                        >
+                                        <th role="columnheader"></th>
+                                        <th role="columnheader" className="sortable">
                                             ID
                                         </th>
                                         <th role="columnheader" className="sortable">
@@ -125,10 +117,7 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
                                     {filteredRecords.map((item: any) => (
                                         <tr key={item.id} role="row">
                                             <td role="gridcell">
-                                                <input
-                                                    type="checkbox"
-                                                    aria-label={`Select row ${item.id}`}
-                                                />
+                                                <input type="checkbox" aria-label={`Select row ${item.id}`} />
                                             </td>
                                             <td role="gridcell" className="scientific-notation">
                                                 <Link
@@ -144,7 +133,10 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
                                             <td role="gridcell">{item.description}</td>
                                             <td role="gridcell">{item.location}</td>
                                             <td role="gridcell">
-                                                <Link href={`/records/${item.type}/${item.id}`} className="view-details-link">
+                                                <Link
+                                                    href={`/records/${item.type}/${item.id}`}
+                                                    className="view-details-link"
+                                                >
                                                     View Details
                                                 </Link>
                                             </td>
@@ -156,9 +148,7 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
                         <div className="pagination">
                             <div className="pagination-info">
                                 <div>Results per page: 10</div>
-                                <div>
-                                    1-{filteredRecords.length} of X
-                                </div>
+                                <div>1-{filteredRecords.length} of X</div>
                             </div>
                             <div className="pagination-controls">
                                 <button className="pagination-button" disabled aria-label="Previous page">
@@ -177,6 +167,6 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
             )}
         </Suspense>
     );
-}
+};
 
 export default SearchPage;
