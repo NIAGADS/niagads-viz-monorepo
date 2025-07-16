@@ -22,7 +22,9 @@
         "rollup-plugin-peer-deps-external": "^2.2.4",
         "rollup-plugin-postcss": "^4.0.2"
     },
-    "dependencies": {},
+    "dependencies": {
+        "recharts": "^3.1.0"
+    },
     "files": [
         "dist"
     ],

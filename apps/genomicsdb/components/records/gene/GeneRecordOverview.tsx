@@ -1,9 +1,11 @@
-import { ExternalUrls } from "@/lib/reference";
-import { GeneRecord } from "@/lib/types";
-import { genomic_location_to_span } from "@/lib/utils";
 import { Card, CardBody, CardHeader } from "@niagads/ui";
+
+import { ExternalUrls } from "@/lib/reference";
+import { GeneAssociationSummaryChart } from "./GeneGeneticAssociationSummaryChart";
+import { GeneRecord } from "@/lib/types";
 import { GenomicFeatureActionToolbar } from "../ActionToolbar";
 import Placeholder from "../placeholder";
+import { genomic_location_to_span } from "@/lib/utils";
 import { renderRecordTitle } from "../RecordOverviewSection";
 
 export const GeneRecordOverview = ({ record }: { record: GeneRecord }) => {
@@ -46,9 +48,7 @@ export const GeneRecordOverview = ({ record }: { record: GeneRecord }) => {
             <Card variant="two-thirds">
                 <CardHeader>Genetic Associations</CardHeader>
                 <CardBody>
-                    <Placeholder type="chart" height={300}>
-                        <div className="placeholder-text">Variant distribution chart will be displayed here</div>
-                    </Placeholder>
+                    <GeneAssociationSummaryChart recordId={record.id} source={"gwas"} traitCategory={"all"} />
                 </CardBody>
             </Card>
         </>

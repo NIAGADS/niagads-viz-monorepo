@@ -28,7 +28,8 @@
         "**/*.ts",
         "**/*.tsx",
         ".next/types/**/*.ts",
-        "components/enhanced-search-component.tsx"
+        "components/enhanced-search-component.tsx",
+        "../../packages/Charts/GeneticAssociationSummaryChart.tsx"
     ],
     "exclude": ["node_modules"]
 }

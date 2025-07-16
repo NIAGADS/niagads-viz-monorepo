@@ -1,20 +1,5 @@
 // lib/types.ts - project type definitions
 
-// literal types
-
-export type PageSectionIcons =
-    | "home"
-    | "gantt"
-    | "barchart"
-    | "link"
-    | "network"
-    | "database"
-    | "info"
-    | "activity"
-    | "file"
-    | "frequency";
-export type RecordType = "gene" | "variant" | "span" | "track";
-
 // API Response
 
 export interface Data {}
@@ -63,7 +48,28 @@ export interface PageProps {
     }>;
 }
 
-// Records
+// Supporting literals
+
+export type PageSectionIcons =
+    | "home"
+    | "gantt"
+    | "barchart"
+    | "link"
+    | "network"
+    | "database"
+    | "info"
+    | "activity"
+    | "file"
+    | "frequency";
+
+export type RecordType = "gene" | "variant" | "span" | "track";
+
+// Records and supporting data types
+
+export interface OntologyTerm {
+    term_id: string;
+    term: string;
+}
 
 export interface BaseRecord {
     id: string;
