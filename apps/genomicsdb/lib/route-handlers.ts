@@ -1,12 +1,15 @@
-import { APIError } from "./errors";
-import { APIErrorResponse, APIResponse } from "./types";
+import { APIErrorResponse, APIResponse, AssociationTraitCategory, AssociationTraitSource, RecordType } from "./types";
 import { get_public_url, is_error_response } from "./utils";
 
+import { APIError } from "./errors";
 import { backendFetch } from "@niagads/common";
 import { notFound } from "next/navigation";
 
-export async function fetchRecord(endpoint: string) {
-    const response: APIResponse | APIErrorResponse = await backendFetch(endpoint, get_public_url());
+type ResponseContent = "brief" | "full" | "counts" | "urls";
+type ResponseFormat = "summary" | "table" | "default";
+
+export async function fetchRecord(endpoint: string, brief: boolean = true) {
+    const response = await _fetch(endpoint, brief ? "brief" : "full");
 
     if (is_error_response(response)) {
         if (response.status === 404) {
@@ -20,12 +23,29 @@ export async function fetchRecord(endpoint: string) {
         }
     }
 
-    return response.data[0]; // record is a list of one item
+    return (response as APIResponse).data[0]; // record is a list of one item
 }
 
-export async function _fetch(endpoint: string, dataOnly: boolean = false) {
-    const response: APIResponse | APIErrorResponse = await backendFetch(endpoint, get_public_url());
+export async function fetchRecordAssocations(
+    recordType: RecordType,
+    id: string,
+    category: AssociationTraitCategory = "all",
+    source: AssociationTraitSource = "all",
+    format: ResponseFormat = "default"
+) {
+    const endpoint = `/api/record/${recordType}/${id}/associations?category=${category}&source=${source}&view=${format === "table" ? "table" : "default"}`;
+    return await _fetch(endpoint, format === "summary" ? "counts" : "full");
+}
 
-    // errors have to be handled in-line
+export async function _fetch(endpoint: string, content: ResponseContent = "full", dataOnly: boolean = false) {
+    let query = endpoint;
+    if (!endpoint.includes("service")) {
+        const operator = endpoint.includes("?") ? "&" : "?";
+        query = `${endpoint}${operator}content=${content}`;
+    }
+    const response: APIResponse | APIErrorResponse = await backendFetch(query, get_public_url());
+
+    // do not catch errors here; deal with them w/in calling block so they can be
+    // handled inline when necessary
     return is_error_response(response) || !dataOnly ? response : response.data;
 }
