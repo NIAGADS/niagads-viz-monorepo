@@ -39,7 +39,11 @@ export async function fetchRecordAssocations(
 
 export async function _fetch(endpoint: string, content: ResponseContent = "full", dataOnly: boolean = false) {
     let query = endpoint;
-    if (!endpoint.includes("service")) {
+
+    if (endpoint.includes("/service/")) {
+        // always want data only response for services
+        dataOnly = true;
+    } else {
         const operator = endpoint.includes("?") ? "&" : "?";
         query = `${endpoint}${operator}content=${content}`;
     }

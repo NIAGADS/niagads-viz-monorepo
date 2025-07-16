@@ -12,3 +12,20 @@ Review whether media queries are sufficient or if we want to reinstate this.  Wi
 resolve action-button.css and record.css
 
 ## create genomicsdb issue tracking project on github and update sample.env.local
+
+## is_error_response did not catch: the fast API validation error - need to wrap these
+
+```json
+{
+  type: "enum",
+  loc: [
+    "query",
+    "source",
+  ],
+  msg: "Input should be 'GWAS', 'CURATED' or 'ALL'",
+  input: "GWASview=table",
+  ctx: {
+    expected: "'GWAS', 'CURATED' or 'ALL'",
+  },
+}
+```

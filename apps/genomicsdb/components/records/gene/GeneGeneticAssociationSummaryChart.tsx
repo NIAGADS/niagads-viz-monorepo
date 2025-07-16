@@ -12,7 +12,6 @@ import { _fetch, fetchRecordAssocations } from "@/lib/route-handlers";
 import { getCache, setCache } from "@/lib/cache";
 
 import ClientWrapper from "@/components/ClientWrapper";
-import { INSPECT_MAX_BYTES } from "buffer";
 import { InlineError } from "@/components/InlineError";
 import Placeholder from "../placeholder";
 import { _get } from "@niagads/common";
@@ -45,23 +44,24 @@ const data_key = (source: string, category: string) => {
 
 const build_chart_data = (summary: GeneticAssocationSummary) => {
     const totals: Record<string, SummaryData> = {};
-    Object.entries(summary).map(([source, traits]) => {
+    Object.entries(summary).forEach(([source, traits]) => {
         traits.forEach((item: { trait_category: string; num_variants: Record<string, number> }) => {
             const seriesKey: string = data_key(source, item.trait_category);
             if (totals.hasOwnProperty(seriesKey)) {
-                totals[seriesKey]["upstream"] = totals[seriesKey]["upstream"] || 0 + item.num_variants["upstream"] || 0;
+                totals[seriesKey]["upstream"] =
+                    (totals[seriesKey]["upstream"] ?? 0) + (item.num_variants["upstream"] ?? 0);
                 totals[seriesKey]["downstream"] =
-                    totals[seriesKey]["downstream"] || 0 + item.num_variants["downstream"] || 0;
-                totals[seriesKey]["in_gene"] = totals[seriesKey]["in_gene"] || 0 + item.num_variants["in_gene"] || 0;
+                    (totals[seriesKey]["downstream"] ?? 0) + (item.num_variants["downstream"] ?? 0);
+                totals[seriesKey]["in_gene"] =
+                    (totals[seriesKey]["in_gene"] ?? 0) + (item.num_variants["in_gene"] ?? 0);
             } else {
-                const dataPoint = { trait_category: seriesKey };
-
-                Object.assign(dataPoint, {
-                    uptream: item.num_variants["upstream"] || 0,
-                    downstream: item.num_variants["downstream"] || 0,
-                    in_gene: item.num_variants["in_gene"] || 0,
-                });
-                Object.assign(totals, { [seriesKey]: dataPoint });
+                const dataPoint: SummaryData = {
+                    trait_category: seriesKey,
+                    upstream: item.num_variants["upstream"] ?? 0,
+                    downstream: item.num_variants["downstream"] ?? 0,
+                    in_gene: item.num_variants["in_gene"] ?? 0,
+                };
+                totals[seriesKey] = dataPoint;
             }
         });
     });
@@ -97,7 +97,7 @@ export default async function GeneAssociationSummaryChart({ recordId }: Associat
 
     let errorMessage: string | null = null;
     let summary: Record<string, any> | null = null;
-    let report: RecordReport = (await getCache("gene-record", "id")) as unknown as RecordReport;
+    let report: RecordReport = (await getCache("gene-record", recordId)) as unknown as RecordReport;
 
     if (!report || !report.hasOwnProperty("genetic_association_summary")) {
         try {
@@ -112,7 +112,7 @@ export default async function GeneAssociationSummaryChart({ recordId }: Associat
         }
 
         Object.assign(report, { genetic_association_summary: summary });
-        await setCache("gene-record", "id", report);
+        await setCache("gene-record", recordId, report);
     }
 
     const data: SummaryData[] = build_chart_data(report["genetic_association_summary"]);

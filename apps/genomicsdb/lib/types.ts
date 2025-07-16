@@ -1,5 +1,7 @@
 // lib/types.ts - project type definitions
 
+import { TableProps } from "@niagads/table";
+
 // API Response
 
 export interface APIResult {}
@@ -26,6 +28,12 @@ export interface APIResponse {
     request: Request;
     pagination: Pagination;
     message: string;
+}
+
+export interface APITableResponse {
+    request: Request;
+    pagination: Pagination;
+    table: TableProps;
 }
 
 export interface APIErrorResponse {
@@ -111,9 +119,17 @@ export interface GeneRecord extends GeneFeature {
     cytogenic_location: string | null;
 }
 
+export interface TableAttributeReport {
+    id: string;
+    title: string;
+    description?: string | null;
+    is_truncated?: boolean;
+    data: any;
+}
 export interface RecordReport {
     id: string;
     record: any;
+    tables?: TableAttributeReport[];
     [key: string]: any;
 }
 
@@ -171,6 +187,8 @@ interface AnchoredSectionBase {
 export interface TableSection extends AnchoredSectionBase {
     endpoint: string;
     wrapper?: string;
+    data?: APITableResponse | null;
+    error?: string | null;
 }
 
 export interface AnchoredPageSection extends AnchoredSectionBase {
