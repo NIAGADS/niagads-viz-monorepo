@@ -2,7 +2,7 @@
 
 // API Response
 
-export interface Data {}
+export interface APIResult {}
 
 export interface Request {
     request_id: string;
@@ -22,7 +22,7 @@ export interface Pagination {
 }
 
 export interface APIResponse {
-    data: Data[];
+    data: APIResult[];
     request: Request;
     pagination: Pagination;
     message: string;
@@ -50,6 +50,9 @@ export interface PageProps {
 
 // Supporting literals
 
+export type AssociationTraitCategory = "biomarker" | "ad" | "adrd" | "other" | "all_ad" | "all";
+export type AssociationTraitSource = "gwas" | "curated" | "all";
+
 export type PageSectionIcons =
     | "home"
     | "gantt"
@@ -69,6 +72,16 @@ export type RecordType = "gene" | "variant" | "span" | "track";
 export interface OntologyTerm {
     term_id: string;
     term: string;
+}
+
+export interface AttributeCount {
+    [key: string]: number;
+}
+
+export interface GeneticAssocationSummary {
+    trait_category: string;
+    trait: OntologyTerm;
+    num_variants: number | AttributeCount;
 }
 
 export interface BaseRecord {
@@ -96,6 +109,12 @@ export interface GeneRecord extends GeneFeature {
     synonyms: string[] | null;
     location: GenomicLocation;
     cytogenic_location: string | null;
+}
+
+export interface RecordReport {
+    id: string;
+    record: any;
+    [key: string]: any;
 }
 
 export interface PredictedConsequence {
