@@ -1,57 +1,46 @@
+import { AnchoredPageSection, GeneRecord, GeneticAssocationSummary, PageProps, RecordReport } from "@/lib/types";
+import { _fetch, fetchRecord, fetchRecordAssocations } from "@/lib/route-handlers";
+import { getCache, setCache } from "@/lib/cache";
+
 import { GeneRecordOverview } from "@/components/records/gene/GeneRecordOverview";
+import { RECORD_PAGE_SECTIONS } from "../../sections";
 import { RecordOverviewSection } from "@/components/records/RecordOverviewSection";
-import { fetchRecord } from "@/lib/route-handlers";
-import { GeneRecord, PageProps } from "@/lib/types";
+import { RecordTableSection } from "@/components/records/RecordTableSection";
 
 export default async function GeneDetailPage({ params, searchParams }: PageProps) {
     const { id } = await params;
 
-    const record: GeneRecord = (await fetchRecord(`/api/record/gene/${id}?content=brief`)) as GeneRecord;
-    Object.assign(record, { record_type: "gene" });
+    let report: RecordReport = (await getCache("gene-record", "id")) as unknown as RecordReport;
+    if (!report) {
+        const record: GeneRecord = (await fetchRecord(`/api/record/gene/${id}`, true)) as GeneRecord;
+        Object.assign(record, { record_type: "gene" });
+        report = { id: record.id, record: record };
+        await setCache("gene-record", "id", report);
+    }
 
     return (
-        <RecordOverviewSection>
-            <GeneRecordOverview record={record}></GeneRecordOverview>
-        </RecordOverviewSection>
+        <>
+            <RecordOverviewSection>
+                <GeneRecordOverview record={report.record}></GeneRecordOverview>
+            </RecordOverviewSection>
+            {RECORD_PAGE_SECTIONS.gene.map((section: AnchoredPageSection) => {
+                if (section.id !== "overview") {
+                    return (
+                        <RecordTableSection
+                            id={report.id}
+                            record_type="gene"
+                            key={`table-section-${section.id}`}
+                            config={section}
+                        ></RecordTableSection>
+                    );
+                }
+            })}
+        </>
     );
 }
 
 /*
-                        <div className="niagads-gwas-section">
-                            <Tabs
-                                width="full"
-                                tabs={[
-                                    {
-                                        id: "niagads-alzheimers",
-                                        label: "NIAGADS Alzheimers",
-                                        content: (
-                                            <div className="card">
-                                                <h3>Alzheimer's Disease Associations</h3>
-                                                <Placeholder type="table">
-                                                    <div className="placeholder-text">
-                                                        NIAGADS Alzheimer's disease GWAS data will be displayed here
-                                                    </div>
-                                                </Placeholder>
-                                            </div>
-                                        ),
-                                    },
-                                    {
-                                        id: "niagads-neuropathologies",
-                                        label: "NIAGADS Neuropathologies",
-                                        content: (
-                                            <div className="card">
-                                                <h3>AD-related Neuropathologies</h3>
-                                                <Placeholder type="table">
-                                                    <div className="placeholder-text">
-                                                        NIAGADS AD-related neuropathology data will be displayed here
-                                                    </div>
-                                                </Placeholder>
-                                            </div>
-                                        ),
-                                    },
-                                ]}
-                            />
-                        </div>
+                      
                         <div className="gwas-catalog-section">
                             <Tabs
                                 width="full"
