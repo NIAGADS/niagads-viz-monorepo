@@ -16,6 +16,7 @@
         "packages/IGVBrowser",
         "packages/LocusZoom",
         "packages/Table",
+        "packages/Charts",
         "packages/UI",
         "apps/storybook",
         "apps/open-access-api-client",
@@ -25,5 +26,8 @@
         "concurrently": "^9.1.2",
         "lerna": "^8.1.9",
         "prettier": "^3.5.3"
+    },
+    "dependencies": {
+        "recharts": "^3.1.0"
     }
 }
