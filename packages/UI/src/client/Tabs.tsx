@@ -43,8 +43,8 @@ const TabButton = ({ label, id, info, sectionId, isActive, onClick }: TabButtonP
 };
 
 export const Tabs = ({ sectionId, tabs, width = "full" }: TabsProps) => {
-    const [selectedKey, setSelectedKey] = useState<string>(tabs[0].id);
-    const [activeTab, setActiveTab] = useState<TabDef>(tabs[0]);
+    const [selectedKey, setSelectedKey] = useState<string | null>(tabs && tabs.length > 0 ? tabs[0].id : null);
+    const [activeTab, setActiveTab] = useState<TabDef | null>(tabs && tabs.length > 0 ? tabs[0] : null);
 
     useEffect(() => {
         const selectedTab = tabs.find((tab) => tab.id === selectedKey);
