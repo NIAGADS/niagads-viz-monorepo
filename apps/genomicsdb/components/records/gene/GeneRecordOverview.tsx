@@ -1,14 +1,13 @@
 import { Card, CardBody, CardHeader } from "@niagads/ui";
 
 import { ExternalUrls } from "@/lib/reference";
-import { GeneAssociationSummaryChart } from "./GeneGeneticAssociationSummaryChart";
+import GeneAssociationSummaryChart from "./GeneGeneticAssociationSummaryChart";
 import { GeneRecord } from "@/lib/types";
 import { GenomicFeatureActionToolbar } from "../ActionToolbar";
-import Placeholder from "../placeholder";
 import { genomic_location_to_span } from "@/lib/utils";
 import { renderRecordTitle } from "../RecordOverviewSection";
 
-export const GeneRecordOverview = ({ record }: { record: GeneRecord }) => {
+export function GeneRecordOverview({ record }: { record: GeneRecord }) {
     // Format location string: chr:start-end:strand / cytogenic_location
     const span = genomic_location_to_span(record.location, true);
     const location = record.cytogenic_location ? `${span} / ${record.cytogenic_location}` : span;
@@ -48,9 +47,9 @@ export const GeneRecordOverview = ({ record }: { record: GeneRecord }) => {
             <Card variant="two-thirds">
                 <CardHeader>Genetic Associations</CardHeader>
                 <CardBody>
-                    <GeneAssociationSummaryChart recordId={record.id} source={"gwas"} traitCategory={"all"} />
+                    <GeneAssociationSummaryChart recordId={record.id} />
                 </CardBody>
             </Card>
         </>
     );
-};
+}
