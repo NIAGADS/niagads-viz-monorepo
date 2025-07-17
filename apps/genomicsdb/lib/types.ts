@@ -122,14 +122,17 @@ export interface GeneRecord extends GeneFeature {
 export interface TableAttributeReport {
     id: string;
     title: string;
-    description?: string | null;
     is_truncated?: boolean;
     data: any;
 }
+
+export interface SectionTableReport {
+    [key: string]: TableAttributeReport[];
+}
+
 export interface RecordReport {
     id: string;
     record: any;
-    tables?: TableAttributeReport[];
     [key: string]: any;
 }
 
