@@ -102,12 +102,5 @@ export default async function RecordTableSection({ recordId, recordType, config 
         }
     }
 
-    return (
-        <RecordTableSectionClient
-            recordId={recordId}
-            recordType={recordType}
-            sectionId={config.id}
-            tables={tables}
-        ></RecordTableSectionClient>
-    );
+    return <RecordTableSectionClient section={config} tables={tables}></RecordTableSectionClient>;
 }

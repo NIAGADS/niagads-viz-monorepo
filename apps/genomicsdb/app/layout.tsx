@@ -1,3 +1,4 @@
+// import "@niagads/table/css";
 import "./globals.css";
 import "@niagads/ui/css";
 

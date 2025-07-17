@@ -60,7 +60,7 @@ const __GENE_RECORD_SECTIONS: AnchoredPageSection[] = [
             },
         ],
     },
-    { id: "link-outs", label: "Link outs", description: "", icon: "link", tables: [] },
+    //{ id: "link-outs", label: "Link outs", description: "", icon: "link", tables: [] },
     {
         id: "predicted-function",
         label: "Functional Annotation",
@@ -85,7 +85,7 @@ const __GENE_RECORD_SECTIONS: AnchoredPageSection[] = [
                 id: "pathway",
                 label: "Pathway Membership",
                 description: "",
-                endpoint: "/pathways",
+                endpoint: "/pathway",
             },
         ],
     },
