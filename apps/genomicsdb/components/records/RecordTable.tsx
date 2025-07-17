@@ -84,8 +84,6 @@ export default async function RecordTable({ recordId, recordType, sectionId, tab
 
     await cacheTableData();
 
-    let tables: TableSection[] = [];
-    const TableComponent: any = null;
     try {
         const response: APITableResponse = await loadTable();
         if (response.pagination.total_num_records == 0) {
