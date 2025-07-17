@@ -12,7 +12,7 @@ function withNamespace(namespace: string, key: string): string {
 }
 
 export async function getCache(namespace: string, key: string): Promise<string | null> {
-    const exists: boolean = await cacheKeyExists(namespace, key, true);
+    const exists: boolean = await cacheKeyExists(namespace, key);
     if (exists) {
         const value = await CACHEDB.get(withNamespace(namespace, key));
         return JSON.parse(value!); // no null should be stored
@@ -24,16 +24,16 @@ export async function setCache(namespace: string, key: string, value: any, ttl: 
     await CACHEDB.set(withNamespace(namespace, key), JSON.stringify(value), "EX", TTL[ttl]);
 }
 
-// check if cache key exists and optional extend ttl
-export async function cacheKeyExists(namespace: string, key: string, extend: boolean): Promise<boolean> {
-    const exists = (await CACHEDB.exists(withNamespace(namespace, key))) === 1;
-    if (exists) {
-        if (extend) {
-            await CACHEDB.expire(withNamespace(namespace, key), TTL[DEFAULT_TTL]);
-        }
-        return true;
+// check if cache key exists
+export async function cacheKeyExists(namespace: string, key: string): Promise<boolean> {
+    return (await CACHEDB.exists(withNamespace(namespace, key))) === 1;
+}
+
+// extend ttl
+export async function extendCacheTTL(namespace: string, key: string, TTLKey = TTL.hour) {
+    if (await cacheKeyExists(namespace, key)) {
+        await CACHEDB.expire(withNamespace(namespace, key), TTL[DEFAULT_TTL]);
     }
-    return false;
 }
 
 // Example usage in an API route
