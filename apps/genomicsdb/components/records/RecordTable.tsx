@@ -1,5 +1,4 @@
 import {
-    AnchoredPageSection,
     APIResponse,
     APITableResponse,
     RecordType,
@@ -9,6 +8,9 @@ import {
 } from "@/lib/types";
 import { getCache, setCache } from "@/lib/cache";
 
+import { EmptyTableMessage } from "../Messages";
+import { InlineError } from "../InlineError";
+import Table from "@niagads/table";
 import { _fetch } from "@/lib/route-handlers";
 import { is_error_response } from "@/lib/utils";
 
@@ -62,8 +64,8 @@ export default async function RecordTable({ recordId, recordType, sectionId, tab
         }
     }
 
-    async function loadTable(tableConfig: TableSection) {
-        const namespace = `gene-record-table-${tableConfig.id}`;
+    async function loadTable() {
+        const namespace = `gene-record-table-${tableDef.id}`;
 
         let table: APITableResponse | null =
             ((await getCache(namespace, recordId)) as unknown as APITableResponse) || null;
@@ -83,28 +85,14 @@ export default async function RecordTable({ recordId, recordType, sectionId, tab
     await cacheTableData();
 
     let tables: TableSection[] = [];
+    const TableComponent: any = null;
     try {
         const response: APITableResponse = await loadTable();
-        item["data"] = response;
-        tables.push(item);
+        if (response.pagination.total_num_records == 0) {
+            return <EmptyTableMessage></EmptyTableMessage>;
+        }
+        return <Table id={tableDef.id} columns={response.table.columns} data={response.table.data}></Table>;
     } catch (error: any) {
-        item["error"] = error.message;
-        tables.push(item);
+        return <InlineError message={error.message} reload={false} />;
     }
-
-    {
-        item.error ? (
-            <InlineError message={item.error} reload={false} />
-        ) : item.data ? (
-            item.data.pagination.total_num_records === 0 ? (
-                <EmptyTableMessage></EmptyTableMessage>
-            ) : (
-                <Table id={item.id} columns={item.data.table.columns} data={item.data.table.data}></Table>
-            )
-        ) : (
-            <InlineError message={"Oops! Something unexpected happened!"} reload={true} />
-        );
-    }
-
-    return <RecordTableSectionClient section={tableDef} tables={tables}></RecordTableSectionClient>;
 }
