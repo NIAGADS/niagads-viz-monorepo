@@ -1,41 +1,35 @@
-import React, { useMemo, useState, useLayoutEffect, useEffect, useRef } from "react";
-
+import { Button, Checkbox, RadioButton } from "@niagads/ui";
+import { Cell, GenericCell, getCellValue, renderCell, resolveCell, validateCellType } from "./Cell";
 import {
+    ColumnDef,
+    ColumnFiltersState,
+    HeaderGroup,
+    RowSelectionState,
+    SortingFnOption,
+    SortingState,
+    TableOptions,
+    VisibilityState,
+    createColumnHelper,
     flexRender,
     getCoreRowModel,
-    getPaginationRowModel,
-    useReactTable,
-    SortingState,
-    createColumnHelper,
-    ColumnDef,
-    HeaderGroup,
-    getFilteredRowModel,
     getFacetedRowModel,
     getFacetedUniqueValues,
-    SortingFnOption,
+    getFilteredRowModel,
+    getPaginationRowModel,
     getSortedRowModel,
-    RowSelectionState,
-    VisibilityState,
-    TableOptions,
-    ColumnFiltersState,
+    useReactTable,
 } from "@tanstack/react-table";
-
-import { TrashIcon } from "@heroicons/react/24/outline";
-
+import { GenericColumn, getColumn } from "./Column";
+import { PaginationControls, TableToolbar } from "./ControlElements";
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { TableConfig, TableData, TableRow } from "./TableProperties";
 import { _get, _hasOwnProperty, toTitleCase } from "@niagads/common";
 
-import { Cell, GenericCell, getCellValue, renderCell, resolveCell, validateCellType } from "./Cell";
-
-import { TableConfig, TableData, TableRow } from "./TableProperties";
-import { GenericColumn, getColumn } from "./Column";
-import { TableColumnHeader } from "./TableColumnHeader";
 import { CustomSortingFunctions } from "./TableSortingFunctions";
-
-import { PaginationControls, TableToolbar } from "./ControlElements";
-
-import { Button, Checkbox, RadioButton } from "@niagads/ui";
-import { Tooltip } from "@niagads/ui/client";
 import { RowSelectionControls } from "./ControlElements/RowSelectionControls";
+import { TableColumnHeader } from "./TableColumnHeader";
+import { Tooltip } from "@niagads/ui/client";
+import { TrashIcon } from "@heroicons/react/24/outline";
 
 const __resolveSortingFn = (col: GenericColumn) => {
     if (col.type === "boolean") {
@@ -126,7 +120,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
     const [showOnlySelected, setShowOnlySelected] = useState(false);
     const initialRender = useRef(true); // to regulate callbacks affected by the initial state
     const enableRowSelect = !!options?.rowSelect;
-    const disableColumnFilters = !!options?.disableColumnFilters;
+    const disableColumnFilters = true; // FIXME- renable after working -- !!options?.disableColumnFilters;
 
     // Translate GenericColumns provided by user into React Table ColumnDefs
     // also adds in checkbox column if rowSelect options are set for the table
@@ -139,7 +133,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
                 id: "select-col",
                 header: ({ table }) =>
                     multiSelect ? (
-                        <div className="inline-flex">
+                        <div className="row-selection-header">
                             <div className="group relative inline-block bottom-[2px]">
                                 <Tooltip anchorId={`${id}-select-col-button}`} content="Reset selected rows">
                                     <Button
@@ -157,7 +151,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
                                     </Button>
                                 </Tooltip>
                             </div>
-                            <span className="ml-4">{options?.rowSelect?.header}</span>
+                            <span className="row-selection-header-text">{options?.rowSelect?.header}</span>
                         </div>
                     ) : (
                         options?.rowSelect?.header
@@ -322,8 +316,8 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
     }, [rowSelection]);
 
     return table ? (
-        <div className="table-container">
-            <div className="flex justify-between items-center">
+        <div className="table-outer-container">
+            <div className="table-controls-container">
                 <TableToolbar table={table} tableId={id} enableExport={!!!options?.disableExport} />
                 <PaginationControls table={table} />
             </div>
@@ -341,7 +335,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
                     />
                 </div>
             )}
-            <div className="overflow-auto">
+            <div className="table-container">
                 <table className="table-layout table-border table-text">
                     {__renderTableHeader(table.getHeaderGroups(), id)}
                     <tbody>
