@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import logo from "@public/genomicsdb_logo.svg";
 import { usePathname, useRouter } from "next/navigation";
-import { EnhancedSearchComponent } from "./enhanced-search-component";
+import { EnhancedSearch } from "./EnhancedSearch";
 import "./header.css";
 
 interface HeaderProps {
@@ -42,12 +42,7 @@ export function Header({
 
                 {showSearch && (
                     <div className="header-search">
-                        <EnhancedSearchComponent
-                            placeholder={searchPlaceholder}
-                            suggestions={searchSuggestions}
-                            showTypeHints={true}
-                            autoRoute={true}
-                        />
+                        <EnhancedSearch placeholder={searchPlaceholder} autoRoute={true} />
                     </div>
                 )}
             </div>

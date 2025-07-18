@@ -26,7 +26,7 @@ export async function fetchRecord(endpoint: string, brief: boolean = true) {
     return (response as APIResponse).data[0]; // record is a list of one item
 }
 
-export async function fetchRecordAssocations(
+export async function fetchRecordAssociations(
     recordType: RecordType,
     id: string,
     category: AssociationTraitCategory = "all",

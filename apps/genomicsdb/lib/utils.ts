@@ -28,6 +28,15 @@ export const get_public_url = () => {
     return publicUrl;
 };
 
+export const get_internal_url = () => {
+    const publicUrl = process.env.NEXT_PUBLIC_BACKEND_SERVICE_URL;
+    console.log(publicUrl);
+    if (!publicUrl) {
+        throw new Error("RUNTIME ERROR: Must define `NEXT_PUBLIC_BACKEND_SERVICE_URL` in `.env.local");
+    }
+    return publicUrl;
+};
+
 // check to see if a response is an error response
 export function is_error_response(obj: any): obj is APIErrorResponse {
     return obj && typeof obj === "object" && typeof obj.status === "number" && typeof obj.detail === "string";

@@ -2,7 +2,7 @@
 
 import { Database, Search, BarChart3, Users, Dna, Brain } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { EnhancedSearchComponent } from "../enhanced-search-component";
+import { EnhancedSearch } from "../EnhancedSearch";
 import { ActionButton } from "@niagads/ui";
 import "./home-page.css";
 
@@ -56,10 +56,8 @@ export function HomePage() {
                     </p>
 
                     <div className="hero-search">
-                        <EnhancedSearchComponent
+                        <EnhancedSearch
                             placeholder="Search genes, variants, or genomic regions (e.g., APOE, rs429358)"
-                            suggestions={suggestions}
-                            showTypeHints={true}
                             autoRoute={true}
                         />
                     </div>
