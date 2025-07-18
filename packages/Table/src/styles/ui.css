@@ -49,6 +49,10 @@
     stroke: #000;
 }
 
+.stroke-white {
+    stroke: white;
+}
+
 .hidden {
     display: none;
 }
