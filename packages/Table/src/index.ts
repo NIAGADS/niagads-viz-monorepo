@@ -1,4 +1,4 @@
-import "@niagads/common/assets/styles/theme.css";
+import "@niagads/ui/css";
 import "./styles/global.css";
 
 import Table from "./Table";
