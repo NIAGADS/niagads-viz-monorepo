@@ -1,4 +1,4 @@
-.action-button {
+.ui-action-button {
     padding: 0.5rem 1rem;
     background-color: var(--surface);
     border: 1px solid var(--border);
@@ -14,18 +14,18 @@
     text-decoration: none;
 }
 
-.action-button:hover {
+.ui-action-button:hover {
     background-color: var(--hover-bg);
     border-color: var(--border-hover);
     box-shadow: var(--shadow-sm);
 }
 
-.action-button.primary {
+.ui-action-button.primary {
     background-color: var(--primary-blue);
     color: var(--text-inverse);
     border-color: var(--primary-blue);
 }
 
-.action-button.primary:hover {
+.ui-action-button.primary:hover {
     background-color: var(--secondary-blue);
 }
