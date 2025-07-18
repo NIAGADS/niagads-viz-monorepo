@@ -133,7 +133,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
                 id: "select-col",
                 header: ({ table }) =>
                     multiSelect ? (
-                        <div className="inline-flex">
+                        <div className="row-selection-header">
                             <div className="group relative inline-block bottom-[2px]">
                                 <Tooltip anchorId={`${id}-select-col-button}`} content="Reset selected rows">
                                     <Button
@@ -151,7 +151,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
                                     </Button>
                                 </Tooltip>
                             </div>
-                            <span className="ml-4">{options?.rowSelect?.header}</span>
+                            <span className="row-selection-header-text">{options?.rowSelect?.header}</span>
                         </div>
                     ) : (
                         options?.rowSelect?.header
@@ -316,8 +316,8 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
     }, [rowSelection]);
 
     return table ? (
-        <div className="table-container">
-            <div className="flex justify-between items-center">
+        <div className="table-outer-container">
+            <div className="table-controls-container">
                 <TableToolbar table={table} tableId={id} enableExport={!!!options?.disableExport} />
                 <PaginationControls table={table} />
             </div>
@@ -335,7 +335,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
                     />
                 </div>
             )}
-            <div className="overflow-auto">
+            <div className="table-container">
                 <table className="table-layout table-border table-text">
                     {__renderTableHeader(table.getHeaderGroups(), id)}
                     <tbody>
