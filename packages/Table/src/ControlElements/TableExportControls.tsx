@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useId } from "react";
+import { Button, Checkbox, Select } from "@niagads/ui";
+import React, { useEffect, useId, useState } from "react";
+
+import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
 import { Table as ReactTable } from "@tanstack/react-table";
 import exportFromJSON from "export-from-json";
-import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
-
-import { Button, Checkbox, Select } from "@niagads/ui";
 
 const EXPORT_FILE_FORMATS = Object.keys(exportFromJSON.types).filter((f) => !["css", "html"].includes(f));
 type FileFormat = Exclude<keyof typeof exportFromJSON.types, "css" | "html">;
@@ -66,7 +66,7 @@ export const TableExportControls = ({ isFiltered, onSubmit }: ExportMenuOptions)
     }, [isFiltered]);
 
     return (
-        <div className="relative inline-block text-left dropdown">
+        <div className="export-control-container">
             <Button variant="white">
                 <ArrowDownTrayIcon className="icon-button"></ArrowDownTrayIcon>
                 <span className="ml-2 uppercase">Export</span>
@@ -74,12 +74,12 @@ export const TableExportControls = ({ isFiltered, onSubmit }: ExportMenuOptions)
 
             <div className="hidden dropdown-menu">
                 <div
-                    className="z-50 absolute right-0 w-56 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none"
+                    className="dropdown-menu-button"
                     aria-labelledby={`${formId}-headlessui-menu-button}`}
                     id={`${formId}-headlessui-menu-items`}
                     role="menu"
                 >
-                    <div className="px-4 py-3">
+                    <div className="dropdown-menu-item-container">
                         <form id={formId} onSubmit={handleSubmit}>
                             {isFiltered && (
                                 <Checkbox
@@ -99,7 +99,7 @@ export const TableExportControls = ({ isFiltered, onSubmit }: ExportMenuOptions)
                                 label="Export table data as"
                             ></Select>
 
-                            <div className="mt-2 flex justify-center">
+                            <div className="export-controls-button-container">
                                 <Button size="md">Export</Button>
                             </div>
                         </form>
