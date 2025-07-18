@@ -8,6 +8,8 @@ import { LoadingProvider } from "@/components/loading-context";
 import type { Metadata } from "next";
 import type React from "react";
 
+// import "@niagads/table/css";
+
 // Add viewport export for better mobile performance
 export const viewport = {
     width: "device-width",

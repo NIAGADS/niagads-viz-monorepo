@@ -13,11 +13,6 @@
     text-align: left;
 }
 
-.error-page p {
-    color: var(--text-gray);
-    font-size: 1.125rem;
-}
-
 .error-page-code-block {
     font-size: 0.75rem;
 }

@@ -11,12 +11,13 @@ interface CardHeaderProps {
     children: ReactNode | string;
 }
 
+type CardVariant = "half" | "third" | "two-thirds" | "full";
+
 interface CardProps {
-    shadow?: boolean;
     href?: string;
     onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void | null;
-    radius?: "none" | "sm" | "md" | "lg" | "xl";
     children: ReactNode | string;
+    variant: CardVariant;
 }
 
 export const CardBody = ({ children }: CardBodyProps) => {
@@ -27,15 +28,8 @@ export const CardHeader = ({ children }: CardHeaderProps) => {
     return <h5 className="ui-card-header">{children}</h5>;
 };
 
-export const Card = ({
-    shadow = false,
-    radius = "md",
-    href,
-    onClick,
-    children,
-    className,
-}: CardProps & StylingProps) => {
-    const cName = `${href || onClick ? "ui-card-link" : "ui-card"} ${shadow ? "shadow-sm" : ""} rounded-${radius} ${className}`;
+export const Card = ({ href, onClick, children, className, variant = "full" }: CardProps & StylingProps) => {
+    const cName = `${href || onClick ? "ui-card ui-card-link" : "ui-card"} ui-card-${variant} ${className}`;
     return (
         <div className={cName}>
             {href ? (
