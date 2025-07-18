@@ -7,7 +7,7 @@ import {
     GeneticAssocationSummary,
     RecordReport,
 } from "@/lib/types";
-import { _fetch, fetchRecordAssocations } from "@/lib/route-handlers";
+import { _fetch, fetchRecordAssociations } from "@/lib/route-handlers";
 import { getCache, setCache } from "@/lib/cache";
 
 import { InlineError } from "@/components/InlineError";
@@ -78,7 +78,7 @@ const build_chart_series = (summary: GeneticAssocationSummary): Series => {
 
 export default async function GeneAssociationSummaryChart({ recordId }: AssociationSummaryChartProps) {
     async function fetchSummary(traitCategory: AssociationTraitCategory, source: AssociationTraitSource) {
-        const response = (await fetchRecordAssocations(
+        const response = (await fetchRecordAssociations(
             "gene",
             recordId,
             traitCategory,
