@@ -1,6 +1,7 @@
 import React, { ReactNode, useEffect, useState } from "react";
 
 import { renderWithHelpIcon } from "./HelpIcon";
+import styles from "../styles/tabs.module.css";
 
 export interface TabDef {
     label: string;
@@ -34,7 +35,11 @@ const TabButton = ({ label, id, info, sectionId, isActive, onClick }: TabButtonP
     };
 
     return (
-        <button className={`ui-tab-button ${isSelected ? "ui-active-tab" : ""}`} key={id} onClick={onSelect}>
+        <button
+            className={`${styles["ui-tab-button"]} ${isSelected ? styles["ui-active-tab"] : ""}`}
+            key={id}
+            onClick={onSelect}
+        >
             {info
                 ? renderWithHelpIcon(label, "question", info, `${sectionId ? sectionId + "_" : ""}-${id}-info`)
                 : label}
@@ -60,10 +65,10 @@ export const Tabs = ({ sectionId, tabs, width = "full" }: TabsProps) => {
     return (
         activeTab && (
             <div className={`w-${width}`}>
-                <div className="ui-tabs-container">
-                    <ul className="ui-tab-list" role="tablist">
+                <div className={styles["ui-tabs-container"]}>
+                    <ul className={styles["ui-tab-list"]} role="tablist">
                         {tabs.map((tab) => (
-                            <li className="ui-tab-list-item" key={`li-${tab.id}`}>
+                            <li className={styles["ui-tab-list-item"]} key={`li-${tab.id}`}>
                                 <TabButton
                                     key={`button-${tab.id}`}
                                     label={tab.label}
@@ -76,7 +81,7 @@ export const Tabs = ({ sectionId, tabs, width = "full" }: TabsProps) => {
                             </li>
                         ))}
                     </ul>
-                    <div className="ui-tab-panel" key={activeTab.id}>
+                    <div className={styles["ui-tab-panel"]} key={activeTab.id}>
                         {activeTab.content}
                     </div>
                 </div>

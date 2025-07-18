@@ -1,4 +1,5 @@
 import React from "react";
+import styles from "./styles/select.module.css";
 
 interface SelectProps {
     fields: string[] | { [key: string]: string } | number[];
@@ -37,7 +38,7 @@ export const Select = ({
 
     return (
         <>
-            <div className={inline ? "ui-select-inline" : ""}>
+            <div className={inline ? styles["ui-select-inline"] : ""}>
                 <div>
                     <label htmlFor={id} className="ui-select-label">
                         {label}

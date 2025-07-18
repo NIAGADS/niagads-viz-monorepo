@@ -1,3 +1,4 @@
+/* Renamed from slider.css for CSS Modules */
 input[type="range"]::-webkit-slider-thumb {
     pointer-events: auto;
     width: 1.25rem;
@@ -23,16 +24,16 @@ input[type="range"] {
     cursor: pointer;
 }
 .ui-slider.primary {
-    background-color: #3b82f6; /* primary, blue-500 */
+    background-color: #3b82f6;
 }
 .ui-slider.secondary {
-    background-color: #f59e42; /* secondary, orange-400 (example) */
+    background-color: #f59e42;
 }
 .ui-slider.accent {
-    background-color: #f43f5e; /* accent, rose-500 (example) */
+    background-color: #f43f5e;
 }
 .ui-slider.default {
-    background-color: #3b82f6; /* blue-500 */
+    background-color: #3b82f6;
 }
 .ui-slider.ui-second-thumb {
     height: 0;

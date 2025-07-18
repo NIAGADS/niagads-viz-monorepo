@@ -1,3 +1,4 @@
+/* Renamed from tabs.css for CSS Modules */
 .ui-tabs-container {
     position: relative;
     right: 0;
@@ -12,7 +13,7 @@
     padding-bottom: 0.375rem;
     list-style: none;
     border-radius: 0.375rem;
-    background-color: rgba(59, 130, 246, 0.05); /* primary/5, assuming blue-500 */
+    background-color: rgba(59, 130, 246, 0.05);
 }
 
 .ui-tab-list-item {
@@ -26,8 +27,8 @@
     font-weight: 600;
     text-align: center;
     padding: 0.5rem 1rem;
-    color: #9ca3af; /* gray-400 */
-    border-bottom: 2px solid #9ca3af; /* gray-400 */
+    color: #9ca3af;
+    border-bottom: 2px solid #9ca3af;
     border-radius: 0.125rem 0.125rem 0 0;
     transition:
         color 0.2s,
@@ -35,15 +36,15 @@
         background 0.2s;
 }
 .ui-tab-list-item .ui-tab-button:hover {
-    color: #3b82f6; /* primary, blue-500 */
-    border-bottom-color: #f59e42; /* secondary, orange-400 (example) */
+    color: #3b82f6;
+    border-bottom-color: #f59e42;
 }
 .ui-tab-list-item .ui-tab-button.ui-active-tab {
     cursor: default;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
-    color: #1e293b; /* accent-dark, slate-800 */
-    border-bottom-color: #f59e42; /* secondary, orange-400 (example) */
-    background-color: rgba(245, 158, 66, 0.3); /* secondary/30, orange-400 */
+    color: #1e293b;
+    border-bottom-color: #f59e42;
+    background-color: rgba(245, 158, 66, 0.3);
 }
 
 .ui-tab-panel {

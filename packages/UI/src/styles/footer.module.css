@@ -1,3 +1,4 @@
+/* Renamed from footer.css for CSS Modules */
 .ui-footer {
     background-color: var(--dark-blue);
     border-top: 1px solid var(--gray-800);
@@ -66,7 +67,6 @@
     color: var(--gray-100);
 }
 
-/* Mobile Responsive */
 @media (max-width: 768px) {
     .ui-footer-container {
         flex-direction: column;
@@ -74,7 +74,6 @@
         gap: 1rem;
         padding: 1rem;
     }
-
     .ui-footer-nav {
         gap: 1rem;
     }

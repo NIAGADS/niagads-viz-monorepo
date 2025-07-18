@@ -1,4 +1,5 @@
 import React from "react";
+import styles from "./styles/checkbox.module.css";
 
 export type CheckboxVariants = "default" | "primary" | "secondary" | "pink" | "accent";
 export interface CheckboxProps {
@@ -24,9 +25,9 @@ export const Checkbox = ({
     defaultChecked = false,
     alignCenter = false,
 }: CheckboxProps) => {
-    const className = `ui-checkbox ${variant}`;
+    const className = [styles["ui-checkbox"], styles[variant]].filter(Boolean).join(" ");
     return (
-        <div className={alignCenter ? "centered" : ""}>
+        <div className={alignCenter ? styles["centered"] : ""}>
             {defaultChecked ? (
                 <input
                     type="checkbox"

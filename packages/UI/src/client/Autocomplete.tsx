@@ -2,6 +2,7 @@ import { ArrowRight, Search } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 
 import { LoadingSpinner } from "../LoadingSpinner";
+import styles from "../styles/autocomplete.module.css";
 
 const useDebounce = (value: string) => {
     const [debouncedValue, setDebouncedValue] = useState(value);
@@ -94,13 +95,13 @@ export const Autocomplete = ({
     };
 
     return (
-        <div className="ui-autocomplete-container">
-            <div className="ui-autocomplete-input-wrapper">
-                <Search className="ui-autocomplete-search-icon" aria-hidden="true" />
+        <div className={styles["ui-autocomplete-container"]}>
+            <div className={styles["ui-autocomplete-input-wrapper"]}>
+                <Search className={styles["ui-autocomplete-search-icon"]} aria-hidden="true" />
                 <input
                     ref={inputRef}
                     type="text"
-                    className="ui-autocomplete-input"
+                    className={styles["ui-autocomplete-input"]}
                     placeholder={placeholder}
                     value={query}
                     onChange={(e) => {
@@ -118,7 +119,7 @@ export const Autocomplete = ({
 
                 {/* Suggestions dropdown */}
                 {showSuggestions && suggestions.length > 0 && (
-                    <div className="ui-autocomplete-suggestions" role="listbox">
+                    <div className={styles["ui-autocomplete-suggestions"]} role="listbox">
                         {waiting ? (
                             <LoadingSpinner />
                         ) : (
@@ -127,15 +128,15 @@ export const Autocomplete = ({
                                     return (
                                         <div
                                             key={suggestion}
-                                            className={`ui-autocomplete-suggestion ${index === highlightedIndex ? "ui-highlighted" : ""}`}
+                                            className={`${styles["ui-autocomplete-suggestion"]} ${index === highlightedIndex ? styles["ui-highlighted"] : ""}`}
                                             onClick={() => handleSuggestionClick(suggestion)}
                                             role="option"
                                             aria-selected={index === highlightedIndex}
                                         >
-                                            <div className="ui-suggestion-content">
-                                                <span className="ui-suggestion-text">{suggestion}</span>
+                                            <div className={styles["ui-suggestion-content"]}>
+                                                <span className={styles["ui-suggestion-text"]}>{suggestion}</span>
                                             </div>
-                                            <ArrowRight size={14} className="ui-suggestion-arrow" />
+                                            <ArrowRight size={14} className={styles["ui-suggestion-arrow"]} />
                                         </div>
                                     );
                                 })}

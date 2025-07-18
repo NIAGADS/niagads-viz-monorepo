@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import styles from "../styles/dropdown.module.css";
+
 export interface DropdownOption<T> {
     value: T;
     name: string;
@@ -28,12 +30,12 @@ export const Dropdown = <T,>({ options, closeOnSelect, onSelect }: DropdownProps
     };
 
     return (
-        <div className="ui-dropdown-container">
-            <div className="ui-dropdown-button" onClick={() => setVisible(!visible)}>
+        <div className={styles["ui-dropdown-container"]}>
+            <div className={styles["ui-dropdown-button"]} onClick={() => setVisible(!visible)}>
                 {selected.length === 0 ? "Select..." : selected.map((o) => o.name).join(", ")}
             </div>
             {visible ? (
-                <div className="ui-dropdown-items">
+                <div className={styles["ui-dropdown-items"]}>
                     {options.map((option) => {
                         return <div onClick={() => handleSelect(option)}>{option.name}</div>;
                     })}

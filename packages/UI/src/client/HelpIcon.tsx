@@ -3,6 +3,7 @@ import React, { ReactNode } from "react";
 
 import { Tooltip } from "../Tooltip";
 import { _get } from "@niagads/common";
+import styles from "../styles/helpicon.module.css";
 
 const ICONS = {
     alert: AlertCircle,
@@ -19,12 +20,11 @@ interface HelpIconProps {
 }
 
 export const HelpIcon = ({ anchorId, message, type }: HelpIconProps) => {
-    const icon =
-        type === "info" ? <Info className="inline-info-bubble" /> : <HelpCircle className="inline-info-bubble" />;
+    const MsgIcon = ICONS[type];
 
     return (
         <Tooltip anchorId={`help-${anchorId}`} content={message}>
-            {icon}
+            <MsgIcon className={styles["ui-help-inline-info-bubble"]} />
         </Tooltip>
     );
 };
@@ -53,7 +53,7 @@ export const renderWithHelpIcon = (
     anchorId: string
 ) => {
     return (
-        <div className="inline-flex">
+        <div className={styles["ui-help-inline-flex"]}>
             {textElement}
             {renderHelpIcon(anchorId, message, type)}
         </div>

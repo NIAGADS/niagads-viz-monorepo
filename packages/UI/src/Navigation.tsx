@@ -1,6 +1,8 @@
 import React, { ReactNode } from "react";
+
 import { ThemeVariant } from "./types";
 import { renderInfoIcon } from "./Alert";
+import styles from "./styles/navigation.module.css";
 
 /** TODO:
  * theme-based variants
@@ -42,7 +44,12 @@ const buildRouterLink = (url: string, hostUrl: string | undefined) => {
 };
 
 const renderMenuLink = (item: MenuItemConfig, hostUrl: string | undefined, variant: string, key: string) => (
-    <a key={key} className={`ui-nav-link ${variant}`} href={buildRouterLink(item.href, hostUrl)} target={item.target}>
+    <a
+        key={key}
+        className={`${styles["ui-nav-link"]} ${styles[variant]}`}
+        href={buildRouterLink(item.href, hostUrl)}
+        target={item.target}
+    >
         {item.label}
     </a>
 );
@@ -75,9 +82,9 @@ const MobileMenu = ({
     variant: string;
 }) => {
     return (
-        <div className="ui-nav-mobile">
+        <div className={styles["ui-nav-mobile"]}>
             {items && (
-                <div className="ui-nav-mobile-menu">
+                <div className={styles["ui-nav-mobile-menu"]}>
                     {items.map((item, index) =>
                         renderMenuLink(item, hostUrl, variant, `nav-mobile-menu-link_${index}`)
                     )}
@@ -126,15 +133,15 @@ const MobileMenuButton = ({}) => (
 const renderNavigationFromConfig = (variant: ThemeVariant, { items, brand, publicHostUrl }: NavigationConfig) => (
     <>
         {brand && (
-            <a href={brand.href} target={brand.target} className="ui-nav-brand">
+            <a href={brand.href} target={brand.target} className={styles["ui-nav-brand"]}>
                 {brand.logo && brand.logo}
-                <span className={`ui-nav-brand-label ${variant}`}>{brand.label}</span>
+                <span className={`${styles["ui-nav-brand-label"]} ${styles[variant]}`}>{brand.label}</span>
             </a>
         )}
 
-        <div className="ui-nav-item-container">
+        <div className={styles["ui-nav-item-container"]}>
             {items && (
-                <ul className="ui-nav-item-list">
+                <ul className={styles["ui-nav-item-list"]}>
                     {items.map((item, index) => (
                         <MenuItem
                             key={`ui-menu-item-${index}`}
@@ -153,7 +160,7 @@ const renderNavigationFromConfig = (variant: ThemeVariant, { items, brand, publi
 );
 
 const renderBanner = (message: string) => (
-    <div className="ui-nav-banner">
+    <div className={styles["ui-nav-banner"]}>
         {renderInfoIcon()} {message}
     </div>
 );
@@ -161,9 +168,9 @@ const renderBanner = (message: string) => (
 export const Navigation = ({ variant = "light", children, config, bannerMsg }: NavigationProps) => {
     return (
         <>
-            <nav className={`ui-nav ${variant}`}>
+            <nav className={`${styles["ui-nav"]} ${styles[variant]}`}>
                 {bannerMsg && renderBanner(bannerMsg)}
-                <div className="ui-nav-inner-container">
+                <div className={styles["ui-nav-inner-container"]}>
                     {config ? renderNavigationFromConfig(variant, config) : children}
                 </div>
             </nav>

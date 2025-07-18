@@ -1,5 +1,7 @@
 import React, { ReactNode } from "react";
+
 import { _get } from "@niagads/common";
+import styles from "./styles/button.module.css";
 
 type ButtonVariants = "default" | "primary" | "secondary" | "white" | "accent";
 type ButtonSizes = "sm" | "md" | "lg";
@@ -12,7 +14,7 @@ interface ButtonProps {
 }
 
 export const Button = ({ variant = "default", size = "md", children, onClick, disabled = false }: ButtonProps) => {
-    const classes = `ui-button ${variant} ${size}`;
+    const classes = [styles["ui-button"], styles[variant], styles[size]].filter(Boolean).join(" ");
 
     return (
         <button disabled={disabled} className={classes} onClick={onClick}>

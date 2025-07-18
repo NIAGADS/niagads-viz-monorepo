@@ -16,7 +16,7 @@ type Story = StoryObj<typeof Alert>;
 
 export const Default: Story = {
     args: {
-        variant: "default",
+        variant: "info",
         message: "Pay attention!",
         children: "This is an alert",
     },

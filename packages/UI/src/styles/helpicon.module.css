@@ -1,0 +1,11 @@
+.ui-help-info-bubble,
+.ui-help-inline-info-bubble {
+    color: transparent;
+    width: 1rem;
+    height: 1rem;
+    stroke: #3b82f6; /* primary (assuming blue-500) */
+}
+
+.ui-help-inline-info-bubble {
+    margin-left: 0.25rem;
+}

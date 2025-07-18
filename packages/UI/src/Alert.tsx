@@ -1,5 +1,7 @@
 import React, { ReactNode } from "react";
+
 import { _get } from "@niagads/common";
+import styles from "./styles/alert.module.css";
 
 type AlertVariants = "info" | "warning" | "danger" | "success" | "default";
 interface Alert {
@@ -10,7 +12,7 @@ interface Alert {
 
 export const renderInfoIcon = () => (
     <svg
-        className="ui-alert-icon"
+        className={styles["ui-alert-icon"]}
         aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
         fill="currentColor"
@@ -21,14 +23,14 @@ export const renderInfoIcon = () => (
 );
 
 export const Alert = ({ variant = "default", message, children }: Alert) => {
-    const classes = `ui-alert ${variant}`;
+    const classes = [styles["ui-alert"], styles[variant]].filter(Boolean).join(" ");
 
     return (
         <div className={classes} role="alert">
             {renderInfoIcon()}
-            <span className="sr-only">{variant}</span>
+            <span className={styles["ui-alert-srOnly"]}>{variant}</span>
             <div>
-                <span className="font-bold">{message}</span>
+                <span className={styles["ui-alert-fontBold"]}>{message}</span>
                 {children && (typeof children === `string` ? <div>{children}</div> : children)}
             </div>
         </div>

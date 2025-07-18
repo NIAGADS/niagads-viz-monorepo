@@ -1,3 +1,4 @@
+/* Renamed from autocomplete.css for CSS Modules */
 .ui-autocomplete-container {
     position: relative;
     width: 100%;
@@ -19,6 +20,9 @@
     color: var(--gray-100);
     font-size: 0.875rem;
     transition: all var(--transition-fast);
+    background-color: var(--surface);
+    color: var(--text-primary);
+    border-color: var(--border);
 }
 
 .ui-autocomplete-input:focus {
@@ -95,7 +99,6 @@
     top: 100%;
     left: 0;
     right: 0;
-    /* background-color: var(--gray-800); */
     border: 1px solid var(--gray-700);
     border-top: none;
     border-radius: 0 0 var(--border-radius) var(--border-radius);
@@ -103,6 +106,8 @@
     z-index: 10;
     max-height: 300px;
     overflow-y: auto;
+    background-color: var(--surface);
+    border-color: var(--border);
 }
 
 .ui-autocomplete-suggestion {
@@ -113,12 +118,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    color: var(--text-primary);
 }
 
 .ui-autocomplete-suggestion:hover,
 .ui-autocomplete-suggestion.highlighted {
-    /* background-color: var(--gray-700); */
-    /* color: var(--gray-100); */
+    background-color: var(--hover-bg);
 }
 
 .ui-suggestion-content {
@@ -149,28 +154,4 @@
 .ui-autocomplete-suggestion:hover .ui-suggestion-arrow,
 .ui-autocomplete-suggestion.ui-highlighted .ui-suggestion-arrow {
     opacity: 1;
-}
-
-.ui-autocomplete-input {
-    background-color: var(--surface);
-    color: var(--text-primary);
-    border-color: var(--border);
-}
-
-.ui-autocomplete-input:focus {
-    border-color: var(--primary-blue);
-}
-
-.ui-autocomplete-suggestions {
-    background-color: var(--surface);
-    border-color: var(--border);
-}
-
-.ui-autocomplete-suggestion {
-    color: var(--text-primary);
-}
-
-.ui-autocomplete-suggestion:hover,
-.ui-autocomplete-suggestion.highlighted {
-    background-color: var(--hover-bg);
 }

@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 
 import { _get } from "@niagads/common";
+import styles from "./styles/action-button.module.css";
 
 type ButtonVariants = "primary";
 interface ActionButtonProps {
@@ -11,8 +12,9 @@ interface ActionButtonProps {
 }
 
 export const ActionButton = ({ variant, children, onClick, disabled = false }: ActionButtonProps) => {
+    const classes = [styles["ui-action-button"], variant && styles[variant]].filter(Boolean).join(" ");
     return (
-        <button disabled={disabled} className={`ui-action-button ${variant ? variant : ""}`} onClick={onClick}>
+        <button disabled={disabled} className={classes} onClick={onClick}>
             {children}
         </button>
     );

@@ -48,7 +48,6 @@
             "default": "./dist/client/index.js",
             "types": "./dist/client/index.d.ts"
         },
-        "./package.json": "./package.json",
-        "./css": "./dist/niagads-ui.css"
+        "./package.json": "./package.json"
     }
 }

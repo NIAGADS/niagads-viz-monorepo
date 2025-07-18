@@ -1,27 +1,28 @@
+/* Renamed from navigation.css for CSS Modules */
 .ui-nav {
     position: fixed;
     width: 100%;
     z-index: 20;
     top: 0;
     left: 0;
-    border-bottom: 2px solid #f59e42; /* secondary, orange-400 (example) */
+    border-bottom: 2px solid #f59e42;
 }
 .ui-nav.light {
     background-color: #fff;
 }
 .ui-nav.primary {
-    background-color: #3b82f6; /* primary, blue-500 */
-    border-color: #1e293b; /* accent-dark, slate-800 */
+    background-color: #3b82f6;
+    border-color: #1e293b;
 }
 .ui-nav.secondary {
-    background-color: #f59e42; /* secondary, orange-400 (example) */
+    background-color: #f59e42;
 }
 .ui-nav.dark {
-    background-color: #1e293b; /* accent-dark, slate-800 */
+    background-color: #1e293b;
 }
 
 .ui-nav-inner-container {
-    max-width: 1280px; /* screen-xl */
+    max-width: 1280px;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -35,7 +36,6 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    /* For RTL support, you may need to add logic in JS or use :dir(rtl) selectors */
 }
 
 .ui-nav-brand-label {
@@ -47,11 +47,11 @@
 }
 .ui-nav-brand-label.light,
 .ui-nav-brand-label.secondary {
-    color: #1e293b; /* accent-dark, slate-800 */
+    color: #1e293b;
 }
 
 .ui-nav-banner {
-    background-color: #f59e42; /* secondary, orange-400 (example) */
+    background-color: #f59e42;
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
     padding-left: 1rem;
@@ -84,7 +84,6 @@
     border: 1px solid #d1d5db;
     border-radius: 0.5rem;
     margin-top: 1rem;
-    /* For RTL support, you may need to add logic in JS or use :dir(rtl) selectors */
 }
 @media (min-width: 768px) {
     .ui-nav-item-list {
@@ -110,14 +109,14 @@
     border-radius: 0.125rem;
 }
 .ui-nav-link:hover {
-    background-color: #f59e42; /* secondary */
-    color: #3b82f6; /* primary */
+    background-color: #f59e42;
+    color: #3b82f6;
 }
 .ui-nav-link.light {
-    color: #3b82f6; /* primary */
+    color: #3b82f6;
 }
 .ui-nav-link.secondary {
-    color: #3b82f6; /* primary */
+    color: #3b82f6;
 }
 .ui-nav-link.secondary:hover {
     color: #fff;

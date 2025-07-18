@@ -1,3 +1,4 @@
+/* Renamed from select.css for CSS Modules */
 .ui-select {
     background-color: #f9fafb; /* gray-50 */
     color: #111827; /* gray-900 */
@@ -8,7 +9,7 @@
 }
 
 @media (min-width: 768px) {
-    .ui-select.inline {
+    .ui-select-inline {
         display: flex;
         align-items: center;
     }
@@ -37,15 +38,4 @@
     border-right: 0;
     border-bottom: 1px solid #000;
     border-style: solid;
-}
-.ui-select.underline:focus {
-    border-bottom-color: #3b82f6; /* blue-500 */
-}
-
-.ui-select-label {
-    display: block;
-    padding: 0.5rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: #111827; /* gray-900 */
 }

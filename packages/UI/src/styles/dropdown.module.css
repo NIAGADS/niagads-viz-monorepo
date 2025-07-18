@@ -1,7 +1,4 @@
-/*const __TAILWIND_CSS = {
-    root: "bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 my-2.5";
-}*/
-
+/* Renamed from dropdown.css for CSS Modules */
 .ui-dropdown-container {
     position: relative;
     display: inline-block;
@@ -18,11 +15,11 @@
     padding: 0.5rem 0.75rem;
     font-size: 0.875rem;
     font-weight: 600;
-    color: #111827; /* gray-900 */
+    color: #111827;
     box-shadow:
         0 1px 2px 0 rgba(0, 0, 0, 0.05),
         0 1px 3px 0 rgba(0, 0, 0, 0.1);
-    border: 1px solid #d1d5db; /* gray-300 */
+    border: 1px solid #d1d5db;
     outline: none;
     transition:
         background 0.2s,
@@ -30,10 +27,10 @@
         border-color 0.2s;
 }
 .ui-dropdown-button:hover {
-    background-color: #f9fafb; /* gray-50 */
+    background-color: #f9fafb;
 }
 .ui-dropdown-button:focus {
-    border-color: #3b82f6; /* blue-500 */
+    border-color: #3b82f6;
     box-shadow: 0 0 0 2px #3b82f6;
 }
 
