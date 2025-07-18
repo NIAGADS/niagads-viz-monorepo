@@ -120,7 +120,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
     const [showOnlySelected, setShowOnlySelected] = useState(false);
     const initialRender = useRef(true); // to regulate callbacks affected by the initial state
     const enableRowSelect = !!options?.rowSelect;
-    const disableColumnFilters = !!options?.disableColumnFilters;
+    const disableColumnFilters = true; // FIXME- renable after working -- !!options?.disableColumnFilters;
 
     // Translate GenericColumns provided by user into React Table ColumnDefs
     // also adds in checkbox column if rowSelect options are set for the table
