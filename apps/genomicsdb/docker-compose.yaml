@@ -1,16 +1,27 @@
 services:
-    client-app:
-        container_name: open-access-api
-        image: open-access-api-client:${API_VERSION}
-        build:
-            context: .
-            dockerfile: ./Dockerfile
-        ports:
-            - "${PORT}:3000"
+  genomicsdb-client-cachedb:
+    # FIXME: - check to see if this issue has been resolved
+    # latest versions fails silently and stops the container; see https://github.com/Snapchat/KeyDB/issues/802
+    image: eqalpha/keydb:x86_64_v6.3.3
+    container_name: genomicsdb-client-cachedb
+    restart: always
+    ports:
+      - ${HOST_KEYDB_PORT}:6379
+    # the bind 0.0.0.0 and protected-mode no allow it to be accessed by the host machine
+    # need to re-evaluate for production deployment
+    # note: multi-master requires active replication
+    # command: keydb-server --multi-master yes --protected-mode no --bind 0.0.0.0
+    command: keydb-server --protected-mode no --bind 0.0.0.0
+    volumes:
+      - ${KEYDB_DATA_DIR}:/data
 
-# networks:
-#   niagads-api_default:
-#       external: true
+  # genomicsdb-client:
+  #     container_name: genomicsdb-client
+  #     image: genomicsdb-client:${RELEASE}
+  #     build:
+  #         context: .
+  #         dockerfile: ./Dockerfile
+  #     ports:
+  #         - "${HOST_CLIENT_PORT}:3000"
 
-volumes:
-    ignore:
+
