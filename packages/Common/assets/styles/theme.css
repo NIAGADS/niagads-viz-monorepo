@@ -78,3 +78,7 @@
 .bg-accent {
     background-color: var(--accent);
 }
+
+.inline-flex {
+    display: inline-flex;
+}
