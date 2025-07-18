@@ -1,5 +1,5 @@
-"use client";
-import React, { useRef, useLayoutEffect, useEffect } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
+
 import { GoslingComponent } from "gosling.js";
 
 interface GoslingProps {

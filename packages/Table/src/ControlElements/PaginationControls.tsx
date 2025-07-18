@@ -1,10 +1,9 @@
-import React, { useState, useMemo } from "react";
+import { Button, Select } from "@niagads/ui";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
+import React, { useMemo, useState } from "react";
 
 import { Table as ReactTable } from "@tanstack/react-table";
 import range from "lodash.range";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
-
-import { Select, Button } from "@niagads/ui";
 
 interface PaginationControlsProps {
     table: ReactTable<any>;
@@ -42,7 +41,7 @@ export const PaginationControls = ({ table }: PaginationControlsProps) => {
 
     return (
         <>
-            <div className="flex flex-row gap-4" aria-label="pagination">
+            <div className="pagination-control-container" aria-label="pagination">
                 <Select
                     defaultValue={pageSize.toString()}
                     fields={pageSizeOptions}
@@ -54,7 +53,7 @@ export const PaginationControls = ({ table }: PaginationControlsProps) => {
                     inline
                     variant="plain"
                 />
-                <div className="self-center text-sm text-gray-900 px-2">
+                <div className="pagination-control-summary">
                     {minDisplayedRow} - {maxDisplayedRow} of {nRows}
                 </div>
                 <Button variant="white" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>

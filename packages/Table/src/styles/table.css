@@ -1,44 +1,171 @@
 /* TABLE */
 
+.table-outer-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
 .table-container {
-    @apply block mx-2 max-w-full font-[Inter];
-}
-
-.table-border {
-    @apply border-collapse border-t-[4px] border-solid border-primary;
-}
-
-.table-text {
-    @apply text-sm text-left rtl:text-right text-primary;
+    width: 100%;
+    overflow: auto;
+    border: 1px solid var(--niagads-table-border);
+    background-color: var(--niagads-table-surface);
+    border-radius: 12px;
 }
 
 .table-layout {
-    @apply w-full overflow-x-scroll;
+    width: 100%;
+    overflow-x: scroll;
+    border-collapse: collapse;
+}
+
+.table-controls-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/*
+.table-border {
+    border-top-width: 4px;
+    border-top-style: solid;
+    border-top-color: var(--niagads-table-primary);
+}*/
+
+.table-text {
+    /*font-size: 0.875rem;*/
+    text-align: left;
+    /*color: var(--niagads-table-primary);*/
+    direction: ltr;
+}
+
+.table-text[dir="rtl"],
+.table-text.rtl {
+    text-align: right;
+    direction: rtl;
 }
 
 .table-td {
-    @apply font-[Noto_Sans] py-1.5 pr-6 pl-4 text-xs border-solid border-slate-200 border-0 border-b-[1px] border-r-[1px];
+    /*font-family: "Noto Sans", sans-serif;*/
+    font-size: 0.8rem;
+    border-style: solid;
+    border-width: 0 1px 1px 0;
+    padding: 1rem;
+    border-bottom: 1px solid var(--niagads-table-border);
+    vertical-align: top;
+}
+
+/* Add vertical borders except for first and last cell in a row */
+.table-layout td:not(:first-child):not(:last-child),
+.table-layout th:not(:first-child):not(:last-child) {
+    border-right: 1px solid var(--gray-100);
+}
+
+.table-layout td:first-child,
+.table-layout th:first-child {
+    border-right: none;
+}
+
+.table-layout td:last-child,
+.table-layout th:last-child {
+    border-right: none;
 }
 
 .table-dtr {
-    @apply hover:bg-gray-50 bg-white border-b odd:border-gray-700;
+    background-color: #fff;
+    border-bottom: 1px solid #374151; /* Tailwind gray-700 */
+    transition: background 0.2s;
+}
+
+.table-dtr:hover {
+    background-color: #f9fafb; /* Tailwind gray-50 */
+}
+
+.table-dtr:nth-child(odd) {
+    border-bottom: 1px solid #374151; /* Tailwind gray-700 */
 }
 
 /* TABLE COLUMN HEADERS */
 
 .column-header {
-    @apply bg-primary/20 px-6 py-3 border-0 border-r-[1px] border-solid border-slate-50;
+    background-color: var(--gray-50);
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--niagads-table-primary);
+    border-bottom: 1px solid var(--border);
+
+    &.sortable:hover {
+        background-color: var(--gray-100);
+    }
+}
+
+.column-header-controls-container {
+    display: inline-flex;
+}
+
+.column-header-controls {
+    display: inline-flex;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    cursor: default;
+
+    &.sortable {
+        cursor: pointer;
+    }
+}
+
+.column-header-info-icon {
+    margin-left: 0.25rem;
+}
+
+.column-header-sort-icon-placeholder {
+    height: 19px;
+    width: 20px;
+}
+
+.column-header-filter-control-container {
+    margin-left: 1.25rem;
+}
+
+.visible {
+    visibility: visible;
+}
+
+.invisible {
+    visibility: hidden;
 }
 
 .column-header-text {
-    @apply text-sm text-nowrap text-slate-700  font-bold;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    color: #334155; /* Tailwind slate-700 */
+    font-weight: bold;
 }
 
 .column-header-icon {
-    @apply ml-1 text-slate-700 pl-px size-5;
+    margin-left: 0.25rem;
+    color: #334155; /* Tailwind slate-700 */
+    padding-left: 1px;
+    width: 1.25rem;
+    height: 1.25rem;
 }
 
 /* ROW SELECTION CONTROLS */
+
+.row-selection-header {
+    display: inline-flex;
+}
+
+.row-selection-header-controls {
+    position: relative;
+    display: inline-block;
+    bottom: 2px;
+}
+
+.row-selection-header-text {
+    margin-left: 1rem;
+}
 
 .row-selection-controls {
     display: flex;
@@ -46,21 +173,18 @@
 
 .row-selection-sidebar {
     width: 200px;
+}
 
-    .toggle {
-        cursor: pointer;
-    }
+.row-selection-sidebar .toggle {
+    cursor: pointer;
 }
 
 .row-selection-items {
     display: flex;
     align-items: center;
-
     width: 100%;
     overflow-x: scroll;
-
     margin-top: 5px;
     margin-bottom: 5px;
-
     font-size: 0.875rem;
 }

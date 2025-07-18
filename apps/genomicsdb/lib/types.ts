@@ -1,23 +1,10 @@
 // lib/types.ts - project type definitions
 
-// literal types
-
-export type PageSectionIcons =
-    | "home"
-    | "gantt"
-    | "barchart"
-    | "link"
-    | "network"
-    | "database"
-    | "info"
-    | "activity"
-    | "file"
-    | "frequency";
-export type RecordType = "gene" | "variant" | "span" | "track";
+import { TableProps } from "@niagads/table";
 
 // API Response
 
-export interface Data {}
+export interface APIResult {}
 
 export interface Request {
     request_id: string;
@@ -37,10 +24,16 @@ export interface Pagination {
 }
 
 export interface APIResponse {
-    data: Data[];
+    data: APIResult[];
     request: Request;
     pagination: Pagination;
     message: string;
+}
+
+export interface APITableResponse {
+    request: Request;
+    pagination: Pagination;
+    table: TableProps;
 }
 
 export interface APIErrorResponse {
@@ -74,7 +67,41 @@ export interface PageProps {
     }>;
 }
 
-// Records
+// Supporting literals
+
+export type AssociationTraitCategory = "biomarker" | "ad" | "adrd" | "other" | "all_ad" | "all";
+export type AssociationTraitSource = "gwas" | "curated" | "all";
+
+export type PageSectionIcons =
+    | "home"
+    | "gantt"
+    | "barchart"
+    | "link"
+    | "network"
+    | "database"
+    | "info"
+    | "activity"
+    | "file"
+    | "frequency";
+
+export type RecordType = "gene" | "variant" | "span" | "track";
+
+// Records and supporting data types
+
+export interface OntologyTerm {
+    term_id: string;
+    term: string;
+}
+
+export interface AttributeCount {
+    [key: string]: number;
+}
+
+export interface GeneticAssocationSummary {
+    trait_category: string;
+    trait: OntologyTerm;
+    num_variants: number | AttributeCount;
+}
 
 export interface BaseRecord {
     id: string;
@@ -101,6 +128,23 @@ export interface GeneRecord extends GeneFeature {
     synonyms: string[] | null;
     location: GenomicLocation;
     cytogenic_location: string | null;
+}
+
+export interface TableAttributeReport {
+    id: string;
+    title: string;
+    is_truncated?: boolean;
+    data: any;
+}
+
+export interface SectionTableReport {
+    [key: string]: TableAttributeReport[];
+}
+
+export interface RecordReport {
+    id: string;
+    record: any;
+    [key: string]: any;
 }
 
 export interface PredictedConsequence {
@@ -152,11 +196,22 @@ interface AnchoredSectionBase {
     description?: string | React.ReactNode;
 }
 
+// TODO: table wrapper "types"
+
 export interface TableSection extends AnchoredSectionBase {
     endpoint: string;
+    wrapper?: string;
+    data?: APITableResponse | null;
+    error?: string | null;
 }
 
 export interface AnchoredPageSection extends AnchoredSectionBase {
     icon: PageSectionIcons;
     tables?: TableSection[];
+}
+
+// shared props for components fetching record data that needs to be cached
+export interface CacheKeyInfo {
+    recordId: string;
+    recordType: RecordType;
 }
