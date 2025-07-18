@@ -57,6 +57,11 @@
     grid-column: span 3;
 }
 
+.ui-card-button-content {
+    display: flex;
+    flex-direction: column;
+}
+
 @media (max-width: 1024px) {
     .ui-card-third {
         grid-column: span 1;

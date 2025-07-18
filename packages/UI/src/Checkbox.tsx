@@ -26,7 +26,7 @@ export const Checkbox = ({
 }: CheckboxProps) => {
     const className = `ui-checkbox ${variant}`;
     return (
-        <div className={alignCenter ? "text-center align-middle" : ""}>
+        <div className={alignCenter ? "centered" : ""}>
             {defaultChecked ? (
                 <input
                     type="checkbox"

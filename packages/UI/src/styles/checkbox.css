@@ -3,6 +3,11 @@
     cursor: pointer;
 }
 
+.centered {
+    text-align: center;
+    vertical-align: middle;
+}
+
 .ui-checkbox.primary,
 .ui-radio.primary {
     accent-color: var(--primary);
@@ -21,4 +26,9 @@
 .ui-checkbox.pink,
 .ui-radio.pink {
     accent-color: var(--color-pink-500);
+}
+
+.ui-checkbox-label {
+    font-size: 0.875rem;
+    margin-left: 0.5rem;
 }

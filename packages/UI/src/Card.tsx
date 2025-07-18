@@ -1,7 +1,8 @@
 import React, { ReactNode } from "react";
-import { _get } from "@niagads/common";
+
 import { Button } from "./Button";
 import { StylingProps } from "./types";
+import { _get } from "@niagads/common";
 
 interface CardBodyProps {
     children: ReactNode | string;
@@ -36,7 +37,7 @@ export const Card = ({ href, onClick, children, className, variant = "full" }: C
                 <a href={href}>{children}</a>
             ) : onClick ? (
                 <Button onClick={onClick} variant="white">
-                    <div className="flex col">{children}</div>
+                    <div className="ui-card-button-content">{children}</div>
                 </Button>
             ) : (
                 <div>{children}</div>
