@@ -23,14 +23,17 @@ export default async function GeneDetailPage({ params }: PageProps) {
             <RecordOverviewSection>
                 <GeneRecordOverview record={report.record}></GeneRecordOverview>
             </RecordOverviewSection>
-            {RECORD_PAGE_SECTIONS.gene.map((section: AnchoredPageSection) => (
-                <RecordTableSection
-                    recordId={report.id}
-                    recordType="gene"
-                    key={`table-section-${section.id}`}
-                    section={section}
-                ></RecordTableSection>
-            ))}
+            {RECORD_PAGE_SECTIONS.gene.map(
+                (section: AnchoredPageSection) =>
+                    section.tables && (
+                        <RecordTableSection
+                            recordId={report.id}
+                            recordType="gene"
+                            key={`table-section-${section.id}`}
+                            section={section}
+                        ></RecordTableSection>
+                    )
+            )}
         </>
     );
 }

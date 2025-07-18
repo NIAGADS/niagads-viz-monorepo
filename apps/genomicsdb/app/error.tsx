@@ -1,7 +1,10 @@
 "use client";
+
 import "./error-page.css";
-import { APIError } from "@/lib/errors";
+
 import { _isJSON, formatMultiline, linkify, safeHtml } from "@niagads/common";
+
+import { APIError } from "@/lib/errors";
 import { Alert } from "@niagads/ui";
 import { useEffect } from "react";
 
@@ -11,7 +14,7 @@ export default function ErrorPage({ error, reset }: { error: APIError & { digest
         console.error(error);
     }, [error]);
 
-    const issueTrackerMsg = `An unexpected error occurred. Please submit a bug GitHub issue containing this full error response at: ${process.env.NEXT_PUBLIC_ISSUE_TRACKER}`;
+    const issueTrackerMsg = `An unexpected error occurred. Please submit a GitHub (bug) issue containing this full error response at: ${process.env.NEXT_PUBLIC_ISSUE_TRACKER}`;
 
     const errorJSON = _isJSON(error.message) ? JSON.parse(error.message) : null;
 

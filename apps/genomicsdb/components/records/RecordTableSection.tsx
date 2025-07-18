@@ -1,17 +1,19 @@
 import {
+    APIErrorResponse,
     APIResponse,
     APITableResponse,
     AnchoredPageSection,
+    Pagination,
     RecordType,
     SectionTableReport,
     TableAttributeReport,
     TableSection,
 } from "@/lib/types";
-import TabbedTableGroup, { TableTab } from "../TabbedTableGroup";
-// import TabbedTableGroup, { TableTab } from "../TabbedTableGroup";
+import TableSetTabs, { TableTab } from "../TabbedTableGroup";
 import { getCache, setCache } from "@/lib/cache";
 
 import RecordSectionHeader from "./RecordSectionHeader";
+import { TableProps } from "@niagads/table";
 import { _fetch } from "@/lib/route-handlers";
 import { is_error_response } from "@/lib/utils";
 
@@ -25,12 +27,13 @@ export default async function RecordTableSection({ recordId, recordType, section
     async function fetchTable(tableDef: TableSection, asTable: boolean = true) {
         // we are going to fetch twice, once for the raw data for caching and once for the view
         // the second fetch will be quick b/c the API will have already cached the raw
-        const endpoint = `/api/record/${recordType}/${recordId}/${tableDef.endpoint}${asTable ? "&view=table" : ""}`;
+        const view = asTable ? (tableDef.endpoint.includes("?") ? "&view=table" : "?view=table") : "";
+        const endpoint = `/api/record/${recordType}/${recordId}${tableDef.endpoint}${view}`;
 
-        const response = (await _fetch(endpoint)) as APIResponse;
+        const response = await _fetch(endpoint);
 
-        if (is_error_response(response)) {
-            throw new Error(JSON.stringify(response));
+        if (is_error_response(response as APIResponse)) {
+            throw new Error((response as APIErrorResponse).detail);
         }
         return response;
     }
@@ -47,18 +50,20 @@ export default async function RecordTableSection({ recordId, recordType, section
             let tableReports: TableAttributeReport[] = await Promise.all(
                 section.tables.map(async (table: TableSection) => {
                     try {
-                        const dataResponse: APIResponse = await fetchTable(table, false);
+                        const response: APITableResponse = (await fetchTable(
+                            table,
+                            false
+                        )) as unknown as APITableResponse;
                         return {
                             id: table.id,
                             title: `${section.label}: ${table.label}`,
-                            is_truncated: dataResponse.pagination.total_num_pages > 1,
-                            data: dataResponse.data,
+                            is_truncated: response.pagination.total_num_pages > 1,
+                            data: response.table,
                         };
                     } catch (error: any) {
                         return {
                             id: table.id,
                             title: `${table.label}: ${table.label}`,
-                            is_truncated: false,
                             data: `ERROR retrieving table data; please report to our issue tracker: ${process.env.NEXT_PUBLIC_ISSUE_TRACKER}`,
                         };
                     }
@@ -69,14 +74,14 @@ export default async function RecordTableSection({ recordId, recordType, section
         }
     }
 
-    async function loadTable(tableDef: TableSection) {
+    async function loadTable(tableDef: TableSection): Promise<APITableResponse | string> {
         const namespace = `gene-record-table-${tableDef.id}`;
 
-        let table: APITableResponse | null =
+        let table: APITableResponse | null | string =
             ((await getCache(namespace, recordId)) as unknown as APITableResponse) || null;
         if (!table) {
             try {
-                table = (await fetchTable(tableDef, true)) as unknown as APITableResponse;
+                table = (await fetchTable(tableDef)) as unknown as APITableResponse;
                 await setCache(namespace, recordId, table);
             } catch (error: any) {
                 return error.message;
@@ -92,7 +97,7 @@ export default async function RecordTableSection({ recordId, recordType, section
 
     await addTableDataToRecordCache();
 
-    const tabs = section.tables
+    const tables = section.tables
         ? await Promise.all(
               section.tables.map(async (table) => {
                   // Fetch your data for this table (from Redis, DB, etc)
@@ -101,7 +106,8 @@ export default async function RecordTableSection({ recordId, recordType, section
 
                   return {
                       config: table,
-                      data: isError ? null : response,
+                      table: isError ? null : (response.table as TableProps),
+                      pagination: isError ? null : (response.pagination as Pagination),
                       error: isError ? (response as string) : null,
                   };
               })
@@ -111,7 +117,7 @@ export default async function RecordTableSection({ recordId, recordType, section
     return (
         <div id={section.id}>
             <RecordSectionHeader title={section.label} description={section.description}></RecordSectionHeader>
-            <TabbedTableGroup tables={tabs as TableTab[]} />
+            <TableSetTabs tableSet={tables as TableTab[]} />
         </div>
     );
 }

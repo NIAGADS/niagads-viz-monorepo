@@ -85,7 +85,7 @@ const __GENE_RECORD_SECTIONS: AnchoredPageSection[] = [
                 id: "pathway",
                 label: "Pathway Membership",
                 description: "",
-                endpoint: "/pathway",
+                endpoint: "/pathways",
             },
         ],
     },

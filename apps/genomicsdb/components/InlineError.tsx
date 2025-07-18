@@ -4,7 +4,9 @@ import { Alert } from "@niagads/ui";
 export function InlineError({ message, reload = false }: { message: string; reload: boolean }) {
     const renderTrackerMessage = () => (
         <>
-            <p>Please help us out by submitting a `bug` GitHub issue referencing the page request to: </p>
+            <p>
+                Please help us out by submitting a <strong>bug</strong> issue referencing this page request to:{" "}
+            </p>
             <p>
                 <a href={process.env.NEXT_PUBLIC_ISSUE_TRACKER} target="_blank">
                     {process.env.NEXT_PUBLIC_ISSUE_TRACKER}
@@ -14,9 +16,8 @@ export function InlineError({ message, reload = false }: { message: string; relo
     );
 
     return (
-        <Alert variant="danger" message="Unable to retrieve annotation.">
+        <Alert variant="danger" message="Unable to fetch annotation.">
             <div>
-                <p>An unexpected error occurred.</p>
                 {reload ? (
                     <p>
                         <strong>Please try reloading the page.</strong>
