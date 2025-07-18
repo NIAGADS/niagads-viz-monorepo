@@ -1,6 +1,5 @@
+import { PlacesType, Tooltip as ReactTooltip, VariantType } from "react-tooltip";
 import React, { ReactNode } from "react";
-
-import { Tooltip as ReactTooltip, PlacesType, VariantType } from "react-tooltip";
 
 interface TooltipProps {
     anchorId: string;
@@ -25,7 +24,7 @@ export function Tooltip({
             <div data-tooltip-id={friendlyAnchorId} data-tooltip-variant={variant}>
                 {children}
             </div>
-            <ReactTooltip className="font-normal text-xs" id={friendlyAnchorId} openOnClick={openOnClick} place={place}>
+            <ReactTooltip className="ui-tooltip-text" id={friendlyAnchorId} openOnClick={openOnClick} place={place}>
                 {content}
             </ReactTooltip>
         </>

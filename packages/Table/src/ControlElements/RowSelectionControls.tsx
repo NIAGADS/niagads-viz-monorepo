@@ -1,8 +1,8 @@
-import { Row } from "@tanstack/react-table";
 import React, { useState } from "react";
-import { TableRow } from "../TableProperties";
 
-import { XMarkIcon } from "@heroicons/react/16/solid";
+import { Row } from "@tanstack/react-table";
+import { TableRow } from "../TableProperties";
+import { X } from "lucide-react";
 
 interface RowSelectionControlsProps {
     selectedRows: Row<TableRow>[];
@@ -35,7 +35,7 @@ export const RowSelectionControls = ({
                     return (
                         <div className="pill" key={row.id}>
                             {row.renderValue(displayColumn)}
-                            <XMarkIcon className="icon clickable" onClick={row.getToggleSelectedHandler()} />
+                            <X className="icon clickable" onClick={row.getToggleSelectedHandler()} />
                         </div>
                     );
                 })}

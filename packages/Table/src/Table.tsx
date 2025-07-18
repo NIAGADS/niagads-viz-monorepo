@@ -29,7 +29,7 @@ import { CustomSortingFunctions } from "./TableSortingFunctions";
 import { RowSelectionControls } from "./ControlElements/RowSelectionControls";
 import { TableColumnHeader } from "./TableColumnHeader";
 import { Tooltip } from "@niagads/ui/client";
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { Trash2 as TrashIcon } from "lucide-react";
 
 const __resolveSortingFn = (col: GenericColumn) => {
     if (col.type === "boolean") {

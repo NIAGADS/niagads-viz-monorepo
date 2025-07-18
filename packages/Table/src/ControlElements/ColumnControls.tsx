@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useId } from "react";
-
 import { Button, Checkbox } from "@niagads/ui";
-import { ViewColumnsIcon } from "@heroicons/react/24/solid";
-import { _get } from "@niagads/common";
-import { GenericColumn } from "../Column";
+import React, { useEffect, useId, useState } from "react";
+
 import { Column } from "@tanstack/react-table";
+import { Columns3 } from "lucide-react";
+import { GenericColumn } from "../Column";
 import { TableRow } from "../TableProperties";
+import { _get } from "@niagads/common";
 
 interface ColumnControlsProps {
     columns: Column<TableRow, unknown>[];
@@ -19,7 +19,7 @@ export const ColumnControls = ({ columns, onSelect }: ColumnControlsProps) => {
     return (
         <div className="relative inline-block text-left dropdown">
             <Button variant="white">
-                <ViewColumnsIcon className={`icon-button`}></ViewColumnsIcon>
+                <Columns3 className={`icon-button`}></Columns3>
                 <span className="ml-2 uppercase">Columns</span>
             </Button>
 

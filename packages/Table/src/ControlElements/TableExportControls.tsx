@@ -1,7 +1,7 @@
 import { Button, Checkbox, Select } from "@niagads/ui";
 import React, { useEffect, useId, useState } from "react";
 
-import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
+import { Download } from "lucide-react";
 import { Table as ReactTable } from "@tanstack/react-table";
 import exportFromJSON from "export-from-json";
 
@@ -68,7 +68,7 @@ export const TableExportControls = ({ isFiltered, onSubmit }: ExportMenuOptions)
     return (
         <div className="export-control-container">
             <Button variant="white">
-                <ArrowDownTrayIcon className="icon-button"></ArrowDownTrayIcon>
+                <Download className="icon-button"></Download>
                 <span className="ml-2 uppercase">Export</span>
             </Button>
 

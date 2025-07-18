@@ -1,22 +1,26 @@
-import { ExclamationCircleIcon, InformationCircleIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
+import { AlertCircle, HelpCircle, Info } from "lucide-react";
 import React, { ReactNode } from "react";
 
 import { Tooltip } from "../Tooltip";
 import { _get } from "@niagads/common";
 
+const ICONS = {
+    alert: AlertCircle,
+    question: HelpCircle,
+    info: Info,
+};
+
+type HelpIconType = keyof typeof ICONS;
+
 interface HelpIconProps {
     anchorId: string;
     message: ReactNode | string;
-    type: "question" | "info";
+    type: HelpIconType;
 }
 
 export const HelpIcon = ({ anchorId, message, type }: HelpIconProps) => {
     const icon =
-        type === "info" ? (
-            <InformationCircleIcon className="inline-info-bubble" />
-        ) : (
-            <QuestionMarkCircleIcon className="inline-info-bubble" />
-        );
+        type === "info" ? <Info className="inline-info-bubble" /> : <HelpCircle className="inline-info-bubble" />;
 
     return (
         <Tooltip anchorId={`help-${anchorId}`} content={message}>
@@ -25,18 +29,8 @@ export const HelpIcon = ({ anchorId, message, type }: HelpIconProps) => {
     );
 };
 
-export const renderHelpIcon = (
-    anchorId: string,
-    message: ReactNode | string,
-    type: "question" | "info" = "question"
-) => {
+export const renderHelpIcon = (anchorId: string, message: ReactNode | string, type: HelpIconType) => {
     return <HelpIcon anchorId={anchorId} message={message} type={type} />;
-};
-
-const ICONS = {
-    info: ExclamationCircleIcon,
-    question: QuestionMarkCircleIcon,
-    infoOutline: InformationCircleIcon,
 };
 
 /**
@@ -54,7 +48,7 @@ export const getIconElement = (key: string) => {
 
 export const renderWithHelpIcon = (
     textElement: ReactNode | string,
-    type: "question" | "info",
+    type: HelpIconType,
     message: string,
     anchorId: string
 ) => {

@@ -37,7 +37,7 @@ export const Select = ({
 
     return (
         <>
-            <div className={inline ? "md:flex md:items-center" : ""}>
+            <div className={inline ? "ui-select-inline" : ""}>
                 <div>
                     <label htmlFor={id} className="ui-select-label">
                         {label}

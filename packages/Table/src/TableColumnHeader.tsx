@@ -1,10 +1,15 @@
-import { ArrowDownIcon, ArrowUpIcon, ArrowsUpDownIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/solid";
+import {
+    ArrowDownUp,
+    HelpCircle,
+    ListFilterPlus,
+    ArrowDownNarrowWide as SortAscIcon,
+    ArrowUpWideNarrow as SortDescIcon,
+} from "lucide-react";
 import { Header, flexRender } from "@tanstack/react-table";
 import React, { useState } from "react";
 
 import { Button } from "@niagads/ui";
 import { Filter } from "./Filter";
-import { FunnelIcon } from "@heroicons/react/24/outline";
 import { TableRow } from "./TableProperties";
 import { _get } from "@niagads/common";
 import { renderTooltip } from "@niagads/ui/client";
@@ -15,9 +20,9 @@ interface TableColumnHeaderProps {
 }
 
 const __ICONS = {
-    sort: ArrowsUpDownIcon,
-    asc: ArrowUpIcon,
-    desc: ArrowDownIcon,
+    sort: ArrowDownUp,
+    asc: SortAscIcon,
+    desc: SortDescIcon,
 };
 
 export const TableColumnHeader = ({ header, tableId }: TableColumnHeaderProps) => {
@@ -39,7 +44,7 @@ export const TableColumnHeader = ({ header, tableId }: TableColumnHeaderProps) =
                     {description &&
                         renderTooltip(
                             `${tableId}-${header.column.id}-info`,
-                            <QuestionMarkCircleIcon className="info-bubble column-header-info-icon" />,
+                            <HelpCircle className="info-bubble column-header-info-icon" />,
                             description
                         )}
                     {canSort ? (
@@ -54,7 +59,7 @@ export const TableColumnHeader = ({ header, tableId }: TableColumnHeaderProps) =
                 {header.column.getCanFilter() && (
                     <div className="column-header-filter-control-container">
                         <Button variant="primary" size="sm" onClick={() => setFilterOpen(!filterOpen)}>
-                            <FunnelIcon className="icon-button stroke-white"></FunnelIcon>
+                            <ListFilterPlus className="icon-button stroke-white"></ListFilterPlus>
                         </Button>
                     </div>
                 )}

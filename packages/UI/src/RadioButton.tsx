@@ -1,6 +1,5 @@
-import React from "react";
-
 import { CheckboxProps as RadioButtonProps } from "./Checkbox";
+import React from "react";
 
 export const RadioButton = ({
     variant = "default",
@@ -12,9 +11,9 @@ export const RadioButton = ({
 }: RadioButtonProps) => {
     const className = `ui-radio ${variant}`;
     return (
-        <div className={alignCenter ? "text-center align-middle" : ""}>
+        <div className={alignCenter ? "centered" : ""}>
             <input type="radio" className={className} onChange={onChange} checked={checked} disabled={disabled} />
-            {label && <label className="text-sm ml-2">{label}</label>}
+            {label && <label className="ui-checkbox-label">{label}</label>}
         </div>
     );
 };
