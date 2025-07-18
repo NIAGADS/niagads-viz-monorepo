@@ -1,29 +1,48 @@
 .ui-link {
-    @apply text-blue-700 hover:underline visited:text-purple-900 active:text-red-950;
+    color: #1d4ed8; /* blue-700 */
+    text-decoration: none;
+}
+.ui-link:hover {
+    text-decoration: underline;
+}
+.ui-link:visited {
+    color: #6d28d9; /* purple-900 */
+}
+.ui-link:active {
+    color: #450a0a; /* red-950 */
 }
 
 .ui-info-link {
-    @apply text-blue-700 cursor-pointer underline decoration-dashed decoration-blue-700 underline-offset-4;
+    color: #1d4ed8; /* blue-700 */
+    cursor: pointer;
+    text-decoration: underline dashed;
+    text-decoration-color: #1d4ed8; /* blue-700 */
+    text-underline-offset: 4px;
 }
 
 /* UI ELEMENTS */
 
 .icon-disabled {
-    @apply stroke-slate-300;
+    stroke: #cbd5e1; /* slate-300 */
 }
 
 /* UI ELEMENTS */
 
 .info-bubble,
 .inline-info-bubble {
-    @apply text-transparent size-4 stroke-primary;
+    color: transparent;
+    width: 1rem;
+    height: 1rem;
+    stroke: #3b82f6; /* primary (assuming blue-500) */
 }
 
 .inline-info-bubble {
-    @apply ml-1;
+    margin-left: 0.25rem;
 }
 
 /* FIXME: for formatting icon in a button icon */
 .icon-button {
-    @apply size-4 stroke-4;
+    width: 1rem;
+    height: 1rem;
+    stroke-width: 4;
 }

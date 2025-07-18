@@ -1,29 +1,94 @@
 .ui-button {
-    @apply font-[Inter] cursor-pointer font-medium text-sm rounded-lg border-solid border focus:ring-2 focus:z-10 inline-flex items-center disabled:bg-slate-50 disabled:text-slate-500 disabled:border;
-
-    &.primary {
-        @apply text-white border-primary/50 bg-primary hover:bg-primary/85 focus:ring-accent;
-    }
-    &.secondary {
-        @apply text-primary border-secondary bg-secondary hover:bg-secondary/85 focus:ring-secondary/30;
-    }
-    &.accent {
-        @apply text-white border-accent bg-accent hover:bg-accent/50 focus:ring-accent/30 focus:outline-none;
-    }
-    &.white {
-        @apply border-white text-primary focus:outline-none bg-white hover:bg-gray-100 hover:border-gray-100 hover:text-blue-700 focus:ring-blue-700;
-    }
-    &.default {
-        @apply text-white border-blue-500 bg-blue-500 hover:bg-blue-700 focus:ring-blue-700;
-    }
-
-    &.sm {
-        @apply px-1 py-1;
-    }
-    &.md {
-        @apply px-4 py-2;
-    }
-    &.lg {
-        @apply px-5 py-2.5 text-2xl;
-    }
+    font-family: "Inter", sans-serif;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.875rem;
+    border-radius: 0.5rem;
+    border-style: solid;
+    border-width: 1px;
+    outline: none;
+    display: inline-flex;
+    align-items: center;
+    transition:
+        background 0.2s,
+        color 0.2s,
+        border-color 0.2s;
+}
+.ui-button:focus {
+    z-index: 10;
+    box-shadow: 0 0 0 2px var(--accent, #f59e42); /* fallback for accent */
+}
+.ui-button:disabled {
+    background-color: #f8fafc; /* slate-50 */
+    color: #64748b; /* slate-500 */
+    border-color: #e5e7eb; /* slate-200 */
+    cursor: not-allowed;
+}
+.ui-button.primary {
+    color: #fff;
+    border-color: rgba(59, 130, 246, 0.5); /* primary/50, blue-500 */
+    background-color: #3b82f6; /* primary, blue-500 */
+}
+.ui-button.primary:hover {
+    background-color: rgba(59, 130, 246, 0.85); /* primary/85 */
+}
+.ui-button.primary:focus {
+    box-shadow: 0 0 0 2px #f59e42; /* accent */
+}
+.ui-button.secondary {
+    color: #3b82f6; /* primary */
+    border-color: #f59e42; /* secondary, orange-400 */
+    background-color: #f59e42; /* secondary */
+}
+.ui-button.secondary:hover {
+    background-color: rgba(245, 158, 66, 0.85); /* secondary/85 */
+}
+.ui-button.secondary:focus {
+    box-shadow: 0 0 0 2px rgba(245, 158, 66, 0.3); /* secondary/30 */
+}
+.ui-button.accent {
+    color: #fff;
+    border-color: #f43f5e; /* accent, rose-500 */
+    background-color: #f43f5e;
+}
+.ui-button.accent:hover {
+    background-color: rgba(244, 63, 94, 0.5); /* accent/50 */
+}
+.ui-button.accent:focus {
+    box-shadow: 0 0 0 2px rgba(244, 63, 94, 0.3); /* accent/30 */
+    outline: none;
+}
+.ui-button.white {
+    border-color: #fff;
+    color: #3b82f6; /* primary */
+    background-color: #fff;
+}
+.ui-button.white:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #3b82f6; /* blue-700 */
+}
+.ui-button.white:hover {
+    background-color: #f3f4f6; /* gray-100 */
+    border-color: #f3f4f6; /* gray-100 */
+    color: #1d4ed8; /* blue-700 */
+}
+.ui-button.default {
+    color: #fff;
+    border-color: #3b82f6; /* blue-500 */
+    background-color: #3b82f6;
+}
+.ui-button.default:hover,
+.ui-button.default:focus {
+    background-color: #1d4ed8; /* blue-700 */
+    box-shadow: 0 0 0 2px #1d4ed8;
+}
+.ui-button.sm {
+    padding: 0.25rem 0.25rem;
+}
+.ui-button.md {
+    padding: 0.5rem 1rem;
+}
+.ui-button.lg {
+    padding: 0.625rem 1.25rem;
+    font-size: 1.5rem;
 }

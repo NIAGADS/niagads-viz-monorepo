@@ -1,19 +1,43 @@
 .ui-select {
-    @apply bg-gray-50 text-gray-900 text-sm block w-full p-2.5;
-
-    &.outline {
-        @apply border border-solid border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500;
-    }
-
-    &.plain {
-        @apply bg-white border-0 focus:bg-gray-100;
-    }
-
-    &.underline {
-        @apply bg-white border-t-0 border-l-0 border-r-0 border-b-[1px] border-solid border-black focus:border-blue-500;
-    }
+    background-color: #f9fafb; /* gray-50 */
+    color: #111827; /* gray-900 */
+    font-size: 0.875rem; /* text-sm */
+    display: block;
+    width: 100%;
+    padding: 0.625rem; /* 2.5 */
+}
+.ui-select.outline {
+    border: 1px solid #d1d5db; /* gray-300 */
+    border-radius: 0.5rem; /* rounded-lg */
+    outline: none;
+}
+.ui-select.outline:focus {
+    box-shadow: 0 0 0 2px #3b82f6; /* ring-blue-500 */
+    border-color: #3b82f6; /* blue-500 */
+}
+.ui-select.plain {
+    background-color: #fff;
+    border: 0;
+}
+.ui-select.plain:focus {
+    background-color: #f3f4f6; /* gray-100 */
+}
+.ui-select.underline {
+    background-color: #fff;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 1px solid #000;
+    border-style: solid;
+}
+.ui-select.underline:focus {
+    border-bottom-color: #3b82f6; /* blue-500 */
 }
 
 .ui-select-label {
-    @apply block p-2 text-sm font-medium text-gray-900;
+    display: block;
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #111827; /* gray-900 */
 }

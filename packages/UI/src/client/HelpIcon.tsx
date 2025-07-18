@@ -1,8 +1,7 @@
+import { ExclamationCircleIcon, InformationCircleIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import React, { ReactNode } from "react";
 
-import { InformationCircleIcon, ExclamationCircleIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
-
-import { Tooltip } from "./Tooltip";
+import { Tooltip } from "../Tooltip";
 import { _get } from "@niagads/common";
 
 interface HelpIconProps {

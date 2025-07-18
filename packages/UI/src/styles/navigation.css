@@ -1,67 +1,149 @@
 .ui-nav {
-    @apply fixed w-full z-20 top-0 start-0 border-b-2 border-secondary;
-
-    &.light {
-        @apply bg-white;
-    }
-
-    &.primary {
-        @apply bg-primary border-accent-dark;
-    }
-
-    &.secondary {
-        @apply bg-secondary;
-    }
-
-    &.dark {
-        @apply bg-accent-dark;
-    }
+    position: fixed;
+    width: 100%;
+    z-index: 20;
+    top: 0;
+    left: 0;
+    border-bottom: 2px solid #f59e42; /* secondary, orange-400 (example) */
+}
+.ui-nav.light {
+    background-color: #fff;
+}
+.ui-nav.primary {
+    background-color: #3b82f6; /* primary, blue-500 */
+    border-color: #1e293b; /* accent-dark, slate-800 */
+}
+.ui-nav.secondary {
+    background-color: #f59e42; /* secondary, orange-400 (example) */
+}
+.ui-nav.dark {
+    background-color: #1e293b; /* accent-dark, slate-800 */
 }
 
 .ui-nav-inner-container {
-    @apply max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2;
+    max-width: 1280px; /* screen-xl */
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0.5rem;
 }
 
 .ui-nav-brand {
-    @apply flex items-center space-x-3 rtl:space-x-reverse;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    /* For RTL support, you may need to add logic in JS or use :dir(rtl) selectors */
 }
 
 .ui-nav-brand-label {
-    @apply self-center text-2xl font-semibold whitespace-nowrap text-white;
-    &.light,
-    &.secondary {
-        @apply text-accent-dark;
-    }
+    align-self: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    white-space: nowrap;
+    color: #fff;
+}
+.ui-nav-brand-label.light,
+.ui-nav-brand-label.secondary {
+    color: #1e293b; /* accent-dark, slate-800 */
 }
 
 .ui-nav-banner {
-    @apply bg-secondary py-1 px-4 text-lg flex items-center justify-center;
+    background-color: #f59e42; /* secondary, orange-400 (example) */
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: 1.125rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .ui-nav-item-container {
-    @apply items-center justify-between hidden w-full md:flex md:w-auto md:order-1;
+    align-items: center;
+    justify-content: space-between;
+    display: none;
+    width: 100%;
+}
+@media (min-width: 768px) {
+    .ui-nav-item-container {
+        display: flex;
+        width: auto;
+        order: 1;
+    }
 }
 
 .ui-nav-item-list {
-    @apply flex flex-col p-4 md:p-0 mt-4 font-medium border rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    font-weight: 500;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    margin-top: 1rem;
+    /* For RTL support, you may need to add logic in JS or use :dir(rtl) selectors */
+}
+@media (min-width: 768px) {
+    .ui-nav-item-list {
+        flex-direction: row;
+        padding: 0;
+        margin-top: 0;
+        border: 0;
+        gap: 2rem;
+    }
 }
 
 .ui-nav-link {
-    @apply block py-2 px-3 text-lg text-white  hover:bg-secondary hover:rounded-sm hover:text-primary;
-
-    &.light {
-        @apply text-primary;
-    }
-
-    &.secondary {
-        @apply text-primary hover:text-white;
-    }
+    display: block;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    font-size: 1.125rem;
+    color: #fff;
+    transition:
+        background 0.2s,
+        color 0.2s;
+    border-radius: 0.125rem;
+}
+.ui-nav-link:hover {
+    background-color: #f59e42; /* secondary */
+    color: #3b82f6; /* primary */
+}
+.ui-nav-link.light {
+    color: #3b82f6; /* primary */
+}
+.ui-nav-link.secondary {
+    color: #3b82f6; /* primary */
+}
+.ui-nav-link.secondary:hover {
+    color: #fff;
 }
 
 .ui-nav-mobile {
-    @apply md:hidden;
+    display: block;
+}
+@media (min-width: 768px) {
+    .ui-nav-mobile {
+        display: none;
+    }
 }
 
 .ui-nav-mobile-menu {
-    @apply space-y-1 px-2 pt-2 pb-3 sm:px-3;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-left: 0.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.75rem;
+    padding-right: 0.75rem;
+}
+@media (min-width: 640px) {
+    .ui-nav-mobile-menu {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
 }

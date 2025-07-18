@@ -1,17 +1,24 @@
 .ui-checkbox,
 .ui-radio {
     cursor: pointer;
+}
 
-    &.primary {
-        accent-color: var(--primary);
-    }
-    &.secondary {
-        accent-color: var(--secondary);
-    }
-    &.accent {
-        accent-color: var(--secondary);
-    }
-    &.pink {
-        accent-color: var(--color-pink-500);
-    }
+.ui-checkbox.primary,
+.ui-radio.primary {
+    accent-color: var(--primary);
+}
+
+.ui-checkbox.secondary,
+.ui-radio.secondary {
+    accent-color: var(--secondary);
+}
+
+.ui-checkbox.accent,
+.ui-radio.accent {
+    accent-color: var(--secondary);
+}
+
+.ui-checkbox.pink,
+.ui-radio.pink {
+    accent-color: var(--color-pink-500);
 }

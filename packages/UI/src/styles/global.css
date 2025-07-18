@@ -1,16 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
-
-@import "tailwindcss";
+@import "@niagads/common/assets/styles/theme.css";
 @import "react-tooltip/dist/react-tooltip.css";
-@theme {
-    --color-primary: #030112;
-    --color-secondary: #f9c664;
-    --color-accent: #618eb5;
-    --color-accent-dark: #27333f;
-}
 
 @import "./ui.css";
-
 @import "./action-button.css";
 @import "./alert.css";
 @import "./autocomplete.css";

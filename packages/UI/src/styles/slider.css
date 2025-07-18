@@ -1,45 +1,60 @@
 input[type="range"]::-webkit-slider-thumb {
-    @apply pointer-events-auto w-5 h-5;
+    pointer-events: auto;
+    width: 1.25rem;
+    height: 1.25rem;
 }
 input[type="range"]::-moz-range-thumb {
-    @apply pointer-events-auto w-5 h-5;
+    pointer-events: auto;
+    width: 1.25rem;
+    height: 1.25rem;
 }
 input[type="range"] {
-    @apply pointer-events-none h-2 w-full;
+    pointer-events: none;
+    height: 0.5rem;
+    width: 100%;
 }
 
 .ui-slider {
-    @apply absolute w-full h-2 rounded-lg appearance-none cursor-pointer;
-
-    &.primary {
-        @apply bg-primary;
-    }
-    &.secondary {
-        @apply bg-secondary;
-    }
-    &.accent {
-        @apply bg-accent;
-    }
-    &.default {
-        @apply bg-blue-500;
-    }
-    &.ui-second-thumb {
-        @apply h-0 z-1;
-    }
+    position: absolute;
+    width: 100%;
+    height: 0.5rem;
+    border-radius: 0.5rem;
+    appearance: none;
+    cursor: pointer;
+}
+.ui-slider.primary {
+    background-color: #3b82f6; /* primary, blue-500 */
+}
+.ui-slider.secondary {
+    background-color: #f59e42; /* secondary, orange-400 (example) */
+}
+.ui-slider.accent {
+    background-color: #f43f5e; /* accent, rose-500 (example) */
+}
+.ui-slider.default {
+    background-color: #3b82f6; /* blue-500 */
+}
+.ui-slider.ui-second-thumb {
+    height: 0;
+    z-index: 1;
 }
 
 .ui-slider-label {
-    @apply block mb-2 text-sm font-medium;
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
 }
 
 .ui-slider-range-label {
-    @apply text-sm absolute;
-
-    &.start {
-        @apply start-2 -bottom-2;
-    }
-
-    &.end {
-        @apply end-2 -bottom-2;
-    }
+    font-size: 0.875rem;
+    position: absolute;
+}
+.ui-slider-range-label.start {
+    left: 0.5rem;
+    bottom: -0.5rem;
+}
+.ui-slider-range-label.end {
+    right: 0.5rem;
+    bottom: -0.5rem;
 }
