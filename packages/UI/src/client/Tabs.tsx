@@ -47,8 +47,10 @@ export const Tabs = ({ sectionId, tabs, width = "full" }: TabsProps) => {
     const [activeTab, setActiveTab] = useState<TabDef | null>(tabs && tabs.length > 0 ? tabs[0] : null);
 
     useEffect(() => {
-        const selectedTab = tabs.find((tab) => tab.id === selectedKey);
-        setActiveTab(selectedTab!);
+        if (tabs) {
+            const selectedTab = tabs.find((tab) => tab.id === selectedKey);
+            setActiveTab(selectedTab!);
+        }
     }, [selectedKey]);
 
     const onTabSelect = (tabId: string) => {
