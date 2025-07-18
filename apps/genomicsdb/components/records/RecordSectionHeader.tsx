@@ -1,10 +1,5 @@
-export const RecordSectionHeader = ({
-    title,
-    description,
-}: {
-    title: string;
-    description: string | React.ReactNode;
-}) => {
+const RecordSectionHeader = ({ title, description }: { title: string; description: string | React.ReactNode }) => {
+    console.log("enter header");
     return (
         <div className="record-section-header">
             <div className="record-section-title">{title}</div>
@@ -14,3 +9,5 @@ export const RecordSectionHeader = ({
         </div>
     );
 };
+
+export default RecordSectionHeader;

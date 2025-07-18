@@ -15,7 +15,7 @@ export default async function GeneDetailPage({ params }: PageProps) {
         const record: GeneRecord = (await fetchRecord(`/api/record/gene/${id}`, true)) as GeneRecord;
         Object.assign(record, { record_type: "gene" });
         report = { id: record.id, record: record };
-        await setCache("gene-record", record.id, report); // cache on actual record ID
+        await setCache("gene-record", id, report); // cache on path ID, which might be an alias
     }
 
     return (
@@ -23,18 +23,14 @@ export default async function GeneDetailPage({ params }: PageProps) {
             <RecordOverviewSection>
                 <GeneRecordOverview record={report.record}></GeneRecordOverview>
             </RecordOverviewSection>
-            {RECORD_PAGE_SECTIONS.gene.map((section: AnchoredPageSection) => {
-                if (section.id !== "overview") {
-                    return (
-                        <RecordTableSection
-                            recordId={report.id}
-                            recordType="gene"
-                            key={`table-section-${section.id}`}
-                            config={section}
-                        ></RecordTableSection>
-                    );
-                }
-            })}
+            {RECORD_PAGE_SECTIONS.gene.map((section: AnchoredPageSection) => (
+                <RecordTableSection
+                    recordId={report.id}
+                    recordType="gene"
+                    key={`table-section-${section.id}`}
+                    section={section}
+                ></RecordTableSection>
+            ))}
         </>
     );
 }

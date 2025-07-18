@@ -198,3 +198,9 @@ export interface AnchoredPageSection extends AnchoredSectionBase {
     icon: PageSectionIcons;
     tables?: TableSection[];
 }
+
+// shared props for components fetching record data that needs to be cached
+export interface CacheKeyInfo {
+    recordId: string;
+    recordType: RecordType;
+}

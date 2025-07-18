@@ -7,15 +7,15 @@ import {
     GeneticAssocationSummary,
     RecordReport,
 } from "@/lib/types";
-import { AssociationSummaryBarChart, Series } from "@niagads/charts";
 import { _fetch, fetchRecordAssocations } from "@/lib/route-handlers";
 import { getCache, setCache } from "@/lib/cache";
 
-import ClientWrapper from "@/components/ClientWrapper";
 import { InlineError } from "@/components/InlineError";
 import Placeholder from "../placeholder";
+import { Series } from "@niagads/charts";
 import { _get } from "@niagads/common";
 import { is_error_response } from "@/lib/utils";
+import { stringify } from "querystring";
 
 type RelativePosition = "in gene" | "upstream" | "downstream";
 
@@ -29,10 +29,6 @@ interface SummaryData {
     downstream: number;
     in_gene: number;
 }
-
-/* chart config:
-series; summary data
-*/
 
 const data_key = (source: string, category: string) => {
     const cleanCategory = category
@@ -95,32 +91,32 @@ export default async function GeneAssociationSummaryChart({ recordId }: Associat
         return response.data;
     }
 
-    let errorMessage: string | null = null;
-    let summary: Record<string, any> | null = null;
-    let report: RecordReport = (await getCache("gene-record", recordId)) as unknown as RecordReport;
+    const namespace = "gene-record-genetic-association-summary";
+    let summary: any = ((await getCache(namespace, recordId)) as unknown as GeneticAssocationSummary) || {};
 
-    if (!report || !report.hasOwnProperty("genetic_association_summary")) {
+    if (!summary || Object.keys(summary).length === 0) {
+        let errorMessage: string | null = null;
+        const sources: AssociationTraitSource[] = ["gwas", "curated"];
         try {
-            summary = { gwas: await fetchSummary("all", "gwas") };
-            Object.assign(summary, { curated: await fetchSummary("all", "curated") });
+            for (const source of sources) {
+                summary[source] = await fetchSummary("all", source);
+            }
+            await setCache(namespace, recordId, summary);
         } catch (error: any) {
             errorMessage = error.message;
         }
 
         if (errorMessage) {
-            return <InlineError message={errorMessage}></InlineError>;
+            return <InlineError message={errorMessage} reload={false}></InlineError>;
         }
-
-        Object.assign(report, { genetic_association_summary: summary });
-        await setCache("gene-record", recordId, report);
     }
 
-    const data: SummaryData[] = build_chart_data(report["genetic_association_summary"]);
-    const series: Series = build_chart_series(report["genetic_association_summary"]);
+    const data: SummaryData[] = build_chart_data(summary);
+    const series: Series = build_chart_series(summary);
     return (
-        <ClientWrapper>
+        <div>
             <Placeholder type={"chart"} />
-            {/*<AssociationSummaryBarChart data={data} series={series} />*/}
-        </ClientWrapper>
+        </div>
     );
 }
+// {/*<AssociationSummaryBarChart data={data} series={series} />*/}
