@@ -1,41 +1,35 @@
-import React, { useMemo, useState, useLayoutEffect, useEffect, useRef } from "react";
-
+import { Button, Checkbox, RadioButton } from "@niagads/ui";
+import { Cell, GenericCell, getCellValue, renderCell, resolveCell, validateCellType } from "./Cell";
 import {
+    ColumnDef,
+    ColumnFiltersState,
+    HeaderGroup,
+    RowSelectionState,
+    SortingFnOption,
+    SortingState,
+    TableOptions,
+    VisibilityState,
+    createColumnHelper,
     flexRender,
     getCoreRowModel,
-    getPaginationRowModel,
-    useReactTable,
-    SortingState,
-    createColumnHelper,
-    ColumnDef,
-    HeaderGroup,
-    getFilteredRowModel,
     getFacetedRowModel,
     getFacetedUniqueValues,
-    SortingFnOption,
+    getFilteredRowModel,
+    getPaginationRowModel,
     getSortedRowModel,
-    RowSelectionState,
-    VisibilityState,
-    TableOptions,
-    ColumnFiltersState,
+    useReactTable,
 } from "@tanstack/react-table";
-
-import { TrashIcon } from "@heroicons/react/24/outline";
-
+import { GenericColumn, getColumn } from "./Column";
+import { PaginationControls, TableToolbar } from "./ControlElements";
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { TableConfig, TableData, TableRow } from "./TableProperties";
 import { _get, _hasOwnProperty, toTitleCase } from "@niagads/common";
 
-import { Cell, GenericCell, getCellValue, renderCell, resolveCell, validateCellType } from "./Cell";
-
-import { TableConfig, TableData, TableRow } from "./TableProperties";
-import { GenericColumn, getColumn } from "./Column";
-import { TableColumnHeader } from "./TableColumnHeader";
 import { CustomSortingFunctions } from "./TableSortingFunctions";
-
-import { PaginationControls, TableToolbar } from "./ControlElements";
-
-import { Button, Checkbox, RadioButton } from "@niagads/ui";
-import { Tooltip } from "@niagads/ui/client";
 import { RowSelectionControls } from "./ControlElements/RowSelectionControls";
+import { TableColumnHeader } from "./TableColumnHeader";
+import { Tooltip } from "@niagads/ui/client";
+import { TrashIcon } from "@heroicons/react/24/outline";
 
 const __resolveSortingFn = (col: GenericColumn) => {
     if (col.type === "boolean") {

@@ -1,44 +1,76 @@
 .cell {
-    @apply font-[Inter];
+    font-family: "Inter", sans-serif;
 }
 
 .cell-badge {
-    @apply px-2 py-1 rounded-full;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    border-radius: 9999px;
 }
 
 .cell-badge-icon {
-    @apply size-5 py-1;
+    width: 1.25rem;
+    height: 1.25rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
 }
 
 .cell-icon-only-badge {
-    @apply size-5 m-auto;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .cell-spark {
-    @apply h-[20px] inline-block;
+    height: 20px;
+    display: inline-block;
 }
 
 .cell-spark-value {
-    @apply w-[35px] self-center;
+    width: 35px;
+    align-self: center;
 }
 
 .cell-spark-bar {
-    @apply w-[100px];
+    width: 100px;
 }
 
 .cell-spark-bar-observed {
-    @apply bg-green-600;
+    background-color: #16a34a; /* Tailwind green-600 */
 }
 
 .cell-spark-bar-remainder {
-    @apply bg-gray-300;
+    background-color: #d1d5db; /* Tailwind gray-300 */
 }
 
 .cell-link,
 .info-link {
-    @apply text-blue-700 hover:underline visited:text-purple-900 active:text-red-950;
+    color: #1d4ed8; /* Tailwind blue-700 */
+    text-decoration: none;
+}
+
+.cell-link:hover,
+.info-link:hover {
+    text-decoration: underline;
+}
+
+.cell-link:visited,
+.info-link:visited {
+    color: #6d28d9; /* Tailwind purple-900 */
+}
+
+.cell-link:active,
+.info-link:active {
+    color: #450a0a; /* Tailwind red-950 */
 }
 
 .info-link {
-    @apply cursor-pointer underline decoration-dashed decoration-blue-700 underline-offset-4;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-style: dashed;
+    text-decoration-color: #1d4ed8; /* Tailwind blue-700 */
+    text-underline-offset: 4px;
 }

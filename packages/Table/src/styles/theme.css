@@ -1,0 +1,18 @@
+:root {
+    --niagads-table-primary: #030112;
+    --niagads-table-secondary: #f9c664;
+    --niagads-table-accent: #618eb5;
+    --niagads-table-accent-dark: #27333f;
+}
+
+.bg-primary {
+    background-color: var(--niagads-table-primary);
+}
+
+.bg-secondary {
+    background-color: var(--niagads-table-secondary);
+}
+
+.bg-accent {
+    background-color: var(--niagads-table-accent);
+}
