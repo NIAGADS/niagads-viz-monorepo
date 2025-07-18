@@ -65,5 +65,4 @@ export default [
         plugins: [dts()],
         external: [/\.css$/u], // HACK: Fix for this problem https://github.com/Swatinem/rollup-plugin-dts/issues/165]
     },
-
 ];
