@@ -1,5 +1,6 @@
 import "./globals.css";
 import "@niagads/ui/css";
+import "@niagads/table/css";
 
 import { Inter, Lato, Roboto_Mono } from "next/font/google";
 
