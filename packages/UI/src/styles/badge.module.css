@@ -1,0 +1,33 @@
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    background-color: #e5e7eb; /* Tailwind gray-200 */
+    color: #374151; /* Tailwind gray-700 */
+    font-size: 0.875rem;
+    font-weight: 500;
+    gap: 0.5rem;
+}
+
+.pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 1.25rem;
+    border-radius: 9999px;
+    background-color: #2563eb; /* Tailwind blue-600 */
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 600;
+    gap: 0.5rem;
+}
+
+.icon {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+}
+
+.text {
+    display: inline;
+}
