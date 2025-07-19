@@ -45,7 +45,13 @@ const TabButton = ({ label, id, info, sectionId, isActive, onClick }: TabButtonP
             aria-controls={`tabpanel-${id}`}
         >
             {info
-                ? renderWithHelpIcon(label, "question", info, `${sectionId ? sectionId + "_" : ""}-${id}-info`)
+                ? renderWithHelpIcon(
+                      label,
+                      "question",
+                      info,
+                      `${sectionId ? sectionId + "_" : ""}-${id}-info`,
+                      styles["tab-help-icon"]
+                  )
                 : label}
         </button>
     );
@@ -73,7 +79,7 @@ export const Tabs = ({ sectionId, tabs, width = "full" }: TabsProps) => {
     return (
         activeTab && (
             <>
-                <div className={styles["tab-navigation"]} role="tablist">
+                <div className={styles["tab-container"]} role="tablist">
                     {tabs.map((tab) => (
                         <TabButton
                             key={`button-${tab.id}`}

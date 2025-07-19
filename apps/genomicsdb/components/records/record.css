@@ -72,49 +72,6 @@
 }
 
 /* Content tabs styling - ONLY active tab has bottom border */
-.content-tabs {
-    display: flex;
-    gap: 0.25rem;
-    margin-bottom: 2rem;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-.content-tabs::-webkit-scrollbar {
-    display: none;
-}
-
-.content-tab {
-    position: relative;
-    padding: 0.75rem 1.25rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--text-secondary, #6b7280);
-    background: transparent;
-    border: none;
-    border-radius: var(--border-radius, 0.375rem) var(--border-radius, 0.375rem) 0 0;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-    min-width: fit-content;
-}
-
-.content-tab:hover {
-    color: var(--text-primary, #374151);
-    background: var(--gray-50, #f9fafb);
-}
-
-.content-tab.active {
-    color: var(--primary-blue, #2563eb);
-    background: var(--surface, #ffffff);
-    border-bottom: 2px solid var(--primary-blue, #2563eb);
-}
-
-.content-tab:focus {
-    outline: 2px solid var(--primary-blue, #2563eb);
-    outline-offset: -2px;
-}
 
 .external-ids {
     display: grid;
@@ -391,15 +348,6 @@
     .overview-grid {
         grid-template-columns: 1fr;
         gap: 1rem;
-    }
-
-    .content-tabs {
-        gap: 0.125rem;
-    }
-
-    .content-tab {
-        padding: 0.5rem 0.75rem;
-        font-size: 0.8rem;
     }
 
     .section-title {
