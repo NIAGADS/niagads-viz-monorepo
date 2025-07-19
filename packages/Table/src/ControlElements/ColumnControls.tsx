@@ -18,7 +18,7 @@ interface ColumnControlsProps {
 export const ColumnControls = ({ columns, onSelect }: ColumnControlsProps) => {
     return (
         <div className="relative inline-block text-left dropdown">
-            <Button variant="white">
+            <Button variant="link">
                 <Columns3 className={`icon-button`}></Columns3>
                 <span className="ml-2 uppercase">Columns</span>
             </Button>

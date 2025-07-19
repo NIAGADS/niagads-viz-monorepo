@@ -67,7 +67,7 @@ export const TableExportControls = ({ isFiltered, onSubmit }: ExportMenuOptions)
 
     return (
         <div className="export-control-container">
-            <Button variant="white">
+            <Button variant="link">
                 <Download className="icon-button"></Download>
                 <span className="ml-2 uppercase">Export</span>
             </Button>
