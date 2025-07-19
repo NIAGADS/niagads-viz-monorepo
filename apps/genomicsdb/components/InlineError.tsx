@@ -16,7 +16,7 @@ export function InlineError({ message, reload = false }: { message: string; relo
     );
 
     return (
-        <Alert variant="danger" message="Unable to fetch annotation.">
+        <Alert variant="error" message="Unable to fetch annotation.">
             <div>
                 {reload ? (
                     <p>
