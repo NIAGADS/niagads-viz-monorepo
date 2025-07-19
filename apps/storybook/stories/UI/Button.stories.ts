@@ -19,5 +19,7 @@ export const Default: Story = {
         variant: "action",
         children: "Example Button",
         onClick: (event) => alert("I've been clicked!"),
+        disabled: false,
+        className: "",
     },
 };

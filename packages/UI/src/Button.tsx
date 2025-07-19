@@ -20,10 +20,14 @@ export const Button = ({
     ariaLabel,
     className,
 }: ButtonProps & StylingProps & AriaProps) => {
-    const classes = [styles["button"], styles[variant]].filter(Boolean).join(" ");
+    let classes = [styles.button, styles[variant]].filter(Boolean).join(" ");
+
+    if (className) {
+        classes = `${classes} ${className}`;
+    }
 
     return (
-        <button disabled={disabled} className={classes} onClick={onClick}>
+        <button className={classes} disabled={disabled} onClick={onClick} aria-label={ariaLabel}>
             {children}
         </button>
     );

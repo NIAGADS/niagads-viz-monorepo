@@ -1,6 +1,5 @@
 .button {
-    padding: 0.5rem 1rem;
-    /*    padding: 0.625rem 1rem;*/
+    padding: 0.625rem 1rem;
     background-color: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--border-radius);
@@ -51,18 +50,25 @@
     cursor: not-allowed;
 }
 
+.button:disabled:active {
+    background-color: #f8fafc; /* slate-50 */
+    transform: none;
+}
+
 .button.link {
     border-color: #fff;
     color: #3b82f6; /* primary */
     background-color: #fff;
 }
-.button.link:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px #3b82f6; /* blue-700 */
+
+.button.link:disabled {
+    color: #64748b; /* slate-500 */
+    cursor: not-allowed;
 }
+
 .button.link:hover {
-    background-color: #f3f4f6; /* gray-100 */
-    border-color: #f3f4f6; /* gray-100 */
+    background-color: var(--gray-50);
+    border-color: var(--gray-50);
     color: #1d4ed8; /* blue-700 */
 }
 
