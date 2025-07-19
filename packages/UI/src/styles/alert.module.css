@@ -1,31 +1,39 @@
 /* Renamed from alert.css for CSS Modules */
-.ui-alert {
+.alert {
     display: flex;
     padding: 1rem;
     margin-bottom: 1rem;
     font-size: 0.875rem;
     border-radius: 0.5rem;
+    flex-direction: column;
+    box-shadow: var(--shadow-md);
 }
 
-.ui-alert.info {
-    color: #1e40af;
-    border: 1px solid #93c5fd;
-    background-color: #eff6ff;
+.alert.info {
+    color: var(--dark-blue);
+    border: 1px solid var(--dark-blue);
+    background-color: #eef3f7;
 }
 
-.ui-alert.warning {
-    color: #854d0e;
-    border: 1px solid #fde68a;
-    background-color: #fef9c3;
+.alert.warning {
+    color: var(--warning-amber);
+    border: 1px solid var(--warning-amber);
+    background-color: #fef3e6;
 }
 
-.ui-alert.danger {
-    color: #991b1b;
-    border: 1px solid #fca5a5;
+.alert.error {
+    color: var(--error-red);
+    border: 1px solid var(--error-red);
     background-color: #fef2f2;
 }
 
-.ui-alert-srOnly {
+.alert.success {
+    color: var(--success-green);
+    border: 1px solid var(--success-green);
+    background-color: #f5fffc;
+}
+
+.alert-sr {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -37,6 +45,11 @@
     border: 0;
 }
 
-.ui-alert-fontBold {
+.alert-message {
     font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.alert-content {
+    margin-top: 1rem;
 }
