@@ -7,6 +7,9 @@
     border-radius: 0.5rem;
     flex-direction: column;
     box-shadow: var(--shadow-md);
+    font-family:
+        "Inter", "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana,
+        sans-serif;
 }
 
 .alert.info {
