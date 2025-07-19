@@ -6,26 +6,10 @@
     color: var(--gray-300);
 }
 
-.badge {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
-    border-radius: 9999px;
-}
 
-.badgeIcon {
-    width: 1.25rem;
-    height: 1.25rem;
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
-}
-
-.iconOnlyBadge {
-    width: 1.25rem;
-    height: 1.25rem;
-    margin-left: auto;
-    margin-right: auto;
+.sparkContainer {
+    display: flex;
+    flex-direction: row;
 }
 
 .spark {
