@@ -36,7 +36,7 @@ export const Skeleton = ({ type }: SkeletonProps) => {
                     </svg>
                 </div>
                 <div className={styles["skeleton-card-bar"]} />
-                <div className={styles["skeleton-card-bar-sm"]} />
+                {/*<div className={styles["skeleton-card-bar-sm"]} />
                 <div className={styles["skeleton-card-bar-sm"]} />
                 <div className={styles["skeleton-card-bar-md"]} />
                 <div className={styles["skeleton-card-row"]}>
@@ -53,7 +53,7 @@ export const Skeleton = ({ type }: SkeletonProps) => {
                         <div className={styles["skeleton-card-row-bar"]} />
                         <div className={styles["skeleton-card-row-bar-md"]} />
                     </div>
-                </div>
+                </div>*/}
                 <span style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0,0,0,0)" }}>
                     Loading...
                 </span>
