@@ -1,94 +1,116 @@
-.ui-button {
-    font-family: "Inter", sans-serif;
+.button {
+    padding: 0.5rem 1rem;
+    /*    padding: 0.625rem 1rem;*/
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
     cursor: pointer;
-    font-weight: 500;
-    font-size: 0.875rem;
-    border-radius: 0.5rem;
-    border-style: solid;
-    border-width: 1px;
-    outline: none;
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    transition:
-        background 0.2s,
-        color 0.2s,
-        border-color 0.2s;
+    gap: 0.5rem;
+    transition: all var(--transition-fast);
+    /*transition: all 0.2s ease;*/
+    font-weight: 500;
+    /*    font-size: 0.875rem; */
+    color: var(--text-primary);
+    white-space: nowrap;
+    text-decoration: none;
 }
-.ui-button:focus {
-    z-index: 10;
-    box-shadow: 0 0 0 2px var(--accent, #f59e42); /* fallback for accent */
+
+.button:hover {
+    background-color: var(--hover-bg);
+    border-color: var(--border-hover);
+    color: var(--text-primary, #111827);
+    box-shadow: var(--shadow-sm);
 }
-.ui-button:disabled {
+
+.button:focus {
+    outline: 2px solid var(--primary-blue, #2563eb);
+    outline-offset: 2px;
+}
+
+.button:active {
+    background: var(--gray-100, #f3f4f6);
+    transform: translateY(1px);
+}
+
+.button.primary {
+    background-color: var(--primary-blue);
+    color: var(--text-inverse);
+    border-color: var(--primary-blue);
+}
+
+.button.primary:hover {
+    background-color: var(--secondary-blue);
+}
+
+.button:disabled {
     background-color: #f8fafc; /* slate-50 */
     color: #64748b; /* slate-500 */
     border-color: #e5e7eb; /* slate-200 */
     cursor: not-allowed;
 }
-.ui-button.primary {
-    color: #fff;
-    border-color: rgba(59, 130, 246, 0.5); /* primary/50, blue-500 */
-    background-color: #3b82f6; /* primary, blue-500 */
-}
-.ui-button.primary:hover {
-    background-color: rgba(59, 130, 246, 0.85); /* primary/85 */
-}
-.ui-button.primary:focus {
-    box-shadow: 0 0 0 2px #f59e42; /* accent */
-}
-.ui-button.secondary {
-    color: #3b82f6; /* primary */
-    border-color: #f59e42; /* secondary, orange-400 */
-    background-color: #f59e42; /* secondary */
-}
-.ui-button.secondary:hover {
-    background-color: rgba(245, 158, 66, 0.85); /* secondary/85 */
-}
-.ui-button.secondary:focus {
-    box-shadow: 0 0 0 2px rgba(245, 158, 66, 0.3); /* secondary/30 */
-}
-.ui-button.accent {
-    color: #fff;
-    border-color: #f43f5e; /* accent, rose-500 */
-    background-color: #f43f5e;
-}
-.ui-button.accent:hover {
-    background-color: rgba(244, 63, 94, 0.5); /* accent/50 */
-}
-.ui-button.accent:focus {
-    box-shadow: 0 0 0 2px rgba(244, 63, 94, 0.3); /* accent/30 */
-    outline: none;
-}
-.ui-button.white {
+
+.button.link {
     border-color: #fff;
     color: #3b82f6; /* primary */
     background-color: #fff;
 }
-.ui-button.white:focus {
+.button.link:focus {
     outline: none;
     box-shadow: 0 0 0 2px #3b82f6; /* blue-700 */
 }
-.ui-button.white:hover {
+.button.link:hover {
     background-color: #f3f4f6; /* gray-100 */
     border-color: #f3f4f6; /* gray-100 */
     color: #1d4ed8; /* blue-700 */
 }
-.ui-button.default {
-    color: #fff;
-    border-color: #3b82f6; /* blue-500 */
-    background-color: #3b82f6;
+
+.button-group {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
 }
-.ui-button.default:hover,
-.ui-button.default:focus {
-    background-color: #1d4ed8; /* blue-700 */
-    box-shadow: 0 0 0 2px #1d4ed8;
+
+.action-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    margin-bottom: 1.5rem;
 }
-.ui-button.sm {
-    padding: 0.25rem 0.25rem;
+
+@media (max-width: 1024px) {
+    .button-group {
+        gap: 0.5rem;
+    }
+
+    .button {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+    }
 }
-.ui-button.md {
-    padding: 0.5rem 1rem;
-}
-.ui-button.lg {
-    padding: 0.625rem 1.25rem;
-    font-size: 1.5rem;
+
+@media (max-width: 768px) {
+    .action-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .button-group {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .button {
+        flex: 1;
+        justify-content: center;
+        padding: 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    .button span {
+        display: none;
+    }
 }
