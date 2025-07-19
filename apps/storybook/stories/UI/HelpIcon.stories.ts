@@ -16,7 +16,8 @@ type Story = StoryObj<typeof HelpIcon>;
 
 export const Default: Story = {
     args: {
+        anchorId: "info",
         message: "Pay attention!",
-        type: "info",
+        variant: "alert",
     },
 };
