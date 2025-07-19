@@ -68,7 +68,7 @@ export const Tabs = ({ sectionId, tabs, width = "full" }: TabsProps) => {
 
     const memoizedTabContent = useMemo(() => {
         return activeTab ? activeTab.content : null;
-    }, [activeTab]);
+    }, [activeTab?.id]);
 
     return (
         activeTab && (
