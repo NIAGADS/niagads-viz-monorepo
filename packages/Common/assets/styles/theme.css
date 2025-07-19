@@ -66,15 +66,3 @@
     --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
     --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
 }
-
-.bg-primary {
-    background-color: var(--primary);
-}
-
-.bg-secondary {
-    background-color: var(--secondary);
-}
-
-.bg-accent {
-    background-color: var(--accent);
-}

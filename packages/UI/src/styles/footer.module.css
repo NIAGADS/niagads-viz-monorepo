@@ -1,4 +1,5 @@
-.footer {
+/* Renamed from footer.css for CSS Modules */
+.ui-footer {
     background-color: var(--dark-blue);
     border-top: 1px solid var(--gray-800);
     margin-top: auto;
@@ -6,7 +7,7 @@
     height: var(--footer-height);
 }
 
-.footer-container {
+.ui-footer-container {
     max-width: 1200px;
     height: 100%;
     margin: 0 auto;
@@ -17,71 +18,69 @@
     gap: 2rem;
 }
 
-.footer-left {
+.ui-footer-left {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
 }
 
-.footer-logo {
+.ui-footer-logo {
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.footer-logo-icon {
+.ui-footer-logo-icon {
     width: 20px;
     height: 20px;
     color: var(--accent-teal);
 }
 
-.footer-logo-text {
+.ui-footer-logo-text {
     font-weight: 600;
     color: var(--gray-100);
     font-size: 0.875rem;
 }
 
-.footer-copyright {
+.ui-footer-copyright {
     color: var(--gray-400);
     font-size: 0.75rem;
 }
 
-.footer-right {
+.ui-footer-right {
     flex-shrink: 0;
 }
 
-.footer-nav {
+.ui-footer-nav {
     display: flex;
     gap: 1.5rem;
 }
 
-.footer-link {
+.ui-footer-link {
     color: var(--gray-400);
     text-decoration: none;
     font-size: 0.875rem;
     transition: color var(--transition-fast);
 }
 
-.footer-link:hover {
+.ui-footer-link:hover {
     color: var(--gray-100);
 }
 
-/* Mobile Responsive */
 @media (max-width: 768px) {
-    .footer-container {
+    .ui-footer-container {
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
         padding: 1rem;
     }
-
-    .footer-nav {
+    .ui-footer-nav {
         gap: 1rem;
     }
 }
 
 @media (max-width: 480px) {
-    .footer-nav {
+    .ui-footer-nav {
         flex-wrap: wrap;
         gap: 0.75rem;
     }

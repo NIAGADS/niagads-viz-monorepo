@@ -20,7 +20,7 @@ export default function ErrorPage({ error, reset }: { error: APIError & { digest
 
     return errorJSON ? (
         <div className="error-page">
-            <Alert variant="danger" message={`${errorJSON.status} - ${errorJSON.detail}`}>
+            <Alert variant="error" message={`${errorJSON.status} - ${errorJSON.detail}`}>
                 <div>{errorJSON.message && <div>{safeHtml(linkify(errorJSON.message))}</div>}</div>
             </Alert>
             <div>
@@ -39,7 +39,7 @@ export default function ErrorPage({ error, reset }: { error: APIError & { digest
         </div>
     ) : (
         <div className="error-page">
-            <Alert variant="danger" message={`Runtime Error - ${error.message}`}>
+            <Alert variant="error" message={`Runtime Error - ${error.message}`}>
                 <div className="mb-15">{safeHtml(linkify(issueTrackerMsg))}</div>
             </Alert>
             <div>

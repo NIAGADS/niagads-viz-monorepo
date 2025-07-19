@@ -1,27 +1,34 @@
+import { AlertCircle, HelpCircle, Info } from "lucide-react";
 import React, { ReactNode } from "react";
 
-import { InformationCircleIcon, ExclamationCircleIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
-
-import { Tooltip } from "./Tooltip";
+import { InlineIcon } from "../InlineIcon";
+import { StylingProps } from "../types";
+import { Tooltip } from "../Tooltip";
 import { _get } from "@niagads/common";
+
+const ICONS = {
+    alert: AlertCircle,
+    question: HelpCircle,
+    info: Info,
+};
+
+type HelpIconVariant = keyof typeof ICONS;
 
 interface HelpIconProps {
     anchorId: string;
     message: ReactNode | string;
-    type: "question" | "info";
+    variant: HelpIconVariant;
+    className?: string;
 }
 
-export const HelpIcon = ({ anchorId, message, type }: HelpIconProps) => {
-    const icon =
-        type === "info" ? (
-            <InformationCircleIcon className="inline-info-bubble" />
-        ) : (
-            <QuestionMarkCircleIcon className="inline-info-bubble" />
-        );
+export const HelpIcon = ({ anchorId, message, variant, className }: HelpIconProps & StylingProps) => {
+    const Icon = ICONS[variant] || Info; // fallback to Info
 
     return (
         <Tooltip anchorId={`help-${anchorId}`} content={message}>
-            {icon}
+            <div className={className}>
+                <Icon size={15} />
+            </div>
         </Tooltip>
     );
 };
@@ -29,15 +36,10 @@ export const HelpIcon = ({ anchorId, message, type }: HelpIconProps) => {
 export const renderHelpIcon = (
     anchorId: string,
     message: ReactNode | string,
-    type: "question" | "info" = "question"
+    variant: HelpIconVariant,
+    className: string
 ) => {
-    return <HelpIcon anchorId={anchorId} message={message} type={type} />;
-};
-
-const ICONS = {
-    info: ExclamationCircleIcon,
-    question: QuestionMarkCircleIcon,
-    infoOutline: InformationCircleIcon,
+    return <HelpIcon anchorId={anchorId} message={message} variant={variant} className={className} />;
 };
 
 /**
@@ -46,23 +48,20 @@ const ICONS = {
  * @returns
  */
 export const getIconElement = (key: string) => {
-    const icon = _get(key, ICONS);
-    if (icon === null) {
-        throw Error("Error rendering field: invalid icon `" + key + "`");
-    }
+    const icon = ICONS[key as keyof typeof ICONS] || Info;
     return icon;
 };
 
 export const renderWithHelpIcon = (
     textElement: ReactNode | string,
-    type: "question" | "info",
+    variant: HelpIconVariant,
     message: string,
-    anchorId: string
+    anchorId: string,
+    className = ""
 ) => {
     return (
-        <div className="inline-flex">
+        <InlineIcon icon={renderHelpIcon(anchorId, message, variant, className)} iconPosition="end">
             {textElement}
-            {renderHelpIcon(anchorId, message, type)}
-        </div>
+        </InlineIcon>
     );
 };

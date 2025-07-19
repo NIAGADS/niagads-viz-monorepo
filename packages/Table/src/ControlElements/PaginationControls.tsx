@@ -1,5 +1,5 @@
 import { Button, Select } from "@niagads/ui";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useMemo, useState } from "react";
 
 import { Table as ReactTable } from "@tanstack/react-table";
@@ -56,15 +56,15 @@ export const PaginationControls = ({ table }: PaginationControlsProps) => {
                 <div className="pagination-control-summary">
                     {minDisplayedRow} - {maxDisplayedRow} of {nRows}
                 </div>
-                <Button variant="white" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
-                    <ChevronLeftIcon
+                <Button variant="link" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
+                    <ChevronLeft
                         className={`icon-button stroke-1 ${!table.getCanPreviousPage() ? "icon-disabled" : "stroke-black"}`}
-                    ></ChevronLeftIcon>
+                    ></ChevronLeft>
                 </Button>
-                <Button variant="white" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-                    <ChevronRightIcon
+                <Button variant="link" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+                    <ChevronRight
                         className={`icon-button stroke-1 ${!table.getCanNextPage() ? "icon-disabled" : "stroke-black"}`}
-                    ></ChevronRightIcon>
+                    ></ChevronRight>
                 </Button>
             </div>
         </>

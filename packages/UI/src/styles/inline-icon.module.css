@@ -1,0 +1,16 @@
+.inlineIcon {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+}
+
+.icon {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+.text {
+    display: inline;
+}

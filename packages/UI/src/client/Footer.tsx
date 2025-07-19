@@ -1,31 +1,32 @@
-import React from "react";
 import Link from "next/link";
+import React from "react";
+import styles from "../styles/footer.module.css";
 
 export const Footer = () => {
     const currentYear = new Date().getFullYear();
 
     return (
-        <footer className="footer">
-            <div className="footer-container">
-                <div className="footer-left">
-                    <div className="footer-logo">
-                        <span className="footer-logo-text">NIAGADS GenomicsDB</span>
+        <footer className={styles["ui-footer"]}>
+            <div className={styles["ui-footer-container"]}>
+                <div className={styles["ui-footer-left"]}>
+                    <div className={styles["ui-footer-logo"]}>
+                        <span className={styles["ui-footer-logo-text"]}>NIAGADS GenomicsDB</span>
                     </div>
-                    <p className="footer-copyright">© {currentYear} NIAGADS. All rights reserved.</p>
+                    <p className={styles["ui-footer-copyright"]}>© {currentYear} NIAGADS. All rights reserved.</p>
                 </div>
 
-                <div className="footer-right">
-                    <nav className="footer-nav">
-                        <Link href="/about" className="footer-link">
+                <div className={styles["ui-footer-right"]}>
+                    <nav className={styles["ui-footer-nav"]}>
+                        <Link href="/about" className={styles["ui-footer-link"]}>
                             About
                         </Link>
-                        <a href="#" className="footer-link">
+                        <a href="#" className={styles["ui-footer-link"]}>
                             Contact
                         </a>
-                        <a href="#" className="footer-link">
+                        <a href="#" className={styles["ui-footer-link"]}>
                             Privacy
                         </a>
-                        <a href="#" className="footer-link">
+                        <a href="#" className={styles["ui-footer-link"]}>
                             Terms
                         </a>
                     </nav>

@@ -1,31 +1,21 @@
+import { AlertCircle, AlertTriangle, Check, CheckCircle, Info, UserCircle, XCircle } from "lucide-react";
 import React, { ReactNode, useMemo } from "react";
-
 import { _get, _hasOwnProperty, _isNA, _isNull } from "@niagads/common";
+
 import { renderTooltip } from "@niagads/ui/client";
-
-import {
-    CheckIcon,
-    CheckCircleIcon,
-    ExclamationCircleIcon,
-    ExclamationTriangleIcon,
-    UserCircleIcon,
-    XCircleIcon,
-} from "@heroicons/react/24/solid";
-
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
 
 export interface TextRenderer<T> {
     props: T;
 }
 
 export const ICONS = {
-    check: CheckIcon,
-    solidCheck: CheckCircleIcon,
-    info: ExclamationCircleIcon,
-    warning: ExclamationTriangleIcon,
-    user: UserCircleIcon,
-    infoOutline: InformationCircleIcon,
-    xMark: XCircleIcon,
+    check: Check,
+    solidCheck: CheckCircle,
+    info: AlertCircle,
+    warning: AlertTriangle,
+    user: UserCircle,
+    infoOutline: Info,
+    xMark: XCircle,
 };
 
 const DEFAULT_NA_STRING = "n/a";
@@ -60,7 +50,7 @@ export const renderWithInfo = (
         return renderTooltip(anchorId, textElement, infoMessage);
     }
     // otherwise draw info icon and attach the tooltip to the icon
-    return renderWithIcon(textElement, <InformationCircleIcon className="info-bubble size-3 ml-1" />, {
+    return renderWithIcon(textElement, <Info className="info-bubble size-3 ml-1" />, {
         prefix: false,
         iconOnly: false,
         tooltip: infoMessage,

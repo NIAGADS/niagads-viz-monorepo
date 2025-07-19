@@ -1,4 +1,3 @@
-import "@niagads/ui/css";
 import "./styles/global.css";
 
 import Table from "./Table";

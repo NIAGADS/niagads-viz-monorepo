@@ -1,7 +1,7 @@
+import { AriaProps, StylingProps } from "./types";
 import React, { ReactNode } from "react";
-import { _get } from "@niagads/common";
-import { Button } from "./Button";
-import { StylingProps } from "./types";
+
+import styles from "./styles/card.module.css";
 
 interface CardBodyProps {
     children: ReactNode | string;
@@ -18,29 +18,63 @@ interface CardProps {
     onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void | null;
     children: ReactNode | string;
     variant: CardVariant;
+    hover?: boolean;
 }
 
-export const CardBody = ({ children }: CardBodyProps) => {
-    return <div className="ui-card-body">{children}</div>;
-};
+export const CardBody = ({ children }: CardBodyProps) => <div className={styles["card-body"]}>{children}</div>;
+export const CardHeader = ({ children }: CardHeaderProps) => <div className={styles["card-header"]}>{children}</div>;
 
-export const CardHeader = ({ children }: CardHeaderProps) => {
-    return <h5 className="ui-card-header">{children}</h5>;
-};
+export const Card = ({
+    href,
+    onClick,
+    children,
+    className,
+    variant = "full",
+    hover = false,
+    role,
+}: CardProps & StylingProps & AriaProps) => {
+    const isClickable = href || onClick;
+    const useHoverStyles = hover || isClickable;
+    const classes = [
+        styles.card,
+        styles[`card-${variant}`],
+        isClickable && styles["card-link"],
+        useHoverStyles && styles["with-hover"],
+        className,
+    ]
+        .filter(Boolean)
+        .join(" ");
 
-export const Card = ({ href, onClick, children, className, variant = "full" }: CardProps & StylingProps) => {
-    const cName = `${href || onClick ? "ui-card ui-card-link" : "ui-card"} ui-card-${variant} ${className}`;
+    const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+        if (href) {
+            window.location.href = href;
+        } else if (onClick) {
+            onClick(event as any);
+        }
+        // else do nothing
+    };
+
     return (
-        <div className={cName}>
-            {href ? (
-                <a href={href}>{children}</a>
-            ) : onClick ? (
-                <Button onClick={onClick} variant="white">
-                    <div className="flex col">{children}</div>
-                </Button>
-            ) : (
-                <div>{children}</div>
-            )}
+        <div className={classes} role={role} onClick={isClickable ? handleClick : undefined}>
+            {children}
         </div>
+    );
+};
+
+interface FeatureCardProps extends Omit<CardProps, "children">, StylingProps, AriaProps {
+    icon: React.ElementType;
+    title: string;
+    description: string;
+}
+
+// note: this assumes the `icon` is a lucide-react icon
+export const FeatureCard = ({ icon, title, description, className, ...cardProps }: FeatureCardProps) => {
+    const Icon = icon;
+    return (
+        <Card {...cardProps} className={[className, styles["feature-card"]].filter(Boolean).join(" ")}>
+            <Icon className={styles["feature-icon"]} size={48} />
+            <h3 className={styles["feature-title"]}>{title}</h3>
+            <p className={styles["feature-description"]}>{description}</p>
+        </Card>
     );
 };

@@ -1,6 +1,8 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useMemo, useState } from "react";
 
+import { Card } from "../Card";
 import { renderWithHelpIcon } from "./HelpIcon";
+import styles from "../styles/tabs.module.css";
 
 export interface TabDef {
     label: string;
@@ -34,9 +36,22 @@ const TabButton = ({ label, id, info, sectionId, isActive, onClick }: TabButtonP
     };
 
     return (
-        <button className={`ui-tab-button ${isSelected ? "ui-active-tab" : ""}`} key={id} onClick={onSelect}>
+        <button
+            key={id}
+            className={`${styles["tab-item"]} ${isSelected ? styles.active : ""}`}
+            onClick={onSelect}
+            role="tab"
+            aria-selected={isSelected}
+            aria-controls={`tabpanel-${id}`}
+        >
             {info
-                ? renderWithHelpIcon(label, "question", info, `${sectionId ? sectionId + "_" : ""}-${id}-info`)
+                ? renderWithHelpIcon(
+                      label,
+                      "question",
+                      info,
+                      `${sectionId ? sectionId + "_" : ""}-${id}-info`,
+                      styles["tab-help-icon"]
+                  )
                 : label}
         </button>
     );
@@ -57,30 +72,30 @@ export const Tabs = ({ sectionId, tabs, width = "full" }: TabsProps) => {
         setSelectedKey(tabId);
     };
 
+    const memoizedTabContent = useMemo(() => {
+        return activeTab ? activeTab.content : null;
+    }, [activeTab?.id]);
+
     return (
         activeTab && (
-            <div className={`w-${width}`}>
-                <div className="ui-tabs-container">
-                    <ul className="ui-tab-list" role="tablist">
-                        {tabs.map((tab) => (
-                            <li className="ui-tab-list-item" key={`li-${tab.id}`}>
-                                <TabButton
-                                    key={`button-${tab.id}`}
-                                    label={tab.label}
-                                    sectionId={sectionId}
-                                    id={tab.id}
-                                    info={tab.info}
-                                    isActive={tab.id === activeTab.id}
-                                    onClick={onTabSelect}
-                                ></TabButton>
-                            </li>
-                        ))}
-                    </ul>
-                    <div className="ui-tab-panel" key={activeTab.id}>
-                        {activeTab.content}
-                    </div>
+            <>
+                <div className={styles["tab-container"]} role="tablist">
+                    {tabs.map((tab) => (
+                        <TabButton
+                            key={`button-${tab.id}`}
+                            label={tab.label}
+                            sectionId={sectionId}
+                            id={tab.id}
+                            info={tab.info}
+                            isActive={tab.id === activeTab.id}
+                            onClick={onTabSelect}
+                        ></TabButton>
+                    ))}
                 </div>
-            </div>
+                <Card variant="full" hover={false} role="tabpanel">
+                    {memoizedTabContent}
+                </Card>
+            </>
         )
     );
 };

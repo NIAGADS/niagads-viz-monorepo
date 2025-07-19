@@ -9,16 +9,30 @@ const meta: Meta<typeof Button> = {
         layout: "centered",
     },
     tags: ["autodocs"],
+    argTypes: {
+        variant: {
+            control: { type: "radio" },
+            options: ["action", "primary", "secondary", "link", "white"],
+            description: "Button style variant",
+        },
+        children: { control: "text", description: "Button label or content" },
+        disabled: { control: "boolean", description: "Disable the button" },
+        onClick: { action: "clicked", description: "Click handler" },
+        className: { control: false },
+    },
+    args: {
+        variant: "action",
+        children: "Example Button",
+        disabled: false,
+        className: "",
+    },
 };
 
 export default meta;
 type Story = StoryObj<typeof Button>;
 
-export const Default: Story = {
+export const Playground: Story = {
     args: {
-        variant: "primary",
-        size: "md",
-        children: "Example Button",
-        //onClick: (event) => alert("I've been clicked!")
+        // All controls are set in meta.args
     },
 };

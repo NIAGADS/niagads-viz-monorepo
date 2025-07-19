@@ -1,5 +1,5 @@
-import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
+import React, { useState } from "react";
 
 import { Autocomplete } from "@niagads/ui/client";
 
@@ -12,16 +12,21 @@ const meta: Meta<typeof Autocomplete> = {
     },
     // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
     tags: ["autodocs"],
+    argTypes: {
+        suggestions: { control: "object", description: "Array of suggestion strings" },
+        onSearch: { action: "searched", description: "Callback for search action" },
+        onValueChange: { action: "valueChanged", description: "Callback for value change" },
+    },
+    args: {
+        suggestions: ["foo", "bar", "baz", "test", "hello", "world"],
+    },
 };
 
 export default meta;
 type Story = StoryObj<typeof Autocomplete>;
-const suggestions = ["foo", "bar", "baz", "test", "hello", "world"];
 
-export const Display: Story = {
+export const Playground: Story = {
     args: {
-        suggestions: suggestions,
-        onSearch: (term) => alert(`Searching for ${term}`),
-        onValueChange: (value) => console.log(`value set as: ${value}`),
+        // suggestions is set in meta.args
     },
 };

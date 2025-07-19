@@ -11,6 +11,9 @@ const meta: Meta<typeof Skeleton> = {
     },
     // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
     tags: ["autodocs"],
+    argTypes: {
+        type: { control: { type: "radio" }, options: ["default", "card", "table"] },
+    },
 };
 
 export default meta;

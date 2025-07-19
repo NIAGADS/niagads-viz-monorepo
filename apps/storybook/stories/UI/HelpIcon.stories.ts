@@ -9,6 +9,15 @@ const meta: Meta<typeof HelpIcon> = {
         layout: "centered",
     },
     tags: ["autodocs"],
+    argTypes: {
+        anchorId: { control: "text" },
+        message: { control: "text" },
+        variant: { control: { type: "radio" }, options: ["alert", "question", "info"] },
+        className: {
+            control: "text",
+            description: "Custom className for the icon wrapper; used primarily to set the icon color",
+        },
+    },
 };
 
 export default meta;
@@ -16,7 +25,9 @@ type Story = StoryObj<typeof HelpIcon>;
 
 export const Default: Story = {
     args: {
+        anchorId: "info",
         message: "Pay attention!",
-        type: "info",
+        variant: "alert",
+        className: "",
     },
 };

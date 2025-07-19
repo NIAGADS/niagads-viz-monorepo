@@ -1,5 +1,4 @@
 import "./globals.css";
-import "@niagads/ui/css";
 
 import { Inter, Lato, Roboto_Mono } from "next/font/google";
 
@@ -7,7 +6,6 @@ import { ConditionalMainLayout } from "@/components/conditional-main-layout";
 import { LoadingProvider } from "@/components/loading-context";
 import type { Metadata } from "next";
 import type React from "react";
-
 // import "@niagads/table/css";
 
 // Add viewport export for better mobile performance
@@ -15,6 +13,7 @@ export const viewport = {
     width: "device-width",
     initialScale: 1,
 };
+
 // Configure Google Fonts
 const inter = Inter({
     subsets: ["latin"],
