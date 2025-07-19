@@ -7,7 +7,7 @@ type ButtonVariants = "default" | "primary" | "link";
 
 interface ButtonProps {
     variant?: ButtonVariants;
-    children: ReactNode | string;
+    children: ReactNode;
     disabled?: boolean;
     onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void | null;
 }

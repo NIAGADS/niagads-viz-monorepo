@@ -8,7 +8,7 @@ import styles from "./styles/alert.module.css";
 interface Alert {
     variant?: AlertVariants;
     message: string;
-    children?: ReactNode | string;
+    children?: ReactNode;
 }
 
 const ICONS = {

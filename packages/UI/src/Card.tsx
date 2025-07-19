@@ -4,11 +4,11 @@ import React, { ReactNode } from "react";
 import styles from "./styles/card.module.css";
 
 interface CardBodyProps {
-    children: ReactNode | string;
+    children: ReactNode;
 }
 
 interface CardHeaderProps {
-    children: ReactNode | string;
+    children: ReactNode;
 }
 
 type CardVariant = "half" | "third" | "two-thirds" | "full";
@@ -16,7 +16,7 @@ type CardVariant = "half" | "third" | "two-thirds" | "full";
 interface CardProps {
     href?: string;
     onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void | null;
-    children: ReactNode | string;
+    children: ReactNode;
     variant: CardVariant;
     hover?: boolean;
 }
