@@ -2,7 +2,11 @@
     font-family: "Inter", sans-serif;
 } */
 
-.cell-badge {
+.nullValue {
+    color: var(--gray-300);
+}
+
+.badge {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     padding-top: 0.25rem;
@@ -10,67 +14,59 @@
     border-radius: 9999px;
 }
 
-.cell-badge-icon {
+.badgeIcon {
     width: 1.25rem;
     height: 1.25rem;
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
 }
 
-.cell-icon-only-badge {
+.iconOnlyBadge {
     width: 1.25rem;
     height: 1.25rem;
     margin-left: auto;
     margin-right: auto;
 }
 
-.cell-spark {
+.spark {
     height: 20px;
     display: inline-block;
 }
 
-.cell-spark-value {
+.sparkValue {
     width: 35px;
     align-self: center;
 }
 
-.cell-spark-bar {
+.sparkBar {
     width: 100px;
 }
 
-.cell-spark-bar-observed {
+.sparkBarObserved {
     background-color: #16a34a; /* Tailwind green-600 */
 }
 
-.cell-spark-bar-remainder {
+.sparkBarRemainder {
     background-color: #d1d5db; /* Tailwind gray-300 */
 }
 
-.cell-link,
-.info-link {
-    color: #1d4ed8; /* Tailwind blue-700 */
-    text-decoration: none;
+.truncatedText {
+    max-width: 300px;
+    word-break: break-word;
 }
 
-.cell-link:hover,
-.info-link:hover {
+
+
+.link:hover,
+.infoLink:hover {
     text-decoration: underline;
 }
 
-.cell-link:visited,
-.info-link:visited {
-    color: #6d28d9; /* Tailwind purple-900 */
-}
 
-.cell-link:active,
-.info-link:active {
-    color: #450a0a; /* Tailwind red-950 */
-}
-
-.info-link {
+.infoLink {
     cursor: pointer;
     text-decoration: underline;
     text-decoration-style: dashed;
-    text-decoration-color: #1d4ed8; /* Tailwind blue-700 */
+    text-decoration-color: --var(--secondary-blue); /* Tailwind blue-700 */
     text-underline-offset: 4px;
 }
