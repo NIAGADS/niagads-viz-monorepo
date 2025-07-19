@@ -8,6 +8,9 @@
     scrollbar-width: none;
     -ms-overflow-style: none;
     gap: 0.25rem;
+    font-family:
+        "Inter", "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana,
+        sans-serif;
 }
 
 .tab-item {

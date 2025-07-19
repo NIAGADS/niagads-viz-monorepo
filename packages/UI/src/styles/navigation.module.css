@@ -6,6 +6,9 @@
     top: 0;
     left: 0;
     border-bottom: 2px solid #f59e42;
+    font-family:
+        "Inter", "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana,
+        sans-serif;
 }
 .ui-nav.light {
     background-color: #fff;
