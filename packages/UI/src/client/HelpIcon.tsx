@@ -1,6 +1,7 @@
 import { AlertCircle, HelpCircle, Info } from "lucide-react";
 import React, { ReactNode } from "react";
 
+import { InlineIcon } from "../InlineIcon";
 import { Tooltip } from "../Tooltip";
 import { _get } from "@niagads/common";
 import styles from "../styles/helpicon.module.css";
@@ -20,11 +21,11 @@ interface HelpIconProps {
 }
 
 export const HelpIcon = ({ anchorId, message, variant }: HelpIconProps) => {
-    const MsgIcon = ICONS[variant] || Info; // fallback to Info
+    const Icon = ICONS[variant] || Info; // fallback to Info
 
     return (
         <Tooltip anchorId={`help-${anchorId}`} content={message}>
-            <MsgIcon className={styles["ui-help-inline-info-bubble"]} />
+            <Icon />
         </Tooltip>
     );
 };
@@ -49,10 +50,5 @@ export const renderWithHelpIcon = (
     message: string,
     anchorId: string
 ) => {
-    return (
-        <div className={styles["ui-help-inline-flex"]}>
-            {textElement}
-            {renderHelpIcon(anchorId, message, variant)}
-        </div>
-    );
+    return <InlineIcon icon={renderHelpIcon(anchorId, message, variant)}> {textElement}</InlineIcon>;
 };
