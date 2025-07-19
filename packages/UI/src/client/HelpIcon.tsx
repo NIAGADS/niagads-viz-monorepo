@@ -11,16 +11,16 @@ const ICONS = {
     info: Info,
 };
 
-type HelpIconType = keyof typeof ICONS;
+type HelpIconVariant = keyof typeof ICONS;
 
 interface HelpIconProps {
     anchorId: string;
     message: ReactNode | string;
-    type: HelpIconType;
+    variant: HelpIconVariant;
 }
 
-export const HelpIcon = ({ anchorId, message, type }: HelpIconProps) => {
-    const MsgIcon = ICONS[type];
+export const HelpIcon = ({ anchorId, message, variant }: HelpIconProps) => {
+    const MsgIcon = ICONS[variant] || Info; // fallback to Info
 
     return (
         <Tooltip anchorId={`help-${anchorId}`} content={message}>
@@ -29,8 +29,8 @@ export const HelpIcon = ({ anchorId, message, type }: HelpIconProps) => {
     );
 };
 
-export const renderHelpIcon = (anchorId: string, message: ReactNode | string, type: HelpIconType) => {
-    return <HelpIcon anchorId={anchorId} message={message} type={type} />;
+export const renderHelpIcon = (anchorId: string, message: ReactNode | string, variant: HelpIconVariant) => {
+    return <HelpIcon anchorId={anchorId} message={message} variant={variant} />;
 };
 
 /**
@@ -39,23 +39,20 @@ export const renderHelpIcon = (anchorId: string, message: ReactNode | string, ty
  * @returns
  */
 export const getIconElement = (key: string) => {
-    const icon = _get(key, ICONS);
-    if (icon === null) {
-        throw Error("Error rendering field: invalid icon `" + key + "`");
-    }
+    const icon = ICONS[key as keyof typeof ICONS] || Info;
     return icon;
 };
 
 export const renderWithHelpIcon = (
     textElement: ReactNode | string,
-    type: HelpIconType,
+    variant: HelpIconVariant,
     message: string,
     anchorId: string
 ) => {
     return (
         <div className={styles["ui-help-inline-flex"]}>
             {textElement}
-            {renderHelpIcon(anchorId, message, type)}
+            {renderHelpIcon(anchorId, message, variant)}
         </div>
     );
 };
