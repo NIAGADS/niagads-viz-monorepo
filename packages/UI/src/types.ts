@@ -1,7 +1,6 @@
-export type ThemeVariant = "secondary" | "light" | "dark" | "accent";
-
 export interface StylingProps {
     className?: string;
+    style?: React.CSSProperties;
 }
 
 export interface AriaProps {
@@ -10,3 +9,6 @@ export interface AriaProps {
     ariaLabeledBy?: string;
     ariaDescribedBy?: string;
 }
+
+// legacy for layout & nav
+export type ThemeVariant = "secondary" | "light" | "dark" | "accent";

@@ -12,3 +12,4 @@ export * from "./TextInput";
 export * from "./LoadingSpinner";
 export * from "./InlineIcon";
 export * from "./Badge";
+export * from "./types";

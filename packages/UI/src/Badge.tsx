@@ -1,31 +1,37 @@
+import React, { ReactNode } from "react";
+
 import { InlineIcon } from "./InlineIcon";
-import React from "react";
 import { StylingProps } from "./types";
 import styles from "./styles/badge.module.css";
 
 interface BadgeProps extends StylingProps {
-    text: string;
-    icon?: React.ElementType;
+    children: ReactNode;
+    icon: ReactNode;
     iconPosition?: "start" | "end";
     variant?: "badge" | "pill";
 }
 
-export const Badge: React.FC<BadgeProps> = ({
-    text,
+export const Badge = ({
+    children,
     icon,
     iconPosition = "start",
     variant = "badge",
     className = "",
-}) => {
+    style = {},
+}: BadgeProps) => {
     const variantClass = variant === "pill" ? styles.pill : styles.badge;
-    const Icon = icon;
+
+    if (icon) {
+        return (
+            <span className={`${variantClass} ${className}`} style={style}>
+                <InlineIcon icon={icon} children={children} iconPosition={iconPosition}></InlineIcon>
+            </span>
+        );
+    }
+
     return (
-        <span className={`${variantClass} ${className}`}>
-            <InlineIcon
-                icon={Icon ? <Icon size={48} /> : null}
-                children={text}
-                iconPosition={iconPosition}
-            ></InlineIcon>
+        <span className={`${variantClass} ${className}`} style={style}>
+            {children}
         </span>
     );
 };
