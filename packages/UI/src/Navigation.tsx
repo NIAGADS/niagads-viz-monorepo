@@ -1,7 +1,8 @@
 import React, { ReactNode } from "react";
 
+import { Info } from "lucide-react";
+import { InlineIcon } from "./InlineIcon";
 import { ThemeVariant } from "./types";
-import { renderInfoIcon } from "./Alert";
 import styles from "./styles/navigation.module.css";
 
 /** TODO:
@@ -161,7 +162,7 @@ const renderNavigationFromConfig = (variant: ThemeVariant, { items, brand, publi
 
 const renderBanner = (message: string) => (
     <div className={styles["ui-nav-banner"]}>
-        {renderInfoIcon()} {message}
+        <InlineIcon icon={<Info size={18} />}>{message}</InlineIcon>
     </div>
 );
 

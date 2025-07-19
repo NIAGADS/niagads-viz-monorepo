@@ -1,38 +1,38 @@
+import { BadgeCheck, Info, OctagonAlert, TriangleAlert } from "lucide-react";
 import React, { ReactNode } from "react";
 
+import { InlineIcon } from "./InlineIcon";
 import { _get } from "@niagads/common";
 import styles from "./styles/alert.module.css";
 
-type AlertVariants = "info" | "warning" | "danger" | "success" | "default";
 interface Alert {
     variant?: AlertVariants;
     message: string;
     children?: ReactNode | string;
 }
 
-export const renderInfoIcon = () => (
-    <svg
-        className={styles["ui-alert-icon"]}
-        aria-hidden="true"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="currentColor"
-        viewBox="0 0 20 20"
-    >
-        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-    </svg>
-);
+const ICONS = {
+    info: Info,
+    error: OctagonAlert,
+    warning: TriangleAlert,
+    success: BadgeCheck,
+};
 
-export const Alert = ({ variant = "default", message, children }: Alert) => {
-    const classes = [styles["ui-alert"], styles[variant]].filter(Boolean).join(" ");
+type AlertVariants = keyof typeof ICONS;
+
+export const Alert = ({ variant = "info", message, children }: Alert) => {
+    const classes = [styles.alert, styles[variant]].filter(Boolean).join(" ");
+
+    const Icon = ICONS[variant] || Info;
 
     return (
         <div className={classes} role="alert">
-            {renderInfoIcon()}
-            <span className={styles["ui-alert-srOnly"]}>{variant}</span>
-            <div>
-                <span className={styles["ui-alert-fontBold"]}>{message}</span>
-                {children && (typeof children === `string` ? <div>{children}</div> : children)}
-            </div>
+            <span className={styles["alert-sr"]}>{variant}</span>
+            <InlineIcon icon={<Icon size={18} />}>
+                <span className={styles["alert-message"]}>{message}</span>
+            </InlineIcon>
+
+            <div>{children && <div className={styles["alert-content"]}>{children}</div>}</div>
         </div>
     );
 };
