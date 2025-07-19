@@ -3,7 +3,7 @@ import React, { ReactNode } from "react";
 
 import styles from "./styles/button.module.css";
 
-type ButtonVariants = "action" | "link";
+type ButtonVariants = "default" | "primary" | "link";
 
 interface ButtonProps {
     variant?: ButtonVariants;
@@ -15,7 +15,7 @@ interface ButtonProps {
 export const Button = ({
     children,
     onClick,
-    variant = "action",
+    variant = "default",
     disabled = false,
     ariaLabel,
     className,
