@@ -1,28 +1,23 @@
-//@ts-nocheck
 import type { Meta, StoryObj } from "@storybook/react";
 
-import Table from "@niagads/table";
-import { TABLE_DEFINTION as table } from "../../../examples/tables/table_large_numeric_values";
+import { PercentageBar } from "@niagads/table";
 
-const meta: Meta<typeof Table> = {
-    title: "NIAGADS-VIZ/Data Vizualization/Table/Large Table",
-    component: Table,
+const meta: Meta<typeof PercentageBar> = {
+    title: "NIAGADS-VIZ/Table/Cell/PercentageBar",
+    component: PercentageBar,
     parameters: {
         // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
-        layout: "fullscreen",
+        layout: "centered",
     },
     // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
     tags: ["autodocs"],
 };
 
 export default meta;
-type Story = StoryObj<typeof Table>;
+type Story = StoryObj<typeof PercentageBar>;
 
 export const Default: Story = {
     args: {
-        id: table.id,
-        columns: table.columns,
-        options: table.options,
-        data: table.data,
+        props: { value: 0.62 },
     },
 };

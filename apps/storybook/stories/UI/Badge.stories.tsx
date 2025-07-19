@@ -12,7 +12,7 @@ const iconOptions = {
 };
 
 const meta: Meta<typeof Badge> = {
-    title: "UI/Badge",
+    title: "NIAGADS-VIZ/UI/Badge",
     component: Badge,
     tags: ["autodocs"],
     argTypes: {

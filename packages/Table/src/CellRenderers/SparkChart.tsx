@@ -24,8 +24,14 @@ export const PercentageBar = <T,>({ props }: TextRenderer<T>) => {
         <div className={styles.sparkContainer}>
             <div className={styles.sparkValue}>{`${formattedValue}`}</div>
             <div className={`${styles.spark} ${styles.sparkBar}`}>
-                <div className={`${styles.sparkBar} ${styles.sparkBarObserved}`} style={{ width: observed }} />
-                <div className={`${styles.sparkBar} ${styles.sparkBarRemainder}`} style={{ width: remainder }} />
+                <div
+                    className={`${styles.spark} ${styles.sparkBar} ${styles.sparkBarObserved}`}
+                    style={{ width: observed }}
+                />
+                <div
+                    className={`${styles.spark} ${styles.sparkBar} ${styles.sparkBarRemainder}`}
+                    style={{ width: remainder }}
+                />
             </div>
         </div>
     );

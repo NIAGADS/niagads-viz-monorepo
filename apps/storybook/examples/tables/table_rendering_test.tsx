@@ -55,9 +55,10 @@ export const TABLE_DEFINTION: Table = {
             website: { value: "FedEx" },
             state: {
                 value: "FAIL",
-                icon: "xMark",
+                icon: "warning",
                 color: "red",
                 borderColor: "red",
+                backgroundColor: "#ffe5e5",
                 tooltip: "This one did't pass :(",
             },
         },

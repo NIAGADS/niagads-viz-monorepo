@@ -1,7 +1,7 @@
+import { HelpIcon, renderTooltip, renderWithHelpIcon } from "@niagads/ui/client";
 import React, { ReactNode, useState } from "react";
 import { TextRenderer, buildElementStyle, renderNullValue } from "./TextRenderer";
 import { _deepCopy, _get, _hasOwnProperty, _isJSON, _isNA, _isNull } from "@niagads/common";
-import { renderTooltip, renderWithHelpIcon } from "@niagads/ui/client";
 
 import { StylingProps } from "@niagads/ui";
 import styles from "../styles/cell.module.css";
@@ -29,9 +29,9 @@ interface TextWithInfoProps {
 
 export const TextWithInfo = ({ text, message, anchorId, asInfoLink }: TextWithInfoProps) => {
     if (asInfoLink) {
-        return <>{renderTooltip(anchorId, text, message)}</>;
+        const infoLink = <div className={styles.infoLink}>{text}</div>;
+        return <>{renderTooltip(anchorId, infoLink, message)}</>;
     }
-
     return renderWithHelpIcon(text, "info", message, anchorId);
 };
 

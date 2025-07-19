@@ -1,10 +1,12 @@
+//@ts-nocheck
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { PercentageBar } from "@niagads/table";
+import Table from "@niagads/table";
+import { TABLE_DEFINTION as table } from "../../examples/tables/table_rendering_test";
 
-const meta: Meta<typeof PercentageBar> = {
-    title: "NIAGADS-VIZ/Text/PercentageBar",
-    component: PercentageBar,
+const meta: Meta<typeof Table> = {
+    title: "NIAGADS-VIZ/Table/Rendering Test Table",
+    component: Table,
     parameters: {
         // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
         layout: "centered",
@@ -14,10 +16,13 @@ const meta: Meta<typeof PercentageBar> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof PercentageBar>;
+type Story = StoryObj<typeof Table>;
 
 export const Default: Story = {
     args: {
-        props: { value: 0.62 },
+        id: table.id,
+        columns: table.columns,
+        options: table.options,
+        data: table.data,
     },
 };
