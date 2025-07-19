@@ -13,6 +13,10 @@ const meta: Meta<typeof HelpIcon> = {
         anchorId: { control: "text" },
         message: { control: "text" },
         variant: { control: { type: "radio" }, options: ["alert", "question", "info"] },
+        className: {
+            control: "text",
+            description: "Custom className for the icon wrapper; used primarily to set the icon color",
+        },
     },
 };
 
@@ -24,5 +28,6 @@ export const Default: Story = {
         anchorId: "info",
         message: "Pay attention!",
         variant: "alert",
+        className: "",
     },
 };
