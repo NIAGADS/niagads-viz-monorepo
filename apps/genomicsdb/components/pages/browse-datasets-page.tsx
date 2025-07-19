@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Download, Filter, Search } from "lucide-react";
-import { EnhancedSearchComponent } from "../enhanced-search-component";
-import { ActionButton } from "@niagads/ui";
 import "../table.css";
+
+import { Download, Filter, Search } from "lucide-react";
+
+import { Button } from "@niagads/ui";
+import { EnhancedSearchComponent } from "../enhanced-search-component";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export function BrowseDatasetsPage() {
     const [selectedDatasets, setSelectedDatasets] = useState<Set<string>>(new Set());
@@ -76,11 +78,11 @@ export function BrowseDatasetsPage() {
                     </p>
                 </div>
                 <div className="action-buttons">
-                    <ActionButton>
+                    <Button>
                         <Download size={16} aria-hidden="true" />
                         Export
-                    </ActionButton>
-                    <ActionButton>Share</ActionButton>
+                    </Button>
+                    <Button>Share</Button>
                 </div>
             </div>
 
