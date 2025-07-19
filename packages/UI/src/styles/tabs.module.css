@@ -1,54 +1,32 @@
 /* Renamed from tabs.css for CSS Modules */
-.ui-tabs-container {
-    position: relative;
-    right: 0;
-}
 
-.ui-tab-list {
+.tab-container {
     display: flex;
-    flex-wrap: wrap;
-    padding-left: 0.375rem;
-    padding-right: 0.375rem;
-    padding-top: 0.375rem;
-    padding-bottom: 0.375rem;
-    list-style: none;
-    border-radius: 0.375rem;
-    background-color: rgba(59, 130, 246, 0.05);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
 }
 
-.ui-tab-list-item {
-    z-index: 30;
-    margin-inline-end: 0.5rem;
-}
-
-.ui-tab-list-item .ui-tab-button {
+.tab-item {
+    padding: 1rem 1.5rem;
     cursor: pointer;
-    display: inline-block;
-    font-weight: 600;
-    text-align: center;
-    padding: 0.5rem 1rem;
-    color: #9ca3af;
-    border-bottom: 2px solid #9ca3af;
-    border-radius: 0.125rem 0.125rem 0 0;
-    transition:
-        color 0.2s,
-        border-color 0.2s,
-        background 0.2s;
-}
-.ui-tab-list-item .ui-tab-button:hover {
-    color: #3b82f6;
-    border-bottom-color: #f59e42;
-}
-.ui-tab-list-item .ui-tab-button.ui-active-tab {
-    cursor: default;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
-    color: #1e293b;
-    border-bottom-color: #f59e42;
-    background-color: rgba(245, 158, 66, 0.3);
+    border-bottom: 2px solid transparent;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
 }
 
-.ui-tab-panel {
-    width: 100%;
-    padding: 1rem;
-    border-radius: 0.5rem;
+.tab-item:hover {
+    background-color: var(--hover-bg);
+    color: var(--text-primary);
+}
+
+.tab-item.active {
+    border-bottom-color: var(--primary-blue);
+    color: var(--primary-blue);
+    background-color: var(--active-bg);
 }

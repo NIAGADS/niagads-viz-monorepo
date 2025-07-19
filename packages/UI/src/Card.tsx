@@ -1,7 +1,7 @@
+import { AriaProps, StylingProps } from "./types";
 import React, { ReactNode } from "react";
 
 import { Button } from "./Button";
-import { StylingProps } from "./types";
 import { _get } from "@niagads/common";
 import styles from "./styles/card.module.css";
 
@@ -20,7 +20,7 @@ interface CardProps {
     onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void | null;
     children: ReactNode | string;
     variant: CardVariant;
-    hover: boolean;
+    hover?: boolean;
 }
 
 export const CardBody = ({ children }: CardBodyProps) => {
@@ -38,7 +38,8 @@ export const Card = ({
     className,
     variant = "full",
     hover = false,
-}: CardProps & StylingProps) => {
+    role,
+}: CardProps & StylingProps & AriaProps) => {
     const cName = [
         href || onClick ? styles.card + " " + styles["card-link"] : styles.card,
         styles[`card-${variant}`],
@@ -48,7 +49,7 @@ export const Card = ({
         .filter(Boolean)
         .join(" ");
     return (
-        <div className={cName}>
+        <div className={cName} role={role}>
             {href ? (
                 <a href={href}>{children}</a>
             ) : onClick ? (
