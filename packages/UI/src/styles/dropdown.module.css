@@ -1,52 +1,64 @@
-/* Renamed from dropdown.css for CSS Modules */
-.ui-dropdown-container {
+.dropdown {
     position: relative;
     display: inline-block;
-    text-align: left;
+    min-width: 160px;
+    font-size: 1rem;
 }
 
-.ui-dropdown-button {
-    display: inline-flex;
+.toggle {
     width: 100%;
-    justify-content: center;
-    gap: 0.375rem;
-    border-radius: 0.375rem;
-    background-color: #fff;
-    padding: 0.5rem 0.75rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #111827;
-    box-shadow:
-        0 1px 2px 0 rgba(0, 0, 0, 0.05),
-        0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 1rem;
+    background: #fff;
     border: 1px solid #d1d5db;
-    outline: none;
-    transition:
-        background 0.2s,
-        box-shadow 0.2s,
-        border-color 0.2s;
-}
-.ui-dropdown-button:hover {
-    background-color: #f9fafb;
-}
-.ui-dropdown-button:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 2px #3b82f6;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: border-color 0.2s;
 }
 
-.ui-dropdown-items {
+.toggle:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+.placeholder {
+    color: #9ca3af;
+}
+
+.arrow {
+    margin-left: 0.5rem;
+    font-size: 0.8em;
+}
+
+.menu {
     position: absolute;
+    left: 0;
     right: 0;
     z-index: 10;
-    margin-top: 0.5rem;
-    width: 14rem;
-    transform-origin: top right;
+    background: #fff;
+    border: 1px solid #d1d5db;
     border-radius: 0.375rem;
-    background-color: #fff;
-    box-shadow:
-        0 10px 15px -3px rgba(0, 0, 0, 0.1),
-        0 4px 6px -4px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    outline: none;
-    transition: box-shadow 0.2s;
+    margin-top: 0.25rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 0.25rem 0;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.option {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.option:hover {
+    background: #f3f4f6;
+}
+
+.active {
+    background: #2563eb;
+    color: #fff;
+    font-weight: 500;
 }
