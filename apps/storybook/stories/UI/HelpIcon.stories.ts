@@ -9,6 +9,11 @@ const meta: Meta<typeof HelpIcon> = {
         layout: "centered",
     },
     tags: ["autodocs"],
+    argTypes: {
+        anchorId: { control: "text" },
+        message: { control: "text" },
+        variant: { control: { type: "radio" }, options: ["alert", "question", "info"] },
+    },
 };
 
 export default meta;

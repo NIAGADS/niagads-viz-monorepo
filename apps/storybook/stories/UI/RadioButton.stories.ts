@@ -9,6 +9,11 @@ const meta: Meta<typeof RadioButton> = {
         layout: "centered",
     },
     tags: ["autodocs"],
+    argTypes: {
+        variant: { control: { type: "radio" }, options: ["primary", "secondary"] },
+        label: { control: "text" },
+        disabled: { control: "boolean" },
+    },
 };
 
 export default meta;

@@ -11,6 +11,13 @@ const meta: Meta<typeof Select> = {
     },
     // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
     tags: ["autodocs"],
+    argTypes: {
+        fields: { control: "object" },
+        label: { control: "text" },
+        id: { control: "text" },
+        inline: { control: "boolean" },
+        variant: { control: { type: "radio" }, options: ["outline", "filled"] },
+    },
 };
 
 export default meta;
