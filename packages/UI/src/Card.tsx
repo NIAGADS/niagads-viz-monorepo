@@ -20,21 +20,30 @@ interface CardProps {
     onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void | null;
     children: ReactNode | string;
     variant: CardVariant;
+    hover: boolean;
 }
 
 export const CardBody = ({ children }: CardBodyProps) => {
-    return <div className={styles["ui-card-body"]}>{children}</div>;
+    return <div className={styles["card-body"]}>{children}</div>;
 };
 
 export const CardHeader = ({ children }: CardHeaderProps) => {
-    return <h5 className={styles["ui-card-header"]}>{children}</h5>;
+    return <h5 className={styles["card-header"]}>{children}</h5>;
 };
 
-export const Card = ({ href, onClick, children, className, variant = "full" }: CardProps & StylingProps) => {
+export const Card = ({
+    href,
+    onClick,
+    children,
+    className,
+    variant = "full",
+    hover = false,
+}: CardProps & StylingProps) => {
     const cName = [
-        href || onClick ? styles["ui-card"] + " " + styles["ui-card-link"] : styles["ui-card"],
-        styles[`ui-card-${variant}`],
+        href || onClick ? styles.card + " " + styles["card-link"] : styles.card,
+        styles[`card-${variant}`],
         className,
+        hover && styles["with-hover"],
     ]
         .filter(Boolean)
         .join(" ");
@@ -43,8 +52,8 @@ export const Card = ({ href, onClick, children, className, variant = "full" }: C
             {href ? (
                 <a href={href}>{children}</a>
             ) : onClick ? (
-                <Button onClick={onClick} variant="white">
-                    <div className={styles["ui-card-button-content"]}>{children}</div>
+                <Button onClick={onClick} variant="link">
+                    <div className={styles["card-button-content"]}>{children}</div>
                 </Button>
             ) : (
                 children

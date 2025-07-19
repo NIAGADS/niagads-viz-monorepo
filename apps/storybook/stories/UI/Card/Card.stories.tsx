@@ -3,9 +3,10 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { Default as CardBodyStory } from "./CardBody.stories";
 import { Default as CardHeaderStory } from "./CardHeader.stories";
-//@ts-nocheck
-// b/c of https://github.com/storybookjs/storybook/issues/23170 issue w/subcomponets w/children
+// @ts-nocheck
 import React from "react";
+
+// no-check b/c of https://github.com/storybookjs/storybook/issues/23170 issue w/subcomponets w/children
 
 const meta: Meta<typeof Card> = {
     title: "NIAGADS-VIZ/UI/Card",
@@ -24,13 +25,13 @@ export const Default: Story = {
     name: "Default Card",
     render: (args) => (
         <Card {...args}>
-            <div>Placeholder until we can resolve the CardHeader/Body issue see Card.stories.tsx</div>
-            {/*<CardHeader {...CardHeaderStory.args} />
-            <CardBody {...CardBodyStory.args} />*/}
+            <CardHeader>{CardHeaderStory.args!.children!} </CardHeader>
+            <CardBody>{CardBodyStory.args!.children}</CardBody>
         </Card>
     ),
     args: {
         variant: "half",
+        hover: false,
     },
 };
 
@@ -39,6 +40,7 @@ export const LinkCard: Story = {
     name: "Pressable Card: Link",
     args: {
         variant: "half",
+        hover: true,
     },
 };
 
@@ -47,6 +49,7 @@ export const ButtonCard: Story = {
     name: "PressableCard: Button",
     args: {
         variant: "half",
+        hover: true,
         onClick: (event) => alert("I've been clicked!"),
     },
 };
