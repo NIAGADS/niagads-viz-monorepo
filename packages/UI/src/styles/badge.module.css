@@ -2,9 +2,9 @@
     display: inline-flex;
     align-items: center;
     padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
-    background-color: #e5e7eb; /* Tailwind gray-200 */
-    color: #374151; /* Tailwind gray-700 */
+    border-radius: var(--border-radius-md);
+    background-color: var(--surface); 
+    border-color: var(--dark-blue);
     font-size: 0.875rem;
     font-weight: 500;
     gap: 0.5rem;
@@ -14,8 +14,9 @@
     display: inline-flex;
     align-items: center;
     padding: 0.25rem 1.25rem;
-    border-radius: 9999px;
-    background-color: #2563eb; /* Tailwind blue-600 */
+    border-radius: var(--border-radius-lg);
+    border-color: var(--dark-blue);
+    background-color: var(--surface); 
     color: #fff;
     font-size: 0.875rem;
     font-weight: 600;
