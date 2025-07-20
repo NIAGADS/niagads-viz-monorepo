@@ -13,17 +13,17 @@ interface PaginationControlsProps {
 const __generatePageSizeOptions = (nRows: number) => {
     const nearestTenth = Math.ceil(nRows / 10) * 10;
 
-    if (nearestTenth >= 500) return [10, 20, 30, 40, 50, 100, 500];
-    else if (nearestTenth >= 100) return [10, 20, 30, 40, 50, 100];
-    else if (nearestTenth >= 50)
-        return [10, 20, 30, 40, 50, nRows]; // range is up to but not including end
+    let intervals = [nRows];
+    if (nearestTenth >= 500) intervals = [10, 20, 30, 40, 50, 100, 500];
+    else if (nearestTenth >= 100) intervals = [10, 20, 30, 40, 50, 100];
+    else if (nearestTenth >= 50) intervals = [10, 20, 30, 40, 50, nRows];
     else if (nearestTenth >= 10 && nRows >= 10) {
         const options = range(10, nearestTenth + 10, 10);
         options.push(nRows);
-        return options;
+        intervals = options;
     }
 
-    return [nRows];
+    return intervals.filter((v, i, a) => a.indexOf(v) === i);
 };
 
 export const PaginationControls = ({ table }: PaginationControlsProps) => {
