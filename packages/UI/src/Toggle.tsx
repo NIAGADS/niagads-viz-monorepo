@@ -1,4 +1,5 @@
-import React from "react";
+import React, { ReactNode } from "react";
+
 import { StylingProps } from "./types";
 import styles from "./styles/toggle.module.css";
 
@@ -10,6 +11,12 @@ interface ToggleProps extends StylingProps {
     disabled?: boolean;
     label?: string;
     variant: ToggleVariant;
+    truncateLabel?: boolean;
+}
+
+function truncate(label: string, maxLength = 15): string {
+    if (label.length <= maxLength) return label;
+    return label.slice(0, maxLength) + "...";
 }
 
 export const Toggle = ({
@@ -18,9 +25,12 @@ export const Toggle = ({
     disabled = false,
     label = "",
     variant = "default",
+    truncateLabel = false,
     className = "",
     style = {},
 }: ToggleProps) => {
+    const displayLabel = truncateLabel ? truncate(label) : label;
+    const isTruncated = label !== displayLabel;
     return (
         <label className={`${styles.toggleSwitch} ${className}`} style={style}>
             <input
@@ -31,27 +41,27 @@ export const Toggle = ({
                 className={styles.toggleInput}
             />
             <span className={`${styles.toggleSlider} ${variant !== "default" ? styles[variant] : ""}`} />
-            {label && <span className={styles.toggleLabel}>{label}</span>}
+            {label && (
+                <span className={styles.toggleLabel} title={isTruncated ? label : undefined}>
+                    {displayLabel}
+                </span>
+            )}
         </label>
     );
 };
 
-export interface ToggleGroupProps {
-    toggles: (ToggleProps & { key: string | number })[];
-    className?: string;
-    style?: React.CSSProperties;
+export interface ToggleGroupProps extends StylingProps {
+    children: ReactNode;
+    asGrid: boolean;
 }
 
-export const ToggleGroup: React.FC<ToggleGroupProps> = ({ toggles, className = "", style = {} }) => {
-    const isGrid = toggles.length > 5;
+export const ToggleGroup = ({ children, asGrid = false, className = "", style = {} }: ToggleGroupProps) => {
     return (
         <div
-            className={`${styles.toggleGroup} ${isGrid ? styles.toggleGroupGrid : styles.toggleGroupColumn} ${className}`}
+            className={`${styles.toggleGroup} ${asGrid ? styles.toggleGroupGrid : styles.toggleGroupColumn} ${className}`}
             style={style}
         >
-            {toggles.map(({ key, ...toggleProps }) => (
-                <Toggle key={key} {...toggleProps} />
-            ))}
+            {children}
         </div>
     );
 };

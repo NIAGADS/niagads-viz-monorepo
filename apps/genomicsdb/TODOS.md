@@ -40,3 +40,7 @@ resolve action-button.css and record.css
   },
 }
 ```
+
+## NOTES
+
+* See Card.tsx and Button.tsx in UI for how to allow aria-* and role to be passed to a custom component

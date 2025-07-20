@@ -8,7 +8,6 @@
 .pagination-control-summary {
     align-self: center;
     font-size: 0.875rem;
-    color: #111827; /* Tailwind gray-900 */
     padding-left: 0.5rem;
     padding-right: 0.5rem;
 }
@@ -31,4 +30,13 @@
     justify-content: flex-end;
     gap: 0.5rem;
     margin: 0.5rem;
+}
+
+.column-controls-container {
+    width: 200px;
+}
+
+.column-controls-container,
+.column-controls-toggle-container {
+    padding: 0.5rem;
 }

@@ -4,7 +4,7 @@ import { StylingProps } from "./types";
 import styles from "./styles/button.module.css";
 
 type ButtonVariants = "default" | "icon";
-type ButtonColorVariants = "default" | "primary" | "white";
+export type ButtonColorVariants = "default" | "primary" | "white";
 
 interface ButtonProps extends StylingProps {
     variant?: ButtonVariants;
@@ -21,7 +21,7 @@ export const Button = ({
     color = "default",
     disabled = false,
     className,
-    id,
+    id, // FIXME: look into whether id is naturally included in the ...rest from the HTMLAttributes
     ...rest
 }: ButtonProps & React.HTMLAttributes<HTMLButtonElement>) => {
     let classes = [styles.button, styles[variant], color !== "default" && styles[color]].filter(Boolean).join(" ");
