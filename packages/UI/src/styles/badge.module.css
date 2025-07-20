@@ -2,25 +2,17 @@
     display: inline-flex;
     align-items: center;
     padding: 0.25rem 0.75rem;
-    border-radius: var(--border-radius-md);
+    border-radius: var(--border-radius-lg);
     background-color: var(--surface); 
     border-color: var(--dark-blue);
     font-size: 0.875rem;
     font-weight: 500;
     gap: 0.5rem;
+    border: 1px solid;
 }
 
-.pill {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.25rem 1.25rem;
-    border-radius: var(--border-radius-lg);
-    border-color: var(--dark-blue);
-    background-color: var(--surface); 
-    color: #fff;
-    font-size: 0.875rem;
-    font-weight: 600;
-    gap: 0.5rem;
+.badge.pill {
+    border-radius: 20px;
 }
 
 .icon {
