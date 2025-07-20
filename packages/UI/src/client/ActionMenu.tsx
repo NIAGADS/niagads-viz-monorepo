@@ -1,18 +1,21 @@
 import React, { ReactNode, useEffect, useRef, useState } from "react";
 
+import { Button } from "../Button";
+import { InlineIcon } from "../InlineIcon";
 import { StylingProps } from "../types";
 import styles from "../styles/actionmenu.module.css";
 
 interface ActionMenuProps extends StylingProps {
-    onChange: (value: string) => void;
     label: string;
+    icon: React.ElementType;
     children: ReactNode;
 }
 
-export const ActionMenu = ({ label, children, className = "", style = {} }: ActionMenuProps) => {
+export const ActionMenu = ({ label, icon, children, className = "", style = {} }: ActionMenuProps) => {
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
     const buttonId = `actionmenu-toggle-${Math.random().toString(36).substr(2, 9)}`;
+    const Icon = icon;
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -26,16 +29,10 @@ export const ActionMenu = ({ label, children, className = "", style = {} }: Acti
 
     return (
         <div className={`${styles.actionMenu} ${className}`} style={style} ref={ref}>
-            <button
-                id={buttonId}
-                className={styles.toggle}
-                onClick={() => setOpen((o) => !o)}
-                type="button"
-                aria-expanded={open}
-            >
-                {label}
+            <Button id={buttonId} className={styles.toggle} onClick={() => setOpen((o) => !o)} aria-expanded={open}>
+                {icon ? <InlineIcon icon={<Icon size={18} />}>{label}</InlineIcon> : label}
                 <span className={styles.arrow}>&#9662;</span>
-            </button>
+            </Button>
             {open && (
                 <div className={styles.menu} style={{ display: open ? "block" : "none" }}>
                     {children}
