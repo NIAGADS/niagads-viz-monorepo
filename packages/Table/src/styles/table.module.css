@@ -153,36 +153,3 @@
     width: 1rem;
     height: 1rem;
 }
-
-/* ROW SELECTION CONTROLS */
-
-.row-selection-header {
-    display: inline-flex;
-    align-items: center;
-}
-
-.row-selection-header-text {
-    margin-left: 1rem;
-}
-
-.row-selection-controls {
-    display: flex;
-}
-
-.row-selection-sidebar {
-    width: 200px;
-}
-
-.row-selection-sidebar .toggle {
-    cursor: pointer;
-}
-
-.row-selection-items {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    overflow-x: scroll;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    font-size: 0.875rem;
-}

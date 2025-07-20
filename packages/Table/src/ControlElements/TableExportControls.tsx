@@ -99,27 +99,3 @@ export const TableExportControls = ({ isFiltered, onSubmit }: ExportMenuOptions)
         </ActionMenu>
     );
 };
-/*
-
-                        <Button>Export</Button>
-                    </div>
-
- <div className="export-control-container">
-            <Button color="white">
-                <Download className="icon-button"></Download>
-                <span className="ml-2 uppercase">Export</span>
-            </Button>
-
-            <div className="hidden dropdown-menu">
-                <div
-                    className="dropdown-menu-button"
-                    aria-labelledby={`${formId}-headlessui-menu-button}`}
-                    id={`${formId}-headlessui-menu-items`}
-                    role="menu"
-                >
-                    <div className="dropdown-menu-item-container">
-                    
-                    </div>
-                </div>
-            </div>
-        </div>*/

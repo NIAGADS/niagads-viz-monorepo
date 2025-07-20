@@ -132,32 +132,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
             const multiSelect: boolean = !!options?.rowSelect?.enableMultiRowSelect;
             columnDefs.push({
                 id: "select-col",
-                header: ({ table }) =>
-                    multiSelect ? (
-                        <div className={styles["row-selection-header"]}>
-                            <Tooltip anchorId={`${id}-select-col-button}`} content="Reset selected rows">
-                                <Button
-                                    color="primary"
-                                    variant="icon"
-                                    disabled={
-                                        Object.keys(table.getState().rowSelection).length === 0
-                                        // FIXME: !table.getIsSomeRowsSelected() - not working in next.js
-                                    }
-                                    onClick={() => {
-                                        table.resetRowSelection(true);
-                                    }}
-                                >
-                                    <TrashIcon
-                                        className={`${styles["column-header-icon"]} ${styles.button}`}
-                                    ></TrashIcon>
-                                </Button>
-                            </Tooltip>
-
-                            <span className={styles["row-selection-header-text"]}>{options?.rowSelect?.header}</span>
-                        </div>
-                    ) : (
-                        options?.rowSelect?.header
-                    ),
+                header: ({ table }) => options?.rowSelect?.header,
                 enableHiding: false,
                 enableSorting: true, // FIXME: enable sorting doesn't seem to work / header.canSort() returns false
                 meta: { description: options?.rowSelect?.description },
@@ -328,11 +303,14 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
                     <RowSelectionControls
                         selectedRows={table.getSelectedRowModel().rows}
                         displayColumn={options.rowSelect?.rowId!} // if row select is enabled, rowId must be defined
-                        onToggleShowSelected={() => {
+                        onToggleSelectedFilter={() => {
                             if (showOnlySelected) {
                                 setColumnFilters([]);
                             }
                             setShowOnlySelected(!showOnlySelected);
+                        }}
+                        onRemoveAll={() => {
+                            table.resetRowSelection(true);
                         }}
                     />
                 </div>

@@ -13,3 +13,4 @@ export * from "./LoadingSpinner";
 export * from "./InlineIcon";
 export * from "./Badge";
 export * from "./Toggle";
+export * from "./FilterChip";
