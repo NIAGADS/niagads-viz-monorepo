@@ -3,6 +3,9 @@
 .table-outer-container {
     width: 100%;
     overflow-x: auto;
+      font-family:
+        var(--font-inter), "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana,
+        sans-serif;
 }
 
 .table-container {
@@ -10,7 +13,7 @@
     overflow: auto;
     border: 1px solid var(--niagads-table-border);
     background-color: var(--niagads-table-surface);
-    border-radius: 12px;
+    border-radius: 12px;  
 }
 
 .table-layout {
@@ -33,9 +36,8 @@
 }*/
 
 .table-text {
-    /*font-size: 0.875rem;*/
+    font-size: 0.8rem;
     text-align: left;
-    /*color: var(--niagads-table-primary);*/
     direction: ltr;
 }
 
