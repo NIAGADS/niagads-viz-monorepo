@@ -22,6 +22,7 @@ export const renderRecordTitle = (
     externalUrl: string,
     recordType: RecordType
 ) => {
+    // TODO: title for the link indicating which external resource (depending on record type) this will take you to
     return (
         <div className="record-title">
             <span className={`record-type-badge ${recordType}`}>{displayId}</span>
