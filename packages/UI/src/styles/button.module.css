@@ -77,18 +77,18 @@
 }
 
 
-.button.link {
+.button.white {
     border-color: #fff;
     color: #3b82f6; /* primary */
     background-color: #fff;
 }
 
-.button.link:disabled {
+.button.white:disabled {
     color: #64748b; /* slate-500 */
     cursor: not-allowed;
 }
 
-.button.link:hover {
+.button.white:hover {
     background-color: var(--gray-50);
     border-color: var(--gray-50);
     color: #1d4ed8; /* blue-700 */

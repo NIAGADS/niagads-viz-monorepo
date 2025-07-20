@@ -4,6 +4,7 @@ import React, { useMemo, useState } from "react";
 
 import { Table as ReactTable } from "@tanstack/react-table";
 import range from "lodash.range";
+import styles from "../styles/controls.module.css";
 
 interface PaginationControlsProps {
     table: ReactTable<any>;
@@ -41,7 +42,7 @@ export const PaginationControls = ({ table }: PaginationControlsProps) => {
 
     return (
         <>
-            <div className="pagination-control-container" aria-label="pagination">
+            <div className={styles["pagination-control-container"]} aria-label="pagination">
                 <Select
                     defaultValue={pageSize.toString()}
                     fields={pageSizeOptions}
@@ -51,20 +52,26 @@ export const PaginationControls = ({ table }: PaginationControlsProps) => {
                     label="Results per page"
                     id="pages"
                     inline
-                    variant="plain"
+                    variant="outline"
                 />
-                <div className="pagination-control-summary">
+                <div className={styles["pagination-control-summary"]}>
                     {minDisplayedRow} - {maxDisplayedRow} of {nRows}
                 </div>
-                <Button variant="link" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
-                    <ChevronLeft
-                        className={`icon-button stroke-1 ${!table.getCanPreviousPage() ? "icon-disabled" : "stroke-black"}`}
-                    ></ChevronLeft>
+                <Button
+                    color="default"
+                    variant="icon"
+                    onClick={() => table.previousPage()}
+                    disabled={!table.getCanPreviousPage()}
+                >
+                    <ChevronLeft></ChevronLeft>
                 </Button>
-                <Button variant="link" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-                    <ChevronRight
-                        className={`icon-button stroke-1 ${!table.getCanNextPage() ? "icon-disabled" : "stroke-black"}`}
-                    ></ChevronRight>
+                <Button
+                    color="default"
+                    variant="icon"
+                    onClick={() => table.nextPage()}
+                    disabled={!table.getCanNextPage()}
+                >
+                    <ChevronRight></ChevronRight>
                 </Button>
             </div>
         </>

@@ -3,8 +3,8 @@ import React, { ReactNode } from "react";
 
 import styles from "./styles/button.module.css";
 
-type ButtonVariants = "default" | "link" | "icon";
-type ButtonColorVariants = "default" | "primary";
+type ButtonVariants = "default" | "icon";
+type ButtonColorVariants = "default" | "primary" | "white";
 
 interface ButtonProps {
     variant?: ButtonVariants;
