@@ -1,44 +1,62 @@
 .toggleSwitch {
-  display: inline-flex;
-  align-items: center;
-  cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
 }
 .toggleInput {
-  display: none;
+    display: none;
 }
 .toggleSlider {
-  width: 40px;
-  height: 20px;
-  background: #ccc;
-  border-radius: 20px;
-  position: relative;
-  transition: background 0.2s;
-  margin-right: 8px;
-  display: inline-block;
+    width: 40px;
+    height: 20px;
+    background: #ccc;
+    border-radius: 20px;
+    position: relative;
+    transition: background 0.2s;
+    margin-right: 8px;
+    display: inline-block;
 }
 .toggleInput:checked + .toggleSlider {
-  background: #4ade80;
+    background: #4ade80;
 }
 .toggleInput:checked + .toggleSlider.primary {
-  background: var(--secondary-blue);
+    background: var(--secondary-blue);
 }
-
 
 .toggleSlider:before {
-  content: "";
-  position: absolute;
-  left: 2px;
-  top: 2px;
-  width: 16px;
-  height: 16px;
-  background: #fff;
-  border-radius: 50%;
-  transition: transform 0.2s;
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.2s;
 }
 .toggleInput:checked + .toggleSlider:before {
-  transform: translateX(20px);
+    transform: translateX(20px);
 }
 .toggleLabel {
-  font-size: 0.95em;
-  color: #222;
+    font-size: 0.95em;
+    color: #222;
+}
+.toggleGroup {
+    width: 100%;
+    gap: 12px;
+}
+
+.toggleGroupColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.toggleGroupGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: minmax(40px, auto);
+    gap: 16px;
+    max-width: 420px;
+    /* 3 columns * 140px each (example width) */
 }

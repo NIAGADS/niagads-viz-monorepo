@@ -35,3 +35,23 @@ export const Toggle = ({
         </label>
     );
 };
+
+export interface ToggleGroupProps {
+    toggles: (ToggleProps & { key: string | number })[];
+    className?: string;
+    style?: React.CSSProperties;
+}
+
+export const ToggleGroup: React.FC<ToggleGroupProps> = ({ toggles, className = "", style = {} }) => {
+    const isGrid = toggles.length > 5;
+    return (
+        <div
+            className={`${styles.toggleGroup} ${isGrid ? styles.toggleGroupGrid : styles.toggleGroupColumn} ${className}`}
+            style={style}
+        >
+            {toggles.map(({ key, ...toggleProps }) => (
+                <Toggle key={key} {...toggleProps} />
+            ))}
+        </div>
+    );
+};
