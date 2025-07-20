@@ -1,22 +1,32 @@
-import { Button, Checkbox } from "@niagads/ui";
 import React, { useEffect, useId, useState } from "react";
+import { Toggle, ToggleGroup } from "@niagads/ui";
 
+import { ActionMenu } from "@niagads/ui/client";
 import { Column } from "@tanstack/react-table";
 import { Columns3 } from "lucide-react";
 import { GenericColumn } from "../Column";
 import { TableRow } from "../TableProperties";
-import { _get } from "@niagads/common";
 
 interface ColumnControlsProps {
     columns: Column<TableRow, unknown>[];
     onSelect: (col: GenericColumn) => void;
 }
 
-// working from https://www.creative-tim.com/twcomponents/component/pure-css-dropdown-using-focus-within
-// idea to create a drop down menu w/select which data and which format
-
 export const ColumnControls = ({ columns, onSelect }: ColumnControlsProps) => {
     return (
+        <ActionMenu
+            onChange={function (value: string): void {
+                throw new Error("Function not implemented.");
+            }}
+            icon={Columns3}
+            label={"Columns"}
+        >
+            {"TEST"}
+        </ActionMenu>
+    );
+};
+
+/*
         <div className="relative inline-block text-left dropdown">
             <Button color="white">
                 <Columns3 className={`icon-button`}></Columns3>
@@ -47,6 +57,4 @@ export const ColumnControls = ({ columns, onSelect }: ColumnControlsProps) => {
                     </div>
                 </div>
             </div>
-        </div>
-    );
-};
+        </div>*/
