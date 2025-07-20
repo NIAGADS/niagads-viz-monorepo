@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Checkbox } from "@niagads/ui";
 
 const meta: Meta<typeof Checkbox> = {
-    title: "NIAGADS-VIZ/UI/Checkbox",
+    title: "UI/Checkbox",
     component: Checkbox,
     parameters: {
         layout: "centered",

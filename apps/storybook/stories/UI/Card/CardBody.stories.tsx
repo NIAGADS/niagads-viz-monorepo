@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { CardBody } from "@niagads/ui";
 
 const meta: Meta<typeof CardBody> = {
-    title: "NIAGADS-VIZ/UI/Card/CardBody",
+    title: "UI/Card/CardBody",
     component: CardBody,
     parameters: {
         layout: "centered",

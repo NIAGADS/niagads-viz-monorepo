@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { RadioButton } from "@niagads/ui";
 
 const meta: Meta<typeof RadioButton> = {
-    title: "NIAGADS-VIZ/UI/RadioButton",
+    title: "UI/RadioButton",
     component: RadioButton,
     parameters: {
         layout: "centered",

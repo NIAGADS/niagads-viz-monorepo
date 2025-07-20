@@ -2,10 +2,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import Table from "@niagads/table";
-import { TABLE_DEFINTION as table } from "../../examples/tables/table_rendering_test";
+import { TABLE_DEFINTION as table } from "../../examples/tables/table_text_fields_only";
 
 const meta: Meta<typeof Table> = {
-    title: "NIAGADS-VIZ/Table/Rendering Test Table",
+    title: "Table/Table",
     component: Table,
     parameters: {
         // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout

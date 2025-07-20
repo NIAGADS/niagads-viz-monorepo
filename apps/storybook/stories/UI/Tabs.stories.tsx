@@ -8,7 +8,7 @@ import Table from "@niagads/table";
 import { TABLE_DEFINTION as table } from "../../examples/tables/table_rendering_test";
 
 const meta: Meta<typeof Tabs> = {
-    title: "NIAGADS-VIZ/UI/Tabs",
+    title: "UI/Tabs",
     component: Tabs,
     parameters: {},
     tags: ["autodocs"],

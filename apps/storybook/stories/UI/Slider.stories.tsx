@@ -1,10 +1,10 @@
-import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
+import React, { useState } from "react";
 
 import { Slider } from "@niagads/ui/client";
 
 const meta: Meta<typeof Slider> = {
-    title: "NIAGADS-VIZ/UI/Slider",
+    title: "UI/Slider",
     component: Slider,
     parameters: {
         // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout

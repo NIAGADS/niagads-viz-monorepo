@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Skeleton } from "@niagads/ui";
 
 const meta: Meta<typeof Skeleton> = {
-    title: "NIAGADS-VIZ/UI/Skeleton",
+    title: "UI/Skeleton",
     component: Skeleton,
     parameters: {
         // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout

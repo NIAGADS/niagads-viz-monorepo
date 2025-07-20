@@ -6,7 +6,7 @@ import { Default as CardHeaderStory } from "./CardHeader.stories";
 import { Search } from "lucide-react";
 
 const meta: Meta<typeof Card> = {
-    title: "NIAGADS-VIZ/UI/Card",
+    title: "UI/Card",
     component: Card,
     parameters: {
         layout: "centered",

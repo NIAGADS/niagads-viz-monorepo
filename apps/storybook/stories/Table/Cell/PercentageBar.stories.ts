@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { PercentageBar } from "@niagads/table";
 
 const meta: Meta<typeof PercentageBar> = {
-    title: "NIAGADS-VIZ/Table/Cell/PercentageBar",
+    title: "Table/Cell/PercentageBar",
     component: PercentageBar,
     parameters: {
         // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout

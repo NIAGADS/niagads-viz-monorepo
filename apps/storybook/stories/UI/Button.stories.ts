@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "@niagads/ui";
 
 const meta: Meta<typeof Button> = {
-    title: "NIAGADS-VIZ/UI/Button",
+    title: "UI/Button",
     component: Button,
     parameters: {
         layout: "centered",
@@ -12,12 +12,12 @@ const meta: Meta<typeof Button> = {
     argTypes: {
         variant: {
             control: { type: "radio" },
-            options: ["default", "link", "icon"],
+            options: ["default", "icon"],
             description: "Button style variant",
         },
         color: {
             control: { type: "radio" },
-            options: ["default", "primary"],
+            options: ["default", "primary", "white"],
             description: "Button color style variant",
         },
         children: { control: "text", description: "Button label or content" },

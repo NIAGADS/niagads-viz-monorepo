@@ -6,7 +6,7 @@ import Table from "@niagads/table";
 import { Default as TableStory } from "../../Table/FilerTable.stories";
 
 const meta: Meta<typeof RootLayout> = {
-    title: "NIAGADS-VIZ/UI/Layouts/RootLayout",
+    title: "UI/Layouts/RootLayout",
     component: RootLayout,
     parameters: {},
     tags: ["autodocs"],

@@ -8,7 +8,7 @@ const options = [
 ];
 
 export default {
-    title: "NIAGADS-VIZ/UI/Dropdown",
+    title: "UI/Dropdown",
     component: Dropdown,
     argTypes: {
         value: {

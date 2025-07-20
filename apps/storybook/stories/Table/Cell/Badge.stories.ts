@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Badge } from "@niagads/table";
 
 const meta: Meta<typeof Badge> = {
-    title: "NIAGADS-VIZ/Table/Cell/Badge",
+    title: "Table/Cell/Badge",
     component: Badge,
     parameters: {
         // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout

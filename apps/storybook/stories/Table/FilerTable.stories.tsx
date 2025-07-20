@@ -5,7 +5,7 @@ import Table from "@niagads/table";
 import { TABLE_DEFINTION as table } from "../../examples/tables/table_filer";
 
 const meta: Meta<typeof Table> = {
-    title: "NIAGADS-VIZ/Table/FILER Table",
+    title: "Table/FILER Table",
     component: Table,
     parameters: {
         // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
