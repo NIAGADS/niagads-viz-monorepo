@@ -3,10 +3,12 @@ import React, { ReactNode } from "react";
 
 import styles from "./styles/button.module.css";
 
-type ButtonVariants = "default" | "primary" | "link";
+type ButtonVariants = "default" | "link" | "icon";
+type ButtonColorVariants = "default" | "primary";
 
 interface ButtonProps {
     variant?: ButtonVariants;
+    color?: ButtonColorVariants;
     children: ReactNode;
     disabled?: boolean;
     onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void | null;
@@ -16,11 +18,12 @@ export const Button = ({
     children,
     onClick,
     variant = "default",
+    color = "default",
     disabled = false,
     ariaLabel,
     className,
 }: ButtonProps & StylingProps & AriaProps) => {
-    let classes = [styles.button, styles[variant]].filter(Boolean).join(" ");
+    let classes = [styles.button, styles[variant], color !== "default" && styles[color]].filter(Boolean).join(" ");
 
     if (className) {
         classes = `${classes} ${className}`;

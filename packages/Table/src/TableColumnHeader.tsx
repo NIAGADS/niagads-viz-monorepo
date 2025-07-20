@@ -65,7 +65,7 @@ export const TableColumnHeader = ({ header, tableId }: TableColumnHeaderProps) =
                     {canSort ? (
                         SortIcon ? (
                             <SortIcon
-                                className={`${isSorted ? styles["visible"] : styles["invisible"]} ${styles["column-header-icon"]}`}
+                                className={`${isSorted ? styles["visible"] : styles["invisible"]} ${styles["column-header-icon"]} ${styles.right}`}
                             />
                         ) : (
                             <div className={styles["column-header-sort-icon-placeholder"]}></div>
@@ -75,8 +75,10 @@ export const TableColumnHeader = ({ header, tableId }: TableColumnHeaderProps) =
 
                 {header.column.getCanFilter() && (
                     <div className={styles["column-header-filter-control-container"]}>
-                        <Button variant="primary" onClick={() => setFilterOpen(!filterOpen)}>
-                            <ListFilterPlus className={`${styles["column-header-icon"]}}`} size={12}></ListFilterPlus>
+                        <Button variant="icon" color="primary" onClick={() => setFilterOpen(!filterOpen)}>
+                            <ListFilterPlus
+                                className={`${styles["column-header-icon"]} ${styles.button}}`}
+                            ></ListFilterPlus>
                         </Button>
                     </div>
                 )}
