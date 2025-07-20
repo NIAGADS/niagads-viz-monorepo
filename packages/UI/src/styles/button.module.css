@@ -45,19 +45,17 @@
     transform: none;
 }
 
-
 .button.icon {
-    padding:0.4rem 0.5rem;
+    padding: 0.4rem 0.5rem;
 }
 
 .button.icon.primary {
-    color: var(--text-inverse)
+    color: var(--text-inverse);
 }
 
 .button.icon.primary:disabled {
-    color: var(--primary-blue)
+    color: var(--primary-blue);
 }
-
 
 .button.primary {
     background-color: var(--primary-blue);
@@ -75,7 +73,6 @@
     border-color: #e5e7eb; /* slate-200 */
     cursor: not-allowed;
 }
-
 
 .button.white {
     border-color: #fff;

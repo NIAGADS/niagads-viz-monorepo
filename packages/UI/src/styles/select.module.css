@@ -1,6 +1,6 @@
 /* Renamed from select.css for CSS Modules */
 .select-wrapper {
- font-size: 0.875rem; /* text-sm */
+    font-size: 0.875rem; /* text-sm */
     font-family:
         "Inter", "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana,
         sans-serif;
@@ -9,11 +9,10 @@
 .select {
     background-color: #f9fafb; /* gray-50 */
     color: #111827; /* gray-900 */
-   
+
     display: block;
     width: 100%;
     padding: 0.625rem; /* 2.5 */
-    
 }
 
 .select-label.select-inline {

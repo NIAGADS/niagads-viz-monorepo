@@ -3,5 +3,5 @@
 @import "@niagads/common/assets/styles/typography.css";
 
 :root {
-  --font-inter: 'Inter', sans-serif;
+    --font-inter: "Inter", sans-serif;
 }

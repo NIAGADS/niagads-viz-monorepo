@@ -3,5 +3,5 @@
 @import "react-tooltip/dist/react-tooltip.css";
 
 :root {
-  --font-inter: 'Inter', sans-serif;
+    --font-inter: "Inter", sans-serif;
 }

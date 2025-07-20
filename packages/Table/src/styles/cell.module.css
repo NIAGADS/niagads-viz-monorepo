@@ -6,7 +6,6 @@
     color: var(--gray-300);
 }
 
-
 .sparkContainer {
     display: flex;
     flex-direction: row;
@@ -39,13 +38,10 @@
     word-break: break-word;
 }
 
-
-
 .link:hover,
 .infoLink:hover {
     text-decoration: underline;
 }
-
 
 .infoLink {
     cursor: pointer;
