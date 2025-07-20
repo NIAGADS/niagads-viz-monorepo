@@ -48,7 +48,11 @@ const TableSetTabs = ({ tableSet }: TableSetTabsProps) => {
                 return {
                     id: t.config.id,
                     label: label,
-                    content: <Card variant="full">{renderTabContents(t)}</Card>,
+                    content: (
+                        <Card variant="full" outline={false}>
+                            {renderTabContents(t)}
+                        </Card>
+                    ),
                 };
             }),
         [tableSet]
