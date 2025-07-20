@@ -1,12 +1,12 @@
-import { AriaProps, StylingProps } from "./types";
 import React, { ReactNode } from "react";
 
+import { StylingProps } from "./types";
 import styles from "./styles/button.module.css";
 
 type ButtonVariants = "default" | "icon";
 type ButtonColorVariants = "default" | "primary" | "white";
 
-interface ButtonProps extends StylingProps, AriaProps {
+interface ButtonProps extends StylingProps {
     variant?: ButtonVariants;
     color?: ButtonColorVariants;
     children: ReactNode;
@@ -20,10 +20,10 @@ export const Button = ({
     variant = "default",
     color = "default",
     disabled = false,
-    ariaLabel,
     className,
     id,
-}: ButtonProps) => {
+    ...rest
+}: ButtonProps & React.HTMLAttributes<HTMLButtonElement>) => {
     let classes = [styles.button, styles[variant], color !== "default" && styles[color]].filter(Boolean).join(" ");
 
     if (className) {
@@ -31,7 +31,7 @@ export const Button = ({
     }
 
     return (
-        <button id={id} className={classes} disabled={disabled} onClick={onClick} aria-label={ariaLabel}>
+        <button id={id} className={classes} disabled={disabled} onClick={onClick} {...rest}>
             {children}
         </button>
     );
