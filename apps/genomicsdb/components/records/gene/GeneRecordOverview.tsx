@@ -3,7 +3,7 @@ import { Card, CardBody, CardHeader } from "@niagads/ui";
 import { ExternalUrls } from "@/lib/reference";
 import GeneAssociationSummaryChart from "./GeneGeneticAssociationSummaryChart";
 import { GeneRecord } from "@/lib/types";
-import { GenomicFeatureActionToolbar } from "../ActionToolbar";
+import { RecordActionToolbar } from "../RecordActionToolbar";
 import { genomic_location_to_span } from "@/lib/utils";
 import { renderRecordTitle } from "../RecordOverviewSection";
 
@@ -39,7 +39,7 @@ export function GeneRecordOverview({ record }: { record: GeneRecord }) {
                             </div>
                         </div>
                     </div>
-                    <GenomicFeatureActionToolbar id="gene-actions" record={record} />
+                    <RecordActionToolbar id="gene-actions" record={record} />
                 </CardBody>
             </Card>
 

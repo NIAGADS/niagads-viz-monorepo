@@ -44,7 +44,7 @@ export const RecordActionToolbar = ({ id, record }: ActionToolbarProps) => {
                         <InlineIcon icon={<Download size={16} />}>Export</InlineIcon>
                     </Button>
 
-                    <Tooltip content="Copied!" anchorId="record-share" openOnClick={true}>
+                    <Tooltip content="Copied to clipboard!" anchorId="record-share" openOnClick={true}>
                         <Button onClick={handleShare} title={`Get record permalink`}>
                             <InlineIcon icon={<Share2 size={16} />}>Share</InlineIcon>
                         </Button>
