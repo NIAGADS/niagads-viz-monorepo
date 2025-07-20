@@ -1,5 +1,5 @@
 import { Button, ButtonColorVariants } from "../Button";
-import React, { ReactNode, useEffect, useRef, useState } from "react";
+import React, { ReactNode, useEffect, useId, useRef, useState } from "react";
 
 import { InlineIcon } from "../InlineIcon";
 import { StylingProps } from "../types";
@@ -23,7 +23,7 @@ export const ActionMenu = ({
 }: ActionMenuProps & React.HTMLAttributes<HTMLDivElement>) => {
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
-    const buttonId = `actionmenu-toggle-${Math.random().toString(36).substr(2, 9)}`;
+    const buttonId = useId();
     const Icon = icon;
 
     useEffect(() => {
