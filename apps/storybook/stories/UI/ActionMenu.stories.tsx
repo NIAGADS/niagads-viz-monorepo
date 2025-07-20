@@ -1,4 +1,5 @@
 import { ActionMenu } from "@niagads/ui/client";
+import { Atom } from "lucide-react";
 
 export default {
     title: "UI/ActionMenu",
@@ -7,7 +8,6 @@ export default {
         label: { control: "text" },
         className: { control: false },
         style: { control: false },
-        onChange: { action: "changed" },
     },
     args: {
         label: "Open Action Menu",
@@ -16,7 +16,7 @@ export default {
 
 export const WithForm = (args) => (
     <div style={{ width: 300 }}>
-        <ActionMenu {...args} onChange={() => {}}>
+        <ActionMenu {...args}>
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
@@ -41,7 +41,7 @@ export const WithForm = (args) => (
 
 export const WithArbitraryContent = (args) => (
     <div style={{ width: 300 }}>
-        <ActionMenu {...args} onChange={() => {}}>
+        <ActionMenu {...args} icon={Atom}>
             <div style={{ padding: "1rem", fontSize: "0.8rem" }}>
                 <h4>Arbitrary Content</h4>
                 <p>You can put any React node here, such as lists, images, or even other components.</p>
