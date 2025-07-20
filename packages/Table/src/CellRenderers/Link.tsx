@@ -1,9 +1,9 @@
 import { _get, _hasOwnProperty, _isNull } from "@niagads/common";
 
+import { HelpIconWrapper } from "@niagads/ui/client";
 import React from "react";
 import { Text } from "./BasicText";
 import { TextRenderer } from "./TextRenderer";
-import { renderWithHelpIcon } from "@niagads/ui/client";
 import styles from "../styles/cell.module.css";
 
 const _renderLink = (displayText: string, url: string, newWindow: boolean = false) => {
@@ -52,7 +52,11 @@ export const Link = <T,>({ props }: TextRenderer<T>) => {
     const tooltip = _get("tooltip", props);
     if (tooltip) {
         const anchorId = `${_get("rowId", props)}-${_get("columnId", props)}`;
-        return renderWithHelpIcon(component, "info", tooltip, `${_get("rowId", props)}-${_get("columnId", props)}`);
+        return (
+            <HelpIconWrapper anchorId={anchorId} message={tooltip} variant={"question"}>
+                {component}
+            </HelpIconWrapper>
+        );
     }
 
     return component;

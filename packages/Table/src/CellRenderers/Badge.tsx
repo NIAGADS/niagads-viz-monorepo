@@ -1,10 +1,10 @@
 import { AlertTriangle, Check, CheckCircle, Info, X, XCircle } from "lucide-react";
 import { TextRenderer, buildElementStyle, renderNullValue } from "./TextRenderer";
 import { _get, _hasOwnProperty, _isNA, _isNull } from "@niagads/common";
-import { renderTooltip, renderWithHelpIcon } from "@niagads/ui/client";
 
 import React from "react";
 import { Badge as UIBadge } from "@niagads/ui";
+import { renderTooltip } from "@niagads/ui/client";
 
 export const ICONS = {
     check: Check,
@@ -39,6 +39,7 @@ export const Badge = <T,>({ props }: TextRenderer<T>) => {
         component = <Icon color={color} size={24} />;
     } else {
         const badgeStyle = buildElementStyle(props);
+        Object.assign(badgeStyle, { fontSize: "0.8rem" }); // font-size from .table-td class
         component = (
             <UIBadge style={badgeStyle} icon={Icon ? <Icon color={color} size={18} /> : undefined}>
                 {value}
@@ -46,7 +47,7 @@ export const Badge = <T,>({ props }: TextRenderer<T>) => {
         );
     }
 
-    const tooltip = _get("tooltip", "props");
+    const tooltip = _get("tooltip", props);
     return tooltip
         ? renderTooltip(`${_get("rowId", props)}-${_get("columnId", props)}`, component, tooltip)
         : component;

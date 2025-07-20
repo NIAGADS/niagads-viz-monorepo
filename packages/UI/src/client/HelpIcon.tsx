@@ -47,16 +47,14 @@ export const getIconElement = (key: string) => {
     return icon;
 };
 
-export const renderWithHelpIcon = (
-    child: ReactNode,
-    variant: HelpIconVariant,
-    message: string,
-    anchorId: string,
-    className = ""
-) => {
+interface HelpIconWrapperProps extends HelpIconProps {
+    children: ReactNode;
+}
+
+export const HelpIconWrapper = ({ children, variant, message, anchorId, className = "" }: HelpIconWrapperProps) => {
     return (
         <InlineIcon icon={renderHelpIcon(anchorId, message, variant, className)} iconPosition="end">
-            {child}
+            {children}
         </InlineIcon>
     );
 };

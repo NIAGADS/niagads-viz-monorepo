@@ -19,7 +19,7 @@ export const Badge = ({
     className = "",
     style = {},
 }: BadgeProps) => {
-    const variantClass = variant === "pill" ? styles.pill : styles.badge;
+    const variantClass = variant === "pill" ? `${styles.badge} ${styles.pill}` : styles.badge;
 
     if (icon) {
         return (

@@ -1,4 +1,4 @@
-import { HelpIcon, renderTooltip, renderWithHelpIcon } from "@niagads/ui/client";
+import { HelpIconWrapper, renderTooltip } from "@niagads/ui/client";
 import React, { ReactNode, useState } from "react";
 import { TextRenderer, buildElementStyle, renderNullValue } from "./TextRenderer";
 import { _deepCopy, _get, _hasOwnProperty, _isJSON, _isNA, _isNull } from "@niagads/common";
@@ -32,7 +32,11 @@ export const TextWithInfo = ({ text, message, anchorId, asInfoLink }: TextWithIn
         const infoLink = <div className={styles.infoLink}>{text}</div>;
         return <>{renderTooltip(anchorId, infoLink, message)}</>;
     }
-    return renderWithHelpIcon(text, "info", message, anchorId);
+    return (
+        <HelpIconWrapper anchorId={anchorId} message={message} variant={"info"}>
+            {text}
+        </HelpIconWrapper>
+    );
 };
 
 export const TextList = <T,>({ props }: TextRenderer<T>) => {

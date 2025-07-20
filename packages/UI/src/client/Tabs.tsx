@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect, useMemo, useState } from "react";
 
 import { Card } from "../Card";
-import { renderWithHelpIcon } from "./HelpIcon";
+import { HelpIconWrapper } from "./HelpIcon";
 import styles from "../styles/tabs.module.css";
 
 export interface TabDef {
@@ -44,15 +44,17 @@ const TabButton = ({ label, id, info, sectionId, isActive, onClick }: TabButtonP
             aria-selected={isSelected}
             aria-controls={`tabpanel-${id}`}
         >
-            {info
-                ? renderWithHelpIcon(
-                      label,
-                      "question",
-                      info,
-                      `${sectionId ? sectionId + "_" : ""}-${id}-info`,
-                      styles["tab-help-icon"]
-                  )
-                : label}
+            {info ? (
+                <HelpIconWrapper
+                    anchorId={`${sectionId ? sectionId + "_" : ""}-${id}-info`}
+                    message={info}
+                    variant={"question"}
+                >
+                    {label}
+                </HelpIconWrapper>
+            ) : (
+                label
+            )}
         </button>
     );
 };
