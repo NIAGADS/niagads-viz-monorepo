@@ -1,9 +1,11 @@
 import { Button, Checkbox, Select } from "@niagads/ui";
 import React, { useEffect, useId, useState } from "react";
 
+import { ActionMenu } from "@niagads/ui/client";
 import { Download } from "lucide-react";
 import { Table as ReactTable } from "@tanstack/react-table";
 import exportFromJSON from "export-from-json";
+import styles from "../styles/controls.module.css";
 
 const EXPORT_FILE_FORMATS = Object.keys(exportFromJSON.types).filter((f) => !["css", "html"].includes(f));
 type FileFormat = Exclude<keyof typeof exportFromJSON.types, "css" | "html">;
@@ -66,7 +68,43 @@ export const TableExportControls = ({ isFiltered, onSubmit }: ExportMenuOptions)
     }, [isFiltered]);
 
     return (
-        <div className="export-control-container">
+        <ActionMenu label={"Export"} icon={Download} buttonColor="primary">
+            <div className={styles["export-control-container"]}>
+                {" "}
+                <form id={formId} onSubmit={handleSubmit} className={styles["export-control-form"]}>
+                    {isFiltered && (
+                        <Checkbox
+                            name="filtered_only"
+                            variant="accent"
+                            value={filteredOnly.toString()}
+                            label="Filtered Rows Only"
+                            checked={filteredOnly}
+                            onChange={() => setFilteredOnly(!filteredOnly)}
+                        ></Checkbox>
+                    )}
+
+                    <Select
+                        id={`${formId}_select_export_format"`}
+                        name="format"
+                        fields={EXPORT_FILE_FORMATS}
+                        label="Format"
+                        inline={true}
+                    ></Select>
+
+                    <Button color="primary" className={styles["export-control-button"]}>
+                        Export
+                    </Button>
+                </form>
+            </div>
+        </ActionMenu>
+    );
+};
+/*
+
+                        <Button>Export</Button>
+                    </div>
+
+ <div className="export-control-container">
             <Button color="white">
                 <Download className="icon-button"></Download>
                 <span className="ml-2 uppercase">Export</span>
@@ -80,32 +118,8 @@ export const TableExportControls = ({ isFiltered, onSubmit }: ExportMenuOptions)
                     role="menu"
                 >
                     <div className="dropdown-menu-item-container">
-                        <form id={formId} onSubmit={handleSubmit}>
-                            {isFiltered && (
-                                <Checkbox
-                                    name="filtered_only"
-                                    variant="accent"
-                                    value={filteredOnly.toString()}
-                                    label="Filtered Rows Only"
-                                    checked={filteredOnly}
-                                    onChange={() => setFilteredOnly(!filteredOnly)}
-                                ></Checkbox>
-                            )}
-
-                            <Select
-                                id={`${formId}_select_export_format"`}
-                                name="format"
-                                fields={EXPORT_FILE_FORMATS}
-                                label="Export table data as"
-                            ></Select>
-
-                            <div className="export-controls-button-container">
-                                <Button size="md">Export</Button>
-                            </div>
-                        </form>
+                    
                     </div>
                 </div>
             </div>
-        </div>
-    );
-};
+        </div>*/

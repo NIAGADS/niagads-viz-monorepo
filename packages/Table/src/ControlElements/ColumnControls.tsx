@@ -19,7 +19,7 @@ export const ColumnControls = ({ columns, onSelect }: ColumnControlsProps) => {
         return label.toLowerCase().includes(search.toLowerCase());
     });
     return (
-        <ActionMenu icon={Columns3} label={"Columns"} buttonColor="white">
+        <ActionMenu icon={Columns3} label={"Columns"} buttonColor="default">
             <div className={styles["column-controls-container"]}>
                 <TextInput
                     onChange={(val) => setSearch(val)}
