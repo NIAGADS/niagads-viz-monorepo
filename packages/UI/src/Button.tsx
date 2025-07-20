@@ -6,7 +6,7 @@ import styles from "./styles/button.module.css";
 type ButtonVariants = "default" | "icon";
 type ButtonColorVariants = "default" | "primary" | "white";
 
-interface ButtonProps {
+interface ButtonProps extends StylingProps, AriaProps {
     variant?: ButtonVariants;
     color?: ButtonColorVariants;
     children: ReactNode;
@@ -22,7 +22,8 @@ export const Button = ({
     disabled = false,
     ariaLabel,
     className,
-}: ButtonProps & StylingProps & AriaProps) => {
+    id,
+}: ButtonProps) => {
     let classes = [styles.button, styles[variant], color !== "default" && styles[color]].filter(Boolean).join(" ");
 
     if (className) {
@@ -30,7 +31,7 @@ export const Button = ({
     }
 
     return (
-        <button className={classes} disabled={disabled} onClick={onClick} aria-label={ariaLabel}>
+        <button id={id} className={classes} disabled={disabled} onClick={onClick} aria-label={ariaLabel}>
             {children}
         </button>
     );

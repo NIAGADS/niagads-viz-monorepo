@@ -1,5 +1,5 @@
 import "./styles/global.css";
-
+export * from "./types";
 export * from "./Alert";
 export * from "./Button";
 export * from "./Card";
@@ -12,4 +12,4 @@ export * from "./TextInput";
 export * from "./LoadingSpinner";
 export * from "./InlineIcon";
 export * from "./Badge";
-export * from "./types";
+export * from "./Toggle";

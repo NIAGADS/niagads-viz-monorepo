@@ -1,6 +1,7 @@
 export interface StylingProps {
     className?: string;
     style?: React.CSSProperties;
+    id?: string;
 }
 
 export interface AriaProps {
