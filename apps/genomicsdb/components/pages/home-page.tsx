@@ -67,11 +67,7 @@ export function HomePage() {
                     </div>
 
                     <div className="hero-buttons">
-                        <Button
-                            variant="primary"
-                            onClick={() => router.push("/browse-datasets")}
-                            className="bg-primary"
-                        >
+                        <Button color="primary" onClick={() => router.push("/browse-datasets")} className="bg-primary">
                             <Search size={20} />
                             Start Exploring
                         </Button>

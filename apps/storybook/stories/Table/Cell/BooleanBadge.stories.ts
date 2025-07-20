@@ -1,9 +1,8 @@
+import { BadgeIconType, BooleanBadge } from "@niagads/table";
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { BooleanBadge, BadgeIconType } from "@niagads/table";
-
 const meta: Meta<typeof BooleanBadge> = {
-    title: "NIAGADS-VIZ/Text/Boolean Badge",
+    title: "Table/Cell/Boolean Badge",
     component: BooleanBadge,
     parameters: {
         // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
@@ -16,20 +15,20 @@ const meta: Meta<typeof BooleanBadge> = {
 export default meta;
 type Story = StoryObj<typeof BooleanBadge>;
 
-// FIXME: the story re-renders after the icon prop gets internally updated to the mapped icon object & then throws an error;
-// maybe need to add an internal property for the iconObj? or just not worry about the story
+// TODO: investigate https://www.npmjs.com/package/storybook-addon-deep-controls
+// to allow control & documentation of nested settings
 
 interface BadgeProps {
     value: boolean;
     color?: string;
-    backgroundColor?: string;
-    borderColor?: string;
     icon?: BadgeIconType;
+    iconOnly?: boolean;
 }
 const props: BadgeProps = {
     value: true,
     color: "green",
-    icon: "solidCheck",
+    icon: "circleCheck",
+    iconOnly: false,
 };
 
 export const Default: Story = {

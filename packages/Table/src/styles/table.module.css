@@ -3,13 +3,16 @@
 .table-outer-container {
     width: 100%;
     overflow-x: auto;
+    font-family:
+        var(--font-inter), "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva,
+        Verdana, sans-serif;
 }
 
 .table-container {
     width: 100%;
     overflow: auto;
-    border: 1px solid var(--niagads-table-border);
-    background-color: var(--niagads-table-surface);
+    border: 1px solid var(--gray-500);
+    background-color: var(--surface);
     border-radius: 12px;
 }
 
@@ -25,17 +28,9 @@
     align-items: center;
 }
 
-/*
-.table-border {
-    border-top-width: 4px;
-    border-top-style: solid;
-    border-top-color: var(--niagads-table-primary);
-}*/
-
 .table-text {
-    /*font-size: 0.875rem;*/
+    font-size: 0.8rem;
     text-align: left;
-    /*color: var(--niagads-table-primary);*/
     direction: ltr;
 }
 
@@ -51,16 +46,18 @@
     border-style: solid;
     border-width: 0 1px 1px 0;
     padding: 1rem;
-    border-bottom: 1px solid var(--niagads-table-border);
-    vertical-align: top;
+    border-bottom: 1px solid var(--gray-200);
+    vertical-align: center;
 }
 
 /* Add vertical borders except for first and last cell in a row */
-.table-layout td:not(:first-child):not(:last-child),
-.table-layout th:not(:first-child):not(:last-child) {
-    border-right: 1px solid var(--gray-100);
+.table-layout td:not(:first-child):not(:last-child) {
+    border-right: 1px solid var(--gray-50);
 }
 
+.table-layout th:not(:first-child):not(:last-child) {
+    border-right: 1px solid var(--white);
+}
 .table-layout td:first-child,
 .table-layout th:first-child {
     border-right: none;
@@ -73,7 +70,7 @@
 
 .table-dtr {
     background-color: #fff;
-    border-bottom: 1px solid #374151; /* Tailwind gray-700 */
+    border-bottom: 1px solid var(--gray-700);
     transition: background 0.2s;
 }
 
@@ -92,7 +89,7 @@
     padding: 1rem;
     text-align: left;
     font-weight: 600;
-    color: var(--niagads-table-primary);
+    color: var(--dark-blue);
     border-bottom: 1px solid var(--border);
 
     &.sortable:hover {
@@ -139,52 +136,20 @@
 .column-header-text {
     font-size: 0.875rem;
     white-space: nowrap;
-    color: #334155; /* Tailwind slate-700 */
-    font-weight: bold;
+    font-weight: 700;
 }
 
 .column-header-icon {
-    margin-left: 0.25rem;
-    color: #334155; /* Tailwind slate-700 */
-    padding-left: 1px;
     width: 1.25rem;
     height: 1.25rem;
 }
 
-/* ROW SELECTION CONTROLS */
-
-.row-selection-header {
-    display: inline-flex;
+.column-header-icon.right {
+    margin-left: 0.25rem;
+    padding-left: 1px;
 }
 
-.row-selection-header-controls {
-    position: relative;
-    display: inline-block;
-    bottom: 2px;
-}
-
-.row-selection-header-text {
-    margin-left: 1rem;
-}
-
-.row-selection-controls {
-    display: flex;
-}
-
-.row-selection-sidebar {
-    width: 200px;
-}
-
-.row-selection-sidebar .toggle {
-    cursor: pointer;
-}
-
-.row-selection-items {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    overflow-x: scroll;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    font-size: 0.875rem;
+.column-header-icon.button {
+    width: 1rem;
+    height: 1rem;
 }

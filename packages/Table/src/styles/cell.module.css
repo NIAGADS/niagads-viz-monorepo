@@ -1,0 +1,52 @@
+/* .cell {
+    font-family: "Inter", sans-serif;
+} */
+
+.nullValue {
+    color: var(--gray-300);
+}
+
+.sparkContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.spark {
+    height: 20px;
+    display: inline-block;
+}
+
+.sparkValue {
+    width: 35px;
+    align-self: center;
+}
+
+.sparkBar {
+    width: 100px;
+}
+
+.sparkBarObserved {
+    background-color: #16a34a; /* Tailwind green-600 */
+}
+
+.sparkBarRemainder {
+    background-color: #d1d5db; /* Tailwind gray-300 */
+}
+
+.truncatedText {
+    max-width: 300px;
+    word-break: break-word;
+}
+
+.link:hover,
+.infoLink:hover {
+    text-decoration: underline;
+}
+
+.infoLink {
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-style: dashed;
+    text-decoration-color: --var(--secondary-blue); /* Tailwind blue-700 */
+    text-underline-offset: 4px;
+}

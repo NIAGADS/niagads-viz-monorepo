@@ -16,7 +16,7 @@ type HelpIconVariant = keyof typeof ICONS;
 
 interface HelpIconProps {
     anchorId: string;
-    message: ReactNode | string;
+    message: ReactNode;
     variant: HelpIconVariant;
     className?: string;
 }
@@ -33,12 +33,7 @@ export const HelpIcon = ({ anchorId, message, variant, className }: HelpIconProp
     );
 };
 
-export const renderHelpIcon = (
-    anchorId: string,
-    message: ReactNode | string,
-    variant: HelpIconVariant,
-    className: string
-) => {
+export const renderHelpIcon = (anchorId: string, message: ReactNode, variant: HelpIconVariant, className: string) => {
     return <HelpIcon anchorId={anchorId} message={message} variant={variant} className={className} />;
 };
 
@@ -52,16 +47,14 @@ export const getIconElement = (key: string) => {
     return icon;
 };
 
-export const renderWithHelpIcon = (
-    textElement: ReactNode | string,
-    variant: HelpIconVariant,
-    message: string,
-    anchorId: string,
-    className = ""
-) => {
+interface HelpIconWrapperProps extends HelpIconProps {
+    children: ReactNode;
+}
+
+export const HelpIconWrapper = ({ children, variant, message, anchorId, className = "" }: HelpIconWrapperProps) => {
     return (
         <InlineIcon icon={renderHelpIcon(anchorId, message, variant, className)} iconPosition="end">
-            {textElement}
+            {children}
         </InlineIcon>
     );
 };

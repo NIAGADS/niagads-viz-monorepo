@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Select } from "@niagads/ui";
 
 const meta: Meta<typeof Select> = {
-    title: "NIAGADS-VIZ/UI/Select",
+    title: "UI/Select",
     component: Select,
     parameters: {
         // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout

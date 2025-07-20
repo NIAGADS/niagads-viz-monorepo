@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Alert } from "@niagads/ui";
 
 const meta = {
-    title: "NIAGADS-VIZ/UI/Alert",
+    title: "UI/Alert",
     component: Alert,
     parameters: {
         layout: "centered",

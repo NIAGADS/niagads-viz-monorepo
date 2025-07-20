@@ -1,37 +1,48 @@
 /* Renamed from select.css for CSS Modules */
-.ui-select {
+.select-wrapper {
+    font-size: 0.875rem; /* text-sm */
+    font-family:
+        "Inter", "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana,
+        sans-serif;
+}
+
+.select {
     background-color: #f9fafb; /* gray-50 */
     color: #111827; /* gray-900 */
-    font-size: 0.875rem; /* text-sm */
+
     display: block;
     width: 100%;
     padding: 0.625rem; /* 2.5 */
 }
 
+.select-label.select-inline {
+    margin-right: 1rem;
+}
+
 @media (min-width: 768px) {
-    .ui-select-inline {
+    .select-inline {
         display: flex;
         align-items: center;
     }
 }
 
-.ui-select.outline {
+.select.outline {
     border: 1px solid #d1d5db; /* gray-300 */
     border-radius: 0.5rem; /* rounded-lg */
     outline: none;
 }
-.ui-select.outline:focus {
+.select.outline:focus {
     box-shadow: 0 0 0 2px #3b82f6; /* ring-blue-500 */
     border-color: #3b82f6; /* blue-500 */
 }
-.ui-select.plain {
+.select.plain {
     background-color: #fff;
     border: 0;
 }
-.ui-select.plain:focus {
+.select.plain:focus {
     background-color: #f3f4f6; /* gray-100 */
 }
-.ui-select.underline {
+.select.underline {
     background-color: #fff;
     border-top: 0;
     border-left: 0;

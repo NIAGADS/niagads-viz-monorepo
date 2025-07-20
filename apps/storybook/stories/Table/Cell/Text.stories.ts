@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Text } from "@niagads/table";
 
 const meta: Meta<typeof Text> = {
-    title: "NIAGADS-VIZ/Text/Truncated Text",
+    title: "Table/Cell/Text",
     component: Text,
     parameters: {
         // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
@@ -20,13 +20,23 @@ type Story = StoryObj<typeof Text>;
 // to allow control & documentation of nested settings
 
 const props = {
-    value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque molestie, elit at molestie accumsan, arcu orci interdum diam, vitae mattis libero est vel enim. Suspendisse quis metus erat. Nullam convallis sed turpis nec elementum. Mauris mattis elit eros, in commodo tellus laoreet at. Nunc ultrices vel massa sit amet tincidunt.",
-    color: "grey",
-    truncateTo: 100,
+    value: "Lorem ipsum dolor sit amet",
+    tooltip: "add notes to text that provide an explanation or context",
+    color: "teal",
+    inlineTooltip: true,
 };
 
 export const Default: Story = {
     args: {
         props: props,
+    },
+};
+
+export const HelpIcon: Story = {
+    args: {
+        props: {
+            value: "Lorem ipsum dolor sit amet",
+            tooltip: "add notes to text that provide an explanation or context",
+        },
     },
 };

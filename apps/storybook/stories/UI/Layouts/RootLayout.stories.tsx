@@ -1,16 +1,12 @@
-//@ts-nocheck
-// b/c of https://github.com/storybookjs/storybook/issues/23170 issue w/subcomponets w/children
-import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { Default as NavigationStory } from "../Navigation.stories";
-import { Default as TableStory } from "../../DataViz/Table/FilerTable.stories";
-
 import { RootLayout } from "@niagads/ui/layouts";
 import Table from "@niagads/table";
+import { Default as TableStory } from "../../Table/FilerTable.stories";
 
 const meta: Meta<typeof RootLayout> = {
-    title: "NIAGADS-VIZ/UI/Layouts/RootLayout",
+    title: "UI/Layouts/RootLayout",
     component: RootLayout,
     parameters: {},
     tags: ["autodocs"],
@@ -39,7 +35,7 @@ export const Default: Story = {
                     More information...
                 </a>
 
-                <Table {...TableStory.args} />
+                <Table id={TableStory.args!.id!} data={TableStory.args!.data!} columns={TableStory.args!.columns!} />
             </>
         ),
     },

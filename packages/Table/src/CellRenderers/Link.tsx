@@ -1,20 +1,21 @@
-import React from "react";
-
-import { TextRenderer, renderWithInfo } from "./TextRenderer";
-import { Text } from "./BasicText";
-
 import { _get, _hasOwnProperty, _isNull } from "@niagads/common";
+
+import { HelpIconWrapper } from "@niagads/ui/client";
+import React from "react";
+import { Text } from "./BasicText";
+import { TextRenderer } from "./TextRenderer";
+import styles from "../styles/cell.module.css";
 
 const _renderLink = (displayText: string, url: string, newWindow: boolean = false) => {
     if (newWindow) {
         return (
-            <a className="cell cell-link" href={url} target="_blank" rel="noopener noreferrer">
+            <a className={styles.cellLink} href={url} target="_blank" rel="noopener noreferrer">
                 {displayText}
             </a>
         );
     }
     return (
-        <a className="cell cell-link" href={url}>
+        <a className={styles.cellLink} href={url}>
             {displayText}
         </a>
     );
@@ -47,12 +48,16 @@ export const Link = <T,>({ props }: TextRenderer<T>) => {
         }
     }
 
-    const linkElement = _renderLink(value ? value : url, url);
-    const hasTooltip = _hasOwnProperty("tooltip", props);
-    if (hasTooltip) {
+    const component = _renderLink(value ? value : url, url);
+    const tooltip = _get("tooltip", props);
+    if (tooltip) {
         const anchorId = `${_get("rowId", props)}-${_get("columnId", props)}`;
-        return renderWithInfo(linkElement, _get("tooltip", props), anchorId, true);
+        return (
+            <HelpIconWrapper anchorId={anchorId} message={tooltip} variant={"question"}>
+                {component}
+            </HelpIconWrapper>
+        );
     }
 
-    return linkElement;
+    return component;
 };

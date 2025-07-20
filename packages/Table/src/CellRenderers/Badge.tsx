@@ -1,14 +1,19 @@
-import React from "react";
+import { AlertTriangle, Check, CheckCircle, Info, X, XCircle } from "lucide-react";
+import { TextRenderer, buildElementStyle, renderNullValue } from "./TextRenderer";
 import { _get, _hasOwnProperty, _isNA, _isNull } from "@niagads/common";
-import {
-    TextRenderer,
-    buildElementStyle,
-    renderNullValue,
-    renderStyledText,
-    renderWithIcon,
-    renderWithInfo,
-    ICONS,
-} from "./TextRenderer";
+
+import React from "react";
+import { Badge as UIBadge } from "@niagads/ui";
+import { renderTooltip } from "@niagads/ui/client";
+
+export const ICONS = {
+    check: Check,
+    circleCheck: CheckCircle,
+    warning: AlertTriangle,
+    info: Info,
+    xMark: XCircle,
+    x: X,
+};
 
 export type BadgeIconType = keyof typeof ICONS;
 
@@ -22,35 +27,30 @@ export const Badge = <T,>({ props }: TextRenderer<T>) => {
     if (_isNA(value)) {
         return renderNullValue();
     }
-    const badgeStyle = buildElementStyle(props);
-    const textStyle = buildElementStyle(props, "color");
-    const backgroundIsStyled =
-        _hasOwnProperty("backgroundColor", badgeStyle) || _hasOwnProperty("borderColor", badgeStyle);
-    const className = "cell cell-badge";
 
-    let textElement = renderStyledText(value, textStyle, className);
+    const color = _get("color", props, null);
+    const iconId: BadgeIconType = _get("icon", props, null);
+    const iconOnly = _get("iconOnly", props, false);
 
-    if (_hasOwnProperty("icon", props)) {
-        const iconOnly = _get("iconOnly", props, false);
-        const iconStyle = _get("iconStyle", props, false);
-        const iconClassName = iconOnly ? "cell cell-icon-only-badge" : "cell cell-badge-icon";
-        textElement = renderWithIcon(textElement, _get("icon", props), {
-            iconOnly: iconOnly,
-            iconClassName: iconClassName,
-            className: className,
-            style: badgeStyle,
-        });
+    const Icon = iconId && ICONS[iconId];
+
+    let component;
+    if (iconOnly && Icon) {
+        component = <Icon color={color} size={24} />;
+    } else {
+        const badgeStyle = buildElementStyle(props);
+        Object.assign(badgeStyle, { fontSize: "0.8rem" }); // font-size from .table-td class
+        component = (
+            <UIBadge style={badgeStyle} icon={Icon ? <Icon color={color} size={18} /> : undefined}>
+                {value}
+            </UIBadge>
+        );
     }
 
-    const hasTooltip = _hasOwnProperty("tooltip", props);
-    return hasTooltip
-        ? renderWithInfo(
-              textElement,
-              _get("tooltip", props),
-              `${_get("rowId", props)}-${_get("columnId", props)}`,
-              true
-          )
-        : textElement;
+    const tooltip = _get("tooltip", props);
+    return tooltip
+        ? renderTooltip(`${_get("rowId", props)}-${_get("columnId", props)}`, component, tooltip)
+        : component;
 };
 
 export const BooleanBadge = <T,>({ props }: TextRenderer<T>) => {
@@ -62,17 +62,14 @@ export const BooleanBadge = <T,>({ props }: TextRenderer<T>) => {
 
     const displayProps = {
         value: value.toString(),
+        backgroundColor: "white",
+        // borderColor: "white",
     };
 
     if (value === false && !_hasOwnProperty("color", props)) {
         Object.assign(displayProps, {
-            color: "rgb(229, 231, 235)", // same as the n/a color
+            color: "rgb(203, 213, 225)", // === var(--gray-300) from .nullValue styling
         });
-    }
-
-    if (_hasOwnProperty("icon", props)) {
-        const iconStyle = buildElementStyle(props, "color");
-        Object.assign(displayProps, { iconOnly: true, iconStyle: iconStyle });
     }
 
     return <Badge props={Object.assign(props as any, displayProps)} />;

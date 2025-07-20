@@ -1,22 +1,22 @@
-import { AriaProps, StylingProps } from "./types";
 import React, { ReactNode } from "react";
 
+import { StylingProps } from "./types";
 import styles from "./styles/card.module.css";
 
 interface CardBodyProps {
-    children: ReactNode | string;
+    children: ReactNode;
 }
 
 interface CardHeaderProps {
-    children: ReactNode | string;
+    children: ReactNode;
 }
 
 type CardVariant = "half" | "third" | "two-thirds" | "full";
 
-interface CardProps {
+interface CardProps extends StylingProps {
     href?: string;
     onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void | null;
-    children: ReactNode | string;
+    children: ReactNode;
     variant: CardVariant;
     hover?: boolean;
 }
@@ -31,8 +31,8 @@ export const Card = ({
     className,
     variant = "full",
     hover = false,
-    role,
-}: CardProps & StylingProps & AriaProps) => {
+    ...rest /// for things like aria*- and role along w/typing against the React.HTMLAtts...
+}: CardProps & React.HTMLAttributes<HTMLDivElement>) => {
     const isClickable = href || onClick;
     const useHoverStyles = hover || isClickable;
     const classes = [
@@ -55,20 +55,26 @@ export const Card = ({
     };
 
     return (
-        <div className={classes} role={role} onClick={isClickable ? handleClick : undefined}>
+        <div className={classes} onClick={isClickable ? handleClick : undefined} {...rest}>
             {children}
         </div>
     );
 };
 
-interface FeatureCardProps extends Omit<CardProps, "children">, StylingProps, AriaProps {
+interface FeatureCardProps extends Omit<CardProps, "children">, StylingProps {
     icon: React.ElementType;
     title: string;
     description: string;
 }
 
 // note: this assumes the `icon` is a lucide-react icon
-export const FeatureCard = ({ icon, title, description, className, ...cardProps }: FeatureCardProps) => {
+export const FeatureCard = ({
+    icon,
+    title,
+    description,
+    className,
+    ...cardProps
+}: FeatureCardProps & React.HTMLAttributes<HTMLDivElement>) => {
     const Icon = icon;
     return (
         <Card {...cardProps} className={[className, styles["feature-card"]].filter(Boolean).join(" ")}>

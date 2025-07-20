@@ -1,0 +1,68 @@
+.toggleSwitch {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.toggleInput {
+    display: none;
+}
+
+.toggleSlider {
+    width: 30px;
+    height: 15px;
+    background: #ccc;
+    border-radius: 20px;
+    position: relative;
+    transition: background 0.2s;
+    display: inline-block;
+}
+
+.toggleInput:checked + .toggleSlider {
+    background: #4ade80;
+}
+
+.toggleInput:checked + .toggleSlider.primary {
+    background: var(--secondary-blue);
+}
+
+.toggleSlider:before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.2s;
+}
+
+.toggleInput:checked + .toggleSlider:before {
+    transform: translateX(14px);
+}
+
+.toggleLabel {
+    font-size: 0.8em;
+    margin-left: 0.5rem;
+}
+
+.toggleGroup {
+    width: 100%;
+    gap: 12px;
+}
+
+.toggleGroupColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.toggleGroupGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: minmax(40px, auto);
+    gap: 16px;
+    max-width: 420px;
+    /* 3 columns * 140px each (example width) */
+}

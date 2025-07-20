@@ -4,7 +4,7 @@ import { Info } from "lucide-react";
 import { InlineIcon } from "@niagads/ui";
 
 const meta: Meta<typeof InlineIcon> = {
-    title: "NIAGADS-VIZ/UI/InlineIcon",
+    title: "UI/InlineIcon",
     component: InlineIcon,
     tags: ["autodocs"],
     argTypes: {
