@@ -1,4 +1,4 @@
-.record-type-badge {
+.recordTypeBadge {
     display: inline-block;
     padding: 0.25rem 0.5rem;
     background-color: var(--gray-100);
@@ -8,28 +8,28 @@
     text-transform: capitalize;
 }
 
-.record-type-badge.gene {
+.recordTypeBadge.gene {
     background-color: #e0f2fe;
     color: #0369a1;
 }
 
-.record-type-badge.variant {
+.recordTypeBadge.variant {
     background-color: #fef3c7;
     color: #92400e;
 }
 
-.record-type-badge.study {
+.recordTypeBadge.study {
     background-color: #d1fae5;
     color: #047857;
 }
 
-.view-details-link {
+.viewDetailsLink {
     color: var(--primary-blue);
     text-decoration: none;
     font-size: 0.875rem;
     font-weight: 500;
 }
 
-.view-details-link:hover {
+.viewDetailsLink:hover {
     text-decoration: underline;
 }

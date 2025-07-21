@@ -1,0 +1,114 @@
+.description {
+    color: var(--text-secondary, #4b5563);
+    font-weight: 500;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.infoContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.attribute {
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.infoLabel {
+    font-weight: 600;
+    color: var(--text-primary, #374151);
+}
+
+.overviewGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.title {
+    /*font-size: 1.75rem !important;
+    font-weight: 700 !important;
+    color: #1f2937; */
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 0.5rem;
+    line-height: 1.2;
+    min-width: 100%;
+    display: flex;
+    align-items: center;
+    /*  margin-bottom: 0.5rem;
+ 
+    */
+}
+
+.externalIdentifier {
+    background: var(--gray-50, #f3f4f6);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius, 0.25rem);
+    width: fit-content;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-grow: 0;
+    font-family: var(--font-family-mono, "Monaco", "Menlo", "Ubuntu Mono", monospace);
+    font-size: 1.2rem;
+    color: var(--text-secondary, #6b7280);
+}
+
+
+.sectionTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary, #1f2937);
+    margin-bottom: 1rem;
+    padding-bottom: 0;
+}
+
+.container {
+    padding: 1rem;
+}
+
+.pageContainer {
+    display: flex;
+    min-height: calc(100vh - var(--header-height) - var(--footer-height));
+    margin-top: 0;
+}
+
+.pageContainerCapped {
+    height: calc(100vh - var(--header-height));
+}
+
+.contentSection {
+    margin-top: 0;
+}
+
+
+
+@media (max-width: 1024px) {
+    .overviewGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+
+
+    .overviewGrid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .sectionTitle {
+        font-size: 1.25rem;
+    }
+}

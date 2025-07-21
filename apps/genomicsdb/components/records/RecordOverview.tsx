@@ -1,17 +1,19 @@
 import React, { ReactNode } from "react";
 
 import { ExternalLink } from "lucide-react";
+import { InlineIcon } from "@niagads/ui";
 import { RecordType } from "@/lib/types";
+import badgeStyles from "./styles/record-type.module.css";
+import styles from "./styles/record.module.css";
 
-interface RecordOverviewSectionProps {
+interface RecordOverviewProps {
     children: ReactNode;
 }
 
-export const RecordOverviewSection = ({ children }: RecordOverviewSectionProps) => {
+export const RecordOverview = ({ children }: RecordOverviewProps) => {
     return (
-        <div id="overview" className="overview-section">
-            {/* Grid layout for overview cards */}
-            <div className="overview-grid">{children}</div>
+        <div id="overview" className={styles.overviewGrid}>
+            {children}
         </div>
     );
 };
@@ -24,19 +26,21 @@ export const renderRecordTitle = (
 ) => {
     // TODO: title for the link indicating which external resource (depending on record type) this will take you to
     return (
-        <div className="record-title">
-            <span className={`record-type-badge ${recordType}`}>{displayId}</span>
+        <div className={styles.title}>
+            <span className={`${badgeStyles.recordTypeBadge} ${badgeStyles[recordType]}`}>{displayId}</span>
 
             {externalId && <span>-</span>}
             {externalId && (
                 <a
-                    className="record-external-identifier record-external-identifier-text"
+                    className={`${styles.externalIdentifier} ${styles.externalIdentifierText}`}
                     href={`${externalUrl}${externalId}`}
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    {externalId}{" "}
-                    <ExternalLink className="record-external-identifier record-external-identifier-icon"></ExternalLink>
+                    <InlineIcon icon={<ExternalLink size={18} />} iconPosition="end">
+                        {" "}
+                        {externalId}
+                    </InlineIcon>
                 </a>
             )}
         </div>
