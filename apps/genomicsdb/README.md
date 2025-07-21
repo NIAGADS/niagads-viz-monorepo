@@ -36,6 +36,15 @@ There is likely no need to change the following:
 
 ## Docker Deployment
 
+> NOTE: temporary **beta** instructions: will change when packages are published and can do a sparse checkout
+
+> NOTE: temporary **beta** instruction: will change when `npm run genomicsdb-build` runs successfuly (when all broken or dead code is removed)
+
+For now: the `docker-compose.yaml`, `genomicsdb.Dockerfile`, and `genomicsdb.docker.env.sample` have been **moved to the root monorepo directory**, so that the Docker container can be deployed despite the broken build
+
+* rename `genomicsdb.docker.env.sample`  to `.env` and follow the instructions as in the [Environment Section](#environment).
+
+
 ### Environment
 
 Rename `docker.env.sample` to `.env`
@@ -55,7 +64,10 @@ and edit as necessary for your envronment:
 
 > NOTE: currently the docker container only deploys the cache database service.  Application service will be added soon.
 
-To deploy the docker container, run the following
+To deploy the cache, run the following
 
-```docker compose up -d genomicsdb-client-cachedb```
+```docker compose up -d genomicsdb-cachedb```
 
+To deploy the client, run the following:
+
+```docker compose up -d genomicsdb-app```
