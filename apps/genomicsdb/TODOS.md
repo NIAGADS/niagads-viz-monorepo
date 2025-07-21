@@ -8,8 +8,6 @@
 
 * how to handle fonts UI/application
 
-* predicted consequece coloring in report overviews and tables: <https://useast.ensembl.org/info/genome/variation/prediction/predicted_data.html>
-
 ## Zile - in order of priority
 
 * Record Table in tabbed-sections are not fitting to enclosing div, no scrolling on x-overflow, instead div (Card?) is growing.  
