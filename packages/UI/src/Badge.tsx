@@ -6,7 +6,7 @@ import styles from "./styles/badge.module.css";
 
 interface BadgeProps extends StylingProps {
     children: ReactNode;
-    icon: ReactNode;
+    icon?: ReactNode;
     iconPosition?: "start" | "end";
     variant?: "badge" | "pill";
 }

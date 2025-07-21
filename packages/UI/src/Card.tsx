@@ -19,6 +19,7 @@ interface CardProps extends StylingProps {
     children: ReactNode;
     variant: CardVariant;
     hover?: boolean;
+    outline?: boolean;
 }
 
 export const CardBody = ({ children }: CardBodyProps) => <div className={styles["card-body"]}>{children}</div>;
@@ -31,6 +32,7 @@ export const Card = ({
     className,
     variant = "full",
     hover = false,
+    outline = true,
     ...rest /// for things like aria*- and role along w/typing against the React.HTMLAtts...
 }: CardProps & React.HTMLAttributes<HTMLDivElement>) => {
     const isClickable = href || onClick;
@@ -40,6 +42,7 @@ export const Card = ({
         styles[`card-${variant}`],
         isClickable && styles["card-link"],
         useHoverStyles && styles["with-hover"],
+        outline && styles["with-outline"],
         className,
     ]
         .filter(Boolean)

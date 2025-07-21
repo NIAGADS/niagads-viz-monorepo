@@ -1,30 +1,31 @@
-import React, { ReactNode, useEffect, useMemo, useState } from "react";
+import React, { ReactNode, Suspense, useEffect, useId, useMemo, useState } from "react";
 
 import { Card } from "../Card";
-import { HelpIconWrapper } from "./HelpIcon";
+import { HelpIconWrapper } from "../HelpIcon";
+import { LoadingSpinner } from "../LoadingSpinner";
+import { StylingProps } from "../types";
 import styles from "../styles/tabs.module.css";
 
 export interface TabDef {
-    label: string;
+    label: ReactNode;
     id: string;
     info?: string;
     content: ReactNode;
 }
 
-interface TabsProps {
-    sectionId?: string;
+interface TabsProps extends StylingProps {
     tabs: TabDef[];
     width: string; // tailwind width class
 }
 
 type TabButtonProps = Omit<TabDef, "content"> & {
-    sectionId?: string;
     isActive: boolean;
     onClick: any;
 };
 
-const TabButton = ({ label, id, info, sectionId, isActive, onClick }: TabButtonProps) => {
+const TabButton = ({ label, id, info, isActive, onClick }: TabButtonProps) => {
     const [isSelected, setIsSelected] = useState<boolean>(false);
+    const buttonId = useId();
 
     useEffect(() => {
         setIsSelected(isActive);
@@ -37,7 +38,7 @@ const TabButton = ({ label, id, info, sectionId, isActive, onClick }: TabButtonP
 
     return (
         <button
-            key={id}
+            key={buttonId}
             className={`${styles["tab-item"]} ${isSelected ? styles.active : ""}`}
             onClick={onSelect}
             role="tab"
@@ -45,11 +46,7 @@ const TabButton = ({ label, id, info, sectionId, isActive, onClick }: TabButtonP
             aria-controls={`tabpanel-${id}`}
         >
             {info ? (
-                <HelpIconWrapper
-                    anchorId={`${sectionId ? sectionId + "_" : ""}-${id}-info`}
-                    message={info}
-                    variant={"question"}
-                >
+                <HelpIconWrapper message={info} variant={"question"}>
                     {label}
                 </HelpIconWrapper>
             ) : (
@@ -59,9 +56,11 @@ const TabButton = ({ label, id, info, sectionId, isActive, onClick }: TabButtonP
     );
 };
 
-export const Tabs = ({ sectionId, tabs, width = "full" }: TabsProps) => {
+export const Tabs = ({ tabs, width = "full" }: TabsProps) => {
     const [selectedKey, setSelectedKey] = useState<string | null>(tabs && tabs.length > 0 ? tabs[0].id : null);
     const [activeTab, setActiveTab] = useState<TabDef | null>(tabs && tabs.length > 0 ? tabs[0] : null);
+
+    const tabsId = useId();
 
     useEffect(() => {
         if (tabs) {
@@ -81,12 +80,11 @@ export const Tabs = ({ sectionId, tabs, width = "full" }: TabsProps) => {
     return (
         activeTab && (
             <>
-                <div className={styles["tab-container"]} role="tablist">
+                <div id={tabsId} className={styles["tab-container"]} role="tablist">
                     {tabs.map((tab) => (
                         <TabButton
                             key={`button-${tab.id}`}
                             label={tab.label}
-                            sectionId={sectionId}
                             id={tab.id}
                             info={tab.info}
                             isActive={tab.id === activeTab.id}
@@ -94,8 +92,9 @@ export const Tabs = ({ sectionId, tabs, width = "full" }: TabsProps) => {
                         ></TabButton>
                     ))}
                 </div>
+
                 <Card variant="full" hover={false} role="tabpanel">
-                    {memoizedTabContent}
+                    <Suspense fallback={<LoadingSpinner message="Loading..." />}>{memoizedTabContent}</Suspense>
                 </Card>
             </>
         )

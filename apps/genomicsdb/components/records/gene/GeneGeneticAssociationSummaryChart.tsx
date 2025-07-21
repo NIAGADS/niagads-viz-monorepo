@@ -1,21 +1,14 @@
 "use server";
 
-import {
-    APIResponse,
-    AssociationTraitCategory,
-    AssociationTraitSource,
-    GeneticAssocationSummary,
-    RecordReport,
-} from "@/lib/types";
+import { APIResponse, AssociationTraitCategory, AssociationTraitSource, GeneticAssocationSummary } from "@/lib/types";
 import { _fetch, fetchRecordAssocations } from "@/lib/route-handlers";
 import { getCache, setCache } from "@/lib/cache";
 
-import { InlineError } from "@/components/InlineError";
+import { InlineError } from "@/components/ErrorAlerts";
 import Placeholder from "../placeholder";
 import { Series } from "@niagads/charts";
 import { _get } from "@niagads/common";
-import { is_error_response } from "@/lib/utils";
-import { stringify } from "querystring";
+import { isErrorAPIResponse } from "@/lib/utils";
 
 type RelativePosition = "in gene" | "upstream" | "downstream";
 
@@ -76,7 +69,7 @@ const build_chart_series = (summary: GeneticAssocationSummary): Series => {
     return series as Series;
 };
 
-export default async function GeneAssociationSummaryChart({ recordId }: AssociationSummaryChartProps) {
+export async function GeneAssociationSummaryChart({ recordId }: AssociationSummaryChartProps) {
     async function fetchSummary(traitCategory: AssociationTraitCategory, source: AssociationTraitSource) {
         const response = (await fetchRecordAssocations(
             "gene",
@@ -85,7 +78,7 @@ export default async function GeneAssociationSummaryChart({ recordId }: Associat
             source,
             "summary"
         )) as APIResponse;
-        if (is_error_response(response)) {
+        if (isErrorAPIResponse(response)) {
             throw new Error(JSON.stringify(response));
         }
         return response.data;

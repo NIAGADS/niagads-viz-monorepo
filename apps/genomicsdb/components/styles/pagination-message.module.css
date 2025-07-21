@@ -1,0 +1,17 @@
+.alert {
+    margin-bottom: 1rem;
+    font-size: 0.8rem;
+}
+
+.messageContainer {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 0;
+    align-items: center;
+}
+
+.message {
+    display: flex;
+    flex-grow: 0;
+    flex-direction: column;
+}

@@ -1,7 +1,5 @@
 "use client";
 
-import "./error-page.css";
-
 import { _isJSON, formatMultiline, linkify, safeHtml } from "@niagads/common";
 
 import { APIError } from "@/lib/errors";

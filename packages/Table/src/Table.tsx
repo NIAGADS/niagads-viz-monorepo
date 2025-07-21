@@ -28,8 +28,6 @@ import { _get, _hasOwnProperty, toTitleCase } from "@niagads/common";
 import { CustomSortingFunctions } from "./TableSortingFunctions";
 import { RowSelectionControls } from "./ControlElements/RowSelectionControls";
 import { TableColumnHeader } from "./TableColumnHeader";
-import { Tooltip } from "@niagads/ui/client";
-import { Trash2 as TrashIcon } from "lucide-react";
 import styles from "./styles/table.module.css";
 
 const __resolveSortingFn = (col: GenericColumn) => {

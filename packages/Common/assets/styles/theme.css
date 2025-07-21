@@ -48,9 +48,6 @@
     --focus-ring: 0 0 0 3px rgba(37, 99, 235, 0.1);
 
     /* Layout */
-    --header-height: 72px;
-    --footer-height: 90px;
-    --sidebar-width: 280px;
     --border-radius: 8px;
     --border-radius-sm: 4px;
     --border-radius-lg: 12px;

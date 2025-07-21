@@ -2,10 +2,11 @@ import { BadgeCheck, Info, OctagonAlert, TriangleAlert } from "lucide-react";
 import React, { ReactNode } from "react";
 
 import { InlineIcon } from "./InlineIcon";
+import { StylingProps } from "./types";
 import { _get } from "@niagads/common";
 import styles from "./styles/alert.module.css";
 
-interface Alert {
+interface Alert extends StylingProps {
     variant?: AlertVariants;
     message: string;
     children?: ReactNode;
@@ -20,13 +21,13 @@ const ICONS = {
 
 type AlertVariants = keyof typeof ICONS;
 
-export const Alert = ({ variant = "info", message, children }: Alert) => {
+export const Alert = ({ variant = "info", message, children, className, style = {} }: Alert) => {
     const classes = [styles.alert, styles[variant]].filter(Boolean).join(" ");
 
     const Icon = ICONS[variant] || Info;
 
     return (
-        <div className={classes} role="alert">
+        <div className={`${classes} ${className}`} role="alert" style={style}>
             <span className={styles["alert-sr"]}>{variant}</span>
             <InlineIcon icon={<Icon size={18} />}>
                 <span className={styles["alert-message"]}>{message}</span>

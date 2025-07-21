@@ -1,6 +1,9 @@
 import { Alert } from "@niagads/ui";
 
+export const NoData = ({}) => <Alert variant="info" message="No data available." style={{ maxWidth: "25%" }}></Alert>;
+
 // TODO handle message which may be stringified JSON
+// until then not displaying message
 export function InlineError({ message, reload = false }: { message: string; reload: boolean }) {
     const renderTrackerMessage = () => (
         <>
@@ -20,7 +23,7 @@ export function InlineError({ message, reload = false }: { message: string; relo
             <div>
                 {reload ? (
                     <p>
-                        <strong>Please try reloading the page.</strong>
+                        Oops! An unexpected error occurred. <strong>Please try reloading the page.</strong>
                     </p>
                 ) : (
                     renderTrackerMessage()

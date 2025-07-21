@@ -10,7 +10,7 @@ import React, { useState } from "react";
 
 import { Button } from "@niagads/ui";
 import { Filter } from "./Filter";
-import { HelpIconWrapper } from "@niagads/ui/client";
+import { HelpIconWrapper } from "@niagads/ui";
 import { TableRow } from "./TableProperties";
 import { _get } from "@niagads/common";
 import styles from "./styles/table.module.css";
@@ -52,11 +52,7 @@ export const TableColumnHeader = ({ header, tableId }: TableColumnHeaderProps) =
                     onClick={header.column.getToggleSortingHandler()}
                 >
                     {description ? (
-                        <HelpIconWrapper
-                            anchorId={`${tableId}-${header.column.id}-info`}
-                            message={description}
-                            variant={"question"}
-                        >
+                        <HelpIconWrapper message={description} variant={"question"} tooltipPosition="bottom">
                             <span>{headerContent}</span>
                         </HelpIconWrapper>
                     ) : (
