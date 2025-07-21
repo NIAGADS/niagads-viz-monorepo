@@ -88,6 +88,8 @@ const __SPAN_RECORD_SECTIONS: AnchoredPageSection[] = [
 ];
 
 const __GENE_RECORD_SECTIONS: AnchoredPageSection[] = [
+    GWAS_ASSOC_SECTION,
+    CURATED_ASSOC_SECTION,
     //{ id: "link-outs", label: "Link outs", description: "", icon: "link", tables: [] },
     {
         id: "predicted-function",
@@ -123,7 +125,6 @@ const __VARIANT_RECORD_SECTIONS: AnchoredPageSection[] = [
     { id: "overview", label: "Overview", icon: "home" },
     GWAS_ASSOC_SECTION,
     CURATED_ASSOC_SECTION,
-    //{ id: "link-outs", label: "Link outs", description: "", icon: "link", tables: [] },
     {
         id: "predicted-consequences",
         label: "Predicted Consequences",
