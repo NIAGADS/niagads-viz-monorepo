@@ -1,7 +1,5 @@
 // lib/types.ts - project type definitions
 
-import { TableProps } from "@niagads/table";
-
 // API Response
 
 export interface APIResult {}
@@ -30,10 +28,21 @@ export interface APIResponse {
     message: string;
 }
 
+// generic placeholders b/c to avoid importing
+// client component in server component, if we need better typing
+// can import TableProps from @niagads/table in
+// the client component
+export interface NIAGADSTableProps {
+    id: string;
+    options?: any;
+    columns: any;
+    data: any;
+}
+
 export interface APITableResponse {
     request: Request;
     pagination: Pagination;
-    table: TableProps;
+    table: NIAGADSTableProps;
 }
 
 export interface APIErrorResponse {
@@ -200,7 +209,9 @@ export interface AnchoredPageSection extends AnchoredSectionBase {
 }
 
 // shared props for components fetching record data that needs to be cached
-export interface CacheKeyInfo {
+export interface CacheIdentifier {
     recordId: string;
     recordType: RecordType;
+    sectionId?: string;
+    sectionLabel?: string;
 }

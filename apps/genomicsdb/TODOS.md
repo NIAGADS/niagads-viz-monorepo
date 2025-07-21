@@ -4,6 +4,10 @@
 
 * record page navigation offset
 
+* make the counter in tab buttons a badge?
+
+* margin-bottom on nested cards (see TabbedTables)
+
 * Selected rows bar Storybook table
 
 * `/components/sidebar`
@@ -14,6 +18,8 @@ This is an effect of removing the client side-states at the page level.
 Review whether media queries are sufficient or if we want to reinstate this.  Will it work w/new record/layout.tsx?
 
 * TableExportControl form formatting
+
+* how to handle fonts
 
 ## Group
 

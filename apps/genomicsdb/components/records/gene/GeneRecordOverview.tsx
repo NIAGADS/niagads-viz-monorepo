@@ -5,7 +5,8 @@ import GeneAssociationSummaryChart from "./GeneGeneticAssociationSummaryChart";
 import { GeneRecord } from "@/lib/types";
 import { RecordActionToolbar } from "../RecordActionToolbar";
 import { genomic_location_to_span } from "@/lib/utils";
-import { renderRecordTitle } from "../RecordOverviewSection";
+import { renderRecordTitle } from "../RecordOverview";
+import styles from "../styles/record.module.css";
 
 export function GeneRecordOverview({ record }: { record: GeneRecord }) {
     // Format location string: chr:start-end:strand / cytogenic_location
@@ -23,19 +24,19 @@ export function GeneRecordOverview({ record }: { record: GeneRecord }) {
                     {renderRecordTitle(record.symbol, record.id, ExternalUrls.ENSEMBL_GENE_URL, "gene")}
                 </CardHeader>
                 <CardBody>
-                    <div>{record.name && <div className="record-description">{record.name}</div>}</div>
-                    <div className="record-info-content mb-15">
-                        <div className="record-details">
+                    <div>{record.name && <div className={styles.description}>{record.name}</div>}</div>
+                    <div className={styles.infoContent}>
+                        <div className={styles.details}>
                             {synonyms && (
-                                <div className="record-attribute">
-                                    <span className="info-label">Also known as:</span> {synonyms}
+                                <div className={styles.attribute}>
+                                    <span className={styles.infoLabel}>Also known as:</span> {synonyms}
                                 </div>
                             )}
-                            <div className="record-attribute">
-                                <span className="info-label">Gene Type:</span> {record.type}
+                            <div className={styles.attribute}>
+                                <span className={styles.infoLabel}>Gene Type:</span> {record.type}
                             </div>
-                            <div className="record-attribute">
-                                <span className="info-label">Location:</span> {location}
+                            <div className={styles.attribute}>
+                                <span className={styles.infoLabel}>Location:</span> {location}
                             </div>
                         </div>
                     </div>

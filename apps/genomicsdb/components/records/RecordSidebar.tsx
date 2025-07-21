@@ -1,32 +1,23 @@
 "use client";
 
-import "./record-sidebar.css";
-
 import {
     Activity,
     AudioLines,
     BarChart2,
     ChartNoAxesGantt,
-    ChevronDown,
-    ChevronLeft,
-    ChevronRight,
     Database,
-    Dna,
-    Download,
     ExternalLink,
-    Eye,
     FileText,
     GitBranch,
     Home,
     Info,
-    TrendingUp,
 } from "lucide-react";
 import { AnchoredPageSection, RecordType } from "@/lib/types";
 
 import Link from "next/link";
+import badgeStyles from "./styles/record-type.module.css";
+import styles from "./styles/record-sidebar.module.css";
 import { useState } from "react";
-
-//import "./records/record-sidebar.css";
 
 const ICONS = {
     home: Home,
@@ -48,7 +39,7 @@ interface SidebarProps {
     isOpen?: boolean; // hold-over
 }
 
-const RecordSidebar = ({ title, recordType, items }: SidebarProps) => {
+export const RecordSidebar = ({ title, recordType, items }: SidebarProps) => {
     const [isOpen, setIsOpen] = useState(true);
     const [activeFilter, setActiveFilter] = useState("overview");
 
@@ -64,12 +55,12 @@ const RecordSidebar = ({ title, recordType, items }: SidebarProps) => {
         return (
             <div key={item.id}>
                 <button
-                    className={`sidebar-item ${isActive ? "active" : ""}`}
+                    className={[styles.item, isActive ? styles.itemActive : ""].join(" ")}
                     onClick={() => handleItemClick(item.id)}
                     aria-current={isActive ? "page" : undefined}
                 >
-                    <Icon className="sidebar-item-icon" size={18} aria-hidden="true" />
-                    <Link href={`#${item.id}`} className="sidebar-item-text">
+                    <Icon className={styles.itemIcon} size={18} aria-hidden="true" />
+                    <Link href={`#${item.id}`} className={styles.itemText}>
                         {item.label}
                     </Link>
                     {/*<span className="flex-1 text-left">{item.label}</span>*/}
@@ -79,24 +70,32 @@ const RecordSidebar = ({ title, recordType, items }: SidebarProps) => {
     };
 
     return (
-        <aside className={`sidebar ${isOpen ? "open" : ""}`} role="navigation" aria-label="Secondary navigation">
-            <div className="sidebar-header">
-                <h2 className="sidebar-title">
+        <aside
+            className={[styles.sidebar, isOpen ? styles.open : ""].join(" ")}
+            role="navigation"
+            aria-label="Secondary navigation"
+        >
+            <div className={styles.header}>
+                <h2 className={styles.title}>
                     {" "}
-                    <div className={`record-type-badge ${recordType}`}>{recordType}</div>
+                    <div
+                        className={[styles.recordTypeBadge, badgeStyles.recordTypeBadge, badgeStyles[recordType]].join(
+                            " "
+                        )}
+                    >
+                        {recordType}
+                    </div>
                     {/*title*/} Annotation
                 </h2>
                 {/*<button
-                    className="sidebar-toggle"
+                    className={styles.toggle}
                     onClick={() => handleCollapse()}
                     aria-label={isOpen ? "Collapse sidebar" : "Expand sidebar"}
                 >
                     {isOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
                 </button>*/}
             </div>
-            <nav className="sidebar-nav">{items.map((item) => renderSidebarItem(item))}</nav>
+            <nav className={styles.nav}>{items.map((item) => renderSidebarItem(item))}</nav>
         </aside>
     );
 };
-
-export default RecordSidebar;

@@ -1,21 +1,14 @@
 "use server";
 
-import {
-    APIResponse,
-    AssociationTraitCategory,
-    AssociationTraitSource,
-    GeneticAssocationSummary,
-    RecordReport,
-} from "@/lib/types";
+import { APIResponse, AssociationTraitCategory, AssociationTraitSource, GeneticAssocationSummary } from "@/lib/types";
 import { _fetch, fetchRecordAssocations } from "@/lib/route-handlers";
 import { getCache, setCache } from "@/lib/cache";
 
-import { InlineError } from "@/components/InlineError";
+import { InlineError } from "@/components/ErrorAlerts";
 import Placeholder from "../placeholder";
 import { Series } from "@niagads/charts";
 import { _get } from "@niagads/common";
 import { is_error_response } from "@/lib/utils";
-import { stringify } from "querystring";
 
 type RelativePosition = "in gene" | "upstream" | "downstream";
 
