@@ -14,12 +14,10 @@ const meta: Meta<typeof Tabs> = {
     tags: ["autodocs"],
     argTypes: {
         width: { control: "text", description: "Tailwind width class for the tab container" },
-        sectionId: { control: "text", description: "Optional section id for accessibility" },
         tabs: { control: false, description: "Tab definitions (array of TabDef objects)" },
     },
     args: {
         width: "full",
-        sectionId: undefined,
         tabs: [
             {
                 id: "text",
