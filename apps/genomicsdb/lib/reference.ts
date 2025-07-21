@@ -52,4 +52,5 @@ export const ExternalUrls = {
     HGNC_URL: "https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/",
     EFO_TRAIT_URL: "http://www.ebi.ac.uk/efo/",
     ALPHAFOLDDB_PROTEIN_URL: "https://alphafold.ebi.ac.uk/entry/",
+    GNOMAD_URL: "https://gnomad.broadinstitute.org/",
 };
