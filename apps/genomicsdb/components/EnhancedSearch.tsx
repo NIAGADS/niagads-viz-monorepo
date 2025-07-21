@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import "./enhanced-search-component.css";
 import { Autocomplete } from "@niagads/ui/client";
 import { _fetch } from "@/lib/route-handlers";
 import { SearchResult } from "@/lib/types";
+
+import "./enhanced-search-component.css";
 
 interface EnhancedSearchProps {
     placeholder?: string;
@@ -19,7 +20,7 @@ export function EnhancedSearch({ placeholder, autoRoute }: EnhancedSearchProps) 
     const getSuggestions = (value: string) => {
         setSuggestions([]);
         !!value &&
-            _fetch(`/service/search?keyword=${value}`).then((results: SearchResult[]) => setSuggestions(results));
+            _fetch(`/api/service/search?keyword=${value}&limit=10`).then((results: SearchResult[]) => setSuggestions(results));
     };
 
     const handleSearch = (searchTerm: string) => {

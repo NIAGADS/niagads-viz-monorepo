@@ -30,7 +30,7 @@ const useDebounce = (value: string) => {
 interface Suggestion {
     id: string;
     display: string;
-    record_type: "gene" | "variant" | "span" | "track";
+    record_type?: "gene" | "variant" | "span" | "track";
 }
 interface AutocompleteProps {
     suggestions: Suggestion[];
@@ -125,7 +125,7 @@ export const Autocomplete = ({
                     role="combobox"
                 />
 
-                {showSuggestions && suggestions.length > 0 && (
+                {showSuggestions && (
                     <div className={styles["ui-autocomplete-suggestions"]} role="listbox">
                         {waiting || !(suggestions.length > 0) ? (
                             <LoadingSpinner />
