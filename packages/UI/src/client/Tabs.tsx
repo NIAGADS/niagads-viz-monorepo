@@ -1,7 +1,7 @@
 import React, { ReactNode, Suspense, useEffect, useId, useMemo, useState } from "react";
 
 import { Card } from "../Card";
-import { HelpIconWrapper } from "./HelpIcon";
+import { HelpIconWrapper } from "../HelpIcon";
 import { LoadingSpinner } from "../LoadingSpinner";
 import { StylingProps } from "../types";
 import styles from "../styles/tabs.module.css";
@@ -46,7 +46,7 @@ const TabButton = ({ label, id, info, isActive, onClick }: TabButtonProps) => {
             aria-controls={`tabpanel-${id}`}
         >
             {info ? (
-                <HelpIconWrapper anchorId={`help-${buttonId}`} message={info} variant={"question"}>
+                <HelpIconWrapper message={info} variant={"question"}>
                     {label}
                 </HelpIconWrapper>
             ) : (

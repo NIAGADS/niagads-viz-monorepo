@@ -1,51 +1,27 @@
-import { PlacesType, Tooltip as ReactTooltip, VariantType } from "react-tooltip";
 import React, { ReactNode } from "react";
 
 import styles from "./styles/tooltip.module.css";
 
+export type TooltipPosition = "top" | "bottom" | "left" | "right";
 interface TooltipProps {
-    anchorId: string;
     content: string | ReactNode;
-    children: string | ReactNode;
-    variant?: VariantType;
-    place?: PlacesType;
-    openOnClick?: boolean; // tooltip opens on click instead of hover
+    children: ReactNode;
+    position?: TooltipPosition;
 }
 
-export function Tooltip({
-    anchorId,
-    content,
-    children,
-    place = "top",
-    variant = "dark",
-    openOnClick = false,
-}: TooltipProps) {
-    const friendlyAnchorId = "tooltip-" + anchorId.replace(" ", "_");
+export function Tooltip({ content, children, position = "top" }: TooltipProps) {
     return (
-        <>
-            <div
-                data-tooltip-id={friendlyAnchorId}
-                data-tooltip-variant={variant}
-                className={styles["ui-tooltip-anchor"]}
-            >
-                {children}
-            </div>
-            <ReactTooltip
-                className={styles["ui-tooltip-text"]}
-                id={friendlyAnchorId}
-                openOnClick={openOnClick}
-                place={place}
-            >
-                {content}
-            </ReactTooltip>
-        </>
+        <span className={styles.tooltipWrapper}>
+            {children}
+            <span className={`${styles.tooltip} ${styles[position]}`}>{content}</span>
+        </span>
     );
 }
 
 // function that renders simple text only tooltip
-export const renderTooltip = (anchorId: string, children: any, message: any) => {
+export const renderTooltip = (children: any, message: any, position?: TooltipPosition) => {
     return (
-        <Tooltip anchorId={anchorId} content={message}>
+        <Tooltip content={message} position={position}>
             {children}
         </Tooltip>
     );

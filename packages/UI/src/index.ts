@@ -14,3 +14,5 @@ export * from "./InlineIcon";
 export * from "./Badge";
 export * from "./Toggle";
 export * from "./FilterChip";
+export * from "./HelpIcon";
+export * from "./Tooltip";

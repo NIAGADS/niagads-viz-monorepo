@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { HelpIcon } from "@niagads/ui/client";
+import { HelpIcon } from "@niagads/ui";
 
 const meta: Meta<typeof HelpIcon> = {
     title: "UI/HelpIcon",
@@ -10,7 +10,6 @@ const meta: Meta<typeof HelpIcon> = {
     },
     tags: ["autodocs"],
     argTypes: {
-        anchorId: { control: "text" },
         message: { control: "text" },
         variant: { control: { type: "radio" }, options: ["alert", "question", "info"] },
         className: {
@@ -25,7 +24,6 @@ type Story = StoryObj<typeof HelpIcon>;
 
 export const Default: Story = {
     args: {
-        anchorId: "info",
         message: "Pay attention!",
         variant: "alert",
         className: "",

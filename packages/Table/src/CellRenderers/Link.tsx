@@ -1,6 +1,6 @@
 import { _get, _hasOwnProperty, _isNull } from "@niagads/common";
 
-import { HelpIconWrapper } from "@niagads/ui/client";
+import { HelpIconWrapper } from "@niagads/ui";
 import React from "react";
 import { Text } from "./BasicText";
 import { TextRenderer } from "./TextRenderer";
@@ -51,9 +51,8 @@ export const Link = <T,>({ props }: TextRenderer<T>) => {
     const component = _renderLink(value ? value : url, url);
     const tooltip = _get("tooltip", props);
     if (tooltip) {
-        const anchorId = `${_get("rowId", props)}-${_get("columnId", props)}`;
         return (
-            <HelpIconWrapper anchorId={anchorId} message={tooltip} variant={"question"}>
+            <HelpIconWrapper message={tooltip} variant={"question"}>
                 {component}
             </HelpIconWrapper>
         );

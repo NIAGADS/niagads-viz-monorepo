@@ -1,4 +1,4 @@
-import { HelpIconWrapper, renderTooltip } from "@niagads/ui/client";
+import { HelpIconWrapper, renderTooltip } from "@niagads/ui";
 import React, { ReactNode, useState } from "react";
 import { TextRenderer, buildElementStyle, renderNullValue } from "./TextRenderer";
 import { _deepCopy, _get, _hasOwnProperty, _isJSON, _isNA, _isNull } from "@niagads/common";
@@ -23,17 +23,16 @@ export const StyledText = ({ value, className = "", style = {} }: StyledTextProp
 interface TextWithInfoProps {
     text: ReactNode;
     message: string;
-    anchorId: string;
     asInfoLink?: boolean; // display as info link instead of as icon
 }
 
-export const TextWithInfo = ({ text, message, anchorId, asInfoLink }: TextWithInfoProps) => {
+export const TextWithInfo = ({ text, message, asInfoLink }: TextWithInfoProps) => {
     if (asInfoLink) {
         const infoLink = <div className={styles.infoLink}>{text}</div>;
-        return <>{renderTooltip(anchorId, infoLink, message)}</>;
+        return <>{renderTooltip(infoLink, message)}</>;
     }
     return (
-        <HelpIconWrapper anchorId={anchorId} message={message} variant={"info"}>
+        <HelpIconWrapper message={message} variant={"info"}>
             {text}
         </HelpIconWrapper>
     );
@@ -77,16 +76,8 @@ export const Text = <T,>({ props }: TextRenderer<T>) => {
 
     // tooltips
     if (_hasOwnProperty("tooltip", props)) {
-        const anchorId = `${_get("rowId", props)}-${_get("columnId", props)}`;
         const asInfoLink = _get("inlineTooltip", props, false); // tooltip
-        return (
-            <TextWithInfo
-                text={styledText}
-                message={_get("tooltip", props)}
-                anchorId={anchorId}
-                asInfoLink={asInfoLink}
-            />
-        );
+        return <TextWithInfo text={styledText} message={_get("tooltip", props)} asInfoLink={asInfoLink} />;
     }
 
     return styledText;
