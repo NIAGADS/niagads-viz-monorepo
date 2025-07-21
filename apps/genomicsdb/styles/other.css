@@ -7,7 +7,6 @@
     font-weight: 500;
 }
 
-
 /* Loading States */
 .loading-container {
     display: flex;
@@ -36,8 +35,6 @@
         transform: rotate(360deg);
     }
 }
-
-
 
 /* Progress Bar Styles */
 .progress-bar {
