@@ -7,7 +7,7 @@ import { StylingProps } from "../types";
 import styles from "../styles/tabs.module.css";
 
 export interface TabDef {
-    label: string;
+    label: ReactNode;
     id: string;
     info?: string;
     content: ReactNode;

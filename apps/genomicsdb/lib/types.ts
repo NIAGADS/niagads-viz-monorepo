@@ -52,6 +52,8 @@ export interface Pagination {
     total_num_records: number;
 }
 
+export type TablePagination = { [key: string]: Pagination };
+
 export interface APIResponse {
     data: APIResult[];
     request: Request;

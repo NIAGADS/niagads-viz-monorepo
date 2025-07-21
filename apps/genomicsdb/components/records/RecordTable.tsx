@@ -1,11 +1,12 @@
 import { APITableResponse, CacheIdentifier, Pagination, TableSection } from "@/lib/types";
-import { Alert, LoadingSpinner } from "@niagads/ui";
 import { InlineError, NoData } from "../ErrorAlerts";
 
+import { LoadingSpinner } from "@niagads/ui";
 import PaginationMessage from "../PaginationMessage";
 import Table from "@niagads/table";
 import { _fetch } from "@/lib/route-handlers";
 import { is_error_response } from "@/lib/utils";
+import { useEffect } from "react";
 import useSWR from "swr";
 
 export interface RecordTableProps extends CacheIdentifier {
@@ -19,18 +20,20 @@ export default function RecordTable({ tableDef, onTableLoad, ...cacheInfo }: Rec
         (url: string) => fetch(url).then((res) => res.json())
     );
 
+    // Call onTableLoad when data is loaded and valid to return the result size
+    // to the parent
+    useEffect(() => {
+        if (onTableLoad && data && !isLoading) {
+            onTableLoad((data as APITableResponse).pagination);
+        }
+    }, [isLoading, data]);
+
     if (isLoading) return <LoadingSpinner />;
 
     if (error) return <InlineError message="Oops! An unexpected error occurred." reload={true} />;
 
     if (is_error_response(data)) {
         return <InlineError message={data.detail} reload={false} />;
-    }
-
-    // Call onTableLoad when data is loaded and valid to return the result size
-    // to the parent
-    if (onTableLoad && data) {
-        onTableLoad((data as APITableResponse).pagination);
     }
 
     if ((data as APITableResponse).pagination.total_num_records === 0) {
