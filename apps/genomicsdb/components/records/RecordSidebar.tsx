@@ -1,36 +1,11 @@
 "use client";
 
-import {
-    Activity,
-    AudioLines,
-    BarChart2,
-    ChartNoAxesGantt,
-    Database,
-    ExternalLink,
-    FileText,
-    GitBranch,
-    Home,
-    Info,
-} from "lucide-react";
-import { AnchoredPageSection, RecordType } from "@/lib/types";
+import { AnchoredPageSection, PAGE_SECTION_ICONS as ICONS, RecordType } from "@/lib/types";
 
 import Link from "next/link";
 import badgeStyles from "./styles/record-type.module.css";
 import styles from "./styles/record-sidebar.module.css";
 import { useState } from "react";
-
-const ICONS = {
-    home: Home,
-    gantt: ChartNoAxesGantt,
-    barchart: BarChart2,
-    link: ExternalLink,
-    network: GitBranch,
-    database: Database,
-    info: Info,
-    activity: Activity,
-    frequency: AudioLines,
-    file: FileText,
-};
 
 interface SidebarProps {
     title: string;
