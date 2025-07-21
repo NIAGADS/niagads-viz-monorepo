@@ -1,4 +1,35 @@
 // lib/types.ts - project type definitions
+import {
+    Activity,
+    AudioLines,
+    Brain,
+    ChartNoAxesCombined,
+    Database,
+    ExternalLink,
+    FilePenLine,
+    FileText,
+    GitBranch,
+    Home,
+    Info,
+} from "lucide-react";
+
+// icons
+
+export const PAGE_SECTION_ICONS = {
+    home: Home,
+    brain: Brain,
+    chart: ChartNoAxesCombined,
+    link: ExternalLink,
+    network: GitBranch,
+    database: Database,
+    info: Info,
+    activity: Activity,
+    frequency: AudioLines,
+    file: FileText,
+    annotate: FilePenLine,
+};
+
+export type PageSectionIcon = keyof typeof PAGE_SECTION_ICONS;
 
 // API Response
 
@@ -69,18 +100,6 @@ export interface PageProps {
 
 export type AssociationTraitCategory = "biomarker" | "ad" | "adrd" | "other" | "all_ad" | "all";
 export type AssociationTraitSource = "gwas" | "curated" | "all";
-
-export type PageSectionIcons =
-    | "home"
-    | "gantt"
-    | "barchart"
-    | "link"
-    | "network"
-    | "database"
-    | "info"
-    | "activity"
-    | "file"
-    | "frequency";
 
 export type RecordType = "gene" | "variant" | "span" | "track";
 
@@ -204,7 +223,7 @@ export interface TableSection extends AnchoredSectionBase {
 }
 
 export interface AnchoredPageSection extends AnchoredSectionBase {
-    icon: PageSectionIcons;
+    icon: PageSectionIcon;
     tables?: TableSection[];
 }
 

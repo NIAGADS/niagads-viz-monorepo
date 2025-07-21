@@ -6,7 +6,7 @@ const __GENE_RECORD_SECTIONS: AnchoredPageSection[] = [
         id: "gwas-genetic-associations",
         label: "NIAGADS GWAS associations",
         description: "",
-        icon: "gantt",
+        icon: "chart",
         tables: [
             {
                 id: "gwas-ad",
@@ -32,7 +32,7 @@ const __GENE_RECORD_SECTIONS: AnchoredPageSection[] = [
         id: "curated-genetic-associations",
         label: "Curated associations",
         description: "",
-        icon: "gantt",
+        icon: "file",
         tables: [
             {
                 id: "curated-ad",
@@ -65,7 +65,7 @@ const __GENE_RECORD_SECTIONS: AnchoredPageSection[] = [
         id: "predicted-function",
         label: "Functional Annotation",
         description: "",
-        icon: "file",
+        icon: "annotate",
         tables: [
             {
                 id: "go-function",
