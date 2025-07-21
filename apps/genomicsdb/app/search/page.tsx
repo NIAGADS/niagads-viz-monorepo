@@ -1,14 +1,10 @@
 import { Suspense } from "react";
-import { LoadingSpinner, ActionButton } from "@niagads/ui";
+import { LoadingSpinner, Button } from "@niagads/ui";
 import { EnhancedSearch } from "@/components/EnhancedSearch";
 import { Filter, Download, ChevronLeft, ChevronRight } from "lucide-react";
 import { _fetch } from "@/lib/route-handlers";
 import { SearchResult } from "@/lib/types";
 import Link from "next/link";
-
-import "@/components/table.css";
-import "@/components/tab-navigation.css";
-import "@/components/records/records-list.css";
 
 interface SearchPageProps {
     searchParams: { q?: string; type?: string };
@@ -19,9 +15,7 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
     const query = params.q || "";
     const type = params.type;
 
-    const tabs = ["gene", "variant", "span", "track"];
-
-    const results: SearchResult[] = (await _fetch(`/service/search?keyword=${query}`)) as SearchResult[];
+    const results: SearchResult[] = (await _fetch(`/api/service/search?keyword=${query}`)) as SearchResult[];
 
     const filteredRecords = type ? results.filter((result) => result.record_type === type) : results;
 
@@ -68,10 +62,10 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
                                 placeholder="Search genes, variants, or genomic regions (e.g., APOE, rs429358)"
                                 autoRoute={true}
                             />
-                            <ActionButton>
+                            <Button>
                                 <Filter size={16} aria-hidden="true" />
                                 Search
-                            </ActionButton>
+                            </Button>
                         </div>
                     </div>
                     {/* <div className="tab-navigation" role="tablist">
@@ -94,10 +88,10 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
                                 <div className="card-subtitle">Showing {filteredRecords.length} results</div>
                             </div>
                             <div className="flex gap-2">
-                                <ActionButton>
+                                <Button>
                                     <Download size={16} aria-hidden="true" />
                                     Export
-                                </ActionButton>
+                                </Button>
                             </div>
                         </div>
                         <div className="table-container">
@@ -123,7 +117,7 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
                                             </td>
                                             <td role="gridcell" className="scientific-notation">
                                                 <Link
-                                                    href={`/records/${item.record_type}/${item.id}`}
+                                                    href={`/record/${item.record_type}/${item.id}`}
                                                     className="text-primary-blue hover:underline"
                                                 >
                                                     {item.id}
@@ -137,7 +131,7 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
                                             <td role="gridcell">{item.description}</td>
                                             <td role="gridcell">
                                                 <Link
-                                                    href={`/records/${item.record_type}/${item.id}`}
+                                                    href={`/record/${item.record_type}/${item.id}`}
                                                     className="view-details-link"
                                                 >
                                                     View Details

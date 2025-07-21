@@ -129,7 +129,7 @@ export interface AttributeCount {
     [key: string]: number;
 }
 
-export interface GeneticAssocationSummary {
+export interface GeneticAssociationSummary {
     trait_category: string;
     trait: OntologyTerm;
     num_variants: number | AttributeCount;

@@ -7,12 +7,6 @@ import { useRouter } from "next/navigation";
 
 export function HomePage() {
     const router = useRouter();
-    const suggestions = ["APOE", "TREM2", "APP", "PSEN1", "MAPT", "CLU", "CR1", "PICALM", "Alzheimer's disease"];
-
-    // const handleSearch = (query: string) => {
-    //   // Navigate to search page with query parameter
-    //   router.push(`/search?q=${encodeURIComponent(query)}`)
-    // }
 
     const features = [
         {
@@ -139,7 +133,7 @@ export function HomePage() {
                         <div
                             className="feature-card"
                             style={{ cursor: "pointer" }}
-                            onClick={() => router.push("/records/gene/APOE")}
+                            onClick={() => router.push("/record/gene/APOE")}
                         >
                             <div className="feature-title">Explore APOE</div>
                             <p className="feature-description">
@@ -161,7 +155,7 @@ export function HomePage() {
                         <div
                             className="feature-card"
                             style={{ cursor: "pointer" }}
-                            onClick={() => router.push("/records/variant/chr19:44908684")}
+                            onClick={() => router.push("/record/variant/chr19:44908684")}
                         >
                             <div className="feature-title">Chromosome 19</div>
                             <p className="feature-description">
