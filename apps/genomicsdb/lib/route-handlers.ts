@@ -57,6 +57,9 @@ export async function fetchRecordAssocations(
 }
 
 export async function _fetch(endpoint: string, content: ResponseContent = "full", dataOnly: boolean = false) {
+    if (!endpoint.startsWith("/api/")) {
+        throw Error("Runtime Error: _fetch wrapper is for querying /api endpoints only.");
+    }
     let query = endpoint;
     let namespace: string = "";
     if (endpoint.includes("/service/")) {
