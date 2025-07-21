@@ -2,9 +2,9 @@ import Redis from "ioredis";
 
 const CACHEDB = new Redis(process.env.INTERNAL_CACHE_DB_URL!);
 
-const TTL = { day: 86400, hour: 3600, "12hrs": 432000, "6hrs": 21600 };
+const TTL = { "10mins": 600, day: 86400, hour: 3600, "12hrs": 432000, "6hrs": 21600 };
 type TTLKey = keyof typeof TTL;
-const DEFAULT_TTL = (process.env.DEFAULT_CACHE_TTL as TTLKey) || "hour";
+const DEFAULT_TTL = (process.env.CACHEDB_TTL as TTLKey) || "hour";
 
 // Helper to prefix key with namespace
 function withNamespace(namespace: string, key: string): string {
