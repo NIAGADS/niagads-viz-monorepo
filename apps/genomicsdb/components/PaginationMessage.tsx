@@ -5,7 +5,7 @@ import React, { useId } from "react";
 
 import { CloudCog } from "lucide-react";
 import { Pagination } from "@/lib/types";
-import { Tooltip } from "@niagads/ui/client";
+import { TooltipClient } from "@niagads/ui/client";
 import styles from "./styles/pagination-message.module.css";
 
 interface PaginationMessageProps {
@@ -26,7 +26,7 @@ const PaginationMessage = ({ pagination, endpoint }: PaginationMessageProps) => 
         <Alert variant="info" message={"This query returned a large result"} className={styles.alert}>
             <div className={styles.messageContainer}>
                 <div>
-                    <Tooltip content="Copied to clipboard!" anchorId={tooltipId} openOnClick={true}>
+                    <TooltipClient content="Copied to clipboard!" openOnClick={true}>
                         <Button
                             onClick={handleCopy}
                             title={`Get record permalink`}
@@ -35,7 +35,7 @@ const PaginationMessage = ({ pagination, endpoint }: PaginationMessageProps) => 
                         >
                             <InlineIcon icon={<CloudCog size={16} />}>Fetch</InlineIcon>
                         </Button>
-                    </Tooltip>
+                    </TooltipClient>
                 </div>
                 <div className={styles.message}>
                     <span>

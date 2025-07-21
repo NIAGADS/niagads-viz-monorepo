@@ -11,6 +11,7 @@ import {
     GitBranch,
     Home,
     Info,
+    SquareChartGantt,
 } from "lucide-react";
 
 // icons
@@ -27,6 +28,7 @@ export const PAGE_SECTION_ICONS = {
     frequency: AudioLines,
     file: FileText,
     annotate: FilePenLine,
+    location: SquareChartGantt,
 };
 
 export type PageSectionIcon = keyof typeof PAGE_SECTION_ICONS;
@@ -176,6 +178,11 @@ export interface PredictedConsequence {
     amino_acid_cahnge: string | null;
 }
 
+export interface CADDScore {
+    phred: number;
+    raw: number;
+}
+
 export interface VariantRecord extends BaseRecord {
     record_type: "variant";
     variant_class: string;
@@ -184,6 +191,9 @@ export interface VariantRecord extends BaseRecord {
     location: GenomicLocation;
     is_adsp_variant: boolean | null;
     most_severe_consequence: PredictedConsequence | null;
+    cadd_scores: CADDScore;
+    is_structural_variant: boolean;
+    allele_string: string;
     ref: string;
     alt: string;
 }

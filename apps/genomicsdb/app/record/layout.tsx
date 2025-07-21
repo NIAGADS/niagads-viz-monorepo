@@ -1,4 +1,4 @@
-import { get_record_id_from_path, get_record_type_from_path } from "@/lib/utils";
+import { getRecordIdFromPath, getRecordTypeFromPath } from "@/lib/utils";
 
 import { RECORD_PAGE_SECTIONS } from "./sections";
 import { RecordSidebar } from "@/components/records/RecordSidebar";
@@ -9,8 +9,8 @@ import styles from "@/components/records/styles/record.module.css";
 export default async function RecordPageLayout({ children }: { children: React.ReactNode }) {
     const headers = await get_headers();
     const request: string = headers.get("x-current-pathname")!;
-    const recordType: RecordType = get_record_type_from_path(request)!;
-    const recordId = get_record_id_from_path(request);
+    const recordType: RecordType = getRecordTypeFromPath(request)!;
+    const recordId = getRecordIdFromPath(request);
 
     return (
         <div className={`${styles.pageContainer} ${styles.pageContainerCapped}`}>

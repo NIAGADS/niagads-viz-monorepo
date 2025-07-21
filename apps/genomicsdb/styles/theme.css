@@ -27,6 +27,10 @@ a {
     text-decoration: none;
 }
 
+a:hover {
+    text-decoration: underline;
+}
+
 /* Focus management */
 *:focus {
     outline: none;

@@ -1,6 +1,6 @@
 import { APIErrorResponse, APIResponse, AssociationTraitCategory, AssociationTraitSource, RecordType } from "./types";
 import { getCache, setCache } from "./cache";
-import { get_public_url, get_record_id_from_path, get_record_type_from_path, is_error_response } from "./utils";
+import { getPublicUrl, getRecordIdFromPath, getRecordTypeFromPath, isErrorAPIResponse } from "./utils";
 
 import { APIError } from "./errors";
 import { backendFetch } from "@niagads/common";
@@ -12,7 +12,7 @@ type ResponseFormat = "summary" | "table" | "default";
 export async function fetchRecord(endpoint: string, brief: boolean = true) {
     const response = await _fetch(endpoint, brief ? "brief" : "full");
 
-    if (is_error_response(response)) {
+    if (isErrorAPIResponse(response)) {
         if (response.status === 404) {
             notFound();
         } else if (response.status === 429) {
@@ -81,9 +81,9 @@ export async function _fetch(endpoint: string, content: ResponseContent = "full"
     }
 
     // Not cached, fetch from backend
-    const response: APIResponse | APIErrorResponse = await backendFetch(query, get_public_url());
+    const response: APIResponse | APIErrorResponse = await backendFetch(query, getPublicUrl());
 
-    const isError = is_error_response(response);
+    const isError = isErrorAPIResponse(response);
     if (!isError) {
         // don't cache errors; they may go away
         await setCache(namespace, endpoint, JSON.stringify(response));

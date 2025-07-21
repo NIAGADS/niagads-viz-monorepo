@@ -1,4 +1,4 @@
-import { AlertCircle, HelpCircle, Info } from "lucide-react";
+import { AlertCircle, HelpCircle, Info, ShieldAlert } from "lucide-react";
 import React, { ReactNode } from "react";
 import { Tooltip, TooltipPosition } from "./Tooltip";
 
@@ -10,6 +10,7 @@ const ICONS = {
     alert: AlertCircle,
     question: HelpCircle,
     info: Info,
+    shield: ShieldAlert,
 };
 
 type HelpIconVariant = keyof typeof ICONS;
@@ -27,7 +28,7 @@ export const HelpIcon = ({ message, variant, tooltipPosition = "top", className 
     return (
         <Tooltip content={message} position={tooltipPosition}>
             <div className={className}>
-                <Icon size={15} />
+                <Icon size={15} color={variant === "shield" ? "red" : undefined} />
             </div>
         </Tooltip>
     );

@@ -5,7 +5,7 @@ import { LoadingSpinner } from "@niagads/ui";
 import PaginationMessage from "../PaginationMessage";
 import Table from "@niagads/table";
 import { _fetch } from "@/lib/route-handlers";
-import { is_error_response } from "@/lib/utils";
+import { isErrorAPIResponse } from "@/lib/utils";
 import { useEffect } from "react";
 import useSWR from "swr";
 
@@ -32,7 +32,7 @@ export default function RecordTable({ tableDef, onTableLoad, ...cacheInfo }: Rec
 
     if (error) return <InlineError message="Oops! An unexpected error occurred." reload={true} />;
 
-    if (is_error_response(data)) {
+    if (isErrorAPIResponse(data)) {
         return <InlineError message={data.detail} reload={false} />;
     }
 

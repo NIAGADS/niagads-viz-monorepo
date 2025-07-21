@@ -3,9 +3,9 @@
 import { ActionToolbar, Button, ButtonGroup, InlineIcon } from "@niagads/ui";
 import { Download, Eye, Share2 } from "lucide-react";
 import { GenomicFeatureRecord, Record, TrackRecord } from "@/lib/types";
+import { genomicLocationToSpan, getPublicUrl } from "@/lib/utils";
 
-import { Tooltip } from "@niagads/ui/client";
-import { genomic_location_to_span } from "@/lib/utils";
+import { TooltipClient } from "@niagads/ui/client";
 
 interface ActionToolbarProps {
     id: string;
@@ -14,7 +14,7 @@ interface ActionToolbarProps {
 
 export const RecordActionToolbar = ({ id, record }: ActionToolbarProps) => {
     const isFeatureRecord: boolean = "location" in record;
-    const span = isFeatureRecord ? genomic_location_to_span((record as GenomicFeatureRecord).location) : false;
+    const span = isFeatureRecord ? genomicLocationToSpan((record as GenomicFeatureRecord).location) : false;
 
     const handleViewInGenomeBrowser = () => {
         // Navigate to genome browser with gene coordinates
@@ -28,7 +28,7 @@ export const RecordActionToolbar = ({ id, record }: ActionToolbarProps) => {
 
     const handleShare = () => {
         // create permalink and copy to clipboard
-        const permalink = `${process.env.NEXT_PUBLIC_HOST_URL}/record/${record.record_type}/${record.id}`;
+        const permalink = `${getPublicUrl()}/record/${record.record_type}/${record.id}`;
         navigator.clipboard.writeText(permalink);
     };
 
@@ -44,11 +44,11 @@ export const RecordActionToolbar = ({ id, record }: ActionToolbarProps) => {
                         <InlineIcon icon={<Download size={16} />}>Export</InlineIcon>
                     </Button>
 
-                    <Tooltip content="Copied to clipboard!" anchorId="record-share" openOnClick={true}>
+                    <TooltipClient content="Copied to clipboard!" openOnClick={true}>
                         <Button onClick={handleShare} title={`Get record permalink`}>
                             <InlineIcon icon={<Share2 size={16} />}>Share</InlineIcon>
                         </Button>
-                    </Tooltip>
+                    </TooltipClient>
                 </ButtonGroup>
             </ActionToolbar>
         </>

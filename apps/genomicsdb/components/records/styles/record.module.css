@@ -5,6 +5,11 @@
     margin-bottom: 1.5rem;
 }
 
+.minusIcon {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+
 .infoContent {
     display: flex;
     flex-direction: column;
@@ -65,7 +70,6 @@
     color: var(--text-secondary, #6b7280);
 }
 
-
 .sectionTitle {
     font-size: 1.5rem;
     font-weight: 700;
@@ -92,8 +96,6 @@
     margin-top: 0;
 }
 
-
-
 @media (max-width: 1024px) {
     .overviewGrid {
         grid-template-columns: repeat(2, 1fr);
@@ -101,8 +103,6 @@
 }
 
 @media (max-width: 768px) {
-
-
     .overviewGrid {
         grid-template-columns: 1fr;
         gap: 1rem;

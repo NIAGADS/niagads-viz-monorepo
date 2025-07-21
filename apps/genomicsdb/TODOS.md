@@ -6,6 +6,10 @@
   
 > See Card.tsx and Button.tsx in UI for how example of how to allow aria-* and role to be passed to a custom component
 
+* how to handle fonts UI/application
+
+* predicted consequece coloring in report overviews and tables: <https://useast.ensembl.org/info/genome/variation/prediction/predicted_data.html>
+
 ## Zile - in order of priority
 
 * Record Table in tabbed-sections are not fitting to enclosing div, no scrolling on x-overflow, instead div (Card?) is growing.  
@@ -19,19 +23,17 @@ Also with previous design users had to click on every section which could be pro
 
 We need some quick fixes: sidebar height, sidebar sticky, navigation offset when jumping to anchors & anything else that catches your eye
 
-* TableExportControl form formatting in @niagads/table
+* @niagads/Table TableExportControl form formatting
 
-* make the counter in tab buttons a badge?
-
-## Group
-
-* how to handle fonts UI/application
+* UI Tooltip styling: wrap long ones to max of two lines and give a max-width (see one over ADSP badge in variant overview for a long tooltip)
 
 ## Emily
 
 * create genomicsdb issue tracking project on github and update sample.env.local
 
 * is_error_response did not catch: the fast API validation error - need to wrap these
+
+* colocated variants in genetic variation section?
 
 ```json
 {

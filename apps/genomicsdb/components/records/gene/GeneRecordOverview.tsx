@@ -1,16 +1,16 @@
 import { Card, CardBody, CardHeader } from "@niagads/ui";
 
 import { ExternalUrls } from "@/lib/reference";
-import GeneAssociationSummaryChart from "./GeneGeneticAssociationSummaryChart";
+import { GeneAssociationSummaryChart } from "./GeneGeneticAssociationSummaryChart";
 import { GeneRecord } from "@/lib/types";
 import { RecordActionToolbar } from "../RecordActionToolbar";
-import { genomic_location_to_span } from "@/lib/utils";
+import { genomicLocationToSpan } from "@/lib/utils";
 import { renderRecordTitle } from "../RecordOverview";
 import styles from "../styles/record.module.css";
 
 export function GeneRecordOverview({ record }: { record: GeneRecord }) {
     // Format location string: chr:start-end:strand / cytogenic_location
-    const span = genomic_location_to_span(record.location, true);
+    const span = genomicLocationToSpan(record.location, true);
     const location = record.cytogenic_location ? `${span} / ${record.cytogenic_location}` : span;
 
     // Format synonyms as comma-space delimited string
@@ -21,7 +21,7 @@ export function GeneRecordOverview({ record }: { record: GeneRecord }) {
             {/* Gene Information Card - 1/3 width */}
             <Card variant="third">
                 <CardHeader>
-                    {renderRecordTitle(record.symbol, record.id, ExternalUrls.ENSEMBL_GENE_URL, "gene")}
+                    {renderRecordTitle(record.symbol, record.id, ExternalUrls.ENSEMBL_GENE_URL, record.record_type)}
                 </CardHeader>
                 <CardBody>
                     <div>{record.name && <div className={styles.description}>{record.name}</div>}</div>

@@ -1,6 +1,6 @@
+import { ExternalLink, Minus } from "lucide-react";
 import React, { ReactNode } from "react";
 
-import { ExternalLink } from "lucide-react";
 import { InlineIcon } from "@niagads/ui";
 import { RecordType } from "@/lib/types";
 import badgeStyles from "./styles/record-type.module.css";
@@ -29,7 +29,7 @@ export const renderRecordTitle = (
         <div className={styles.title}>
             <span className={`${badgeStyles.recordTypeBadge} ${badgeStyles[recordType]}`}>{displayId}</span>
 
-            {externalId && <span>-</span>}
+            {externalId && <Minus size={12} className={styles.minusIcon} />}
             {externalId && (
                 <a
                     className={`${styles.externalIdentifier} ${styles.externalIdentifierText}`}
