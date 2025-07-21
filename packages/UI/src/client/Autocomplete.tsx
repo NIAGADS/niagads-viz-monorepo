@@ -141,7 +141,9 @@ export const Autocomplete = ({
                                             aria-selected={index === highlightedIndex}
                                         >
                                             <div className={styles["ui-suggestion-content"]}>
-                                                <span className={styles["ui-suggestion-text"]}>{suggestion.display}</span>
+                                                <span className={styles["ui-suggestion-text"]}>
+                                                    {suggestion.display}
+                                                </span>
                                             </div>
                                             <ArrowRight size={14} className={styles["ui-suggestion-arrow"]} />
                                         </div>

@@ -20,7 +20,9 @@ export function EnhancedSearch({ placeholder, autoRoute }: EnhancedSearchProps) 
     const getSuggestions = (value: string) => {
         setSuggestions([]);
         !!value &&
-            _fetch(`/api/service/search?keyword=${value}&limit=10`).then((results: SearchResult[]) => setSuggestions(results));
+            _fetch(`/api/service/search?keyword=${value}&limit=10`).then((results: SearchResult[]) =>
+                setSuggestions(results)
+            );
     };
 
     const handleSearch = (searchTerm: string) => {
