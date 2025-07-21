@@ -1,0 +1,102 @@
+/* Renamed from card.css for CSS Modules */
+/* Card Styles */
+
+.card {
+    background-color: var(--surface);
+
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+
+    transition: all var(--transition-fast);
+    font-family:
+        "Inter", "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana,
+        sans-serif;
+}
+
+.with-outline {
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow);
+}
+
+.feature-card {
+    padding: 2rem;
+    text-align: center;
+}
+
+.card-link {
+    cursor: pointer;
+}
+
+.with-hover:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    gap: 1rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.feature-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.feature-description {
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.feature-icon {
+    width: 48px;
+    height: 48px;
+    color: var(--primary-blue);
+    margin: 0 auto 1rem;
+}
+
+/* Card size variants */
+.card-third {
+    grid-column: span 1;
+}
+
+.card-half {
+    grid-column: span 1.5;
+}
+
+.card-two-thirds {
+    grid-column: span 2;
+}
+
+.card-full {
+    grid-column: span 3;
+}
+
+@media (max-width: 1024px) {
+    .card-third {
+        grid-column: span 1;
+    }
+
+    .card-half {
+        grid-column: span 1;
+    }
+
+    .card-two-thirds {
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .card-third,
+    .card-half,
+    .card-two-thirds,
+    .card-full {
+        grid-column: span 1;
+    }
+}

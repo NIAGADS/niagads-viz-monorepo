@@ -1,6 +1,37 @@
 // lib/types.ts - project type definitions
+import {
+    Activity,
+    AudioLines,
+    Brain,
+    ChartNoAxesCombined,
+    Database,
+    ExternalLink,
+    FilePenLine,
+    FileText,
+    GitBranch,
+    Home,
+    Info,
+    SquareChartGantt,
+} from "lucide-react";
 
-import { TableProps } from "@niagads/table";
+// icons
+
+export const PAGE_SECTION_ICONS = {
+    home: Home,
+    brain: Brain,
+    chart: ChartNoAxesCombined,
+    link: ExternalLink,
+    network: GitBranch,
+    database: Database,
+    info: Info,
+    activity: Activity,
+    frequency: AudioLines,
+    file: FileText,
+    annotate: FilePenLine,
+    location: SquareChartGantt,
+};
+
+export type PageSectionIcon = keyof typeof PAGE_SECTION_ICONS;
 
 // API Response
 
@@ -23,6 +54,8 @@ export interface Pagination {
     total_num_records: number;
 }
 
+export type TablePagination = { [key: string]: Pagination };
+
 export interface APIResponse {
     data: APIResult[];
     request: Request;
@@ -30,10 +63,21 @@ export interface APIResponse {
     message: string;
 }
 
+// generic placeholders b/c to avoid importing
+// client component in server component, if we need better typing
+// can import TableProps from @niagads/table in
+// the client component
+export interface NIAGADSTableProps {
+    id: string;
+    options?: any;
+    columns: any;
+    data: any;
+}
+
 export interface APITableResponse {
     request: Request;
     pagination: Pagination;
-    table: TableProps;
+    table: NIAGADSTableProps;
 }
 
 export interface APIErrorResponse {
@@ -71,18 +115,6 @@ export interface PageProps {
 
 export type AssociationTraitCategory = "biomarker" | "ad" | "adrd" | "other" | "all_ad" | "all";
 export type AssociationTraitSource = "gwas" | "curated" | "all";
-
-export type PageSectionIcons =
-    | "home"
-    | "gantt"
-    | "barchart"
-    | "link"
-    | "network"
-    | "database"
-    | "info"
-    | "activity"
-    | "file"
-    | "frequency";
 
 export type RecordType = "gene" | "variant" | "span" | "track";
 
@@ -157,6 +189,11 @@ export interface PredictedConsequence {
     amino_acid_cahnge: string | null;
 }
 
+export interface CADDScore {
+    phred: number;
+    raw: number;
+}
+
 export interface VariantRecord extends BaseRecord {
     record_type: "variant";
     variant_class: string;
@@ -165,6 +202,9 @@ export interface VariantRecord extends BaseRecord {
     location: GenomicLocation;
     is_adsp_variant: boolean | null;
     most_severe_consequence: PredictedConsequence | null;
+    cadd_scores: CADDScore;
+    is_structural_variant: boolean;
+    allele_string: string;
     ref: string;
     alt: string;
 }
@@ -206,12 +246,14 @@ export interface TableSection extends AnchoredSectionBase {
 }
 
 export interface AnchoredPageSection extends AnchoredSectionBase {
-    icon: PageSectionIcons;
+    icon: PageSectionIcon;
     tables?: TableSection[];
 }
 
 // shared props for components fetching record data that needs to be cached
-export interface CacheKeyInfo {
+export interface CacheIdentifier {
     recordId: string;
     recordType: RecordType;
+    sectionId?: string;
+    sectionLabel?: string;
 }

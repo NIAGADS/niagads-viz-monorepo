@@ -1,5 +1,5 @@
 import "./styles/global.css";
-
+export * from "./types";
 export * from "./Alert";
 export * from "./Button";
 export * from "./Card";
@@ -10,5 +10,10 @@ export * from "./Skeleton";
 export * from "./Select";
 export * from "./TextInput";
 export * from "./LoadingSpinner";
-export * from "./SimpleTooltip";
-export * from "./ActionButton";
+export * from "./InlineIcon";
+export * from "./Badge";
+export * from "./Toggle";
+export * from "./FilterChip";
+export * from "./HelpIcon";
+export * from "./Tooltip";
+export * from "./Footer";

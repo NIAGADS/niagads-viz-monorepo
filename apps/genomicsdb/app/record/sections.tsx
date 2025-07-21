@@ -1,71 +1,99 @@
 import { AnchoredPageSection } from "@/lib/types";
 
-const __GENE_RECORD_SECTIONS: AnchoredPageSection[] = [
+const GWAS_ASSOC_SECTION: AnchoredPageSection = {
+    id: "gwas-genetic-associations",
+    label: "NIAGADS GWAS associations",
+    description: "",
+    icon: "chart",
+    tables: [
+        {
+            id: "gwas-ad",
+            label: "Alzheimer's Disease",
+            description: "",
+            endpoint: "/associations?pvalue=5e-8&trait=AD&source=GWAS",
+        },
+        {
+            id: "gwas-adrd",
+            label: "AD-Related Dementias",
+            description: "",
+            endpoint: "/associations?pvalue=5e-8&trait=ADRD&source=GWAS",
+        },
+        {
+            id: "gwas-biomarker",
+            label: "AD/ADRD Biomarkers",
+            description: "",
+            endpoint: "/associations?pvalue=5e-8&trait=BIOMARKER&source=GWAS",
+        },
+    ],
+};
+
+const CURATED_ASSOC_SECTION: AnchoredPageSection = {
+    id: "curated-genetic-associations",
+    label: "Curated associations",
+    description: "",
+    icon: "file",
+    tables: [
+        {
+            id: "curated-ad",
+            label: "Alzheimer's Disease",
+            description: "",
+            endpoint: "/associations?pvalue=5e-8&trait=AD&source=CURATED",
+        },
+        {
+            id: "curated-adrd",
+            label: "AD-Related Dementias",
+            description: "",
+            endpoint: "/associations?pvalue=5e-8&trait=ADRD&source=CURATED",
+        },
+        {
+            id: "curated-biomarker",
+            label: "AD/ADRD Biomarkers",
+            description: "",
+            endpoint: "/associations?pvalue=5e-8&trait=BIOMARKER&source=CURATED",
+        },
+        {
+            id: "curated-Other",
+            label: "Other Associations",
+            description: "",
+            endpoint: "/associations?pvalue=5e-8&trait=OTHER&source=CURATED",
+        },
+    ],
+};
+
+const __SPAN_RECORD_SECTIONS: AnchoredPageSection[] = [
     { id: "overview", label: "Overview", icon: "home" },
     {
-        id: "gwas-genetic-associations",
-        label: "NIAGADS GWAS associations",
+        id: "colocated-features",
+        label: "Colocated Genomic Features",
         description: "",
-        icon: "gantt",
+        icon: "location",
         tables: [
             {
-                id: "gwas-ad",
-                label: "Alzheimer's Disease",
+                id: "genes",
+                label: "Genes",
                 description: "",
-                endpoint: "/associations?pvalue=5e-8&trait=AD&source=GWAS",
+                endpoint: "/record/gene/search?content=brief&span=",
             },
             {
-                id: "gwas-adrd",
-                label: "AD-Related Dementias",
+                id: "variants",
+                label: "Variants",
                 description: "",
-                endpoint: "/associations?pvalue=5e-8&trait=ADRD&source=GWAS",
+                endpoint: "/record/variant/search?content=brief&span=",
             },
-            {
-                id: "gwas-biomarker",
-                label: "AD/ADRD Biomarkers",
-                description: "",
-                endpoint: "/associations?pvalue=5e-8&trait=BIOMARKER&source=GWAS",
-            },
+            // TODO: functional genomics
         ],
     },
-    {
-        id: "curated-genetic-associations",
-        label: "Curated associations",
-        description: "",
-        icon: "gantt",
-        tables: [
-            {
-                id: "curated-ad",
-                label: "Alzheimer's Disease",
-                description: "",
-                endpoint: "/associations?pvalue=5e-8&trait=AD&source=CURATED",
-            },
-            {
-                id: "curated-adrd",
-                label: "AD-Related Dementias",
-                description: "",
-                endpoint: "/associations?pvalue=5e-8&trait=ADRD&source=CURATED",
-            },
-            {
-                id: "curated-biomarker",
-                label: "AD/ADRD Biomarkers",
-                description: "",
-                endpoint: "/associations?pvalue=5e-8&trait=BIOMARKER&source=CURATED",
-            },
-            {
-                id: "curated-Other",
-                label: "Other Associations",
-                description: "",
-                endpoint: "/associations?pvalue=5e-8&trait=OTHER&source=CURATED",
-            },
-        ],
-    },
+    GWAS_ASSOC_SECTION,
+    CURATED_ASSOC_SECTION,
+];
+
+const __GENE_RECORD_SECTIONS: AnchoredPageSection[] = [
     //{ id: "link-outs", label: "Link outs", description: "", icon: "link", tables: [] },
     {
         id: "predicted-function",
         label: "Functional Annotation",
         description: "",
-        icon: "file",
+        icon: "annotate",
         tables: [
             {
                 id: "go-function",
@@ -91,8 +119,64 @@ const __GENE_RECORD_SECTIONS: AnchoredPageSection[] = [
     },
 ];
 
+const __VARIANT_RECORD_SECTIONS: AnchoredPageSection[] = [
+    { id: "overview", label: "Overview", icon: "home" },
+    GWAS_ASSOC_SECTION,
+    CURATED_ASSOC_SECTION,
+    //{ id: "link-outs", label: "Link outs", description: "", icon: "link", tables: [] },
+    {
+        id: "predicted-consequences",
+        label: "Predicted Consequences",
+        description: "",
+        icon: "annotate",
+        tables: [
+            {
+                id: "transcript-consequences",
+                label: "Transcript Consequences",
+                description: "",
+                endpoint: "/function?&conseq=TRANSCRIPT",
+            },
+            {
+                id: "regulatory-consequences",
+                label: "Regulatory Consequences",
+                description: "",
+                endpoint: "/function?&conseq=REGULATORY",
+            },
+            {
+                id: "motif-consequences",
+                label: "Regulatory Motif Consequences",
+                description: "",
+                endpoint: "/function?&conseq=MOTIF",
+            },
+            {
+                id: "intergenic-consequences",
+                label: "Intergenic Consequences",
+                description: "",
+                endpoint: "/function?&conseq=INTERGENIC",
+            },
+        ],
+    },
+    {
+        id: "variation",
+        label: "Genetic Variation",
+        description: "",
+        icon: "frequency",
+        tables: [
+            {
+                id: "frequency",
+                label: "Population Frequencies",
+                description: "",
+                endpoint: "/frequencies",
+            },
+        ],
+    },
+    // TODO: linkage
+];
+
 export const RECORD_PAGE_SECTIONS = {
     gene: __GENE_RECORD_SECTIONS,
+    variant: __VARIANT_RECORD_SECTIONS,
+    span: __SPAN_RECORD_SECTIONS,
 };
 
 // TODO - linkouts

@@ -3,8 +3,8 @@
 import React, { useState, useEffect, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { Header } from "@/components/header";
-import Sidebar from "@/components/records/RecordSidebar";
-import { Footer } from "@niagads/ui/client";
+// import Sidebar from "@/components/records/RecordSidebar";
+import { Footer } from "@niagads/ui";
 import { MobileMenu } from "@/components/mobile-menu";
 
 interface MainLayoutProps {

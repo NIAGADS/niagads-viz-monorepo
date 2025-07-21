@@ -1,4 +1,5 @@
 import React from "react";
+import styles from "./styles/select.module.css";
 
 interface SelectProps {
     fields: string[] | { [key: string]: string } | number[];
@@ -35,11 +36,14 @@ export const Select = ({
             </option>
         ));
 
+    const wrapperClassName = `${styles["select-wrapper"]} ${inline ? styles["select-inline"] : ""}`;
+    const labelClassName = `${styles["select-label"]} ${inline ? styles["select-inline"] : ""}`;
+
     return (
         <>
-            <div className={inline ? "md:flex md:items-center" : ""}>
+            <div className={wrapperClassName}>
                 <div>
-                    <label htmlFor={id} className="ui-select-label">
+                    <label htmlFor={id} className={labelClassName}>
                         {label}
                     </label>
                 </div>
@@ -49,7 +53,7 @@ export const Select = ({
                         defaultValue={defaultValue}
                         id={id}
                         onChange={onChange}
-                        className={`ui-select ${variant}`}
+                        className={`${styles.select} ${styles[variant]}`}
                     >
                         {Array.isArray(fields) ? _optionsFromArray(fields) : _optionsFromObj(fields)}
                     </select>

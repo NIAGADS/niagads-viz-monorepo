@@ -1,10 +1,10 @@
-import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { CardHeader } from "@niagads/ui";
+import React from "react";
 
 const meta: Meta<typeof CardHeader> = {
-    title: "NIAGADS-VIZ/UI/Card/CardHeader",
+    title: "UI/Card/CardHeader",
     component: CardHeader,
     parameters: {
         layout: "centered",

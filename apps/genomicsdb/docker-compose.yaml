@@ -15,13 +15,13 @@ services:
     volumes:
       - ${KEYDB_DATA_DIR}:/data
 
-  # genomicsdb-client:
-  #     container_name: genomicsdb-client
-  #     image: genomicsdb-client:${RELEASE}
-  #     build:
-  #         context: .
-  #         dockerfile: ./Dockerfile
-  #     ports:
-  #         - "${HOST_CLIENT_PORT}:3000"
+  genomicsdb-client:
+      container_name: genomicsdb-client
+      image: genomicsdb-client:${RELEASE}
+      build:
+          context: .
+          dockerfile: ./Dockerfile
+      ports:
+          - "${HOST_CLIENT_PORT}:3000"
 
 

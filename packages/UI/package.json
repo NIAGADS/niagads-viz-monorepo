@@ -16,18 +16,17 @@
         "@rollup/plugin-node-resolve": "^16.0.0",
         "@rollup/plugin-terser": "^0.4.4",
         "@rollup/plugin-typescript": "^12.1.2",
-        "@tailwindcss/postcss": "^4.0.9",
+        "postcss-import": "^16.1.1",
         "rollup": "^4.28.1",
         "rollup-plugin-delete": "^2.1.0",
         "rollup-plugin-dts": "^6.1.1",
         "rollup-plugin-peer-deps-external": "^2.2.4",
-        "rollup-plugin-postcss": "^4.0.2",
-        "tailwindcss": "^4.0"
+        "rollup-plugin-postcss": "^4.0.2"
     },
     "dependencies": {
-        "@heroicons/react": "^2.2.0",
         "@niagads/common": "^1.0.1-alpha.0",
         "react-tooltip": "^5.28.0",
+        "lucide-react": "^0.513.0",
         "style-inject": "^0.3.0"
     },
     "files": [
@@ -49,7 +48,6 @@
             "default": "./dist/client/index.js",
             "types": "./dist/client/index.d.ts"
         },
-        "./package.json": "./package.json",
-        "./css": "./dist/niagads-ui.css"
+        "./package.json": "./package.json"
     }
 }

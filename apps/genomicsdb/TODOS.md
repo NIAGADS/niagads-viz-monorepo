@@ -1,30 +1,44 @@
 # TODOs and FIXMEs
 
-## Zile
+## Group, long-term TODOS
 
-* record page navigation offset
+* Assess accessibility
+  
+> See Card.tsx and Button.tsx in UI for how example of how to allow aria-* and role to be passed to a custom component
 
-* Selected rows bar Storybook table
+* how to handle fonts UI/application
 
-* `/components/sidebar`
+* predicted consequece coloring in report overviews and tables: <https://useast.ensembl.org/info/genome/variation/prediction/predicted_data.html>
 
-Commented out sidebar navigation button b/c it doesn't work and it hides the whole side bar, including the navigation.
-This is an effect of removing the client side-states at the page level.
+## Zile - in order of priority
 
-Review whether media queries are sufficient or if we want to reinstate this.  Will it work w/new record/layout.tsx?
+* Record Table in tabbed-sections are not fitting to enclosing div, no scrolling on x-overflow, instead div (Card?) is growing.  
 
-## Group
+* `Sidebar`
 
-* action button css
+We redesigned the sidebar, removing all states and hooks to allow pages to render server side.  We can reassess when we have more time.
+This breaks: collapsing, keeping current state.
 
-resolve action-button.css and record.css
+Also with previous design users had to click on every section which could be problematic for sparsely annotated records.
 
+We need some quick fixes: sidebar height, sidebar sticky, navigation offset when jumping to anchors & anything else that catches your eye
+
+* Most Severe Variant Consequence Card for variants: check it out & improve
+
+  * `/record/variant/1:241765187:GA:G` for multiple consequence terms
+  * `/record/variant/rs429358` another example
+
+* @niagads/Table TableExportControl form formatting
+
+* UI Tooltip styling: wrap long ones to max of two lines and give a max-width (see one over ADSP badge in variant overview for a long tooltip)
 
 ## Emily
 
-- create genomicsdb issue tracking project on github and update sample.env.local
+* create genomicsdb issue tracking project on github and update sample.env.local
 
-- is_error_response did not catch: the fast API validation error - need to wrap these
+* is_error_response did not catch: the fast API validation error - need to wrap these
+
+* colocated variants in genetic variation section?
 
 ```json
 {
@@ -40,3 +54,4 @@ resolve action-button.css and record.css
   },
 }
 ```
+

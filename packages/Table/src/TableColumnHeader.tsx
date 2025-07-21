@@ -1,60 +1,80 @@
-import { ArrowDownIcon, ArrowUpIcon, ArrowsUpDownIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/solid";
+import {
+    ArrowDownUp,
+    HelpCircle,
+    ListFilterPlus,
+    ArrowDownNarrowWide as SortAscIcon,
+    ArrowUpWideNarrow as SortDescIcon,
+} from "lucide-react";
 import { Header, flexRender } from "@tanstack/react-table";
 import React, { useState } from "react";
 
 import { Button } from "@niagads/ui";
 import { Filter } from "./Filter";
-import { FunnelIcon } from "@heroicons/react/24/outline";
+import { HelpIconWrapper } from "@niagads/ui";
 import { TableRow } from "./TableProperties";
 import { _get } from "@niagads/common";
-import { renderTooltip } from "@niagads/ui/client";
+import styles from "./styles/table.module.css";
 
 interface TableColumnHeaderProps {
     header: Header<TableRow, unknown>;
     tableId: string;
 }
 
-const __ICONS = {
-    sort: ArrowsUpDownIcon,
-    asc: ArrowUpIcon,
-    desc: ArrowDownIcon,
+const SORT_ICONS = {
+    sort: ArrowDownUp,
+    asc: SortAscIcon,
+    desc: SortDescIcon,
 };
 
 export const TableColumnHeader = ({ header, tableId }: TableColumnHeaderProps) => {
     const isSorted = header.column.getIsSorted();
-    const SortIcon = __ICONS[isSorted !== false ? isSorted : "sort"];
+    const SortIcon = SORT_ICONS[isSorted !== false ? isSorted : "sort"];
     const description = _get("description", header.column.columnDef.meta);
     const [filterOpen, setFilterOpen] = useState(false);
 
     const canSort = header.column.getCanSort();
 
+    const headerContent = flexRender(header.column.columnDef.header, header.getContext());
+
     return (
-        <th key={header.id} scope="col" className={`column-header column-header-text ${canSort ? "sortable" : ""}`}>
-            <div className="column-header-controls-container">
+        <th
+            key={header.id}
+            scope="col"
+            className={`${styles["column-header"]} ${styles["column-header-text"]} ${canSort ? styles["sortable"] : ""}`}
+        >
+            <div className={styles["column-header-controls-container"]}>
                 <div
-                    className={`${canSort ? "column-header-controls sortable" : "column-header-controls"}`}
+                    className={
+                        canSort
+                            ? `${styles["column-header-controls"]} ${styles["sortable"]}`
+                            : styles["column-header-controls"]
+                    }
                     onClick={header.column.getToggleSortingHandler()}
                 >
-                    <span>{flexRender(header.column.columnDef.header, header.getContext())}</span>
-                    {description &&
-                        renderTooltip(
-                            `${tableId}-${header.column.id}-info`,
-                            <QuestionMarkCircleIcon className="info-bubble column-header-info-icon" />,
-                            description
-                        )}
+                    {description ? (
+                        <HelpIconWrapper message={description} variant={"question"} tooltipPosition="bottom">
+                            <span>{headerContent}</span>
+                        </HelpIconWrapper>
+                    ) : (
+                        <span>{headerContent}</span>
+                    )}
                     {canSort ? (
                         SortIcon ? (
-                            <SortIcon className={`${isSorted ? "visible" : "invisible"} column-header-icon`} />
+                            <SortIcon
+                                className={`${isSorted ? styles["visible"] : styles["invisible"]} ${styles["column-header-icon"]} ${styles.right}`}
+                            />
                         ) : (
-                            <div className="column-header-sort-icon-placeholder"></div>
+                            <div className={styles["column-header-sort-icon-placeholder"]}></div>
                         )
                     ) : null}
                 </div>
 
                 {header.column.getCanFilter() && (
-                    <div className="column-header-filter-control-container">
-                        <Button variant="primary" size="sm" onClick={() => setFilterOpen(!filterOpen)}>
-                            <FunnelIcon className="icon-button stroke-white"></FunnelIcon>
+                    <div className={styles["column-header-filter-control-container"]}>
+                        <Button variant="icon" color="primary" onClick={() => setFilterOpen(!filterOpen)}>
+                            <ListFilterPlus
+                                className={`${styles["column-header-icon"]} ${styles.button}}`}
+                            ></ListFilterPlus>
                         </Button>
                     </div>
                 )}

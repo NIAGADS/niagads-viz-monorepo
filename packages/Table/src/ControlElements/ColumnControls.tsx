@@ -1,52 +1,52 @@
-import React, { useState, useEffect, useId } from "react";
+import React, { useEffect, useId, useState } from "react";
+import { TextInput, Toggle, ToggleGroup } from "@niagads/ui";
 
-import { Button, Checkbox } from "@niagads/ui";
-import { ViewColumnsIcon } from "@heroicons/react/24/solid";
-import { _get } from "@niagads/common";
-import { GenericColumn } from "../Column";
+import { ActionMenu } from "@niagads/ui/client";
 import { Column } from "@tanstack/react-table";
+import { Columns3 } from "lucide-react";
+import { GenericColumn } from "../Column";
 import { TableRow } from "../TableProperties";
+import styles from "../styles/controls.module.css";
 
 interface ColumnControlsProps {
     columns: Column<TableRow, unknown>[];
     onSelect: (col: GenericColumn) => void;
 }
-
-// working from https://www.creative-tim.com/twcomponents/component/pure-css-dropdown-using-focus-within
-// idea to create a drop down menu w/select which data and which format
-
 export const ColumnControls = ({ columns, onSelect }: ColumnControlsProps) => {
+    const [search, setSearch] = useState("");
+    const filteredColumns = columns.filter((col) => {
+        const label = col.columnDef.header?.toString() || "";
+        return label.toLowerCase().includes(search.toLowerCase());
+    });
     return (
-        <div className="relative inline-block text-left dropdown">
-            <Button variant="white">
-                <ViewColumnsIcon className={`icon-button`}></ViewColumnsIcon>
-                <span className="ml-2 uppercase">Columns</span>
-            </Button>
+        <ActionMenu icon={Columns3} label={"Columns"} buttonColor="default">
+            <div className={styles["column-controls-container"]}>
+                <TextInput
+                    onChange={(val) => setSearch(val)}
+                    placeholder={`Search columns...`}
+                    value={search}
+                    style={{ fontSize: "0.8rem" }}
+                />
 
-            <div className="hidden dropdown-menu">
-                <div
-                    role="menu"
-                    className="z-50 absolute left-0 w-56 mt-2 origin-top-left bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none"
-                >
-                    <div className="flex flex-col px-4 py-3">
-                        {columns.map((col) => {
-                            // console.log(col.columnDef.id)
+                <div className={styles["column-controls-toggle-container"]}>
+                    <ToggleGroup asGrid={false}>
+                        {filteredColumns.map((col) => {
                             return (
                                 col.getCanHide() && (
-                                    <Checkbox
-                                        name="show_columns"
-                                        variant="accent"
+                                    <Toggle
                                         key={`toggle_${col.columnDef.id}`}
                                         label={col.columnDef.header?.toString()}
+                                        truncateLabel={true}
                                         checked={col.getIsVisible()}
-                                        onChange={col.getToggleVisibilityHandler()}
-                                    />
+                                        onChange={(checked) => col.toggleVisibility?.(checked)}
+                                        variant="primary"
+                                    ></Toggle>
                                 )
                             );
                         })}
-                    </div>
+                    </ToggleGroup>
                 </div>
             </div>
-        </div>
+        </ActionMenu>
     );
 };

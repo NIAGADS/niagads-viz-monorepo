@@ -28,8 +28,7 @@ import { _get, _hasOwnProperty, toTitleCase } from "@niagads/common";
 import { CustomSortingFunctions } from "./TableSortingFunctions";
 import { RowSelectionControls } from "./ControlElements/RowSelectionControls";
 import { TableColumnHeader } from "./TableColumnHeader";
-import { Tooltip } from "@niagads/ui/client";
-import { TrashIcon } from "@heroicons/react/24/outline";
+import styles from "./styles/table.module.css";
 
 const __resolveSortingFn = (col: GenericColumn) => {
     if (col.type === "boolean") {
@@ -131,31 +130,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
             const multiSelect: boolean = !!options?.rowSelect?.enableMultiRowSelect;
             columnDefs.push({
                 id: "select-col",
-                header: ({ table }) =>
-                    multiSelect ? (
-                        <div className="row-selection-header">
-                            <div className="group relative inline-block bottom-[2px]">
-                                <Tooltip anchorId={`${id}-select-col-button}`} content="Reset selected rows">
-                                    <Button
-                                        size="sm"
-                                        variant="primary"
-                                        disabled={
-                                            Object.keys(table.getState().rowSelection).length === 0
-                                            // FIXME: !table.getIsSomeRowsSelected() - not working in next.js
-                                        }
-                                        onClick={() => {
-                                            table.resetRowSelection(true);
-                                        }}
-                                    >
-                                        <TrashIcon className="icon-button"></TrashIcon>
-                                    </Button>
-                                </Tooltip>
-                            </div>
-                            <span className="row-selection-header-text">{options?.rowSelect?.header}</span>
-                        </div>
-                    ) : (
-                        options?.rowSelect?.header
-                    ),
+                header: ({ table }) => options?.rowSelect?.header,
                 enableHiding: false,
                 enableSorting: true, // FIXME: enable sorting doesn't seem to work / header.canSort() returns false
                 meta: { description: options?.rowSelect?.description },
@@ -316,8 +291,8 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
     }, [rowSelection]);
 
     return table ? (
-        <div className="table-outer-container">
-            <div className="table-controls-container">
+        <div className={styles["table-outer-container"]}>
+            <div className={styles["table-controls-container"]}>
                 <TableToolbar table={table} tableId={id} enableExport={!!!options?.disableExport} />
                 <PaginationControls table={table} />
             </div>
@@ -326,23 +301,26 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
                     <RowSelectionControls
                         selectedRows={table.getSelectedRowModel().rows}
                         displayColumn={options.rowSelect?.rowId!} // if row select is enabled, rowId must be defined
-                        onToggleShowSelected={() => {
+                        onToggleSelectedFilter={() => {
                             if (showOnlySelected) {
                                 setColumnFilters([]);
                             }
                             setShowOnlySelected(!showOnlySelected);
                         }}
+                        onRemoveAll={() => {
+                            table.resetRowSelection(true);
+                        }}
                     />
                 </div>
             )}
-            <div className="table-container">
-                <table className="table-layout table-border table-text">
+            <div className={styles["table-container"]}>
+                <table className={`${styles["table-layout"]} ${styles["table-border"]} ${styles["table-text"]}`}>
                     {__renderTableHeader(table.getHeaderGroups(), id)}
                     <tbody>
                         {rowModel.rows.map((row) => (
-                            <tr key={row.id} className="table-dtr">
+                            <tr key={row.id} className={styles["table-dtr"]}>
                                 {row.getVisibleCells().map((cell) => (
-                                    <td className="table-td" key={`${row.id}-${cell.id}`}>
+                                    <td className={styles["table-td"]} key={`${row.id}-${cell.id}`}>
                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                     </td>
                                 ))}

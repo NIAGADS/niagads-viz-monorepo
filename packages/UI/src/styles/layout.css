@@ -1,7 +1,0 @@
-.ui-container {
-    @apply relative z-2 max-w-[1264px] w-full bg-none block justify-between m-auto;
-
-    &.full {
-        @apply max-w-full;
-    }
-}

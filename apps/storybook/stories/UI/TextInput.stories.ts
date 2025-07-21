@@ -3,12 +3,16 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { TextInput } from "@niagads/ui";
 
 const meta: Meta<typeof TextInput> = {
-    title: "NIAGADS-VIZ/UI/TextInput",
+    title: "UI/TextInput",
     component: TextInput,
     parameters: {
         layout: "centered",
     },
     tags: ["autodocs"],
+    argTypes: {
+        value: { control: "text" },
+        placeholder: { control: "text" },
+    },
 };
 
 export default meta;

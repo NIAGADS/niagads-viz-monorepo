@@ -1,4 +1,5 @@
 import React from "react";
+import styles from "../styles/slider.module.css";
 
 interface SliderProps {
     name: string;
@@ -19,7 +20,7 @@ export const Slider = ({ variant = "default", name, label, value, min, max, step
     return (
         <div>
             {label && (
-                <label htmlFor={name} className="ui-slider-label">
+                <label htmlFor={name} className={styles["ui-slider-label"]}>
                     {label}
                 </label>
             )}
@@ -36,7 +37,7 @@ export const Slider = ({ variant = "default", name, label, value, min, max, step
                         min={min}
                         max={max}
                         step={step}
-                        className={`ui-slider ${variant}`}
+                        className={`${styles["ui-slider"]} ${styles[variant]}`}
                     />
                     <input
                         id={name}
@@ -49,7 +50,7 @@ export const Slider = ({ variant = "default", name, label, value, min, max, step
                         min={min}
                         max={max}
                         step={step}
-                        className={`ui-slider ui-second-thumb ${variant}`}
+                        className={`${styles["ui-slider"]} ${styles["ui-second-thumb"]} ${styles[variant]}`}
                     />
                 </div>
             ) : (
@@ -61,11 +62,15 @@ export const Slider = ({ variant = "default", name, label, value, min, max, step
                     min={min}
                     max={max}
                     step={step}
-                    className={`ui-slider ${variant}`}
+                    className={`${styles["ui-slider"]} ${styles[variant]}`}
                 />
             )}
-            <span className="ui-slider-range-label start">{min}</span>
-            <span className="ui-slider-range-label end">{max}</span>
+            <span className={styles["ui-slider-range-label"]} style={{ left: 0 }}>
+                {min}
+            </span>
+            <span className={styles["ui-slider-range-label"]} style={{ right: 0 }}>
+                {max}
+            </span>
         </div>
     );
 };

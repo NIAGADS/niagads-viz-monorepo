@@ -1,10 +1,9 @@
 "use client";
 
-import { Database, Search, BarChart3, Users, Dna, Brain } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { BarChart3, Database, Search } from "lucide-react";
+import { Button } from "@niagads/ui";
 import { EnhancedSearch } from "../EnhancedSearch";
-import { ActionButton } from "@niagads/ui";
-import "./home-page.css";
+import { useRouter } from "next/navigation";
 
 export function HomePage() {
     const router = useRouter();
@@ -63,14 +62,14 @@ export function HomePage() {
                     </div>
 
                     <div className="hero-buttons">
-                        <ActionButton variant="primary" onClick={() => router.push("/browse-datasets")}>
+                        <Button color="primary" onClick={() => router.push("/browse-datasets")} className="bg-primary">
                             <Search size={20} />
                             Start Exploring
-                        </ActionButton>
-                        <ActionButton onClick={() => router.push("/browse-datasets")}>
+                        </Button>
+                        <Button onClick={() => router.push("/browse-datasets")}>
                             <Database size={20} />
                             Browse Datasets
-                        </ActionButton>
+                        </Button>
                     </div>
                 </div>
             </section>

@@ -1,39 +1,33 @@
-import { AnchoredPageSection, GeneRecord, PageProps, RecordReport } from "@/lib/types";
+import { GeneRecord, PageProps, RecordType } from "@/lib/types";
 import { _fetch, fetchRecord } from "@/lib/route-handlers";
-import { extendCacheTTL, getCache, setCache } from "@/lib/cache";
 
 import { GeneRecordOverview } from "@/components/records/gene/GeneRecordOverview";
 import { RECORD_PAGE_SECTIONS } from "../../sections";
-import { RecordOverviewSection } from "@/components/records/RecordOverviewSection";
-import RecordTableSection from "@/components/records/RecordTableSection";
+import { RecordAnnotationSection } from "@/components/records/RecordAnnotationSection";
+import { RecordOverview } from "@/components/records/RecordOverview";
+import { getRecordTypeFromPath } from "@/lib/utils";
+import { headers as get_headers } from "next/headers";
 
-export default async function GeneDetailPage({ params }: PageProps) {
+export default async function GeneReport({ params }: PageProps) {
     const { id } = await params;
+    const headers = await get_headers();
+    const path: string = headers.get("x-current-pathname")!;
+    const recordType: RecordType = getRecordTypeFromPath(path)!;
 
-    let report: RecordReport = (await getCache("gene-record", id)) as unknown as RecordReport;
-    if (!report) {
-        const record: GeneRecord = (await fetchRecord(`/api/record/gene/${id}`, true)) as GeneRecord;
-        Object.assign(record, { record_type: "gene" });
-        report = { id: record.id, record: record };
-        await setCache("gene-record", id, report); // cache on path ID, which might be an alias
-    }
+    let record: GeneRecord = (await fetchRecord(`/api${path}`, true)) as GeneRecord;
+    Object.assign(record, { record_type: recordType });
 
     return (
         <>
-            <RecordOverviewSection>
-                <GeneRecordOverview record={report.record}></GeneRecordOverview>
-            </RecordOverviewSection>
-            {RECORD_PAGE_SECTIONS.gene.map(
-                (section: AnchoredPageSection) =>
-                    section.tables && (
-                        <RecordTableSection
-                            recordId={report.id}
-                            recordType="gene"
-                            key={`table-section-${section.id}`}
-                            section={section}
-                        ></RecordTableSection>
-                    )
-            )}
+            <RecordOverview>
+                <GeneRecordOverview record={record}></GeneRecordOverview>
+            </RecordOverview>
+
+            <RecordAnnotationSection
+                recordId={record.id}
+                recordType={recordType}
+                sections={RECORD_PAGE_SECTIONS[recordType as keyof typeof RECORD_PAGE_SECTIONS]}
+            ></RecordAnnotationSection>
         </>
     );
 }

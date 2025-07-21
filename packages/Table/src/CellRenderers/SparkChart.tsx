@@ -1,9 +1,9 @@
-import React from "react";
-
-import { _deepCopy, _get, _hasOwnProperty, _isJSON, _isNA, _isNull } from "@niagads/common";
-
 import { TextRenderer, renderNullValue } from "./TextRenderer";
+import { _get, _isNA, _isNull } from "@niagads/common";
+
+import React from "react";
 import { formatFloat } from "./Number";
+import styles from "../styles/cell.module.css";
 
 export const PercentageBar = <T,>({ props }: TextRenderer<T>) => {
     const value = _get("value", props);
@@ -21,11 +21,17 @@ export const PercentageBar = <T,>({ props }: TextRenderer<T>) => {
     const remainder = 100.0 - observed;
 
     return (
-        <div className="flex flex-row">
-            <div className="cell cell-spark-value">{`${formattedValue}`}</div>
-            <div className="cell cell-spark tr-spark-bar">
-                <div className="cell cell-spark tr-spark-bar-observed" style={{ width: observed }} />
-                <div className="cell cell-spark tr-spark-bar-remainder" style={{ width: remainder }} />
+        <div className={styles.sparkContainer}>
+            <div className={styles.sparkValue}>{`${formattedValue}`}</div>
+            <div className={`${styles.spark} ${styles.sparkBar}`}>
+                <div
+                    className={`${styles.spark} ${styles.sparkBar} ${styles.sparkBarObserved}`}
+                    style={{ width: observed }}
+                />
+                <div
+                    className={`${styles.spark} ${styles.sparkBar} ${styles.sparkBarRemainder}`}
+                    style={{ width: remainder }}
+                />
             </div>
         </div>
     );

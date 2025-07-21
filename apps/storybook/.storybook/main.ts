@@ -17,7 +17,28 @@ const config: StorybookConfig = {
             options: {
                 rules: [
                     {
+                        test: /\.module\.css$/,
+                        sideEffects: true,
+                        use: [
+                            require.resolve("style-loader"),
+                            {
+                                loader: require.resolve("css-loader"),
+                                options: {
+                                    importLoaders: 1,
+                                    modules: true,
+                                },
+                            },
+                            {
+                                loader: require.resolve("postcss-loader"),
+                                options: {
+                                    implementation: require.resolve("postcss"),
+                                },
+                            },
+                        ],
+                    },
+                    {
                         test: /\.css$/,
+                        exclude: /\.module\.css$/,
                         sideEffects: true,
                         use: [
                             require.resolve("style-loader"),

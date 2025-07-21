@@ -1,0 +1,155 @@
+/* TABLE */
+
+.table-outer-container {
+    width: 100%;
+    overflow-x: auto;
+    font-family:
+        var(--font-inter), "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva,
+        Verdana, sans-serif;
+}
+
+.table-container {
+    width: 100%;
+    overflow: auto;
+    border: 1px solid var(--gray-500);
+    background-color: var(--surface);
+    border-radius: 12px;
+}
+
+.table-layout {
+    width: 100%;
+    overflow-x: scroll;
+    border-collapse: collapse;
+}
+
+.table-controls-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.table-text {
+    font-size: 0.8rem;
+    text-align: left;
+    direction: ltr;
+}
+
+.table-text[dir="rtl"],
+.table-text.rtl {
+    text-align: right;
+    direction: rtl;
+}
+
+.table-td {
+    /*font-family: "Noto Sans", sans-serif;*/
+    font-size: 0.8rem;
+    border-style: solid;
+    border-width: 0 1px 1px 0;
+    padding: 1rem;
+    border-bottom: 1px solid var(--gray-200);
+    vertical-align: center;
+}
+
+/* Add vertical borders except for first and last cell in a row */
+.table-layout td:not(:first-child):not(:last-child) {
+    border-right: 1px solid var(--gray-50);
+}
+
+.table-layout th:not(:first-child):not(:last-child) {
+    border-right: 1px solid var(--white);
+}
+.table-layout td:first-child,
+.table-layout th:first-child {
+    border-right: none;
+}
+
+.table-layout td:last-child,
+.table-layout th:last-child {
+    border-right: none;
+}
+
+.table-dtr {
+    background-color: #fff;
+    border-bottom: 1px solid var(--gray-700);
+    transition: background 0.2s;
+}
+
+.table-dtr:hover {
+    background-color: #f9fafb; /* Tailwind gray-50 */
+}
+
+.table-dtr:nth-child(odd) {
+    border-bottom: 1px solid #374151; /* Tailwind gray-700 */
+}
+
+/* TABLE COLUMN HEADERS */
+
+.column-header {
+    background-color: var(--gray-50);
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--dark-blue);
+    border-bottom: 1px solid var(--border);
+
+    &.sortable:hover {
+        background-color: var(--gray-100);
+    }
+}
+
+.column-header-controls-container {
+    display: inline-flex;
+}
+
+.column-header-controls {
+    display: inline-flex;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    cursor: default;
+
+    &.sortable {
+        cursor: pointer;
+    }
+}
+
+.column-header-info-icon {
+    margin-left: 0.25rem;
+}
+
+.column-header-sort-icon-placeholder {
+    height: 19px;
+    width: 20px;
+}
+
+.column-header-filter-control-container {
+    margin-left: 1.25rem;
+}
+
+.visible {
+    visibility: visible;
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+.column-header-text {
+    font-size: 0.875rem;
+    white-space: nowrap;
+    font-weight: 700;
+}
+
+.column-header-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.column-header-icon.right {
+    margin-left: 0.25rem;
+    padding-left: 1px;
+}
+
+.column-header-icon.button {
+    width: 1rem;
+    height: 1rem;
+}
