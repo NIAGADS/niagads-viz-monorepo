@@ -4,7 +4,7 @@ import { _get, _hasOwnProperty, _isNA, _isNull } from "@niagads/common";
 
 import React from "react";
 import { Badge as UIBadge } from "@niagads/ui";
-import { renderTooltip } from "@niagads/ui/client";
+import { renderTooltip } from "@niagads/ui";
 
 export const ICONS = {
     check: Check,
@@ -48,9 +48,7 @@ export const Badge = <T,>({ props }: TextRenderer<T>) => {
     }
 
     const tooltip = _get("tooltip", props);
-    return tooltip
-        ? renderTooltip(`${_get("rowId", props)}-${_get("columnId", props)}`, component, tooltip)
-        : component;
+    return tooltip ? renderTooltip(component, tooltip) : component;
 };
 
 export const BooleanBadge = <T,>({ props }: TextRenderer<T>) => {
