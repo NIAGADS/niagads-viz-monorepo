@@ -1,38 +1,37 @@
 # TODOs and FIXMEs
 
-## Zile
+## Group, long-term TODOS
 
-* record page navigation offset
+* Assess accessibility
+  
+> See Card.tsx and Button.tsx in UI for how example of how to allow aria-* and role to be passed to a custom component
+
+## Zile - in order of priority
+
+* Record Table in tabbed-sections are not fitting to enclosing div, no scrolling on x-overflow, instead div (Card?) is growing.  
+
+* `Sidebar`
+
+We redesigned the sidebar, removing all states and hooks to allow pages to render server side.  We can reassess when we have more time.
+This breaks: collapsing, keeping current state.
+
+Also with previous design users had to click on every section which could be problematic for sparsely annotated records.
+
+We need some quick fixes: sidebar height, sidebar sticky, navigation offset when jumping to anchors & anything else that catches your eye
+
+* TableExportControl form formatting in @niagads/table
 
 * make the counter in tab buttons a badge?
 
-* margin-bottom on nested cards (see TabbedTables)
-
-* Selected rows bar Storybook table
-
-* `/components/sidebar`
-
-Commented out sidebar navigation button b/c it doesn't work and it hides the whole side bar, including the navigation.
-This is an effect of removing the client side-states at the page level.
-
-Review whether media queries are sufficient or if we want to reinstate this.  Will it work w/new record/layout.tsx?
-
-* TableExportControl form formatting
-
-* how to handle fonts
-
 ## Group
 
-* action button css
-
-resolve action-button.css and record.css
-
+* how to handle fonts UI/application
 
 ## Emily
 
-- create genomicsdb issue tracking project on github and update sample.env.local
+* create genomicsdb issue tracking project on github and update sample.env.local
 
-- is_error_response did not catch: the fast API validation error - need to wrap these
+* is_error_response did not catch: the fast API validation error - need to wrap these
 
 ```json
 {
@@ -49,9 +48,3 @@ resolve action-button.css and record.css
 }
 ```
 
-## Table
-
-
-## NOTES
-
-* See Card.tsx and Button.tsx in UI for how to allow aria-* and role to be passed to a custom component
