@@ -1,0 +1,50 @@
+
+/* Utility Classes */
+.flex {
+    display: flex;
+}
+.flex-col {
+    flex-direction: column;
+}
+.items-center {
+    align-items: center;
+}
+.justify-between {
+    justify-content: space-between;
+}
+.justify-center {
+    justify-content: center;
+}
+.gap-025 {
+    gap: 0.25rem;
+}
+.gap-05 {
+    gap: 0.5rem;
+}
+.gap-075 {
+    gap: 0.75rem;
+}
+.gap-1 {
+    gap: 1rem;
+}
+.gap-15 {
+    gap: 1.5rem;
+}
+.gap-2 {
+    gap: 2rem;
+}
+.w-full {
+    width: 100%;
+}
+.text-center {
+    text-align: center;
+}
+.mb-1 {
+    margin-bottom: 1rem;
+}
+.mb-15 {
+    margin-bottom: 1.5rem;
+}
+.space-y-15 > * + * {
+    margin-top: 1.5rem;
+}
