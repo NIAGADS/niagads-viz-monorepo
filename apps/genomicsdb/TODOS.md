@@ -23,6 +23,11 @@ Also with previous design users had to click on every section which could be pro
 
 We need some quick fixes: sidebar height, sidebar sticky, navigation offset when jumping to anchors & anything else that catches your eye
 
+* Most Severe Variant Consequence Card for variants: check it out & improve
+
+  * `/record/variant/1:241765187:GA:G` for multiple consequence terms
+  * `/record/variant/rs429358` another example
+
 * @niagads/Table TableExportControl form formatting
 
 * UI Tooltip styling: wrap long ones to max of two lines and give a max-width (see one over ADSP badge in variant overview for a long tooltip)
