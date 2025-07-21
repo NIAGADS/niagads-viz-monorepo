@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { TabDef, Tabs } from "@niagads/ui/client";
 
+import Table from "@niagads/table";
+import { TABLE_DEFINTION as table } from "../../../examples/tables/table_rendering_test";
+
 //@ts-nocheck
 // b/c of https://github.com/storybookjs/storybook/issues/23170 issue w/subcomponets w/children
-import React from "react";
-import Table from "@niagads/table";
-import { TABLE_DEFINTION as table } from "../../examples/tables/table_rendering_test";
 
 const meta: Meta<typeof Tabs> = {
-    title: "UI/Tabs",
+    title: "UI/Client/Tabs",
     component: Tabs,
     parameters: {},
     tags: ["autodocs"],

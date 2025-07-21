@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Autocomplete } from "@niagads/ui/client";
 
 const meta: Meta<typeof Autocomplete> = {
-    title: "UI/Autocomplete",
+    title: "UI/Client/Autocomplete",
     component: Autocomplete,
     parameters: {
         // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout

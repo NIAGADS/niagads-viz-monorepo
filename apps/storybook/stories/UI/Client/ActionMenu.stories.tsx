@@ -2,7 +2,7 @@ import { ActionMenu } from "@niagads/ui/client";
 import { Atom } from "lucide-react";
 
 export default {
-    title: "UI/ActionMenu",
+    title: "UI/Client/ActionMenu",
     component: ActionMenu,
     argTypes: {
         label: { control: "text" },

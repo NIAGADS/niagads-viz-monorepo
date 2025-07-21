@@ -1,5 +1,5 @@
 /* Renamed from footer.css for CSS Modules */
-.ui-footer {
+.footer {
     background-color: var(--dark-blue);
     border-top: 1px solid var(--gray-800);
     margin-top: auto;
@@ -7,7 +7,7 @@
     height: var(--footer-height);
 }
 
-.ui-footer-container {
+.footer-container {
     max-width: 1200px;
     height: 100%;
     margin: 0 auto;
@@ -18,69 +18,69 @@
     gap: 2rem;
 }
 
-.ui-footer-left {
+.footer-left {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
 }
 
-.ui-footer-logo {
+.footer-logo {
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.ui-footer-logo-icon {
+.footer-logo-icon {
     width: 20px;
     height: 20px;
     color: var(--accent-teal);
 }
 
-.ui-footer-logo-text {
+.footer-logo-text {
     font-weight: 600;
     color: var(--gray-100);
     font-size: 0.875rem;
 }
 
-.ui-footer-copyright {
+.footer-copyright {
     color: var(--gray-400);
     font-size: 0.75rem;
 }
 
-.ui-footer-right {
+.footer-right {
     flex-shrink: 0;
 }
 
-.ui-footer-nav {
+.footer-nav {
     display: flex;
     gap: 1.5rem;
 }
 
-.ui-footer-link {
+.footer-link {
     color: var(--gray-400);
     text-decoration: none;
     font-size: 0.875rem;
     transition: color var(--transition-fast);
 }
 
-.ui-footer-link:hover {
+.footer-link:hover {
     color: var(--gray-100);
 }
 
 @media (max-width: 768px) {
-    .ui-footer-container {
+    .footer-container {
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
         padding: 1rem;
     }
-    .ui-footer-nav {
+    .footer-nav {
         gap: 1rem;
     }
 }
 
 @media (max-width: 480px) {
-    .ui-footer-nav {
+    .footer-nav {
         flex-wrap: wrap;
         gap: 0.75rem;
     }
