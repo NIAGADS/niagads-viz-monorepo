@@ -3,8 +3,29 @@
     background-color: var(--surface);
     border-right: 1px solid var(--border);
     /*padding: 1.5rem 0;*/
-    overflow-y: auto;
+    /* overflow-y: auto; */
     transition: transform var(--transition-normal);
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    border-left: 3px solid transparent;
+    position: relative;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    font-size: 0.875rem;
 }
 
 .header {
@@ -45,27 +66,6 @@
     color: var(--text-primary);
 }
 
-.nav {
-    display: flex;
-    flex-direction: column;
-}
-
-.item {
-    display: flex;
-    align-items: center;
-    padding: 0.75rem 1.5rem;
-    color: var(--text-primary);
-    cursor: pointer;
-    transition: all var(--transition-fast);
-    border-left: 3px solid transparent;
-    position: relative;
-    background: none;
-    border: none;
-    width: 100%;
-    text-align: left;
-    font-size: 0.875rem;
-}
-
 .item:hover {
     background-color: var(--hover-bg);
     color: var(--primary-blue);
@@ -94,7 +94,8 @@
     flex: 1;
     text-align: left;
     font-weight: inherit; /* Inherit from parent to prevent jumping */
-    /*color: var(--text-primary); */
+    color: var(--text-primary);
+    white-space: nowrap;
 }
 
 @media (max-width: 768px) {

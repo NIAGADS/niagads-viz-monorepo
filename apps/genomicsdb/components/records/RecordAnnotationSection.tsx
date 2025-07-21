@@ -11,9 +11,14 @@ export function RecordAnnotationSection({ sections, ...cacheInfo }: RecordAnnota
     return sections.map(
         (section: AnchoredPageSection) =>
             section.tables && (
-                <div id={section.id}>
-                    <RecordSectionHeader title={section.label} description={section.description}></RecordSectionHeader>
+                <div id={section.id} key={section.id}>
+                    <RecordSectionHeader
+                        key={`${section.id}-header`}
+                        title={section.label}
+                        description={section.description}
+                    ></RecordSectionHeader>
                     <RecordTableSection
+                        key={`${section.id}-tables`}
                         recordId={cacheInfo.recordId}
                         recordType={cacheInfo.recordType}
                         sectionId={section.id}
