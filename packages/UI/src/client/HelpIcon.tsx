@@ -6,6 +6,8 @@ import { StylingProps } from "../types";
 import { Tooltip } from "../Tooltip";
 import { _get } from "@niagads/common";
 
+// FIXME: not sure if this has to be client b/c of react-tooltip.  If it does, update to use useId to generate the anchors
+
 const ICONS = {
     alert: AlertCircle,
     question: HelpCircle,
