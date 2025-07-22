@@ -8,9 +8,8 @@ const nextConfig: NextConfig = {
     typescript: {
         ignoreBuildErrors: true,
     }, */
-    // basePath: '/genomics/beta', // Ensures all routes are prefixed with /genomics/beta
-    assetPrefix: "/genomics/beta", // Ensures static assets are served from the correct path
-    experimental: {
+    // assetPrefix: {`process.env.NEXT_PUBLIC_BASE_PATH ? process.env.NEXT_PUBLIC_BASE_PATH : null`}, // Ensures static assets are served from the correct path
+    experimental: 
         serverActions: {
             allowedOrigins: ["www.niagads.org", "*.niagads.org"],
             allowedDevOrigins: [
