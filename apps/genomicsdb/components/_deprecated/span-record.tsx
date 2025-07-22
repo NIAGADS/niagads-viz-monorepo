@@ -1,9 +1,10 @@
 "use client";
 
-import type { SpanRecord as SpanRecordType } from "./types";
-import Placeholder from "./placeholder";
 import "./record.css";
 import "./placeholder.css";
+
+import Placeholder from "./placeholder";
+import type { SpanRecord as SpanRecordType } from "./types";
 
 interface SpanRecordProps {
     record: SpanRecordType;
@@ -59,7 +60,7 @@ export function SpanRecord({ record, activeSection }: SpanRecordProps) {
                         <div className="card">
                             <h3>Features</h3>
                             <div className="features-list">
-                                {record.features.map((feature, index) => (
+                                {record.features.map((feature: any, index: number) => (
                                     <span key={index} className="feature-badge">
                                         {feature}
                                     </span>
