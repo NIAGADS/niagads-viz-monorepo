@@ -1,21 +1,12 @@
 "use client";
 
-import "./home-page.css";
-
-import { BarChart3, Brain, Database, Dna, Search, Users } from "lucide-react";
-
+import { BarChart3, Database, Search } from "lucide-react";
 import { Button } from "@niagads/ui";
-import { EnhancedSearchComponent } from "../enhanced-search-component";
+import { EnhancedSearch } from "../EnhancedSearch";
 import { useRouter } from "next/navigation";
 
 export function HomePage() {
     const router = useRouter();
-    const suggestions = ["APOE", "TREM2", "APP", "PSEN1", "MAPT", "CLU", "CR1", "PICALM", "Alzheimer's disease"];
-
-    // const handleSearch = (query: string) => {
-    //   // Navigate to search page with query parameter
-    //   router.push(`/search?q=${encodeURIComponent(query)}`)
-    // }
 
     const features = [
         {
@@ -58,10 +49,8 @@ export function HomePage() {
                     </p>
 
                     <div className="hero-search">
-                        <EnhancedSearchComponent
+                        <EnhancedSearch
                             placeholder="Search genes, variants, or genomic regions (e.g., APOE, rs429358)"
-                            suggestions={suggestions}
-                            showTypeHints={true}
                             autoRoute={true}
                         />
                     </div>
@@ -144,7 +133,7 @@ export function HomePage() {
                         <div
                             className="feature-card"
                             style={{ cursor: "pointer" }}
-                            onClick={() => router.push("/records/gene/APOE")}
+                            onClick={() => router.push("/record/gene/APOE")}
                         >
                             <div className="feature-title">Explore APOE</div>
                             <p className="feature-description">
@@ -166,7 +155,7 @@ export function HomePage() {
                         <div
                             className="feature-card"
                             style={{ cursor: "pointer" }}
-                            onClick={() => router.push("/records/variant/chr19:44908684")}
+                            onClick={() => router.push("/record/variant/chr19:44908684")}
                         >
                             <div className="feature-title">Chromosome 19</div>
                             <p className="feature-description">

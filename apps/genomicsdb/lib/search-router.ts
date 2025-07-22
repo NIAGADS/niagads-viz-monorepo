@@ -54,20 +54,20 @@ export function detectSearchType(query: string): SearchRoute {
     if (!trimmed) return { type: "search", path: "/search" };
 
     if (REFSNP_PATTERN.test(trimmed)) {
-        return { type: "record", path: `/records/variant/${trimmed}` };
+        return { type: "record", path: `/record/variant/${trimmed}` };
     }
 
     if (GENOMIC_COORD_PATTERN.test(trimmed)) {
         const normalized = trimmed.startsWith("chr") ? trimmed : `chr${trimmed}`;
-        return { type: "record", path: `/records/variant/${encodeURIComponent(normalized)}` };
+        return { type: "record", path: `/record/variant/${encodeURIComponent(normalized)}` };
     }
 
     if (GENE_PATTERN.test(upperQuery) && COMMON_GENES.has(upperQuery)) {
-        return { type: "record", path: `/records/gene/${upperQuery}` };
+        return { type: "record", path: `/record/gene/${upperQuery}` };
     }
 
     if (TRACK_ID_PATTERN.test(trimmed)) {
-        return { type: "record", path: `/records/track/${trimmed}` };
+        return { type: "record", path: `/record/track/${trimmed}` };
     }
 
     // Fallback: unknown/unsupported input → Search page

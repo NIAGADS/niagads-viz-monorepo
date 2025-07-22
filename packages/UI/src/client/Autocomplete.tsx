@@ -15,6 +15,7 @@ const useDebounce = (value: string) => {
         }
 
         setWaiting(true);
+
         setTimeoutID(
             setTimeout(() => {
                 setWaiting(false);
@@ -26,9 +27,15 @@ const useDebounce = (value: string) => {
     return { waiting, debouncedValue };
 };
 
+interface Suggestion {
+    id: string;
+    display: string;
+    record_type?: "gene" | "variant" | "span" | "track";
+}
 interface AutocompleteProps {
-    suggestions: string[];
+    suggestions: Suggestion[];
     onSearch: (query: string) => void;
+    onClick: (suggestion: Suggestion) => void;
     onValueChange: (value: string) => void;
     placeholder?: string;
     showTypeHints?: boolean;
@@ -38,6 +45,7 @@ interface AutocompleteProps {
 export const Autocomplete = ({
     suggestions,
     onSearch,
+    onClick,
     onValueChange,
     placeholder = "Search genes, variants, tissues...",
     showTypeHints = true,
@@ -68,7 +76,7 @@ export const Autocomplete = ({
                     if (highlightedIndex >= 0) {
                         handleSuggestionClick(suggestions[highlightedIndex]);
                     } else {
-                        handleSearch();
+                        handleSearch(query);
                     }
                     break;
                 case "Escape":
@@ -80,18 +88,18 @@ export const Autocomplete = ({
 
         document.addEventListener("keydown", handleKeyDown);
         return () => document.removeEventListener("keydown", handleKeyDown);
-    }, [showSuggestions, highlightedIndex, suggestions]);
+    }, [showSuggestions, highlightedIndex, suggestions, query]);
 
     useEffect(() => {
         onValueChange(debouncedValue);
     }, [debouncedValue]);
 
-    const handleSearch = () => {
-        setShowSuggestions(false);
+    const handleSearch = (q: string) => {
+        onSearch(query);
     };
 
-    const handleSuggestionClick = (suggestion: string) => {
-        onSearch(suggestion);
+    const handleSuggestionClick = (suggestion: Suggestion) => {
+        onClick(suggestion);
     };
 
     return (
@@ -117,24 +125,25 @@ export const Autocomplete = ({
                     role="combobox"
                 />
 
-                {/* Suggestions dropdown */}
-                {showSuggestions && suggestions.length > 0 && (
+                {showSuggestions && (
                     <div className={styles["ui-autocomplete-suggestions"]} role="listbox">
-                        {waiting ? (
+                        {waiting || !(suggestions.length > 0) ? (
                             <LoadingSpinner />
                         ) : (
                             <div>
-                                {suggestions.map((suggestion, index) => {
+                                {suggestions.slice(0, 8).map((suggestion, index) => {
                                     return (
                                         <div
-                                            key={suggestion}
+                                            key={suggestion.id}
                                             className={`${styles["ui-autocomplete-suggestion"]} ${index === highlightedIndex ? styles["ui-highlighted"] : ""}`}
                                             onClick={() => handleSuggestionClick(suggestion)}
                                             role="option"
                                             aria-selected={index === highlightedIndex}
                                         >
                                             <div className={styles["ui-suggestion-content"]}>
-                                                <span className={styles["ui-suggestion-text"]}>{suggestion}</span>
+                                                <span className={styles["ui-suggestion-text"]}>
+                                                    {suggestion.display}
+                                                </span>
                                             </div>
                                             <ArrowRight size={14} className={styles["ui-suggestion-arrow"]} />
                                         </div>
