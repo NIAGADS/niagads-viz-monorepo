@@ -1,4 +1,4 @@
-import { BadgeCheck, Info, OctagonAlert, TriangleAlert } from "lucide-react";
+import { BadgeCheck, HardHat, Info, OctagonAlert, TriangleAlert } from "lucide-react";
 import React, { ReactNode } from "react";
 
 import { InlineIcon } from "./InlineIcon";
@@ -17,12 +17,13 @@ const ICONS = {
     error: OctagonAlert,
     warning: TriangleAlert,
     success: BadgeCheck,
+    construction: HardHat,
 };
 
 type AlertVariants = keyof typeof ICONS;
 
 export const Alert = ({ variant = "info", message, children, className, style = {} }: Alert) => {
-    const classes = [styles.alert, styles[variant]].filter(Boolean).join(" ");
+    const classes = [styles.alert, styles[variant === "construction" ? "warning" : variant]].filter(Boolean).join(" ");
 
     const Icon = ICONS[variant] || Info;
 

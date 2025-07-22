@@ -1,5 +1,5 @@
-import { GenomeBrowserPage } from "@/components/pages/genome-browser-page";
+import { UnderConstructionPage } from "@/components/UnderConstructionPage";
 
 export default function GenomeBrowser() {
-    return <GenomeBrowserPage />;
+    return <UnderConstructionPage source={"Genome Browser"} />;
 }

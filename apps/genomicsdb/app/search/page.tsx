@@ -1,10 +1,11 @@
-import { Suspense } from "react";
-import { LoadingSpinner, Button } from "@niagads/ui";
+import { Button, LoadingSpinner } from "@niagads/ui";
+import { ChevronLeft, ChevronRight, Download, Filter } from "lucide-react";
+import React, { Suspense } from "react";
+
 import { EnhancedSearch } from "@/components/EnhancedSearch";
-import { Filter, Download, ChevronLeft, ChevronRight } from "lucide-react";
-import { _fetch } from "@/lib/route-handlers";
-import { SearchResult } from "@/lib/types";
 import Link from "next/link";
+import { SearchResult } from "@/lib/types";
+import { _fetch } from "@/lib/route-handlers";
 
 interface SearchPageProps {
     searchParams: { q?: string; type?: string };
@@ -15,7 +16,7 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
     const query = params.q || "";
     const type = params.type;
 
-    const results: SearchResult[] = (await _fetch(`/api/service/search?keyword=${query}`)) as SearchResult[];
+    const results: SearchResult[] = (await _fetch(`/service/search?keyword=${query}`)) as SearchResult[];
 
     const filteredRecords = type ? results.filter((result) => result.record_type === type) : results;
 
