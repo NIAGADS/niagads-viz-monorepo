@@ -1,10 +1,12 @@
 import { Suspense } from "react";
-import { LoadingSpinner, Button } from "@niagads/ui";
+import { LoadingSpinner, Button, Card } from "@niagads/ui";
 import { EnhancedSearch } from "@/components/EnhancedSearch";
 import { Filter, Download, ChevronLeft, ChevronRight } from "lucide-react";
 import { _fetch } from "@/lib/route-handlers";
 import { SearchResult } from "@/lib/types";
-import Link from "next/link";
+import { SearchTable } from "@/components/SearchTable";
+
+import "@/app/globals.css";
 
 interface SearchPageProps {
     searchParams: { q?: string; type?: string };
@@ -15,9 +17,7 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
     const query = params.q || "";
     const type = params.type;
 
-    const results: SearchResult[] = (await _fetch(`/api/service/search?keyword=${query}`)) as SearchResult[];
-
-    const filteredRecords = type ? results.filter((result) => result.record_type === type) : results;
+    const results: SearchResult[] = (await _fetch(`/service/search?keyword=${query}`)) as SearchResult[];
 
     return (
         <Suspense fallback={<LoadingSpinner message="Loading search results..." />}>
@@ -39,24 +39,12 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
                     <div className="content-header">
                         <div>
                             <h1 className="content-title">Search Results</h1>
-                            <p className="content-subtitle">Found X results for "{query}"</p>
+                            <p className="content-subtitle">
+                                Found {results.length} results for "{query}"
+                            </p>
                         </div>
-                        {/*
-                            <div className="action-buttons">
-                                <Tooltip content="View selected data in genome browser">
-                                    <button className="action-button" onClick={() => router.push("/genome-browser")}>
-                                    View in Genome Browser
-                                    </button>
-                                </Tooltip>
-                                <button className="action-button">
-                                    <Download size={16} aria-hidden="true" />
-                                    Export
-                                </button>
-                                <button className="action-button">Share</button>
-                            </div>
-                        */}
                     </div>
-                    <div className="card">
+                    <Card variant="full">
                         <div className="flex justify-between items-center mb-4 gap-4">
                             <EnhancedSearch
                                 placeholder="Search genes, variants, or genomic regions (e.g., APOE, rs429358)"
@@ -67,99 +55,18 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
                                 Search
                             </Button>
                         </div>
-                    </div>
-                    {/* <div className="tab-navigation" role="tablist">
-                        {tabs.map((tab) => (
-                            <button
-                                key={tab}
-                                className={`tab-item ${tab === type ? "active" : ""}`}
-                                role="tab"
-                                aria-selected={tab === type}
-                                aria-controls={`tabpanel-${tab}`}
-                            >
-                                {tab}
-                            </button>
-                        ))}
-                    </div> */}
-                    <div className="card" role="tabpanel" id={`tabpanel-${type}`}>
-                        <div className="card-header">
+                    </Card>
+                    <Card variant="full">
+                        <div className="content-header">
                             <div>
-                                <div className="card-title">Records</div>
-                                <div className="card-subtitle">Showing {filteredRecords.length} results</div>
-                            </div>
-                            <div className="flex gap-2">
-                                <Button>
-                                    <Download size={16} aria-hidden="true" />
-                                    Export
-                                </Button>
+                                <div className="content-title">Records</div>
+                                <div className="content-subtitle">Showing {results.length} results</div>
                             </div>
                         </div>
                         <div className="table-container">
-                            <table className="data-table" role="table">
-                                <thead>
-                                    <tr role="row">
-                                        <th role="columnheader"></th>
-                                        <th role="columnheader" className="sortable">
-                                            ID
-                                        </th>
-                                        <th role="columnheader" className="sortable">
-                                            Type
-                                        </th>
-                                        <th role="columnheader">Description</th>
-                                        <th role="columnheader"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {filteredRecords.map((item: SearchResult) => (
-                                        <tr key={item.id} role="row">
-                                            <td role="gridcell">
-                                                <input type="checkbox" aria-label={`Select row ${item.id}`} />
-                                            </td>
-                                            <td role="gridcell" className="scientific-notation">
-                                                <Link
-                                                    href={`/record/${item.record_type}/${item.id}`}
-                                                    className="text-primary-blue hover:underline"
-                                                >
-                                                    {item.id}
-                                                </Link>
-                                            </td>
-                                            <td role="gridcell">
-                                                <span className={`record-type-badge ${item.record_type}`}>
-                                                    {item.record_type}
-                                                </span>
-                                            </td>
-                                            <td role="gridcell">{item.description}</td>
-                                            <td role="gridcell">
-                                                <Link
-                                                    href={`/record/${item.record_type}/${item.id}`}
-                                                    className="view-details-link"
-                                                >
-                                                    View Details
-                                                </Link>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                            <SearchTable searchResults={results} />
                         </div>
-                        <div className="pagination">
-                            <div className="pagination-info">
-                                <div>Results per page: 10</div>
-                                <div>1-{filteredRecords.length} of X</div>
-                            </div>
-                            <div className="pagination-controls">
-                                <button className="pagination-button" disabled aria-label="Previous page">
-                                    <ChevronLeft size={16} aria-hidden="true" />
-                                </button>
-                                <button className="pagination-button active" aria-label="Page 1" aria-current="page">
-                                    1
-                                </button>
-                                <button className="pagination-button" disabled aria-label="Next page">
-                                    <ChevronRight size={16} aria-hidden="true" />
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    </Card>
                 </div>
             )}
         </Suspense>
