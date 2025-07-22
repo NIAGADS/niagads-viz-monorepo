@@ -13,12 +13,12 @@ interface ExtendedNextConfig extends NextConfig {
 
 const nextConfig: ExtendedNextConfig = {
     reactStrictMode: true,
-    /* eslint: {
+    eslint: {
         ignoreDuringBuilds: true,
     },
     typescript: {
         ignoreBuildErrors: true,
-    }, */
+    },
     // assetPrefix: {`process.env.NEXT_PUBLIC_BASE_PATH ? process.env.NEXT_PUBLIC_BASE_PATH : null`}, // Ensures static assets are served from the correct path
     experimental: {
         allowedDevOrigins: [
