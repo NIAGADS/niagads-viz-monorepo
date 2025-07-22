@@ -8,6 +8,20 @@ const nextConfig: NextConfig = {
     typescript: {
         ignoreBuildErrors: true,
     }, */
+    // basePath: '/genomics/beta', // Ensures all routes are prefixed with /genomics/beta
+    assetPrefix: '/genomics/beta', // Ensures static assets are served from the correct path
+    experimental: {
+        serverActions: {
+          allowedOrigins: ['www.niagads.org', '*.niagads.org'],
+          allowedDevOrigins: [ 'localhost:3000', // Default Next.js dev server
+            '127.0.0.1:3000', // Localhost with IP
+            'localhost:8010', // Custom dev port
+            '127.0.0.1:8010', // Custom dev port with IP
+            'www.niagads.org', // Live site domain
+            '*.niagads.org' // Subdomains of niagads.org
+          ]
+        },
+      },
     images: {
         unoptimized: true,
     },
