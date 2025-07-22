@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
         ignoreBuildErrors: true,
     }, */
     // assetPrefix: {`process.env.NEXT_PUBLIC_BASE_PATH ? process.env.NEXT_PUBLIC_BASE_PATH : null`}, // Ensures static assets are served from the correct path
-    experimental: 
+    experimental: {
         serverActions: {
             allowedOrigins: ["www.niagads.org", "*.niagads.org"],
             allowedDevOrigins: [
