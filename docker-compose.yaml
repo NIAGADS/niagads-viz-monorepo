@@ -21,8 +21,6 @@ services:
       build:
           context: .
           dockerfile: ./genomicsdb.Dockerfile
-      depends_on:
-          - genomicsdb-cachedb
       ports:
           - "${HOST_CLIENT_PORT}:3000"
 
