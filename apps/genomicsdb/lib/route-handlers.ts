@@ -1,3 +1,5 @@
+"use server";
+
 import { APIErrorResponse, APIResponse, AssociationTraitCategory, AssociationTraitSource, RecordType } from "./types";
 import { getCache, setCache } from "./cache";
 import { getBasePath, getPublicUrl, isErrorAPIResponse } from "./utils";
@@ -45,7 +47,7 @@ export async function fetchRecordAnnotationTable(endpoint: string) {
     return await _fetch(query);
 }
 
-export async function fetchRecordAssocations(
+export async function fetchRecordAssociations(
     recordType: RecordType,
     id: string,
     category: AssociationTraitCategory = "all",
@@ -62,8 +64,8 @@ export async function _fetch(endpoint: string, content: ResponseContent = "full"
 
     let namespace: string = "";
     if (endpoint.includes("/service/")) {
-        // always want data only response for services
-        dataOnly = true;
+        // search endpoint does not return data object
+        // dataOnly = true;
         namespace = "service";
     } else {
         const operator = endpoint.includes("?") ? "&" : "?";

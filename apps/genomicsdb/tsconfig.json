@@ -28,7 +28,7 @@
         "**/*.ts",
         "**/*.tsx",
         ".next/types/**/*.ts",
-        "components/enhanced-search-component.tsx",
+        "components/EnhancedSearch.tsx",
         "../../packages/Charts/GeneticAssociationSummaryChart.tsx",
         "components/records/RecordTable.tsx.old"
     ],

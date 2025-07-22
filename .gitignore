@@ -437,3 +437,6 @@ FodyWeavers.xsd
 
 # NX
 .nx
+
+# REDIS
+redis/

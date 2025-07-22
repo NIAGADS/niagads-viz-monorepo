@@ -88,6 +88,17 @@ export interface APIErrorResponse {
     request?: string;
 }
 
+// Search Results
+
+export interface SearchResult {
+    id: string;
+    description: string;
+    display: string;
+    record_type: RecordType;
+    matched_term: string;
+    match_rank: number;
+}
+
 // Page Request Parameters
 
 export interface PageProps {
@@ -118,7 +129,7 @@ export interface AttributeCount {
     [key: string]: number;
 }
 
-export interface GeneticAssocationSummary {
+export interface GeneticAssociationSummary {
     trait_category: string;
     trait: OntologyTerm;
     num_variants: number | AttributeCount;
