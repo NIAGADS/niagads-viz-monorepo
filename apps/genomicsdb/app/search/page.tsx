@@ -1,17 +1,13 @@
 import { Button, LoadingSpinner } from "@niagads/ui";
 import { ChevronLeft, ChevronRight, Download, Filter } from "lucide-react";
+import { PageProps, SearchResult } from "@/lib/types";
 import React, { Suspense } from "react";
 
 import { EnhancedSearch } from "@/components/EnhancedSearch";
 import Link from "next/link";
-import { SearchResult } from "@/lib/types";
 import { _fetch } from "@/lib/route-handlers";
 
-interface SearchPageProps {
-    searchParams: { q?: string; type?: string };
-}
-
-const SearchPage = async ({ searchParams }: SearchPageProps) => {
+const SearchPage = async ({ searchParams }: PageProps) => {
     const params = await searchParams;
     const query = params.q || "";
     const type = params.type;
