@@ -28,7 +28,7 @@ export const RecordLink = ({
     style = {},
     ...props
 }: RecordLinkProps) => {
-    const prefix = routerLink ? "" : getPublicUrl();
+    const prefix = routerLink ? "" : getPublicUrl(true); // get url and basePath
     const href = `${prefix}/record/${recordType}/${recordId}`;
 
     return asText ? (

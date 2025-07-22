@@ -1,6 +1,6 @@
 import { APIErrorResponse, APIResponse, AssociationTraitCategory, AssociationTraitSource, RecordType } from "./types";
 import { getCache, setCache } from "./cache";
-import { getPublicUrl, getRecordIdFromPath, getRecordTypeFromPath, isErrorAPIResponse } from "./utils";
+import {getBasePath, getPublicUrl, isErrorAPIResponse } from "./utils";
 
 import { APIError } from "./errors";
 import { backendFetch } from "@niagads/common";
@@ -8,6 +8,7 @@ import { notFound } from "next/navigation";
 
 type ResponseContent = "brief" | "full" | "counts" | "urls";
 type ResponseFormat = "summary" | "table" | "default";
+
 
 export async function fetchRecord(endpoint: string, brief: boolean = true) {
     const response = await _fetch(endpoint, brief ? "brief" : "full");
@@ -57,10 +58,9 @@ export async function fetchRecordAssocations(
 }
 
 export async function _fetch(endpoint: string, content: ResponseContent = "full", dataOnly: boolean = false) {
-    if (!endpoint.startsWith("/api/")) {
-        throw Error("Runtime Error: _fetch wrapper is for querying /api endpoints only.");
-    }
-    let query = endpoint;
+    const basePath = `${getBasePath()}/api`;
+    let query = `${basePath}${endpoint}`;
+
     let namespace: string = "";
     if (endpoint.includes("/service/")) {
         // always want data only response for services
@@ -68,7 +68,7 @@ export async function _fetch(endpoint: string, content: ResponseContent = "full"
         namespace = "service";
     } else {
         const operator = endpoint.includes("?") ? "&" : "?";
-        query = `${endpoint}${operator}content=${content}`;
+        query = `${query}${operator}content=${content}`;
 
         if (endpoint.includes("record")) {
             namespace = "record";
