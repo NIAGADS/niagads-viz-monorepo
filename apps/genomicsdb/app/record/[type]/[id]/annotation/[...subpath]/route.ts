@@ -13,7 +13,6 @@ export async function GET(req: NextRequest) {
     let endpoint = req.nextUrl.pathname;
     endpoint = cleanRedirect(endpoint.replace("/annotation", ""));
 
-
     // Append query parameters if present
     const search = req.nextUrl.search;
     if (search) {

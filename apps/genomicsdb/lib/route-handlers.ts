@@ -1,6 +1,6 @@
 import { APIErrorResponse, APIResponse, AssociationTraitCategory, AssociationTraitSource, RecordType } from "./types";
 import { getCache, setCache } from "./cache";
-import {getBasePath, getPublicUrl, isErrorAPIResponse } from "./utils";
+import { getBasePath, getPublicUrl, isErrorAPIResponse } from "./utils";
 
 import { APIError } from "./errors";
 import { backendFetch } from "@niagads/common";
@@ -8,7 +8,6 @@ import { notFound } from "next/navigation";
 
 type ResponseContent = "brief" | "full" | "counts" | "urls";
 type ResponseFormat = "summary" | "table" | "default";
-
 
 export async function fetchRecord(endpoint: string, brief: boolean = true) {
     const response = await _fetch(endpoint, brief ? "brief" : "full");
