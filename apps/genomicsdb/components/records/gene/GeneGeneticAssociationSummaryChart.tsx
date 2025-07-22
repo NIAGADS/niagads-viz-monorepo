@@ -1,9 +1,8 @@
 "use server";
 
-import { APIResponse, AssociationTraitCategory, AssociationTraitSource, GeneticAssocationSummary } from "@/lib/types";
-import { _fetch, fetchRecordAssocations } from "@/lib/route-handlers";
+import { APIResponse, AssociationTraitCategory, AssociationTraitSource, GeneticAssociationSummary } from "@/lib/types";
+import { _fetch, fetchRecordAssociations } from "@/lib/route-handlers";
 import { getCache, setCache } from "@/lib/cache";
-
 import { InlineError } from "@/components/ErrorAlerts";
 import Placeholder from "../placeholder";
 import { Series } from "@niagads/charts";
@@ -31,7 +30,7 @@ const data_key = (source: string, category: string) => {
     return `${source}|${cleanCategory}`;
 };
 
-const build_chart_data = (summary: GeneticAssocationSummary) => {
+const build_chart_data = (summary: GeneticAssociationSummary) => {
     const totals: Record<string, SummaryData> = {};
     Object.entries(summary).forEach(([source, traits]) => {
         traits.forEach((item: { trait_category: string; num_variants: Record<string, number> }) => {
@@ -57,7 +56,7 @@ const build_chart_data = (summary: GeneticAssocationSummary) => {
     return Object.values(totals);
 };
 
-const build_chart_series = (summary: GeneticAssocationSummary): Series => {
+const build_chart_series = (summary: GeneticAssociationSummary): Series => {
     const series = {};
     Object.entries(summary).map(([source, traits]) => {
         return traits.forEach((item: { trait_category: string; num_variants: Record<string, number> }) => {
@@ -71,7 +70,7 @@ const build_chart_series = (summary: GeneticAssocationSummary): Series => {
 
 export async function GeneAssociationSummaryChart({ recordId }: AssociationSummaryChartProps) {
     async function fetchSummary(traitCategory: AssociationTraitCategory, source: AssociationTraitSource) {
-        const response = (await fetchRecordAssocations(
+        const response = (await fetchRecordAssociations(
             "gene",
             recordId,
             traitCategory,
@@ -85,7 +84,7 @@ export async function GeneAssociationSummaryChart({ recordId }: AssociationSumma
     }
 
     const namespace = "gene-record-genetic-association-summary";
-    let summary: any = ((await getCache(namespace, recordId)) as unknown as GeneticAssocationSummary) || {};
+    let summary: any = ((await getCache(namespace, recordId)) as unknown as GeneticAssociationSummary) || {};
 
     if (!summary || Object.keys(summary).length === 0) {
         let errorMessage: string | null = null;
