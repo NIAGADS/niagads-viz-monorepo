@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { Autocomplete } from "@niagads/ui/client";
 import { _fetch } from "@/lib/route-handlers";
 import { SearchResult } from "@/lib/types";
+import { prefixClientRoute } from "@/lib/utils";
+import useSWR from "swr";
 
 import "./enhanced-search-component.css";
 
@@ -14,15 +16,15 @@ interface EnhancedSearchProps {
 }
 
 export function EnhancedSearch({ placeholder, autoRoute }: EnhancedSearchProps) {
-    const [suggestions, setSuggestions] = useState<SearchResult[]>([]);
+    const [url, setUrl] = useState("");
     const router = useRouter();
 
+    const { data, error, isLoading, mutate } = useSWR(url, (url: string) => fetch(url).then((res) => res.json()));
+
     const getSuggestions = (value: string) => {
-        setSuggestions([]);
-        !!value &&
-            _fetch(`/api/service/search?keyword=${value}&limit=10`).then((results: SearchResult[]) =>
-                setSuggestions(results)
-            );
+        if (value) {
+            setUrl(prefixClientRoute(`/api/service/search?keyword=${value}&limit=10`));
+        }
     };
 
     const handleSearch = (searchTerm: string) => {
@@ -35,7 +37,7 @@ export function EnhancedSearch({ placeholder, autoRoute }: EnhancedSearchProps) 
 
     return (
         <Autocomplete
-            suggestions={suggestions}
+            suggestions={data || []}
             onSearch={(term) => handleSearch(term)}
             onClick={(suggestion) => handleClick(suggestion)}
             onValueChange={(value) => getSuggestions(value)}
