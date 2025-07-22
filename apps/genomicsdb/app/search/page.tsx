@@ -1,4 +1,3 @@
-
 import React, { Suspense } from "react";
 import { LoadingSpinner, Button, Card } from "@niagads/ui";
 import { EnhancedSearch } from "@/components/EnhancedSearch";
@@ -15,7 +14,7 @@ const SearchPage = async ({ searchParams }: PageProps) => {
     const type = params.type;
 
     const results: SearchResult[] = (await _fetch(`/service/search?keyword=${query}`)) as SearchResult[];
-  
+
     return (
         <Suspense fallback={<LoadingSpinner message="Loading search results..." />}>
             {!results || results.length === 0 ? (
