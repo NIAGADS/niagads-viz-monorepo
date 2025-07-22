@@ -1,9 +1,11 @@
 "use client";
 
 import { BarChart3, Database, Search } from "lucide-react";
-import { Button } from "@niagads/ui";
+import { Button, Card } from "@niagads/ui";
 import { EnhancedSearch } from "../EnhancedSearch";
 import { useRouter } from "next/navigation";
+
+import styles from "@/components/styles/homePage.module.css";
 
 export function HomePage() {
     const router = useRouter();
@@ -35,27 +37,27 @@ export function HomePage() {
     return (
         <div>
             {/* Hero Section */}
-            <section className="hero-section">
+            <section className={styles["heroSection"]}>
                 <div className="max-text-width">
-                    <h1 className="hero-title">
+                    <h1 className={styles["heroTitle"]}>
                         The NIAGADS <br />
                         Alzheimer's Genomics Database
                     </h1>
-                    <p className="hero-subtitle">
+                    <p className={styles["heroSubtitle"]}>
                         is an interactive knowledgebase for Alzheimer's disease (AD) genetics. It provides a platform
                         for data sharing, discovery, and analysis to help advance the understanding of the complex
                         genetic underpinnings of AD neurodegeneration and accelerate the progress of research on AD and
                         AD related dementias (ADRD).
                     </p>
 
-                    <div className="hero-search">
+                    <div className={styles["heroSearch"]}>
                         <EnhancedSearch
                             placeholder="Search genes, variants, or genomic regions (e.g., APOE, rs429358)"
                             autoRoute={true}
                         />
                     </div>
 
-                    <div className="hero-buttons">
+                    <div className={styles["heroButtons"]}>
                         <Button color="primary" onClick={() => router.push("/browse-datasets")} className="bg-primary">
                             <Search size={20} />
                             Start Exploring
@@ -79,25 +81,25 @@ export function HomePage() {
                         </p>
                     </div>
 
-                    <div className="feature-grid">
+                    <div className={styles["featureGrid"]}>
                         {features.map((feature, index) => (
-                            <div key={index} className="feature-card">
-                                <feature.icon className="feature-icon" />
-                                <h3 className="feature-title">{feature.title}</h3>
-                                <p className="feature-description">{feature.description}</p>
-                            </div>
+                            <Card variant="third">
+                                <feature.icon className={styles["featureIcon"]} />
+                                <h3 className={styles["featureTitle"]}>{feature.title}</h3>
+                                <p className={styles["featureDescription"]}>{feature.description}</p>
+                            </Card>
                         ))}
                     </div>
                 </div>
             </section>
 
             {/* Stats Section */}
-            <section className="stats-section">
+            <section className={styles["statsSection"]}>
                 <div className="max-text-width">
                     <h2 className="text-2xl font-bold text-primary mb-15">
                         Explore AD/ADRD Genetic Evidence for AD/ADRD
                     </h2>
-                    <div className="section-description">
+                    <div className={styles["sectionDescription"]}>
                         For each dataset we provide a detailed interactive report summarizing the top risk-associated
                         variants. These variants are are annotated using the ADSP Annotation Pipeline (Butkiewicz et al.
                         Bioinformatics 2018 / PMID:{" "}
@@ -107,12 +109,12 @@ export function HomePage() {
                         ) and mapped against sequence features and functional genomics data tracks to help researchers
                         explore the potential impact of risk-associated variants in a broader genomics context.
                     </div>
-                    <div className="main-stat-number">1.3B Annotated Variants</div>
-                    <div className="stats-grid">
+                    <div className={styles["mainStatNumber"]}>1.3B Annotated Variants</div>
+                    <div className={styles["statsGrid"]}>
                         {stats.map((stat, index) => (
-                            <div key={index} className="stat-item">
-                                <div className="stat-number">{stat.number}</div>
-                                <div className="stat-label">{stat.label}</div>
+                            <div key={index} className={styles["statItem"]}>
+                                <div className={styles["statNumber"]}>{stat.number}</div>
+                                <div className={styles["statLabel"]}>{stat.label}</div>
                             </div>
                         ))}
                     </div>
@@ -129,39 +131,39 @@ export function HomePage() {
                         </p>
                     </div>
 
-                    <div className="feature-grid">
-                        <div
-                            className="feature-card"
+                    <div className={styles["featureGrid"]}>
+                        <Card
+                            variant="third"
                             style={{ cursor: "pointer" }}
                             onClick={() => router.push("/record/gene/APOE")}
                         >
-                            <div className="feature-title">Explore APOE</div>
-                            <p className="feature-description">
+                            <div className={styles["featureTitle"]}>Explore APOE</div>
+                            <p className={styles["featureDescription"]}>
                                 Investigate the most well-known Alzheimer's risk gene and its variants
                             </p>
-                        </div>
+                        </Card>
 
-                        <div
-                            className="feature-card"
+                        <Card
+                            variant="third"
                             style={{ cursor: "pointer" }}
                             onClick={() => router.push("/search?q=Alzheimer's disease")}
                         >
-                            <div className="feature-title">AD GWAS Data</div>
-                            <p className="feature-description">
+                            <div className={styles["featureTitle"]}>AD GWAS Data</div>
+                            <p className={styles["featureDescription"]}>
                                 Browse genome-wide association studies for Alzheimer's disease
                             </p>
-                        </div>
+                        </Card>
 
-                        <div
-                            className="feature-card"
+                        <Card
+                            variant="third"
                             style={{ cursor: "pointer" }}
                             onClick={() => router.push("/record/variant/chr19:44908684")}
                         >
-                            <div className="feature-title">Chromosome 19</div>
-                            <p className="feature-description">
+                            <div className={styles["featureTitle"]}>Chromosome 19</div>
+                            <p className={styles["featureDescription"]}>
                                 Explore variants on chromosome 19, enriched for AD associations
                             </p>
-                        </div>
+                        </Card>
                     </div>
                 </div>
             </section>
