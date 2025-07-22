@@ -28,7 +28,7 @@ export const RecordActionToolbar = ({ id, record }: ActionToolbarProps) => {
 
     const handleShare = () => {
         // create permalink and copy to clipboard
-        const permalink = `${getPublicUrl()}/record/${record.record_type}/${record.id}`;
+        const permalink = `${getPublicUrl(true)}/record/${record.record_type}/${record.id}`;
         navigator.clipboard.writeText(permalink);
     };
 

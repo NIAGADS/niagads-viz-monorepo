@@ -14,7 +14,7 @@ export default async function VariantReport({ params }: PageProps) {
     const path: string = headers.get("x-current-pathname")!;
     const recordType: RecordType = getRecordTypeFromPath(path)!;
 
-    let record: VariantRecord = (await fetchRecord(`/api${path}`, false)) as VariantRecord;
+    let record: VariantRecord = (await fetchRecord(path, false)) as VariantRecord;
     Object.assign(record, { record_type: recordType });
 
     return (

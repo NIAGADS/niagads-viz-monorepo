@@ -23,14 +23,6 @@ export const getRecordIdFromPath = (pathname: string) => {
     return match ? match[1] : null;
 };
 
-export const getPublicUrl = () => {
-    const publicUrl = process.env.NEXT_PUBLIC_HOST_URL;
-    if (!publicUrl) {
-        throw new Error("RUNTIME ERROR: Must define `NEXT_PUBLIC_HOST_URL` in `.env.local");
-    }
-    return publicUrl;
-};
-
 // check to see if a response is an error response
 export function isErrorAPIResponse(obj: any): obj is APIErrorResponse {
     return obj && typeof obj === "object" && typeof obj.status === "number" && typeof obj.detail === "string";
@@ -53,3 +45,34 @@ export function mapConsequenceToClass(term: string): string {
 
     return normalized;
 }
+
+// route modifiers - even though these are technically "route-handlers",
+// they cannot go in route-handlers.ts b/c otherwise client-side code
+// may attempt to access they keydb store on import of the function
+// leading to errors
+export const getPublicUrl = (inclBasePath: boolean = false) => {
+    const publicUrl = process.env.NEXT_PUBLIC_HOST_URL;
+    if (!publicUrl) {
+        throw new Error("RUNTIME ERROR: Must define `NEXT_PUBLIC_HOST_URL` in `.env.local");
+    }
+    return inclBasePath ? `${publicUrl}${getBasePath()}` : publicUrl;
+};
+
+// always returns a string
+export const getBasePath = (): string => {
+    const basePath = process.env.NEXT_PUBLIC_BASE_PATH;
+    return basePath ? basePath : "";
+};
+
+// handles basePath prefixing for client-side fetching with a useEffect or useSWR hook
+export const prefixClientRoute = (endpoint: string): string => {
+    return `${getBasePath()}${endpoint}`;
+};
+
+// handles basePath removal for redirected client-side (e.g., from a route.ts to a _fetch())
+export const cleanRedirect = (endpoint: string): string => {
+    const basePath = getBasePath();
+    if (basePath === "") {
+        return endpoint;
+    } else return endpoint.replace(basePath, "");
+};

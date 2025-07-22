@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { fetchRecordAnnotationTable } from "@/lib/route-handlers";
+import { cleanRedirect } from "@/lib/utils";
 
 // for client-side fetching from the API w/ioredis caching
 
@@ -10,10 +11,7 @@ export async function GET(req: NextRequest) {
     // remove the /annotation subpath
 
     let endpoint = req.nextUrl.pathname;
-    endpoint = endpoint.replace("/annotation", "");
-
-    // add api prefix
-    endpoint = `/api${endpoint}`;
+    endpoint = cleanRedirect(endpoint.replace("/annotation", ""));
 
     // Append query parameters if present
     const search = req.nextUrl.search;

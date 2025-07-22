@@ -2,7 +2,7 @@
 
 import { APIErrorResponse, APIResponse, AssociationTraitCategory, AssociationTraitSource, RecordType } from "./types";
 import { getCache, setCache } from "./cache";
-import { getPublicUrl, isErrorAPIResponse } from "./utils";
+import { getBasePath, getPublicUrl, isErrorAPIResponse } from "./utils";
 
 import { APIError } from "./errors";
 import { backendFetch } from "@niagads/common";
@@ -59,10 +59,9 @@ export async function fetchRecordAssociations(
 }
 
 export async function _fetch(endpoint: string, content: ResponseContent = "full", dataOnly: boolean = false) {
-    if (!endpoint.startsWith("/api/")) {
-        throw Error("Runtime Error: _fetch wrapper is for querying /api endpoints only.");
-    }
-    let query = endpoint;
+    const basePath = `${getBasePath()}/api`;
+    let query = `${basePath}${endpoint}`;
+
     let namespace: string = "";
     if (endpoint.includes("/service/")) {
         // search endpoint does not return data object
@@ -70,7 +69,7 @@ export async function _fetch(endpoint: string, content: ResponseContent = "full"
         namespace = "service";
     } else {
         const operator = endpoint.includes("?") ? "&" : "?";
-        query = `${endpoint}${operator}content=${content}`;
+        query = `${query}${operator}content=${content}`;
 
         if (endpoint.includes("record")) {
             namespace = "record";

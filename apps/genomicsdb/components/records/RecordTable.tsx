@@ -4,8 +4,7 @@ import { InlineError, NoData } from "../ErrorAlerts";
 import { LoadingSpinner } from "@niagads/ui";
 import PaginationMessage from "../PaginationMessage";
 import Table from "@niagads/table";
-import { _fetch } from "@/lib/route-handlers";
-import { isErrorAPIResponse } from "@/lib/utils";
+import { isErrorAPIResponse, prefixClientRoute } from "@/lib/utils";
 import { useEffect } from "react";
 import useSWR from "swr";
 
@@ -16,7 +15,7 @@ export interface RecordTableProps extends CacheIdentifier {
 
 export default function RecordTable({ tableDef, onTableLoad, ...cacheInfo }: RecordTableProps) {
     const { data, error, isLoading } = useSWR(
-        `/record/${cacheInfo.recordType}/${cacheInfo.recordId}/annotation/${tableDef.endpoint}`,
+        prefixClientRoute(`/record/${cacheInfo.recordType}/${cacheInfo.recordId}/annotation/${tableDef.endpoint}`),
         (url: string) => fetch(url).then((res) => res.json())
     );
 
