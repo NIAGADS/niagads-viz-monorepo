@@ -19,7 +19,7 @@ export function EnhancedSearch({
     const [url, setUrl] = useState("");
     const router = useRouter();
 
-    const { data } = useSWR(url, (url: string) => fetch(url).then((res) => res.json()));
+    const { data, error } = useSWR(url, (url: string) => fetch(url).then((res) => res.json()));
 
     const getSuggestions = (value: string) => {
         if (value) {
@@ -37,7 +37,8 @@ export function EnhancedSearch({
 
     return (
         <Autocomplete
-            suggestions={data || null}
+            suggestions={data || (error ? [] : null)} // if there's an error set the suggestions to be an empty array to display suggestions instead of loading spinner
+            error={`${error}`}
             onSearch={(term) => handleSearch(term)}
             onClick={(suggestion) => handleClick(suggestion)}
             onValueChange={(value) => getSuggestions(value)}

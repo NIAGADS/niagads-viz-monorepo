@@ -144,6 +144,9 @@
 .ui-suggestion-text {
     font-weight: 400;
     font-size: 1rem;
+    &.error {
+        color: var(--error-red);
+    }
 }
 
 .ui-suggestion-text-sm {

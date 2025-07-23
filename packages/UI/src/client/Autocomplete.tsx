@@ -38,6 +38,7 @@ interface AutocompleteProps {
     onSearch: (query: string) => void;
     onClick: (suggestion: Suggestion) => void;
     onValueChange: (value: string) => void;
+    error: string;
     placeholder?: string;
     showTypeHints?: boolean;
     autoRoute?: boolean; // If true, automatically route to record pages
@@ -48,6 +49,7 @@ export const Autocomplete = ({
     onSearch,
     onClick,
     onValueChange,
+    error,
     placeholder,
     showTypeHints = true,
     autoRoute = true,
@@ -133,9 +135,18 @@ export const Autocomplete = ({
                             <LoadingSpinner />
                         ) : suggestions.length === 0 ? (
                             <div className={styles["ui-autocomplete-no-results"]}>
-                                <div className={styles["ui-suggestion-content"]}>
-                                    <span className={styles["ui-suggestion-text"]}>No results found for "{query}"</span>
-                                </div>
+                                {error ? (
+                                    <div className={styles["ui-suggestion-content"]}>
+                                        <span className={styles["ui-suggestion-text error"]}>Error</span>
+                                        <span className={styles["ui-suggestion-text-sm"]}>{error}</span>
+                                    </div>
+                                ) : (
+                                    <div className={styles["ui-suggestion-content"]}>
+                                        <span className={styles["ui-suggestion-text"]}>
+                                            No results found for "{query}"
+                                        </span>
+                                    </div>
+                                )}
                             </div>
                         ) : (
                             <div>
