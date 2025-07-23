@@ -30,7 +30,7 @@ const useDebounce = (value: string) => {
 interface Suggestion {
     id: string;
     display: string;
-    record_type?: "gene" | "variant" | "span" | "track";
+    record_type?: "gene" | "variant" | "region" | "track";
 }
 interface AutocompleteProps {
     suggestions: Suggestion[];
