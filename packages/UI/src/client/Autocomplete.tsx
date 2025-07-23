@@ -74,6 +74,7 @@ export const Autocomplete = ({
                     break;
                 case "Enter":
                     e.preventDefault();
+                    setShowSuggestions(false);
                     if (highlightedIndex >= 0) {
                         handleSuggestionClick(suggestions[highlightedIndex]);
                     } else {
@@ -130,6 +131,12 @@ export const Autocomplete = ({
                     <div className={styles["ui-autocomplete-suggestions"]} role="listbox">
                         {waiting || suggestions === null ? (
                             <LoadingSpinner />
+                        ) : suggestions.length === 0 ? (
+                            <div className={styles["ui-autocomplete-no-results"]}>
+                                <div className={styles["ui-suggestion-content"]}>
+                                    <span className={styles["ui-suggestion-text"]}>No results found for "{query}"</span>
+                                </div>
+                            </div>
                         ) : (
                             <div>
                                 {suggestions.slice(0, 8).map((suggestion, index) => {

@@ -16,7 +16,7 @@ const SearchPage = async ({ searchParams }: PageProps) => {
 
     const results: SearchResult[] = (await _fetch(`/service/search?keyword=${query}`)) as SearchResult[];
 
-    if (autoRoute && results[0].match_rank === -1) {
+    if (autoRoute && results.length > 0 && results[0].match_rank === -1) {
         redirect(prefixClientRoute(`/record/${results[0].record_type}/${results[0].id}`));
     }
 
