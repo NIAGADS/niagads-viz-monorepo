@@ -13,10 +13,7 @@ interface HeaderProps {
     showSearch?: boolean;
 }
 
-export function Header({
-    onMenuToggle,
-    showSearch = true,
-}: HeaderProps) {
+export function Header({ onMenuToggle, showSearch = true }: HeaderProps) {
     const pathname = usePathname();
 
     const isActive = (path: string) => {

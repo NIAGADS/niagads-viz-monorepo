@@ -10,9 +10,7 @@ interface MainLayoutProps {
     children: ReactNode;
 }
 
-export function MainLayout({
-    children,
-}: MainLayoutProps) {
+export function MainLayout({ children }: MainLayoutProps) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const pathname = usePathname();
 
@@ -39,13 +37,8 @@ export function MainLayout({
 
     return (
         <div className="app-container">
-            <Header
-                onMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)}
-            />
-            <MobileMenu
-                isOpen={mobileMenuOpen}
-                onClose={() => setMobileMenuOpen(false)}
-            />
+            <Header onMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)} />
+            <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
             <div className="content-container">
                 {/*shouldShowSidebar && <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />*/}
                 {/*shouldShowSidebar && sidebarOpen && (
