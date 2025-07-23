@@ -1,14 +1,14 @@
 import React, { Suspense } from "react";
 import { LoadingSpinner, Button, Card } from "@niagads/ui";
 import { EnhancedSearch } from "@/components/EnhancedSearch";
-import { Filter, Download, ChevronLeft, ChevronRight } from "lucide-react";
+import { Filter } from "lucide-react";
 import { _fetch } from "@/lib/route-handlers";
 import { SearchResult, PageProps } from "@/lib/types";
 import { SearchTable } from "@/components/SearchTable";
 import { redirect } from "next/navigation";
+import { prefixClientRoute } from "@/lib/utils";
 
 import "@/app/globals.css";
-import { prefixClientRoute } from "@/lib/utils";
 
 const SearchPage = async ({ searchParams }: PageProps) => {
     const params = await searchParams;
