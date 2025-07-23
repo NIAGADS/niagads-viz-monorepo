@@ -12,7 +12,10 @@ interface EnhancedSearchProps {
     autoRoute?: boolean; // If true, automatically route to record pages
 }
 
-export function EnhancedSearch({ placeholder, autoRoute }: EnhancedSearchProps) {
+export function EnhancedSearch({
+    placeholder = "Search for genes, variants, regions...",
+    autoRoute = true,
+}: EnhancedSearchProps) {
     const [url, setUrl] = useState("");
     const router = useRouter();
 
@@ -25,7 +28,7 @@ export function EnhancedSearch({ placeholder, autoRoute }: EnhancedSearchProps) 
     };
 
     const handleSearch = (searchTerm: string) => {
-        router.push(`/search?q=${searchTerm}`);
+        router.push(`/search?q=${searchTerm}&autoRoute=${autoRoute}`);
     };
 
     const handleClick = (suggestion: Partial<SearchResult>) => {
@@ -34,7 +37,7 @@ export function EnhancedSearch({ placeholder, autoRoute }: EnhancedSearchProps) 
 
     return (
         <Autocomplete
-            suggestions={data || []}
+            suggestions={data || null}
             onSearch={(term) => handleSearch(term)}
             onClick={(suggestion) => handleClick(suggestion)}
             onValueChange={(value) => getSuggestions(value)}

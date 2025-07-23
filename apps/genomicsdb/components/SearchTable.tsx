@@ -10,11 +10,10 @@ interface SearchTableProps {
 
 export const SearchTable = ({ searchResults }: SearchTableProps) => {
     const tableData = searchResults.map((result) => ({
-        id: {
-            value: result.id,
+        display: {
+            value: result.display,
             url: prefixClientRoute(`/record/${result.record_type}/${result.id}`),
         },
-        display: result.display,
         type: result.record_type,
         description: result.description,
     }));
@@ -28,13 +27,10 @@ export const SearchTable = ({ searchResults }: SearchTableProps) => {
 
 const tableColumns: GenericColumn[] = [
     {
-        id: "id",
-        header: "ID",
-        type: "link",
-    },
-    {
         id: "display",
-        header: "Display Name",
+        header: "Record ID",
+        type: "link",
+        required: true,
     },
     {
         id: "type",

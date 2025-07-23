@@ -100,8 +100,7 @@
     left: 0;
     right: 0;
     border: 1px solid var(--gray-700);
-    border-top: none;
-    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    border-radius: var(--border-radius);
     box-shadow: var(--shadow-md);
     z-index: 10;
     max-height: 300px;
@@ -126,6 +125,15 @@
     background-color: var(--hover-bg);
 }
 
+.ui-autocomplete-no-results {
+    padding: 0.75rem 1rem;
+    color: var(--gray-300);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-primary);
+}
+
 .ui-suggestion-content {
     display: flex;
     align-items: center;
@@ -134,7 +142,13 @@
 }
 
 .ui-suggestion-text {
-    font-weight: 500;
+    font-weight: 400;
+    font-size: 1rem;
+}
+
+.ui-suggestion-text-sm {
+    font-weight: 250;
+    font-size: 0.75rem;
 }
 
 .ui-suggestion-type {
