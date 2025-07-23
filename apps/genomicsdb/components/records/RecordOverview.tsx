@@ -21,7 +21,7 @@ export const RecordOverview = ({ children }: RecordOverviewProps) => {
 export const renderRecordTitle = (
     displayId: string,
     externalId: string | null,
-    externalUrl: string,
+    externalUrl: string | null,
     recordType: RecordType
 ) => {
     // TODO: title for the link indicating which external resource (depending on record type) this will take you to

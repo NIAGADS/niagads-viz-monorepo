@@ -4,6 +4,7 @@ import { ExternalUrls } from "@/lib/reference";
 import { GeneAssociationSummaryChart } from "./GeneGeneticAssociationSummaryChart";
 import { GeneRecord } from "@/lib/types";
 import { RecordActionToolbar } from "../RecordActionToolbar";
+import { RecordLink } from "../Link";
 import { RecordSectionUnderConstructionAlert } from "../RecordSectionUnderConstructionAlert";
 import { genomicLocationToSpan } from "@/lib/utils";
 import { renderRecordTitle } from "../RecordOverview";
@@ -37,7 +38,8 @@ export function GeneRecordOverview({ record }: { record: GeneRecord }) {
                                 <span className={styles.infoLabel}>Gene Type:</span> {record.type}
                             </div>
                             <div className={styles.attribute}>
-                                <span className={styles.infoLabel}>Location:</span> {location}
+                                <span className={styles.infoLabel}>Location:</span>{" "}
+                                <RecordLink recordType={"region"} recordId={span} displayText={location}></RecordLink>
                             </div>
                         </div>
                     </div>

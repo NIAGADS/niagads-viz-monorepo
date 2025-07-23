@@ -88,13 +88,13 @@ const __SPAN_RECORD_SECTIONS: AnchoredPageSection[] = [
                 id: "genes",
                 label: "Genes",
                 description: "",
-                endpoint: "/record/gene/search?content=brief&span=",
+                endpoint: "/genes",
             },
             {
                 id: "variants",
                 label: "Variants",
                 description: "",
-                endpoint: "/record/variant/search?content=brief&span=",
+                endpoint: "/variants",
             },
             // TODO: functional genomics
         ],
@@ -194,7 +194,7 @@ const __VARIANT_RECORD_SECTIONS: AnchoredPageSection[] = [
 export const RECORD_PAGE_SECTIONS = {
     gene: __GENE_RECORD_SECTIONS,
     variant: __VARIANT_RECORD_SECTIONS,
-    span: __SPAN_RECORD_SECTIONS,
+    region: __SPAN_RECORD_SECTIONS,
 };
 
 // TODO - linkouts

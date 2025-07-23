@@ -212,6 +212,9 @@ export interface VariantRecord extends BaseRecord {
 export interface RegionRecord extends BaseRecord {
     record_type: "region";
     location: GenomicLocation;
+    num_structural_variants: number;
+    num_genes: number;
+    num_small_variants: number | string;
 }
 
 export interface TrackRecord extends BaseRecord {
