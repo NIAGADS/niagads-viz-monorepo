@@ -2,6 +2,8 @@
 
 import "./about-page.css";
 
+import { Alert } from "@niagads/ui";
+
 export function AboutPage() {
     return (
         <div className="max-text-width">
@@ -31,7 +33,6 @@ export function AboutPage() {
                     Pennsylvania.
                 </p>
             </section>
-
             {/* How to Cite */}
             <section className="about-section">
                 <h2>How to Cite</h2>
@@ -48,12 +49,12 @@ export function AboutPage() {
                     Greenfest-Allen et al. (28 April 2023). "NIAGADS Alzheimer's GenomicsDB: A resource for exploring
                     Alzheimer's Disease genetic and genomic knowledge":
                     <a
-                        href="https://doi.org/10.1101/2020.09.23.310276"
+                        href="https://alz-journals.onlinelibrary.wiley.com/doi/10.1002/alz.13509"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="link"
                     >
-                        https://doi.org/10.1101/2020.09.23.310276
+                        doi:10.1002/alz.13509
                     </a>
                 </blockquote>
                 <p>
@@ -61,7 +62,6 @@ export function AboutPage() {
                     in the dataset browser to obtain original publication information.
                 </p>
             </section>
-
             {/* FAQ */}
             <section className="about-section">
                 <h2>Frequently Asked Questions</h2>
@@ -111,10 +111,12 @@ export function AboutPage() {
                     </p>
                 </details>
             </section>
-
             {/* Data Sources */}
             <section className="about-section">
-                <h2>Data Sources</h2>
+                <Alert variant="construction" message="Under contruction">
+                    <div>Full documentation and data source information coming soon.</div>
+                </Alert>
+                {/*<h2>Data Sources</h2>
                 <h3>Ontologies</h3>
                 <p>
                     The GenomicsDB uses ontologies to capture phenotypes, biosample types, and experimental design
@@ -135,6 +137,7 @@ export function AboutPage() {
                     usage.
                 </p>
                 <div className="table-placeholder">[Variant Annotation Table Placeholder]</div>
+                */}
             </section>
         </div>
     );

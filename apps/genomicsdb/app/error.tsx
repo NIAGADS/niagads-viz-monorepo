@@ -41,8 +41,12 @@ export default function ErrorPage({ error, reset }: { error: APIError & { digest
                 <div className="mb-15">{safeHtml(linkify(issueTrackerMsg))}</div>
             </Alert>
             <div>
-                <h3 className="error-page-section-header">Stack Trace</h3>
-                <div className="error-page-code-block">{formatMultiline(error.stack!)}</div>
+                {error.stack && (
+                    <div>
+                        <h3 className="error-page-section-header">Stack Trace</h3>
+                        <div className="error-page-code-block">{formatMultiline(error.stack)}</div>
+                    </div>
+                )}
             </div>
         </div>
     );

@@ -14,7 +14,6 @@ export default async function GeneReport({ params }: PageProps) {
     const path: string = headers.get("x-current-pathname")!;
     const recordType: RecordType = getRecordTypeFromPath(path)!;
     let record: GeneRecord = (await fetchRecord(path, true)) as GeneRecord;
-    console.log(record);
     Object.assign(record, { record_type: recordType });
 
     return (

@@ -116,7 +116,7 @@ export interface PageProps {
 export type AssociationTraitCategory = "biomarker" | "ad" | "adrd" | "other" | "all_ad" | "all";
 export type AssociationTraitSource = "gwas" | "curated" | "all";
 
-export type RecordType = "gene" | "variant" | "span" | "track";
+export type RecordType = "gene" | "variant" | "region" | "track";
 
 // Records and supporting data types
 
@@ -209,8 +209,8 @@ export interface VariantRecord extends BaseRecord {
     alt: string;
 }
 
-export interface SpanRecord extends BaseRecord {
-    record_type: "span";
+export interface RegionRecord extends BaseRecord {
+    record_type: "region";
     location: GenomicLocation;
 }
 
@@ -225,8 +225,8 @@ export interface TrackRecord extends BaseRecord {
     url: string;
 }
 
-export type Record = GeneRecord | VariantRecord | SpanRecord | TrackRecord;
-export type GenomicFeatureRecord = GeneRecord | VariantRecord | SpanRecord;
+export type GenomicFeatureRecord = GeneRecord | VariantRecord | RegionRecord;
+export type Record = GeneRecord | VariantRecord | RegionRecord | TrackRecord;
 
 // record page structure; anchored sections
 

@@ -92,6 +92,10 @@
     height: calc(100vh - var(--header-height));
 }
 
+.content {
+    overflow: auto;
+}
+
 .contentSection {
     margin-top: 0;
 }

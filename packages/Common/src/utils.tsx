@@ -1,4 +1,5 @@
 import React, { JSX } from "react";
+
 import { BasicType } from "./types";
 
 // checks if object is defined before checking if object has key
@@ -112,12 +113,12 @@ export function formatMultiline(text: string | string[], delimiter: string = "\n
     // takes a string or list of strings and breaks it into multiple lines for pretty printing
     // If text is an array, map directly
     if (Array.isArray(text)) {
-        return text.map((line, idx) => <p key={idx}>{line}</p>);
+        return text.map((line, idx) => <p key={`${idx}-${line}`}>{line}</p>);
     }
     // If text is not a string, convert to string (handles null/undefined gracefully)
     if (typeof text !== "string") {
         text = text == null ? "" : String(text);
     }
     // Split string by delimiter and map
-    return text.split(delimiter).map((line, idx) => <p key={idx}>{line}</p>);
+    return text.split(delimiter).map((line, idx) => <p key={`${idx}-${line}`}>{line}</p>);
 }

@@ -1,10 +1,11 @@
 import { APITableResponse, CacheIdentifier, Pagination, TableSection } from "@/lib/types";
 import { InlineError, NoData } from "../ErrorAlerts";
+import { isErrorAPIResponse, prefixClientRoute } from "@/lib/utils";
 
 import { LoadingSpinner } from "@niagads/ui";
 import PaginationMessage from "../PaginationMessage";
 import Table from "@niagads/table";
-import { isErrorAPIResponse, prefixClientRoute } from "@/lib/utils";
+import TableWrapper from "../TableWrapper";
 import { useEffect } from "react";
 import useSWR from "swr";
 
@@ -46,7 +47,7 @@ export default function RecordTable({ tableDef, onTableLoad, ...cacheInfo }: Rec
                     pagination={(data as APITableResponse).pagination}
                     endpoint={`/record/${cacheInfo.recordType}/${cacheInfo.recordId}${tableDef.endpoint}`}
                 />
-                <Table
+                <TableWrapper
                     id={tableDef.id}
                     columns={(data as APITableResponse).table.columns}
                     data={(data as APITableResponse).table.data}
@@ -55,7 +56,7 @@ export default function RecordTable({ tableDef, onTableLoad, ...cacheInfo }: Rec
         );
 
     return (
-        <Table
+        <TableWrapper
             id={tableDef.id}
             columns={(data as APITableResponse).table.columns}
             data={(data as APITableResponse).table.data}

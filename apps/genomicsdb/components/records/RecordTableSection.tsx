@@ -37,9 +37,14 @@ export function RecordTableSection({ tables, ...cacheInfo }: RecordTableSectionP
         <Tabs
             tabs={tables.map((t) => ({
                 id: t.id,
-                label: <TabHeader label={t.label} pagination={paginations[t.id]} />,
+                label: <TabHeader key={`tab-label-${t.id}`} label={t.label} pagination={paginations[t.id]} />,
                 content: (
-                    <Card variant="full" outline={false} style={{ marginBottom: "0px", padding: "0.5rem" }}>
+                    <Card
+                        key={`tab-content-${t.id}`}
+                        variant="full"
+                        outline={false}
+                        style={{ marginBottom: "0px", padding: "0.5rem" }}
+                    >
                         <RecordTable tableDef={t} {...cacheInfo} onTableLoad={handleTableLoad(t.id)} />
                     </Card>
                 ),

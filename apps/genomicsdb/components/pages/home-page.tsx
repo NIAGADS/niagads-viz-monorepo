@@ -2,10 +2,10 @@
 
 import { BarChart3, Database, Search } from "lucide-react";
 import { Button, Card } from "@niagads/ui";
-import { EnhancedSearch } from "../EnhancedSearch";
-import { useRouter } from "next/navigation";
 
-import styles from "@/components/styles/homePage.module.css";
+import { EnhancedSearch } from "../EnhancedSearch";
+import styles from "@/components/styles/HomePage.module.css";
+import { useRouter } from "next/navigation";
 
 export function HomePage() {
     const router = useRouter();
@@ -83,7 +83,7 @@ export function HomePage() {
 
                     <div className={styles["featureGrid"]}>
                         {features.map((feature, index) => (
-                            <Card variant="third">
+                            <Card key={`feature-${index}`} variant="third">
                                 <feature.icon className={styles["featureIcon"]} />
                                 <h3 className={styles["featureTitle"]}>{feature.title}</h3>
                                 <p className={styles["featureDescription"]}>{feature.description}</p>
