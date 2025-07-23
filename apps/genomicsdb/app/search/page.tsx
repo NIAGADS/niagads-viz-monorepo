@@ -1,10 +1,12 @@
 import React, { Suspense } from "react";
 import { LoadingSpinner, Button, Card } from "@niagads/ui";
 import { EnhancedSearch } from "@/components/EnhancedSearch";
-import { Filter, Download, ChevronLeft, ChevronRight } from "lucide-react";
+import { Filter } from "lucide-react";
 import { _fetch } from "@/lib/route-handlers";
 import { SearchResult, PageProps } from "@/lib/types";
 import { SearchTable } from "@/components/SearchTable";
+import { redirect } from "next/navigation";
+import { prefixClientRoute } from "@/lib/utils";
 
 import "@/app/globals.css";
 
@@ -14,6 +16,10 @@ const SearchPage = async ({ searchParams }: PageProps) => {
     const type = params.type;
 
     const results: SearchResult[] = (await _fetch(`/service/search?keyword=${query}`)) as SearchResult[];
+
+    if (results[0].match_rank === 0) {
+        redirect(prefixClientRoute(`/record/${results[0].record_type}/${results[0].id}`));
+    }
 
     return (
         <Suspense fallback={<LoadingSpinner message="Loading search results..." />}>

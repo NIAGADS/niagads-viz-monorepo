@@ -1,6 +1,7 @@
 "use client";
 
 import { SearchResult } from "@/lib/types";
+import { prefixClientRoute } from "@/lib/utils";
 import Table, { GenericColumn } from "@niagads/table";
 
 interface SearchTableProps {
@@ -9,7 +10,10 @@ interface SearchTableProps {
 
 export const SearchTable = ({ searchResults }: SearchTableProps) => {
     const tableData = searchResults.map((result) => ({
-        id: result.id,
+        id: {
+            value: result.id,
+            url: prefixClientRoute(`/record/${result.record_type}/${result.id}`),
+        },
         display: result.display,
         type: result.record_type,
         description: result.description,
@@ -26,6 +30,7 @@ const tableColumns: GenericColumn[] = [
     {
         id: "id",
         header: "ID",
+        type: "link",
     },
     {
         id: "display",
