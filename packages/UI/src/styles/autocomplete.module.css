@@ -134,7 +134,13 @@
 }
 
 .ui-suggestion-text {
-    font-weight: 500;
+    font-weight: 400;
+    font-size: 1rem;
+}
+
+.ui-suggestion-text-sm {
+    font-weight: 250;
+    font-size: 0.75rem;
 }
 
 .ui-suggestion-type {

@@ -8,18 +8,11 @@ import { MobileMenu } from "@/components/mobile-menu";
 
 interface MainLayoutProps {
     children: ReactNode;
-    showHeaderSearch?: boolean;
-    headerSearchPlaceholder?: string;
-    headerSearchSuggestions?: string[];
 }
 
 export function MainLayout({
     children,
-    showHeaderSearch = false,
-    headerSearchPlaceholder,
-    headerSearchSuggestions = [],
 }: MainLayoutProps) {
-    const [sidebarOpen, setSidebarOpen] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const pathname = usePathname();
 
@@ -48,18 +41,11 @@ export function MainLayout({
         <div className="app-container">
             <Header
                 onMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)}
-                showSearch={showHeaderSearch}
-                searchPlaceholder={headerSearchPlaceholder}
-                searchSuggestions={headerSearchSuggestions}
             />
             <MobileMenu
                 isOpen={mobileMenuOpen}
                 onClose={() => setMobileMenuOpen(false)}
-                showSearch={showHeaderSearch}
-                searchPlaceholder={headerSearchPlaceholder}
-                searchSuggestions={headerSearchSuggestions}
             />
-
             <div className="content-container">
                 {/*shouldShowSidebar && <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />*/}
                 {/*shouldShowSidebar && sidebarOpen && (

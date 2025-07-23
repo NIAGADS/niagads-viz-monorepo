@@ -1,11 +1,10 @@
-import "./globals.css";
-
 import { Inter, Lato, Roboto_Mono } from "next/font/google";
-
-import { ConditionalMainLayout } from "@/components/conditional-main-layout";
 import { LoadingProvider } from "@/components/loading-context";
 import type { Metadata } from "next";
 import type React from "react";
+import { MainLayout } from "@/components/main-layout";
+
+import "./globals.css";
 
 // Add viewport export for better mobile performance
 export const viewport = {
@@ -49,7 +48,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </head>
             <body className={inter.className}>
                 <LoadingProvider>
-                    <ConditionalMainLayout>{children}</ConditionalMainLayout>
+                    <MainLayout>
+                        {children}
+                    </MainLayout>
                 </LoadingProvider>
             </body>
         </html>
