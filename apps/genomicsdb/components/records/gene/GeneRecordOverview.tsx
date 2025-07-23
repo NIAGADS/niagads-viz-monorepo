@@ -4,6 +4,7 @@ import { ExternalUrls } from "@/lib/reference";
 import { GeneAssociationSummaryChart } from "./GeneGeneticAssociationSummaryChart";
 import { GeneRecord } from "@/lib/types";
 import { RecordActionToolbar } from "../RecordActionToolbar";
+import { RecordSectionUnderConstructionAlert } from "../RecordSectionUnderConstructionAlert";
 import { genomicLocationToSpan } from "@/lib/utils";
 import { renderRecordTitle } from "../RecordOverview";
 import styles from "../styles/record.module.css";
@@ -48,7 +49,8 @@ export function GeneRecordOverview({ record }: { record: GeneRecord }) {
             <Card variant="two-thirds">
                 <CardHeader>Genetic Associations</CardHeader>
                 <CardBody>
-                    <GeneAssociationSummaryChart recordId={record.id} />
+                    <RecordSectionUnderConstructionAlert section={"Gene Genetic Association Overview"} />
+                    {/*<GeneAssociationSummaryChart recordId={record.id} />*/}
                 </CardBody>
             </Card>
         </>

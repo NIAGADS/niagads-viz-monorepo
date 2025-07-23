@@ -234,6 +234,7 @@ interface AnchoredSectionBase {
     id: string;
     label: string;
     description?: string | React.ReactNode;
+    underConstruction?: boolean;
 }
 
 // TODO: table wrapper "types"
