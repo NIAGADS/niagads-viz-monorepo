@@ -11,16 +11,9 @@ import "./header.css";
 interface HeaderProps {
     onMenuToggle: () => void;
     showSearch?: boolean;
-    searchPlaceholder?: string;
-    searchSuggestions?: string[];
 }
 
-export function Header({
-    onMenuToggle,
-    showSearch = false,
-    searchPlaceholder = "Search genes, variants, regions...",
-    searchSuggestions = [],
-}: HeaderProps) {
+export function Header({ onMenuToggle, showSearch = true }: HeaderProps) {
     const pathname = usePathname();
 
     const isActive = (path: string) => {
@@ -42,7 +35,7 @@ export function Header({
 
                 {showSearch && (
                     <div className="header-search">
-                        <EnhancedSearch placeholder={searchPlaceholder} autoRoute={true} />
+                        <EnhancedSearch placeholder={"Search for genes, tracks, regions..."} autoRoute={true} />
                     </div>
                 )}
             </div>

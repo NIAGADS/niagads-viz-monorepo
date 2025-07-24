@@ -3,23 +3,23 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Autocomplete } from "@niagads/ui/client";
-import { _fetch } from "@/lib/route-handlers";
 import { SearchResult } from "@/lib/types";
 import { prefixClientRoute } from "@/lib/utils";
 import useSWR from "swr";
-
-import "./enhanced-search-component.css";
 
 interface EnhancedSearchProps {
     placeholder?: string;
     autoRoute?: boolean; // If true, automatically route to record pages
 }
 
-export function EnhancedSearch({ placeholder, autoRoute }: EnhancedSearchProps) {
+export function EnhancedSearch({
+    placeholder = "Search for genes, variants, regions...",
+    autoRoute = true,
+}: EnhancedSearchProps) {
     const [url, setUrl] = useState("");
     const router = useRouter();
 
-    const { data, error, isLoading, mutate } = useSWR(url, (url: string) => fetch(url).then((res) => res.json()));
+    const { data, error } = useSWR(url, (url: string) => fetch(url).then((res) => res.json()));
 
     const getSuggestions = (value: string) => {
         if (value) {
@@ -28,7 +28,7 @@ export function EnhancedSearch({ placeholder, autoRoute }: EnhancedSearchProps) 
     };
 
     const handleSearch = (searchTerm: string) => {
-        router.push(`/search?q=${searchTerm}`);
+        router.push(`/search?q=${searchTerm}&autoRoute=${autoRoute}`);
     };
 
     const handleClick = (suggestion: Partial<SearchResult>) => {
@@ -37,7 +37,8 @@ export function EnhancedSearch({ placeholder, autoRoute }: EnhancedSearchProps) 
 
     return (
         <Autocomplete
-            suggestions={data || []}
+            suggestions={data || (error ? [] : null)} // if there's an error set the suggestions to be an empty array to display suggestions instead of loading spinner
+            error={`${error}`}
             onSearch={(term) => handleSearch(term)}
             onClick={(suggestion) => handleClick(suggestion)}
             onValueChange={(value) => getSuggestions(value)}

@@ -20,7 +20,7 @@ const useDebounce = (value: string) => {
             setTimeout(() => {
                 setWaiting(false);
                 setDebouncedValue(value);
-            }, 1000)
+            }, 500)
         );
     }, [value]);
 
@@ -30,13 +30,15 @@ const useDebounce = (value: string) => {
 interface Suggestion {
     id: string;
     display: string;
-    record_type?: "gene" | "variant" | "span" | "track";
+    matched_term: string;
 }
+
 interface AutocompleteProps {
     suggestions: Suggestion[];
     onSearch: (query: string) => void;
     onClick: (suggestion: Suggestion) => void;
     onValueChange: (value: string) => void;
+    error: string;
     placeholder?: string;
     showTypeHints?: boolean;
     autoRoute?: boolean; // If true, automatically route to record pages
@@ -47,7 +49,8 @@ export const Autocomplete = ({
     onSearch,
     onClick,
     onValueChange,
-    placeholder = "Search genes, variants, tissues...",
+    error,
+    placeholder,
     showTypeHints = true,
     autoRoute = true,
 }: AutocompleteProps) => {
@@ -73,6 +76,7 @@ export const Autocomplete = ({
                     break;
                 case "Enter":
                     e.preventDefault();
+                    setShowSuggestions(false);
                     if (highlightedIndex >= 0) {
                         handleSuggestionClick(suggestions[highlightedIndex]);
                     } else {
@@ -127,8 +131,23 @@ export const Autocomplete = ({
 
                 {showSuggestions && (
                     <div className={styles["ui-autocomplete-suggestions"]} role="listbox">
-                        {waiting || !(suggestions.length > 0) ? (
+                        {waiting || suggestions === null ? (
                             <LoadingSpinner />
+                        ) : suggestions.length === 0 ? (
+                            <div className={styles["ui-autocomplete-no-results"]}>
+                                {error ? (
+                                    <div className={styles["ui-suggestion-content"]}>
+                                        <span className={styles["ui-suggestion-text error"]}>Error</span>
+                                        <span className={styles["ui-suggestion-text-sm"]}>{error}</span>
+                                    </div>
+                                ) : (
+                                    <div className={styles["ui-suggestion-content"]}>
+                                        <span className={styles["ui-suggestion-text"]}>
+                                            No results found for "{query}"
+                                        </span>
+                                    </div>
+                                )}
+                            </div>
                         ) : (
                             <div>
                                 {suggestions.slice(0, 8).map((suggestion, index) => {
@@ -143,6 +162,9 @@ export const Autocomplete = ({
                                             <div className={styles["ui-suggestion-content"]}>
                                                 <span className={styles["ui-suggestion-text"]}>
                                                     {suggestion.display}
+                                                </span>
+                                                <span className={styles["ui-suggestion-text-sm"]}>
+                                                    {suggestion.matched_term}
                                                 </span>
                                             </div>
                                             <ArrowRight size={14} className={styles["ui-suggestion-arrow"]} />
