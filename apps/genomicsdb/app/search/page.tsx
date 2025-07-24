@@ -1,20 +1,24 @@
-import React, { Suspense } from "react";
-import { LoadingSpinner, Card } from "@niagads/ui";
-import { EnhancedSearch } from "@/components/EnhancedSearch";
-import { _fetch } from "@/lib/route-handlers";
-import { SearchResult, PageProps } from "@/lib/types";
-import { SearchTable } from "@/components/SearchTable";
-import { redirect } from "next/navigation";
-import { prefixClientRoute } from "@/lib/utils";
-
 import "@/app/globals.css";
+
+import { Card, LoadingSpinner } from "@niagads/ui";
+import { PageProps, SearchResult } from "@/lib/types";
+import React, { Suspense } from "react";
+
+import { EnhancedSearch } from "@/components/EnhancedSearch";
+import { SearchTable } from "@/components/SearchTable";
+import { _fetch } from "@/lib/route-handlers";
+import { prefixClientRoute } from "@/lib/utils";
+import { redirect } from "next/navigation";
 
 const SearchPage = async ({ searchParams }: PageProps) => {
     const params = await searchParams;
     const query = params.q || "";
     const autoRoute = params.autoRoute || true;
 
-    const results: SearchResult[] = (await _fetch(`/service/search?keyword=${query}`)) as SearchResult[];
+    // const results: SearchResult[] = (await _fetch(`/service/search?keyword=${query}`)) as SearchResult[];
+    const results: SearchResult[] = (await _fetch(
+        `/service/search?keyword=${query}&searchType=feature`
+    )) as SearchResult[];
 
     if (autoRoute && results.length > 0 && results[0].match_rank === -1) {
         redirect(prefixClientRoute(`/record/${results[0].record_type}/${results[0].id}`));

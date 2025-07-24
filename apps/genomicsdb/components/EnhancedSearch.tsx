@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Autocomplete } from "@niagads/ui/client";
 import { SearchResult } from "@/lib/types";
 import { prefixClientRoute } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 import useSWR from "swr";
+import { useState } from "react";
 
 interface EnhancedSearchProps {
     placeholder?: string;
@@ -23,7 +23,8 @@ export function EnhancedSearch({
 
     const getSuggestions = (value: string) => {
         if (value) {
-            setUrl(prefixClientRoute(`/api/service/search?keyword=${value}&limit=10`));
+            // setUrl(prefixClientRoute(`/api/service/search?keyword=${value}&limit=10`));
+            setUrl(prefixClientRoute(`/api/service/search?keyword=${value}&limit=10&searchType=feature`));
         }
     };
 
