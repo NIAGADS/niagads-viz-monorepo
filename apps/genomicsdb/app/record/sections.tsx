@@ -60,6 +60,22 @@ const CURATED_ASSOC_SECTION: AnchoredPageSection = {
     ],
 };
 
+const UC_GWAS_ASSOC_SECTION: AnchoredPageSection = {
+    id: "gwas-genetic-associations",
+    label: "NIAGADS GWAS associations",
+    description: "",
+    icon: "chart",
+    underConstruction: true,
+};
+
+const UC_CURATED_ASSOC_SECTION: AnchoredPageSection = {
+    id: "curated-genetic-associations",
+    label: "Curated associations",
+    description: "",
+    icon: "file",
+    underConstruction: true,
+};
+
 const __SPAN_RECORD_SECTIONS: AnchoredPageSection[] = [
     { id: "overview", label: "Overview", icon: "home" },
     {
@@ -72,19 +88,19 @@ const __SPAN_RECORD_SECTIONS: AnchoredPageSection[] = [
                 id: "genes",
                 label: "Genes",
                 description: "",
-                endpoint: "/record/gene/search?content=brief&span=",
+                endpoint: "/genes",
             },
             {
                 id: "variants",
                 label: "Variants",
                 description: "",
-                endpoint: "/record/variant/search?content=brief&span=",
+                endpoint: "/variants",
             },
             // TODO: functional genomics
         ],
     },
-    GWAS_ASSOC_SECTION,
-    CURATED_ASSOC_SECTION,
+    UC_GWAS_ASSOC_SECTION,
+    UC_CURATED_ASSOC_SECTION,
 ];
 
 const __GENE_RECORD_SECTIONS: AnchoredPageSection[] = [
@@ -128,6 +144,7 @@ const __VARIANT_RECORD_SECTIONS: AnchoredPageSection[] = [
     {
         id: "predicted-consequences",
         label: "Predicted Consequences",
+        underConstruction: true,
         description: "",
         icon: "annotate",
         tables: [
@@ -177,7 +194,7 @@ const __VARIANT_RECORD_SECTIONS: AnchoredPageSection[] = [
 export const RECORD_PAGE_SECTIONS = {
     gene: __GENE_RECORD_SECTIONS,
     variant: __VARIANT_RECORD_SECTIONS,
-    span: __SPAN_RECORD_SECTIONS,
+    region: __SPAN_RECORD_SECTIONS,
 };
 
 // TODO - linkouts

@@ -2,7 +2,7 @@
 
 import { Alert } from "@niagads/ui";
 import React from "react";
-import { RecordLink } from "./records/Link";
+import { RecordLink } from "./Link";
 import styles from "./styles/UnderConstruction.module.css";
 
 export const UnderConstructionPage = ({ source }: { source: string }) => (
@@ -22,23 +22,23 @@ export const UnderConstructionPage = ({ source }: { source: string }) => (
                 <ul style={{ padding: "1rem" }}>
                     <li>
                         Genes, e.g.,{" "}
-                        <RecordLink recordType={"gene"} recordId={"ENSG00000064687"} displayText="ABCA7"></RecordLink>
+                        <RecordLink recordType="gene" recordId={"ENSG00000064687"}>
+                            ABCA7
+                        </RecordLink>
                     </li>
                     <li>
                         Variants, e.g.,{" "}
-                        <RecordLink
-                            recordType={"variant"}
-                            recordId={"1:207518704:A:G"}
-                            displayText="rs6656401"
-                        ></RecordLink>
+                        <RecordLink recordType={"variant"} recordId={"1:207518704:A:G"}>
+                            rs6656401
+                        </RecordLink>
                     </li>
-                    {/*<li>
+                    <li>
                         Structural Variants, e.g.,{" "}
                         <RecordLink recordType={"variant"} recordId={"DUP_CHR10_2A1CEBD0"}></RecordLink>
-                    </li>*/}
-                    {/*<li>
+                    </li>
+                    <li>
                         Regions, e.g., <RecordLink recordType={"region"} recordId={"19:44905791-44909393"}></RecordLink>
-                    </li>*/}
+                    </li>
                 </ul>
             </div>
         </Alert>

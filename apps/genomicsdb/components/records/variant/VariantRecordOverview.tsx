@@ -6,6 +6,7 @@ import { HelpIconWrapper } from "@niagads/ui";
 import { MostSevereConsequenceCard } from "./MostSeverConsequenceCard";
 import Placeholder from "../placeholder";
 import { RecordActionToolbar } from "../RecordActionToolbar";
+import { RecordSectionUnderConstructionAlert } from "../RecordSectionUnderConstructionAlert";
 // import VariantAssociationSummaryChart from "./VariantGeneticAssociationSummaryChart";
 import { VariantRecord } from "@/lib/types";
 import { genomicLocationToSpan } from "@/lib/utils";
@@ -68,9 +69,7 @@ export function VariantRecordOverview({ record }: { record: VariantRecord }) {
                 <CardHeader>Variant Associations</CardHeader>
                 <CardBody>
                     {/*<VariantAssociationSummaryChart recordId={record.id} />*/}
-                    <Placeholder type="chart">
-                        <div className="placeholder-text">Conservation score visualization will be displayed here</div>
-                    </Placeholder>
+                    <RecordSectionUnderConstructionAlert section={"Variant Association Overview"} />
                 </CardBody>
             </Card>
         </>

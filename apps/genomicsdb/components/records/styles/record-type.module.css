@@ -5,7 +5,6 @@
     border-radius: var(--border-radius);
     font-weight: 500;
     /*margin-bottom: 0.5rem;*/
-    text-transform: capitalize;
 }
 
 .recordTypeBadge.gene {

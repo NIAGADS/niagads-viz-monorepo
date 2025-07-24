@@ -13,6 +13,7 @@ import { Badge, Card, CardBody, CardHeader, InlineIcon } from "@niagads/ui";
 import { ExternalUrls } from "@/lib/reference";
 import { PredictedConsequence } from "@/lib/types";
 import React from "react";
+import { RecordLink } from "@/components/Link";
 import conseqStyles from "../styles/consequence.module.css";
 import { mapConsequenceToClass } from "@/lib/utils";
 import styles from "../styles/most-severe-consequence-card.module.css";
@@ -48,9 +49,12 @@ export const MostSevereConsequenceCard = ({ conseq }: { conseq: PredictedConsequ
                             {impacted_gene && (
                                 <>
                                     <p className={styles.gene}>
-                                        Gene: <span className={styles.geneName}>{impacted_gene.symbol}</span>
+                                        Gene:{" "}
+                                        <RecordLink recordType={"gene"} recordId={impacted_gene.id}>
+                                            {impacted_gene.symbol}
+                                        </RecordLink>
                                     </p>
-                                    <p className={styles.subtext}>Ensembl: {impacted_gene.id}</p>
+                                    <p className={styles.subtext}>Ensembl: </p>
                                 </>
                             )}
                         </div>

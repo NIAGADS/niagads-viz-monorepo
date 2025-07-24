@@ -1,6 +1,8 @@
 import { AnchoredPageSection, CacheIdentifier } from "@/lib/types";
 
+import { Alert } from "@niagads/ui";
 import RecordSectionHeader from "./RecordAnnotationSectionHeader";
+import { RecordSectionUnderConstructionAlert } from "./RecordSectionUnderConstructionAlert";
 import { RecordTableSection } from "./RecordTableSection";
 
 export interface RecordAnnotationProps extends CacheIdentifier {
@@ -17,14 +19,18 @@ export function RecordAnnotationSection({ sections, ...cacheInfo }: RecordAnnota
                         title={section.label}
                         description={section.description}
                     ></RecordSectionHeader>
-                    <RecordTableSection
-                        key={`${section.id}-tables`}
-                        recordId={cacheInfo.recordId}
-                        recordType={cacheInfo.recordType}
-                        sectionId={section.id}
-                        sectionLabel={section.label}
-                        tables={section.tables}
-                    ></RecordTableSection>
+                    {section.underConstruction ? (
+                        <RecordSectionUnderConstructionAlert section={section.label} />
+                    ) : (
+                        <RecordTableSection
+                            key={`${section.id}-tables`}
+                            recordId={cacheInfo.recordId}
+                            recordType={cacheInfo.recordType}
+                            sectionId={section.id}
+                            sectionLabel={section.label}
+                            tables={section.tables}
+                        ></RecordTableSection>
+                    )}
                 </div>
             )
     );
