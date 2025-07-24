@@ -1,6 +1,5 @@
-import React, { ReactNode } from "react";
-
 import Link from "next/link";
+import React from "react";
 import { RecordType } from "@/lib/types";
 import { getPublicUrl } from "@/lib/utils";
 
@@ -53,6 +52,24 @@ export const RouterLink = ({ path, displayText, className = "", style = {}, ...p
     return (
         <Link href={href} className={className} style={style} {...props}>
             {displayText ? displayText : href}
+        </Link>
+    );
+};
+
+interface LinkWrapperProps {
+    href: string;
+    children: React.ReactNode;
+    className?: string;
+    style?: React.CSSProperties;
+    [key: string]: any; // Allow additional props
+}
+
+export const PrefixedRouterLink = ({ href, children, className = "", style = {}, ...props }: LinkWrapperProps) => {
+    const prefix = getPublicUrl(true); // get url and basePath
+
+    return (
+        <Link href={`${prefix}/${href}`} className={className} style={style} {...props}>
+            {children}
         </Link>
     );
 };
