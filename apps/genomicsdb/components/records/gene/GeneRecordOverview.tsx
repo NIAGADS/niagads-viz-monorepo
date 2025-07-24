@@ -4,7 +4,7 @@ import { ExternalUrls } from "@/lib/reference";
 import { GeneAssociationSummaryChart } from "./GeneGeneticAssociationSummaryChart";
 import { GeneRecord } from "@/lib/types";
 import { RecordActionToolbar } from "../RecordActionToolbar";
-import { RecordLink } from "../Link";
+import { RecordLink } from "../../Link";
 import { RecordSectionUnderConstructionAlert } from "../RecordSectionUnderConstructionAlert";
 import { genomicLocationToSpan } from "@/lib/utils";
 import { renderRecordTitle } from "../RecordOverview";
@@ -12,8 +12,8 @@ import styles from "../styles/record.module.css";
 
 export function GeneRecordOverview({ record }: { record: GeneRecord }) {
     // Format location string: chr:start-end:strand / cytogenic_location
-    const span = genomicLocationToSpan(record.location, true);
-    const location = record.cytogenic_location ? `${span} / ${record.cytogenic_location}` : span;
+    const region = genomicLocationToSpan(record.location);
+    const location = genomicLocationToSpan(record.location, true);
 
     // Format synonyms as comma-space delimited string
     const synonyms = !record.synonyms || record.synonyms.length === 0 ? null : record.synonyms.join(", ");
@@ -39,7 +39,10 @@ export function GeneRecordOverview({ record }: { record: GeneRecord }) {
                             </div>
                             <div className={styles.attribute}>
                                 <span className={styles.infoLabel}>Location:</span>{" "}
-                                <RecordLink recordType={"region"} recordId={span} displayText={location}></RecordLink>
+                                <RecordLink recordType={"region"} recordId={region}>
+                                    {location}
+                                </RecordLink>
+                                <span>{` / ${record.cytogenic_location}`}</span>
                             </div>
                         </div>
                     </div>
