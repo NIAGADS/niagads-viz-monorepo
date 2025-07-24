@@ -3,11 +3,15 @@ import { APIErrorResponse, GenomicLocation, RecordType } from "./types";
 export const genomicLocationToSpan = (location: GenomicLocation, inclStrand: boolean = false) => {
     const end = location.end === null ? location.start + location.length! : location.end;
 
-    const span =
+    const region =
         location.start === location.end
             ? `${location.chr}:${location.start}`
             : `${location.chr}:${location.start}-${end}`;
-    return inclStrand ? `${span}:${location.strand}` : span;
+    return inclStrand ? `${region}:${location.strand}` : region;
+};
+
+export const genomicLocationToRegionId = (location: GenomicLocation) => {
+    return genomicLocationToSpan(location, false).replace("chr", "");
 };
 
 // extract information from request pathname
