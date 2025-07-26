@@ -179,7 +179,7 @@ export interface RecordReport {
     [key: string]: any;
 }
 
-export interface PredictedConsequence {
+export interface PredictedConsequenceSummary {
     consequence_terms: string[];
     impact: "HIGH" | "MODERATE" | "LOW" | "MODIFIER";
     is_coding: boolean | null;
@@ -201,7 +201,7 @@ export interface VariantRecord extends BaseRecord {
     ref_snp_id: string;
     location: GenomicLocation;
     is_adsp_variant: boolean | null;
-    most_severe_consequence: PredictedConsequence | null;
+    most_severe_consequence: PredictedConsequenceSummary | null;
     cadd_scores: CADDScore;
     is_structural_variant: boolean;
     allele_string: string;

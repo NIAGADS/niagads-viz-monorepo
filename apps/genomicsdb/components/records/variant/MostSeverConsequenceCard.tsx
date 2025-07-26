@@ -11,14 +11,14 @@ import {
 import { Badge, Card, CardBody, CardHeader, InlineIcon } from "@niagads/ui";
 
 import { ExternalUrls } from "@/lib/reference";
-import { PredictedConsequence } from "@/lib/types";
+import { PredictedConsequenceSummary } from "@/lib/types";
 import React from "react";
 import { RecordLink } from "@/components/Link";
 import conseqStyles from "../styles/consequence.module.css";
 import { mapConsequenceToClass } from "@/lib/utils";
 import styles from "../styles/most-severe-consequence-card.module.css";
 
-export const MostSevereConsequenceCard = ({ conseq }: { conseq: PredictedConsequence }) => {
+export const MostSevereConsequenceCard = ({ conseq }: { conseq: PredictedConsequenceSummary }) => {
     const {
         consequence_terms,
         impact,
