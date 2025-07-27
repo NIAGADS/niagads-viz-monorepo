@@ -13,6 +13,7 @@ import { genomicLocationToSpan } from "@/lib/utils";
 import { renderRecordTitle } from "../RecordOverview";
 import styles from "../styles/record.module.css";
 import variantStyles from "../styles/variant-record.module.css";
+import { RecordLink } from "@/components/Link";
 
 export function VariantRecordOverview({ record }: { record: VariantRecord }) {
     const span = genomicLocationToSpan(record.location, false);
@@ -39,7 +40,7 @@ export function VariantRecordOverview({ record }: { record: VariantRecord }) {
                                         ADSP Variant
                                     </Badge>
                                 </HelpIconWrapper>
-                                <HelpIcon message={undefined} variant={"shield"}></HelpIcon>
+                                {/*<HelpIcon message={undefined} variant={"shield"}></HelpIcon>*/}
                             </>
                         )}
                         <div className={styles.details}>
@@ -52,7 +53,14 @@ export function VariantRecordOverview({ record }: { record: VariantRecord }) {
                                 <span className={styles.infoLabel}>Variant Type:</span> {record.variant_class}
                             </div>
                             <div className={styles.attribute}>
-                                <span className={styles.infoLabel}>Location:</span> {span}
+                                <span className={styles.infoLabel}>Location:</span>{" "}
+                                {record.is_structural_variant ? (
+                                    <RecordLink recordType={"region"} recordId={span}>
+                                        {span}
+                                    </RecordLink>
+                                ) : (
+                                    span
+                                )}
                             </div>
                         </div>
                     </div>
@@ -65,13 +73,15 @@ export function VariantRecordOverview({ record }: { record: VariantRecord }) {
             )}
 
             {/* Chart placeholders - 2/3 width */}
-            <Card variant="two-thirds">
-                <CardHeader>Variant Associations</CardHeader>
-                <CardBody>
-                    {/*<VariantAssociationSummaryChart recordId={record.id} />*/}
-                    <RecordSectionUnderConstructionAlert section={"Variant Association Overview"} />
-                </CardBody>
-            </Card>
+            {record.is_structural_variant !== true && (
+                <Card variant="two-thirds">
+                    <CardHeader>Variant Associations</CardHeader>
+                    <CardBody>
+                        {/*<VariantAssociationSummaryChart recordId={record.id} />*/}
+                        <RecordSectionUnderConstructionAlert section={"Variant Association Overview"} />
+                    </CardBody>
+                </Card>
+            )}
         </>
     );
 }

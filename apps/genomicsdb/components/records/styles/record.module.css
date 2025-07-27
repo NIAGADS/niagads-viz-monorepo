@@ -70,6 +70,10 @@
     color: var(--text-secondary, #6b7280);
 }
 
+.sectionHeader {
+    scroll-margin-top: var(--header-height);
+}
+
 .sectionTitle {
     font-size: 1.5rem;
     font-weight: 700;
@@ -84,7 +88,8 @@
 
 .pageContainer {
     display: flex;
-    min-height: calc(100vh - var(--header-height) - var(--footer-height));
+
+    min-height: calc(100vh - var(--header-height));
     margin-top: 0;
 }
 
@@ -94,6 +99,7 @@
 
 .content {
     overflow: auto;
+    width: 100%; /* EGA -temp w/out sidebar */
 }
 
 .contentSection {

@@ -7,6 +7,7 @@ import { RecordOverview } from "@/components/records/RecordOverview";
 import { VariantRecordOverview } from "@/components/records/variant/VariantRecordOverview";
 import { getRecordTypeFromPath } from "@/lib/utils";
 import { headers as get_headers } from "next/headers";
+import { RecordSectionUnderConstructionAlert } from "@/components/records/RecordSectionUnderConstructionAlert";
 
 export default async function VariantReport({ params }: PageProps) {
     const { id } = await params;
@@ -17,17 +18,23 @@ export default async function VariantReport({ params }: PageProps) {
     let record: VariantRecord = (await fetchRecord(path, false)) as VariantRecord;
     Object.assign(record, { record_type: recordType });
 
+    let sections = RECORD_PAGE_SECTIONS[recordType as keyof typeof RECORD_PAGE_SECTIONS];
+
     return (
         <>
             <RecordOverview>
                 <VariantRecordOverview record={record}></VariantRecordOverview>
             </RecordOverview>
 
-            <RecordAnnotationSection
-                recordId={record.id}
-                recordType={recordType}
-                sections={RECORD_PAGE_SECTIONS[recordType as keyof typeof RECORD_PAGE_SECTIONS]}
-            ></RecordAnnotationSection>
+            {record.is_structural_variant !== true ? (
+                <RecordAnnotationSection
+                    recordId={record.id}
+                    recordType={recordType}
+                    sections={sections}
+                ></RecordAnnotationSection>
+            ) : (
+                <RecordSectionUnderConstructionAlert section="Structural Variant Annotations"></RecordSectionUnderConstructionAlert>
+            )}
         </>
     );
 }

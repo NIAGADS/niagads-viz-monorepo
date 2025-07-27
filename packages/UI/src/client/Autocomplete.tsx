@@ -137,8 +137,8 @@ export const Autocomplete = ({
                             <div className={styles["ui-autocomplete-no-results"]}>
                                 {error ? (
                                     <div className={styles["ui-suggestion-content"]}>
-                                        <span className={styles["ui-suggestion-text error"]}>Error</span>
-                                        <span className={styles["ui-suggestion-text-sm"]}>{error}</span>
+                                        <span className={styles["ui-suggestion-text error"]}>No records found.</span>
+                                        <span className={styles["ui-suggestion-text-sm"]}>No records found.</span>
                                     </div>
                                 ) : (
                                     <div className={styles["ui-suggestion-content"]}>

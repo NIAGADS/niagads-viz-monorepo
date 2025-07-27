@@ -1,22 +1,22 @@
 .header {
-    /* height: var(--header-height); */
+    height: var(--header-height);
     background-color: var(--dark-blue);
     color: var(--text-primary);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.5rem 1.5rem;
+    padding: 0.25rem 1.5rem;
     box-shadow: var(--shadow-sm);
     border-bottom: 1px solid var(--border);
     position: sticky;
     top: 0;
     z-index: 50;
 }
-
 .logo-container {
     display: flex;
     align-items: center;
     gap: 2rem;
+    line-height: 0;
 }
 
 /* .logo-image {

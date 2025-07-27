@@ -37,12 +37,12 @@ export const RecordActionToolbar = ({ id, record }: ActionToolbarProps) => {
         <>
             <ActionToolbar>
                 <ButtonGroup>
-                    <Button onClick={handleViewInGenomeBrowser} title={`View genomic location on genome browser`}>
+                    {/*<Button onClick={handleViewInGenomeBrowser} title={`View genomic location on genome browser`}>
                         <InlineIcon icon={<Eye size={16} />}>View in Genome Browser</InlineIcon>
                     </Button>
                     <Button onClick={handleExport} title={`Export annotated record`}>
                         <InlineIcon icon={<Download size={16} />}>Export</InlineIcon>
-                    </Button>
+                    </Button>*/}
 
                     <TooltipClient content="Copied to clipboard!" openOnClick={true}>
                         <Button onClick={handleShare} title={`Get record permalink`}>
