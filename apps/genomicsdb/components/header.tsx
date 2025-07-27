@@ -7,6 +7,7 @@ import logo from "@public/genomicsdb_logo.svg";
 import { usePathname, useRouter } from "next/navigation";
 import { EnhancedSearch } from "./EnhancedSearch";
 import "./header.css";
+import { getPublicUrl } from "@/lib/utils";
 
 interface HeaderProps {
     onMenuToggle: () => void;
@@ -51,28 +52,28 @@ export function Header({ onMenuToggle, showSearch = true }: HeaderProps) {
 
             <nav className="main-nav" role="navigation" aria-label="Main navigation">
                 <Link
-                    href="/browse-datasets"
+                    href={`${getPublicUrl(true)}/browse-datasets`}
                     className={`nav-link ${isActive("/browse-datasets") ? "active" : ""}`}
                     aria-current={isActive("/browse-datasets") ? "page" : undefined}
                 >
                     Browse Datasets
                 </Link>
                 <Link
-                    href="/genome-browser"
+                    href={`${getPublicUrl(true)}/genome-browser`}
                     className={`nav-link ${isActive("/genome-browser") ? "active" : ""}`}
                     aria-current={isActive("/genome-browser") ? "page" : undefined}
                 >
                     Genome Browser
                 </Link>
                 <Link
-                    href="/tutorials"
+                    href={`${getPublicUrl(true)}/tutorials`}
                     className={`nav-link ${isActive("/tutorials") ? "active" : ""}`}
                     aria-current={isActive("/tutorials") ? "page" : undefined}
                 >
                     Tutorials
                 </Link>
                 <Link
-                    href="/about"
+                    href={`${getPublicUrl(true)}/about`}
                     className={`nav-link ${isActive("/about") ? "active" : ""}`}
                     aria-current={isActive("/about") ? "page" : undefined}
                 >

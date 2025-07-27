@@ -29,11 +29,11 @@ export function EnhancedSearch({
     };
 
     const handleSearch = (searchTerm: string) => {
-        router.push(`/search?q=${searchTerm}&autoRoute=${autoRoute}`);
+        router.push(prefixClientRoute(`/search?q=${searchTerm}&autoRoute=${autoRoute}`));
     };
 
     const handleClick = (suggestion: Partial<SearchResult>) => {
-        router.push(`/record/${suggestion.record_type}/${suggestion.id}`);
+        router.push(prefixClientRoute(`/record/${suggestion.record_type}/${suggestion.id}`));
     };
 
     return (
