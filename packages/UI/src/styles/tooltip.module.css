@@ -22,7 +22,8 @@
     font-size: 0.85em;
     transition: opacity 0.2s;
     pointer-events: none;
-    white-space: nowrap;
+    white-space: break-spaces;
+    min-width: 200px;
 }
 
 .tooltipWrapper:hover .tooltip,

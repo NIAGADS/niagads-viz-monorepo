@@ -8,6 +8,8 @@ import { genomicLocationToSpan } from "@/lib/utils";
 import { renderRecordTitle } from "../RecordOverview";
 import styles from "../styles/record.module.css";
 
+const MAX_SPAN_FOR_SMALL_VARIANTS = 50000;
+
 export function RegionRecordOverview({ record }: { record: RegionRecord }) {
     // Format location string: chr:start-end:strand / cytogenic_location
     // const location = record.id;
@@ -31,17 +33,19 @@ export function RegionRecordOverview({ record }: { record: RegionRecord }) {
                                     <span className={styles.infoLabel}>Genes:</span> {record.num_genes}
                                 </div>
                             </HelpIconWrapper>
-                            {record.location.length! < 50000 && (
-                                <HelpIconWrapper
-                                    message={"number of variants overlapping or contained within this region"}
-                                    variant={"info"}
-                                >
-                                    <div className={styles.attribute}>
-                                        <span className={styles.infoLabel}>Small Variants:</span>{" "}
-                                        {record.num_small_variants}
-                                    </div>
-                                </HelpIconWrapper>
-                            )}
+
+                            <HelpIconWrapper
+                                message={"number of variants overlapping or contained within this region"}
+                                variant={"info"}
+                            >
+                                <div className={styles.attribute}>
+                                    <span className={styles.infoLabel}>Small Variants:</span>{" "}
+                                    {record.location.length! < MAX_SPAN_FOR_SMALL_VARIANTS
+                                        ? record.num_small_variants
+                                        : `Region legnth > ${MAX_SPAN_FOR_SMALL_VARIANTS.toLocaleString()}; to view counts of small variants please specify a smaller genomic reigon.`}
+                                </div>
+                            </HelpIconWrapper>
+
                             <HelpIconWrapper
                                 message={"number of structural variants overlapping or contained within this region"}
                                 variant={"info"}

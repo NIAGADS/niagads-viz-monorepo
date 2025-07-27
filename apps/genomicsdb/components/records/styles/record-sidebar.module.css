@@ -1,9 +1,18 @@
-.sidebar {
+/*.sidebar {
     width: var(--sidebar-width);
     background-color: var(--surface);
     border-right: 1px solid var(--border);
-    /*padding: 1.5rem 0;*/
-    /* overflow-y: auto; */
+    transition: transform var(--transition-normal);
+}*/
+
+.sidebar {
+    width: var(--sidebar-width);
+    position: sticky;
+    top: 0;
+    height: calc(100vh - var(--header-height));
+    background-color: var(--surface);
+    border-right: 1px solid var(--border);
+
     transition: transform var(--transition-normal);
 }
 

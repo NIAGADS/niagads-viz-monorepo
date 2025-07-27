@@ -7,6 +7,7 @@ import badgeStyles from "./styles/record-type.module.css";
 import styles from "./styles/record-sidebar.module.css";
 import { useState } from "react";
 
+const SCROLL_OFFSET = 70; // adjust for the header height
 interface SidebarProps {
     title: string;
     items: AnchoredPageSection[];
@@ -18,15 +19,21 @@ export const RecordSidebar = ({ title, recordType, items }: SidebarProps) => {
     const [isOpen, setIsOpen] = useState(true);
     const [activeFilter, setActiveFilter] = useState("overview");
 
+    // note: this actually is never happening b/c of the next/link
     const handleItemClick = (itemId: string) => {
         const element = document.getElementById(itemId);
-        element?.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+        if (element) {
+            const y = element.getBoundingClientRect().top + window.pageYOffset - SCROLL_OFFSET;
+            window.scrollTo({ top: y, behavior: "smooth" });
+        }
     };
 
     const renderSidebarItem = (item: AnchoredPageSection) => {
         const isActive = activeFilter === item.id;
         const Icon = ICONS[item.icon];
 
+        // the next/link is handling the scroll, we need to style it b/c right
+        // now the button is just providing styling
         return (
             <div key={item.id}>
                 <button

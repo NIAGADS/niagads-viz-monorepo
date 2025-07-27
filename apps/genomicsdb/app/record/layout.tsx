@@ -14,11 +14,11 @@ export default async function RecordPageLayout({ children }: { children: React.R
 
     return (
         <div className={`${styles.pageContainer} ${styles.pageContainerCapped}`}>
-            <RecordSidebar
+            {/*<RecordSidebar
                 title={recordId!}
                 recordType={recordType}
                 items={RECORD_PAGE_SECTIONS[recordType as keyof typeof RECORD_PAGE_SECTIONS]}
-            />
+            />*/}
             <div className={styles.content}>
                 <div className={styles.container}>
                     <div className={styles.contentSection}>{children}</div>
