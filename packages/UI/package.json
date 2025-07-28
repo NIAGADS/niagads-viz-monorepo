@@ -1,6 +1,6 @@
 {
     "name": "@niagads/ui",
-    "version": "1.0.1-alpha.0",
+    "version": "1.1.0-alpha.0",
     "description": "NIAGADS Common UI React Component Library",
     "repository": {
         "type": "git",
@@ -24,9 +24,9 @@
         "rollup-plugin-postcss": "^4.0.2"
     },
     "dependencies": {
-        "@niagads/common": "^1.0.1-alpha.0",
-        "react-tooltip": "^5.28.0",
+        "@niagads/common": "^1.1.0-alpha.0",
         "lucide-react": "^0.513.0",
+        "react-tooltip": "^5.28.0",
         "style-inject": "^0.3.0"
     },
     "files": [
