@@ -38,10 +38,10 @@ interface AutocompleteProps {
     onSearch: (query: string) => void;
     onClick: (suggestion: Suggestion) => void;
     onValueChange: (value: string) => void;
-    error: string;
     placeholder?: string;
     showTypeHints?: boolean;
     autoRoute?: boolean; // If true, automatically route to record pages
+    children?: React.ReactNode;
 }
 
 export const Autocomplete = ({
@@ -49,10 +49,10 @@ export const Autocomplete = ({
     onSearch,
     onClick,
     onValueChange,
-    error,
     placeholder,
     showTypeHints = true,
     autoRoute = true,
+    children,
 }: AutocompleteProps) => {
     const [query, setQuery] = useState("");
     const [showSuggestions, setShowSuggestions] = useState(false);
@@ -60,6 +60,8 @@ export const Autocomplete = ({
     const inputRef = useRef<HTMLInputElement>(null);
 
     const { waiting, debouncedValue } = useDebounce(query);
+
+    const filteredChildren = React.Children.toArray(children).filter((c) => c !== null);
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -128,54 +130,48 @@ export const Autocomplete = ({
                     aria-autocomplete="list"
                     role="combobox"
                 />
-
-                {showSuggestions && (
-                    <div className={styles["ui-autocomplete-suggestions"]} role="listbox">
-                        {waiting || suggestions === null ? (
-                            <LoadingSpinner />
-                        ) : suggestions.length === 0 ? (
-                            <div className={styles["ui-autocomplete-no-results"]}>
-                                {error ? (
-                                    <div className={styles["ui-suggestion-content"]}>
-                                        <span className={styles["ui-suggestion-text error"]}>No records found.</span>
-                                        <span className={styles["ui-suggestion-text-sm"]}>No records found.</span>
-                                    </div>
-                                ) : (
-                                    <div className={styles["ui-suggestion-content"]}>
-                                        <span className={styles["ui-suggestion-text"]}>
-                                            No results found for "{query}"
-                                        </span>
-                                    </div>
-                                )}
-                            </div>
-                        ) : (
-                            <div>
-                                {suggestions.slice(0, 8).map((suggestion, index) => {
-                                    return (
-                                        <div
-                                            key={suggestion.id}
-                                            className={`${styles["ui-autocomplete-suggestion"]} ${index === highlightedIndex ? styles["ui-highlighted"] : ""}`}
-                                            onClick={() => handleSuggestionClick(suggestion)}
-                                            role="option"
-                                            aria-selected={index === highlightedIndex}
-                                        >
-                                            <div className={styles["ui-suggestion-content"]}>
-                                                <span className={styles["ui-suggestion-text"]}>
-                                                    {suggestion.display}
-                                                </span>
-                                                <span className={styles["ui-suggestion-text-sm"]}>
-                                                    {suggestion.matched_term}
-                                                </span>
-                                            </div>
-                                            <ArrowRight size={14} className={styles["ui-suggestion-arrow"]} />
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        )}
-                    </div>
-                )}
             </div>
+            {showSuggestions && (
+                <div className={styles["ui-autocomplete-suggestions"]} role="listbox">
+                    {waiting || suggestions === null ? (
+                        <LoadingSpinner />
+                    ) : suggestions.length === 0 ? (
+                        <div className={styles["ui-autocomplete-no-results"]}>
+                            <div className={styles["ui-suggestion-content"]}>
+                                <span className={styles["ui-suggestion-text"]}>No results found for "{query}"</span>
+                            </div>
+                        </div>
+                    ) : (
+                        <div>
+                            {suggestions.slice(0, 8).map((suggestion, index) => {
+                                return (
+                                    <div
+                                        key={suggestion.id}
+                                        className={`${styles["ui-autocomplete-suggestion"]} ${index === highlightedIndex ? styles["ui-highlighted"] : ""}`}
+                                        onClick={() => handleSuggestionClick(suggestion)}
+                                        role="option"
+                                        aria-selected={index === highlightedIndex}
+                                    >
+                                        <div className={styles["ui-suggestion-content"]}>
+                                            <span className={styles["ui-suggestion-text"]}>{suggestion.display}</span>
+                                            <span className={styles["ui-suggestion-text-sm"]}>
+                                                {suggestion.matched_term}
+                                            </span>
+                                        </div>
+                                        <ArrowRight size={14} className={styles["ui-suggestion-arrow"]} />
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
+            )}
+            {filteredChildren.length > 0 &&
+                filteredChildren.map((child, i) => (
+                    <div key={i} className={styles["ui-autocomplete-info-box"]}>
+                        <div className={styles["ui-autocomplete-info"]}>{child}</div>
+                    </div>
+                ))}
         </div>
     );
 };

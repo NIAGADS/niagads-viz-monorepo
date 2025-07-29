@@ -45,7 +45,7 @@
     pointer-events: none;
 }
 
-.search-type-hint {
+.ui-autocomplete-search-type-hint {
     position: absolute;
     right: 0.75rem;
     top: 50%;
@@ -53,7 +53,7 @@
     pointer-events: none;
 }
 
-.type-badge {
+.ui-autocomplete-type-badge {
     padding: 0.125rem 0.375rem;
     border-radius: var(--border-radius-sm);
     font-size: 0.625rem;
@@ -61,22 +61,22 @@
     text-transform: uppercase;
 }
 
-.type-badge.type-gene {
+.ui-autocomplete-type-badge.type-gene {
     background-color: #e0f2fe;
     color: #0369a1;
 }
 
-.type-badge.type-variant {
+.ui-autocomplete-type-badge.type-variant {
     background-color: #fef3c7;
     color: #92400e;
 }
 
-.type-badge.type-study {
+.ui-autocomplete-type-badge.type-study {
     background-color: #d1fae5;
     color: #047857;
 }
 
-.search-hints {
+.ui-autocomplete-info-box {
     margin-top: 0.5rem;
     padding: 0.5rem;
     background-color: var(--gray-50);
@@ -84,13 +84,13 @@
     border: 1px solid var(--border);
 }
 
-.search-hint {
+.ui-autocomplete-info {
     font-size: 0.75rem;
     color: var(--text-secondary);
     margin-bottom: 0.25rem;
 }
 
-.search-hint:last-child {
+.ui-autocomplete-info:last-child {
     margin-bottom: 0;
 }
 

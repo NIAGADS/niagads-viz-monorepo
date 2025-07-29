@@ -21,9 +21,11 @@ export function EnhancedSearch({
 
     const { data, error } = useSWR(url, (url: string) => fetch(url).then((res) => res.json()));
 
+    // Not in use for now
+    //const regionTest = /^(chr)?(1[0-9]|2[0-2]|[1-9]|X|Y|M)[:\-](\d+)[\-:](\d+)$/gm;
+
     const getSuggestions = (value: string) => {
         if (value) {
-            // setUrl(prefixClientRoute(`/api/service/search?keyword=${value}&limit=10`));
             setUrl(prefixClientRoute(`/api/service/search?keyword=${value}&limit=10&searchType=feature`));
         }
     };
@@ -38,12 +40,13 @@ export function EnhancedSearch({
 
     return (
         <Autocomplete
-            suggestions={data || (error ? [] : null)} // if there's an error set the suggestions to be an empty array to display suggestions instead of loading spinner
-            error={`${error}`}
+            suggestions={data || null}
             onSearch={(term) => handleSearch(term)}
             onClick={(suggestion) => handleClick(suggestion)}
             onValueChange={(value) => getSuggestions(value)}
             placeholder={placeholder}
-        />
+        >
+            {error && <div>Error</div>}
+        </Autocomplete>
     );
 }
