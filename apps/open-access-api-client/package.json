@@ -1,6 +1,6 @@
 {
     "name": "open-access-api-client",
-    "version": "1.1.0-alpha.0",
+    "version": "0.0.1",
     "author": "fossilfriend",
     "private": true,
     "bugs": {
@@ -15,9 +15,9 @@
         "lint": "next lint"
     },
     "dependencies": {
-        "@niagads/common": "^1.1.0-alpha.0",
-        "@niagads/table": "^1.1.0-alpha.0",
-        "@niagads/ui": "^1.1.0-alpha.0",
+        "@niagads/common": "^0.0.1",
+        "@niagads/table": "^0.0.1",
+        "@niagads/ui": "^0.0.1",
         "core-js": "^3.43.0",
         "mobx": "^6.13.7",
         "next": "15.3.3",
