@@ -10,7 +10,10 @@
         "genomicsdb-prod": "npx lerna run genomicsdb-prod",
         "genomicsdb-build": "npx lerna run genomicsdb-build",
         "lint": "npx prettier . --write",
-        "build": "npx lerna run build --concurrency 1"
+        "clean-dist": "find . -name 'dist' -type d -prune -exec rm -rf '{}' +",
+        "clean-node-modules": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +",
+        "build": "npx lerna run build --concurrency 1",
+        "build-fresh": "npm run clean-dist && npm run build"
     },
     "workspaces": [
         "packages/Common",
