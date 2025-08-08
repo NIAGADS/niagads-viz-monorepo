@@ -219,10 +219,10 @@ npx lerna publish <initial_version>
 npx lerna version
 ```
 
-- Rebuild the packages using lerna
+- Rebuild the packages fresh using lerna
 
 ```bash
-npx lerna run build
+npx lerna run build-fresh
 ```
 
 - Publish the packages
