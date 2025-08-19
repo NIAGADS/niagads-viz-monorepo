@@ -4,7 +4,6 @@ import { isErrorAPIResponse, prefixClientRoute } from "@/lib/utils";
 
 import { LoadingSpinner } from "@niagads/ui";
 import PaginationMessage from "../PaginationMessage";
-import Table from "@niagads/table";
 import TableWrapper from "../TableWrapper";
 import { useEffect } from "react";
 import useSWR from "swr";
@@ -47,21 +46,35 @@ export default function RecordTable({ tableDef, onTableLoad, ...cacheInfo }: Rec
                     pagination={(data as APITableResponse).pagination}
                     endpoint={`/record/${cacheInfo.recordType}/${cacheInfo.recordId}${tableDef.endpoint}`}
                 />
-                <TableWrapper
-                    id={tableDef.id}
-                    columns={(data as APITableResponse).table.columns}
-                    data={(data as APITableResponse).table.data}
-                />
+                {tableDef.wrapper ? (
+                    <tableDef.wrapper
+                        id={tableDef.id}
+                        columns={(data as APITableResponse).table.columns}
+                        data={(data as APITableResponse).table.data}
+                    />
+                ) : (
+                    <TableWrapper
+                        id={tableDef.id}
+                        columns={(data as APITableResponse).table.columns}
+                        data={(data as APITableResponse).table.data}
+                    />
+                )}
             </>
         );
 
-    return (
+    return tableDef.wrapper ? (
+        <tableDef.wrapper
+            id={tableDef.id}
+            columns={(data as APITableResponse).table.columns}
+            data={(data as APITableResponse).table.data}
+        />
+    ) : (
         <TableWrapper
             id={tableDef.id}
             columns={(data as APITableResponse).table.columns}
             data={(data as APITableResponse).table.data}
         />
-    );
+    )
 }
 
 //<Table config={tableDef} table={response.table} />

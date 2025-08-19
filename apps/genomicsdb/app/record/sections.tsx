@@ -1,3 +1,4 @@
+import AssociationTable from "@/components/tables/AssociationTable";
 import { AnchoredPageSection } from "@/lib/types";
 
 const GWAS_ASSOC_SECTION: AnchoredPageSection = {
@@ -11,18 +12,21 @@ const GWAS_ASSOC_SECTION: AnchoredPageSection = {
             label: "Alzheimer's Disease",
             description: "",
             endpoint: "/associations?pvalue=5e-8&trait=AD&source=GWAS",
+            wrapper: AssociationTable
         },
         {
             id: "gwas-adrd",
             label: "AD-Related Dementias",
             description: "",
             endpoint: "/associations?pvalue=5e-8&trait=ADRD&source=GWAS",
+            wrapper: AssociationTable
         },
         {
             id: "gwas-biomarker",
             label: "AD/ADRD Biomarkers",
             description: "",
             endpoint: "/associations?pvalue=5e-8&trait=BIOMARKER&source=GWAS",
+            wrapper: AssociationTable
         },
     ],
 };
@@ -38,24 +42,28 @@ const CURATED_ASSOC_SECTION: AnchoredPageSection = {
             label: "Alzheimer's Disease",
             description: "",
             endpoint: "/associations?pvalue=5e-8&trait=AD&source=CURATED",
+            wrapper: AssociationTable
         },
         {
             id: "curated-adrd",
             label: "AD-Related Dementias",
             description: "",
             endpoint: "/associations?pvalue=5e-8&trait=ADRD&source=CURATED",
+            wrapper: AssociationTable
         },
         {
             id: "curated-biomarker",
             label: "AD/ADRD Biomarkers",
             description: "",
             endpoint: "/associations?pvalue=5e-8&trait=BIOMARKER&source=CURATED",
+            wrapper: AssociationTable
         },
         {
             id: "curated-Other",
             label: "Other Associations",
             description: "",
             endpoint: "/associations?pvalue=5e-8&trait=OTHER&source=CURATED",
+            wrapper: AssociationTable
         },
     ],
 };

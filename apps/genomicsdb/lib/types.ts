@@ -1,4 +1,5 @@
 // lib/types.ts - project type definitions
+import TableWrapper from "@/components/TableWrapper";
 import {
     Activity,
     AudioLines,
@@ -244,7 +245,7 @@ interface AnchoredSectionBase {
 
 export interface TableSection extends AnchoredSectionBase {
     endpoint: string;
-    wrapper?: string;
+    wrapper?: typeof TableWrapper;
     data?: APITableResponse | null;
     error?: string | null;
 }
