@@ -177,7 +177,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
                         description: _get("description", col),
                         type: _get("type", col),
                     },
-                    cell: (props) => renderCell(props.cell.row.original[col.id] as Cell),
+                    cell: (props) => renderCell(props.cell.row.original[col.id] as Cell, col),
                 })
             );
         });

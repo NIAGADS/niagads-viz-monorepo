@@ -1,4 +1,4 @@
-import { BasicType, NAString } from "@niagads/common";
+import { BasicType, Color, NAString } from "@niagads/common";
 import { CellType } from "./Cell";
 
 export interface ColumnSortConfig {
@@ -17,6 +17,9 @@ export interface ColumnValueFormat {
     precision?: number; // for floats
 }
 
+// used for mapping values to colors when the when you want to color data that isn't returned with colored cells
+export type ColorMap = Record<string, Color>;
+
 // allowable fields provided by users
 // TODO: custom sorting /filtering functions?!
 export interface GenericColumn {
@@ -29,6 +32,7 @@ export interface GenericColumn {
     disableSorting?: boolean; // defaults to FALSE
     required?: boolean; // if required = true then cannot be hidden
     format?: ColumnValueFormat;
+    colorMap?: ColorMap;
 }
 
 export const getColumn = (columnId: string, columns: GenericColumn[]) => {

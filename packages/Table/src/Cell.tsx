@@ -276,16 +276,20 @@ export const resolveCell = (
     return resolvedCell;
 };
 
-export const renderCell = (cell: Cell) => {
+export const renderCell = (cell: Cell, col: GenericColumn) => {
     switch (cell.type) {
         case "abstract":
+            return <Text key={`cell-${cell.rowId}-${cell.columnId}`} props={cell}></Text>;
         case "text":
+            if (col.colorMap) cell.color = col.colorMap[`${cell.value}`] || "gray";
             return <Text key={`cell-${cell.rowId}-${cell.columnId}`} props={cell}></Text>;
         case "link":
             return <Link key={`cell-${cell.rowId}-${cell.columnId}`} props={cell}></Link>;
         case "boolean":
+            if (col.colorMap) cell.color = col.colorMap[`${cell.value}`] || "gray";
             return <BooleanBadge key={`cell-${cell.rowId}-${cell.columnId}`} props={cell}></BooleanBadge>;
         case "badge":
+            if (col.colorMap) cell.color = col.colorMap[`${cell.value}`] || "gray";
             return <Badge key={`cell-${cell.rowId}-${cell.columnId}`} props={cell}></Badge>;
         case "float":
         case "p_value":
