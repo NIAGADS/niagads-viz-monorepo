@@ -4,7 +4,7 @@ import { isErrorAPIResponse, prefixClientRoute } from "@/lib/utils";
 
 import { LoadingSpinner } from "@niagads/ui";
 import PaginationMessage from "../PaginationMessage";
-import TableWrapper from "../TableWrapper";
+import TableWrapper from "../tables/TableWrapper";
 import { useEffect } from "react";
 import useSWR from "swr";
 

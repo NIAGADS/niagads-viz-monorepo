@@ -1,4 +1,4 @@
-export const ExternalUrls = {
+export const ExternalUrls: Record<string, string> = {
     NIAGADS_BASE_URL: "https://www.niagads.org",
     IDEOGRAM_CYTOBAND_URL: "https://unpkg.com/ideogram@1.16.0/dist/data/bands/native/",
     ADVP_VARIANT_URL: "https://advp.niagads.org/variant?",

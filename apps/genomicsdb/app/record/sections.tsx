@@ -1,4 +1,6 @@
 import AssociationTable from "@/components/tables/AssociationTable";
+import GOAssociationTable from "@/components/tables/GOAssociationTable";
+import PathwayTable from "@/components/tables/PathwayTable";
 import { AnchoredPageSection } from "@/lib/types";
 
 const GWAS_ASSOC_SECTION: AnchoredPageSection = {
@@ -126,6 +128,7 @@ const __GENE_RECORD_SECTIONS: AnchoredPageSection[] = [
                 label: "GO Associations",
                 description: "",
                 endpoint: "/function",
+                wrapper: GOAssociationTable
             },
         ],
     },
@@ -140,6 +143,7 @@ const __GENE_RECORD_SECTIONS: AnchoredPageSection[] = [
                 label: "Pathway Membership",
                 description: "",
                 endpoint: "/pathways",
+                wrapper: PathwayTable,
             },
         ],
     },

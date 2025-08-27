@@ -1,9 +1,10 @@
 "use client";
 
 import { prefixClientRoute } from "@/lib/utils";
-import Table, { GenericColumn, TableConfig, TableProps } from "@niagads/table";
+import { GenericColumn, TableProps } from "@niagads/table";
+import TableWrapper from "./TableWrapper";
 
-export default function AssociationTable({ id, data, columns }: TableProps) {
+const AssociationTable = ({ id, data, columns }: TableProps) => {
     const processedColumns: GenericColumn[] = columns.reduce((p, c) => {
         if (c.id === "relative_position") {
             c.colorMap = {
@@ -52,16 +53,9 @@ export default function AssociationTable({ id, data, columns }: TableProps) {
         return processedRow;
     });
 
-    const defaultColumns = processedColumns.map((c, index) => {
-        if (index < 8 || c["id"].startsWith("num_") || c["id"] === "url") return c["id"];
-    }).filter(id => id !== undefined);
-
-    const options: TableConfig = { disableColumnFilters: true, defaultColumns: defaultColumns };
-
-    console.log(processedColumns);
-    console.log(processedData);
-
     return (
-        <Table id={id} data={processedData} columns={processedColumns} options={options} />
+        <TableWrapper id={id} data={processedData} columns={processedColumns} />
     );
 }
+
+export default AssociationTable;

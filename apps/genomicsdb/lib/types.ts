@@ -1,5 +1,5 @@
 // lib/types.ts - project type definitions
-import TableWrapper from "@/components/TableWrapper";
+import TableWrapper from "@/components/tables/TableWrapper";
 import {
     Activity,
     AudioLines,

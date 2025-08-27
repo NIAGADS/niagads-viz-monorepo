@@ -1,6 +1,6 @@
 "use client";
 
-import Table, { GenericColumn, TableConfig, TableProps } from "@niagads/table";
+import Table, { TableConfig, TableProps } from "@niagads/table";
 
 export default function TableWrapper({ id, data, columns }: TableProps) {
     const defaultColumns = columns.map((c, index) => {
