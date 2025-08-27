@@ -1,4 +1,4 @@
-import React, { ReactNode, Suspense, useEffect, useId, useMemo, useState } from "react";
+import React, { ReactElement, ReactNode, Suspense, useEffect, useId, useMemo, useState } from "react";
 
 import { Card } from "../Card";
 import { HelpIconWrapper } from "../HelpIcon";
@@ -12,10 +12,16 @@ export interface TabDef {
     info?: string;
     content: ReactNode;
 }
-
 interface TabsProps extends StylingProps {
-    tabs: TabDef[];
     width: string; // tailwind width class
+    children: Array<ReactElement<TabProps>>;
+}
+
+interface TabProps {
+    id: string;
+    title: string;
+    info?: string;
+    children: ReactNode;
 }
 
 type TabButtonProps = Omit<TabDef, "content"> & {
@@ -56,47 +62,45 @@ const TabButton = ({ label, id, info, isActive, onClick }: TabButtonProps) => {
     );
 };
 
-export const Tabs = ({ tabs, width = "full" }: TabsProps) => {
-    const [selectedKey, setSelectedKey] = useState<string | null>(tabs && tabs.length > 0 ? tabs[0].id : null);
-    const [activeTab, setActiveTab] = useState<TabDef | null>(tabs && tabs.length > 0 ? tabs[0] : null);
+export const Tab = ({children}: TabProps) => {
+    return (
+        <div>
+            {children}
+        </div>
+    )
+}
+
+export const Tabs = ({ width = "full", children }: TabsProps) => {
+    const [selectedId, setSelectedId] = useState<string | null>(children[0].props.id);
+    const [activeTab, setActiveTab] = useState<typeof children[0]>(children[0]);
 
     const tabsId = useId();
 
-    useEffect(() => {
-        if (tabs) {
-            const selectedTab = tabs.find((tab) => tab.id === selectedKey);
-            setActiveTab(selectedTab!);
-        }
-    }, [selectedKey]);
-
     const onTabSelect = (tabId: string) => {
-        setSelectedKey(tabId);
+        setSelectedId(tabId);
+        setActiveTab(children.find(tab => tab.props.id === tabId)!)
     };
 
-    const memoizedTabContent = useMemo(() => {
-        return activeTab ? activeTab.content : null;
-    }, [activeTab?.id]);
-
     return (
-        activeTab && (
-            <>
-                <div id={tabsId} className={styles["tab-container"]} role="tablist">
-                    {tabs.map((tab) => (
-                        <TabButton
-                            key={`button-${tab.id}`}
-                            label={tab.label}
-                            id={tab.id}
-                            info={tab.info}
-                            isActive={tab.id === activeTab.id}
-                            onClick={onTabSelect}
-                        ></TabButton>
-                    ))}
-                </div>
+        <>
+            <div id={tabsId} className={styles["tab-container"]} role="tablist">
+                {children.map((tab) => (
+                    <TabButton
+                        key={`button-${tab.props.id}`}
+                        label={tab.props.title}
+                        id={tab.props.id}
+                        info={tab.props.info}
+                        isActive={tab.props.id === selectedId}
+                        onClick={onTabSelect}
+                    ></TabButton>
+                ))}
+            </div>
 
-                <Card variant="full" hover={false} role="tabpanel">
-                    <Suspense fallback={<LoadingSpinner message="Loading..." />}>{memoizedTabContent}</Suspense>
-                </Card>
-            </>
-        )
+            <Card variant="full" hover={false} role="tabpanel">
+                <Suspense fallback={<LoadingSpinner message="Loading..." />}>
+                    {activeTab}
+                </Suspense>
+            </Card>
+        </>
     );
 };
