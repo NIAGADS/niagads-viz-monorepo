@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Tab, Tabs } from "@niagads/ui/client";
+import { TabHeader, TabBody, Tabs } from "@niagads/ui/client";
 
 import Table from "@niagads/table";
 import { TABLE_DEFINTION as table } from "../../../examples/tables/table_rendering_test";
@@ -19,10 +19,12 @@ const meta: Meta<typeof Tabs> = {
     args: {
         width: "full",
         children: [
-            <Tab id="tab1" title="Tab 1">This is tab 1</Tab>,
-            <Tab id="tab2" title="Tab 2">This is tab 2</Tab>,
-            <Tab id="tab3" title="Tab 3">This is tab 3</Tab>,
-            <Tab id="tab4" title="Tab 4">This is tab 4</Tab>,
+            <TabHeader id="tab1">Tab 1</TabHeader>,
+            <TabHeader id="tab2">Tab 2</TabHeader>,
+            <TabHeader id="tab3">Tab 3</TabHeader>,
+            <TabBody id="tab1">This is tab 1</TabBody>,
+            <TabBody id="tab2">This is tab 2</TabBody>,
+            <TabBody id="tab3">This is tab 3</TabBody>,
         ]
     },
 };
