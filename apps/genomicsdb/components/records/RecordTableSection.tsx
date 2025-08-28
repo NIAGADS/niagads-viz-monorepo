@@ -5,7 +5,7 @@ import { Card, Skeleton } from "@niagads/ui";
 import React, { Suspense, useState } from "react";
 
 import RecordTable from "./RecordTable";
-import { Tabs } from "@niagads/ui/client";
+import { Tabs, Tab } from "@niagads/ui/client";
 import styles from "./styles/record-table-section.module.css";
 
 interface RecordTableSectionProps extends CacheIdentifier {
@@ -27,29 +27,32 @@ const TabHeader = ({ label, pagination }: TabHeaderProps) => {
     );
 };
 
-export function RecordTableSection({ tables, ...cacheInfo }: RecordTableSectionProps) {
-    const [paginations, setPaginations] = useState<TablePagination>({});
+const RecordTableSection = ({ tables, ...cacheInfo }: RecordTableSectionProps) => {
+    const [pagination, setPagination] = useState<TablePagination>({});
 
     const handleTableLoad = (id: string) => (pagination: Pagination) => {
-        setPaginations((prev) => ({ ...prev, [id]: pagination }));
+        setPagination((prev) => ({ ...prev, [id]: pagination }));
     };
+
     return (
-        <Tabs
-            tabs={tables.map((t) => ({
-                id: t.id,
-                label: <TabHeader key={`tab-label-${t.id}`} label={t.label} pagination={paginations[t.id]} />,
-                content: (
+        <Tabs width="full" >
+            {tables.map(table => (
+                <Tab
+                    id={table.id}
+                    title={<TabHeader key={`tab-label-${table.id}`} label={table.label} pagination={pagination[table.id]} />}
+                >
                     <Card
-                        key={`tab-content-${t.id}`}
+                        key={`tab-content-${table.id}`}
                         variant="full"
                         outline={false}
                         style={{ marginBottom: "0px", padding: "0.5rem" }}
                     >
-                        <RecordTable tableDef={t} {...cacheInfo} onTableLoad={handleTableLoad(t.id)} />
+                        <RecordTable tableDef={table} {...cacheInfo} onTableLoad={handleTableLoad(table.id)} />
                     </Card>
-                ),
-            }))}
-            width="full"
-        />
+                </Tab>
+            ))}
+        </Tabs>
     );
 }
+
+export default RecordTableSection;

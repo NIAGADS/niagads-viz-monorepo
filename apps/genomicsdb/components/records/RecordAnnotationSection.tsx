@@ -1,9 +1,8 @@
 import { AnchoredPageSection, CacheIdentifier } from "@/lib/types";
 
-import { Alert } from "@niagads/ui";
 import RecordSectionHeader from "./RecordAnnotationSectionHeader";
 import { RecordSectionUnderConstructionAlert } from "./RecordSectionUnderConstructionAlert";
-import { RecordTableSection } from "./RecordTableSection";
+import RecordTableSection from "./RecordTableSection";
 
 export interface RecordAnnotationProps extends CacheIdentifier {
     sections: AnchoredPageSection[];

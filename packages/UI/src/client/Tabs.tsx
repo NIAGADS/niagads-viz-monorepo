@@ -6,12 +6,6 @@ import { LoadingSpinner } from "../LoadingSpinner";
 import { StylingProps } from "../types";
 import styles from "../styles/tabs.module.css";
 
-export interface TabDef {
-    label: ReactNode;
-    id: string;
-    info?: string;
-    content: ReactNode;
-}
 interface TabsProps extends StylingProps {
     width: string; // tailwind width class
     children: Array<ReactElement<TabProps>>;
@@ -19,12 +13,15 @@ interface TabsProps extends StylingProps {
 
 interface TabProps {
     id: string;
-    title: string;
+    title: string | ReactNode;
     info?: string;
     children: ReactNode;
 }
 
-type TabButtonProps = Omit<TabDef, "content"> & {
+type TabButtonProps = {
+    label: string | ReactNode;
+    id: string;
+    info?: string;
     isActive: boolean;
     onClick: any;
 };
