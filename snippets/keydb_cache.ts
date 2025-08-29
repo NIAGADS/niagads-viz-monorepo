@@ -1,3 +1,5 @@
+// example of how to use a keydb cache
+
 import Redis from "ioredis";
 
 const CACHEDB = new Redis(process.env.INTERNAL_CACHE_DB_URL!);
@@ -41,12 +43,13 @@ export async function extendCacheTTL(namespace: string, key: string, TTLKey = TT
 
 // export default async function handler(req, res) {
 //     const cacheKey = "some-key";
-//     const cached = await getCache(cacheKey);
+//     const nameSpace = "namespace";
+//     const cached = await getCache(namespace, cacheKey);
 //     if (cached) {
 //         res.status(200).json(JSON.parse(cached));
 //         return;
 //     }
 //     // ...fetch data...
-//     await setCache(cacheKey, JSON.stringify(data));
+//     await setCache(namespace, cacheKey, JSON.stringify(data));
 //     res.status(200).json(data);
 // }
