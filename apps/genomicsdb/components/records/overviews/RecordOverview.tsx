@@ -1,16 +1,16 @@
+import { EntityRecord, RecordType } from "@/lib/types";
 import { ExternalLink, Minus } from "lucide-react";
 import React, { ReactNode } from "react";
 
 import { InlineIcon } from "@niagads/ui";
-import { RecordType } from "@/lib/types";
 import badgeStyles from "./styles/record-type.module.css";
 import styles from "./styles/record.module.css";
 
-interface RecordOverviewProps {
-    children: ReactNode;
+export interface RecordOverviewProps {
+    record: EntityRecord;
 }
 
-export const RecordOverview = ({ children }: RecordOverviewProps) => {
+export const RecordOverview = ({ children }: { children: ReactNode }) => {
     return (
         <div id="overview" className={styles.overviewGrid}>
             {children}

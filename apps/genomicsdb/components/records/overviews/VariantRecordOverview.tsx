@@ -1,21 +1,22 @@
 import { Badge, Card, CardBody, CardHeader, HelpIcon, InlineIcon } from "@niagads/ui";
+// import VariantAssociationSummaryChart from "./VariantGeneticAssociationSummaryChart";
+import { BaseRecord, VariantRecord } from "@/lib/types";
 
 import { BadgeCheck } from "lucide-react";
 import { ExternalUrls } from "@/lib/reference";
 import { HelpIconWrapper } from "@niagads/ui";
-import { MostSevereConsequenceCard } from "./MostSeverConsequenceCard";
+import { MostSevereConsequenceCard } from "./MostSevereConsequenceCard";
 import Placeholder from "../placeholder";
 import { RecordActionToolbar } from "../RecordActionToolbar";
+import { RecordLink } from "@/components/Link";
 import { RecordSectionUnderConstructionAlert } from "../RecordSectionUnderConstructionAlert";
-// import VariantAssociationSummaryChart from "./VariantGeneticAssociationSummaryChart";
-import { VariantRecord } from "@/lib/types";
+import { fetchRecord } from "@/lib/route-handlers";
 import { genomicLocationToSpan } from "@/lib/utils";
-import { renderRecordTitle } from "../RecordOverview";
+import { renderRecordTitle } from "./RecordOverview";
 import styles from "../styles/record.module.css";
 import variantStyles from "../styles/variant-record.module.css";
-import { RecordLink } from "@/components/Link";
 
-export function VariantRecordOverview({ record }: { record: VariantRecord }) {
+const VariantRecordOverview = async (record: VariantRecord) => {
     const span = genomicLocationToSpan(record.location, false);
 
     return (
@@ -84,4 +85,6 @@ export function VariantRecordOverview({ record }: { record: VariantRecord }) {
             )}
         </>
     );
-}
+};
+
+export default VariantRecordOverview;

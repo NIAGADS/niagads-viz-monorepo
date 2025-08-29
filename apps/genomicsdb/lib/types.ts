@@ -77,7 +77,9 @@ export interface PageProps {
 export type AssociationTraitCategory = "biomarker" | "ad" | "adrd" | "other" | "all_ad" | "all";
 export type AssociationTraitSource = "gwas" | "curated" | "all";
 
-export type RecordType = "gene" | "variant" | "region" | "track";
+// this implementation allows us to create an assertion on record type
+export const RECORD_TYPES = ["gene", "variant", "region", "track"] as const;
+export type RecordType = (typeof RECORD_TYPES)[number];
 
 // Records and supporting data types
 
@@ -190,7 +192,8 @@ export interface TrackRecord extends BaseRecord {
 }
 
 export type GenomicFeatureRecord = GeneRecord | VariantRecord | RegionRecord;
-export type Record = GeneRecord | VariantRecord | RegionRecord | TrackRecord;
+// named "EntityRecord" so as not to confuse w/built-in "Record" for generic key-value pair
+export type EntityRecord = GeneRecord | VariantRecord | RegionRecord | TrackRecord;
 
 // record page structure; anchored sections
 

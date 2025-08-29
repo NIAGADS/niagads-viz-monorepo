@@ -1,16 +1,15 @@
+import { BaseRecord, GeneRecord } from "@/lib/types";
 import { Card, CardBody, CardHeader } from "@niagads/ui";
+import { RecordOverview, renderRecordTitle } from "./RecordOverview";
 
 import { ExternalUrls } from "@/lib/reference";
-import { GeneAssociationSummaryChart } from "./GeneGeneticAssociationSummaryChart";
-import { GeneRecord } from "@/lib/types";
 import { RecordActionToolbar } from "../RecordActionToolbar";
 import { RecordLink } from "../../Link";
 import { RecordSectionUnderConstructionAlert } from "../RecordSectionUnderConstructionAlert";
 import { genomicLocationToSpan } from "@/lib/utils";
-import { renderRecordTitle } from "../RecordOverview";
 import styles from "../styles/record.module.css";
 
-export function GeneRecordOverview({ record }: { record: GeneRecord }) {
+const GeneRecordOverview = async (record: GeneRecord) => {
     // Format location string: chr:start-end:strand / cytogenic_location
     const region = genomicLocationToSpan(record.location);
     const location = genomicLocationToSpan(record.location, true);
@@ -19,7 +18,7 @@ export function GeneRecordOverview({ record }: { record: GeneRecord }) {
     const synonyms = !record.synonyms || record.synonyms.length === 0 ? null : record.synonyms.join(", ");
 
     return (
-        <>
+        <RecordOverview>
             {/* Gene Information Card - 1/3 width */}
             <Card variant="third">
                 <CardHeader>
@@ -58,6 +57,8 @@ export function GeneRecordOverview({ record }: { record: GeneRecord }) {
                     {/*<GeneAssociationSummaryChart recordId={record.id} />*/}
                 </CardBody>
             </Card>
-        </>
+        </RecordOverview>
     );
-}
+};
+
+export default GeneRecordOverview;

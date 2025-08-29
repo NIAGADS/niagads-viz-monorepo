@@ -7,9 +7,9 @@ import { notFound } from "next/navigation";
 type ResponseContent = "brief" | "full" | "counts" | "urls";
 type ResponseFormat = "summary" | "table" | "default";
 
-export async function fetchRecord(endpoint: string, brief: boolean = true) {
+export async function fetchRecord(recordType: RecordType, id: string, brief: boolean = true) {
     // fetch record and handle error response
-    const response = await _fetch(endpoint, brief ? "brief" : "full");
+    const response = await _fetch(`${recordType}/${id}`, brief ? "brief" : "full");
 
     if (isAPIError(response)) {
         if (response.status === 404) {
@@ -22,8 +22,9 @@ export async function fetchRecord(endpoint: string, brief: boolean = true) {
             throw new APIError("Unexpected Error", response);
         }
     }
-
-    return (response as APIResponse).data[0]; // record is a list of one item
+    const record = (response as APIResponse).data[0]; // records are lists of one item
+    Object.assign(record, { record_type: recordType });
+    return record;
 }
 
 export async function fetchTable(endpoint: string) {

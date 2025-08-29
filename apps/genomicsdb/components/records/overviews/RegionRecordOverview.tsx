@@ -1,19 +1,17 @@
+import { BaseRecord, RegionRecord } from "@/lib/types";
 import { Card, CardBody, CardHeader, HelpIconWrapper } from "@niagads/ui";
 
 import { ExternalUrls } from "@/lib/reference";
 import { RecordActionToolbar } from "../RecordActionToolbar";
 import { RecordSectionUnderConstructionAlert } from "../RecordSectionUnderConstructionAlert";
-import { RegionRecord } from "@/lib/types";
+import { fetchRecord } from "@/lib/route-handlers";
 import { genomicLocationToSpan } from "@/lib/utils";
-import { renderRecordTitle } from "../RecordOverview";
+import { renderRecordTitle } from "./RecordOverview";
 import styles from "../styles/record.module.css";
 
 const MAX_SPAN_FOR_SMALL_VARIANTS = 50000;
 
-export function RegionRecordOverview({ record }: { record: RegionRecord }) {
-    // Format location string: chr:start-end:strand / cytogenic_location
-    // const location = record.id;
-
+const RegionRecordOverview = async (record: RegionRecord) => {
     return (
         <>
             {/* Gene Information Card - 1/3 width */}
@@ -64,4 +62,6 @@ export function RegionRecordOverview({ record }: { record: RegionRecord }) {
             {/* Chart placeholders - 2/3 width */}
         </>
     );
-}
+};
+
+export default RegionRecordOverview;
