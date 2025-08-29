@@ -1,4 +1,3 @@
-// lib/types.ts - project type definitions
 import {
     Activity,
     AudioLines,
@@ -13,6 +12,9 @@ import {
     Info,
     SquareChartGantt,
 } from "lucide-react";
+
+// lib/types.ts - project type definitions
+import { APIPagination } from "@niagads/common";
 
 // icons
 
@@ -35,8 +37,6 @@ export type PageSectionIcon = keyof typeof PAGE_SECTION_ICONS;
 
 // API Response
 
-export interface APIResult {}
-
 export interface Request {
     request_id: string;
     endpoint: string;
@@ -47,46 +47,7 @@ export interface RequestParameters {
     id: string;
 }
 
-export interface Pagination {
-    page: number;
-    total_num_pages: number;
-    paged_num_records: number;
-    total_num_records: number;
-}
-
-export type TablePagination = { [key: string]: Pagination };
-
-export interface APIResponse {
-    data: APIResult[];
-    request: Request;
-    pagination: Pagination;
-    message: string;
-}
-
-// generic placeholders b/c to avoid importing
-// client component in server component, if we need better typing
-// can import TableProps from @niagads/table in
-// the client component
-export interface NIAGADSTableProps {
-    id: string;
-    options?: any;
-    columns: any;
-    data: any;
-}
-
-export interface APITableResponse {
-    request: Request;
-    pagination: Pagination;
-    table: NIAGADSTableProps;
-}
-
-export interface APIErrorResponse {
-    status: number;
-    detail: string;
-    message?: string;
-    stack_trace?: string;
-    request?: string;
-}
+export type TablePagination = { [key: string]: APIPagination };
 
 // Search Results
 
@@ -241,6 +202,23 @@ interface AnchoredSectionBase {
 }
 
 // TODO: table wrapper "types"
+
+// generic placeholder b/c to avoid importing
+// client component in server component, if we need better typing
+// can import TableProps from @niagads/table in
+// the client component
+export interface NIAGADSTableProps {
+    id: string;
+    options?: any;
+    columns: any;
+    data: any;
+}
+
+export interface APITableResponse {
+    request: Request;
+    pagination: APIPagination;
+    table: NIAGADSTableProps;
+}
 
 export interface TableSection extends AnchoredSectionBase {
     endpoint: string;

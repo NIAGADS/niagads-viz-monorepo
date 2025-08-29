@@ -1,4 +1,6 @@
-import { APIErrorResponse, GenomicLocation, RecordType } from "./types";
+import { GenomicLocation, RecordType } from "./types";
+
+import { APIErrorResponse } from "@niagads/common";
 
 export const genomicLocationToSpan = (location: GenomicLocation, inclStrand: boolean = false) => {
     const end = location.end === null ? location.start + location.length! : location.end;
@@ -26,11 +28,6 @@ export const getRecordIdFromPath = (pathname: string) => {
     const match = pathname.match(/\/record\/[^/]+\/([^/]+)/);
     return match ? match[1] : null;
 };
-
-// check to see if a response is an error response
-export function isErrorAPIResponse(obj: any): obj is APIErrorResponse {
-    return obj && typeof obj === "object" && typeof obj.status === "number" && typeof obj.detail === "string";
-}
 
 /**
  * Maps SO consequence terms to CSS module class names for color badges.

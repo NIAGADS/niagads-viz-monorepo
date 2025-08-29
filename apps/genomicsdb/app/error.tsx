@@ -1,8 +1,7 @@
 "use client";
 
-import { _isJSON, formatMultiline, linkify, safeHtml } from "@niagads/common";
+import { APIError, _isJSON, formatMultiline, linkify, safeHtml } from "@niagads/common";
 
-import { APIError } from "@/lib/errors";
 import { Alert } from "@niagads/ui";
 import { useEffect } from "react";
 

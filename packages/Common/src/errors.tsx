@@ -1,11 +1,14 @@
-import React from "react";
-import { FallbackProps } from "react-error-boundary";
+import { APIErrorResponse } from "./types";
 
-export function errorFallback({ error, resetErrorBoundary }: FallbackProps) {
-    return (
-        <div role="alert" className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
-            <p>Something went wrong:</p>
-            <pre className="text-wrap">{error.message}</pre>
-        </div>
-    );
+export class APIError extends Error {
+    constructor(message: string, response: APIErrorResponse) {
+        Object.assign(response, { error: message });
+        super(JSON.stringify(response));
+        this.name = "Service Error";
+    }
+}
+
+// check to see if a response is an error response
+export function isAPIError(obj: any): obj is APIErrorResponse {
+    return obj && typeof obj === "object" && typeof obj.status === "number" && typeof obj.detail === "string";
 }
