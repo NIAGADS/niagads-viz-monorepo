@@ -1,20 +1,17 @@
-"use server";
+import { APIError, APIErrorResponse, APIResponse, backendFetch, isAPIError } from "@niagads/common";
+import { AssociationTraitCategory, AssociationTraitSource, RecordType } from "./types";
+import { getBasePath, getPublicUrl } from "./utils";
 
-import { APIErrorResponse, APIResponse, AssociationTraitCategory, AssociationTraitSource, RecordType } from "./types";
-import { getCache, setCache } from "./cache";
-import { getBasePath, getPublicUrl, isErrorAPIResponse } from "./utils";
-
-import { APIError } from "./errors";
-import { backendFetch } from "@niagads/common";
 import { notFound } from "next/navigation";
 
 type ResponseContent = "brief" | "full" | "counts" | "urls";
 type ResponseFormat = "summary" | "table" | "default";
 
 export async function fetchRecord(endpoint: string, brief: boolean = true) {
+    // fetch record and handle error response
     const response = await _fetch(endpoint, brief ? "brief" : "full");
 
-    if (isErrorAPIResponse(response)) {
+    if (isAPIError(response)) {
         if (response.status === 404) {
             notFound();
         } else if (response.status === 429) {
@@ -29,22 +26,9 @@ export async function fetchRecord(endpoint: string, brief: boolean = true) {
     return (response as APIResponse).data[0]; // record is a list of one item
 }
 
-export async function fetchRecordAnnotationTable(endpoint: string) {
-    // we are going to fetch twice, once for the raw data for caching and once for the view
-    // the second fetch will be quick b/c the API will have already cached the raw
-    let query = `${endpoint}`;
-
-    // fetch but this response gets thrown away, just need to cache it
-    // errors are handled in export function
-    await _fetch(query);
-
-    // now fetch the table; will be quick b/c API cached the raw response
-    // and just needs to reformat it
+export async function fetchTable(endpoint: string) {
     const view = endpoint.includes("?") ? "&view=table" : "?view=table";
-    query = `${query}${view}`;
-
-    // errors are handled in the component
-    return await _fetch(query);
+    return await _fetch(`${endpoint}${view}`);
 }
 
 export async function fetchRecordAssociations(
@@ -62,36 +46,10 @@ export async function _fetch(endpoint: string, content: ResponseContent = "full"
     const basePath = `${getBasePath()}/api`;
     let query = `${basePath}${endpoint}`;
 
-    let namespace: string = "";
-    if (endpoint.includes("/service/")) {
-        // search endpoint does not return data object
-        // dataOnly = true;
-        namespace = "service";
-    } else {
-        const operator = endpoint.includes("?") ? "&" : "?";
-        query = `${query}${operator}content=${content}`;
-
-        if (endpoint.includes("record")) {
-            namespace = "record";
-        } else {
-            namespace = "query";
-        }
-    }
-
-    // Try to get from cache
-    const cached = await getCache(namespace, endpoint);
-    if (cached) {
-        return JSON.parse(cached);
-    }
-
-    // Not cached, fetch from backend
+    // fetch from backend
     const response: APIResponse | APIErrorResponse = await backendFetch(query, getPublicUrl());
 
-    const isError = isErrorAPIResponse(response);
-    if (!isError) {
-        // don't cache errors; they may go away
-        await setCache(namespace, endpoint, JSON.stringify(response));
-    }
+    const isError = isAPIError(response);
 
     // do not catch errors here; deal with them w/in calling block so they can be
     // handled inline when necessary

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { fetchRecordAnnotationTable } from "@/lib/route-handlers";
 import { cleanRedirect } from "@/lib/utils";
+import { fetchTable } from "@/lib/route-handlers";
 
 // for client-side fetching from the API w/ioredis caching
 
@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
         endpoint += search;
     }
 
-    const response = await fetchRecordAnnotationTable(endpoint);
+    const response = await fetchTable(endpoint);
     return NextResponse.json(response);
 }
 
