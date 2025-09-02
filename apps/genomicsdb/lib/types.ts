@@ -63,12 +63,15 @@ export interface SearchResult {
 // Page Request Parameters
 
 export interface PageProps {
-    params: Promise<{
-        type: string;
-        id: string;
-    }>;
     searchParams: Promise<{
         [key: string]: string | string[] | undefined;
+    }>;
+}
+
+export interface RecordPageProps extends PageProps {
+    params: Promise<{
+        entity: string;
+        id: string;
     }>;
 }
 
@@ -233,12 +236,4 @@ export interface TableSection extends AnchoredSectionBase {
 export interface AnchoredPageSection extends AnchoredSectionBase {
     icon: PageSectionIcon;
     tables?: TableSection[];
-}
-
-// shared props for components fetching record data that needs to be cached
-export interface CacheIdentifier {
-    recordId: string;
-    recordType: RecordType;
-    sectionId?: string;
-    sectionLabel?: string;
 }

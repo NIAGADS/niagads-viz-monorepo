@@ -1,15 +1,16 @@
-import { AnchoredPageSection, CacheIdentifier } from "@/lib/types";
+import { AnchoredPageSection, RecordType } from "@/lib/types";
 
-import { Alert } from "@niagads/ui";
 import RecordSectionHeader from "./RecordAnnotationSectionHeader";
-import { RecordSectionUnderConstructionAlert } from "./RecordSectionUnderConstructionAlert";
-import { RecordTableSection } from "./RecordTableSection";
+import RecordSectionUnderConstructionAlert from "./RecordSectionUnderConstructionAlert";
+import RecordTableSection from "./RecordTableSection";
 
-export interface RecordAnnotationProps extends CacheIdentifier {
+export interface RecordAnnotationProps {
+    recordId: string;
+    recordType: RecordType;
     sections: AnchoredPageSection[];
 }
 
-export function RecordAnnotationSection({ sections, ...cacheInfo }: RecordAnnotationProps) {
+const RecordAnnotationSection = ({ sections, ...cacheInfo }: RecordAnnotationProps) => {
     return sections.map(
         (section: AnchoredPageSection) =>
             section.tables && (
@@ -26,12 +27,12 @@ export function RecordAnnotationSection({ sections, ...cacheInfo }: RecordAnnota
                             key={`${section.id}-tables`}
                             recordId={cacheInfo.recordId}
                             recordType={cacheInfo.recordType}
-                            sectionId={section.id}
-                            sectionLabel={section.label}
                             tables={section.tables}
                         ></RecordTableSection>
                     )}
                 </div>
             )
     );
-}
+};
+
+export default RecordAnnotationSection;

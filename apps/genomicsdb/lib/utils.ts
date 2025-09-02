@@ -1,7 +1,5 @@
 import { GenomicLocation, RecordType } from "./types";
 
-import { APIErrorResponse } from "@niagads/common";
-
 export const genomicLocationToSpan = (location: GenomicLocation, inclStrand: boolean = false) => {
     const end = location.end === null ? location.start + location.length! : location.end;
 

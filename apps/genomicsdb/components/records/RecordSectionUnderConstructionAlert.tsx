@@ -1,6 +1,6 @@
 import { Alert } from "@niagads/ui";
 
-export const RecordSectionUnderConstructionAlert = ({ section }: { section: string }) => (
+const RecordSectionUnderConstructionAlert = ({ section }: { section: string }) => (
     <Alert
         variant="construction"
         message={`The ${section} section is under construction`}
@@ -9,3 +9,5 @@ export const RecordSectionUnderConstructionAlert = ({ section }: { section: stri
         <p>This feature is still under development. Please check back soon.</p>
     </Alert>
 );
+
+export default RecordSectionUnderConstructionAlert;

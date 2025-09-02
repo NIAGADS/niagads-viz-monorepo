@@ -3,7 +3,7 @@ import { Card, CardBody, CardHeader, HelpIconWrapper } from "@niagads/ui";
 
 import { ExternalUrls } from "@/lib/reference";
 import { RecordActionToolbar } from "../RecordActionToolbar";
-import { RecordSectionUnderConstructionAlert } from "../RecordSectionUnderConstructionAlert";
+import RecordSectionUnderConstructionAlert from "../RecordSectionUnderConstructionAlert";
 import { fetchRecord } from "@/lib/route-handlers";
 import { genomicLocationToSpan } from "@/lib/utils";
 import { renderRecordTitle } from "./RecordOverview";

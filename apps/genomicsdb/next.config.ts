@@ -22,6 +22,7 @@ const nextConfig: NextConfig = {
         serverActions: {
             allowedOrigins: ["www.niagads.org", "*.niagads.org"],
         },
+        serverSourceMaps: true,
     },
     images: {
         unoptimized: true,

@@ -9,7 +9,7 @@ type ResponseFormat = "summary" | "table" | "default";
 
 export async function fetchRecord(recordType: RecordType, id: string, brief: boolean = true) {
     // fetch record and handle error response
-    const response = await _fetch(`${recordType}/${id}`, brief ? "brief" : "full");
+    const response = await _fetch(`/record/${recordType}/${id}`, brief ? "brief" : "full");
 
     if (isAPIError(response)) {
         if (response.status === 404) {
@@ -39,7 +39,7 @@ export async function fetchRecordAssociations(
     source: AssociationTraitSource = "all",
     format: ResponseFormat = "default"
 ) {
-    const endpoint = `/api/record/${recordType}/${id}/associations?category=${category}&source=${source}&view=${format === "table" ? "table" : "default"}`;
+    const endpoint = `record/${recordType}/${id}/associations?category=${category}&source=${source}&view=${format === "table" ? "table" : "default"}`;
     return await _fetch(endpoint, format === "summary" ? "counts" : "full");
 }
 

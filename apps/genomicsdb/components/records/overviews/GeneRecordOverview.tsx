@@ -1,15 +1,15 @@
-import { BaseRecord, GeneRecord } from "@/lib/types";
 import { Card, CardBody, CardHeader } from "@niagads/ui";
 import { RecordOverview, renderRecordTitle } from "./RecordOverview";
 
 import { ExternalUrls } from "@/lib/reference";
+import { GeneRecord } from "@/lib/types";
 import { RecordActionToolbar } from "../RecordActionToolbar";
 import { RecordLink } from "../../Link";
-import { RecordSectionUnderConstructionAlert } from "../RecordSectionUnderConstructionAlert";
+import RecordSectionUnderConstructionAlert from "../RecordSectionUnderConstructionAlert";
 import { genomicLocationToSpan } from "@/lib/utils";
 import styles from "../styles/record.module.css";
 
-const GeneRecordOverview = async (record: GeneRecord) => {
+const GeneRecordOverview = (record: GeneRecord) => {
     // Format location string: chr:start-end:strand / cytogenic_location
     const region = genomicLocationToSpan(record.location);
     const location = genomicLocationToSpan(record.location, true);

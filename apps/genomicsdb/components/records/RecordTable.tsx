@@ -1,5 +1,5 @@
 import { APIPagination, isAPIError } from "@niagads/common";
-import { APITableResponse, CacheIdentifier, TableSection } from "@/lib/types";
+import { APITableResponse, RecordType, TableSection } from "@/lib/types";
 import { InlineError, NoData } from "../ErrorAlerts";
 
 import { LoadingSpinner } from "@niagads/ui";
@@ -10,19 +10,23 @@ import { prefixClientRoute } from "@/lib/utils";
 import { useEffect } from "react";
 import useSWR from "swr";
 
-export interface RecordTableProps extends CacheIdentifier {
+export interface RecordTableProps {
+    recordType: RecordType;
+    recordId: string;
     tableDef: TableSection;
     onTableLoad?: (pagination: APIPagination) => void;
 }
 
-export default function RecordTable({ tableDef, onTableLoad, ...cacheInfo }: RecordTableProps) {
+const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTableProps) => {
     const { data, error, isLoading } = useSWR(
-        prefixClientRoute(`/record/${cacheInfo.recordType}/${cacheInfo.recordId}/annotation/${tableDef.endpoint}`),
+        prefixClientRoute(`/record/${recordType}/${recordId}/annotation/${tableDef.endpoint}`),
         (url: string) => fetch(url).then((res) => res.json())
     );
 
     // Call onTableLoad when data is loaded and valid to return the result size
     // to the parent
+
+    // FIXME: tie to table's onTableLoad so we don't have to have a useEffect here
     useEffect(() => {
         if (onTableLoad && data && !isLoading) {
             onTableLoad((data as APITableResponse).pagination);
@@ -46,7 +50,7 @@ export default function RecordTable({ tableDef, onTableLoad, ...cacheInfo }: Rec
             <>
                 <PaginationMessage
                     pagination={(data as APITableResponse).pagination}
-                    endpoint={`/record/${cacheInfo.recordType}/${cacheInfo.recordId}${tableDef.endpoint}`}
+                    endpoint={`/record/${recordType}/${recordId}${tableDef.endpoint}`}
                 />
                 <TableWrapper
                     id={tableDef.id}
@@ -63,6 +67,8 @@ export default function RecordTable({ tableDef, onTableLoad, ...cacheInfo }: Rec
             data={(data as APITableResponse).table.data}
         />
     );
-}
+};
+
+export default RecordTable;
 
 //<Table config={tableDef} table={response.table} />
