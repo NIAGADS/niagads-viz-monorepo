@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { Badge, Card, CardBody, CardHeader, InlineIcon } from "@niagads/ui";
 
-import { ExternalUrls } from "@/lib/reference";
+import { ExternalUrls } from "@/data/reference";
 import { PredictedConsequenceSummary } from "@/lib/types";
 import React from "react";
 import { RecordLink } from "@/components/Link";

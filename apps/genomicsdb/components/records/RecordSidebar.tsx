@@ -6,19 +6,19 @@ import Link from "next/link";
 import badgeStyles from "./styles/record-type.module.css";
 import styles from "./styles/record-sidebar.module.css";
 import { useState } from "react";
+import { RECORD_PAGE_SECTIONS } from "@/data/sections";
 
 const SCROLL_OFFSET = 70; // adjust for the header height
 interface SidebarProps {
     title: string;
-    items: AnchoredPageSection[];
     recordType: RecordType;
     isOpen?: boolean; // hold-over
 }
 
-export const RecordSidebar = ({ title, recordType, items }: SidebarProps) => {
+export const RecordSidebar = ({ title, recordType }: SidebarProps) => {
     const [isOpen, setIsOpen] = useState(true);
     const [activeFilter, setActiveFilter] = useState("overview");
-
+    const items = RECORD_PAGE_SECTIONS[recordType];
     // note: this actually is never happening b/c of the next/link
     const handleItemClick = (itemId: string) => {
         const element = document.getElementById(itemId);

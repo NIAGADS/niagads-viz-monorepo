@@ -1,20 +1,29 @@
 "use client";
 
+<<<<<<< HEAD
 import { CacheIdentifier, Pagination, TablePagination, TableSection } from "@/lib/types";
 import { Card } from "@niagads/ui";
 import React, { useState } from "react";
+=======
+import { Card, Skeleton } from "@niagads/ui";
+import React, { Suspense, useState } from "react";
+import { RecordType, TablePagination, TableSection } from "@/lib/types";
+>>>>>>> origin/main
 
+import { APIPagination } from "@niagads/common";
 import RecordTable from "./RecordTable";
 import { Tabs, Tab, TabHeader, TabBody } from "@niagads/ui/client";
 import styles from "./styles/record-table-section.module.css";
 
-interface RecordTableSectionProps extends CacheIdentifier {
+interface RecordTableSectionProps {
+    recordId: string;
+    recordType: RecordType;
     tables: TableSection[];
 }
 
 interface TabTitleProps {
     label: string;
-    pagination?: Pagination;
+    pagination?: APIPagination;
 }
 
 const TabTitle = ({ label, pagination }: TabTitleProps) => {
@@ -27,10 +36,10 @@ const TabTitle = ({ label, pagination }: TabTitleProps) => {
     );
 };
 
-const RecordTableSection = ({ tables, ...cacheInfo }: RecordTableSectionProps) => {
+const RecordTableSection = ({ tables, ...record }: RecordTableSectionProps) => {
     const [pagination, setPagination] = useState<TablePagination>({});
 
-    const handleTableLoad = (id: string) => (pagination: Pagination) => {
+    const handleTableLoad = (id: string) => (pagination: APIPagination) => {
         setPagination((prev) => ({ ...prev, [id]: pagination }));
     };
 
@@ -48,7 +57,7 @@ const RecordTableSection = ({ tables, ...cacheInfo }: RecordTableSectionProps) =
                             outline={false}
                             style={{ marginBottom: "0px", padding: "0.5rem" }}
                         >
-                            <RecordTable tableDef={table} {...cacheInfo} onTableLoad={handleTableLoad(table.id)} />
+                            <RecordTable tableDef={table} {...record} onTableLoad={handleTableLoad(table.id)} />
                         </Card>
                     </TabBody>
                 </Tab>

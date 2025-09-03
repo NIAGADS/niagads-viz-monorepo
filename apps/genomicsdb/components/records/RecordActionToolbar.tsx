@@ -2,14 +2,14 @@
 
 import { ActionToolbar, Button, ButtonGroup, InlineIcon } from "@niagads/ui";
 import { Download, Eye, Share2 } from "lucide-react";
-import { GenomicFeatureRecord, Record, TrackRecord } from "@/lib/types";
+import { EntityRecord, GenomicFeatureRecord, TrackRecord } from "@/lib/types";
 import { genomicLocationToSpan, getPublicUrl } from "@/lib/utils";
 
 import { TooltipClient } from "@niagads/ui/client";
 
 interface ActionToolbarProps {
     id: string;
-    record: Record;
+    record: EntityRecord;
 }
 
 export const RecordActionToolbar = ({ id, record }: ActionToolbarProps) => {
