@@ -1,25 +1,24 @@
-import { Badge, Card, CardBody, CardHeader, HelpIcon, InlineIcon } from "@niagads/ui";
+import { Badge, Card, CardBody, CardHeader } from "@niagads/ui";
+import { RecordOverview, renderRecordTitle } from "./RecordOverview";
 
 import { BadgeCheck } from "lucide-react";
-import { ExternalUrls } from "@/lib/reference";
-import { HelpIconWrapper } from "@niagads/ui";
-import { MostSevereConsequenceCard } from "./MostSeverConsequenceCard";
-import Placeholder from "../placeholder";
+import { ExternalUrls } from "@/data/reference";
+import { MostSevereConsequenceCard } from "./MostSevereConsequenceCard";
 import { RecordActionToolbar } from "../RecordActionToolbar";
-import { RecordSectionUnderConstructionAlert } from "../RecordSectionUnderConstructionAlert";
+import { RecordLink } from "@/components/Link";
+import RecordSectionUnderConstructionAlert from "../RecordSectionUnderConstructionAlert";
 // import VariantAssociationSummaryChart from "./VariantGeneticAssociationSummaryChart";
 import { VariantRecord } from "@/lib/types";
 import { genomicLocationToSpan } from "@/lib/utils";
-import { renderRecordTitle } from "../RecordOverview";
 import styles from "../styles/record.module.css";
 import variantStyles from "../styles/variant-record.module.css";
-import { RecordLink } from "@/components/Link";
 
-export function VariantRecordOverview({ record }: { record: VariantRecord }) {
+const VariantRecordOverview = ({ record }: { record: VariantRecord }) => {
+    console.log(record);
     const span = genomicLocationToSpan(record.location, false);
 
     return (
-        <>
+        <RecordOverview>
             {/* Variant Information Card - 1/3 width */}
             <Card variant="third">
                 <CardHeader>
@@ -32,15 +31,9 @@ export function VariantRecordOverview({ record }: { record: VariantRecord }) {
                     <div className={styles.infoContent}>
                         {record.is_adsp_variant && (
                             <>
-                                <HelpIconWrapper
-                                    message="This variant was present in ADSP samples and passed ADSP quality checks."
-                                    variant={"info"}
-                                >
-                                    <Badge icon={<BadgeCheck size={18} />} className={variantStyles.adspVariantBadge}>
-                                        ADSP Variant
-                                    </Badge>
-                                </HelpIconWrapper>
-                                {/*<HelpIcon message={undefined} variant={"shield"}></HelpIcon>*/}
+                                <Badge icon={<BadgeCheck size={18} />} className={variantStyles.adspVariantBadge}>
+                                    ADSP Variant
+                                </Badge>
                             </>
                         )}
                         <div className={styles.details}>
@@ -64,7 +57,7 @@ export function VariantRecordOverview({ record }: { record: VariantRecord }) {
                             </div>
                         </div>
                     </div>
-                    <RecordActionToolbar id="gene-actions" record={record} />
+                    <RecordActionToolbar id="variant-actions" record={record} />
                 </CardBody>
             </Card>
 
@@ -82,6 +75,8 @@ export function VariantRecordOverview({ record }: { record: VariantRecord }) {
                     </CardBody>
                 </Card>
             )}
-        </>
+        </RecordOverview>
     );
-}
+};
+
+export default VariantRecordOverview;

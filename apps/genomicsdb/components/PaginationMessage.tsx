@@ -1,22 +1,19 @@
-"use client";
-
 import { Alert, Button, InlineIcon } from "@niagads/ui";
-import React, { useId } from "react";
 
 import { CloudCog } from "lucide-react";
-import { Pagination } from "@/lib/types";
+
+import { APIPagination } from "@niagads/common";
 import { TooltipClient } from "@niagads/ui/client";
 import styles from "./styles/pagination-message.module.css";
 
 interface PaginationMessageProps {
-    pagination: Pagination;
+    pagination: APIPagination;
     endpoint: string;
 }
 
 const PaginationMessage = ({ pagination, endpoint }: PaginationMessageProps) => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
     const fullUrl = apiUrl + endpoint;
-    const tooltipId = useId();
 
     const handleCopy = () => {
         navigator.clipboard.writeText(fullUrl);

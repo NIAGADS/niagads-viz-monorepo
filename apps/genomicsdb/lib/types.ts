@@ -1,4 +1,3 @@
-// lib/types.ts - project type definitions
 import {
     Activity,
     AudioLines,
@@ -13,6 +12,9 @@ import {
     Info,
     SquareChartGantt,
 } from "lucide-react";
+
+// lib/types.ts - project type definitions
+import { APIPagination } from "@niagads/common";
 
 // icons
 
@@ -35,8 +37,6 @@ export type PageSectionIcon = keyof typeof PAGE_SECTION_ICONS;
 
 // API Response
 
-export interface APIResult {}
-
 export interface Request {
     request_id: string;
     endpoint: string;
@@ -47,46 +47,7 @@ export interface RequestParameters {
     id: string;
 }
 
-export interface Pagination {
-    page: number;
-    total_num_pages: number;
-    paged_num_records: number;
-    total_num_records: number;
-}
-
-export type TablePagination = { [key: string]: Pagination };
-
-export interface APIResponse {
-    data: APIResult[];
-    request: Request;
-    pagination: Pagination;
-    message: string;
-}
-
-// generic placeholders b/c to avoid importing
-// client component in server component, if we need better typing
-// can import TableProps from @niagads/table in
-// the client component
-export interface NIAGADSTableProps {
-    id: string;
-    options?: any;
-    columns: any;
-    data: any;
-}
-
-export interface APITableResponse {
-    request: Request;
-    pagination: Pagination;
-    table: NIAGADSTableProps;
-}
-
-export interface APIErrorResponse {
-    status: number;
-    detail: string;
-    message?: string;
-    stack_trace?: string;
-    request?: string;
-}
+export type TablePagination = { [key: string]: APIPagination };
 
 // Search Results
 
@@ -102,12 +63,15 @@ export interface SearchResult {
 // Page Request Parameters
 
 export interface PageProps {
-    params: Promise<{
-        type: string;
-        id: string;
-    }>;
     searchParams: Promise<{
         [key: string]: string | string[] | undefined;
+    }>;
+}
+
+export interface RecordPageProps extends PageProps {
+    params: Promise<{
+        entity: string;
+        id: string;
     }>;
 }
 
@@ -116,7 +80,9 @@ export interface PageProps {
 export type AssociationTraitCategory = "biomarker" | "ad" | "adrd" | "other" | "all_ad" | "all";
 export type AssociationTraitSource = "gwas" | "curated" | "all";
 
-export type RecordType = "gene" | "variant" | "region" | "track";
+// this implementation allows us to create an assertion on record type
+export const RECORD_TYPES = ["gene", "variant", "structural_variant", "region", "track"] as const;
+export type RecordType = (typeof RECORD_TYPES)[number];
 
 // Records and supporting data types
 
@@ -229,7 +195,8 @@ export interface TrackRecord extends BaseRecord {
 }
 
 export type GenomicFeatureRecord = GeneRecord | VariantRecord | RegionRecord;
-export type Record = GeneRecord | VariantRecord | RegionRecord | TrackRecord;
+// named "EntityRecord" so as not to confuse w/built-in "Record" for generic key-value pair
+export type EntityRecord = GeneRecord | VariantRecord | RegionRecord | TrackRecord;
 
 // record page structure; anchored sections
 
@@ -242,6 +209,23 @@ interface AnchoredSectionBase {
 
 // TODO: table wrapper "types"
 
+// generic placeholder b/c to avoid importing
+// client component in server component, if we need better typing
+// can import TableProps from @niagads/table in
+// the client component
+export interface NIAGADSTableProps {
+    id: string;
+    options?: any;
+    columns: any;
+    data: any;
+}
+
+export interface APITableResponse {
+    request: Request;
+    pagination: APIPagination;
+    table: NIAGADSTableProps;
+}
+
 export interface TableSection extends AnchoredSectionBase {
     endpoint: string;
     wrapper?: string;
@@ -252,12 +236,4 @@ export interface TableSection extends AnchoredSectionBase {
 export interface AnchoredPageSection extends AnchoredSectionBase {
     icon: PageSectionIcon;
     tables?: TableSection[];
-}
-
-// shared props for components fetching record data that needs to be cached
-export interface CacheIdentifier {
-    recordId: string;
-    recordType: RecordType;
-    sectionId?: string;
-    sectionLabel?: string;
 }

@@ -1,20 +1,23 @@
 "use client";
 
-import { CacheIdentifier, Pagination, TablePagination, TableSection } from "@/lib/types";
 import { Card, Skeleton } from "@niagads/ui";
 import React, { Suspense, useState } from "react";
+import { RecordType, TablePagination, TableSection } from "@/lib/types";
 
+import { APIPagination } from "@niagads/common";
 import RecordTable from "./RecordTable";
 import { Tabs } from "@niagads/ui/client";
 import styles from "./styles/record-table-section.module.css";
 
-interface RecordTableSectionProps extends CacheIdentifier {
+interface RecordTableSectionProps {
+    recordId: string;
+    recordType: RecordType;
     tables: TableSection[];
 }
 
 interface TabHeaderProps {
     label: string;
-    pagination?: Pagination;
+    pagination?: APIPagination;
 }
 
 const TabHeader = ({ label, pagination }: TabHeaderProps) => {
@@ -27,10 +30,10 @@ const TabHeader = ({ label, pagination }: TabHeaderProps) => {
     );
 };
 
-export function RecordTableSection({ tables, ...cacheInfo }: RecordTableSectionProps) {
+const RecordTableSection = ({ tables, ...record }: RecordTableSectionProps) => {
     const [paginations, setPaginations] = useState<TablePagination>({});
 
-    const handleTableLoad = (id: string) => (pagination: Pagination) => {
+    const handleTableLoad = (id: string) => (pagination: APIPagination) => {
         setPaginations((prev) => ({ ...prev, [id]: pagination }));
     };
     return (
@@ -45,11 +48,13 @@ export function RecordTableSection({ tables, ...cacheInfo }: RecordTableSectionP
                         outline={false}
                         style={{ marginBottom: "0px", padding: "0.5rem" }}
                     >
-                        <RecordTable tableDef={t} {...cacheInfo} onTableLoad={handleTableLoad(t.id)} />
+                        <RecordTable tableDef={t} {...record} onTableLoad={handleTableLoad(t.id)} />
                     </Card>
                 ),
             }))}
             width="full"
         />
     );
-}
+};
+
+export default RecordTableSection;

@@ -1,13 +1,12 @@
 "use server";
 
-import { APIResponse, AssociationTraitCategory, AssociationTraitSource, GeneticAssociationSummary } from "@/lib/types";
+import { APIResponse, _get, isAPIError } from "@niagads/common";
+import { AssociationTraitCategory, AssociationTraitSource, GeneticAssociationSummary } from "@/lib/types";
 import { _fetch, fetchRecordAssociations } from "@/lib/route-handlers";
-import { getCache, setCache } from "@/lib/cache";
+
 import { InlineError } from "@/components/ErrorAlerts";
 import Placeholder from "../placeholder";
 import { Series } from "@niagads/charts";
-import { _get } from "@niagads/common";
-import { isErrorAPIResponse } from "@/lib/utils";
 
 type RelativePosition = "in gene" | "upstream" | "downstream";
 
@@ -77,14 +76,13 @@ export async function GeneAssociationSummaryChart({ recordId }: AssociationSumma
             source,
             "summary"
         )) as APIResponse;
-        if (isErrorAPIResponse(response)) {
+        if (isAPIError(response)) {
             throw new Error(JSON.stringify(response));
         }
         return response.data;
     }
 
-    const namespace = "gene-record-genetic-association-summary";
-    let summary: any = ((await getCache(namespace, recordId)) as unknown as GeneticAssociationSummary) || {};
+    let summary: any = {};
 
     if (!summary || Object.keys(summary).length === 0) {
         let errorMessage: string | null = null;
@@ -93,7 +91,6 @@ export async function GeneAssociationSummaryChart({ recordId }: AssociationSumma
             for (const source of sources) {
                 summary[source] = await fetchSummary("all", source);
             }
-            await setCache(namespace, recordId, summary);
         } catch (error: any) {
             errorMessage = error.message;
         }

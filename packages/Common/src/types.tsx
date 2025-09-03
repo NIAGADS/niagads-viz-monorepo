@@ -42,3 +42,29 @@ export type ExpandRecursively<T> = T extends object
         ? { [K in keyof O]: ExpandRecursively<O[K]> }
         : never
     : T;
+
+// Types to handle API responses
+
+export interface APIResult {}
+
+export interface APIPagination {
+    page: number;
+    total_num_pages: number;
+    paged_num_records: number;
+    total_num_records: number;
+}
+
+export interface APIResponse {
+    data: APIResult[];
+    request: Request;
+    pagination: APIPagination;
+    message: string;
+}
+
+export interface APIErrorResponse {
+    status: number;
+    detail: string;
+    message?: string;
+    stack_trace?: string;
+    request?: string;
+}
