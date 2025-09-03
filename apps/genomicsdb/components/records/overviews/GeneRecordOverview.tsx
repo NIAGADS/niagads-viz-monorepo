@@ -9,7 +9,7 @@ import RecordSectionUnderConstructionAlert from "../RecordSectionUnderConstructi
 import { genomicLocationToSpan } from "@/lib/utils";
 import styles from "../styles/record.module.css";
 
-const GeneRecordOverview = (record: GeneRecord) => {
+const GeneRecordOverview = ({ record }: { record: GeneRecord }) => {
     // Format location string: chr:start-end:strand / cytogenic_location
     const region = genomicLocationToSpan(record.location);
     const location = genomicLocationToSpan(record.location, true);

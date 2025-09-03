@@ -4,14 +4,13 @@ import { Card, CardBody, CardHeader, HelpIconWrapper } from "@niagads/ui";
 import { ExternalUrls } from "@/lib/reference";
 import { RecordActionToolbar } from "../RecordActionToolbar";
 import RecordSectionUnderConstructionAlert from "../RecordSectionUnderConstructionAlert";
-import { fetchRecord } from "@/lib/route-handlers";
 import { genomicLocationToSpan } from "@/lib/utils";
 import { renderRecordTitle } from "./RecordOverview";
 import styles from "../styles/record.module.css";
 
 const MAX_SPAN_FOR_SMALL_VARIANTS = 50000;
 
-const RegionRecordOverview = async (record: RegionRecord) => {
+const RegionRecordOverview = async ({ record }: { record: RegionRecord }) => {
     return (
         <>
             {/* Gene Information Card - 1/3 width */}
