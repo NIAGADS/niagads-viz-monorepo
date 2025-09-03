@@ -5,6 +5,7 @@
     "scripts": {
         "genomicsdb": "npm run dev",
         "dev": "next dev --turbopack",
+        "genomicsdb-debug": "next dev",
         "genomicsdb-build": "next build",
         "genomicsdb-prod": "next start",
         "start": "next start",
