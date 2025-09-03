@@ -1,8 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { TabHeader, TabBody, Tabs } from "@niagads/ui/client";
-
-import Table from "@niagads/table";
-import { TABLE_DEFINTION as table } from "../../../examples/tables/table_rendering_test";
+import { TabHeader, TabBody, Tabs, Tab } from "@niagads/ui/client";
 
 //@ts-nocheck
 // b/c of https://github.com/storybookjs/storybook/issues/23170 issue w/subcomponets w/children
@@ -19,12 +16,18 @@ const meta: Meta<typeof Tabs> = {
     args: {
         width: "full",
         children: [
-            <TabHeader id="tab1">Tab 1</TabHeader>,
-            <TabHeader id="tab2">Tab 2</TabHeader>,
-            <TabHeader id="tab3">Tab 3</TabHeader>,
-            <TabBody id="tab1">This is tab 1</TabBody>,
-            <TabBody id="tab2">This is tab 2</TabBody>,
-            <TabBody id="tab3">This is tab 3</TabBody>,
+            <Tab id="tab1">
+                <TabHeader>Tab 1</TabHeader>
+                <TabBody>This is tab 1</TabBody>
+            </Tab>,
+            <Tab id="tab2">
+                <TabHeader>Tab 2</TabHeader>
+                <TabBody>This is tab 2</TabBody>
+            </Tab>,
+            <Tab id="tab3">
+                <TabHeader>Tab 3</TabHeader>
+                <TabBody>This is tab 3</TabBody>
+            </Tab>
         ]
     },
 };
