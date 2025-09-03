@@ -1,14 +1,8 @@
 "use client";
 
-<<<<<<< HEAD
-import { CacheIdentifier, Pagination, TablePagination, TableSection } from "@/lib/types";
 import { Card } from "@niagads/ui";
 import React, { useState } from "react";
-=======
-import { Card, Skeleton } from "@niagads/ui";
-import React, { Suspense, useState } from "react";
 import { RecordType, TablePagination, TableSection } from "@/lib/types";
->>>>>>> origin/main
 
 import { APIPagination } from "@niagads/common";
 import RecordTable from "./RecordTable";
