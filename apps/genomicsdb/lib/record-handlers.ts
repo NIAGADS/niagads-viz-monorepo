@@ -16,6 +16,7 @@ export function assertValidRecordType(type: string): RecordType {
 const RecordOverviewMap: Record<string, () => Promise<any>> = {
     gene: () => import("@/components/records/overviews/GeneRecordOverview"),
     variant: () => import("@/components/records/overviews/VariantRecordOverview"),
+    structural_variant: () => import("@/components/records/overviews/VariantRecordOverview"),
     region: () => import("@/components/records/overviews/RegionRecordOverview"),
     // track: () => import("@/components/records/overviews/TrackRecordOverview"),
 } as const;

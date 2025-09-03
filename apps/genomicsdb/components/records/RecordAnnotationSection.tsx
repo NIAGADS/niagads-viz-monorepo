@@ -1,16 +1,12 @@
-import { AnchoredPageSection, RecordType } from "@/lib/types";
+import { AnchoredPageSection, BaseRecord, RecordType } from "@/lib/types";
 
 import RecordSectionHeader from "./RecordAnnotationSectionHeader";
 import RecordSectionUnderConstructionAlert from "./RecordSectionUnderConstructionAlert";
 import RecordTableSection from "./RecordTableSection";
+import { RECORD_PAGE_SECTIONS } from "@/data/sections";
 
-export interface RecordAnnotationProps {
-    recordId: string;
-    recordType: RecordType;
-    sections: AnchoredPageSection[];
-}
-
-const RecordAnnotationSection = ({ sections, ...cacheInfo }: RecordAnnotationProps) => {
+const RecordAnnotationSection = ({ id, record_type }: BaseRecord) => {
+    const sections = RECORD_PAGE_SECTIONS[record_type];
     return sections.map(
         (section: AnchoredPageSection) =>
             section.tables && (
@@ -25,8 +21,8 @@ const RecordAnnotationSection = ({ sections, ...cacheInfo }: RecordAnnotationPro
                     ) : (
                         <RecordTableSection
                             key={`${section.id}-tables`}
-                            recordId={cacheInfo.recordId}
-                            recordType={cacheInfo.recordType}
+                            recordId={id}
+                            recordType={record_type}
                             tables={section.tables}
                         ></RecordTableSection>
                     )}

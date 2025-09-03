@@ -81,7 +81,7 @@ export type AssociationTraitCategory = "biomarker" | "ad" | "adrd" | "other" | "
 export type AssociationTraitSource = "gwas" | "curated" | "all";
 
 // this implementation allows us to create an assertion on record type
-export const RECORD_TYPES = ["gene", "variant", "region", "track"] as const;
+export const RECORD_TYPES = ["gene", "variant", "structural_variant", "region", "track"] as const;
 export type RecordType = (typeof RECORD_TYPES)[number];
 
 // Records and supporting data types

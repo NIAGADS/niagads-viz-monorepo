@@ -1,4 +1,12 @@
-import { AnchoredPageSection } from "@/lib/types";
+import { AnchoredPageSection, RecordType } from "@/lib/types";
+
+const UC_GENERIC_SECTION: AnchoredPageSection = {
+    id: "uc-section",
+    label: "Under Constructure",
+    description: "more annotations coming soon",
+    icon: "chart",
+    underConstruction: true,
+};
 
 const GWAS_ASSOC_SECTION: AnchoredPageSection = {
     id: "gwas-genetic-associations",
@@ -191,10 +199,12 @@ const __VARIANT_RECORD_SECTIONS: AnchoredPageSection[] = [
     // TODO: linkage
 ];
 
-export const RECORD_PAGE_SECTIONS = {
+export const RECORD_PAGE_SECTIONS: Record<RecordType, AnchoredPageSection[]> = {
     gene: __GENE_RECORD_SECTIONS,
     variant: __VARIANT_RECORD_SECTIONS,
+    structural_variant: [UC_GENERIC_SECTION],
     region: __SPAN_RECORD_SECTIONS,
+    track: [UC_GENERIC_SECTION],
 };
 
 // TODO - linkouts
