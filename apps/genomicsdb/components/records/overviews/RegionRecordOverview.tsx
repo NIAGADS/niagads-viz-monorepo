@@ -1,7 +1,7 @@
 import { BaseRecord, RegionRecord } from "@/lib/types";
 import { Card, CardBody, CardHeader, HelpIconWrapper } from "@niagads/ui";
 
-import { ExternalUrls } from "@/lib/reference";
+import { ExternalUrls } from "@/data/reference";
 import { RecordActionToolbar } from "../RecordActionToolbar";
 import RecordSectionUnderConstructionAlert from "../RecordSectionUnderConstructionAlert";
 import { genomicLocationToSpan } from "@/lib/utils";

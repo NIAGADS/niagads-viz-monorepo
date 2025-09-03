@@ -1,7 +1,7 @@
 import { Card, CardBody, CardHeader } from "@niagads/ui";
 import { RecordOverview, renderRecordTitle } from "./RecordOverview";
 
-import { ExternalUrls } from "@/lib/reference";
+import { ExternalUrls } from "@/data/reference";
 import { GeneRecord } from "@/lib/types";
 import { RecordActionToolbar } from "../RecordActionToolbar";
 import { RecordLink } from "../../Link";

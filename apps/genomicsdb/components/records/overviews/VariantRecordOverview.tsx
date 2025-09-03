@@ -2,7 +2,7 @@ import { Badge, Card, CardBody, CardHeader } from "@niagads/ui";
 import { RecordOverview, renderRecordTitle } from "./RecordOverview";
 
 import { BadgeCheck } from "lucide-react";
-import { ExternalUrls } from "@/lib/reference";
+import { ExternalUrls } from "@/data/reference";
 import { MostSevereConsequenceCard } from "./MostSevereConsequenceCard";
 import { RecordActionToolbar } from "../RecordActionToolbar";
 import { RecordLink } from "@/components/Link";
