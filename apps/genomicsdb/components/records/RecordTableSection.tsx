@@ -1,18 +1,15 @@
 "use client";
 
-import { Card } from "@niagads/ui";
-import React, { useState } from "react";
-import { RecordType, TablePagination, TableSection } from "@/lib/types";
-
+import React, { ReactElement, useState } from "react";
+import { TablePagination, TableSection } from "@/lib/types";
 import { APIPagination } from "@niagads/common";
-import RecordTable from "./RecordTable";
 import { Tabs, Tab, TabHeader, TabBody } from "@niagads/ui/client";
 import styles from "./styles/record-table-section.module.css";
+import { RecordTableProps } from "./RecordTable";
 
 interface RecordTableSectionProps {
-    recordId: string;
-    recordType: RecordType;
     tables: TableSection[];
+    children: ReactElement<RecordTableProps>[];
 }
 
 interface TabTitleProps {
@@ -30,29 +27,18 @@ const TabTitle = ({ label, pagination }: TabTitleProps) => {
     );
 };
 
-const RecordTableSection = ({ tables, ...record }: RecordTableSectionProps) => {
+const RecordTableSection = ({ tables, children }: RecordTableSectionProps) => {
     const [pagination, setPagination] = useState<TablePagination>({});
 
-    const handleTableLoad = (id: string) => (pagination: APIPagination) => {
-        setPagination((prev) => ({ ...prev, [id]: pagination }));
-    };
-
     return (
-        <Tabs width="full">
+        <Tabs>
             {tables.map((table) => (
-                <Tab id={table.id}>
+                <Tab key={table.id} id={table.id}>
                     <TabHeader>
-                        <TabTitle key={`tab-label-${table.id}`} label={table.label} pagination={pagination[table.id]} />
+                        <TabTitle label={table.label} pagination={pagination[table.id]} />
                     </TabHeader>
                     <TabBody>
-                        <Card
-                            key={`tab-content-${table.id}`}
-                            variant="full"
-                            outline={false}
-                            style={{ marginBottom: "0px", padding: "0.5rem" }}
-                        >
-                            <RecordTable tableDef={table} {...record} onTableLoad={handleTableLoad(table.id)} />
-                        </Card>
+                        {children.find(x => x.key === table.id)}
                     </TabBody>
                 </Tab>
             ))}

@@ -6,7 +6,6 @@ import { StylingProps } from "../types";
 import styles from "../styles/tabs.module.css";
 
 interface TabsProps extends StylingProps {
-    width: string; // tailwind width class
     children: ReactElement<TabProps>[];
 }
 

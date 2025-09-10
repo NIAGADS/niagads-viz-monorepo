@@ -1,5 +1,5 @@
 import { APIError, APIErrorResponse, APIResponse, backendFetch, isAPIError } from "@niagads/common";
-import { AssociationTraitCategory, AssociationTraitSource, RecordType } from "./types";
+import { APITableResponse, AssociationTraitCategory, AssociationTraitSource, RecordType } from "./types";
 import { getBasePath, getPublicUrl } from "./utils";
 
 import { notFound } from "next/navigation";
@@ -27,9 +27,9 @@ export async function fetchRecord(recordType: RecordType, id: string, brief: boo
     return record;
 }
 
-export async function fetchTable(endpoint: string) {
+export async function fetchTable(endpoint: string): Promise<APITableResponse> {
     const view = endpoint.includes("?") ? "&view=table" : "?view=table";
-    return await _fetch(`${endpoint}${view}`);
+    return await _fetch(`${endpoint}${view}`) as unknown as APITableResponse;
 }
 
 export async function fetchRecordAssociations(
