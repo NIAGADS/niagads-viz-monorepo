@@ -1,19 +1,24 @@
-//@ts-nocheck
-// b/c of https://github.com/storybookjs/storybook/issues/23170 issue w/subcomponets w/children
-import React from "react";
+import { Card, CardBody, CardHeader, FeatureCard } from "@niagads/ui";
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Card, CardHeader, CardBody } from "@niagads/ui";
-import { Default as CardHeaderStory } from "./CardHeader.stories";
 import { Default as CardBodyStory } from "./CardBody.stories";
+import { Default as CardHeaderStory } from "./CardHeader.stories";
+import { Search } from "lucide-react";
 
 const meta: Meta<typeof Card> = {
-    title: "NIAGADS-VIZ/UI/Card",
+    title: "UI/Card",
     component: Card,
     parameters: {
         layout: "centered",
     },
     tags: ["autodocs"],
+    decorators: [
+        (Story) => (
+            <div style={{ maxWidth: "400px" }}>
+                <Story />
+            </div>
+        ),
+    ],
 };
 
 export default meta;
@@ -24,32 +29,52 @@ export const Default: Story = {
     name: "Default Card",
     render: (args) => (
         <Card {...args}>
-            <CardHeader {...CardHeaderStory.args} />
-            <CardBody {...CardBodyStory.args} />
+            <CardBody>{CardBodyStory.args!.children}</CardBody>
         </Card>
     ),
     args: {
-        shadow: true,
-        radius: "md",
+        variant: "full",
+        hover: true,
     },
 };
 
-export const LinkCard: Story = {
+export const PressableCard: Story = {
     ...Default,
-    name: "Pressable Card: Link",
+    name: "Pressable Card",
     args: {
-        shadow: true,
-        radius: "md",
-        href: "#",
+        variant: "full",
+        hover: true,
+        onClick: () => alert("Card clicked!"),
     },
 };
 
-export const ButtonCard: Story = {
-    ...Default,
-    name: "PressableCard: Button",
+export const Feature: Story = {
+    name: "FeatureCard",
+    render: (args) => (
+        <FeatureCard
+            {...args}
+            icon={Search}
+            title="Explore something interesting"
+            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore"
+        />
+    ),
     args: {
-        shadow: true,
-        radius: "md",
-        onClick: (event) => alert("I've been clicked!"),
+        variant: "full",
+        hover: true,
+        onClick: () => alert("Off you go!"),
+    },
+};
+
+export const CardWitHeader: Story = {
+    name: "Default Card With Header",
+    render: (args) => (
+        <Card {...args}>
+            <CardHeader>{CardHeaderStory.args!.children!} </CardHeader>
+            <CardBody>{CardBodyStory.args!.children}</CardBody>
+        </Card>
+    ),
+    args: {
+        variant: "full",
+        hover: false,
     },
 };

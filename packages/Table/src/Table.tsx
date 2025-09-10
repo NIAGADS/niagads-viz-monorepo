@@ -1,40 +1,34 @@
-import React, { useMemo, useState, useLayoutEffect, useEffect, useRef } from "react";
-
+import { Button, Checkbox, RadioButton } from "@niagads/ui";
+import { Cell, GenericCell, getCellValue, renderCell, resolveCell, validateCellType } from "./Cell";
 import {
+    ColumnDef,
+    ColumnFiltersState,
+    HeaderGroup,
+    RowSelectionState,
+    SortingFnOption,
+    SortingState,
+    TableOptions,
+    VisibilityState,
+    createColumnHelper,
     flexRender,
     getCoreRowModel,
-    getPaginationRowModel,
-    useReactTable,
-    SortingState,
-    createColumnHelper,
-    ColumnDef,
-    HeaderGroup,
-    getFilteredRowModel,
     getFacetedRowModel,
     getFacetedUniqueValues,
-    SortingFnOption,
+    getFilteredRowModel,
+    getPaginationRowModel,
     getSortedRowModel,
-    RowSelectionState,
-    VisibilityState,
-    TableOptions,
-    ColumnFiltersState,
+    useReactTable,
 } from "@tanstack/react-table";
-
-import { TrashIcon } from "@heroicons/react/24/outline";
-
+import { GenericColumn, getColumn } from "./Column";
+import { PaginationControls, TableToolbar } from "./ControlElements";
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { TableConfig, TableData, TableRow } from "./TableProperties";
 import { _get, _hasOwnProperty, toTitleCase } from "@niagads/common";
 
-import { Cell, CellType, GenericCell, getCellValue, renderCell, resolveCell, validateCellType } from "./Cell";
-
-import { TableConfig, TableData, TableRow } from "./TableProperties";
-import { GenericColumn, getColumn } from "./Column";
-import { TableColumnHeader } from "./TableColumnHeader";
 import { CustomSortingFunctions } from "./TableSortingFunctions";
-
-import { PaginationControls, TableToolbar } from "./ControlElements";
-
-import { Button, Checkbox, RadioButton } from "@niagads/ui";
-import { Tooltip } from "@niagads/ui/client";
+import { RowSelectionControls } from "./ControlElements/RowSelectionControls";
+import { TableColumnHeader } from "./TableColumnHeader";
+import styles from "./styles/table.module.css";
 
 const __resolveSortingFn = (col: GenericColumn) => {
     if (col.type === "boolean") {
@@ -122,9 +116,10 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
         __setInitialColumnVisibility(options?.defaultColumns, columns)
     );
+    const [showOnlySelected, setShowOnlySelected] = useState(false);
     const initialRender = useRef(true); // to regulate callbacks affected by the initial state
     const enableRowSelect = !!options?.rowSelect;
-    const disableColumnFilters = !!options?.disableColumnFilters;
+    const disableColumnFilters = true; // FIXME- renable after working -- !!options?.disableColumnFilters;
 
     // Translate GenericColumns provided by user into React Table ColumnDefs
     // also adds in checkbox column if rowSelect options are set for the table
@@ -135,31 +130,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
             const multiSelect: boolean = !!options?.rowSelect?.enableMultiRowSelect;
             columnDefs.push({
                 id: "select-col",
-                header: ({ table }) =>
-                    multiSelect ? (
-                        <div className="inline-flex">
-                            <div className="group relative inline-block bottom-[2px]">
-                                <Tooltip anchorId={`${id}-select-col-button}`} content="Reset selected rows">
-                                    <Button
-                                        size="sm"
-                                        variant="primary"
-                                        disabled={
-                                            Object.keys(table.getState().rowSelection).length === 0
-                                            // FIXME: !table.getIsSomeRowsSelected() - not working in next.js
-                                        }
-                                        onClick={() => {
-                                            table.resetRowSelection(true);
-                                        }}
-                                    >
-                                        <TrashIcon className="icon-button"></TrashIcon>
-                                    </Button>
-                                </Tooltip>
-                            </div>
-                            <span className="ml-4">{options?.rowSelect?.header}</span>
-                        </div>
-                    ) : (
-                        options?.rowSelect?.header
-                    ),
+                header: ({ table }) => options?.rowSelect?.header,
                 enableHiding: false,
                 enableSorting: true, // FIXME: enable sorting doesn't seem to work / header.canSort() returns false
                 meta: { description: options?.rowSelect?.description },
@@ -299,6 +270,8 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
 
     const table = useReactTable(reactTableOptions);
 
+    const rowModel = showOnlySelected ? table.getSelectedRowModel() : table.getRowModel();
+
     useLayoutEffect(() => {
         if (options?.onTableLoad) {
             // TODO: if (initialRender.current)  // not sure if necessary - initialRender is a useRef / from GenomicsDB code; has to do w/pre-selected rows
@@ -318,19 +291,36 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
     }, [rowSelection]);
 
     return table ? (
-        <div className="table-container">
-            <div className="flex justify-between items-center">
+        <div className={styles["table-outer-container"]}>
+            <div className={styles["table-controls-container"]}>
                 <TableToolbar table={table} tableId={id} enableExport={!!!options?.disableExport} />
                 <PaginationControls table={table} />
             </div>
-            <div className="overflow-auto">
-                <table className="table-layout table-border table-text">
+            {enableRowSelect && (
+                <div>
+                    <RowSelectionControls
+                        selectedRows={table.getSelectedRowModel().rows}
+                        displayColumn={options.rowSelect?.rowId!} // if row select is enabled, rowId must be defined
+                        onToggleSelectedFilter={() => {
+                            if (showOnlySelected) {
+                                setColumnFilters([]);
+                            }
+                            setShowOnlySelected(!showOnlySelected);
+                        }}
+                        onRemoveAll={() => {
+                            table.resetRowSelection(true);
+                        }}
+                    />
+                </div>
+            )}
+            <div className={styles["table-container"]}>
+                <table className={`${styles["table-layout"]} ${styles["table-border"]} ${styles["table-text"]}`}>
                     {__renderTableHeader(table.getHeaderGroups(), id)}
                     <tbody>
-                        {table.getRowModel().rows.map((row) => (
-                            <tr key={row.id} className="table-dtr">
+                        {rowModel.rows.map((row) => (
+                            <tr key={row.id} className={styles["table-dtr"]}>
                                 {row.getVisibleCells().map((cell) => (
-                                    <td className="table-td" key={`${row.id}-${cell.id}`}>
+                                    <td className={styles["table-td"]} key={`${row.id}-${cell.id}`}>
                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                     </td>
                                 ))}

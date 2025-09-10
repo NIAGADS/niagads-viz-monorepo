@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useId } from "react";
+import { Button, Checkbox, Select } from "@niagads/ui";
+import React, { useEffect, useId, useState } from "react";
+
+import { ActionMenu } from "@niagads/ui/client";
+import { Download } from "lucide-react";
 import { Table as ReactTable } from "@tanstack/react-table";
 import exportFromJSON from "export-from-json";
-import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
-
-import { Button, Checkbox, Select } from "@niagads/ui";
+import styles from "../styles/controls.module.css";
 
 const EXPORT_FILE_FORMATS = Object.keys(exportFromJSON.types).filter((f) => !["css", "html"].includes(f));
 type FileFormat = Exclude<keyof typeof exportFromJSON.types, "css" | "html">;
@@ -66,46 +68,34 @@ export const TableExportControls = ({ isFiltered, onSubmit }: ExportMenuOptions)
     }, [isFiltered]);
 
     return (
-        <div className="relative inline-block text-left dropdown">
-            <Button variant="white">
-                <ArrowDownTrayIcon className="icon-button"></ArrowDownTrayIcon>
-                <span className="ml-2 uppercase">Export</span>
-            </Button>
+        <ActionMenu label={"Export"} icon={Download} buttonColor="primary">
+            <div className={styles["export-control-container"]}>
+                {" "}
+                <form id={formId} onSubmit={handleSubmit} className={styles["export-control-form"]}>
+                    {isFiltered && (
+                        <Checkbox
+                            name="filtered_only"
+                            variant="accent"
+                            value={filteredOnly.toString()}
+                            label="Filtered Rows Only"
+                            checked={filteredOnly}
+                            onChange={() => setFilteredOnly(!filteredOnly)}
+                        ></Checkbox>
+                    )}
 
-            <div className="hidden dropdown-menu">
-                <div
-                    className="z-50 absolute right-0 w-56 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none"
-                    aria-labelledby={`${formId}-headlessui-menu-button}`}
-                    id={`${formId}-headlessui-menu-items`}
-                    role="menu"
-                >
-                    <div className="px-4 py-3">
-                        <form id={formId} onSubmit={handleSubmit}>
-                            {isFiltered && (
-                                <Checkbox
-                                    name="filtered_only"
-                                    variant="accent"
-                                    value={filteredOnly.toString()}
-                                    label="Filtered Rows Only"
-                                    checked={filteredOnly}
-                                    onChange={() => setFilteredOnly(!filteredOnly)}
-                                ></Checkbox>
-                            )}
+                    <Select
+                        id={`${formId}_select_export_format"`}
+                        name="format"
+                        fields={EXPORT_FILE_FORMATS}
+                        label="Format"
+                        inline={true}
+                    ></Select>
 
-                            <Select
-                                id={`${formId}_select_export_format"`}
-                                name="format"
-                                fields={EXPORT_FILE_FORMATS}
-                                label="Export table data as"
-                            ></Select>
-
-                            <div className="mt-2 flex justify-center">
-                                <Button size="md">Export</Button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                    <Button color="primary" className={styles["export-control-button"]}>
+                        Export
+                    </Button>
+                </form>
             </div>
-        </div>
+        </ActionMenu>
     );
 };

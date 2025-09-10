@@ -1,52 +1,89 @@
 import React, { ReactNode } from "react";
-import { _get } from "@niagads/common";
-import { Button } from "./Button";
+
 import { StylingProps } from "./types";
+import styles from "./styles/card.module.css";
 
 interface CardBodyProps {
-    children: ReactNode | string;
+    children: ReactNode;
 }
 
 interface CardHeaderProps {
-    children: ReactNode | string;
+    children: ReactNode;
 }
 
-interface CardProps {
-    shadow?: boolean;
+type CardVariant = "half" | "third" | "two-thirds" | "full";
+
+interface CardProps extends StylingProps {
     href?: string;
     onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void | null;
-    radius?: "none" | "sm" | "md" | "lg" | "xl";
-    children: ReactNode | string;
+    children: ReactNode;
+    variant: CardVariant;
+    hover?: boolean;
+    outline?: boolean;
 }
 
-export const CardBody = ({ children }: CardBodyProps) => {
-    return <div className="ui-card-body">{children}</div>;
-};
-
-export const CardHeader = ({ children }: CardHeaderProps) => {
-    return <h5 className="ui-card-header">{children}</h5>;
-};
+export const CardBody = ({ children }: CardBodyProps) => <div className={styles["card-body"]}>{children}</div>;
+export const CardHeader = ({ children }: CardHeaderProps) => <div className={styles["card-header"]}>{children}</div>;
 
 export const Card = ({
-    shadow = false,
-    radius = "md",
     href,
     onClick,
     children,
     className,
-}: CardProps & StylingProps) => {
-    const cName = `${href || onClick ? "ui-card-link" : "ui-card"} ${shadow ? "shadow-sm" : ""} rounded-${radius} ${className}`;
+    variant = "full",
+    hover = false,
+    outline = true,
+    ...rest /// for things like aria*- and role along w/typing against the React.HTMLAtts...
+}: CardProps & React.HTMLAttributes<HTMLDivElement>) => {
+    const isClickable = href || onClick;
+    const useHoverStyles = hover || isClickable;
+    const classes = [
+        styles.card,
+        styles[`card-${variant}`],
+        isClickable && styles["card-link"],
+        useHoverStyles && styles["with-hover"],
+        outline && styles["with-outline"],
+        className,
+    ]
+        .filter(Boolean)
+        .join(" ");
+
+    const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+        if (href) {
+            window.location.href = href;
+        } else if (onClick) {
+            onClick(event as any);
+        }
+        // else do nothing
+    };
+
     return (
-        <div className={cName}>
-            {href ? (
-                <a href={href}>{children}</a>
-            ) : onClick ? (
-                <Button onClick={onClick} variant="white">
-                    <div className="flex col">{children}</div>
-                </Button>
-            ) : (
-                <div>{children}</div>
-            )}
+        <div className={classes} onClick={isClickable ? handleClick : undefined} {...rest}>
+            {children}
         </div>
+    );
+};
+
+interface FeatureCardProps extends Omit<CardProps, "children">, StylingProps {
+    icon: React.ElementType;
+    title: string;
+    description: string;
+}
+
+// note: this assumes the `icon` is a lucide-react icon
+export const FeatureCard = ({
+    icon,
+    title,
+    description,
+    className,
+    ...cardProps
+}: FeatureCardProps & React.HTMLAttributes<HTMLDivElement>) => {
+    const Icon = icon;
+    return (
+        <Card {...cardProps} className={[className, styles["feature-card"]].filter(Boolean).join(" ")}>
+            <Icon className={styles["feature-icon"]} size={48} />
+            <h3 className={styles["feature-title"]}>{title}</h3>
+            <p className={styles["feature-description"]}>{description}</p>
+        </Card>
     );
 };

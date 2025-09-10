@@ -1,6 +1,6 @@
+import { Navigation, NavigationConfig } from "../Navigation";
 import React, { ReactNode } from "react";
 
-import { Navigation, NavigationConfig } from "../Navigation";
 import { LayoutProps } from "./types";
 import { ThemeVariant } from "../types";
 import { isNavigationConfig } from "./utils";

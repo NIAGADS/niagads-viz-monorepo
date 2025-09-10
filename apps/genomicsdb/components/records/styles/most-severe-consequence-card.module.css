@@ -1,0 +1,82 @@
+.subtext {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    margin-top: 0.1rem;
+}
+
+.badge {
+    padding: 0.25rem 0.6rem !important;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: var(--border-radius-sm);
+    margin-bottom: 0.5rem;
+}
+
+.consequence {
+    background-color: #dbeafe;
+    color: #1e40af;
+    margin-top: 0.25rem;
+}
+
+.infoGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+    font-size: 0.9rem;
+    color: #374151;
+}
+
+.label {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-bottom: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.monospace {
+    font-family: monospace;
+    color: #4f46e5;
+    font-size: 0.9rem;
+}
+
+.coding {
+    color: #15803d;
+    font-weight: 500;
+}
+
+.codonChange {
+    font-family: monospace;
+    background-color: #f3f4f6;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    display: inline-block;
+}
+
+.fullWidth {
+    grid-column: span 2;
+}
+
+.italic {
+    font-style: italic;
+    color: #6b7280;
+}
+
+.high {
+    background-color: #fee2e2 !important;
+    color: #991b1b;
+}
+
+.low {
+    background-color: #e0f2fe !important;
+    color: #0369a1;
+}
+
+.modifier {
+    background-color: #e5e7eb !important;
+    color: #6b7280;
+}
+
+.moderate {
+    background-color: #fef9c3 !important;
+    color: #92400e;
+}

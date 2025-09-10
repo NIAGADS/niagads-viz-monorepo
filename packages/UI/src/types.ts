@@ -1,14 +1,8 @@
-export type ThemeVariant = "secondary" | "light" | "dark" | "accent";
-
 export interface StylingProps {
-    colorVariant?: "primary" | "secondary" | "accent" | "default" | "transparent";
-    size?: "sm" | "md" | "lg";
     className?: string;
+    style?: React.CSSProperties;
+    id?: string;
 }
 
-export interface AriaProps {
-    role?: string;
-    ariaLabel?: string;
-    ariaLabeledBy?: string;
-    ariaDescribedBy?: string;
-}
+// legacy for layout & nav
+export type ThemeVariant = "secondary" | "light" | "dark" | "accent";

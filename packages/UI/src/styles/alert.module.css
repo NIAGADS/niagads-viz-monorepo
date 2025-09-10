@@ -1,0 +1,57 @@
+/* Renamed from alert.css for CSS Modules */
+.alert {
+    display: flex;
+    padding: 1rem;
+    font-size: 0.875rem;
+    border-radius: 0.5rem;
+    flex-direction: column;
+    box-shadow: var(--shadow-md);
+    font-family:
+        "Inter", "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana,
+        sans-serif;
+}
+
+.alert.info {
+    color: var(--dark-blue);
+    border: 1px solid var(--dark-blue);
+    background-color: #eef3f7;
+}
+
+.alert.warning {
+    color: var(--warning-amber);
+    border: 1px solid var(--warning-amber);
+    background-color: #fef3e6;
+}
+
+.alert.error {
+    color: var(--error-red);
+    border: 1px solid var(--error-red);
+    background-color: #fef2f2;
+}
+
+.alert.success {
+    color: var(--success-green);
+    border: 1px solid var(--success-green);
+    background-color: #f5fffc;
+}
+
+.alert-sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.alert-message {
+    font-weight: 700;
+    /* font-size: 1.1rem;*/
+}
+
+.alert-content {
+    margin-top: 1rem;
+}

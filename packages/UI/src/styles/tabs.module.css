@@ -1,0 +1,56 @@
+/* Renamed from tabs.css for CSS Modules */
+
+.tab-container {
+    display: flex;
+    /*border-bottom: 1px solid var(--border);*/
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    gap: 0.25rem;
+    font-family:
+        "Inter", "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana,
+        sans-serif;
+}
+
+.tab-item {
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+    font-weight: 500;
+    color: var(--text-secondary);
+    border: none;
+    border-bottom: 2px solid transparent;
+
+    /* font-size: 0.875rem; */
+
+    background: transparent;
+    border-radius: var(--border-radius, 0.375rem) var(--border-radius, 0.375rem) 0 0;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    min-width: fit-content;
+}
+
+.tab-item:hover {
+    background-color: var(--hover-bg);
+    color: var(--text-primary);
+}
+
+.tab-item.active {
+    border-bottom-color: var(--primary-blue);
+    color: var(--primary-blue);
+    background-color: var(--active-bg);
+}
+
+@media (max-width: 768px) {
+    .tab-container {
+        gap: 0.125rem;
+    }
+
+    .tab-item {
+        padding: 0.5rem 0.75rem;
+        /*font-size: 0.8rem; */
+    }
+}

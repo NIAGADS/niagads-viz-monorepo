@@ -1,2 +1,4 @@
+# to avoid changing indentation
 **/*.yaml
 **/*.yml
+**/*.md

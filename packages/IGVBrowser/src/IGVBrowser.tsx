@@ -1,30 +1,27 @@
-"use client";
-
 // TODO: streaming w/Suspense and fallback instead
 
-import React, { useLayoutEffect, useMemo, useState, useEffect, useRef, useCallback } from "react";
-import igv from "igv/dist/igv.esm";
-import noop from "lodash.noop";
-import find from "lodash.find";
-import { VariantPValueTrack, VariantServiceTrack as VariantTrack, trackPopover } from "./tracks";
-import { _genomes } from "./common/_igvGenomes";
+import { BrowserChangeEvent, QueryParams, ReferenceFrame } from "./types/browser";
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Session, TrackBaseOptions } from "./types/tracks";
+import { VariantPValueTrack, VariantServiceTrack as VariantTrack, trackPopover } from "./tracks";
 import {
-    loadTracks,
-    downloadObjectAsJson,
-    getLoadedTracks,
-    removeTracks,
+    addDefaultFlank,
     cleanTracks,
     convertStringToTrackNames,
-    selectTracksFromURLParams,
-    addDefaultFlank,
     createROIFromLocusRange,
+    downloadObjectAsJson,
+    getLoadedTracks,
+    loadTracks,
+    removeTracks,
+    selectTracksFromURLParams,
 } from "./utils";
 
-import { useSessionStorage } from "usehooks-ts";
-import { BrowserChangeEvent, QueryParams, ReferenceFrame } from "./types/browser";
-
 import { DEFAULT_FLANK } from "./common/_constants";
+import { _genomes } from "./common/_igvGenomes";
+import find from "lodash.find";
+import igv from "igv/dist/igv.esm";
+import noop from "lodash.noop";
+import { useSessionStorage } from "usehooks-ts";
 
 interface IGVBrowserProps {
     featureSearchUrl: string;

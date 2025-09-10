@@ -1,5 +1,5 @@
 module.exports = {
     plugins: {
-        "@tailwindcss/postcss": {},
+        "postcss-import": {}, // Ensures nested @import rules are processed
     },
 };

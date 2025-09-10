@@ -1,0 +1,147 @@
+/* Hero Section */
+.heroSection {
+    background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+    padding: 4rem 2rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.heroTitle {
+    font-size: 3rem;
+    font-weight: 700;
+    max-width: 800px;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    line-height: 1.1;
+}
+
+.heroSubtitle {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    max-width: 800px;
+}
+
+.heroSearch {
+    max-width: 800px;
+    margin-bottom: 2rem;
+}
+
+.heroSearch .searchInput {
+    padding: 1rem 1rem 1rem 3rem;
+    font-size: 1rem;
+    border-radius: var(--border-radius-lg);
+}
+
+.heroSearch .searchIcon {
+    left: 1rem;
+    width: 20px;
+    height: 20px;
+}
+
+.heroButtons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+/* Feature Grid */
+.featureGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+}
+
+.featureCard {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius-lg);
+    padding: 2rem;
+    text-align: center;
+    transition: all var(--transition-fast);
+}
+
+.featureCard:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.featureIcon {
+    width: 48px;
+    height: 48px;
+    color: var(--primary-blue);
+    margin: 0 auto 1rem;
+}
+
+.featureTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.featureDescription {
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* Stats Section */
+.statsSection {
+    background-color: var(--gray-50);
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+.mainStatNumber {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--blue);
+    margin: 1.5rem 1rem 0.5rem;
+}
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.statItem {
+    padding: 1rem;
+}
+
+.statNumber {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-blue);
+    margin-bottom: 0.5rem;
+}
+
+.statLabel {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .heroTitle {
+        font-size: 2rem;
+    }
+
+    .heroSubtitle {
+        font-size: 1rem;
+    }
+
+    .heroButtons {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .heroSection {
+        padding: 2rem 1rem;
+    }
+}

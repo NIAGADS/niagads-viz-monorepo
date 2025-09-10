@@ -1,0 +1,8 @@
+@import "@niagads/common/assets/styles/theme.css";
+
+@import "../styles/theme.css";
+@import "../styles/layout.css";
+@import "../styles/utility.css";
+@import "../styles/error-page.css";
+@import "../styles/other.css";
+@import "../styles/responsive-design.css";

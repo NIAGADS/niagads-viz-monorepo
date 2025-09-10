@@ -1,10 +1,10 @@
-import React, { useState, useMemo } from "react";
+import { Button, Select } from "@niagads/ui";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import React, { useMemo, useState } from "react";
 
 import { Table as ReactTable } from "@tanstack/react-table";
 import range from "lodash.range";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
-
-import { Select, Button } from "@niagads/ui";
+import styles from "../styles/controls.module.css";
 
 interface PaginationControlsProps {
     table: ReactTable<any>;
@@ -13,17 +13,17 @@ interface PaginationControlsProps {
 const __generatePageSizeOptions = (nRows: number) => {
     const nearestTenth = Math.ceil(nRows / 10) * 10;
 
-    if (nearestTenth >= 500) return [10, 20, 30, 40, 50, 100, 500];
-    else if (nearestTenth >= 100) return [10, 20, 30, 40, 50, 100];
-    else if (nearestTenth >= 50)
-        return [10, 20, 30, 40, 50, nRows]; // range is up to but not including end
+    let intervals = [nRows];
+    if (nearestTenth >= 500) intervals = [10, 20, 30, 40, 50, 100, 500];
+    else if (nearestTenth >= 100) intervals = [10, 20, 30, 40, 50, 100];
+    else if (nearestTenth >= 50) intervals = [10, 20, 30, 40, 50, nRows];
     else if (nearestTenth >= 10 && nRows >= 10) {
         const options = range(10, nearestTenth + 10, 10);
         options.push(nRows);
-        return options;
+        intervals = options;
     }
 
-    return [nRows];
+    return intervals.filter((v, i, a) => a.indexOf(v) === i);
 };
 
 export const PaginationControls = ({ table }: PaginationControlsProps) => {
@@ -42,7 +42,7 @@ export const PaginationControls = ({ table }: PaginationControlsProps) => {
 
     return (
         <>
-            <div className="flex flex-row gap-4" aria-label="pagination">
+            <div className={styles["pagination-control-container"]} aria-label="pagination">
                 <Select
                     defaultValue={pageSize.toString()}
                     fields={pageSizeOptions}
@@ -52,20 +52,26 @@ export const PaginationControls = ({ table }: PaginationControlsProps) => {
                     label="Results per page"
                     id="pages"
                     inline
-                    variant="plain"
+                    variant="outline"
                 />
-                <div className="self-center text-sm text-gray-900 px-2">
+                <div className={styles["pagination-control-summary"]}>
                     {minDisplayedRow} - {maxDisplayedRow} of {nRows}
                 </div>
-                <Button variant="white" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
-                    <ChevronLeftIcon
-                        className={`icon-button stroke-1 ${!table.getCanPreviousPage() ? "icon-disabled" : "stroke-black"}`}
-                    ></ChevronLeftIcon>
+                <Button
+                    color="default"
+                    variant="icon"
+                    onClick={() => table.previousPage()}
+                    disabled={!table.getCanPreviousPage()}
+                >
+                    <ChevronLeft></ChevronLeft>
                 </Button>
-                <Button variant="white" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-                    <ChevronRightIcon
-                        className={`icon-button stroke-1 ${!table.getCanNextPage() ? "icon-disabled" : "stroke-black"}`}
-                    ></ChevronRightIcon>
+                <Button
+                    color="default"
+                    variant="icon"
+                    onClick={() => table.nextPage()}
+                    disabled={!table.getCanNextPage()}
+                >
+                    <ChevronRight></ChevronRight>
                 </Button>
             </div>
         </>

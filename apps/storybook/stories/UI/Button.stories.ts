@@ -3,22 +3,41 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "@niagads/ui";
 
 const meta: Meta<typeof Button> = {
-    title: "NIAGADS-VIZ/UI/Button",
+    title: "UI/Button",
     component: Button,
     parameters: {
         layout: "centered",
     },
     tags: ["autodocs"],
+    argTypes: {
+        variant: {
+            control: { type: "radio" },
+            options: ["default", "icon"],
+            description: "Button style variant",
+        },
+        color: {
+            control: { type: "radio" },
+            options: ["default", "primary", "white"],
+            description: "Button color style variant",
+        },
+        children: { control: "text", description: "Button label or content" },
+        disabled: { control: "boolean", description: "Disable the button" },
+        onClick: { action: "clicked", description: "Click handler" },
+        className: { control: false },
+    },
+    args: {
+        variant: "default",
+        children: "Example Button",
+        disabled: false,
+        className: "",
+    },
 };
 
 export default meta;
 type Story = StoryObj<typeof Button>;
 
-export const Default: Story = {
+export const Playground: Story = {
     args: {
-        variant: "primary",
-        size: "md",
-        children: "Example Button",
-        //onClick: (event) => alert("I've been clicked!")
+        // All controls are set in meta.args
     },
 };

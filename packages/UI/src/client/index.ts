@@ -1,6 +1,7 @@
 import "../styles/global.css";
-export * from "./Dropdown";
-export * from "./HelpIcon";
-export * from "./Tooltip";
+
+export * from "./Autocomplete";
+export * from "./ActionMenu";
+export * from "./TooltipClient";
 export * from "./Tabs";
 export * from "./Slider";

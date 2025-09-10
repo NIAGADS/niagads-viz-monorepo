@@ -1,0 +1,29 @@
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--border-radius-lg);
+    background-color: var(--surface);
+    border-color: var(--dark-blue);
+    font-size: 0.875rem;
+    font-weight: 500;
+    gap: 0.5rem;
+    border: 1px solid;
+    flex: 0 0 auto;
+    white-space: nowrap;
+    width: fit-content;
+}
+
+.badge.pill {
+    border-radius: 20px;
+}
+
+.icon {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+}
+
+.text {
+    display: inline;
+}

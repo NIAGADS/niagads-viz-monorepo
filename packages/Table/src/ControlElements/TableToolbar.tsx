@@ -1,12 +1,12 @@
-import React, { useMemo, useCallback } from "react";
-
-import { Column as ReactTableColumn, Table as ReactTable } from "@tanstack/react-table";
-
-import { TextInput } from "@niagads/ui";
-import { TableRow } from "../TableProperties";
+import { ButtonGroup, TextInput } from "@niagads/ui";
+import React, { useCallback, useMemo } from "react";
+import { Table as ReactTable, Column as ReactTableColumn } from "@tanstack/react-table";
 import { TableExportControls, exportTable } from "./TableExportControls";
-import { _get } from "@niagads/common";
+
 import { ColumnControls } from "./ColumnControls";
+import { TableRow } from "../TableProperties";
+import { _get } from "@niagads/common";
+import styles from "../styles/controls.module.css";
 
 interface ToolbarProps {
     table: ReactTable<TableRow>;
@@ -32,12 +32,14 @@ export const TableToolbar = ({ table, tableId, enableExport }: ToolbarProps) => 
     }, []);
 
     return (
-        <div className="relative flex justify-end gap-2 m-2">
+        <div className={styles["table-toolbar-container"]}>
             <TextInput value={table.getState().globalFilter} onChange={(val) => table.setGlobalFilter(val)} />
-            {canToggleColumns && (
-                <ColumnControls columns={table.getAllLeafColumns()} onSelect={() => console.log("selected")} />
-            )}
-            {enableExport && <TableExportControls onSubmit={handleTableExport} isFiltered={tableIsFiltered} />}
+            <ButtonGroup>
+                {canToggleColumns && (
+                    <ColumnControls columns={table.getAllLeafColumns()} onSelect={() => console.log("selected")} />
+                )}
+                {enableExport && <TableExportControls onSubmit={handleTableExport} isFiltered={tableIsFiltered} />}
+            </ButtonGroup>
         </div>
     );
 };

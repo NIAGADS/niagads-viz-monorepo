@@ -1,11 +1,11 @@
-import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
-import typescript from "@rollup/plugin-typescript";
-import terser from "@rollup/plugin-terser"; // generate minified bundle
+import del from "rollup-plugin-delete";
+import { dts } from "rollup-plugin-dts";
 import external from "rollup-plugin-peer-deps-external";
 import postcss from "rollup-plugin-postcss";
-import { dts } from "rollup-plugin-dts";
-import del from "rollup-plugin-delete";
+import resolve from "@rollup/plugin-node-resolve";
+import terser from "@rollup/plugin-terser"; // generate minified bundle
+import typescript from "@rollup/plugin-typescript";
 
 export default [
     {
@@ -30,11 +30,11 @@ export default [
                 config: {
                     path: "./postcss.config.js",
                 },
-                extract: "niagads-table.css",
+                extract: false, // Inline CSS Modules as JS, do not extract CSS file
                 extensions: [".css"],
                 minimize: false, // when minimized not all the tailwind classes get exported
                 sourceMap: true,
-                modules: false,
+                modules: true, // Enable CSS Modules
             }),
             {
                 name: "Custom Rollup Plugin`",

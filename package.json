@@ -5,9 +5,15 @@
     "scripts": {
         "watch": "npx lerna watch -- lerna run build --scope=\\$LERNA_PACKAGE_NAME",
         "storybook": "concurrently \"npm run watch\" \"npx lerna run storybook\"",
-        "open-access-api-client": "concurrently \"npm run watch\" \"npx lerna run open-access-api-client\"",
+        "genomicsdb": "concurrently \"npm run watch\" \"npx lerna run genomicsdb\"",
+        "genomicsdb-debug": "concurrently \"npm run watch\" \"npx lerna run genomicsdb-debug\"",
+        "genomicsdb-prod": "npx lerna run genomicsdb-prod",
+        "genomicsdb-build": "npx lerna run genomicsdb-build",
         "lint": "npx prettier . --write",
-        "build": "npx lerna run build --concurrency 1"
+        "clean-dist": "find . -name 'dist' -type d -prune -exec rm -rf '{}' +",
+        "clean-node-modules": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +",
+        "build": "npx lerna run build --concurrency 1",
+        "build-fresh": "npm run clean-dist && npm run build"
     },
     "workspaces": [
         "packages/Common",
@@ -15,9 +21,10 @@
         "packages/IGVBrowser",
         "packages/LocusZoom",
         "packages/Table",
+        "packages/Charts",
         "packages/UI",
         "apps/storybook",
-        "apps/open-access-api-client"
+        "apps/genomicsdb"
     ],
     "devDependencies": {
         "concurrently": "^9.1.2",
