@@ -1,10 +1,10 @@
-import { Suspense } from "react";
-import { Skeleton } from "@niagads/ui";
+import { fetchCollectionMetadata, fetchTrackConfiguration, fetchTrackSelector } from "@/utils/fetch";
 
 import { Collection } from "@/common/types";
-import { fetchCollectionMetadata, fetchTrackConfiguration, fetchTrackSelector } from "@/utils/fetch";
+import { IGVBrowserWithSelector } from "@/components/IGVBrowserWithSelector";
+import { Skeleton } from "@niagads/ui";
+import { Suspense } from "react";
 import { parseCollectionList } from "@/utils/utils";
-import { IGVBrowserWithSelector } from "@/components/IGVBrowser/IGVBrowserWithSelector";
 
 export default async function Page() {
     const collections: Collection[] = parseCollectionList(process.env.NEXT_PUBLIC_TRACK_COLLECTIONS!);

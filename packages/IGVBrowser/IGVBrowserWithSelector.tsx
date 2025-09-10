@@ -1,22 +1,19 @@
-"use client";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import dynamic from "next/dynamic";
+// FIXME: see igvmicorservice @/config about the reference track config and add
+// to DataProps to be passed to the component as these are application specific
 
-import { TableProps } from "@niagads/table";
-import { TabDef, Tabs } from "@niagads/ui/client";
-import { Skeleton } from "@niagads/ui";
+// FIXME: switch to updated UI/Tabs implementation
 
-import { Collection, CollectionMetadata } from "@/common/types";
+// FIXME: remove tailwind class and switch to css.modules
+
+import { Collection, CollectionMetadata, IGVBrowserTrack } from "./types/data_models";
 import { FEATURE_SEARCH_ENDPOINT, GENOME, VariantReferenceTrack } from "@/config/reference.track.config";
+import { TabDef, Tabs } from "@niagads/ui/client";
+import { getLoadedTracks, getTrackConfig, loadTracks, removeTrackById } from "./tracks/utils";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
-import IGVBrowserTrack from "./tracks/IGVBrowserTrack";
+import { MemoIGVBrowser as GenomeBrowser } from "./IGVBrowser";
+import { TableProps } from "@niagads/table";
 import { TrackSelectorTable } from "./TrackSelectorTable";
-import { getLoadedTracks, loadTracks, removeTrackById, getTrackConfig } from "./tracks/utils";
-
-const GenomeBrowser = dynamic(() => import("@/components/IGVBrowser/IGVBrowser").then((mod) => mod.MemoIGVBrowser), {
-    ssr: false,
-});
 
 interface DataProps {
     metadata: CollectionMetadata;

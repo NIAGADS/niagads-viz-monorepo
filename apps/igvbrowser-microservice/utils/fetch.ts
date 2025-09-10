@@ -1,8 +1,8 @@
-import { cache } from "react";
 import { Collection, CollectionMetadata, RESPONSE_TYPE } from "@/common/types";
-import IGVBrowserTrack from "@/components/IGVBrowser/tracks/IGVBrowserTrack";
-import { TableProps } from "@niagads/table";
 
+import { IGVBrowserTrack } from "@/niagads/igv/types/data_models";
+import { TableProps } from "@niagads/table";
+import { cache } from "react";
 
 const fetchCollection = cache(async (collection: Collection, responseType: RESPONSE_TYPE) => {
     const requestUrl =

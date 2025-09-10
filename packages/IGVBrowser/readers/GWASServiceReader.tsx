@@ -1,4 +1,4 @@
-import igv from "igv/dist/igv.esm";
+const { default: igv } = await import("igv/dist/igv.esm");
 
 interface GWASServiceResponse {
     record_pk: string;

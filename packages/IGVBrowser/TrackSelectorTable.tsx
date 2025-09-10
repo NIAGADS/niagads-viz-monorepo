@@ -1,8 +1,11 @@
-"use client";
+// TODO: typing for handleRowSelect
+// TODO: ensure handleRowSelect is not null -> raise error for developer if it is
+
+import "@niagads/table/css";
+
 import { useEffect, useState } from "react";
 
 import Table from "@niagads/table";
-import "@niagads/table/css";
 
 export type RowSelectionState = Record<string, boolean>;
 
@@ -27,7 +30,9 @@ export function TrackSelectorTable({ table, handleRowSelect }: WrapperProps) {
         setSelectedRows(rows);
     };
 
+    // FIXME: did we disable column filters in the table component? if so, remove this
     table.options && (table.options.disableColumnFilters = true);
+
     Object.assign(table.options!.rowSelect!, { onRowSelect: onRowSelect });
     // ideally, you shouldn't end up here unless the table has rowSelect options
     // which is why I'm assuming options.rowSelect is not null

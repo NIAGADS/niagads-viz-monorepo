@@ -1,9 +1,6 @@
-"use client";
-
-import get from "lodash.get"; // FIXME: deprecated
 import { ALWAYS_ON_TRACKS } from "../config/_constants";
-import IGVBrowserTrack from "./IGVBrowserTrack";
-import { config } from "process";
+import { IGVBrowserTrack } from "../types/data_models";
+import get from "lodash.get"; // FIXME: deprecated
 
 export const getTrackConfig = (trackIds: string[], config: IGVBrowserTrack[]) =>
     config.filter((c) => trackIds.includes(c.id));

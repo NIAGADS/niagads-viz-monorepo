@@ -1,18 +1,15 @@
-"use client";
+// TODO: fix loading fallback handling; it is incorrect
 
-import React, { useLayoutEffect, useMemo, useState, useEffect, useRef, Suspense } from "react";
-
-import noop from "lodash.noop";
-import find from "lodash.find";
-
-import IGVBrowserTrack from "./tracks/IGVBrowserTrack";
-import { trackPopover } from "./tracks/feature_popovers";
-
-import { loadTracks, getLoadedTracks, removeTrackById } from "./tracks/utils";
+import React, { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { getLoadedTracks, loadTracks, removeTrackById } from "./tracks/utils";
 
 import { DEFAULT_FLANK } from "./config/_constants";
-import { _genomes } from "./config/_igvGenomes";
+import { IGVBrowserTrack } from "./types/data_models";
 import { Skeleton } from "@niagads/ui";
+import { _genomes } from "./config/_igvGenomes";
+import find from "lodash.find";
+import noop from "lodash.noop";
+import { trackPopover } from "./tracks/feature_popovers";
 
 export interface IGVBrowserProps {
     genome: string;
@@ -135,5 +132,6 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
     );
 };
 
+// FIXME: which one should be default?
 export const MemoIGVBrowser = React.memo(IGVBrowser);
 export default IGVBrowser;
