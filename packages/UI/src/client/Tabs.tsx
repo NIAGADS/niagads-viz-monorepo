@@ -1,7 +1,6 @@
-import React, { ReactElement, ReactNode, Suspense, useEffect, useId, useState } from "react";
+import React, { ReactElement, ReactNode, useEffect, useId, useState } from "react";
 import { Card } from "../Card";
 import { HelpIconWrapper } from "../HelpIcon";
-import { LoadingSpinner } from "../LoadingSpinner";
 import { StylingProps } from "../types";
 import styles from "../styles/tabs.module.css";
 
@@ -11,14 +10,7 @@ interface TabsProps extends StylingProps {
 
 export const Tabs = ({ children }: TabsProps) => {
     const [selectedId, setSelectedId] = useState<string | null>(children[0].props.id);
-    const [activeTab, setActiveTab] = useState<ReactElement<TabProps>>(children[0]);
-
     const tabsId = useId();
-
-    const onTabSelect = (tabId: string) => {
-        setSelectedId(tabId);
-        setActiveTab(children.find(tab => tab.props.id === tabId)!)
-    };
 
     return (
         <>
@@ -28,7 +20,7 @@ export const Tabs = ({ children }: TabsProps) => {
                         key={`button-${tab.props.id}`}
                         id={tab.props.id}
                         isActive={tab.props.id === selectedId}
-                        onClick={onTabSelect}
+                        onClick={(id) => setSelectedId(id)}
                     >
                         {tab.props.children.find(child => child.type === TabHeader)}
                     </TabButton>
@@ -36,9 +28,18 @@ export const Tabs = ({ children }: TabsProps) => {
             </div>
 
             <Card variant="full" hover={false} role="tabpanel">
-                <Suspense fallback={<LoadingSpinner message="Loading..." />}>
-                    {activeTab?.props.children.find(child => child.type === TabBody)}
-                </Suspense>
+                {children.map(tab => {
+                    const isActive = tab.props.id === selectedId;
+                    return (
+                        <div
+                            key={tab.props.id}
+                            style={{ display: isActive ? "block" : "none" }}
+                            aria-hidden={!isActive}
+                        >
+                            {tab.props.children.find(child => child.type === TabBody)}
+                        </div>
+                    );
+                })}
             </Card>
         </>
     );
@@ -48,7 +49,7 @@ type TabButtonProps = {
     id: string;
     info?: string;
     isActive: boolean;
-    onClick: any;
+    onClick: (id: string) => void;
     children: ReactNode
 };
 
