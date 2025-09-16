@@ -1,15 +1,16 @@
 "use client";
 
-import React, { ReactElement, useState } from "react";
+import React, { useState } from "react";
 import { TablePagination, TableSection } from "@/lib/types";
 import { APIPagination } from "@niagads/common";
 import { Tabs, Tab, TabHeader, TabBody } from "@niagads/ui/client";
 import styles from "./styles/record-table-section.module.css";
-import { RecordTableProps } from "./RecordTable";
+import RecordTable from "./RecordTable";
 
 interface RecordTableSectionProps {
     tables: TableSection[];
-    children: ReactElement<RecordTableProps>[];
+    recordId: string;
+    recordType: string;
 }
 
 interface TabTitleProps {
@@ -23,11 +24,11 @@ const TabTitle = ({ label, pagination }: TabTitleProps) => {
             {label} <span className={styles.badge}>{pagination.total_num_records}</span>
         </div>
     ) : (
-        label
+        label 
     );
 };
 
-const RecordTableSection = ({ tables, children }: RecordTableSectionProps) => {
+const RecordTableSection = ({ tables, recordId, recordType }: RecordTableSectionProps) => {
     const [pagination, setPagination] = useState<TablePagination>({});
 
     return (
@@ -38,7 +39,12 @@ const RecordTableSection = ({ tables, children }: RecordTableSectionProps) => {
                         <TabTitle label={table.label} pagination={pagination[table.id]} />
                     </TabHeader>
                     <TabBody>
-                        {children.find(x => x.key === table.id)}
+                        <RecordTable
+                            tableDef={table}
+                            recordId={recordId}
+                            recordType={recordType}
+                            onTableLoad={(p) => setPagination(prev => ({...prev, [table.id]: p}))}
+                        />
                     </TabBody>
                 </Tab>
             ))}

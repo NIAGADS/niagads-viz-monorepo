@@ -1,29 +1,64 @@
-"use server";
+import { APITableResponse, TableSection } from "@/lib/types";
+import { prefixClientRoute } from "@/lib/utils";
 
-import { APIPagination } from "@niagads/common";
-import { RecordType, TableSection } from "@/lib/types";
-
-import { _fetch, fetchTable } from "@/lib/route-handlers";
-import { ReactNode } from "react";
+import { LoadingSpinner } from "@niagads/ui";
+import PaginationMessage from "../PaginationMessage";
 import TableWrapper from "../TableWrapper";
+import { useEffect } from "react";
+import useSWR from "swr";
+import { APIPagination } from "@niagads/common";
 
 export interface RecordTableProps {
-    recordType: RecordType;
-    recordId: string;
     tableDef: TableSection;
+    recordType: string;
+    recordId: string;
     onTableLoad?: (pagination: APIPagination) => void;
-    children?: ReactNode;
 }
 
-const RecordTable = async ({tableDef, recordType, recordId }: RecordTableProps) => {
-    const data = await fetchTable(`/record/${recordType}/${recordId}/${tableDef.endpoint}`);
+const buildTableEndpoint = (endpoint: string) => {
+    const view = endpoint.includes("?") ? "&view=table" : "?view=table";
+    return `/api/record/${endpoint}${view}`;
+}
+
+const RecordTable = ({ tableDef, recordType, recordId, onTableLoad, }: RecordTableProps) => {
+    const { data, error, isLoading } = useSWR(
+        buildTableEndpoint(`${recordType}/${recordId}/${tableDef.endpoint}`),
+        (url: string) => fetch(url).then((res) => res.json())
+    );
+
+    // Call onTableLoad when data is loaded and valid to return the result size
+    // to the parent
+    useEffect(() => {
+        if (onTableLoad && data && !isLoading) {
+            onTableLoad((data as APITableResponse).pagination);
+        }
+    }, [isLoading, data]);
+
+    if (isLoading) return <LoadingSpinner />;
+
+    if ((data as APITableResponse).pagination.total_num_pages > 1)
+        return (
+            <>
+                <PaginationMessage
+                    pagination={(data as APITableResponse).pagination}
+                    endpoint={`/record/${recordType}/${recordId}${tableDef.endpoint}`}
+                />
+                <TableWrapper
+                    id={tableDef.id}
+                    columns={(data as APITableResponse).table.columns}
+                    data={(data as APITableResponse).table.data}
+                />
+            </>
+        );
+
     return (
-        <TableWrapper 
-            id={data.table.id}
-            data={data.table.data}
-            columns={data.table.columns}
+        <TableWrapper
+            id={tableDef.id}
+            columns={(data as APITableResponse).table.columns}
+            data={(data as APITableResponse).table.data}
         />
-    )
-};
+    );
+}
 
 export default RecordTable;
+
