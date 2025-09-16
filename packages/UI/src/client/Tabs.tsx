@@ -22,13 +22,13 @@ export const Tabs = ({ children }: TabsProps) => {
                         isActive={tab.props.id === selectedId}
                         onClick={(id) => setSelectedId(id)}
                     >
-                        {tab.props.children.find(child => child.type === TabHeader)}
+                        {tab.props.children.find((child) => child.type === TabHeader)}
                     </TabButton>
                 ))}
             </div>
 
             <Card variant="full" hover={false} role="tabpanel">
-                {children.map(tab => {
+                {children.map((tab) => {
                     const isActive = tab.props.id === selectedId;
                     return (
                         <div
@@ -36,7 +36,7 @@ export const Tabs = ({ children }: TabsProps) => {
                             style={{ display: isActive ? "block" : "none" }}
                             aria-hidden={!isActive}
                         >
-                            {tab.props.children.find(child => child.type === TabBody)}
+                            {tab.props.children.find((child) => child.type === TabBody)}
                         </div>
                     );
                 })}
@@ -50,7 +50,7 @@ type TabButtonProps = {
     info?: string;
     isActive: boolean;
     onClick: (id: string) => void;
-    children: ReactNode
+    children: ReactNode;
 };
 
 const TabButton = ({ id, info, isActive, onClick, children }: TabButtonProps) => {
@@ -90,35 +90,23 @@ interface TabHeaderProps {
     children: ReactNode;
 }
 
-export const TabBody = ({children}: TabBodyProps) => {
-    return (
-        <div>
-            {children}
-        </div>
-    )
-}
+export const TabBody = ({ children }: TabBodyProps) => {
+    return <div>{children}</div>;
+};
 
 interface TabBodyProps {
     children: ReactNode;
 }
 
-export const TabHeader = ({children}: TabHeaderProps) => {
-    return (
-        <div>
-            {children}
-        </div>
-    )
-}
+export const TabHeader = ({ children }: TabHeaderProps) => {
+    return <div>{children}</div>;
+};
 
 interface TabProps {
     id: string;
     children: ReactElement<TabBodyProps | TabButtonProps>[];
 }
 
-export const Tab =({children}: TabProps) => {
-    return (
-        <div>
-            {children}
-        </div>
-    )
-}
+export const Tab = ({ children }: TabProps) => {
+    return <div>{children}</div>;
+};

@@ -15,15 +15,9 @@ export interface RecordTableProps {
     children?: ReactNode;
 }
 
-const RecordTable = async ({tableDef, recordType, recordId }: RecordTableProps) => {
+const RecordTable = async ({ tableDef, recordType, recordId }: RecordTableProps) => {
     const data = await fetchTable(`/record/${recordType}/${recordId}/${tableDef.endpoint}`);
-    return (
-        <TableWrapper 
-            id={data.table.id}
-            data={data.table.data}
-            columns={data.table.columns}
-        />
-    )
+    return <TableWrapper id={data.table.id} data={data.table.data} columns={data.table.columns} />;
 };
 
 export default RecordTable;

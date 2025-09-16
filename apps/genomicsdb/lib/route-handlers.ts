@@ -29,7 +29,7 @@ export async function fetchRecord(recordType: RecordType, id: string, brief: boo
 
 export async function fetchTable(endpoint: string): Promise<APITableResponse> {
     const view = endpoint.includes("?") ? "&view=table" : "?view=table";
-    return await _fetch(`${endpoint}${view}`) as unknown as APITableResponse;
+    return (await _fetch(`${endpoint}${view}`)) as unknown as APITableResponse;
 }
 
 export async function fetchRecordAssociations(

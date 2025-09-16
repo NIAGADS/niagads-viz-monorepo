@@ -27,8 +27,8 @@ const meta: Meta<typeof Tabs> = {
             <Tab id="tab3">
                 <TabHeader>Tab 3</TabHeader>
                 <TabBody>This is tab 3</TabBody>
-            </Tab>
-        ]
+            </Tab>,
+        ],
     },
 };
 

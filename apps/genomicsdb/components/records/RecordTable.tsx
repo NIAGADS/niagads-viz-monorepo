@@ -18,9 +18,9 @@ export interface RecordTableProps {
 const buildTableEndpoint = (endpoint: string) => {
     const view = endpoint.includes("?") ? "&view=table" : "?view=table";
     return `/api/record/${endpoint}${view}`;
-}
+};
 
-const RecordTable = ({ tableDef, recordType, recordId, onTableLoad, }: RecordTableProps) => {
+const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTableProps) => {
     const { data, error, isLoading } = useSWR(
         buildTableEndpoint(`${recordType}/${recordId}/${tableDef.endpoint}`),
         (url: string) => fetch(url).then((res) => res.json())
@@ -58,7 +58,6 @@ const RecordTable = ({ tableDef, recordType, recordId, onTableLoad, }: RecordTab
             data={(data as APITableResponse).table.data}
         />
     );
-}
+};
 
 export default RecordTable;
-

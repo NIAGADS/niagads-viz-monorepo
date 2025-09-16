@@ -24,7 +24,7 @@ const TabTitle = ({ label, pagination }: TabTitleProps) => {
             {label} <span className={styles.badge}>{pagination.total_num_records}</span>
         </div>
     ) : (
-        label 
+        label
     );
 };
 
@@ -43,13 +43,13 @@ const RecordTableSection = ({ tables, recordId, recordType }: RecordTableSection
                             tableDef={table}
                             recordId={recordId}
                             recordType={recordType}
-                            onTableLoad={(p) => setPagination(prev => ({...prev, [table.id]: p}))}
+                            onTableLoad={(p) => setPagination((prev) => ({ ...prev, [table.id]: p }))}
                         />
                     </TabBody>
                 </Tab>
             ))}
         </Tabs>
     );
-}
+};
 
 export default RecordTableSection;

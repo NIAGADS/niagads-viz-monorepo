@@ -16,25 +16,22 @@ const RecordAnnotationSection = ({ id, record_type }: BaseRecord) => {
 
     return (
         <div id={id}>
-            {sections.map(section =>
-                section.tables && (
-                    <div id={section.id} key={section.id}>
-                        <RecordSectionHeader
-                            key={`${section.id}-header`}
-                            title={section.label}
-                            description={section.description}
-                        ></RecordSectionHeader>
-                        {section.underConstruction ? (
-                            <RecordSectionUnderConstructionAlert section={section.label} />
-                        ) : (
-                            <RecordTableSection
-                                recordId={id}
-                                recordType={record_type}
-                                tables={section.tables}
-                            />
-                        )}
-                    </div>
-                )
+            {sections.map(
+                (section) =>
+                    section.tables && (
+                        <div id={section.id} key={section.id}>
+                            <RecordSectionHeader
+                                key={`${section.id}-header`}
+                                title={section.label}
+                                description={section.description}
+                            ></RecordSectionHeader>
+                            {section.underConstruction ? (
+                                <RecordSectionUnderConstructionAlert section={section.label} />
+                            ) : (
+                                <RecordTableSection recordId={id} recordType={record_type} tables={section.tables} />
+                            )}
+                        </div>
+                    )
             )}
         </div>
     );
