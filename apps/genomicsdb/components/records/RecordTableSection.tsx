@@ -6,6 +6,7 @@ import { APIPagination } from "@niagads/common";
 import { Tabs, Tab, TabHeader, TabBody } from "@niagads/ui/client";
 import styles from "./styles/record-table-section.module.css";
 import RecordTable from "./RecordTable";
+import { LoadingSpinner } from "@niagads/ui";
 
 interface RecordTableSectionProps {
     tables: TableSection[];
@@ -19,12 +20,17 @@ interface TabTitleProps {
 }
 
 const TabTitle = ({ label, pagination }: TabTitleProps) => {
-    return pagination ? (
-        <div>
-            {label} <span className={styles.badge}>{pagination.total_num_records}</span>
+    return (
+        <div className="flex">
+            {label}
+            {pagination ? (
+                <span className={styles.badge}>{pagination.total_num_records}</span>
+            ) : (
+                <span className={styles.tab_header_spinner}>
+                    <LoadingSpinner message="" size="sm" />
+                </span>
+            )}
         </div>
-    ) : (
-        label
     );
 };
 
