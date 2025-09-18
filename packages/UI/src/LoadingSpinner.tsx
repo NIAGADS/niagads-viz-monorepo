@@ -16,9 +16,11 @@ export const LoadingSpinner = ({ message = "Loading...", size = "md" }: LoadingS
     return (
         <div className={styles["spinner-container"]}>
             <div className={`${styles["spinner"]} ${sizeClass[size]}`} aria-hidden="true" />
-            <p className={styles["spinner-message"]} role="status" aria-live="polite">
-                {message}
-            </p>
+            {message && (
+                <p className={styles["spinner-message"]} role="status" aria-live="polite">
+                    {message}
+                </p>
+            )}
         </div>
     );
 };

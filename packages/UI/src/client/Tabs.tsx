@@ -1,29 +1,59 @@
-import React, { ReactNode, Suspense, useEffect, useId, useMemo, useState } from "react";
-
+import React, { ReactElement, ReactNode, useEffect, useId, useState } from "react";
 import { Card } from "../Card";
 import { HelpIconWrapper } from "../HelpIcon";
-import { LoadingSpinner } from "../LoadingSpinner";
 import { StylingProps } from "../types";
 import styles from "../styles/tabs.module.css";
 
-export interface TabDef {
-    label: ReactNode;
-    id: string;
-    info?: string;
-    content: ReactNode;
-}
-
 interface TabsProps extends StylingProps {
-    tabs: TabDef[];
-    width: string; // tailwind width class
+    children: ReactElement<TabProps>[];
 }
 
-type TabButtonProps = Omit<TabDef, "content"> & {
-    isActive: boolean;
-    onClick: any;
+export const Tabs = ({ children }: TabsProps) => {
+    const [selectedId, setSelectedId] = useState<string | null>(children[0].props.id);
+    const tabsId = useId();
+
+    return (
+        <>
+            <div id={tabsId} className={styles["tab-container"]} role="tablist">
+                {children.map((tab) => (
+                    <TabButton
+                        key={`button-${tab.props.id}`}
+                        id={tab.props.id}
+                        isActive={tab.props.id === selectedId}
+                        onClick={(id) => setSelectedId(id)}
+                    >
+                        {tab.props.children.find((child) => child.type === TabHeader)}
+                    </TabButton>
+                ))}
+            </div>
+
+            <Card variant="full" hover={false} role="tabpanel">
+                {children.map((tab) => {
+                    const isActive = tab.props.id === selectedId;
+                    return (
+                        <div
+                            key={tab.props.id}
+                            style={{ display: isActive ? "block" : "none" }}
+                            aria-hidden={!isActive}
+                        >
+                            {tab.props.children.find((child) => child.type === TabBody)}
+                        </div>
+                    );
+                })}
+            </Card>
+        </>
+    );
 };
 
-const TabButton = ({ label, id, info, isActive, onClick }: TabButtonProps) => {
+type TabButtonProps = {
+    id: string;
+    info?: string;
+    isActive: boolean;
+    onClick: (id: string) => void;
+    children: ReactNode;
+};
+
+const TabButton = ({ id, info, isActive, onClick, children }: TabButtonProps) => {
     const [isSelected, setIsSelected] = useState<boolean>(false);
     const buttonId = useId();
 
@@ -47,56 +77,36 @@ const TabButton = ({ label, id, info, isActive, onClick }: TabButtonProps) => {
         >
             {info ? (
                 <HelpIconWrapper message={info} variant={"question"}>
-                    {label}
+                    {children}
                 </HelpIconWrapper>
             ) : (
-                label
+                children
             )}
         </button>
     );
 };
 
-export const Tabs = ({ tabs, width = "full" }: TabsProps) => {
-    const [selectedKey, setSelectedKey] = useState<string | null>(tabs && tabs.length > 0 ? tabs[0].id : null);
-    const [activeTab, setActiveTab] = useState<TabDef | null>(tabs && tabs.length > 0 ? tabs[0] : null);
+interface TabHeaderProps {
+    children: ReactNode;
+}
 
-    const tabsId = useId();
+export const TabBody = ({ children }: TabBodyProps) => {
+    return <div>{children}</div>;
+};
 
-    useEffect(() => {
-        if (tabs) {
-            const selectedTab = tabs.find((tab) => tab.id === selectedKey);
-            setActiveTab(selectedTab!);
-        }
-    }, [selectedKey]);
+interface TabBodyProps {
+    children: ReactNode;
+}
 
-    const onTabSelect = (tabId: string) => {
-        setSelectedKey(tabId);
-    };
+export const TabHeader = ({ children }: TabHeaderProps) => {
+    return <div>{children}</div>;
+};
 
-    const memoizedTabContent = useMemo(() => {
-        return activeTab ? activeTab.content : null;
-    }, [activeTab?.id]);
+interface TabProps {
+    id: string;
+    children: ReactElement<TabBodyProps | TabButtonProps>[];
+}
 
-    return (
-        activeTab && (
-            <>
-                <div id={tabsId} className={styles["tab-container"]} role="tablist">
-                    {tabs.map((tab) => (
-                        <TabButton
-                            key={`button-${tab.id}`}
-                            label={tab.label}
-                            id={tab.id}
-                            info={tab.info}
-                            isActive={tab.id === activeTab.id}
-                            onClick={onTabSelect}
-                        ></TabButton>
-                    ))}
-                </div>
-
-                <Card variant="full" hover={false} role="tabpanel">
-                    <Suspense fallback={<LoadingSpinner message="Loading..." />}>{memoizedTabContent}</Suspense>
-                </Card>
-            </>
-        )
-    );
+export const Tab = ({ children }: TabProps) => {
+    return <div>{children}</div>;
 };

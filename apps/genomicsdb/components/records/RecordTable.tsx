@@ -1,32 +1,33 @@
-import { APIPagination, isAPIError } from "@niagads/common";
-import { APITableResponse, RecordType, TableSection } from "@/lib/types";
-import { InlineError, NoData } from "../ErrorAlerts";
+import { APITableResponse, TableSection } from "@/lib/types";
+import { prefixClientRoute } from "@/lib/utils";
 
 import { LoadingSpinner } from "@niagads/ui";
 import PaginationMessage from "../PaginationMessage";
-import Table from "@niagads/table";
 import TableWrapper from "../TableWrapper";
-import { prefixClientRoute } from "@/lib/utils";
 import { useEffect } from "react";
 import useSWR from "swr";
+import { APIPagination } from "@niagads/common";
 
 export interface RecordTableProps {
-    recordType: RecordType;
-    recordId: string;
     tableDef: TableSection;
+    recordType: string;
+    recordId: string;
     onTableLoad?: (pagination: APIPagination) => void;
 }
 
+const buildTableEndpoint = (endpoint: string) => {
+    const view = endpoint.includes("?") ? "&view=table" : "?view=table";
+    return `/api/record/${endpoint}${view}`;
+};
+
 const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTableProps) => {
     const { data, error, isLoading } = useSWR(
-        prefixClientRoute(`/record/${recordType}/${recordId}/annotation/${tableDef.endpoint}`),
+        buildTableEndpoint(`${recordType}/${recordId}/${tableDef.endpoint}`),
         (url: string) => fetch(url).then((res) => res.json())
     );
 
     // Call onTableLoad when data is loaded and valid to return the result size
     // to the parent
-
-    // FIXME: tie to table's onTableLoad so we don't have to have a useEffect here
     useEffect(() => {
         if (onTableLoad && data && !isLoading) {
             onTableLoad((data as APITableResponse).pagination);
@@ -34,16 +35,6 @@ const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTabl
     }, [isLoading, data]);
 
     if (isLoading) return <LoadingSpinner />;
-
-    if (error) return <InlineError message="Oops! An unexpected error occurred." reload={true} />;
-
-    if (isAPIError(data)) {
-        return <InlineError message={data.detail} reload={false} />;
-    }
-
-    if ((data as APITableResponse).pagination.total_num_records === 0) {
-        return <NoData />;
-    }
 
     if ((data as APITableResponse).pagination.total_num_pages > 1)
         return (
@@ -70,5 +61,3 @@ const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTabl
 };
 
 export default RecordTable;
-
-//<Table config={tableDef} table={response.table} />

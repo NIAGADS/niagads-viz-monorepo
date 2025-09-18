@@ -294,7 +294,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
         <div className={styles["table-outer-container"]}>
             <div className={styles["table-controls-container"]}>
                 <TableToolbar table={table} tableId={id} enableExport={!!!options?.disableExport} />
-                <PaginationControls table={table} />
+                <PaginationControls id={id} table={table} />
             </div>
             {enableRowSelect && (
                 <div>
