@@ -51,7 +51,27 @@ export function MainLayout({ children }: MainLayoutProps) {
                     {children}
                 </main>
             </div>
-            <Footer />
+            <Footer
+                siteName="NIAGADS GenomicsDB"
+                links={[
+                    {
+                        display: "About",
+                        url: "/about",
+                    },
+                    {
+                        display: "Contact",
+                        url: "#",
+                    },
+                    {
+                        display: "Privacy",
+                        url: "#",
+                    },
+                    {
+                        display: "Terms",
+                        url: "#",
+                    },
+                ]}
+            />
         </div>
     );
 }
