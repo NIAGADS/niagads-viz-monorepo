@@ -6,6 +6,7 @@ import "@niagads/table/css";
 import { useEffect, useState } from "react";
 
 import Table from "@niagads/table";
+import React from "react";
 
 export type RowSelectionState = Record<string, boolean>;
 
@@ -22,7 +23,7 @@ interface WrapperProps {
     onTableLoad?: any;
 }
 
-export function TrackSelectorTable({ table, handleRowSelect }: WrapperProps) {
+const TrackSelectorTable = ({ table, handleRowSelect }: WrapperProps) => {
     const [selectedRows, setSelectedRows] = useState<RowSelectionState>({});
     const [disableRowSelectAction, setDisableRowSelectAction] = useState<boolean>(true);
 
@@ -52,3 +53,5 @@ export function TrackSelectorTable({ table, handleRowSelect }: WrapperProps) {
         </main>
     );
 }
+
+export default TrackSelectorTable;

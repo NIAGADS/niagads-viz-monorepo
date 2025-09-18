@@ -1,6 +1,6 @@
 // TODO: fix loading fallback handling; it is incorrect
 
-import React, { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { getLoadedTracks, loadTracks, removeTrackById } from "./tracks/utils";
 
 import { DEFAULT_FLANK } from "./config/_constants";

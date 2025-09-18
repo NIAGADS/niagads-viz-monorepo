@@ -6,14 +6,15 @@
 // FIXME: remove tailwind class and switch to css.modules
 
 import { Collection, CollectionMetadata, IGVBrowserTrack } from "./types/data_models";
-import { FEATURE_SEARCH_ENDPOINT, GENOME, VariantReferenceTrack } from "@/config/reference.track.config";
 import { TabDef, Tabs } from "@niagads/ui/client";
 import { getLoadedTracks, getTrackConfig, loadTracks, removeTrackById } from "./tracks/utils";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { _genomes } from "./config/_igvGenomes";
 
 import { MemoIGVBrowser as GenomeBrowser } from "./IGVBrowser";
 import { TableProps } from "@niagads/table";
-import { TrackSelectorTable } from "./TrackSelectorTable";
+import TrackSelectorTable from "./TrackSelectorTable";
+import React from "react";
 
 interface DataProps {
     metadata: CollectionMetadata;
@@ -22,7 +23,7 @@ interface DataProps {
     collections: Collection[];
 }
 
-export function IGVBrowserWithSelector({ metadata, selector, config, collections }: DataProps) {
+const IGVBrowserWithSelector = ({ metadata, selector, config, collections }: DataProps) => {
     const [selectedTracks, setSelectedTracks] = useState<string[]>([]);
     const [browser, setBrowser] = useState<any>(null);
     const [loading, setIsLoading] = useState<boolean>(true);
@@ -93,12 +94,13 @@ export function IGVBrowserWithSelector({ metadata, selector, config, collections
 
     return (
         <>
+            {/* TODO: populate props properly */}
             <GenomeBrowser
-                genome={GENOME}
-                featureSearchURI={FEATURE_SEARCH_ENDPOINT}
+                genome={""}
+                featureSearchURI={""}
                 onBrowserLoad={initializeBrowser}
-                tracks={[VariantReferenceTrack]}
-            ></GenomeBrowser>
+                tracks={[]}
+            />
 
             <div className="m-4 py-4 border-b border-primary">
                 <h1 className="font-bold text-3xl">Select Tracks to Display</h1>
@@ -107,3 +109,5 @@ export function IGVBrowserWithSelector({ metadata, selector, config, collections
         </>
     );
 }
+
+export default IGVBrowserWithSelector;

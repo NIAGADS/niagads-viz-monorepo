@@ -1,5 +1,4 @@
-import { features } from "process";
-import { ignoreCaseIndexOf, isSimpleType, capitalize, numberFormatter } from "./utils";
+import { ignoreCaseIndexOf, capitalize, numberFormatter } from "./utils";
 import igv from "igv/dist/igv.esm";
 
 const EXPECTED_BED_FIELDS = [
@@ -24,6 +23,11 @@ const TARGET_GENE_ID_FIELD = "target_ensembl_id";
 const VARIANT_ID_FIELD = "variant_id";
 const IGNORE_OPTIONAL_FIELDS = ["user_input", "target_info"];
 //const NEG_LOG10_P_CAP = 50;
+
+interface Popup {
+    name: string;
+    value: any;
+}
 
 function decodeBedXY(tokens: any, header: any) {
     // Get X (number of standard BED fields) and Y (number of optional BED fields) out of format
@@ -59,11 +63,10 @@ function decodeBedXY(tokens: any, header: any) {
 }
 
 function extractPopupData(genomeId: any) {
-    //@ts-expect-error: using `this` as local variable
     const feature: BedXYFeature = this; // FIXME: investigate ts error
 
     const filteredProperties = new Set(["row", "color", "chr", "start", "end", "cdStart", "cdEnd", "strand", "alpha"]);
-    const data = [];
+    const data: Popup[] = [];
 
     for (const property in feature) {
         //If it's the info object
