@@ -1,8 +1,5 @@
 // TODO: typing for handleRowSelect
 // TODO: ensure handleRowSelect is not null -> raise error for developer if it is
-
-import "@niagads/table/css";
-
 import { useEffect, useState } from "react";
 
 import Table from "@niagads/table";
@@ -52,6 +49,6 @@ const TrackSelectorTable = ({ table, handleRowSelect }: WrapperProps) => {
             <Table id={table.id} data={table.data} columns={table.columns} options={table.options} />
         </main>
     );
-}
+};
 
 export default TrackSelectorTable;

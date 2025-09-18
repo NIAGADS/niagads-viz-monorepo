@@ -640,6 +640,8 @@ class VariantServiceTrack extends igv.TrackBase {
             list.push("<hr/>");
             return list;
         }
+
+        return;
     }
 
     description() {

@@ -29,32 +29,32 @@ class VariantPValueTrack extends igv.TrackBase {
         this.colorScales = config.color
             ? new igv.ConstantColorScale(config.color)
             : this.config.type === "qtl"
-            ? {
-                  "*": new igv.GradientColorScale(
-                      config.colorScale || {
-                          low: 10,
-                          high: 100,
-                          lowColor: "rgb(135,206,250)",
-                          highColor: "rgb(255,165,0)",
-                      }
-                  ),
-              }
-            : {
-                  "*": new igv.BinnedColorScale(
-                      config.colorScale || {
-                          // -log10p of [.5, 1e-3, 1e-6, 5e-8]
-                          thresholds: [0.3, 3, 6, 7.3, this.maxValue],
-                          colors: [
-                              "rgb(227,238,249)",
-                              "rgb(251,170,170)",
-                              "rgb(245, 12, 12)",
-                              "rgb(255,166,0)",
-                              "rgb(20, 186, 59)",
-                              "rgb(16,151,230)",
-                          ],
-                      }
-                  ),
-              };
+              ? {
+                    "*": new igv.GradientColorScale(
+                        config.colorScale || {
+                            low: 10,
+                            high: 100,
+                            lowColor: "rgb(135,206,250)",
+                            highColor: "rgb(255,165,0)",
+                        }
+                    ),
+                }
+              : {
+                    "*": new igv.BinnedColorScale(
+                        config.colorScale || {
+                            // -log10p of [.5, 1e-3, 1e-6, 5e-8]
+                            thresholds: [0.3, 3, 6, 7.3, this.maxValue],
+                            colors: [
+                                "rgb(227,238,249)",
+                                "rgb(251,170,170)",
+                                "rgb(245, 12, 12)",
+                                "rgb(255,166,0)",
+                                "rgb(20, 186, 59)",
+                                "rgb(16,151,230)",
+                            ],
+                        }
+                    ),
+                };
 
         this.featureSource = igv.FeatureSource(config, this.browser.genome);
         this.type = config.type || "variant";

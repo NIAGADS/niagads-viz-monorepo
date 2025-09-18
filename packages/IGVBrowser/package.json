@@ -2,6 +2,15 @@
     "name": "@niagads/igv",
     "private": "true",
     "version": "0.0.1",
+    "description": "NIAGADS IGV Browser Component",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/NIAGADS/niagads-viz-monorepo.git"
+    },
+    "license": "GPL-3.0-only",
+    "scripts": {
+        "build": "rollup -c"
+    },
     "dependencies": {
         "@niagads/common": "^0.0.1",
         "@niagads/ui": "^0.0.1",

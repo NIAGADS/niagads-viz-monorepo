@@ -1,13 +1,12 @@
-
 /**
  * Colors used for coding chromosomes
  * adapted from https://raw.githubusercontent.com/igvteam/igv.js/master/js/gwas/gwasColors.js
  */
 
 const ManhattanColors = {
-    "X": "rgb(204, 153, 0)",
-    "Y": "rgb(153, 204, 0)",
-    "Un": "darkGray)",
+    X: "rgb(204, 153, 0)",
+    Y: "rgb(153, 204, 0)",
+    Un: "darkGray)",
     "1": "rgb(80, 80, 255)",
     "2": "rgb(206, 61, 50)",
     "2a": "rgb(210, 65, 55)",
@@ -57,35 +56,64 @@ const ManhattanColors = {
     "45": "rgb(214, 0, 71)",
     "46": "rgb(255, 20, 99)",
     "47": "rgb(0, 214, 143)",
-    "48": "rgb(20, 255, 177)"
-}
+    "48": "rgb(20, 255, 177)",
+};
 
 //  aliasing
 for (const key of Object.keys(ManhattanColors)) {
-    const altName: string = "chr" + key
+    const altName: string = "chr" + key;
     //@ts-expect-error: no way to type this
-    ManhattanColors[altName] = ManhattanColors[key]
+    ManhattanColors[altName] = ManhattanColors[key];
 }
 
 // romanizing
-for(let a = 1; a <= 48; a++) {
-    if(a === 10) continue   // Don't overide "X"
-    const roman = romanize(a)
+for (let a = 1; a <= 48; a++) {
+    if (a === 10) continue; // Don't overide "X"
+    const roman = romanize(a);
     // @ts-expect-error: no way to type this
-    ManhattanColors[roman] = ManhattanColors[a.toString()]
+    ManhattanColors[roman] = ManhattanColors[a.toString()];
 }
 
-
-function romanize (num: any) {
+function romanize(num: any) {
     if (!+num) return false;
-    const digits = String(+num).split('');
-    const key = ['','C','CC','CCC','CD','D','DC','DCC','DCCC','CM',
-        '','X','XX','XXX','XL','L','LX','LXX','LXXX','XC',
-        '','I','II','III','IV','V','VI','VII','VIII','IX'];
-    let roman = '', i = 3;
+    const digits = String(+num).split("");
+    const key = [
+        "",
+        "C",
+        "CC",
+        "CCC",
+        "CD",
+        "D",
+        "DC",
+        "DCC",
+        "DCCC",
+        "CM",
+        "",
+        "X",
+        "XX",
+        "XXX",
+        "XL",
+        "L",
+        "LX",
+        "LXX",
+        "LXXX",
+        "XC",
+        "",
+        "I",
+        "II",
+        "III",
+        "IV",
+        "V",
+        "VI",
+        "VII",
+        "VIII",
+        "IX",
+    ];
+    let roman = "",
+        i = 3;
     //@ts-expect-error: who knows
-    while (i--) roman = (key[+digits.pop() + (i * 10)] || '') + roman;
-    return Array(+digits.join('') + 1).join('M') + roman;
+    while (i--) roman = (key[+digits.pop() + i * 10] || "") + roman;
+    return Array(+digits.join("") + 1).join("M") + roman;
 }
 
-export default ManhattanColors
+export default ManhattanColors;

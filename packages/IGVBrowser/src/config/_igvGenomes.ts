@@ -1,4 +1,3 @@
-
 export const _genomes = [
     {
         id: "hg38_refseq",
@@ -48,7 +47,9 @@ export const _genomes = [
                 colorBy: "biotype",
                 infoURL: "/gene/$$",
                 color: (feature: any) => {
-                    const value = feature.geneObject ? feature.geneObject.getAttributeValue("biotype") : feature.getAttributeValue("biotype");
+                    const value = feature.geneObject
+                        ? feature.geneObject.getAttributeValue("biotype")
+                        : feature.getAttributeValue("biotype");
                     if (value === undefined) {
                         return "grey";
                     }
@@ -73,7 +74,7 @@ export const _genomes = [
                     if (value.includes("lncRNA")) {
                         return "#ff726e";
                     }
-                    if (value === 'snRNA') {
+                    if (value === "snRNA") {
                         return "#ffce6e";
                     }
                     return "grey";

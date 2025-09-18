@@ -1,6 +1,5 @@
 // FIXME: move to a `Collection`
-export const VariantReferenceTrack =
-{
+export const VariantReferenceTrack = {
     name: "ADSP R4 Variants",
     url: "/service/track/variant",
     type: "variant_service",
@@ -16,5 +15,5 @@ export const VariantReferenceTrack =
     removable: false,
 };
 
-export const GENOME = 'hg38';
-export const FEATURE_SEARCH_ENDPOINT = '/service/track/feature?id='
+export const GENOME = "hg38";
+export const FEATURE_SEARCH_ENDPOINT = "/service/track/feature?id=";

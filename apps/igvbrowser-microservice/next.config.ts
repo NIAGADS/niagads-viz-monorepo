@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
     compiler: { styledComponents: true },
     /* config options here */
-    assetPrefix: '/igvbrowser-static',
+    assetPrefix: "/igvbrowser-static",
     eslint: {
         ignoreDuringBuilds: true,
     },
@@ -11,43 +11,40 @@ const nextConfig: NextConfig = {
     async rewrites() {
         return [
             {
-                source: '/service/:path*',
-                destination: 'https://www.niagads.org/genomics/service/:path*'
+                source: "/service/:path*",
+                destination: "https://www.niagads.org/genomics/service/:path*",
             },
             {
-                source: '/files/:path*',
-                destination: 'https://www.niagads.org/genomics/files/:path*'
+                source: "/files/:path*",
+                destination: "https://www.niagads.org/genomics/files/:path*",
             },
             {
-                source: '/api/:path*',
+                source: "/api/:path*",
                 destination: `${process.env.NIAGADS_API_HOST}/:path*`,
-                basePath: false
+                basePath: false,
             },
-        ]
+        ];
     },
 
     async redirects() {
         return [
             {
-                source: '/gene/:path*',
-                destination: 'https://www.niagads.org/genomics/app/record/gene/:path*',
-                permanent: true
+                source: "/gene/:path*",
+                destination: "https://www.niagads.org/genomics/app/record/gene/:path*",
+                permanent: true,
             },
             {
-                source: '/variant/:path*',
-                destination: 'https://www.niagads.org/genomics/app/record/variant/:path*',
-                permanent: true
+                source: "/variant/:path*",
+                destination: "https://www.niagads.org/genomics/app/record/variant/:path*",
+                permanent: true,
             },
             {
-                source: '/record/:path*',
-                destination: 'https://www.niagads.org/genomics/app/record/:path*',
-                permanent: true
+                source: "/record/:path*",
+                destination: "https://www.niagads.org/genomics/app/record/:path*",
+                permanent: true,
             },
-        ]
-    }
-
+        ];
+    },
 };
 
 export default nextConfig;
-
-

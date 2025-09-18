@@ -1,15 +1,10 @@
-
 export const ignoreCaseIndexOf = (arr: any[], lookup: any) =>
     arr.findIndex((item) => lookup.toLowerCase() === item.toLowerCase());
-
 
 export const isSimpleType = (value: any) => {
     const simpleTypes = new Set(["boolean", "number", "string", "symbol"]);
     const valueType = typeof value;
-    return (
-        value !== undefined &&
-        (simpleTypes.has(valueType) || value.substring || value.toFixed)
-    );
+    return value !== undefined && (simpleTypes.has(valueType) || value.substring || value.toFixed);
 };
 
 export const capitalize = (str: string) => {

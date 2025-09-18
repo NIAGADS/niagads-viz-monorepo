@@ -95,12 +95,7 @@ const IGVBrowserWithSelector = ({ metadata, selector, config, collections }: Dat
     return (
         <>
             {/* TODO: populate props properly */}
-            <GenomeBrowser
-                genome={""}
-                featureSearchURI={""}
-                onBrowserLoad={initializeBrowser}
-                tracks={[]}
-            />
+            <GenomeBrowser genome={""} featureSearchURI={""} onBrowserLoad={initializeBrowser} tracks={[]} />
 
             <div className="m-4 py-4 border-b border-primary">
                 <h1 className="font-bold text-3xl">Select Tracks to Display</h1>
@@ -108,6 +103,6 @@ const IGVBrowserWithSelector = ({ metadata, selector, config, collections }: Dat
             <Tabs tabs={tabItems} width="w-full" />
         </>
     );
-}
+};
 
 export default IGVBrowserWithSelector;

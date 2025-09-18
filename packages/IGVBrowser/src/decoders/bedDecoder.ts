@@ -45,7 +45,7 @@ function decodeBedXY(tokens: any, header: any) {
     }
 
     let feature = new BedXYFeature(chr, start, end);
-    feature.setAdditionalAttributes({ popupData: extractPopupData });
+    Object.assign(feature, { popupData: extractPopupData(feature) });
 
     if (X > 3) {
         // parse additional standard BED (beyond chr, start, end) columns
@@ -62,9 +62,7 @@ function decodeBedXY(tokens: any, header: any) {
     return feature;
 }
 
-function extractPopupData(genomeId: any) {
-    const feature: BedXYFeature = this; // FIXME: investigate ts error
-
+function extractPopupData(feature: BedXYFeature) {
     const filteredProperties = new Set(["row", "color", "chr", "start", "end", "cdStart", "cdEnd", "strand", "alpha"]);
     const data: Popup[] = [];
 
