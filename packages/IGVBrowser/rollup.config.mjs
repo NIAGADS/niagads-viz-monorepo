@@ -19,7 +19,7 @@ export default [
                 preserveModulesRoot: "src",
             },
         ],
-        external: [/node_modules/, "tslib"],
+        external: [/node_modules/, /UI/, /Common/],
         plugins: [
             commonjs(),
             typescript({
@@ -58,5 +58,11 @@ export default [
             resolve(),
             terser(),
         ],
+    },
+    {
+        input: ["./dist/dts/index.d.ts"],
+        output: [{ file: "./dist/index.d.ts", format: "es" }],
+        plugins: [dts(), del({ hook: "buildEnd", targets: "./dist/dts" })],
+        external: [/\.css$/u], // HACK: Fix for this problem https://github.com/Swatinem/rollup-plugin-dts/issues/165]
     },
 ];
