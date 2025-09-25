@@ -60,15 +60,12 @@ const AssociationSummaryChart = ({
 }
 
 const transformData = (data: any): Record<string, any>[] => {
-    console.log(data);
-    const transformed = data.data.map((rawData: any) => (
+    return data.data.map((rawData: any) => (
         {
             term: rawData.trait.term,
             ...rawData.num_variants,
         }
     ));
-    console.log(transformed);
-    return transformed;
 }
 
 export default AssociationSummaryChart;
