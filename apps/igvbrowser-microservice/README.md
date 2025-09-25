@@ -1,5 +1,7 @@
 # NIAGADS-IGV 
 
+> NOTE: Micro-service temporarily **BROKEN**; works as a test application, not stand-a-lone
+
 ## IGV Config Options: 
 
 * `infoURL` -> link for features; track specific
