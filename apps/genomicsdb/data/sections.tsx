@@ -8,7 +8,7 @@ const UC_GENERIC_SECTION: AnchoredPageSection = {
     underConstruction: true,
 };
 
-const GWAS_ASSOC_SECTION: AnchoredPageSection = {
+export const GWAS_ASSOC_SECTION: AnchoredPageSection = {
     id: "gwas-genetic-associations",
     label: "NIAGADS GWAS associations",
     description: "",

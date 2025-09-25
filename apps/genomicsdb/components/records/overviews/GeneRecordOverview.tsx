@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, CardBody, CardHeader } from "@niagads/ui";
 import { RecordOverview, renderRecordTitle } from "./RecordOverview";
 
@@ -5,9 +7,10 @@ import { ExternalUrls } from "@/data/reference";
 import { GeneRecord } from "@/lib/types";
 import { RecordActionToolbar } from "../RecordActionToolbar";
 import { RecordLink } from "../../Link";
-import RecordSectionUnderConstructionAlert from "../RecordSectionUnderConstructionAlert";
 import { genomicLocationToSpan } from "@/lib/utils";
 import styles from "../styles/record.module.css";
+import { AssociationSummaryChart } from "@niagads/charts";
+import { GWAS_ASSOC_SECTION } from "@/data/sections";
 
 const GeneRecordOverview = ({ record }: { record: GeneRecord }) => {
     // Format location string: chr:start-end:strand / cytogenic_location
@@ -53,8 +56,18 @@ const GeneRecordOverview = ({ record }: { record: GeneRecord }) => {
             <Card variant="two-thirds">
                 <CardHeader>Genetic Associations</CardHeader>
                 <CardBody>
-                    <RecordSectionUnderConstructionAlert section={"Gene Genetic Association Overview"} />
-                    {/*<GeneAssociationSummaryChart recordId={record.id} />*/}
+                    <div className="flex" style={{height: "100%", width: "100%"}}>
+                        {GWAS_ASSOC_SECTION.tables!.map(tableDef => (
+                            <div style={{height: "100%", width: "100%"}}>
+                                <AssociationSummaryChart
+                                    id={tableDef.id}
+                                    base_url={`/api/record/${record.record_type}/${record.id}/associations`}
+                                    trait={(new URL(tableDef.endpoint, "https://google.com")).searchParams.get("trait")!}
+                                    source={(new URL(tableDef.endpoint, "https://google.com")).searchParams.get("source")!}
+                                />
+                            </div>
+                        ))}
+                    </div>
                 </CardBody>
             </Card>
         </RecordOverview>

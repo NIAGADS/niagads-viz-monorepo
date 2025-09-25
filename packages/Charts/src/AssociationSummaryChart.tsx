@@ -1,69 +1,74 @@
-import { Bar, BarChart, Label, Legend, ResponsiveContainer, XAxis, YAxis } from "recharts";
-
 import React from "react";
+import useSWR from "swr";
+import { ResponsiveBar, Bar } from "@nivo/bar";
+import { LoadingSpinner } from "@niagads/ui";
+import { APIResponse } from "@niagads/common";
 
-// dataKey: value pairs
-
-// dataKey: legend label pairs
-export interface Series {
-    [key: string]: string;
+interface AssociationSummaryChartProps {
+    id: string;
+    base_url: string;
+    trait: string;
+    source: string;
+    pvalue_threshold?: string;
 }
 
-export interface GeneticAssociationSummaryChartConfig {
-    data: any;
-    series: Series;
-}
-
-export const AssociationSummaryBarChart = ({ data, series }: GeneticAssociationSummaryChartConfig) => {
-    return (
-        <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-                width={500}
-                height={300}
-                data={data}
-                margin={{
-                    top: 20,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
-                }}
-            >
-                <XAxis dataKey="trait_category">
-                    <Label value="Trait Category" position="bottom" />
-                </XAxis>
-                <YAxis>
-                    <Label value="No. Variants" />
-                </YAxis>
-
-                <Legend />
-
-                <Bar name={"AD"} dataKey="upstream" stackId="gwas" />
-            </BarChart>
-        </ResponsiveContainer>
+const AssociationSummaryChart = ({
+    id,
+    base_url,
+    trait,
+    source,
+    pvalue_threshold = "5e-8",
+}: AssociationSummaryChartProps) => {
+    const { data, error, isLoading } = useSWR(
+        `${base_url}?content=counts&trait=${trait}&source=${source}&pvalue=${pvalue_threshold}`,
+        (url: string) => fetch(url).then((res) => res.json())
     );
-};
 
-/*  {Object.entries(series).map(([dataKey, label]) =>
-                    dataKey === "total" ? null : <Bar name={label} dataKey={dataKey} stackId={dataKey.split("|")[0]} />
-                )}*/
-/*
-                     {
-[1]     trait_category: 'gwas|adrd',
-[1]     uptream: 307,
-[1]     downstream: 148,
-[1]     in_gene: 0,
-[1]     upstream: 182
-[1]   },
-[1]   {
-[1]     trait_category: 'gwas|ad_adrd_biomarkers',
-[1]     uptream: 131,
-[1]     downstream: 54,
-[1]     in_gene: 0
-[1]   },
-1]   {
-[1]     trait_category: 'curated|non-ad_adrd',
-[1]     uptream: 83,
-[1]     downstream: 61,
-[1]     in_gene: 0,
-[1]     upstream: 64
-[1]   },*/
+    return isLoading ? (
+        <LoadingSpinner />
+    ) : data ? (
+        <ResponsiveBar
+            data={transformData(data)}
+            indexBy="term"
+            keys={["downstream", "upstream", "in gene"]}
+            margin={{ top: 60, right: 110, bottom: 60, left: 80 }}
+            padding={0.2}
+            labelTextColor={'inherit:darker(1.4)'}
+            labelSkipWidth={16}
+            labelSkipHeight={16}
+            enableTotals={true}
+            enableGridX={true}
+            enableGridY={false}
+            totalsOffset={10}
+            layout="horizontal"
+            legends={[
+                {
+                    dataFrom: 'keys',
+                    anchor: 'bottom-right',
+                    direction: 'column',
+                    translateX: 120,
+                    itemsSpacing: 3,
+                    itemWidth: 100,
+                    itemHeight: 16
+                }
+            ]}
+            axisBottom={{ legend: `N Variants (p < ${pvalue_threshold})`, legendOffset: 32, tickRotation: 45, truncateTickAt: 50 }}
+        />
+    ) : (
+        <div>Error fetching data</div>
+    );
+}
+
+const transformData = (data: any): Record<string, any>[] => {
+    console.log(data);
+    const transformed = data.data.map((rawData: any) => (
+        {
+            term: rawData.trait.term,
+            ...rawData.num_variants,
+        }
+    ));
+    console.log(transformed);
+    return transformed;
+}
+
+export default AssociationSummaryChart;
