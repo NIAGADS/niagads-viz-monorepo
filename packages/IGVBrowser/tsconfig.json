@@ -24,7 +24,7 @@
         "experimentalDecorators": true,
         "resolveJsonModule": true,
         "noErrorTruncation": true,
-        "typeRoots": ["node_modules/@types", "node_modules/niagads-ambient-types"],
+        "typeRoots": ["node_modules/@types", "src/types/igv.d.ts"],
         "outDir": "dist",
         "baseUrl": ".",
         "paths": {
