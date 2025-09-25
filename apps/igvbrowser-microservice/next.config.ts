@@ -18,11 +18,11 @@ const nextConfig: NextConfig = {
                 source: "/files/:path*",
                 destination: "https://www.niagads.org/genomics/files/:path*",
             },
-            {
+            /*  {
                 source: "/api/:path*",
                 destination: `${process.env.NIAGADS_API_HOST}/:path*`,
                 basePath: false,
-            },
+            },*/
         ];
     },
 

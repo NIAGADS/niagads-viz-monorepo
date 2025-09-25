@@ -10,9 +10,9 @@
         "lint": "next lint"
     },
     "dependencies": {
-        "@niagads/common": "^0.2.0-alpha.0",
-        "@niagads/ui": "^0.2.5-alpha.0",
-        "@niagads/igv": "^0.2.5-alpha.0",
+        "@niagads/common": "^0.0.1",
+        "@niagads/ui": "^0.0.1",
+        "@niagads/igv": "^0.0.1",
         "next": "15.1.4",
         "next-seo": "^6.6.0",
         "react": "^19.0.0",
