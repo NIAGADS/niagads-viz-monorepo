@@ -19,7 +19,7 @@ export default [
                 preserveModulesRoot: "src",
             },
         ],
-        external: [/node_modules/, "tslib"],
+        external: [/node_modules/, /UI/, /Common/, ],
         plugins: [
             commonjs(),
             typescript({
@@ -30,11 +30,11 @@ export default [
                 config: {
                     path: "./postcss.config.js",
                 },
-                extract: "niagads-ui.css",
+                extract: false,
                 extensions: [".css"],
                 minimize: false, // when minimized not all the tailwind classes get exported
                 sourceMap: true,
-                modules: false,
+                modules: true,
             }),
             {
                 name: "Custom Rollup Plugin`",
@@ -62,7 +62,7 @@ export default [
     {
         input: ["./dist/dts/index.d.ts"],
         output: [{ file: "./dist/index.d.ts", format: "es" }],
-        plugins: [dts()],
+        plugins: [dts(), del({ hook: "buildEnd", targets: "./dist/dts" })],
         external: [/\.css$/u], // HACK: Fix for this problem https://github.com/Swatinem/rollup-plugin-dts/issues/165]
     },
 ];
