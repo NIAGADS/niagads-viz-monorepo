@@ -19,7 +19,7 @@ export default [
                 preserveModulesRoot: "src",
             },
         ],
-        external: [/node_modules/, /UI/, /Common/, ],
+        external: [/node_modules/, /UI/, /Common/],
         plugins: [
             commonjs(),
             typescript({

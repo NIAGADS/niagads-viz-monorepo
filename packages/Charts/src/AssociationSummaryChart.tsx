@@ -33,7 +33,7 @@ const AssociationSummaryChart = ({
             keys={["downstream", "upstream", "in gene"]}
             margin={{ top: 60, right: 110, bottom: 60, left: 80 }}
             padding={0.2}
-            labelTextColor={'inherit:darker(1.4)'}
+            labelTextColor={"inherit:darker(1.4)"}
             labelSkipWidth={16}
             labelSkipHeight={16}
             enableTotals={true}
@@ -43,29 +43,32 @@ const AssociationSummaryChart = ({
             layout="horizontal"
             legends={[
                 {
-                    dataFrom: 'keys',
-                    anchor: 'bottom-right',
-                    direction: 'column',
+                    dataFrom: "keys",
+                    anchor: "bottom-right",
+                    direction: "column",
                     translateX: 120,
                     itemsSpacing: 3,
                     itemWidth: 100,
-                    itemHeight: 16
-                }
+                    itemHeight: 16,
+                },
             ]}
-            axisBottom={{ legend: `N Variants (p < ${pvalue_threshold})`, legendOffset: 32, tickRotation: 45, truncateTickAt: 50 }}
+            axisBottom={{
+                legend: `N Variants (p < ${pvalue_threshold})`,
+                legendOffset: 32,
+                tickRotation: 45,
+                truncateTickAt: 50,
+            }}
         />
     ) : (
         <div>Error fetching data</div>
     );
-}
+};
 
 const transformData = (data: any): Record<string, any>[] => {
-    return data.data.map((rawData: any) => (
-        {
-            term: rawData.trait.term,
-            ...rawData.num_variants,
-        }
-    ));
-}
+    return data.data.map((rawData: any) => ({
+        term: rawData.trait.term,
+        ...rawData.num_variants,
+    }));
+};
 
 export default AssociationSummaryChart;

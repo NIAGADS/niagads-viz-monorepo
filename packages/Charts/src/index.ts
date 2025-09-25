@@ -1,5 +1,3 @@
 import AssociationSummaryChart from "./AssociationSummaryChart";
 
-export {
-    AssociationSummaryChart
-};
+export { AssociationSummaryChart };
