@@ -122,3 +122,15 @@ export function formatMultiline(text: string | string[], delimiter: string = "\n
     // Split string by delimiter and map
     return text.split(delimiter).map((line, idx) => <p key={`${idx}-${line}`}>{line}</p>);
 }
+
+export function getUrlParam(url: string, param: string): string | null {
+    let parsed;
+    try {
+        parsed = new URL(url);
+    } catch {
+        // url needs to be full url, but most of the time we just have paths
+        // this is hacky, but it gets around that issue
+        parsed = new URL(url, "https://google.com");
+    }
+    return parsed.searchParams.get(param);
+}
