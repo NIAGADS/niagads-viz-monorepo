@@ -39,6 +39,21 @@ The GenomicsDB backend service is an independent application.  If you are a back
 
 If you are a front-end developer, you can tunnel the current production version of the service from the production web server.  Instruction are found on a snippet in the lab slack channel.  If you need a development version of the service, speak with backend developers to arrange.
 
+## Development Deployment
+
+To deploy, without linking hot reloads to the `packages` (e.g. `@niagads/ui`, `@niagads/table` etc), you can just deploy as a standard next.js app in the application director (`/apps/genomicsdb`)
+
+```bash
+npm run dev
+```
+
+To link hot reloads to the `packages`, first make sure you are in the project (mono-repo) root, and then run:
+
+```bash
+npm run genomicsdb
+```
+There is troubleshooting information for `nx` in the mono-repo README.
+
 ## Docker Deployment
 
 **KeyDB Caching has been removed from the project; the Docker deployment has not yet been updated.  Do not USE for now**
