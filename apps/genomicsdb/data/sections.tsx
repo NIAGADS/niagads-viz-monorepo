@@ -2,7 +2,7 @@ import { AnchoredPageSection, RecordType } from "@/lib/types";
 
 const UC_GENERIC_SECTION: AnchoredPageSection = {
     id: "uc-section",
-    label: "Under Constructure",
+    label: "Under Construction",
     description: "more annotations coming soon",
     icon: "chart",
     underConstruction: true,
