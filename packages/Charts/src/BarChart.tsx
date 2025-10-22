@@ -9,13 +9,7 @@ interface BarChartProps {
     yAxisLabel?: string;
 }
 
-const BarChart = ({
-    id,
-    keys,
-    data,
-    xAxisLabel,
-}: BarChartProps) => {
-
+const BarChart = ({ id, keys, data, xAxisLabel }: BarChartProps) => {
     return (
         <ResponsiveBar
             data={data}
@@ -42,15 +36,18 @@ const BarChart = ({
                     itemHeight: 16,
                 },
             ]}
-            axisBottom={xAxisLabel ? {
-                legend: xAxisLabel,
-                legendOffset: 32,
-                tickRotation: 45,
-                truncateTickAt: 50,
-            } : null}
+            axisBottom={
+                xAxisLabel
+                    ? {
+                          legend: xAxisLabel,
+                          legendOffset: 32,
+                          tickRotation: 45,
+                          truncateTickAt: 50,
+                      }
+                    : null
+            }
         />
-    ) 
+    );
 };
-
 
 export default BarChart;

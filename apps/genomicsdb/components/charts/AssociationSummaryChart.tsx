@@ -9,13 +9,9 @@ interface AssociationSummaryChartProps {
     endpoint: string;
 }
 
-const AssociationSummaryChart = ({
-    record,
-    endpoint,
-}: AssociationSummaryChartProps) => {
-    const { data, error, isLoading } = useSWR(
-        buildChartUrl(record, endpoint),
-        (url: string) => fetch(url).then((res) => res.json())
+const AssociationSummaryChart = ({ record, endpoint }: AssociationSummaryChartProps) => {
+    const { data, error, isLoading } = useSWR(buildChartUrl(record, endpoint), (url: string) =>
+        fetch(url).then((res) => res.json())
     );
 
     return isLoading ? (
@@ -24,14 +20,10 @@ const AssociationSummaryChart = ({
         <div>Error loading chart</div>
     ) : (
         <div className="flex" style={{ height: "100%", width: "100%" }}>
-            <BarChart
-                id={"test"}
-                data={transformData(data)}
-                keys={["upstream", "downstream", "in gene"]}
-            />
+            <BarChart id={"test"} data={transformData(data)} keys={["upstream", "downstream", "in gene"]} />
         </div>
-    )
-}
+    );
+};
 
 const buildChartUrl = (record: BaseRecord, tableUrl: string) => {
     const base_url = `/api/record/${record.record_type}/${record.id}/associations`;
@@ -41,7 +33,7 @@ const buildChartUrl = (record: BaseRecord, tableUrl: string) => {
     const pvalue = getUrlParam(tableUrl, "pvalue")!;
 
     return `${base_url}?content=counts&trait=${trait}&source=${source}&pvalue=${pvalue}`;
-}
+};
 
 const transformData = (response: APIResponse): Record<string, any>[] => {
     return response.data.map((rawData: any) => ({
