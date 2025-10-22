@@ -8,9 +8,8 @@ import { RecordActionToolbar } from "../RecordActionToolbar";
 import { RecordLink } from "../../Link";
 import { genomicLocationToSpan } from "@/lib/utils";
 import styles from "../styles/record.module.css";
-import { AssociationSummaryChart } from "@niagads/charts";
 import { GWAS_ASSOC_SECTION } from "@/data/sections";
-import { getUrlParam } from "@niagads/common";
+import AssociationSummaryChart from "../../charts/AssociationSummaryChart";
 
 const GeneRecordOverview = ({ record }: { record: GeneRecord }) => {
     // Format location string: chr:start-end:strand / cytogenic_location
@@ -56,18 +55,12 @@ const GeneRecordOverview = ({ record }: { record: GeneRecord }) => {
             <Card variant="two-thirds">
                 <CardHeader>Genetic Associations</CardHeader>
                 <CardBody>
-                    <div className="flex" style={{ height: "100%", width: "100%" }}>
-                        {GWAS_ASSOC_SECTION.tables!.map((tableDef) => (
-                            <div key={tableDef.id} style={{ height: "100%", width: "100%" }}>
-                                <AssociationSummaryChart
-                                    id={tableDef.id}
-                                    base_url={`/api/record/${record.record_type}/${record.id}/associations`}
-                                    trait={getUrlParam(tableDef.endpoint, "trait")!}
-                                    source={getUrlParam(tableDef.endpoint, "source")!}
-                                />
-                            </div>
-                        ))}
-                    </div>
+                    {GWAS_ASSOC_SECTION.tables!.map(tableDef => (
+                        <AssociationSummaryChart
+                            record={record}
+                            endpoint={tableDef.endpoint}
+                        />
+                    ))}
                 </CardBody>
             </Card>
         </RecordOverview>
