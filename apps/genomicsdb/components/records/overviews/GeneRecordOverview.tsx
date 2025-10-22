@@ -55,12 +55,14 @@ const GeneRecordOverview = ({ record }: { record: GeneRecord }) => {
             <Card variant="two-thirds">
                 <CardHeader>Genetic Associations</CardHeader>
                 <CardBody>
-                    {GWAS_ASSOC_SECTION.tables!.map(tableDef => (
-                        <AssociationSummaryChart
-                            record={record}
-                            endpoint={tableDef.endpoint}
-                        />
-                    ))}
+                    <div className="flex" style={{height: "100%"}}>
+                        {GWAS_ASSOC_SECTION.tables!.map(tableDef => (
+                            <AssociationSummaryChart
+                                record={record}
+                                endpoint={tableDef.endpoint}
+                            />
+                        ))}
+                    </div>
                 </CardBody>
             </Card>
         </RecordOverview>
