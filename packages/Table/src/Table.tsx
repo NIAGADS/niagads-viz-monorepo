@@ -40,6 +40,13 @@ const __resolveSortingFn = (col: GenericColumn) => {
     return "alphanumeric";
 };
 
+const __resolveFilterFn = (col: GenericColumn) => {
+    if (col.type === "float" || col.type === "p_value") {
+        return "inNumberRange";
+    }
+    return "includesString";
+};
+
 // wrapper to catch any errors thrown during cell type and properties validation so that
 // user can more easily identify the problematic table cell by row/column
 const __resolveCell = (userCell: GenericCell | GenericCell[], column: GenericColumn, rowId: number) => {
@@ -119,7 +126,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
     const [showOnlySelected, setShowOnlySelected] = useState(false);
     const initialRender = useRef(true); // to regulate callbacks affected by the initial state
     const enableRowSelect = !!options?.rowSelect;
-    const disableColumnFilters = true; // FIXME- renable after working -- !!options?.disableColumnFilters;
+    const disableColumnFilters = false; // FIXME- renable after working -- !!options?.disableColumnFilters;
 
     // Translate GenericColumns provided by user into React Table ColumnDefs
     // also adds in checkbox column if rowSelect options are set for the table
@@ -172,6 +179,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
                     enableGlobalFilter: !col.disableGlobalFilter,
                     enableSorting: !col.disableSorting,
                     sortingFn: __resolveSortingFn(col) as SortingFnOption<TableRow>,
+                    filterFn: __resolveFilterFn(col),
                     enableHiding: !_get("required", col, false), // if required is true, enableHiding is false
                     meta: {
                         description: _get("description", col),

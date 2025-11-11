@@ -40,25 +40,23 @@ export const Select = ({
     const labelClassName = `${styles["select-label"]} ${inline ? styles["select-inline"] : ""}`;
 
     return (
-        <>
-            <div className={wrapperClassName}>
-                <div>
-                    <label htmlFor={id} className={labelClassName}>
-                        {label}
-                    </label>
-                </div>
-                <div>
-                    <select
-                        name={name ? name : id}
-                        defaultValue={defaultValue}
-                        id={id}
-                        onChange={onChange}
-                        className={`${styles.select} ${styles[variant]}`}
-                    >
-                        {Array.isArray(fields) ? _optionsFromArray(fields) : _optionsFromObj(fields)}
-                    </select>
-                </div>
+        <div className={wrapperClassName}>
+            <div>
+                <label htmlFor={id} className={labelClassName}>
+                    {label}
+                </label>
             </div>
-        </>
+            <div>
+                <select
+                    name={name ? name : id}
+                    defaultValue={defaultValue}
+                    id={id}
+                    onChange={onChange}
+                    className={`${styles.select} ${styles[variant]}`}
+                >
+                    {Array.isArray(fields) ? _optionsFromArray(fields) : _optionsFromObj(fields)}
+                </select>
+            </div>
+        </div>
     );
 };

@@ -1,23 +1,23 @@
 import { Button, FilterChip, FilterChipBar, InlineIcon, Toggle } from "@niagads/ui";
 import React, { useEffect, useState } from "react";
 
-import { Row } from "@tanstack/react-table";
+import { Column, Row } from "@tanstack/react-table";
 import { TableRow } from "../TableProperties";
 import { TrashIcon } from "lucide-react";
 
-interface RowSelectionControlsProps {
-    selectedRows: Row<TableRow>[];
+interface ColumnFilterControlsProps {
+    activeFilters: Column<any, unknown>[];
     displayColumn: string;
     onToggleSelectedFilter: () => void;
     onRemoveAll: () => void;
 }
 
-export const RowSelectionControls = ({
+export const ColumnFilterControls = ({
     onToggleSelectedFilter,
-    selectedRows,
+    activeFilters,
     onRemoveAll,
     displayColumn,
-}: RowSelectionControlsProps) => {
+}: ColumnFilterControlsProps) => {
     const [isFiltered, setIsFiltered] = useState(false);
     const didMount = React.useRef(false);
 
@@ -29,7 +29,7 @@ export const RowSelectionControls = ({
         }
     }, [isFiltered]);
 
-    if (selectedRows.length === 0) return null;
+    if (activeFilters.length === 0) return null;
 
     return (
         <FilterChipBar label={"Selected rows"}>

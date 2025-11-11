@@ -1,13 +1,14 @@
 import { Column } from "@tanstack/react-table";
 import React, { useMemo } from "react";
 import { _get } from "@niagads/common";
-import { TextInput } from "@niagads/ui";
+import { TextInput, Select } from "@niagads/ui";
+import { Slider } from "@niagads/ui/client";
 
-interface Filter {
+interface FilterProps {
     column: Column<any, unknown>;
 }
 
-export const Filter = ({ column }: Filter) => {
+export const Filter = ({ column }: FilterProps) => {
     const columnFilterValue = column.getFilterValue();
     const colType = column.columnDef.meta?.type;
 
@@ -23,49 +24,36 @@ export const Filter = ({ column }: Filter) => {
     return colType === "float" ? (
         //TODO: if faceted unique values length is 5 or more use slider otherwise use dropdown
         <div>
-            {/*  <Slider
-                className="max-w-mid"
+             <Slider
+                name={`${column.id}-filter`}
                 label="Filter Range"
-                minValue={+minValue}
-                maxValue={+maxValue}
-                defaultValue={[+minValue, +maxValue]}
+                min={+minValue}
+                max={+maxValue}
                 step={(maxValue - minValue) / 50}
+                value={[column.getFilterValue() as number || +maxValue]}
                 onChange={(val) => column.setFilterValue(val)}
-            />*/}
+            />
         </div>
     ) : colType === "p_value" ? (
         //TODO: filter based on neg_log10_pvalue maybe
         <div>
-            {/*<Slider
-                className="max-w-mid"
+             <Slider
+                name={`${column.id}-filter`}
                 label="Filter Range"
-                minValue={0}
-                maxValue={+maxValue}
-                defaultValue={+maxValue}
+                min={+minValue}
+                max={+maxValue}
                 step={(maxValue - minValue) / 50}
+                value={[0, column.getFilterValue() as number || +maxValue]}
                 onChange={(val) => column.setFilterValue([0, val])}
-            />*/}
+            />
         </div>
     ) : sortedUniqueValues.length < 11 ? (
         <div>
-            {/*<Dropdown>
-                <DropdownTrigger>
-                    <Button variant="bordered">Select Filter</Button>
-                </DropdownTrigger>
-                <DropdownMenu
-                    onSelectionChange={key => column.setFilterValue(key)}
-                    //TODO: handle filtering based on mutiple selections
-                    // selectionMode="multiple"
-                    // closeOnSelect={false}
-                >
-                    {sortedUniqueValues.map((val) => (
-                        <DropdownItem key={val}>
-                            {val}
-                        </DropdownItem>
-                    ))}
-                </DropdownMenu>
-            </Dropdown>
-            */}
+            <Select 
+                id={`${column.id}-filter`}
+                fields={sortedUniqueValues}
+                onChange={(e) => column.setFilterValue(e.target.value)}
+            />
         </div>
     ) : (
         <div>
