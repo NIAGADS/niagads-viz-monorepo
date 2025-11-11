@@ -24,32 +24,32 @@ export const Filter = ({ column }: FilterProps) => {
     return colType === "float" ? (
         //TODO: if faceted unique values length is 5 or more use slider otherwise use dropdown
         <div>
-             <Slider
+            <Slider
                 name={`${column.id}-filter`}
                 label="Filter Range"
                 min={+minValue}
                 max={+maxValue}
                 step={(maxValue - minValue) / 50}
-                value={[column.getFilterValue() as number || +maxValue]}
+                value={[(column.getFilterValue() as number) || +maxValue]}
                 onChange={(val) => column.setFilterValue(val)}
             />
         </div>
     ) : colType === "p_value" ? (
         //TODO: filter based on neg_log10_pvalue maybe
         <div>
-             <Slider
+            <Slider
                 name={`${column.id}-filter`}
                 label="Filter Range"
                 min={+minValue}
                 max={+maxValue}
                 step={(maxValue - minValue) / 50}
-                value={[0, column.getFilterValue() as number || +maxValue]}
+                value={[0, (column.getFilterValue() as number) || +maxValue]}
                 onChange={(val) => column.setFilterValue([0, val])}
             />
         </div>
     ) : sortedUniqueValues.length < 11 ? (
         <div>
-            <Select 
+            <Select
                 id={`${column.id}-filter`}
                 fields={sortedUniqueValues}
                 onChange={(e) => column.setFilterValue(e.target.value)}
