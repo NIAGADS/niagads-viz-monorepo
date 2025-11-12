@@ -1,5 +1,5 @@
-import igv from "igv/dist/igv.esm";
 import { _deepCopy } from "@niagads/common";
+import igv from "igv/dist/igv.esm";
 
 const SEQUENCES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
 
@@ -36,13 +36,14 @@ class ShardedBEDReader {
 
 function getReader(config: any, genome: any, chr: string) {
     const shardConfig = _deepCopy(config);
+    const chrId = chr.replace("chr", ""); // just substitute in the sequence id w/out `chr` prefix
     if (config.decode) {
         shardConfig.decode = config.decode; // deep copy loses functions as it is a json transformation
     }
-    shardConfig.url = config.url.replace("$CHR", chr);
+    shardConfig.url = config.url.replace("$CHR", chrId);
 
     if (config.indexURL) {
-        shardConfig.indexURL = config.indexURL.replace("$CHR", chr);
+        shardConfig.indexURL = config.indexURL.replace("$CHR", chrId);
     }
 
     return new igv.FeatureFileReader(shardConfig, genome);
