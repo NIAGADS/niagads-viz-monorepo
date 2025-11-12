@@ -11,22 +11,49 @@ import find from "lodash.find";
 import noop from "lodash.noop";
 import { trackPopover } from "./tracks/feature_popovers";
 
+/**
+ * Props for the IGVBrowser React component.
+ * @property genome - Genome assembly identifier (e.g., "GRCh38").
+ * @property searchUrl - URL endpoint for feature search queries.
+ * @property tracks - Optional array of track configuration objects to load.
+ * @property locus - Optional initial locus (region or gene name) to display.
+ * @property hideNavigation - Optional flag to hide browser navigation controls.
+ * @property allowQueryParameters - Optional flag to enable support for query parameters in the URL.
+ * @property onTrackRemoved - Optional callback fired when a track is removed.
+ * @property onBrowserLoad - Optional callback fired when browser is loaded.
+ * @property onLocusChanged - Optional callback fired when locus changes.
+ */
 export interface IGVBrowserProps {
+    /** Genome assembly identifier (e.g., "GRCh38") */
     genome: string;
-    featureSearchURI: string;
+    /** URL endpoint for feature search queries, should take a `feature` and a `flank` parameter */
+    searchUrl: string;
+    /** Array of track configuration objects to load */
     tracks?: IGVBrowserTrack[];
+    /** Initial locus (region or gene name) to display */
     locus?: string;
+    /** Flag to hide browser navigation controls */
+    hideNavigation?: boolean;
+    /** Flag to enable support for query parameters in the URL. */
+    allowQueryParameters?: boolean;
+    /** Callback fired when a track is removed */
     onTrackRemoved?: (track: string) => void;
+    /** Callback fired when browser is loaded */
     onBrowserLoad?: (Browser: any) => void;
+    /** Callback fired when locus changes */
+    onLocusChanged?: (Browser: any) => void;
 }
 
 const IGVBrowser: React.FC<IGVBrowserProps> = ({
-    genome,
-    featureSearchURI,
+    genome = "GRCh38",
+    searchUrl,
     locus,
+    tracks,
+    hideNavigation = false,
+    allowQueryParameters = true,
     onBrowserLoad,
     onTrackRemoved,
-    tracks,
+    onLocusChanged,
 }) => {
     const [isClient, setIsClient] = useState(false);
 
@@ -36,6 +63,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
     const [browser, setBrowser] = useState<any>(null);
 
     const containerRef = useRef(null);
+    const isDragging = useRef(false);
 
     const opts: any = useMemo(() => {
         const referenceTrackConfig: any = find(_genomes, { id: genome });
@@ -44,12 +72,14 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
             showAllChromosomes: false,
             flanking: DEFAULT_FLANK,
             minimumBases: 40,
+            showNavigation: !hideNavigation,
             search: {
-                url: `${featureSearchURI}$FEATURE$&flank=${DEFAULT_FLANK}`,
+                url: `${searchUrl}?feature=$FEATURE$&flank=${DEFAULT_FLANK}`,
             },
             reference: referenceTrackConfig,
             loadDefaultGenomes: false,
             genomeList: _genomes,
+            supportQueryParameters: allowQueryParameters,
         };
     }, [genome, locus]);
 
@@ -102,11 +132,30 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
                         // custom track popovers
                         browser.on("trackclick", trackPopover);
 
-                        // perform action in encapsulating component if track is removed
+                        // handle track removed
                         browser.on("trackremoved", function (track: any) {
                             if (onTrackRemoved) {
                                 onTrackRemoved(track.config.id);
                             }
+                        });
+
+                        // handle locus change; useful for saving a session
+                        browser.on("locuschange", function (referenceFrameList: any) {
+                            if (!isDragging.current) {
+                                let loc = referenceFrameList.map((rf: any) => rf.getLocusString()).join("%20");
+                                onLocusChanged && onLocusChanged(loc);
+                            }
+                        });
+
+                        // track when dragging ends so can accurately register a locus change
+                        browser.on("trackdrag", () => {
+                            isDragging.current = true;
+                        });
+
+                        browser.on("trackdragend", () => {
+                            isDragging.current = false;
+                            let loc = browser.referenceFrameList.map((rf: any) => rf.getLocusString()).join("%20");
+                            onLocusChanged && onLocusChanged(loc);
                         });
 
                         // add browser to state

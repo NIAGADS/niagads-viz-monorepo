@@ -9,12 +9,12 @@ import { Collection, CollectionMetadata, IGVBrowserTrack } from "./types/data_mo
 import { TabDef, Tabs } from "@niagads/ui/client";
 import { getLoadedTracks, getTrackConfig, loadTracks, removeTrackById } from "./tracks/utils";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { _genomes } from "./config/_igvGenomes";
 
 import { MemoIGVBrowser as GenomeBrowser } from "./IGVBrowser";
+import React from "react";
 import { TableProps } from "@niagads/table";
 import TrackSelectorTable from "./TrackSelectorTable";
-import React from "react";
+import { _genomes } from "./config/_igvGenomes";
 
 interface DataProps {
     metadata: CollectionMetadata;
@@ -95,7 +95,7 @@ const IGVBrowserWithSelector = ({ metadata, selector, config, collections }: Dat
     return (
         <>
             {/* TODO: populate props properly */}
-            <GenomeBrowser genome={""} featureSearchURI={""} onBrowserLoad={initializeBrowser} tracks={[]} />
+            <GenomeBrowser genome={""} searchUrl={""} onBrowserLoad={initializeBrowser} tracks={[]} />
 
             <div className="m-4 py-4 border-b border-primary">
                 <h1 className="font-bold text-3xl">Select Tracks to Display</h1>
