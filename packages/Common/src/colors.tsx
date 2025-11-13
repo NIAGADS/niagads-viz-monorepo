@@ -6,7 +6,8 @@ export const COLOR_BLIND_FRIENDLY_PALETTES = {
 
 type RGB = `rgb(${number}, ${number}, ${number})`;
 type RGBA = `rgba(${number}, ${number}, ${number}, ${number})`;
+type HSL = `hsl(${number}, ${number}%, ${number}%)`;
 type HEX = `#${string}`;
 type STANDARD_COLORS = "red" | "blue" | "green" | "gold" | "grey" | "black" | "white";
 
-export type Color = RGB | RGBA | HEX | STANDARD_COLORS;
+export type Color = RGB | RGBA | HSL | HEX | STANDARD_COLORS;
