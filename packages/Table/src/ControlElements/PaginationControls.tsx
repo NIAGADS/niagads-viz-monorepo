@@ -7,6 +7,7 @@ import range from "lodash.range";
 import styles from "../styles/controls.module.css";
 
 interface PaginationControlsProps {
+    id: string;
     table: ReactTable<any>;
 }
 
@@ -26,7 +27,7 @@ const __generatePageSizeOptions = (nRows: number) => {
     return intervals.filter((v, i, a) => a.indexOf(v) === i);
 };
 
-export const PaginationControls = ({ table }: PaginationControlsProps) => {
+export const PaginationControls = ({ id, table }: PaginationControlsProps) => {
     const [pageSize, setPageSize] = useState<number>(table.getState().pagination.pageSize);
     const nRows = table.getPrePaginationRowModel().rows.length;
     const pageSizeOptions = useMemo(() => __generatePageSizeOptions(nRows), [nRows]);
@@ -50,7 +51,7 @@ export const PaginationControls = ({ table }: PaginationControlsProps) => {
                         onChangePageSize(Number(e.target.value));
                     }}
                     label="Results per page"
-                    id="pages"
+                    id={`${id}-pages`}
                     inline
                     variant="outline"
                 />

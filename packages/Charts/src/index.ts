@@ -1,1 +1,3 @@
-export * from "./AssociationSummaryChart";
+import BarChart from "./BarChart";
+
+export { BarChart };

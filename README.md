@@ -70,9 +70,13 @@ npm run storybook
 
 ### niagads-api-client
 
+> temporarily moved to own repo until we can break tailwindcss dependendency (niagads-api)
+
 ### track-collection-microservice
 
 ### igvbrowser-microservice
+
+> temporarily just a test-application
 
 ## For Developers
 
@@ -119,6 +123,10 @@ npm run storybook
 ```
 
 > **Note:** if you get a message that `nx` is not found, install globally with the following command: `npm i -g nx`. Depending on your system setup, you may need to use `sudo`.
+
+#### Run GenomicsDB
+
+see README in the GenomicsDB application directory.
 
 #### Run a microservice
 

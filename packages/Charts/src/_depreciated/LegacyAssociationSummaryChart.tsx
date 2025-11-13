@@ -14,7 +14,7 @@ export interface GeneticAssociationSummaryChartConfig {
     series: Series;
 }
 
-export const AssociationSummaryBarChart = ({ data, series }: GeneticAssociationSummaryChartConfig) => {
+export const LegacyAssociationSummaryBarChart = ({ data, series }: GeneticAssociationSummaryChartConfig) => {
     return (
         <ResponsiveContainer width="100%" height="100%">
             <BarChart

@@ -2,13 +2,13 @@ import { AnchoredPageSection, RecordType } from "@/lib/types";
 
 const UC_GENERIC_SECTION: AnchoredPageSection = {
     id: "uc-section",
-    label: "Under Constructure",
+    label: "Under Construction",
     description: "more annotations coming soon",
     icon: "chart",
     underConstruction: true,
 };
 
-const GWAS_ASSOC_SECTION: AnchoredPageSection = {
+export const GWAS_ASSOC_SECTION: AnchoredPageSection = {
     id: "gwas-genetic-associations",
     label: "NIAGADS GWAS associations",
     description: "",

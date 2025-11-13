@@ -1,13 +1,15 @@
+"use client";
+
 import { Card, CardBody, CardHeader } from "@niagads/ui";
 import { RecordOverview, renderRecordTitle } from "./RecordOverview";
-
 import { ExternalUrls } from "@/data/reference";
 import { GeneRecord } from "@/lib/types";
 import { RecordActionToolbar } from "../RecordActionToolbar";
 import { RecordLink } from "../../Link";
-import RecordSectionUnderConstructionAlert from "../RecordSectionUnderConstructionAlert";
 import { genomicLocationToSpan } from "@/lib/utils";
 import styles from "../styles/record.module.css";
+import { GWAS_ASSOC_SECTION } from "@/data/sections";
+import AssociationSummaryChart from "../../charts/AssociationSummaryChart";
 
 const GeneRecordOverview = ({ record }: { record: GeneRecord }) => {
     // Format location string: chr:start-end:strand / cytogenic_location
@@ -53,8 +55,11 @@ const GeneRecordOverview = ({ record }: { record: GeneRecord }) => {
             <Card variant="two-thirds">
                 <CardHeader>Genetic Associations</CardHeader>
                 <CardBody>
-                    <RecordSectionUnderConstructionAlert section={"Gene Genetic Association Overview"} />
-                    {/*<GeneAssociationSummaryChart recordId={record.id} />*/}
+                    <div className="flex" style={{ height: "100%" }}>
+                        {GWAS_ASSOC_SECTION.tables!.map((tableDef) => (
+                            <AssociationSummaryChart record={record} endpoint={tableDef.endpoint} />
+                        ))}
+                    </div>
                 </CardBody>
             </Card>
         </RecordOverview>

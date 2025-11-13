@@ -10,7 +10,7 @@ export const UnderConstructionPage = ({ source }: { source: string }) => (
         <Alert variant="construction" message={`${source}: Under Construction`}>
             <div>
                 <p>The new version of the NIAGADS GenomicsDB is still under development. Please check back soon. </p>
-                <p>The site will continue to be updated until planned production release (September 2025).</p>
+                <p>The site will continue to be updated until planned production release (November 2025).</p>
             </div>
         </Alert>
         <Alert variant="info" message="What's available?" style={{ marginTop: "2rem" }}>
