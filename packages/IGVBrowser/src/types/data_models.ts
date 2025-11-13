@@ -42,7 +42,7 @@ export interface IGVBrowserTrack {
     height?: string;
     visibilityWindow?: number;
     oauthToken?: any;
-    autoHeight?: boolean;
+    autoscale?: boolean;
     minHeight?: number;
     maxHeight?: number;
     order?: number;
