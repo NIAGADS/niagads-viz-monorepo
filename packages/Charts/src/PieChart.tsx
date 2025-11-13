@@ -16,13 +16,13 @@ interface PieChartProps {
 }
 
 const PieChart = ({ id, data, onClick }: PieChartProps) => {
-    const total = data.reduce((total, row) => total += row.value, 0);
+    const total = data.reduce((total, row) => (total += row.value), 0);
 
     // calculates color based on value
     const gradient = 360;
-    const transformedData = data.map(row => ({
+    const transformedData = data.map((row) => ({
         ...row,
-        color: `hsl(${Math.floor((row.value / total) * gradient)}, 70%, 50%)`
+        color: `hsl(${Math.floor((row.value / total) * gradient)}, 70%, 50%)`,
     }));
 
     console.log(total);
@@ -40,9 +40,9 @@ const PieChart = ({ id, data, onClick }: PieChartProps) => {
                 arcLinkLabelsSkipAngle={10}
                 arcLinkLabelsTextColor="#333333"
                 arcLinkLabelsThickness={2}
-                arcLinkLabelsColor={{ from: 'color' }}
+                arcLinkLabelsColor={{ from: "color" }}
                 arcLabelsSkipAngle={10}
-                arcLabelsTextColor={{ from: 'color', modifiers: [['darker', 2]] }}
+                arcLabelsTextColor={{ from: "color", modifiers: [["darker", 2]] }}
                 legends={[
                     {
                         anchor: "bottom-right",
