@@ -1,0 +1,19 @@
+/* for pretty-printing json */
+.pretty-json {
+    @apply m-3;
+    &.string {
+        @apply text-green-800;
+    }
+    &.number {
+        @apply text-orange-500;
+    }
+    &.boolean {
+        @apply text-blue-700;
+    }
+    &.null {
+        @apply text-gray-700;
+    }
+    &.key {
+        @apply text-yellow-700;
+    }
+}
