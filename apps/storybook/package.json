@@ -23,7 +23,10 @@
         "@storybook/nextjs": "^8.2.8",
         "@storybook/react": "^8.2.8",
         "@storybook/test": "^8.2.8",
-        "http-proxy-middleware": "^3.0.3"
+        "http-proxy-middleware": "^3.0.3",
+        "css-loader": "^6.8.1",
+        "postcss-loader": "^8.1.0",
+        "ts-loader": "^9.4.4"
     },
     "private": "true",
     "version": "0.0.1"
