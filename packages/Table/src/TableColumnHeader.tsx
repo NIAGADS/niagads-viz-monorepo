@@ -1,14 +1,11 @@
 import {
     ArrowDownUp,
-    HelpCircle,
-    ListFilterPlus,
     ArrowDownNarrowWide as SortAscIcon,
     ArrowUpWideNarrow as SortDescIcon,
 } from "lucide-react";
 import { Header, flexRender } from "@tanstack/react-table";
-import React, { useState } from "react";
+import React from "react";
 
-import { Button } from "@niagads/ui";
 import { Filter } from "./Filter";
 import { HelpIconWrapper } from "@niagads/ui";
 import { TableRow } from "./TableProperties";
@@ -17,7 +14,7 @@ import styles from "./styles/table.module.css";
 
 interface TableColumnHeaderProps {
     header: Header<TableRow, unknown>;
-    tableId: string;
+    areFiltersOpen: boolean;
 }
 
 const SORT_ICONS = {
@@ -26,11 +23,10 @@ const SORT_ICONS = {
     desc: SortDescIcon,
 };
 
-export const TableColumnHeader = ({ header, tableId }: TableColumnHeaderProps) => {
+export const TableColumnHeader = ({ header, areFiltersOpen }: TableColumnHeaderProps) => {
     const isSorted = header.column.getIsSorted();
     const SortIcon = SORT_ICONS[isSorted !== false ? isSorted : "sort"];
     const description = _get("description", header.column.columnDef.meta);
-    const [filterOpen, setFilterOpen] = useState(false);
 
     const canSort = header.column.getCanSort();
 
@@ -68,18 +64,8 @@ export const TableColumnHeader = ({ header, tableId }: TableColumnHeaderProps) =
                         )
                     ) : null}
                 </div>
-
-                {header.column.getCanFilter() && (
-                    <div className={styles["column-header-filter-control-container"]}>
-                        <Button variant="icon" color="primary" onClick={() => setFilterOpen(!filterOpen)}>
-                            <ListFilterPlus
-                                className={`${styles["column-header-icon"]} ${styles.button}}`}
-                            ></ListFilterPlus>
-                        </Button>
-                    </div>
-                )}
             </div>
-            {filterOpen && <Filter column={header.column} />}
+            {header.column.getCanFilter() && areFiltersOpen && <Filter column={header.column} />}
         </th>
     );
 };

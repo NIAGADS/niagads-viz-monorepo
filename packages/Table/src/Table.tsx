@@ -64,12 +64,12 @@ const __resolveCell = (userCell: GenericCell | GenericCell[], column: GenericCol
 // the HeaderGroup API will take column visibility into account
 
 // render the table header
-const __renderTableHeader = (hGroups: HeaderGroup<TableRow>[], tableId: string) => (
+const __renderTableHeader = (hGroups: HeaderGroup<TableRow>[], areFiltersOpen: boolean) => (
     <thead>
         {hGroups.map((headerGroup: HeaderGroup<TableRow>) => (
             <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
-                    return <TableColumnHeader key={header.id} header={header} tableId={tableId} />;
+                    return <TableColumnHeader key={header.id} header={header} areFiltersOpen={areFiltersOpen} />;
                 })}
             </tr>
         ))}
@@ -124,6 +124,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
         __setInitialColumnVisibility(options?.defaultColumns, columns)
     );
     const [showOnlySelected, setShowOnlySelected] = useState(false);
+    const [areFiltersOpen, setAreFiltersOpen] = useState(false);
     const initialRender = useRef(true); // to regulate callbacks affected by the initial state
     const enableRowSelect = !!options?.rowSelect;
     const disableColumnFilters = false; // FIXME- renable after working -- !!options?.disableColumnFilters;
@@ -301,7 +302,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
     return table ? (
         <div className={styles["table-outer-container"]}>
             <div className={styles["table-controls-container"]}>
-                <TableToolbar table={table} tableId={id} enableExport={!!!options?.disableExport} />
+                <TableToolbar table={table} tableId={id} enableExport={!!!options?.disableExport} openFilters={() => setAreFiltersOpen(!areFiltersOpen)} />
                 <PaginationControls id={id} table={table} />
             </div>
             {enableRowSelect && (
@@ -323,7 +324,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
             )}
             <div className={styles["table-container"]}>
                 <table className={`${styles["table-layout"]} ${styles["table-border"]} ${styles["table-text"]}`}>
-                    {__renderTableHeader(table.getHeaderGroups(), id)}
+                    {__renderTableHeader(table.getHeaderGroups(), areFiltersOpen)}
                     <tbody>
                         {rowModel.rows.map((row) => (
                             <tr key={row.id} className={styles["table-dtr"]}>

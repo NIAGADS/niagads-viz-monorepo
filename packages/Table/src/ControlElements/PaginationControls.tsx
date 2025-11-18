@@ -42,39 +42,37 @@ export const PaginationControls = ({ id, table }: PaginationControlsProps) => {
     };
 
     return (
-        <>
-            <div className={styles["pagination-control-container"]} aria-label="pagination">
-                <Select
-                    defaultValue={pageSize.toString()}
-                    fields={pageSizeOptions}
-                    onChange={(e: any) => {
-                        onChangePageSize(Number(e.target.value));
-                    }}
-                    label="Results per page"
-                    id={`${id}-pages`}
-                    inline
-                    variant="outline"
-                />
-                <div className={styles["pagination-control-summary"]}>
-                    {minDisplayedRow} - {maxDisplayedRow} of {nRows}
-                </div>
-                <Button
-                    color="default"
-                    variant="icon"
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
-                >
-                    <ChevronLeft></ChevronLeft>
-                </Button>
-                <Button
-                    color="default"
-                    variant="icon"
-                    onClick={() => table.nextPage()}
-                    disabled={!table.getCanNextPage()}
-                >
-                    <ChevronRight></ChevronRight>
-                </Button>
+        <div className={styles["pagination-control-container"]} aria-label="pagination">
+            <Select
+                defaultValue={pageSize.toString()}
+                fields={pageSizeOptions}
+                onChange={(e: any) => {
+                    onChangePageSize(Number(e.target.value));
+                }}
+                label="Results per page"
+                id={`${id}-pages`}
+                inline
+                variant="outline"
+            />
+            <div className={styles["pagination-control-summary"]}>
+                {minDisplayedRow} - {maxDisplayedRow} of {nRows}
             </div>
-        </>
+            <Button
+                color="default"
+                variant="icon"
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+            >
+                <ChevronLeft></ChevronLeft>
+            </Button>
+            <Button
+                color="default"
+                variant="icon"
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+            >
+                <ChevronRight></ChevronRight>
+            </Button>
+        </div>
     );
 };

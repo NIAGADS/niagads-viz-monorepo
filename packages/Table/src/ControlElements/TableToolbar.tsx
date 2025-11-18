@@ -1,7 +1,8 @@
-import { ButtonGroup, TextInput } from "@niagads/ui";
+import { Button, ButtonGroup, TextInput, InlineIcon } from "@niagads/ui";
 import React, { useCallback, useMemo } from "react";
 import { Table as ReactTable, Column as ReactTableColumn } from "@tanstack/react-table";
 import { TableExportControls, exportTable } from "./TableExportControls";
+import { ListFilterPlus } from "lucide-react";
 
 import { ColumnControls } from "./ColumnControls";
 import { TableRow } from "../TableProperties";
@@ -12,6 +13,7 @@ interface ToolbarProps {
     table: ReactTable<TableRow>;
     tableId: string;
     enableExport: boolean;
+    openFilters: () => void;
 }
 
 // if all columns are required, then cannot toggle column visibility for the table
@@ -20,7 +22,7 @@ const __canToggleColumns = (columns: ReactTableColumn<TableRow>[]) => {
     return requiredColumns.some((x) => x === false);
 };
 
-export const TableToolbar = ({ table, tableId, enableExport }: ToolbarProps) => {
+export const TableToolbar = ({ table, tableId, enableExport, openFilters }: ToolbarProps) => {
     const canToggleColumns = useMemo(() => __canToggleColumns(table.getAllColumns()), []);
     const tableIsFiltered: boolean =
         table.getState().globalFilter !==
@@ -37,6 +39,11 @@ export const TableToolbar = ({ table, tableId, enableExport }: ToolbarProps) => 
             <ButtonGroup>
                 {canToggleColumns && (
                     <ColumnControls columns={table.getAllLeafColumns()} onSelect={() => console.log("selected")} />
+                )}
+                {table.getVisibleFlatColumns().some(c => c.getCanFilter()) && (
+                    <Button icon={ListFilterPlus} onClick={() => openFilters()}>
+                        Filter
+                    </Button>
                 )}
                 {enableExport && <TableExportControls onSubmit={handleTableExport} isFiltered={tableIsFiltered} />}
             </ButtonGroup>
