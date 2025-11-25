@@ -23,8 +23,8 @@ export function EnhancedSearch({
 
     const getSuggestions = (value: string) => {
         if (value) {
-            // setUrl(prefixClientRoute(`/api/service/search?keyword=${value}&limit=10`));
-            setUrl(prefixClientRoute(`/api/service/search?keyword=${value}&limit=10&searchType=feature`));
+            // setUrl(prefixClientRoute(`/niagads-api/service/search?keyword=${value}&limit=10`));
+            setUrl(prefixClientRoute(`/niagads-api/service/search?keyword=${value}&limit=10&searchType=feature`));
         }
     };
 

@@ -17,7 +17,7 @@ export interface RecordTableProps {
 
 const buildTableEndpoint = (endpoint: string) => {
     const view = endpoint.includes("?") ? "&view=table" : "?view=table";
-    return `/api/record/${endpoint}${view}`;
+    return `/niagads-api/record/${endpoint}${view}`;
 };
 
 const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTableProps) => {
