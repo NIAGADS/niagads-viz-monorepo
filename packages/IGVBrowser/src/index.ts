@@ -1,7 +1,6 @@
 import IGVBrowser from "./IGVBrowser";
 import IGVBrowserWithSelector from "./IGVBrowserWithSelector";
-import TrackSelectorTable from "./TrackSelectorTable";
 import { VariantReferenceTrack } from "./config/_constants";
-
-export { IGVBrowser, IGVBrowserWithSelector, TrackSelectorTable, VariantReferenceTrack };
+import { convertFILERMetadataToIGVTrack } from "./tracks/utils";
 export type { IGVBrowserTrack } from "./types/data_models";
+export { convertFILERMetadataToIGVTrack, IGVBrowser, IGVBrowserWithSelector, VariantReferenceTrack };

@@ -1,6 +1,5 @@
 import { ALWAYS_ON_TRACKS } from "../config/_constants";
 import { IGVBrowserTrack } from "../types/data_models";
-import get from "lodash.get"; // FIXME: deprecated
 
 export const getTrackConfig = (trackIds: string[], config: IGVBrowserTrack[]) =>
     config.filter((c) => trackIds.includes(c.id));
@@ -11,7 +10,7 @@ export const getTrackID = (trackView: any) => {
 };
 
 export const getLoadedTracks = (browser: any, alwaysOnTracks: string[] = ALWAYS_ON_TRACKS): string[] =>
-    get(browser, "trackViews", [])
+    (browser?.trackViews ?? [])
         .map((view: any) => getTrackID(view))
         .filter((track: string) => !alwaysOnTracks.includes(track));
 
@@ -20,7 +19,7 @@ export const trackIsLoaded = (config: any, browser: any) => getLoadedTracks(brow
 // we want to find track by ID b/c some names may be duplicated; so modeled after:
 // https://github.com/igvteam/igv.js/blob/0dfb1f7b02d9660ff1ef0169899c4711496158e8/js/browser.js#L1104
 export const removeTrackById = (trackId: string, browser: any) => {
-    const trackViews = get(browser, "trackViews", []);
+    const trackViews = browser?.trackViews ?? [];
     const trackView = trackViews.filter((view: any) => getTrackID(view) === trackId);
     browser.removeTrack(trackView[0].track);
 };
@@ -65,4 +64,39 @@ export const resolveServiceTrackReader = async (trackType: string, config: any) 
         default:
             return null;
     }
+};
+
+/**
+Convert FILER metadata specification to IGV tracks
+note: FILER metadata specification is unstable, so this may need to be modified
+in the future
+ */
+export const convertFILERMetadataToIGVTrack = (metadata: any) => {
+    if (!Array.isArray(metadata)) {
+        throw new Error("FILERtoIGV: metadata must be an array");
+    }
+    return metadata.map((track: any) => {
+        const url = track["Processed File Download URL"];
+
+        const igvTrack: Partial<IGVBrowserTrack> = {
+            id: track["#Identifier"],
+            name: track["trackName"],
+            url: url,
+            indexURL: url + ".tbi",
+            infoURL: "/record",
+            format: "bed",
+            type: "annotation",
+            autoscale: false,
+        };
+        if (!track["Track Description"].toLowerCase().includes("not applicable")) {
+            igvTrack.description = track["Track Description"];
+        }
+        if (track["Data Category"].includes("QTL")) {
+            // expect format = bed bed6+14 qtl -> so need bed6+14, or what ever is in 2nd item
+            let format = track["File format"].split(" ")[1];
+            Object.assign(igvTrack, { format: format, type: "qtl", autoscale: true });
+        }
+
+        return igvTrack as IGVBrowserTrack;
+    });
 };
