@@ -6,7 +6,7 @@
 // FIXME: remove tailwind class and switch to css.modules
 
 import { Collection, CollectionMetadata, IGVBrowserTrack } from "./types/data_models";
-import { TabDef, Tabs } from "@niagads/ui/client";
+import { Tabs } from "@niagads/ui/client";
 import { getLoadedTracks, getTrackConfig, loadTracks, removeTrackById } from "./tracks/utils";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -82,6 +82,7 @@ const IGVBrowserWithSelector = ({ metadata, selector, config, collections }: Dat
     }, [loadCallback, unloadCallback]);
 
     // track selector tabs
+    /* FIXME: Tabs have changed implementation
     const tabItems: TabDef[] = useMemo(
         () =>
             selector.map((item) => ({
@@ -91,7 +92,7 @@ const IGVBrowserWithSelector = ({ metadata, selector, config, collections }: Dat
             })),
         []
     );
-
+    */
     return (
         <>
             {/* TODO: populate props properly */}
@@ -100,7 +101,7 @@ const IGVBrowserWithSelector = ({ metadata, selector, config, collections }: Dat
             <div className="m-4 py-4 border-b border-primary">
                 <h1 className="font-bold text-3xl">Select Tracks to Display</h1>
             </div>
-            <Tabs tabs={tabItems} width="w-full" />
+            {/*<Tabs tabs={tabItems} width="w-full" />*/}
         </>
     );
 };

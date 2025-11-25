@@ -2,6 +2,8 @@ export const DEFAULT_FLANK = 1000;
 export const ALWAYS_ON_TRACKS = ["ideogram", "ruler", "sequence", "ENSEMBL_GENE"];
 export const HASH_PREFIX = "#/locus/";
 
+export const FEATURE_SEARCH_URL = `/api/feature-lookup?id=$FEATURE$&flank=${DEFAULT_FLANK}`;
+
 export const VariantReferenceTrack = {
     name: "ADSP R4 Variants",
     url: "/service/track/variant",

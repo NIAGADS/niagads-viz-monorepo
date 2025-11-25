@@ -3,7 +3,7 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { getLoadedTracks, loadTracks, removeTrackById } from "./tracks/utils";
 
-import { DEFAULT_FLANK } from "./config/_constants";
+import { DEFAULT_FLANK, FEATURE_SEARCH_URL } from "./config/_constants";
 import { IGVBrowserTrack } from "./types/data_models";
 import { Skeleton } from "@niagads/ui";
 import { _genomes } from "./config/_igvGenomes";
@@ -26,8 +26,8 @@ import { trackPopover } from "./tracks/feature_popovers";
 export interface IGVBrowserProps {
     /** Genome assembly identifier (e.g., "GRCh38") */
     genome: string;
-    /** URL endpoint for feature search queries, should take a `feature` and a `flank` parameter */
-    searchUrl: string;
+    /** URL endpoint for feature search queries, should take a `feature` and a `flank` parameter; defaults to GenomicsDB Feature search */
+    searchUrl?: string;
     /** Array of track configuration objects to load */
     tracks?: IGVBrowserTrack[];
     /** Initial locus (region or gene name) to display */
@@ -46,7 +46,7 @@ export interface IGVBrowserProps {
 
 const IGVBrowser: React.FC<IGVBrowserProps> = ({
     genome = "GRCh38",
-    searchUrl,
+    searchUrl = FEATURE_SEARCH_URL,
     locus,
     tracks,
     hideNavigation = false,
@@ -74,7 +74,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
             minimumBases: 40,
             showNavigation: !hideNavigation,
             search: {
-                url: `${searchUrl}?feature=$FEATURE$&flank=${DEFAULT_FLANK}`,
+                url: searchUrl,
             },
             reference: referenceTrackConfig,
             loadDefaultGenomes: false,

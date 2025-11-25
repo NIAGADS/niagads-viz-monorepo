@@ -66,7 +66,6 @@ const defaultTracks: IGVBrowserTrack[] = [
 export const WithNavigation: StoryObj<typeof IGVBrowser> = {
     args: {
         genome: "GRCh38",
-        searchUrl: "/api/genomics/service/igvbrowser/feature",
         tracks: defaultTracks,
         locus: "ABCA7",
         hideNavigation: false,
@@ -81,7 +80,6 @@ export const WithNavigation: StoryObj<typeof IGVBrowser> = {
 export const WithoutNavigation: StoryObj<typeof IGVBrowser> = {
     args: {
         genome: "GRCh38",
-        searchUrl: "/api/genomics/service/igvbrowser/feature",
         tracks: defaultTracks,
         locus: "ABCA7",
         hideNavigation: true,
