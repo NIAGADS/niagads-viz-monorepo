@@ -44,7 +44,7 @@ export async function fetchRecordAssociations(
 }
 
 export async function _fetch(endpoint: string, content: ResponseContent = "full", dataOnly: boolean = false) {
-    const basePath = `${getBasePath()}/niagads-api`;
+    const basePath = `${getBasePath()}/api-proxy`;
     let query = `${basePath}${endpoint}`;
 
     // fetch from backend

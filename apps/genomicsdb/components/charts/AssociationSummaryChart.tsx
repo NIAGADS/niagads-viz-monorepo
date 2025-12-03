@@ -26,7 +26,7 @@ const AssociationSummaryChart = ({ record, endpoint }: AssociationSummaryChartPr
 };
 
 const buildChartUrl = (record: BaseRecord, tableUrl: string) => {
-    const base_url = `/niagads-api/record/${record.record_type}/${record.id}/associations`;
+    const base_url = `/api-proxy/record/${record.record_type}/${record.id}/associations`;
 
     const trait = getUrlParam(tableUrl, "trait")!;
     const source = getUrlParam(tableUrl, "source")!;

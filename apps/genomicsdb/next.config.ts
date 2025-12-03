@@ -30,7 +30,7 @@ const nextConfig: NextConfig = {
     async rewrites() {
         return [
             {
-                source: "/niagads-api/:path*",
+                source: "/api-proxy/:path*",
                 destination: `${process.env.INTERNAL_BACKEND_SERVICE_URL}/:path*`,
             },
         ];
