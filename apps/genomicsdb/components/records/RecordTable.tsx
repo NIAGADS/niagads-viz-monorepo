@@ -17,12 +17,12 @@ export interface RecordTableProps {
 
 const buildTableEndpoint = (endpoint: string) => {
     const view = endpoint.includes("?") ? "&view=table" : "?view=table";
-    return `/api-proxy/record/${endpoint}${view}`;
+    return `/api/${endpoint}${view}`;
 };
 
 const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTableProps) => {
     const { data, error, isLoading } = useSWR(
-        buildTableEndpoint(`${recordType}/${recordId}/${tableDef.endpoint}`),
+        `/api/table/${recordType}/${recordId}/${tableDef.endpoint}`,
         (url: string) => fetch(url).then((res) => res.json())
     );
 
