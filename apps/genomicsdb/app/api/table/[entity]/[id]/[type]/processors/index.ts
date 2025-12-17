@@ -5,9 +5,9 @@ export type TableTypes = "associations" | "genes" | "variants" | "function" | "p
 
 export const resolveProcessor = (tableType: TableTypes) => {
     switch (tableType) {
-        case "associations": 
-            return AssociationProcessor
+        case "associations":
+            return AssociationProcessor;
         default:
             return (rawTable: APITableResponse) => rawTable.table;
     }
-}
+};

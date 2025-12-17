@@ -1,12 +1,12 @@
 import { APITableResponse, TableSection } from "@/lib/types";
-import { prefixClientRoute } from "@/lib/utils";
 
-import { LoadingSpinner } from "@niagads/ui";
+import { Card, CardBody, CardHeader, LoadingSpinner } from "@niagads/ui";
 import PaginationMessage from "../PaginationMessage";
 import TableWrapper from "../TableWrapper";
 import { useEffect } from "react";
 import useSWR from "swr";
-import { APIPagination } from "@niagads/common";
+import { APIPagination, _isEmpty } from "@niagads/common";
+import { FileWarning } from "lucide-react";
 
 export interface RecordTableProps {
     tableDef: TableSection;
@@ -15,13 +15,8 @@ export interface RecordTableProps {
     onTableLoad?: (pagination: APIPagination) => void;
 }
 
-const buildTableEndpoint = (endpoint: string) => {
-    const view = endpoint.includes("?") ? "&view=table" : "?view=table";
-    return `/api/${endpoint}${view}`;
-};
-
 const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTableProps) => {
-    const { data, error, isLoading } = useSWR(
+    const { data, error, isLoading } = useSWR<APITableResponse>(
         `/api/table/${recordType}/${recordId}/${tableDef.endpoint}`,
         (url: string) => fetch(url).then((res) => res.json())
     );
@@ -30,33 +25,35 @@ const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTabl
     // to the parent
     useEffect(() => {
         if (onTableLoad && data && !isLoading) {
-            onTableLoad((data as APITableResponse).pagination);
+            onTableLoad(data.pagination);
         }
     }, [isLoading, data]);
 
     if (isLoading) return <LoadingSpinner />;
 
-    if ((data as APITableResponse).pagination.total_num_pages > 1)
-        return (
-            <>
+    if (error) return <div>{JSON.stringify(error)}</div>;
+
+    return _isEmpty(data?.table) ? (
+        <Card variant="full">
+            <CardHeader>
+                <FileWarning />
+            </CardHeader>
+            <CardBody>This table contains no rows.</CardBody>
+        </Card>
+    ) : (
+        <div>
+            {(data as APITableResponse).pagination.total_num_pages > 1 && (
                 <PaginationMessage
                     pagination={(data as APITableResponse).pagination}
                     endpoint={`/record/${recordType}/${recordId}${tableDef.endpoint}`}
                 />
-                <TableWrapper
-                    id={tableDef.id}
-                    columns={(data as APITableResponse).table.columns}
-                    data={(data as APITableResponse).table.data}
-                />
-            </>
-        );
-
-    return (
-        <TableWrapper
-            id={tableDef.id}
-            columns={(data as APITableResponse).table.columns}
-            data={(data as APITableResponse).table.data}
-        />
+            )}
+            <TableWrapper
+                id={tableDef.id}
+                columns={(data as APITableResponse).table.columns}
+                data={(data as APITableResponse).table.data}
+            />
+        </div>
     );
 };
 

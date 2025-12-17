@@ -10,20 +10,21 @@ interface routeParams {
     type: TableTypes;
 }
 
-export async function GET(
-    request: NextRequest,
-    { params }: { params: Promise<routeParams> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<routeParams> }) {
     const { entity, id, type } = await params;
     const queryParams = request.nextUrl.search;
 
     const tableEndpoint = buildTableEndpoint(entity, id, type, queryParams);
 
+    const rawTable = await fetchTable(tableEndpoint);
+
+    if (rawTable.pagination.total_num_records === 0) {
+        return Response.json(rawTable);
+    }
+
     const processor = resolveProcessor(type);
 
-    const rawTable = await fetchTable(tableEndpoint)
-
-    return Response.json({...rawTable, table: processor(rawTable)});
+    return Response.json({ ...rawTable, table: processor(rawTable) });
 }
 
 const buildTableEndpoint = (entity: string, id: string, type: string, queryParams: string) => {
@@ -37,6 +38,6 @@ const fetchTable = async (endpoint: string) => {
     // cacheLife("hours");
 
     const res = await fetch(endpoint);
-    const rawTable = await res.json() as APITableResponse;
+    const rawTable = (await res.json()) as APITableResponse;
     return rawTable;
-}
+};
