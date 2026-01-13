@@ -1,57 +1,36 @@
 import { Button, FilterChip, FilterChipBar, InlineIcon, Toggle } from "@niagads/ui";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
-import { Column, Row } from "@tanstack/react-table";
-import { TableRow } from "../TableProperties";
+import { Column, ColumnFilter, ColumnFiltersState } from "@tanstack/react-table";
 import { TrashIcon } from "lucide-react";
 
 interface ColumnFilterControlsProps {
-    activeFilters: Column<any, unknown>[];
-    displayColumn: string;
-    onToggleSelectedFilter: () => void;
+    activeFilters: ColumnFiltersState;
     onRemoveAll: () => void;
+    onRemoveFilter: (filter: ColumnFilter) => void;
 }
 
 export const ColumnFilterControls = ({
-    onToggleSelectedFilter,
     activeFilters,
     onRemoveAll,
-    displayColumn,
+    onRemoveFilter,
 }: ColumnFilterControlsProps) => {
     const [isFiltered, setIsFiltered] = useState(false);
     const didMount = React.useRef(false);
 
-    useEffect(() => {
-        if (didMount.current) {
-            onToggleSelectedFilter();
-        } else {
-            didMount.current = true;
-        }
-    }, [isFiltered]);
-
     if (activeFilters.length === 0) return null;
 
     return (
-        <FilterChipBar label={"Selected rows"}>
+        <FilterChipBar label={"Active Column Filters:"}>
             <Button color="default" onClick={onRemoveAll}>
-                <InlineIcon icon={<TrashIcon size={18} />}>Unselect all</InlineIcon>
+                <InlineIcon icon={<TrashIcon size={18} />}>Remove all</InlineIcon>
             </Button>
 
-            <Toggle
-                checked={isFiltered}
-                onChange={(checked) => {
-                    setIsFiltered(checked);
-                }}
-                label={"Show selected only"}
-                variant="primary"
-                style={{ marginRight: 12 }}
-            />
-
-            {selectedRows.map((row) => (
+            {activeFilters.map((filter) => (
                 <FilterChip
-                    key={`filter-chip-${row.id}`}
-                    label={row.renderValue(displayColumn)}
-                    onRemove={() => row.getToggleSelectedHandler()({ target: { checked: false } })}
+                    key={`filter-chip-${filter.id}`}
+                    label={filter.id}
+                    onRemove={() => onRemoveFilter(filter)}
                 />
             ))}
         </FilterChipBar>

@@ -29,6 +29,7 @@ import { CustomSortingFunctions } from "./TableSortingFunctions";
 import { RowSelectionControls } from "./ControlElements/RowSelectionControls";
 import { TableColumnHeader } from "./TableColumnHeader";
 import styles from "./styles/table.module.css";
+import { ColumnFilterControls } from "./ControlElements/ColumnFilterControls";
 
 const __resolveSortingFn = (col: GenericColumn) => {
     if (col.type === "boolean") {
@@ -302,7 +303,12 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
     return table ? (
         <div className={styles["table-outer-container"]}>
             <div className={styles["table-controls-container"]}>
-                <TableToolbar table={table} tableId={id} enableExport={!!!options?.disableExport} openFilters={() => setAreFiltersOpen(!areFiltersOpen)} />
+                <TableToolbar
+                    table={table}
+                    tableId={id}
+                    enableExport={!!!options?.disableExport}
+                    openFilters={() => setAreFiltersOpen(!areFiltersOpen)}
+                />
                 <PaginationControls id={id} table={table} />
             </div>
             {enableRowSelect && (
@@ -321,6 +327,13 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
                         }}
                     />
                 </div>
+            )}
+            {columnFilters.length > 0 && (
+                <ColumnFilterControls
+                    activeFilters={columnFilters}
+                    onRemoveAll={() => setColumnFilters([])}
+                    onRemoveFilter={(filter) => setColumnFilters(prev => prev.filter(f => f !== filter))}
+                />
             )}
             <div className={styles["table-container"]}>
                 <table className={`${styles["table-layout"]} ${styles["table-border"]} ${styles["table-text"]}`}>

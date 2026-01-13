@@ -19,8 +19,6 @@ export const Filter = ({ column }: FilterProps) => {
     const minValue = useMemo(() => sortedUniqueValues[0], [sortedUniqueValues]);
     const maxValue = useMemo(() => sortedUniqueValues.at(-1), [sortedUniqueValues]);
 
-    console.log(sortedUniqueValues);
-
     return colType === "float" ? (
         //TODO: if faceted unique values length is 5 or more use slider otherwise use dropdown
         <div>
