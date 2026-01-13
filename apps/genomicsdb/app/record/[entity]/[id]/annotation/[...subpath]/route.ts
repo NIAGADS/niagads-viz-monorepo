@@ -5,7 +5,7 @@ import { fetchTable } from "@/lib/route-handlers";
 
 // for client-side fetching from the API w/ioredis caching
 
-// This dynamic route matches /api/record/[id]/...subpath
+// This dynamic route matches /api-proxy/record/[id]/...subpath
 export async function GET(req: NextRequest) {
     // Get the full pathname from the request
     // remove the /annotation subpath
