@@ -332,7 +332,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
                 <ColumnFilterControls
                     activeFilters={columnFilters}
                     onRemoveAll={() => setColumnFilters([])}
-                    onRemoveFilter={(filter) => setColumnFilters(prev => prev.filter(f => f !== filter))}
+                    onRemoveFilter={(filter) => setColumnFilters((prev) => prev.filter((f) => f !== filter))}
                 />
             )}
             <div className={styles["table-container"]}>

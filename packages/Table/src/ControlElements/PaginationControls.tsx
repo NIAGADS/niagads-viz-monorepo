@@ -65,12 +65,7 @@ export const PaginationControls = ({ id, table }: PaginationControlsProps) => {
             >
                 <ChevronLeft></ChevronLeft>
             </Button>
-            <Button
-                color="default"
-                variant="icon"
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-            >
+            <Button color="default" variant="icon" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
                 <ChevronRight></ChevronRight>
             </Button>
         </div>

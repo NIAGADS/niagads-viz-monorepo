@@ -38,7 +38,6 @@ export const Select = ({
             </option>
         ));
 
-
     const wrapperClassName = `${styles["select-wrapper"]} ${inline ? styles["select-inline"] : ""}`;
     const labelClassName = `${styles["select-label"]} ${inline ? styles["select-inline"] : ""}`;
 
@@ -58,7 +57,9 @@ export const Select = ({
                     className={`${styles.select} ${styles[variant]}`}
                     value={value}
                 >
-                    <option key="default" value="">Select...</option>
+                    <option key="default" value="">
+                        Select...
+                    </option>
                     {Array.isArray(fields) ? _optionsFromArray(fields) : _optionsFromObj(fields)}
                 </select>
             </div>

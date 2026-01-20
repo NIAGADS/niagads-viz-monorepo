@@ -1,8 +1,4 @@
-import {
-    ArrowDownUp,
-    ArrowDownNarrowWide as SortAscIcon,
-    ArrowUpWideNarrow as SortDescIcon,
-} from "lucide-react";
+import { ArrowDownUp, ArrowDownNarrowWide as SortAscIcon, ArrowUpWideNarrow as SortDescIcon } from "lucide-react";
 import { Header, flexRender } from "@tanstack/react-table";
 import React from "react";
 

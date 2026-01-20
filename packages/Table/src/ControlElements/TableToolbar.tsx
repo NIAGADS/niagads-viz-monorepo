@@ -40,7 +40,7 @@ export const TableToolbar = ({ table, tableId, enableExport, openFilters }: Tool
                 {canToggleColumns && (
                     <ColumnControls columns={table.getAllLeafColumns()} onSelect={() => console.log("selected")} />
                 )}
-                {table.getVisibleFlatColumns().some(c => c.getCanFilter()) && (
+                {table.getVisibleFlatColumns().some((c) => c.getCanFilter()) && (
                     <Button icon={ListFilterPlus} onClick={() => openFilters()}>
                         Filter
                     </Button>

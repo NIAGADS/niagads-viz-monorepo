@@ -50,7 +50,7 @@ export const Filter = ({ column }: FilterProps) => {
                 id={`${column.id}-filter`}
                 fields={sortedUniqueValues}
                 onChange={(e) => column.setFilterValue(e.target.value)}
-                value={column.getFilterValue() as string || "---"}
+                value={(column.getFilterValue() as string) || "---"}
             />
         </div>
     ) : (

@@ -10,11 +10,7 @@ interface ColumnFilterControlsProps {
     onRemoveFilter: (filter: ColumnFilter) => void;
 }
 
-export const ColumnFilterControls = ({
-    activeFilters,
-    onRemoveAll,
-    onRemoveFilter,
-}: ColumnFilterControlsProps) => {
+export const ColumnFilterControls = ({ activeFilters, onRemoveAll, onRemoveFilter }: ColumnFilterControlsProps) => {
     if (activeFilters.length === 0) return null;
     return (
         <FilterChipBar label={"Active Column Filters:"}>
