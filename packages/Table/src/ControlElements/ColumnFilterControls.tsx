@@ -15,11 +15,7 @@ export const ColumnFilterControls = ({
     onRemoveAll,
     onRemoveFilter,
 }: ColumnFilterControlsProps) => {
-    const [isFiltered, setIsFiltered] = useState(false);
-    const didMount = React.useRef(false);
-
     if (activeFilters.length === 0) return null;
-
     return (
         <FilterChipBar label={"Active Column Filters:"}>
             <Button color="default" onClick={onRemoveAll}>

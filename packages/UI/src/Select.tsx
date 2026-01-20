@@ -6,6 +6,7 @@ interface SelectProps {
     id: string;
     name?: string;
     label?: string;
+    value?: string;
     defaultValue?: string;
     inline?: boolean;
     onChange?: React.ChangeEventHandler<HTMLSelectElement>;
@@ -17,6 +18,7 @@ export const Select = ({
     id,
     label,
     name,
+    value,
     defaultValue,
     inline = false,
     onChange,
@@ -36,6 +38,7 @@ export const Select = ({
             </option>
         ));
 
+
     const wrapperClassName = `${styles["select-wrapper"]} ${inline ? styles["select-inline"] : ""}`;
     const labelClassName = `${styles["select-label"]} ${inline ? styles["select-inline"] : ""}`;
 
@@ -53,7 +56,9 @@ export const Select = ({
                     id={id}
                     onChange={onChange}
                     className={`${styles.select} ${styles[variant]}`}
+                    value={value}
                 >
+                    <option key="default" value="">Select...</option>
                     {Array.isArray(fields) ? _optionsFromArray(fields) : _optionsFromObj(fields)}
                 </select>
             </div>

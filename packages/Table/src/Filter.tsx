@@ -1,7 +1,7 @@
 import { Column } from "@tanstack/react-table";
 import React, { useMemo } from "react";
 import { _get } from "@niagads/common";
-import { TextInput, Select } from "@niagads/ui";
+import { Select } from "@niagads/ui";
 import { Slider } from "@niagads/ui/client";
 
 interface FilterProps {
@@ -9,7 +9,6 @@ interface FilterProps {
 }
 
 export const Filter = ({ column }: FilterProps) => {
-    const columnFilterValue = column.getFilterValue();
     const colType = column.columnDef.meta?.type;
 
     const sortedUniqueValues = useMemo(() => {
@@ -51,15 +50,18 @@ export const Filter = ({ column }: FilterProps) => {
                 id={`${column.id}-filter`}
                 fields={sortedUniqueValues}
                 onChange={(e) => column.setFilterValue(e.target.value)}
+                value={column.getFilterValue() as string || "---"}
             />
         </div>
     ) : (
-        <div>
-            <TextInput
-                onChange={(value) => column.setFilterValue(value)}
-                placeholder={`Search...`}
-                value={(columnFilterValue ?? "") as string}
-            />
-        </div>
+        <div></div>
+        // TODO: decide if we want to use text filters for columns that have a lot of different values
+        // <div>
+        //     <TextInput
+        //         onChange={(value) => column.setFilterValue(value)}
+        //         placeholder={`Search...`}
+        //         value={(columnFilterValue ?? "") as string}
+        //     />
+        // </div>
     );
 };
