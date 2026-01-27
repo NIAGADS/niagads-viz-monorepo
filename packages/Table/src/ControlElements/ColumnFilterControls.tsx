@@ -22,6 +22,7 @@ export const ColumnFilterControls = ({ activeFilters, onRemoveAll, onRemoveFilte
                 <FilterChip
                     key={`filter-chip-${filter.id}`}
                     label={filter.id}
+                    value={`${filter.value}`}
                     onRemove={() => onRemoveFilter(filter)}
                 />
             ))}
