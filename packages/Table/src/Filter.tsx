@@ -13,7 +13,7 @@ export const Filter = ({ column }: FilterProps) => {
 
     const sortedUniqueValues = useMemo(() => {
         return Array.from(column.getFacetedUniqueValues().keys()).sort();
-    }, [column.getFacetedUniqueValues()]);
+    }, [column.getSize()]);
 
     const minValue = useMemo(() => sortedUniqueValues[0], [sortedUniqueValues]);
     const maxValue = useMemo(() => sortedUniqueValues.at(-1), [sortedUniqueValues]);
