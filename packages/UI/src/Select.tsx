@@ -6,6 +6,7 @@ interface SelectProps {
     id: string;
     name?: string;
     label?: string;
+    value?: string;
     defaultValue?: string;
     inline?: boolean;
     onChange?: React.ChangeEventHandler<HTMLSelectElement>;
@@ -17,6 +18,7 @@ export const Select = ({
     id,
     label,
     name,
+    value,
     defaultValue,
     inline = false,
     onChange,
@@ -40,25 +42,27 @@ export const Select = ({
     const labelClassName = `${styles["select-label"]} ${inline ? styles["select-inline"] : ""}`;
 
     return (
-        <>
-            <div className={wrapperClassName}>
-                <div>
-                    <label htmlFor={id} className={labelClassName}>
-                        {label}
-                    </label>
-                </div>
-                <div>
-                    <select
-                        name={name ? name : id}
-                        defaultValue={defaultValue}
-                        id={id}
-                        onChange={onChange}
-                        className={`${styles.select} ${styles[variant]}`}
-                    >
-                        {Array.isArray(fields) ? _optionsFromArray(fields) : _optionsFromObj(fields)}
-                    </select>
-                </div>
+        <div className={wrapperClassName}>
+            <div>
+                <label htmlFor={id} className={labelClassName}>
+                    {label}
+                </label>
             </div>
-        </>
+            <div>
+                <select
+                    name={name ? name : id}
+                    defaultValue={defaultValue}
+                    id={id}
+                    onChange={onChange}
+                    className={`${styles.select} ${styles[variant]}`}
+                    value={value}
+                >
+                    <option key="default" value="">
+                        Select...
+                    </option>
+                    {Array.isArray(fields) ? _optionsFromArray(fields) : _optionsFromObj(fields)}
+                </select>
+            </div>
+        </div>
     );
 };

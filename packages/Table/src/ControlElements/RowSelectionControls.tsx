@@ -3,9 +3,7 @@ import React, { useEffect, useState } from "react";
 
 import { Row } from "@tanstack/react-table";
 import { TableRow } from "../TableProperties";
-import { Tooltip } from "@niagads/ui/client";
 import { TrashIcon } from "lucide-react";
-import styles from "../styles/controls.module.css";
 
 interface RowSelectionControlsProps {
     selectedRows: Row<TableRow>[];
