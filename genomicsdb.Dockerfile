@@ -22,7 +22,7 @@ COPY apps/genomicsdb/.env.local ./apps/genomicsdb/.env.local
 RUN npm install
 
 # Run the Lerna build command to build all packages in the monorepo
-RUN npx lerna run build
+RUN npm run build
 
 # Build the Next.js application - not now running in dev
 # RUN npm run build
