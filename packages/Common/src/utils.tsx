@@ -52,6 +52,19 @@ export const _isNull = (value: BasicType | null) => {
     return value === null || value === undefined;
 };
 
+export const _isEmpty = (value: Record<string, any> | null | undefined) => {
+    const check = (o: typeof value) => {
+        for (var i in o) {
+            if (o.hasOwnProperty(i)) {
+                return false;
+            }
+        }
+        return true;
+    };
+
+    return value === null || value === undefined || check(value);
+};
+
 export const toFixedWithoutZeros = (value: number, precision: number = 2) => {
     return Number.parseFloat(value.toFixed(precision)).toString();
 };

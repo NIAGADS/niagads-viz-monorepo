@@ -15,6 +15,7 @@ import {
 
 // lib/types.ts - project type definitions
 import { APIPagination } from "@niagads/common";
+import { TableProps } from "@niagads/table";
 
 // icons
 
@@ -223,7 +224,7 @@ export interface NIAGADSTableProps {
 export interface APITableResponse {
     request: Request;
     pagination: APIPagination;
-    table: NIAGADSTableProps;
+    table: TableProps;
 }
 
 export interface TableSection extends AnchoredSectionBase {

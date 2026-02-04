@@ -1,4 +1,4 @@
-import { BasicType, NAString } from "@niagads/common";
+import { BasicType, Color, NAString } from "@niagads/common";
 import { CellType } from "./Cell";
 
 export interface ColumnSortConfig {
@@ -10,11 +10,15 @@ export interface ColumnFilterConfig {
     filterFn?: string; // TODO: should by keys for CustomFilteringFunctions / FilterFns
 }
 
+// can be used to color values in the column based on value
+export type ColorMap = Record<string, Color>;
+
 export interface ColumnValueFormat {
     nullValue?: BasicType | null; // value to assign for nulls; e.g., for booleans, set nullValue = false to treat NULL as FALSE; if not set treats as NA
     naValue?: NAString; // value to assign for NAs; default `NA`
     trueValue?: BasicType; // for booleans; defaults to TRUE
     precision?: number; // for floats
+    colorMap?: ColorMap;
 }
 
 // allowable fields provided by users
