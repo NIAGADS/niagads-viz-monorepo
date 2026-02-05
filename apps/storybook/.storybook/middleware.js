@@ -12,21 +12,12 @@ module.exports = function expressMiddleware(router) {
     );
 
     router.use(
-        "/api/feature-lookup/**",
+        "/api/feature-lookup",
         createProxyMiddleware({
-            target: "https://api.niagads.org/",
+            target: "https://api.niagads.org/genomics/service/igvbrowser/feature",
             changeOrigin: true,
             secure: true,
-            pathRewrite: { "^/api/feature-lookup": "/genomics/service/igvbrowser/feature" },
-            onProxyReq: (proxyReq, req, res) => {
-                // Compose the full URL from proxyReq
-                const protocol = proxyReq.agent && proxyReq.agent.protocol ? proxyReq.agent.protocol.replace(':', '') : 'https';
-                const host = proxyReq.getHeader('host');
-                const path = proxyReq.path;
-                const fullUrl = `${protocol}://${host}${path}`;
-                console.log("Actual outgoing proxied request URL:", fullUrl);
-                console.log("Proxy request headers:", proxyReq.getHeaders());
-            }
+            pathRewrite: { "/api/feature-lookup": "" },
         })
     );
     router.use(
