@@ -100,7 +100,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
 
     const opts: any = useMemo(() => {
         const referenceTrackConfig: any = find(_genomes, { id: genome });
-        //referenceTrackConfig.tracks.push(VariantReferenceTrack);
+
         let browserOpts = {
             locus: locus || "ABCA7",
             showAllChromosomes: false,
@@ -151,7 +151,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
         }
 
         return browserOpts;
-    }, [genome, locus, queryParams]);
+    }, [genome, locus, queryParams, referenceTracks]);
 
     useEffect(() => {
         setIsClient(true);
@@ -171,6 +171,14 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
 
             const loadInitialTracks = async () => {
                 // load tracks from the url query
+                if (referenceTracks) {
+                    await loadTracks(referenceTracks, browser);
+                    if (onTrackAdded) {
+                        const trackIds = referenceTracks.map((t: IGVBrowserTrack) => t.id);
+                        onTrackAdded(trackIds);
+                    }
+                }
+
                 if (browser.config.queryTracks) {
                     await loadTracks(browser.config.queryTracks, browser);
                     if (onTrackAdded) {
