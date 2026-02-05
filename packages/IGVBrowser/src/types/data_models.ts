@@ -49,6 +49,7 @@ export interface IGVBrowserTrack {
     color?: string; //if a function, don't export
 
     queryable?: boolean;
+    metadata?: any;
 }
 
 export interface Collection {
