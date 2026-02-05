@@ -17,9 +17,15 @@ interface IGVBrowserWrapperProps {
     config: IGVBrowserTrack[];
     inclVariantReference: boolean;
     table?: TableProps;
+    searchParams?: Record<string, string | string[]>;
 }
 
-export default function IGVBrowserWrapper({ config, inclVariantReference, table }: IGVBrowserWrapperProps) {
+export default function IGVBrowserWrapper({
+    config,
+    inclVariantReference,
+    table,
+    searchParams,
+}: IGVBrowserWrapperProps) {
     const [selectedTracks, setSelectedTracks] = useState<string[]>([]);
     const [browser, setBrowser] = useState<any>(null);
     const [loading, setIsLoading] = useState<boolean>(true);
@@ -72,8 +78,6 @@ export default function IGVBrowserWrapper({ config, inclVariantReference, table 
             const loadedTracks = getLoadedTracks(browser);
             const addedTracks = loadCallback(selectedTracks, loadedTracks);
             const removedTracks = unloadCallback(selectedTracks, loadedTracks);
-            //await addTracksToSession(addedTracks);
-            //await removeTracksFromSession(removedTracks);
         }
     }, [loadCallback, unloadCallback]);
     return (
