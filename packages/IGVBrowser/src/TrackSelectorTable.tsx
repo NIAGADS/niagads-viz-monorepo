@@ -9,6 +9,39 @@ export type RowSelectionState = Record<string, boolean>;
 export type { TableProps };
 
 /**
+ * Toggles the selection state of tracks in a track selector instance.
+ *
+ * @param trackIds - Array of track IDs to add or remove from selection.
+ * @param action - "add" to select tracks, "remove" to deselect tracks.
+ * @param selectorInstance - The track selector table instance with data and toggleRowSelected method.
+ *
+ * If action is "add", selects the row if found.
+ * If action is "remove", deselects the row for each specified track ID.
+ */
+export async function toggleTrackSelection(trackIds: string[], action: "add" | "remove", selectorInstance: any) {
+    if (action === "add") {
+        // need to validate tracks before trying to add
+        let invalidTracks: string[] = [];
+        trackIds.forEach((id: string) => {
+            if (selectorInstance.data.filter((row: any) => row.row_id === id).length > 0) {
+                selectorInstance.toggleRowSelected(id, true);
+            } else {
+                invalidTracks.push(id);
+            }
+        });
+        if (invalidTracks.length > 0) {
+            alert(
+                `Invalid track identifier(s): ${invalidTracks.toString()} specified in URL string or session file.\nNOTE: track identifiers are CASE SENSITIVE.`
+            );
+        }
+    } else {
+        trackIds.forEach((id: string) => {
+            selectorInstance.toggleRowSelected(id, false);
+        });
+    }
+}
+
+/**
  * Load selected tracks into the browser
  *
  * @param selectedTracks - Array of track IDs that should be loaded
@@ -81,10 +114,10 @@ export async function handleUnloadTracks(
 interface TrackSelectorTableProps {
     table: TableProps;
     handleRowSelect: any;
-    onTableLoad?: any;
+    onTableLoad: any;
 }
 
-const TrackSelectorTable = ({ table, handleRowSelect }: TrackSelectorTableProps) => {
+const TrackSelectorTable = ({ table, handleRowSelect, onTableLoad }: TrackSelectorTableProps) => {
     const [selectedRows, setSelectedRows] = useState<RowSelectionState>({});
     const [disableRowSelectAction, setDisableRowSelectAction] = useState<boolean>(true);
 
@@ -94,7 +127,10 @@ const TrackSelectorTable = ({ table, handleRowSelect }: TrackSelectorTableProps)
 
     // Initialize rowSelect if it doesn't exist
     if (!table.options) table.options = {};
-    Object.assign(table.options, { rowSelect: { onRowSelect: onRowSelect, enableMultiRowSelect: true, rowId: "id" } });
+    Object.assign(table.options, {
+        onTableLoad: onTableLoad,
+        rowSelect: { onRowSelect: onRowSelect, enableMultiRowSelect: true, rowId: "id" },
+    });
 
     useEffect(() => {
         if (Object.keys(selectedRows!).length === 0) {

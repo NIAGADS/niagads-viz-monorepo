@@ -52,6 +52,15 @@ export interface IGVBrowserTrack {
     metadata?: any;
 }
 
+export interface IGVBrowserQueryParams {
+    loc?: string;
+    file?: string[];
+    roiLabel?: string;
+    highlight?: boolean;
+    track?: string[];
+    filesAreIndexed?: boolean;
+}
+
 export interface Collection {
     route: any;
     name: string;

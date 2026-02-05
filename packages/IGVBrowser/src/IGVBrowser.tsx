@@ -4,12 +4,31 @@ import { DEFAULT_FLANK, FEATURE_SEARCH_URL } from "./config/_constants";
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { getLoadedTracks, loadTracks, removeTrackById } from "./tracks/utils";
 
-import { IGVBrowserTrack } from "./types/data_models";
+import { IGVBrowserQueryParams, IGVBrowserTrack } from "./types/data_models";
 import { Skeleton } from "@niagads/ui";
 import { _genomes } from "./config/_igvGenomes";
 import find from "lodash.find";
 import noop from "lodash.noop";
 import { trackPopover } from "./tracks/feature_popovers";
+
+/**
+ * Translates locus from 1-based to zero-based and adds
+ * flank padding to a locus string like "chr1:1000" or "chr1:1000-2000".
+ * Returns the locus string with flank applied (e.g. "chr1:500-1500").
+ */
+function adjustLocusRange(locus: string, flank: number): string {
+    if (locus.startsWith("chr")) {
+        let [chr, position] = locus.split(":");
+        position = position.replace(/,/g, ""); // remove any commas
+        let start = position.includes("-") ? parseInt(position.split("-")[0]) : parseInt(position);
+        let end = position.includes("-") ? parseInt(position.split("-")[1]) : parseInt(position);
+        start = Math.max(1, start - flank);
+        end = end + flank;
+        return `${chr}:${start}-${end}`;
+    }
+
+    return locus || "";
+}
 
 /**
  * Props for the IGVBrowser React component.
@@ -36,13 +55,19 @@ export interface IGVBrowserProps {
     hideNavigation?: boolean;
     /** Flag to enable support for query parameters in the URL. */
     allowQueryParameters?: boolean;
-    /** Callback fired when a track is removed */
-    onTrackRemoved?: (track: string) => void;
+    /** the query params to parse and manage */
+    queryParams?: IGVBrowserQueryParams;
+    /** Callback fired when tracks are removed */
+    onTrackRemoved?: (tracks: string[]) => void;
+    /** Callback fired when tracks are added (e.g., from url parameter) */
+    onTrackAdded?: (tracks: string[]) => void;
     /** Callback fired when browser is loaded */
     onBrowserLoad?: (Browser: any) => void;
     /** Callback fired when locus changes */
     onLocusChanged?: (Browser: any) => void;
 }
+
+type FileTrackConfig = Partial<IGVBrowserTrack>;
 
 const IGVBrowser: React.FC<IGVBrowserProps> = ({
     genome = "GRCh38",
@@ -51,8 +76,10 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
     tracks,
     hideNavigation = false,
     allowQueryParameters = true,
+    queryParams,
     onBrowserLoad,
     onTrackRemoved,
+    onTrackAdded,
     onLocusChanged,
 }) => {
     const [isClient, setIsClient] = useState(false);
@@ -62,13 +89,16 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
     const [browserIsLoading, setBrowserIsLoading] = useState<boolean>(true);
     const [browser, setBrowser] = useState<any>(null);
 
+    // session initializatin
+    const [highlightRegionLabel, setHighlightRegionLabel] = useState<string | null>(null);
+
     const containerRef = useRef(null);
     const isDragging = useRef(false);
 
     const opts: any = useMemo(() => {
         const referenceTrackConfig: any = find(_genomes, { id: genome });
         //referenceTrackConfig.tracks.push(VariantReferenceTrack);
-        return {
+        let browserOpts = {
             locus: locus || "ABCA7",
             showAllChromosomes: false,
             flanking: DEFAULT_FLANK,
@@ -82,7 +112,34 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
             genomeList: _genomes,
             supportQueryParameters: allowQueryParameters,
         };
-    }, [genome, locus]);
+
+        if (queryParams) {
+            Object.assign(
+                browserOpts,
+                queryParams.loc ? { locus: adjustLocusRange(queryParams.loc, DEFAULT_FLANK) } : {}
+            );
+
+            setHighlightRegionLabel(queryParams.roiLabel || queryParams.loc || null);
+
+            Object.assign(
+                browserOpts,
+                queryParams.track ? { queryTracks: Array.from(new Set(queryParams.track)) } : {}
+            );
+            Object.assign(
+                browserOpts,
+                queryParams.file
+                    ? {
+                          queryFiles: {
+                              urls: Array.from(new Set(queryParams.file)),
+                              indexed: queryParams.filesAreIndexed,
+                          },
+                      }
+                    : {}
+            );
+        }
+
+        return browserOpts;
+    }, [genome, locus, queryParams]);
 
     useEffect(() => {
         setIsClient(true);
@@ -100,8 +157,38 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
                 }
             }
 
-            // load initial tracks
-            tracks && loadTracks(tracks, browser);
+            const loadInitialTracks = async () => {
+                // load tracks passed to the component
+                if (tracks) {
+                    await loadTracks(tracks, browser);
+                }
+
+                // load tracks from the url query
+                if (browser.config.queryTracks) {
+                    await loadTracks(browser.config.queryTracks, browser);
+                    if (onTrackAdded) {
+                        const trackIds = browser.config.queryTracks.map((t: IGVBrowserTrack) => t.id);
+                        onTrackAdded(trackIds);
+                    }
+                }
+
+                // load files from the url query
+                if (browser.config.queryFiles) {
+                    const fileTracks = browser.config.queryFiles.urls.map((url: string) => {
+                        const id = "file_" + url!.split("/").pop()!.replace(/\..+$/, "");
+                        const config: FileTrackConfig = browser.config.queryFiles.indexed
+                            ? { url: url, indexURL: url + ".tbi", name: "USER: " + id, id: id }
+                            : { url: url, name: "USER: " + id, id: id };
+                        return config;
+                    });
+
+                    await loadTracks(fileTracks, browser);
+                }
+
+                // TODO: loci and ROI
+            };
+
+            loadInitialTracks();
         }
     }, [browserIsLoading]);
 
