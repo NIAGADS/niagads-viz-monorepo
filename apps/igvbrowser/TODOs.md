@@ -1,4 +1,18 @@
-# GenomicsDB Service -> NIAGADS OA API Service TODOs
+# IGV Browser TODOs
+
+* coordinate track deselect in track selector table when removed from browser (currently broken)
+
+## URL params
+
+* handle highlights, regions of interest
+* catch file errors?
+
+## session management
+
+* very basic: back button/ save session
+* advance: download and load session
+
+## Migrate from GenomicsDB Service -> NIAGADS OA API Service (when live)
 
 ## next.config.js
 
