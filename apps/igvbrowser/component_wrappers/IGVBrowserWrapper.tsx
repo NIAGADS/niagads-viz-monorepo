@@ -7,11 +7,10 @@ import {
     TrackSelectorTable,
     VariantReferenceTrack,
     getLoadedTracks,
-    getTrackConfig,
-    loadTracks,
-    removeTrackById,
+    handleLoadTracks,
+    handleUnloadTracks,
 } from "@niagads/igv";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface IGVBrowserWrapperProps {
     config: IGVBrowserTrack[];
@@ -46,40 +45,13 @@ export default function IGVBrowserWrapper({
         setSelectedTracks(rowSelection);
     };
 
-    const loadCallback = useCallback(
-        async (selectedTracks: string[], loadedTracks: string[]) => {
-            let addedTrackIds: string[] = [];
-            const tracksToAdd = selectedTracks.filter((id: string) => !loadedTracks.includes(id));
-            await loadTracks(getTrackConfig(tracksToAdd, config), browser);
-            return addedTrackIds;
-        },
-        [selectedTracks]
-    );
-
-    const unloadCallback = useCallback(
-        async (selectedTracks: string[], loadedTracks: string[]) => {
-            const removedTracks = loadedTracks.filter((track) => !selectedTracks.includes(track));
-            const removedTrackIds: string[] = [];
-            removedTracks.forEach((trackKey: string) => {
-                config
-                    .filter((track: any) => track.id === trackKey)
-                    .map((track: any) => {
-                        removeTrackById(track.id, browser);
-                        removedTrackIds.push(track.id);
-                    });
-            });
-            return removedTrackIds;
-        },
-        [selectedTracks]
-    );
-
     useEffect(() => {
-        if (!loading) {
+        if (!loading && browser) {
             const loadedTracks = getLoadedTracks(browser);
-            const addedTracks = loadCallback(selectedTracks, loadedTracks);
-            const removedTracks = unloadCallback(selectedTracks, loadedTracks);
+            handleLoadTracks(selectedTracks, loadedTracks, config, browser);
+            handleUnloadTracks(selectedTracks, loadedTracks, config, browser);
         }
-    }, [loadCallback, unloadCallback]);
+    }, [selectedTracks, loading, browser, config]);
     return (
         <>
             <IGVBrowser
