@@ -1,6 +1,6 @@
 // TODO: fix loading fallback handling; it is incorrect
 
-import { DEFAULT_FLANK, FEATURE_SEARCH_URL, VariantReferenceTrack } from "./config/_constants";
+import { DEFAULT_FLANK, FEATURE_SEARCH_URL } from "./config/_constants";
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { getLoadedTracks, loadTracks, removeTrackById } from "./tracks/utils";
 
