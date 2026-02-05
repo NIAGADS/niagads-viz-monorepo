@@ -1,7 +1,9 @@
 # IGV Browser TODOs
 
 * coordinate track deselect in track selector table when removed from browser (currently broken)
-
+* update production docker build
+  * challenge: track config copy
+  
 ## URL params
 
 * handle highlights, regions of interest
