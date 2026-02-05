@@ -1,9 +1,9 @@
 // TODO: fix loading fallback handling; it is incorrect
 
+import { DEFAULT_FLANK, FEATURE_SEARCH_URL, VariantReferenceTrack } from "./config/_constants";
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { getLoadedTracks, loadTracks, removeTrackById } from "./tracks/utils";
 
-import { DEFAULT_FLANK, FEATURE_SEARCH_URL } from "./config/_constants";
 import { IGVBrowserTrack } from "./types/data_models";
 import { Skeleton } from "@niagads/ui";
 import { _genomes } from "./config/_igvGenomes";
@@ -67,6 +67,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
 
     const opts: any = useMemo(() => {
         const referenceTrackConfig: any = find(_genomes, { id: genome });
+        //referenceTrackConfig.tracks.push(VariantReferenceTrack);
         return {
             locus: locus || "ABCA7",
             showAllChromosomes: false,
