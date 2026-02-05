@@ -54,10 +54,10 @@ export interface IGVBrowserTrack {
 
 export interface IGVBrowserQueryParams {
     loc?: string;
-    file?: string[];
+    file?: string | string[];
     roiLabel?: string;
     highlight?: boolean;
-    track?: string[];
+    track?: string | string[];
     filesAreIndexed?: boolean;
 }
 

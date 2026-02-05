@@ -2,7 +2,7 @@
 
 import { DEFAULT_FLANK, FEATURE_SEARCH_URL } from "./config/_constants";
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { getLoadedTracks, loadTracks, removeTrackById } from "./tracks/utils";
+import { getLoadedTracks, loadTracks, removeTrackById, getTrackConfig } from "./tracks/utils";
 
 import { IGVBrowserQueryParams, IGVBrowserTrack } from "./types/data_models";
 import { Skeleton } from "@niagads/ui";
@@ -49,6 +49,8 @@ export interface IGVBrowserProps {
     searchUrl?: string;
     /** Array of track configuration objects to load */
     tracks?: IGVBrowserTrack[];
+    /** Additional Reference tracks to display by default */
+    referenceTracks?: IGVBrowserTrack[];
     /** Initial locus (region or gene name) to display */
     locus?: string;
     /** Flag to hide browser navigation controls */
@@ -74,6 +76,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
     searchUrl = FEATURE_SEARCH_URL,
     locus,
     tracks,
+    referenceTracks,
     hideNavigation = false,
     allowQueryParameters = true,
     queryParams,
@@ -123,14 +126,23 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
 
             Object.assign(
                 browserOpts,
-                queryParams.track ? { queryTracks: Array.from(new Set(queryParams.track)) } : {}
+                queryParams.track
+                    ? {
+                          queryTracks: getTrackConfig(
+                              Array.isArray(queryParams.track) ? queryParams.track : [queryParams.track],
+                              tracks || []
+                          ),
+                      }
+                    : {}
             );
             Object.assign(
                 browserOpts,
                 queryParams.file
                     ? {
                           queryFiles: {
-                              urls: Array.from(new Set(queryParams.file)),
+                              urls: Array.from(
+                                  new Set(Array.isArray(queryParams.file) ? queryParams.file : [queryParams.file])
+                              ),
                               indexed: queryParams.filesAreIndexed,
                           },
                       }
@@ -158,11 +170,6 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
             }
 
             const loadInitialTracks = async () => {
-                // load tracks passed to the component
-                if (tracks) {
-                    await loadTracks(tracks, browser);
-                }
-
                 // load tracks from the url query
                 if (browser.config.queryTracks) {
                     await loadTracks(browser.config.queryTracks, browser);

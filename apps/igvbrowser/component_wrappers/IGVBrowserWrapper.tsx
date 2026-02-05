@@ -22,13 +22,6 @@ interface IGVBrowserWrapperProps {
 
 type FileTrackConfig = Partial<IGVBrowserTrack>;
 
-interface Session {
-    locus: string;
-    tracks: string[];
-    files: FileTrackConfig[];
-    searchParams?: IGVBrowserQueryParams; // reset session if url params change
-}
-
 export default function IGVBrowserWrapper({
     config,
     inclVariantReference,
@@ -40,7 +33,6 @@ export default function IGVBrowserWrapper({
     const [loading, setIsLoading] = useState<boolean>(true);
     const [trackSelector, setTrackSelector] = useState<string[] | null>(null);
 
-    const tracks = inclVariantReference ? [VariantReferenceTrack] : undefined;
     // initialize browser state
     const initializeBrowser = (b: any) => {
         b && setBrowser(b);
@@ -71,7 +63,8 @@ export default function IGVBrowserWrapper({
             <IGVBrowser
                 genome={"GRCh38"}
                 searchUrl={"/service/track/feature?id=$FEATURE$&flank=1000"}
-                tracks={tracks}
+                tracks={config}
+                referenceTracks={inclVariantReference ? [VariantReferenceTrack] : undefined}
                 onBrowserLoad={initializeBrowser}
                 queryParams={queryParams}
                 onTrackRemoved={toggleTrack}
