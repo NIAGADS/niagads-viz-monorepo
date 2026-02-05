@@ -1,9 +1,7 @@
-// TODO: typing for handleRowSelect
-// TODO: ensure handleRowSelect is not null -> raise error for developer if it is
 import { useEffect, useState } from "react";
 
-import Table from "@niagads/table";
 import React from "react";
+import Table from "@niagads/table";
 
 export type RowSelectionState = Record<string, boolean>;
 
