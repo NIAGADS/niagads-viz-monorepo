@@ -1,0 +1,70 @@
+[
+    {
+        "id": "NGFGXQTL0002",
+        "name": "Knight-ADRC-mQTL-PC",
+        "url": "https://tf.lisanwanglab.org/GADB/FILER2/Annotationtracks/ADSP_FunGen_xQTL/v1/Knight-ADRC/mQTL/qvalue_significant/bed3plus17_qtl/hg38/FunGenADv1.Knight-ADRC.mQTL.PC.NGFGXQTL0002_v1_$CHR_snp_qsig.SNP_qvalue_significant.20250901.bed.gz",
+        "description": "Example ADSP FunGen Track (sharded by chr)",
+        "infoURL": "/record",
+        "format": "bed3+17",
+        "type": "qtl",
+        "indexURL": "https://tf.lisanwanglab.org/GADB/FILER2/Annotationtracks/ADSP_FunGen_xQTL/v1/Knight-ADRC/mQTL/qvalue_significant/bed3plus17_qtl/hg38/FunGenADv1.Knight-ADRC.mQTL.PC.NGFGXQTL0002_v1_$CHR_snp_qsig.SNP_qvalue_significant.20250901.bed.gz.tbi",
+        "autoscale": true,
+        "metadata": {
+            "cell_type": "PC",
+            "tissue_category": "Brain",
+            "data_source": "ADSP FunGen",
+            "data_category": "mQTL"
+        }
+    },
+    {
+        "id": "NGGTXSEUAYJDMT",
+        "name": "GTEx_v8 Cerebellum eQTL SNP all associations",
+        "url": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/all/bed3plus17_qtl/hg38/formatted_output_Cerebellum_eQTL_all_assoc_SNP.bed.gz",
+        "description": "GTEx_v8 Cerebellum eQTL eQTL SNP all associations (bed6+14 qtl) [Life stage: Adult]",
+        "infoURL": "/record",
+        "format": "bed6+14",
+        "type": "qtl",
+        "indexURL": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/all/bed3plus17_qtl/hg38/formatted_output_Cerebellum_eQTL_all_assoc_SNP.bed.gz.tbi",
+        "autoscale": true,
+        "metadata": {
+            "cell_type": "Cerebellum",
+            "tissue_category": "Brain",
+            "data_source": "GTEx_v8",
+            "data_category": "eQTL"
+        }
+    },
+    {
+        "id": "NGGTXTAT3VMZWN",
+        "name": "GTEx_v8 Cerebellum eQTL INDEL all associations",
+        "url": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/all/bed3plus17_qtl/hg38/formatted_output_Cerebellum_eQTL_all_assoc_OTHER.bed.gz",
+        "description": "GTEx_v8 Cerebellum eQTL eQTL INDEL all associations (bed6+14 qtl) [Life stage: Adult]",
+        "infoURL": "/record",
+        "format": "bed6+14",
+        "type": "qtl",
+        "indexURL": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/all/bed3plus17_qtl/hg38/formatted_output_Cerebellum_eQTL_all_assoc_OTHER.bed.gz.tbi",
+        "autoscale": true,
+        "metadata": {
+            "cell_type": "Cerebellum",
+            "tissue_category": "Brain",
+            "data_source": "GTEx_v8",
+            "data_category": "eQTL"
+        }
+    },
+    {
+        "id": "NGGTXFSOQ7KF5R",
+        "name": "GTEx_v8 Cerebellum eQTL SNP significant associations",
+        "url": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Cerebellum_eQTL_GTEx_signif_SNP.bed.gz",
+        "description": "GTEx_v8 Cerebellum eQTL eQTL SNP significant associations (bed6+14 qtl) [Life stage: Adult]",
+        "infoURL": "/record",
+        "format": "bed6+14",
+        "type": "qtl",
+        "indexURL": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Cerebellum_eQTL_GTEx_signif_SNP.bed.gz.tbi",
+        "autoscale": true,
+        "metadata": {
+            "cell_type": "Cerebellum",
+            "tissue_category": "Brain",
+            "data_source": "GTEx_v8",
+            "data_category": "eQTL"
+        }
+    }
+]
