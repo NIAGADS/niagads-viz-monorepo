@@ -10,17 +10,9 @@ async function _fetch_track_config(url: string) {
             );
         }
         // Always try to parse as JSON
-        try {
-            const json = await response.json();
-            return NextResponse.json(json);
-        } catch {
-            // fallback: try as text
-            const text = await response.text();
-            return new NextResponse(text, {
-                status: 200,
-                headers: { "Content-Type": response.headers.get("content-type") || "text/plain" },
-            });
-        }
+        const json = await response.json();
+
+        return NextResponse.json(json);
     } catch (err) {
         return NextResponse.json({ error: "Error fetching remote track configuration" }, { status: 500 });
     }
