@@ -76,6 +76,6 @@ export function buildTrackSelectorTable(config: IGVBrowserTrack[]) {
         id: "track-selector",
         columns: columns,
         data: normalizedData,
-        options: defaultColumns ? { defaultColumns: defaultColumns } : undefined,
+        options: defaultColumns ? { defaultColumns: defaultColumns } : {},
     };
 }

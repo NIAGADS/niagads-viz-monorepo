@@ -1,6 +1,17 @@
 "use client";
 
-import { IGVBrowser, IGVBrowserTrack, TableProps, TrackSelectorTable, VariantReferenceTrack } from "@niagads/igv";
+import {
+    IGVBrowser,
+    IGVBrowserTrack,
+    TableProps,
+    TrackSelectorTable,
+    VariantReferenceTrack,
+    getLoadedTracks,
+    getTrackConfig,
+    loadTracks,
+    removeTrackById,
+} from "@niagads/igv";
+import { useCallback, useEffect, useState } from "react";
 
 interface IGVBrowserWrapperProps {
     config: IGVBrowserTrack[];
@@ -9,14 +20,69 @@ interface IGVBrowserWrapperProps {
 }
 
 export default function IGVBrowserWrapper({ config, inclVariantReference, table }: IGVBrowserWrapperProps) {
+    const [selectedTracks, setSelectedTracks] = useState<string[]>([]);
+    const [browser, setBrowser] = useState<any>(null);
+    const [loading, setIsLoading] = useState<boolean>(true);
     const tracks = inclVariantReference ? [VariantReferenceTrack] : undefined;
+    // initialize browser state
+    const initializeBrowser = (b: any) => {
+        b && setBrowser(b);
+    };
 
+    useEffect(() => {
+        if (browser) {
+            setIsLoading(false);
+        }
+    }, [browser]);
+
+    // toggle tracks
+    const toggleTrack = (rowSelection: string[]) => {
+        setSelectedTracks(rowSelection);
+    };
+
+    const loadCallback = useCallback(
+        async (selectedTracks: string[], loadedTracks: string[]) => {
+            let addedTrackIds: string[] = [];
+            const tracksToAdd = selectedTracks.filter((id: string) => !loadedTracks.includes(id));
+            await loadTracks(getTrackConfig(tracksToAdd, config), browser);
+            return addedTrackIds;
+        },
+        [selectedTracks]
+    );
+
+    const unloadCallback = useCallback(
+        async (selectedTracks: string[], loadedTracks: string[]) => {
+            const removedTracks = loadedTracks.filter((track) => !selectedTracks.includes(track));
+            const removedTrackIds: string[] = [];
+            removedTracks.forEach((trackKey: string) => {
+                config
+                    .filter((track: any) => track.id === trackKey)
+                    .map((track: any) => {
+                        removeTrackById(track.id, browser);
+                        removedTrackIds.push(track.id);
+                    });
+            });
+            return removedTrackIds;
+        },
+        [selectedTracks]
+    );
+
+    useEffect(() => {
+        if (!loading) {
+            const loadedTracks = getLoadedTracks(browser);
+            const addedTracks = loadCallback(selectedTracks, loadedTracks);
+            const removedTracks = unloadCallback(selectedTracks, loadedTracks);
+            //await addTracksToSession(addedTracks);
+            //await removeTracksFromSession(removedTracks);
+        }
+    }, [loadCallback, unloadCallback]);
     return (
         <>
             <IGVBrowser
                 genome={"GRCh38"}
                 searchUrl={"/service/track/feature?id=$FEATURE$&flank=1000"}
                 tracks={tracks}
+                onBrowserLoad={initializeBrowser}
             />
 
             {table && (
@@ -40,7 +106,7 @@ export default function IGVBrowserWrapper({ config, inclVariantReference, table 
                     >
                         Select Tracks
                     </div>
-                    <TrackSelectorTable table={table} handleRowSelect={undefined} />
+                    <TrackSelectorTable table={table} handleRowSelect={toggleTrack} />
                 </div>
             )}
         </>

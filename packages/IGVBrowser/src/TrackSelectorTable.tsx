@@ -26,12 +26,9 @@ const TrackSelectorTable = ({ table, handleRowSelect }: WrapperProps) => {
         setSelectedRows(rows);
     };
 
-    // FIXME: did we disable column filters in the table component? if so, remove this
-    table.options && (table.options.disableColumnFilters = true);
-
-    Object.assign(table.options!.rowSelect!, { onRowSelect: onRowSelect });
-    // ideally, you shouldn't end up here unless the table has rowSelect options
-    // which is why I'm assuming options.rowSelect is not null
+    // Initialize rowSelect if it doesn't exist
+    if (!table.options) table.options = {};
+    Object.assign(table.options, { rowSelect: { onRowSelect: onRowSelect, enableMultiRowSelect: true, rowId: "id" } });
 
     useEffect(() => {
         if (Object.keys(selectedRows!).length === 0) {
