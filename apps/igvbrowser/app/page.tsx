@@ -18,7 +18,7 @@ export default async function Page({ searchParams }: PageProps) {
             config={trackConfig}
             inclVariantReference={process.env.INCL_VARIANT_REFERENCE?.toUpperCase() === "TRUE"}
             table={trackSelectorTableData}
-            searchParams={params}
+            queryParams={params}
         />
     );
 }
