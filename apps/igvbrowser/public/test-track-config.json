@@ -17,12 +17,80 @@
         }
     },
     {
+        "id": "NGGTXAMZZNCCLT",
+        "name": "GTEx_v8 Amygdala eQTL SNP significant associations",
+        "url": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Amygdala_eQTL_GTEx_signif_SNP.bed.gz",
+        "description": "GTEx_v8 Amygdala eQTL eQTL SNP significant associations (bed6+14 qtl) [Life stage: Adult]",
+        "infoURL": "/record",
+        "format": "bed6+14",
+        "type": "qtl",
+        "indexURL": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Amygdala_eQTL_GTEx_signif_SNP.bed.gz.tbi",
+        "autoscale": true,
+        "metadata": {
+            "cell_type": "Amygdala",
+            "tissue_category": "Brain",
+            "data_source": "GTEx_v8",
+            "data_category": "eQTL"
+        }
+    },
+    {
+        "id": "NGGTX5KQBHCG4A",
+        "name": "GTEx_v8 Anterior cingulate cortex BA24 eQTL SNP significant associations",
+        "url": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Anterior_cingulate_cortex_BA24_eQTL_GTEx_signif_SNP.bed.gz",
+        "description": "GTEx_v8 Anterior cingulate cortex BA24 eQTL eQTL SNP significant associations (bed6+14 qtl) [Life stage: Adult]",
+        "infoURL": "/record",
+        "format": "bed6+14",
+        "type": "qtl",
+        "indexURL": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Anterior_cingulate_cortex_BA24_eQTL_GTEx_signif_SNP.bed.gz.tbi",
+        "autoscale": true,
+        "metadata": {
+            "cell_type": "Anterior cingulate cortex BA24",
+            "tissue_category": "Brain",
+            "data_source": "GTEx_v8",
+            "data_category": "eQTL"
+        }
+    },
+    {
+        "id": "NGGTXO7PETY55T",
+        "name": "GTEx_v8 Caudate basal ganglia eQTL SNP significant associations",
+        "url": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Caudate_basal_ganglia_eQTL_GTEx_signif_SNP.bed.gz",
+        "description": "GTEx_v8 Caudate basal ganglia eQTL eQTL SNP significant associations (bed6+14 qtl) [Life stage: Adult]",
+        "infoURL": "/record",
+        "format": "bed6+14",
+        "type": "qtl",
+        "indexURL": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Caudate_basal_ganglia_eQTL_GTEx_signif_SNP.bed.gz.tbi",
+        "autoscale": true,
+        "metadata": {
+            "cell_type": "Caudate basal ganglia",
+            "tissue_category": "Brain",
+            "data_source": "GTEx_v8",
+            "data_category": "eQTL"
+        }
+    },
+    {
+        "id": "NGGTXCX426Y6RU",
+        "name": "GTEx_v8 Cerebellar hemisphere eQTL SNP significant associations",
+        "url": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Cerebellar_hemisphere_eQTL_GTEx_signif_SNP.bed.gz",
+        "description": "GTEx_v8 Cerebellar hemisphere eQTL eQTL SNP significant associations (bed6+14 qtl) [Life stage: Adult]",
+        "infoURL": "/record",
+        "format": "bed6+14",
+        "type": "qtl",
+        "indexURL": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Cerebellar_hemisphere_eQTL_GTEx_signif_SNP.bed.gz.tbi",
+        "autoscale": true,
+        "metadata": {
+            "cell_type": "Cerebellar hemisphere",
+            "tissue_category": "Brain",
+            "data_source": "GTEx_v8",
+            "data_category": "eQTL"
+        }
+    },
+    {
         "id": "NGGTXFSOQ7KF5R",
         "name": "GTEx_v8 Cerebellum eQTL SNP significant associations",
         "url": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Cerebellum_eQTL_GTEx_signif_SNP.bed.gz",
         "description": "GTEx_v8 Cerebellum eQTL eQTL SNP significant associations (bed6+14 qtl) [Life stage: Adult]",
         "infoURL": "/record",
-        "format": "bed bed6+14 qtl",
+        "format": "bed6+14",
         "type": "qtl",
         "indexURL": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Cerebellum_eQTL_GTEx_signif_SNP.bed.gz.tbi",
         "autoscale": true,
@@ -30,58 +98,143 @@
             "cell_type": "Cerebellum",
             "tissue_category": "Brain",
             "data_source": "GTEx_v8",
-            "data_category": "QTL"
+            "data_category": "eQTL"
         }
     },
     {
-        "id": "NGGTXEUSJOFLC5",
-        "name": "GTEx_v8 Cerebellum eQTL INDEL significant associations",
-        "url": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Cerebellum_eQTL_GTEx_signif_OTHER.bed.gz",
-        "description": "GTEx_v8 Cerebellum eQTL eQTL INDEL significant associations (bed6+14 qtl) [Life stage: Adult]",
+        "id": "NGGTXQCFSQWL7V",
+        "name": "GTEx_v8 Cortex eQTL SNP significant associations",
+        "url": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Cortex_eQTL_GTEx_signif_SNP.bed.gz",
+        "description": "GTEx_v8 Cortex eQTL eQTL SNP significant associations (bed6+14 qtl) [Life stage: Adult]",
         "infoURL": "/record",
-        "format": "bed bed6+14 qtl",
+        "format": "bed6+14",
         "type": "qtl",
-        "indexURL": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Cerebellum_eQTL_GTEx_signif_OTHER.bed.gz.tbi",
+        "indexURL": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Cortex_eQTL_GTEx_signif_SNP.bed.gz.tbi",
         "autoscale": true,
         "metadata": {
-            "cell_type": "Cerebellum",
+            "cell_type": "Cortex",
             "tissue_category": "Brain",
             "data_source": "GTEx_v8",
-            "data_category": "QTL"
+            "data_category": "eQTL"
         }
     },
     {
-        "id": "NGGTXSKSU44DYE",
-        "name": "GTEx_v8 Cerebellum eQTL SNP nominally significant associations",
-        "url": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/nominally_significant/bed3plus17_qtl/hg38/formatted_output_Cerebellum_eQTL_nominal_pval_signif_SNP.bed.gz",
-        "description": "GTEx_v8 Cerebellum eQTL eQTL SNP nominally significant associations (bed6+14 qtl) [Life stage: Adult]",
+        "id": "NGGTXVR4JBCVQ7",
+        "name": "GTEx_v8 Frontal cortex BA9 eQTL SNP significant associations",
+        "url": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Frontal_cortex_BA9_eQTL_GTEx_signif_SNP.bed.gz",
+        "description": "GTEx_v8 Frontal cortex BA9 eQTL eQTL SNP significant associations (bed6+14 qtl) [Life stage: Adult]",
         "infoURL": "/record",
-        "format": "bed bed6+14 qtl",
+        "format": "bed6+14",
         "type": "qtl",
-        "indexURL": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/nominally_significant/bed3plus17_qtl/hg38/formatted_output_Cerebellum_eQTL_nominal_pval_signif_SNP.bed.gz.tbi",
+        "indexURL": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Frontal_cortex_BA9_eQTL_GTEx_signif_SNP.bed.gz.tbi",
         "autoscale": true,
         "metadata": {
-            "cell_type": "Cerebellum",
+            "cell_type": "Frontal cortex BA9",
             "tissue_category": "Brain",
             "data_source": "GTEx_v8",
-            "data_category": "QTL"
+            "data_category": "eQTL"
         }
     },
     {
-        "id": "NGGTXNF3BF2KKS",
-        "name": "GTEx_v8 Cerebellum eQTL INDEL nominally significant associations",
-        "url": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/nominally_significant/bed3plus17_qtl/hg38/formatted_output_Cerebellum_eQTL_nominal_pval_signif_OTHER.bed.gz",
-        "description": "GTEx_v8 Cerebellum eQTL eQTL INDEL nominally significant associations (bed6+14 qtl) [Life stage: Adult]",
+        "id": "NGGTX3LOKYRVS3",
+        "name": "GTEx_v8 Hippocampus eQTL SNP significant associations",
+        "url": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Hippocampus_eQTL_GTEx_signif_SNP.bed.gz",
+        "description": "GTEx_v8 Hippocampus eQTL eQTL SNP significant associations (bed6+14 qtl) [Life stage: Adult]",
         "infoURL": "/record",
-        "format": "bed bed6+14 qtl",
+        "format": "bed6+14",
         "type": "qtl",
-        "indexURL": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/nominally_significant/bed3plus17_qtl/hg38/formatted_output_Cerebellum_eQTL_nominal_pval_signif_OTHER.bed.gz.tbi",
+        "indexURL": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Hippocampus_eQTL_GTEx_signif_SNP.bed.gz.tbi",
         "autoscale": true,
         "metadata": {
-            "cell_type": "Cerebellum",
+            "cell_type": "Hippocampus",
             "tissue_category": "Brain",
             "data_source": "GTEx_v8",
-            "data_category": "QTL"
+            "data_category": "eQTL"
+        }
+    },
+    {
+        "id": "NGGTXGVNN3KVCG",
+        "name": "GTEx_v8 Hypothalamus eQTL SNP significant associations",
+        "url": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Hypothalamus_eQTL_GTEx_signif_SNP.bed.gz",
+        "description": "GTEx_v8 Hypothalamus eQTL eQTL SNP significant associations (bed6+14 qtl) [Life stage: Adult]",
+        "infoURL": "/record",
+        "format": "bed6+14",
+        "type": "qtl",
+        "indexURL": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Hypothalamus_eQTL_GTEx_signif_SNP.bed.gz.tbi",
+        "autoscale": true,
+        "metadata": {
+            "cell_type": "Hypothalamus",
+            "tissue_category": "Brain",
+            "data_source": "GTEx_v8",
+            "data_category": "eQTL"
+        }
+    },
+    {
+        "id": "NGGTXHL5NBPP2M",
+        "name": "GTEx_v8 Nucleus accumbens basal ganglia eQTL SNP significant associations",
+        "url": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Nucleus_accumbens_basal_ganglia_eQTL_GTEx_signif_SNP.bed.gz",
+        "description": "GTEx_v8 Nucleus accumbens basal ganglia eQTL eQTL SNP significant associations (bed6+14 qtl) [Life stage: Adult]",
+        "infoURL": "/record",
+        "format": "bed6+14",
+        "type": "qtl",
+        "indexURL": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Nucleus_accumbens_basal_ganglia_eQTL_GTEx_signif_SNP.bed.gz.tbi",
+        "autoscale": true,
+        "metadata": {
+            "cell_type": "Nucleus accumbens basal ganglia",
+            "tissue_category": "Brain",
+            "data_source": "GTEx_v8",
+            "data_category": "eQTL"
+        }
+    },
+    {
+        "id": "NGGTXONNPFMY4G",
+        "name": "GTEx_v8 Putamen basal ganglia eQTL SNP significant associations",
+        "url": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Putamen_basal_ganglia_eQTL_GTEx_signif_SNP.bed.gz",
+        "description": "GTEx_v8 Putamen basal ganglia eQTL eQTL SNP significant associations (bed6+14 qtl) [Life stage: Adult]",
+        "infoURL": "/record",
+        "format": "bed6+14",
+        "type": "qtl",
+        "indexURL": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Putamen_basal_ganglia_eQTL_GTEx_signif_SNP.bed.gz.tbi",
+        "autoscale": true,
+        "metadata": {
+            "cell_type": "Putamen basal ganglia",
+            "tissue_category": "Brain",
+            "data_source": "GTEx_v8",
+            "data_category": "eQTL"
+        }
+    },
+    {
+        "id": "NGGTXSRTQRMNTI",
+        "name": "GTEx_v8 Spinal cord cervical c-1 eQTL SNP significant associations",
+        "url": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Spinal_cord_cervical_c-1_eQTL_GTEx_signif_SNP.bed.gz",
+        "description": "GTEx_v8 Spinal cord cervical c-1 eQTL eQTL SNP significant associations (bed6+14 qtl) [Life stage: Adult]",
+        "infoURL": "/record",
+        "format": "bed6+14",
+        "type": "qtl",
+        "indexURL": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Spinal_cord_cervical_c-1_eQTL_GTEx_signif_SNP.bed.gz.tbi",
+        "autoscale": true,
+        "metadata": {
+            "cell_type": "Spinal cord cervical c-1",
+            "tissue_category": "Brain",
+            "data_source": "GTEx_v8",
+            "data_category": "eQTL"
+        }
+    },
+    {
+        "id": "NGGTXJYZEAN4BZ",
+        "name": "GTEx_v8 Substantia nigra eQTL SNP significant associations",
+        "url": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Substantia_nigra_eQTL_GTEx_signif_SNP.bed.gz",
+        "description": "GTEx_v8 Substantia nigra eQTL eQTL SNP significant associations (bed6+14 qtl) [Life stage: Adult]",
+        "infoURL": "/record",
+        "format": "bed6+14",
+        "type": "qtl",
+        "indexURL": "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Substantia_nigra_eQTL_GTEx_signif_SNP.bed.gz.tbi",
+        "autoscale": true,
+        "metadata": {
+            "cell_type": "Substantia nigra",
+            "tissue_category": "Brain",
+            "data_source": "GTEx_v8",
+            "data_category": "eQTL"
         }
     }
 ]
