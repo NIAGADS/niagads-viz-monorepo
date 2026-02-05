@@ -1,5 +1,4 @@
-import { Dna, Home } from "lucide-react";
-
+import { Home } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -34,7 +33,11 @@ export default function RootLayout({
                         boxShadow: "0 2px 8px 0 rgba(0,0,0,0.03)",
                     }}
                 >
-                    <img src="/images/logo.svg" alt="NIAGADS Logo" style={{ height: 32, width: 32 }} />
+                    <img
+                        src={process.env.NEXT_PUBLIC_LOGO || "/images/logo.svg"}
+                        alt="NIAGADS Logo"
+                        style={{ height: 32, width: 32 }}
+                    />
                     <span
                         style={{
                             fontWeight: 700,
@@ -43,23 +46,25 @@ export default function RootLayout({
                             color: "#1e293b",
                         }}
                     >
-                        NIAGADS Genome Browser
+                        {process.env.NEXT_PUBLIC_NAME || "NIAGADS Genome Browser"}
                     </span>
                     <div style={{ flex: 1 }} />
-                    <Link
-                        href="/"
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "0.5rem",
-                            color: "#2563eb",
-                            textDecoration: "none",
-                            fontWeight: 500,
-                            fontSize: "1rem",
-                        }}
-                    >
-                        <Home size={20} /> Home
-                    </Link>
+                    {process.env.NEXT_PUBLIC_HOME && (
+                        <Link
+                            href={process.env.NEXT_PUBLIC_HOME}
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "0.5rem",
+                                color: "#2563eb",
+                                textDecoration: "none",
+                                fontWeight: 500,
+                                fontSize: "1rem",
+                            }}
+                        >
+                            <Home size={20} /> Home
+                        </Link>
+                    )}
                 </nav>
                 <main
                     style={{
