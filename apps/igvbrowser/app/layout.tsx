@@ -18,7 +18,7 @@ export default function RootLayout({
                 style={{
                     minHeight: "100vh",
                     margin: 0,
-                    background: "#f8fafc",
+                    background: "white",
                     fontFamily: "system-ui, sans-serif",
                 }}
             >
