@@ -5,6 +5,7 @@
     "scripts": {
         "watch": "npx lerna watch -- lerna run build --scope=\\$LERNA_PACKAGE_NAME",
         "storybook": "concurrently \"npm run watch\" \"npx lerna run storybook\"",
+        "igvbrowser": "concurrently \"npm run watch\" \"npx lerna run igvbrowser\"",
         "genomicsdb": "concurrently \"npm run watch\" \"npx lerna run genomicsdb\"",
         "genomicsdb-debug": "concurrently \"npm run watch\" \"npx lerna run genomicsdb-debug\"",
         "genomicsdb-prod": "npx lerna run genomicsdb-prod",
@@ -24,7 +25,8 @@
         "packages/Charts",
         "packages/UI",
         "apps/storybook",
-        "apps/genomicsdb"
+        "apps/genomicsdb",
+        "apps/igvbrowser"
     ],
     "devDependencies": {
         "concurrently": "^9.1.2",

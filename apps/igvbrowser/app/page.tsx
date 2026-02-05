@@ -1,4 +1,5 @@
 "use client";
+
 // import { fetchCollectionMetadata, fetchTrackConfiguration, fetchTrackSelector } from "@/utils/fetch";
 // import { Collection } from "@/common/types";
 import { IGVBrowser } from "@niagads/igv";
@@ -7,7 +8,7 @@ import { IGVBrowser } from "@niagads/igv";
 
 export default /*async */ function Page() {
     //return <div>Hello</div>;
-    return <IGVBrowser genome={"hg38"} featureSearchURI={"/service/track/feature?id="}></IGVBrowser>;
+    return <IGVBrowser genome={"hg38"} searchUrl={"/service/track/feature?id="}></IGVBrowser>;
 
     /*const collections: Collection[] = parseCollectionList(process.env.NEXT_PUBLIC_TRACK_COLLECTIONS!);
     const selector = await fetchTrackSelector(collections);
