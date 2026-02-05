@@ -1,41 +1,71 @@
-# NIAGADS-IGV 
+# NIAGADS IGV Genome Browser
 
-> NOTE: Micro-service temporarily **BROKEN**; works as a test application, not stand-a-lone
+A stand-alone genome browser application for NIAGADS, based on IGV. This app provides the complete functionality of the IGV browser, customized for integration with NIAGADS services and NIAGADS hosted data, including variants and annotations from the Alzhemier's Disease Sequencing Project (ADSP):
 
-## IGV Config Options: 
+## Reference Tracks
 
-* `infoURL` -> link for features; track specific
+* Reference annotated ADSP variant track
+* Ensembl Gene reference track
 
+## Custom Track displays
+
+* xQTL track (for QTL data in hipFG-normalized BED file formats)
+* GWAS summary statistics (**NOTE** currently requires input from a web-service; file-data adapte underdevelopment).  Please reach out to us on the NIAGADS IGV Browser [issue tracker](https://github.com/NIAGADS/igvbrowser-microservice/issues) if you are interested in utilizing this track type in your own stand-a-lone application.
+
+## Getting Help
+
+If you have questions, encounter issues, or would like to request new features, please open an issue on the official [NIAGADS IGV Browser issue tracker](https://github.com/NIAGADS/igvbrowser-microservice/issues). Our team monitors this tracker and will respond as promptly as possible.
+
+## Production Docker Build
+
+### 1. Checkout the IGV Browser Code
+
+```bash
+git clone --filter=blob:none --sparse https://github.com/NIAGADS/niagads-viz-monorepo.git
+cd niagads-viz-monorepo
+git sparse-checkout set apps/igvbrowser
 ```
-showAllChromosomes: false
-​
-showCenterGuide: false
-​
-showCenterGuideButton: true
-​
-showChromosomeWidget: false --> hides chromosome select
-​
-showCircularView: false
-​
-showCircularViewButton: false
-​
-showControls: true
-​
-showCursorGuide: false
-​
-showCursorTrackingGuideButton: true
-​
-showIdeogram: true
-​
-showNavigation: true
-​
-showRuler: true
-​
-showSVGButton: true
-​
-showSampleNames: false
-​
-showTrackLabelButton: true
-​
-showTrackLabels: true
+
+### 2.Configure the application
+
+#### Docker ENV
+
+Copy `docker.env.sample` to `docker.env` and edit as needed:
+
+```bash
+cp docker.env.sample docker.env
 ```
+
+* `PORT`: Port to expose the app (default: 3000)
+* `APPLICATION_DIR`: Full path to the project directory containing the application code
+
+> **Note:** The applciation code lives on the host to minimize the size of the container.  This also allows hot-reloads, when updates are pulled from the repo (as long as the update does not involve updating third-party dependencies).
+
+Copy `custom/browser.config.sample` to `custom/browser.config` and edit as needed:
+
+```bash
+cp custom/browser.config.sample custom/browser.config
+```
+
+* `NEXT_PUBLIC_BASE_URL`: Base URL for the browser (default: <http://localhost:3000>)
+* `NEXT_PUBLIC_NAME`: Display name for the browser
+* `NEXT_PUBLIC_DESCRIPTION`: Description or link
+* `NEXT_PUBLIC_LOGO`: Path or URL to logo
+* `NEXT_PUBLIC_HOME`: Home page URL
+* `INCL_TRACK_SELECTOR`: Show track selector (TRUE/FALSE)
+* `INCL_VARIANT_REFERENCE`: Show variant reference (TRUE/FALSE)
+* `TRACK_CONFIG`: Track configuration options
+
+### Docker Configuration
+
+To build and run the NIAGADS IGV Genome Browser application:
+
+```bash
+docker compose up build -d
+```
+
+Adjust the port and environment variables as needed for your deployment.
+
+For more details, see the [IGVBrowser Microservice documentation](https://github.com/NIAGADS/igvbrowser-microservice).
+
+## Developer Build
