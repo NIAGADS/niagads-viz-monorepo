@@ -1,0 +1,18 @@
+# Customization for Stand-a-lone NIAGADS Genome Browser Application.  
+# See https://github.com/NIAGADS/igvbrowser-microservice for more information
+
+# Copy file and rename copy to browser.config.  Then edit.
+
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+NEXT_PUBLIC_NAME="NIAGADS Genome Browser"
+NEXT_PUBLIC_DESCRIPTION="https://github.com/NIAGADS/igvbrowser-microservice"
+NEXT_PUBLIC_LOGO=
+NEXT_PUBLIC_HOME=
+
+
+INCL_TRACK_SELECTOR=TRUE
+INCL_VARIANT_REFERENCE=FALSE
+TRACK_CONFIG=
+
+
+

@@ -2,9 +2,7 @@
 
 FROM node:20.18.0-bullseye-slim as builder
 
-ARG GIT_DEPENDENCIES
-
-RUN if [ ${GIT_DEPENDENCIES} = 1 ]; then apt-get update && apt-get install -y git; fi
+RUN apt-get update && apt-get install -y git; fi
 
 WORKDIR /src
 
