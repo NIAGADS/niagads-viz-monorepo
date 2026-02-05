@@ -11,22 +11,18 @@
         "@niagads/common": "^0.0.1",
         "@niagads/ui": "^0.0.1",
         "@niagads/igv": "^0.0.1",
-        "next": "15.1.4",
-        "next-seo": "^6.6.0",
-        "react": "^19.0.0",
-        "react-dom": "^19.0.0"
+        "lucide-react": "^0.513.0",
+        "next": "^15.4.8",
+        "react": "^19.2.1",
+        "react-dom": "^19.2.1"
     },
     "devDependencies": {
         "@eslint/eslintrc": "^3",
-        "@types/jquery": "^3.5.32",
-        "@types/lodash.find": "^4.6.9",
-        "@types/lodash.noop": "^3.0.9",
         "@types/node": "^20",
-        "@types/react": "^19",
-        "@types/react-dom": "^19",
+        "@types/react": "^19.2.7",
+        "@types/react-dom": "^19.2.3",
         "eslint": "^9",
-        "eslint-config-next": "15.1.4",
-        "postcss": "^8",
+        "eslint-config-next": "15.3.3",
         "typescript": "^5"
     }
 }
