@@ -1,10 +1,10 @@
 // TODO: fix loading fallback handling; it is incorrect
 
 import { DEFAULT_FLANK, FEATURE_SEARCH_URL } from "./config/_constants";
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { getLoadedTracks, loadTracks, removeTrackById, getTrackConfig } from "./tracks/utils";
-
 import { IGVBrowserQueryParams, IGVBrowserTrack } from "./types/data_models";
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { getLoadedTracks, getTrackConfig, loadTracks, removeTrackById } from "./tracks/utils";
+
 import { Skeleton } from "@niagads/ui";
 import { _genomes } from "./config/_igvGenomes";
 import find from "lodash.find";
@@ -48,9 +48,11 @@ export interface IGVBrowserProps {
     /** URL endpoint for feature search queries, should take a `feature` and a `flank` parameter; defaults to GenomicsDB Feature search */
     searchUrl?: string;
     /** Array of track configuration objects to load */
-    tracks?: IGVBrowserTrack[];
-    /** Additional Reference tracks to display by default */
+    trackConfig?: IGVBrowserTrack[];
+    /** Additional Reference tracks (not removable) */
     referenceTracks?: IGVBrowserTrack[];
+    /** Tracks to load by default (list of trackIds) */
+    defaultTracks?: string[];
     /** Initial locus (region or gene name) to display */
     locus?: string;
     /** Flag to hide browser navigation controls */
@@ -60,13 +62,13 @@ export interface IGVBrowserProps {
     /** the query params to parse and manage */
     queryParams?: IGVBrowserQueryParams;
     /** Callback fired when tracks are removed */
-    onTrackRemoved?: (tracks: string[]) => void;
+    onTrackRemoved?: (trackIds: string[]) => void;
     /** Callback fired when tracks are added (e.g., from url parameter) */
-    onTrackAdded?: (tracks: string[]) => void;
+    onTrackAdded?: (trackIds: string[]) => void;
     /** Callback fired when browser is loaded */
-    onBrowserLoad?: (Browser: any) => void;
+    onBrowserLoad?: (browser: any) => void;
     /** Callback fired when locus changes */
-    onLocusChanged?: (Browser: any) => void;
+    onLocusChanged?: (browser: any) => void;
 }
 
 type FileTrackConfig = Partial<IGVBrowserTrack>;
@@ -75,8 +77,9 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
     genome = "GRCh38",
     searchUrl = FEATURE_SEARCH_URL,
     locus,
-    tracks,
+    trackConfig,
     referenceTracks,
+    defaultTracks,
     hideNavigation = false,
     allowQueryParameters = true,
     queryParams,
@@ -114,7 +117,12 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
             loadDefaultGenomes: false,
             genomeList: _genomes,
             supportQueryParameters: allowQueryParameters,
+            defaultTracks: defaultTracks || null,
         };
+
+        if (defaultTracks) {
+            Object.assign(browserOpts, { defaultTracks: defaultTracks });
+        }
 
         if (queryParams) {
             Object.assign(
@@ -124,22 +132,31 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
 
             setHighlightRegionLabel(queryParams.roiLabel || queryParams.loc || null);
 
+            if (queryParams.track) {
+                const trackIds = Array.isArray(queryParams.track) ? queryParams.track : [queryParams.track];
+                browserOpts.defaultTracks = !browserOpts.defaultTracks
+                    ? trackIds
+                    : [...browserOpts.defaultTracks, ...trackIds];
+            }
+
+            /*
             Object.assign(
                 browserOpts,
                 queryParams.track
                     ? {
                           queryTracks: getTrackConfig(
                               Array.isArray(queryParams.track) ? queryParams.track : [queryParams.track],
-                              tracks || []
+                              trackConfig || []
                           ),
                       }
                     : {}
-            );
+            );*/
+
             Object.assign(
                 browserOpts,
                 queryParams.file
                     ? {
-                          queryFiles: {
+                          files: {
                               urls: Array.from(
                                   new Set(Array.isArray(queryParams.file) ? queryParams.file : [queryParams.file])
                               ),
@@ -151,7 +168,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
         }
 
         return browserOpts;
-    }, [genome, locus, queryParams, referenceTracks]);
+    }, [genome, locus, queryParams, defaultTracks]);
 
     useEffect(() => {
         setIsClient(true);
@@ -170,7 +187,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
             }
 
             const loadInitialTracks = async () => {
-                // load tracks from the url query
+                // load additional reference tracks
                 if (referenceTracks) {
                     await loadTracks(referenceTracks, browser);
                     if (onTrackAdded) {
@@ -179,19 +196,21 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
                     }
                 }
 
-                if (browser.config.queryTracks) {
-                    await loadTracks(browser.config.queryTracks, browser);
+                if (browser.config.defautTracks && trackConfig) {
+                    const dtConfig = getTrackConfig(browser.config.defaultTracks, trackConfig);
+                    await loadTracks(dtConfig, browser);
                     if (onTrackAdded) {
-                        const trackIds = browser.config.queryTracks.map((t: IGVBrowserTrack) => t.id);
+                        // extract track ids again, incase some of the defaultTracks did map to configs
+                        const trackIds = dtConfig.map((t: IGVBrowserTrack) => t.id);
                         onTrackAdded(trackIds);
                     }
                 }
 
                 // load files from the url query
-                if (browser.config.queryFiles) {
-                    const fileTracks = browser.config.queryFiles.urls.map((url: string) => {
+                if (browser.config.files) {
+                    const fileTracks = browser.config.files.urls.map((url: string) => {
                         const id = "file_" + url!.split("/").pop()!.replace(/\..+$/, "");
-                        const config: FileTrackConfig = browser.config.queryFiles.indexed
+                        const config: FileTrackConfig = browser.config.files.indexed
                             ? { url: url, indexURL: url + ".tbi", name: "USER: " + id, id: id }
                             : { url: url, name: "USER: " + id, id: id };
                         return config;
