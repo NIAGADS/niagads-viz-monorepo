@@ -44,7 +44,7 @@ function adjustLocusRange(locus: string, flank: number): string {
  */
 export interface IGVBrowserProps {
     /** Genome assembly identifier (e.g., "GRCh38") */
-    genome: string;
+    genome?: string;
     /** URL endpoint for feature search queries, should take a `feature` and a `flank` parameter; defaults to GenomicsDB Feature search */
     searchUrl?: string;
     /** Array of track configuration objects to load */

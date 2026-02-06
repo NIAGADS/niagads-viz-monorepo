@@ -2,9 +2,11 @@ import TrackSelectorTable, { handleLoadTracks, handleUnloadTracks, toggleTrackSe
 import { getLoadedTracks, getTrackConfig, loadTracks, removeTrackById } from "./tracks/utils";
 
 import IGVBrowser from "./IGVBrowser";
+import IGVBrowserWithSelector from "./IGVBrowserWithSelector";
 import { VariantReferenceTrack } from "./config/_constants";
 
 export type { IGVBrowserProps } from "./IGVBrowser";
+export type { IGVBrowserWithSelectorProps } from "./IGVBrowserWithSelector";
 export type { RowSelectionState, TableProps } from "./TrackSelectorTable";
 export type { IGVBrowserTrack, IGVBrowserQueryParams } from "./types/data_models";
 export {
@@ -14,6 +16,7 @@ export {
     handleUnloadTracks,
     toggleTrackSelection,
     IGVBrowser,
+    IGVBrowserWithSelector,
     loadTracks,
     removeTrackById,
     TrackSelectorTable,
