@@ -1,4 +1,5 @@
-import { ignoreCaseIndexOf, capitalize, numberFormatter } from "./utils";
+import { capitalize, ignoreCaseIndexOf, numberFormatter } from "./utils";
+
 import igv from "igv/dist/igv.esm";
 
 const EXPECTED_BED_FIELDS = [
@@ -21,7 +22,7 @@ const P_VALUE_FIELDS = ["pvalue", "p-value", "pval", "p_value"]; //TODO: check n
 const TARGET_GENE_SYMBOL_FIELD = "target_gene_symbol";
 const TARGET_GENE_ID_FIELD = "target_ensembl_id";
 const VARIANT_ID_FIELD = "variant_id";
-const IGNORE_OPTIONAL_FIELDS = ["user_input", "target_info"];
+const IGNORE_OPTIONAL_FIELDS = new Set(["user_input", "target_info"]);
 //const NEG_LOG10_P_CAP = 50;
 
 interface Popup {
@@ -45,19 +46,36 @@ function decodeBedXY(tokens: any, header: any) {
     }
 
     let feature = new BedXYFeature(chr, start, end);
-    Object.assign(feature, { popupData: extractPopupData(feature) });
+
+    // lazy popupData: compute on first access to avoid work for every feature
+    Object.defineProperty(feature, "popupData", {
+        configurable: true,
+        enumerable: false,
+        get() {
+            const data = extractPopupData(this);
+            Object.defineProperty(this, "popupData", { value: data, writable: false });
+            return data;
+        },
+    });
+
+    // build a lowercase field->index map once per header for O(1) lookups
+    const fieldIndexMap: Record<string, number> = Object.create(null);
+    for (let i = 0; i < header.columnNames.length; i++) {
+        const key = String(header.columnNames[i]).toLowerCase();
+        fieldIndexMap[key] = i;
+    }
 
     if (X > 3) {
         // parse additional standard BED (beyond chr, start, end) columns
         parseStandardFields(feature, X, tokens);
     }
 
-    // parse optional columns
-    parseOptionalFields(feature, tokens, X, header.columnNames);
+    // parse optional columns (pass the fieldIndexMap and IGNORE_OPTIONAL_FIELDS set)
+    parseOptionalFields(feature, tokens, X, header.columnNames, fieldIndexMap, IGNORE_OPTIONAL_FIELDS);
 
-    feature.setP(tokens, header.columnNames);
-    feature.setTarget(tokens, header.columnNames);
-    feature.setVariant(tokens, header.columnNames);
+    feature.setP(tokens, fieldIndexMap);
+    feature.setTarget(tokens, fieldIndexMap);
+    feature.setVariant(tokens, fieldIndexMap);
 
     return feature;
 }
@@ -147,14 +165,21 @@ function parseStandardFields(feature: BedXYFeature, X: number, tokens: any) {
     }
 }
 
-function parseOptionalFields(feature: BedXYFeature, tokens: any, X: number, fields: any) {
-    //go through tokens and perform minimal parsing add optional columns to feature.info
+function parseOptionalFields(
+    feature: BedXYFeature,
+    tokens: any,
+    X: number,
+    fields: any,
+    fieldIndexMap: Record<string, number>,
+    ignoreOptionalFields: Set<string>
+) {
+    // go through tokens and perform minimal parsing add optional columns to feature.info
     const infoProps: any = {};
     for (let i = X; i < fields.length; i++) {
         const propKey = fields[i];
-        if (IGNORE_OPTIONAL_FIELDS.indexOf(propKey) === -1) {
+        if (!ignoreOptionalFields.has(propKey)) {
             let value = tokens[i];
-            //check to see if the feature is a number in a string and convert it
+            // check to see if the feature is a number in a string and convert it
             if (!isNaN(value) && typeof value !== "number") {
                 value = value * 1;
             }
@@ -201,11 +226,14 @@ class BedXYFeature {
         }
     }
 
-    setVariant(tokens: any, fields: string[]) {
-        const index = fields.indexOf(VARIANT_ID_FIELD);
+    setVariant(tokens: any, fieldIndexMap: Record<string, number>) {
+        const index = fieldIndexMap[VARIANT_ID_FIELD] ?? -1;
+        if (index === -1 || !tokens[index]) return;
+
+        const val = String(tokens[index]).replace("chr", "");
         this.setAdditionalAttributes({
-            variant: tokens[index].replace("chr", ""),
-            record_pk: tokens[index].replace("chr", ""),
+            variant: val,
+            record_pk: val,
         });
 
         if (!this.name) {
@@ -215,16 +243,17 @@ class BedXYFeature {
         this.removeAttributes([VARIANT_ID_FIELD]);
     }
 
-    setP(tokens: any, fields: string[]) {
+    setP(tokens: any, fieldIndexMap: Record<string, number>) {
         for (const field of P_VALUE_FIELDS) {
-            const index = ignoreCaseIndexOf(fields, field);
-            if (index !== -1) {
+            const index = fieldIndexMap[field];
+            if (index !== undefined) {
                 const pValue = parseFloat(tokens[index]);
+                if (isNaN(pValue)) continue;
                 const neg_log10_pvalue = -1 * Math.log10(pValue);
 
                 this.setAdditionalAttributes({
-                    pvalue: pValue,
-                    neg_log10_pvalue: neg_log10_pvalue, //> NEG_LOG10_P_CAP ? NEG_LOG10_P_CAP : neg_log10_pvalue,
+                    pvalue: pValue.toExponential(2),
+                    neg_log10_pvalue: neg_log10_pvalue,
                 });
 
                 this.removeAttributes([field]);
@@ -233,12 +262,12 @@ class BedXYFeature {
         }
     }
 
-    setTarget(tokens: any, fields: string[]) {
-        let index = fields.indexOf(TARGET_GENE_SYMBOL_FIELD);
-        const targetGeneSymbol = tokens[index];
+    setTarget(tokens: any, fieldIndexMap: Record<string, number>) {
+        const indexSymbol = fieldIndexMap[TARGET_GENE_SYMBOL_FIELD];
+        const targetGeneSymbol = indexSymbol !== undefined ? tokens[indexSymbol] : undefined;
 
-        index = fields.indexOf(TARGET_GENE_ID_FIELD);
-        const targetGeneId = index === -1 ? targetGeneSymbol : tokens[index];
+        const indexId = fieldIndexMap[TARGET_GENE_ID_FIELD];
+        const targetGeneId = indexId !== undefined ? tokens[indexId] : targetGeneSymbol;
 
         this.setAdditionalAttributes({
             gene_symbol: targetGeneSymbol,
