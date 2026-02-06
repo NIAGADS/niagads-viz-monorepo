@@ -2,8 +2,8 @@
 
 import {
     IGVBrowser,
+    IGVBrowserProps,
     IGVBrowserTrack,
-    IGVBrowserQueryParams,
     TableProps,
     TrackSelectorTable,
     VariantReferenceTrack,
@@ -13,20 +13,19 @@ import {
 } from "@niagads/igv";
 import { useEffect, useState } from "react";
 
-interface IGVBrowserWrapperProps {
-    config: IGVBrowserTrack[];
+interface IGVBrowserWrapperProps extends Partial<IGVBrowserProps> {
+    selectorTable?: TableProps;
     inclVariantReference: boolean;
-    table?: TableProps;
-    queryParams?: IGVBrowserQueryParams;
 }
 
 type FileTrackConfig = Partial<IGVBrowserTrack>;
 
 export default function IGVBrowserWrapper({
-    config,
+    selectorTable,
     inclVariantReference,
-    table,
+    trackConfig,
     queryParams,
+    ...restBrowserProps
 }: IGVBrowserWrapperProps) {
     const [selectedTracks, setSelectedTracks] = useState<string[]>([]);
     const [browser, setBrowser] = useState<any>(null);
@@ -52,26 +51,30 @@ export default function IGVBrowserWrapper({
     useEffect(() => {
         if (!loading && browser) {
             const loadedTracks = getLoadedTracks(browser);
-            handleLoadTracks(selectedTracks, loadedTracks, config, browser);
-            handleUnloadTracks(selectedTracks, loadedTracks, config, browser);
+            handleLoadTracks(selectedTracks, loadedTracks, trackConfig!, browser);
+            handleUnloadTracks(selectedTracks, loadedTracks, trackConfig!, browser);
             // TODO - handle removal of tracks from genome browser->trackselectorstate w/toggleTrackSelection()
             // note that handle load/unload return a list of ids that can be used to pass to toggleTrackSelection
         }
-    }, [selectedTracks, loading, browser, config]);
+    }, [selectedTracks, loading, browser, trackConfig]);
+
+    const { genome, searchUrl, defaultTracks, onBrowserLoad, onTrackRemoved, onTrackAdded, ...filteredBrowserProps } =
+        restBrowserProps;
     return (
         <>
             <IGVBrowser
                 genome={"GRCh38"}
                 searchUrl={"/service/track/feature?id=$FEATURE$&flank=1000"}
-                tracks={config}
-                referenceTracks={inclVariantReference ? [VariantReferenceTrack] : undefined}
+                trackConfig={inclVariantReference ? [VariantReferenceTrack, ...trackConfig!] : trackConfig}
+                defaultTracks={inclVariantReference ? [VariantReferenceTrack] : undefined}
                 onBrowserLoad={initializeBrowser}
                 queryParams={queryParams}
                 onTrackRemoved={toggleTrack}
                 onTrackAdded={toggleTrack}
+                {...filteredBrowserProps}
             />
 
-            {table && (
+            {selectorTable && (
                 <div style={{ marginTop: "4rem" }}>
                     <div
                         style={{
@@ -92,7 +95,11 @@ export default function IGVBrowserWrapper({
                     >
                         Select Tracks
                     </div>
-                    <TrackSelectorTable table={table} handleRowSelect={toggleTrack} onTableLoad={setTrackSelector} />
+                    <TrackSelectorTable
+                        table={selectorTable}
+                        handleRowSelect={toggleTrack}
+                        onTableLoad={setTrackSelector}
+                    />
                 </div>
             )}
         </>

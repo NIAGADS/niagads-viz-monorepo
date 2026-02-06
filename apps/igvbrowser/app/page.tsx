@@ -15,9 +15,9 @@ export default async function Page({ searchParams }: PageProps) {
 
     return (
         <IGVBrowserWrapper
-            config={trackConfig}
+            trackConfig={trackConfig}
             inclVariantReference={process.env.INCL_VARIANT_REFERENCE?.toUpperCase() === "TRUE"}
-            table={trackSelectorTableData}
+            selectorTable={trackSelectorTableData}
             queryParams={params}
         />
     );
