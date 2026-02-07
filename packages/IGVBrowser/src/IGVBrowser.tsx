@@ -3,11 +3,12 @@
 import { DEFAULT_FLANK, FEATURE_SEARCH_URL } from "./config/_constants";
 import { IGVBrowserQueryParams, IGVBrowserTrack } from "./types/data_models";
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { getLoadedTracks, getTrackConfig, loadTracks, removeTrackById } from "./tracks/utils";
+import { getLoadedTracks, loadTracks, removeTrackById } from "./utils/browser";
 
 import { Skeleton } from "@niagads/ui";
 import { _genomes } from "./config/_igvGenomes";
 import find from "lodash.find";
+import { findTrackConfigs } from "./utils/track_config";
 import noop from "lodash.noop";
 import { trackPopover } from "./tracks/feature_popovers";
 
@@ -52,7 +53,7 @@ export interface IGVBrowserProps {
     /** Additional Reference tracks (not removable) */
     referenceTracks?: IGVBrowserTrack[];
     /** Tracks to load by default (list of trackIds) */
-    defaultTracks?: string[];
+    defaultTrackIds?: string[];
     /** Initial locus (region or gene name) to display */
     locus?: string;
     /** Flag to hide browser navigation controls */
@@ -79,7 +80,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
     locus,
     trackConfig,
     referenceTracks,
-    defaultTracks,
+    defaultTrackIds,
     hideNavigation = false,
     allowQueryParameters = true,
     queryParams,
@@ -104,7 +105,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
     const opts: any = useMemo(() => {
         const referenceTrackConfig: any = find(_genomes, { id: genome });
 
-        let browserOpts = {
+        let browserOpts: any = {
             locus: locus || "ABCA7",
             showAllChromosomes: false,
             flanking: DEFAULT_FLANK,
@@ -117,58 +118,32 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
             loadDefaultGenomes: false,
             genomeList: _genomes,
             supportQueryParameters: allowQueryParameters,
-            defaultTracks: defaultTracks || null,
+            defaultTrackIds: defaultTrackIds || null,
         };
 
-        if (defaultTracks) {
-            Object.assign(browserOpts, { defaultTracks: defaultTracks });
-        }
-
         if (queryParams) {
-            Object.assign(
-                browserOpts,
-                queryParams.loc ? { locus: adjustLocusRange(queryParams.loc, DEFAULT_FLANK) } : {}
-            );
-
-            setHighlightRegionLabel(queryParams.roiLabel || queryParams.loc || null);
+            if (queryParams.loc) {
+                browserOpts.locus = adjustLocusRange(queryParams.loc, DEFAULT_FLANK);
+                setHighlightRegionLabel(queryParams.roiLabel || queryParams.loc || null);
+            }
 
             if (queryParams.track) {
                 const trackIds = Array.isArray(queryParams.track) ? queryParams.track : [queryParams.track];
-                browserOpts.defaultTracks = !browserOpts.defaultTracks
+                browserOpts.defaultTrackIds = !browserOpts.defaultTrackIds
                     ? trackIds
-                    : [...browserOpts.defaultTracks, ...trackIds];
+                    : [...browserOpts.defaultTrackIds, ...trackIds];
             }
 
-            /*
-            Object.assign(
-                browserOpts,
-                queryParams.track
-                    ? {
-                          queryTracks: getTrackConfig(
-                              Array.isArray(queryParams.track) ? queryParams.track : [queryParams.track],
-                              trackConfig || []
-                          ),
-                      }
-                    : {}
-            );*/
-
-            Object.assign(
-                browserOpts,
-                queryParams.file
-                    ? {
-                          files: {
-                              urls: Array.from(
-                                  new Set(Array.isArray(queryParams.file) ? queryParams.file : [queryParams.file])
-                              ),
-                              indexed: queryParams.filesAreIndexed,
-                          },
-                      }
-                    : {}
-            );
+            if (queryParams.file) {
+                browserOpts.files = {
+                    urls: Array.from(new Set(Array.isArray(queryParams.file) ? queryParams.file : [queryParams.file])),
+                    indexed: queryParams.filesAreIndexed,
+                };
+            }
         }
 
         return browserOpts;
-    }, [genome, locus, queryParams, defaultTracks]);
+    }, [genome, locus, queryParams, defaultTrackIds]);
 
     useEffect(() => {
         setIsClient(true);
@@ -179,34 +154,28 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
         if (!browserIsLoading) {
             const loadedTracks = getLoadedTracks(browser);
 
-            // if any tracks are loaded, remove them
-            if (Object.keys(loadedTracks).length !== 0) {
+            // TODO: if any tracks are loaded, remove them -> if saving session(?)
+            /* if (Object.keys(loadedTracks).length !== 0) {
                 for (const id of loadedTracks) {
-                    removeTrackById(id, browser);
+                    removeTrackById(browser, id);
                 }
-            }
+            }*/
 
             const loadInitialTracks = async () => {
-                // load additional reference tracks
+                let tracksToLoad: IGVBrowserTrack[] = [];
+                let addedTrackIds: string[] = [];
+
                 if (referenceTracks) {
-                    await loadTracks(referenceTracks, browser);
-                    if (onTrackAdded) {
-                        const trackIds = referenceTracks.map((t: IGVBrowserTrack) => t.id);
-                        onTrackAdded(trackIds);
-                    }
+                    tracksToLoad = tracksToLoad.concat(referenceTracks);
+                    addedTrackIds = addedTrackIds.concat(referenceTracks.map((t: IGVBrowserTrack) => t.id));
                 }
 
-                if (browser.config.defautTracks && trackConfig) {
-                    const dtConfig = getTrackConfig(browser.config.defaultTracks, trackConfig);
-                    await loadTracks(dtConfig, browser);
-                    if (onTrackAdded) {
-                        // extract track ids again, incase some of the defaultTracks did map to configs
-                        const trackIds = dtConfig.map((t: IGVBrowserTrack) => t.id);
-                        onTrackAdded(trackIds);
-                    }
+                if (browser.config.defautTrackIds && trackConfig) {
+                    const dtConfig = findTrackConfigs(trackConfig, browser.config.defaultTrackIds);
+                    tracksToLoad = tracksToLoad.concat(dtConfig);
+                    addedTrackIds = addedTrackIds.concat(browser.config.defaultTrackIds);
                 }
 
-                // load files from the url query
                 if (browser.config.files) {
                     const fileTracks = browser.config.files.urls.map((url: string) => {
                         const id = "file_" + url!.split("/").pop()!.replace(/\..+$/, "");
@@ -215,16 +184,21 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
                             : { url: url, name: "USER: " + id, id: id };
                         return config;
                     });
-
-                    await loadTracks(fileTracks, browser);
+                    tracksToLoad = tracksToLoad.concat(fileTracks);
                 }
 
+                if (tracksToLoad.length > 0) {
+                    await loadTracks(browser, tracksToLoad);
+                }
+                if (onTrackAdded && addedTrackIds.length > 0) {
+                    onTrackAdded(addedTrackIds);
+                }
                 // TODO: loci and ROI
             };
 
             loadInitialTracks();
         }
-    }, [browserIsLoading]);
+    }, [browserIsLoading, trackConfig]);
 
     useLayoutEffect(() => {
         if (isClient && containerRef.current) {
@@ -257,7 +231,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
                         // handle track removed
                         browser.on("trackremoved", function (track: any) {
                             if (onTrackRemoved) {
-                                onTrackRemoved(track.config.id);
+                                onTrackRemoved([track.config.id]);
                             }
                         });
 

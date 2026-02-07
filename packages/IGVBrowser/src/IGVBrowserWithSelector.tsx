@@ -84,7 +84,7 @@ export default function IGVBrowserWithSelector({
                     </div>
                     <TrackSelectorTable
                         table={selectorTable}
-                        handleRowSelect={toggleTrack}
+                        onRowSelect={toggleTrack}
                         onTableLoad={setTrackSelector}
                     />
                 </div>
