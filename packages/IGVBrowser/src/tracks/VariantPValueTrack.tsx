@@ -1,7 +1,7 @@
+import { ManhattanColors } from "./color_scales";
 // modified from https://github.com/igvteam/igv.js/tree/master/js/gwas/gwasTrack.js
 // adapted to plot anything w/a p-value (e.g., xQTL as well as GWAS summary statistics)
 import igv from "igv/dist/igv.esm";
-import { ManhattanColors } from "./color_scales";
 
 const DEFAULT_POPOVER_WINDOW = 100000000;
 
@@ -110,16 +110,25 @@ class VariantPValueTrack extends igv.TrackBase {
         }
         igv.IGVGraphics.strokeLine(ctx, 0, pixelHeight - 1, pixelWidth, pixelHeight - 1, { strokeStyle: this.divider });
 
+        let colorScale = this.getColorScale();
+
         if (featureList) {
             const bpPerPixel = options.bpPerPixel;
             const bpStart = options.bpStart;
             const bpEnd = bpStart + pixelWidth * bpPerPixel + 1;
+            let previousChrm = null;
             for (const variant of featureList) {
                 const pos = variant.start;
                 if (pos < bpStart) continue;
                 if (pos > bpEnd) break;
 
-                const colorScale = this.getColorScale(variant._f ? variant._f.chr : variant.chr);
+                let currentChrm = variant._f ? variant._f.chr : variant.chr;
+                if (currentChrm != previousChrm) {
+                    previousChrm = currentChrm;
+                    if (this.useChrColors) {
+                        colorScale = this.getColorScale(currentChrm);
+                    }
+                }
 
                 const val =
                     variant.neg_log10_pvalue > this.maxValue && !this.autoscale
@@ -143,14 +152,17 @@ class VariantPValueTrack extends igv.TrackBase {
         }
     }
 
-    getColorScale(chr: string) {
+    getColorScale(chr: string | undefined = undefined) {
+        if (!chr) {
+            return this.colorScales["*"];
+        }
         if (this.useChrColors) {
-            let cs = this.colorScales[chr];
+            let cs = this.colorScales[chr!];
             if (!cs) {
                 //@ts-expect-error: list indexes
                 const color = ManhattanColors[chr] || igv.randomColorPalette();
                 cs = new igv.ConstantColorScale(color);
-                this.colorScales[chr] = cs;
+                this.colorScales[chr!] = cs;
             }
             return cs;
         } else {
@@ -212,44 +224,48 @@ class VariantPValueTrack extends igv.TrackBase {
                         break;
                     }
                     const pos = f.end; // IGV is zero-based, so end of the variant is the position
-                    data.push({ name: "Location:", value: f.chr + ":" + pos });
+                    data.push({ name: "Location:", value: `${f.chr}:${pos}` });
                     data.push({ name: "p-Value:", value: f.pvalue });
 
                     if (this.infoURL) {
-                        const href = this.infoURL + "/variant/" + f.record_pk;
+                        const href = `${this.infoURL}/variant/${f.record_pk}`;
                         data.push({
                             name: "Variant:",
                             html: `<a target="_blank" href="${href}">${f.variant}</a>`,
-                            title: "Learn more about variant: " + f.variant,
+                            title: `Learn more about variant: ${f.variant}`,
                         });
                     } else {
                         data.push({ name: "Variant", value: f.variant });
                     }
-                    if (f.hasOwnProperty("gene_id")) {
-                        const geneDisplay = f.hasOwnProperty("gene_symbol") ? f.gene_symbol : f.gene_id;
+
+                    if ("gene_id" in f) {
+                        const geneDisplay = "gene_symbol" in f ? f.gene_symbol : f.gene_id;
                         if (this.infoURL) {
-                            const href = this.infoURL + "/gene/" + f.gene_id;
+                            const href = `${this.infoURL}/gene/${f.gene_id}`;
                             data.push({
                                 name: "Target",
                                 html: `<a target="_blank" href="${href}">${geneDisplay}</a>`,
-                                title: "Learn more about gene: " + geneDisplay,
+                                title: `Learn more about gene: ${geneDisplay}`,
                             });
                         } else {
                             data.push({ name: "Target", value: geneDisplay });
                         }
                     }
 
-                    if (f.hasOwnProperty("info")) {
-                        if (f.info.hasOwnProperty("qtl_dist_to_target")) {
+                    if ("info" in f) {
+                        if ("qtl_dist_to_target" in f.info) {
                             data.push({
                                 name: "Dist. to Target",
                                 value: f.info.qtl_dist_to_target === null ? "Not reported" : f.info.qtl_dist_to_target,
                             });
                         }
-                        if (f.info.hasOwnProperty("z_score_non_ref")) {
+                        if ("z_score_non_ref" in f.info) {
                             data.push({
                                 name: "Z-score",
-                                value: f.info.z_score_non_ref === null ? "Not reported" : f.info.z_score_non_ref,
+                                value:
+                                    f.info.z_score_non_ref === null
+                                        ? "Not reported"
+                                        : Number(f.info.z_score_non_ref).toFixed(2),
                             });
                         }
                     }
@@ -262,7 +278,7 @@ class VariantPValueTrack extends igv.TrackBase {
     }
 
     menuItemList() {
-        return igv.MenuUtils.numericDataMenuItems(this.trackView);
+        return this.numericDataMenuItems();
     }
 
     doAutoscale(featureList: any) {
