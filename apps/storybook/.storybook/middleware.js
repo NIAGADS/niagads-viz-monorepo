@@ -7,7 +7,7 @@ module.exports = function expressMiddleware(router) {
             target: "https://www.niagads.org/genomics/service",
             changeOrigin: true,
             secure: false,
-            pathRewrite: { "^/genomics-service": "" }
+            pathRewrite: { "^/genomics-service": "" },
         })
     );
 
@@ -30,7 +30,7 @@ module.exports = function expressMiddleware(router) {
                 const rewritten = path.replace(/^\/api/, "");
                 console.log("Rewritten path for /api/**:", rewritten);
                 return rewritten;
-            }
+            },
         })
     );
 
