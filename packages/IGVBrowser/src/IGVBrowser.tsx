@@ -3,13 +3,11 @@
 import { ALWAYS_ON_TRACKS, DEFAULT_FLANK, FEATURE_SEARCH_URL } from "./config/_constants";
 import { IGVBrowserQueryParams, IGVBrowserTrack } from "./types/data_models";
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { getLoadedTracks, loadTracks, removeTrackById } from "./utils/browser";
 
 import { Skeleton } from "@niagads/ui";
 import { _genomes } from "./config/_igvGenomes";
-import find from "lodash.find";
 import { findTrackConfigs } from "./utils/track_config";
-import noop from "lodash.noop";
+import { loadTracks } from "./utils/browser";
 import { trackPopover } from "./tracks/feature_popovers";
 
 /**
@@ -119,8 +117,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
     const isDragging = useRef(false);
 
     const opts: any = useMemo(() => {
-        const genomeReference: any = find(_genomes, { id: genome });
-
+        const genomeReference = _genomes.find((g) => g.id === genome);
         let browserOpts: any = {
             locus: locus || "ABCA7",
             showAllChromosomes: false,
