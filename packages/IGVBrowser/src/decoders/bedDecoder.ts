@@ -1,4 +1,4 @@
-import { capitalize, ignoreCaseIndexOf, numberFormatter } from "./utils";
+import { capitalize, numberFormatter } from "./utils";
 
 import igv from "igv/dist/igv.esm";
 
@@ -71,7 +71,7 @@ function decodeBedXY(tokens: any, header: any) {
     }
 
     // parse optional columns (pass the fieldIndexMap and IGNORE_OPTIONAL_FIELDS set)
-    parseOptionalFields(feature, tokens, X, header.columnNames, fieldIndexMap, IGNORE_OPTIONAL_FIELDS);
+    parseOptionalFields(feature, tokens, X, header.columnNames, IGNORE_OPTIONAL_FIELDS);
 
     feature.setP(tokens, fieldIndexMap);
     feature.setTarget(tokens, fieldIndexMap);
@@ -88,7 +88,7 @@ function extractPopupData(feature: BedXYFeature) {
         //If it's the info object
         if (property === "info") {
             //iterate over info and add it to data
-            for (const infoProp in feature[property]) {
+            for (const infoProp of Object.keys(feature)) {
                 const value = feature[property][infoProp];
                 if (value) {
                     data.push({ name: formatInfoKey(infoProp), value: value });
@@ -145,24 +145,19 @@ function parseBedToken(field: string, token: string) {
 }
 
 function parseStandardFields(feature: BedXYFeature, X: number, tokens: any) {
-    // building an object { EXPECTED_FIELDS[index]: token[index]}
-    try {
-        const attributes: any = {};
-        for (let index = 3; index < X; index++) {
-            const field: string = EXPECTED_BED_FIELDS[index];
-            const value = parseBedToken(field, tokens[index]);
-            if (value === null) continue;
-            if (typeof value === "number" && isNaN(value)) {
-                continue;
-            }
-            attributes[field] = value;
+    const attributes: any = {};
+    for (let index = 3; index < X; index++) {
+        const field: string = EXPECTED_BED_FIELDS[index];
+        const value = parseBedToken(field, tokens[index]);
+        if (value === null) continue;
+        if (typeof value === "number" && isNaN(value)) {
+            continue;
         }
-
-        // add to the feature and return
-        feature.setAdditionalAttributes(attributes);
-    } catch (e) {
-        console.error(e);
+        attributes[field] = value;
     }
+
+    // add to the feature and return
+    feature.setAdditionalAttributes(attributes);
 }
 
 function parseOptionalFields(
@@ -170,7 +165,6 @@ function parseOptionalFields(
     tokens: any,
     X: number,
     fields: any,
-    fieldIndexMap: Record<string, number>,
     ignoreOptionalFields: Set<string>
 ) {
     // go through tokens and perform minimal parsing add optional columns to feature.info
@@ -209,8 +203,8 @@ class BedXYFeature {
         Object.assign(this, attributes);
     }
 
-    removeAttributes(attributes: any) {
-        for (const attr in attributes) {
+    removeAttributes(attributes: string[]) {
+        for (const attr of attributes) {
             delete this[attr];
         }
     }
