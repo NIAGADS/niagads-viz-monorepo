@@ -1,6 +1,6 @@
 // TODO: fix loading fallback handling; it is incorrect
 
-import { DEFAULT_FLANK, FEATURE_SEARCH_URL } from "./config/_constants";
+import { ALWAYS_ON_TRACKS, DEFAULT_FLANK, FEATURE_SEARCH_URL } from "./config/_constants";
 import { IGVBrowserQueryParams, IGVBrowserTrack } from "./types/data_models";
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { getLoadedTracks, loadTracks, removeTrackById } from "./utils/browser";
@@ -32,6 +32,20 @@ function adjustLocusRange(locus: string, flank: number): string {
 }
 
 /**
+ * Loads all tracks (both reference and file-based) into the IGV browser.
+ * @param browser IGV browser instance.
+ * @param config PreloadedTrackConfig object containing tracks and files to load.
+ * @returns Promise resolving to an array of loaded track IDs (from config.tracks).
+ */
+async function loadInitialTracks(browser: any, config: PreloadedTrackConfig) {
+    // do one load
+    const allTracks: IGVBrowserTrack[] = [...(config?.tracks ?? []), ...((config?.files ?? []) as IGVBrowserTrack[])];
+    await loadTracks(browser, allTracks);
+
+    return config.tracks ? config.tracks.map((t: IGVBrowserTrack) => t.id) : [];
+}
+
+/**
  * Props for the IGVBrowser React component.
  * @property genome - Genome assembly identifier (e.g., "GRCh38").
  * @property searchUrl - URL endpoint for feature search queries.
@@ -58,8 +72,6 @@ export interface IGVBrowserProps {
     locus?: string;
     /** Flag to hide browser navigation controls */
     hideNavigation?: boolean;
-    /** Flag to enable support for query parameters in the URL. */
-    allowQueryParameters?: boolean;
     /** the query params to parse and manage */
     queryParams?: IGVBrowserQueryParams;
     /** Callback fired when tracks are removed */
@@ -67,12 +79,17 @@ export interface IGVBrowserProps {
     /** Callback fired when tracks are added (e.g., from url parameter) */
     onTrackAdded?: (trackIds: string[]) => void;
     /** Callback fired when browser is loaded */
-    onBrowserLoad?: (browser: any) => void;
+    onBrowserLoad?: (browser: any, state: any) => void;
     /** Callback fired when locus changes */
     onLocusChanged?: (browser: any) => void;
 }
 
 type FileTrackConfig = Partial<IGVBrowserTrack>;
+
+interface PreloadedTrackConfig {
+    tracks?: IGVBrowserTrack[];
+    files?: FileTrackConfig[];
+}
 
 const IGVBrowser: React.FC<IGVBrowserProps> = ({
     genome = "GRCh38",
@@ -82,7 +99,6 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
     referenceTracks,
     defaultTrackIds,
     hideNavigation = false,
-    allowQueryParameters = true,
     queryParams,
     onBrowserLoad,
     onTrackRemoved,
@@ -103,7 +119,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
     const isDragging = useRef(false);
 
     const opts: any = useMemo(() => {
-        const referenceTrackConfig: any = find(_genomes, { id: genome });
+        const genomeReference: any = find(_genomes, { id: genome });
 
         let browserOpts: any = {
             locus: locus || "ABCA7",
@@ -114,91 +130,60 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
             search: {
                 url: searchUrl,
             },
-            reference: referenceTrackConfig,
+            reference: genomeReference,
             loadDefaultGenomes: false,
-            genomeList: _genomes,
-            supportQueryParameters: allowQueryParameters,
-            defaultTrackIds: defaultTrackIds || null,
+            genomeList: [genomeReference],
+            alwaysOnTracks: [
+                ...ALWAYS_ON_TRACKS,
+                ...(referenceTracks ? referenceTracks.filter((t) => t.removable !== true).map((t) => t.id) : []),
+            ],
         };
 
-        if (queryParams) {
-            if (queryParams.loc) {
-                browserOpts.locus = adjustLocusRange(queryParams.loc, DEFAULT_FLANK);
-                setHighlightRegionLabel(queryParams.roiLabel || queryParams.loc || null);
-            }
-
-            if (queryParams.track) {
-                const trackIds = Array.isArray(queryParams.track) ? queryParams.track : [queryParams.track];
-                browserOpts.defaultTrackIds = !browserOpts.defaultTrackIds
-                    ? trackIds
-                    : [...browserOpts.defaultTrackIds, ...trackIds];
-            }
-
-            if (queryParams.file) {
-                browserOpts.files = {
-                    urls: Array.from(new Set(Array.isArray(queryParams.file) ? queryParams.file : [queryParams.file])),
-                    indexed: queryParams.filesAreIndexed,
-                };
-            }
+        if (queryParams?.loc) {
+            browserOpts.locus = adjustLocusRange(queryParams!.loc, DEFAULT_FLANK);
         }
 
         return browserOpts;
-    }, [genome, locus, queryParams, defaultTrackIds]);
+    }, [genome, locus, queryParams?.loc]);
+
+    const preloadedTrackConfig = useMemo(() => {
+        const ptConfig: PreloadedTrackConfig = {};
+
+        if (trackConfig) {
+            let tracks: IGVBrowserTrack[] = referenceTracks || [];
+            if (defaultTrackIds) {
+                tracks.push(...findTrackConfigs(trackConfig, defaultTrackIds));
+            }
+            if (queryParams?.track) {
+                tracks.push(
+                    ...findTrackConfigs(
+                        trackConfig,
+                        Array.isArray(queryParams!.track) ? queryParams!.track : [queryParams!.track]
+                    )
+                );
+            }
+            const seen = new Set();
+            ptConfig.tracks = tracks.filter((track) => !seen.has(track.id) && seen.add(track.id));
+
+            if (queryParams?.file) {
+                const urls = Array.isArray(queryParams.file) ? queryParams.file : [queryParams.file];
+                const uniqueUrls = Array.from(new Set(urls));
+                ptConfig.files = uniqueUrls.map((url: string) => {
+                    const id = "file_" + url.split("/").pop()!.replace(/\..+$/, "");
+                    return queryParams.filesAreIndexed
+                        ? { url: url, indexURL: `${url}.tbi`, name: `USER: ${id}`, id: id }
+                        : { url: url, name: `USER: ${id}`, id: id };
+                });
+            }
+
+            return ptConfig;
+        }
+        return undefined;
+    }, [queryParams, trackConfig]);
 
     useEffect(() => {
         setIsClient(true);
     }, []);
-
-    useEffect(() => {
-        // create clean session
-        if (!browserIsLoading) {
-            const loadedTracks = getLoadedTracks(browser);
-
-            // TODO: if any tracks are loaded, remove them -> if saving session(?)
-            /* if (Object.keys(loadedTracks).length !== 0) {
-                for (const id of loadedTracks) {
-                    removeTrackById(browser, id);
-                }
-            }*/
-
-            const loadInitialTracks = async () => {
-                let tracksToLoad: IGVBrowserTrack[] = [];
-                let addedTrackIds: string[] = [];
-
-                if (referenceTracks) {
-                    tracksToLoad = tracksToLoad.concat(referenceTracks);
-                    addedTrackIds = addedTrackIds.concat(referenceTracks.map((t: IGVBrowserTrack) => t.id));
-                }
-
-                if (browser.config.defautTrackIds && trackConfig) {
-                    const dtConfig = findTrackConfigs(trackConfig, browser.config.defaultTrackIds);
-                    tracksToLoad = tracksToLoad.concat(dtConfig);
-                    addedTrackIds = addedTrackIds.concat(browser.config.defaultTrackIds);
-                }
-
-                if (browser.config.files) {
-                    const fileTracks = browser.config.files.urls.map((url: string) => {
-                        const id = "file_" + url!.split("/").pop()!.replace(/\..+$/, "");
-                        const config: FileTrackConfig = browser.config.files.indexed
-                            ? { url: url, indexURL: url + ".tbi", name: "USER: " + id, id: id }
-                            : { url: url, name: "USER: " + id, id: id };
-                        return config;
-                    });
-                    tracksToLoad = tracksToLoad.concat(fileTracks);
-                }
-
-                if (tracksToLoad.length > 0) {
-                    await loadTracks(browser, tracksToLoad);
-                }
-                if (onTrackAdded && addedTrackIds.length > 0) {
-                    onTrackAdded(addedTrackIds);
-                }
-                // TODO: loci and ROI
-            };
-
-            loadInitialTracks();
-        }
-    }, [browserIsLoading, trackConfig]);
 
     useLayoutEffect(() => {
         if (isClient && containerRef.current) {
@@ -224,7 +209,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
                 registerTracks();
 
                 if (opts != null) {
-                    igv.createBrowser(targetDiv, opts).then(function (browser: any) {
+                    igv.createBrowser(targetDiv, opts).then(async function (browser: any) {
                         // custom track popovers
                         browser.on("trackclick", trackPopover);
 
@@ -254,15 +239,17 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
                             onLocusChanged && onLocusChanged(loc);
                         });
 
+                        const initialState = preloadedTrackConfig
+                            ? { preloaded: await loadInitialTracks(browser, preloadedTrackConfig) }
+                            : {};
+
                         // add browser to state
                         setBrowser(browser);
                         setBrowserIsLoading(false);
 
                         // callback to parent component, if exist
                         if (onBrowserLoad) {
-                            onBrowserLoad(browser);
-                        } else {
-                            noop();
+                            onBrowserLoad(browser, initialState);
                         }
                     });
                 }

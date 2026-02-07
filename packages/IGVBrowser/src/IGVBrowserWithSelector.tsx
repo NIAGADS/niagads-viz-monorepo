@@ -26,7 +26,7 @@ export default function IGVBrowserWithSelector({
     const [trackSelector, setTrackSelector] = useState<string[] | null>(null);
 
     // initialize browser state
-    const initializeBrowser = (b: any) => {
+    const initializeBrowser = (b: any, state: any) => {
         b && setBrowser(b);
     };
 
@@ -43,7 +43,7 @@ export default function IGVBrowserWithSelector({
 
     useEffect(() => {
         if (!loading && browser) {
-            const loadedTracks = getLoadedTracks(browser);
+            const loadedTracks = getLoadedTracks(browser, browser.config.alwaysOnTracks);
             const selectedTrackConfigs = findTrackConfigs(trackConfig!, selectedTracks);
             handleUpdateBrowserTracks(browser, selectedTrackConfigs);
 
@@ -59,7 +59,6 @@ export default function IGVBrowserWithSelector({
                 trackConfig={trackConfig}
                 onBrowserLoad={initializeBrowser}
                 onTrackRemoved={toggleTrack}
-                onTrackAdded={toggleTrack}
                 {...filteredBrowserProps}
             />
 

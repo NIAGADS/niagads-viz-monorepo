@@ -20,7 +20,8 @@ export const getLoadedTracks = (browser: any, alwaysOnTracks: string[] = ALWAYS_
  * @param config Track configuration object.
  * @returns True if the track is loaded, false otherwise.
  */
-export const trackIsLoaded = (browser: any, config: IGVBrowserTrack) => getLoadedTracks(browser).includes(config.id);
+export const trackIsLoaded = (browser: any, config: IGVBrowserTrack) =>
+    getLoadedTracks(browser, []).includes(config.id);
 
 /**
  * Removes a track from the browser by its ID. Finds by ID to avoid duplicate names.

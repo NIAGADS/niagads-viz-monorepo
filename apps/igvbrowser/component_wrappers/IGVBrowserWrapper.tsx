@@ -1,6 +1,6 @@
 "use client";
 
-import { IGVBrowserWithSelector, VariantReferenceTrack } from "@niagads/igv";
+import { IGVBrowser, IGVBrowserWithSelector, VariantReferenceTrack } from "@niagads/igv";
 
 interface IGVBrowserWrapperProps {
     trackConfig: any;
@@ -17,13 +17,15 @@ export default function IGVBrowserWrapper({
 }: IGVBrowserWrapperProps) {
     const referenceTracks = inclVariantReference ? [VariantReferenceTrack] : undefined;
     return (
-        <IGVBrowserWithSelector
-            trackConfig={trackConfig}
-            selectorTable={selectorTable}
-            referenceTracks={referenceTracks}
-            queryParams={queryParams}
-            genome={"GRCh38"}
-            searchUrl={"/service/track/feature?id=$FEATURE$&flank=1000"}
-        />
+        <>
+            <IGVBrowserWithSelector
+                trackConfig={trackConfig}
+                selectorTable={selectorTable}
+                referenceTracks={referenceTracks}
+                queryParams={queryParams}
+                genome={"GRCh38"}
+                searchUrl={"/service/track/feature?id=$FEATURE$&flank=1000"}
+            />
+        </>
     );
 }
