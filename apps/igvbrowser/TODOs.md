@@ -3,6 +3,7 @@
 * coordinate track deselect in track selector table when removed from browser (currently broken)
 * update production docker build
   * challenge: track config copy
+* track selecter needs to be loading until browser is fully loaded
   
 ## URL params
 
