@@ -62,26 +62,13 @@ export async function toggleTrackSelection(selector: any, action: SELECTOR_ACTIO
  *   if (!loading && browser) {
  *     selectedTrackConfigs = findTrackConfigs(trackConfig, selectedTracks)
  *     handleUpdateBrowserTracks(browser, action, selectedTrackConfigs)
- *       .then((changedTrackIds) => { // optional
- *         // Do something with changedTrackIds
- *       });
  *   }
  * }, [action, selectedTracks, loading, browser]);
  */
-export async function handleUpdateBrowserTracks(
-    browser: any,
-    action: SELECTOR_ACTION,
-    selectedTrackConfigs: IGVBrowserTrack[]
-): Promise<string[]> {
+export async function handleUpdateBrowserTracks(browser: any, selectedTrackConfigs: IGVBrowserTrack[]) {
     const loadedTrackIds = getLoadedTracks(browser);
-    switch (action) {
-        case "ADD":
-            return await handleAddTracksToBrowser(browser, selectedTrackConfigs, loadedTrackIds);
-        case "REMOVE":
-            return await handleRemoveTracksFromBrowser(browser, selectedTrackConfigs, loadedTrackIds);
-        default:
-            throw new Error(`Unknown track selector action: ${action}`);
-    }
+    await handleAddTracksToBrowser(browser, selectedTrackConfigs, loadedTrackIds);
+    await handleRemoveTracksFromBrowser(browser, selectedTrackConfigs, loadedTrackIds);
 }
 
 /**
