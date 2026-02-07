@@ -1,16 +1,17 @@
 import IGVBrowser, { IGVBrowserProps } from "./IGVBrowser";
 import React, { useEffect, useState } from "react";
-import TrackSelectorTable, { TableProps, handleLoadTracks, handleUnloadTracks } from "./TrackSelectorTable";
+import TrackSelectorTable, { TableProps } from "./TrackSelectorTable";
 
 import type { IGVBrowserTrack } from "./types/data_models";
-import { getLoadedTracks } from "./tracks/utils";
+import { findTrackConfigs } from "./utils/track_config";
+import { getLoadedTracks } from "./utils/browser";
+import { handleUpdateBrowserTracks } from "./utils/selector_actions";
+import styles from "./styles/TrackSelectorSection.module.css";
 
-interface IGVBrowserWithSelectorProps extends Partial<IGVBrowserProps> {
+interface IGVBrowserWithSelectorProps extends IGVBrowserProps {
     selectorTable?: TableProps;
     referenceTracks?: IGVBrowserTrack[];
 }
-
-type FileTrackConfig = Partial<IGVBrowserTrack>;
 
 export type { IGVBrowserWithSelectorProps };
 
@@ -43,8 +44,9 @@ export default function IGVBrowserWithSelector({
     useEffect(() => {
         if (!loading && browser) {
             const loadedTracks = getLoadedTracks(browser);
-            handleLoadTracks(selectedTracks, loadedTracks, trackConfig!, browser);
-            handleUnloadTracks(selectedTracks, loadedTracks, trackConfig!, browser);
+            const selectedTrackConfigs = findTrackConfigs(trackConfig!, selectedTracks);
+            handleUpdateBrowserTracks(browser, selectedTrackConfigs);
+
             // TODO - handle removal of tracks from genome browser->trackselectorstate w/toggleTrackSelection()
             // note that handle load/unload return a list of ids that can be used to pass to toggleTrackSelection
         }
@@ -62,26 +64,8 @@ export default function IGVBrowserWithSelector({
             />
 
             {selectorTable && (
-                <div style={{ marginTop: "4rem" }}>
-                    <div
-                        style={{
-                            fontWeight: 600,
-                            fontSize: "1.1rem",
-                            marginBottom: "0.75rem",
-                            background: "#f1f5f9",
-                            padding: "0.75rem 1.25rem",
-                            borderRadius: 8,
-                            boxShadow: "0 1px 4px 0 rgba(0, 0, 0, 0.04)",
-                            border: "1px solid #e2e8f0",
-                            color: "#1e293b",
-                            letterSpacing: "0.2px",
-                            width: "100%",
-                            textAlign: "left",
-                            display: "block",
-                        }}
-                    >
-                        Select Tracks
-                    </div>
+                <div className={styles.trackSelectorSection}>
+                    <div className={styles.trackSelectorSectionTitle}>Select Tracks</div>
                     <TrackSelectorTable
                         table={selectorTable}
                         onRowSelect={toggleTrack}
