@@ -66,7 +66,7 @@ export async function toggleTrackSelection(selector: any, action: SELECTOR_ACTIO
  * }, [action, selectedTracks, loading, browser]);
  */
 export async function handleUpdateBrowserTracks(browser: any, selectedTrackConfigs: IGVBrowserTrack[]) {
-    const loadedTrackIds = getLoadedTracks(browser);
+    const loadedTrackIds = getLoadedTracks(browser, browser.config.alwaysOnTracks);
     await handleAddTracksToBrowser(browser, selectedTrackConfigs, loadedTrackIds);
     await handleRemoveTracksFromBrowser(browser, selectedTrackConfigs, loadedTrackIds);
 }
