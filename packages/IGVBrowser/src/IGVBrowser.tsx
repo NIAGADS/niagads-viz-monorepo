@@ -237,7 +237,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
                         });
 
                         const initialState = preloadedTrackConfig
-                            ? { preloaded: await loadInitialTracks(browser, preloadedTrackConfig) }
+                            ? { preloadedTrackIds: await loadInitialTracks(browser, preloadedTrackConfig) }
                             : {};
 
                         // add browser to state

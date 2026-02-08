@@ -5,15 +5,19 @@ export type RowSelectionState = Record<string, boolean>;
 export type { TableProps };
 
 interface TrackSelectorTableProps {
+    /** Table configuration and data. */
     table: TableProps;
+    /** Track IDs that should be pre-selected in the table. */
+    preloadedTrackIds?: string[];
+    /** Callback fired when rows are selected. */
     onRowSelect: any;
+    /** Callback fired when the table is loaded. */
     onTableLoad: any;
+    /** Callback fired when tracks are removed from the browser, to keep the table in sync. */
+    onTrackRemoved: (trackIds: string[]) => void;
 }
 
-// TODO: EGA - I am not sure of the logic of the `disableRowSelectAction` state
-// I think the original intent was to limit then number of selectable rows
-
-const TrackSelectorTable = ({ table, onRowSelect, onTableLoad }: TrackSelectorTableProps) => {
+const TrackSelectorTable = ({ table, preloadedTrackIds, onRowSelect, onTableLoad }: TrackSelectorTableProps) => {
     const [selectedRows, setSelectedRows] = useState<RowSelectionState>({});
     const [disableRowSelectAction, setDisableRowSelectAction] = useState<boolean>(true);
 
@@ -25,7 +29,12 @@ const TrackSelectorTable = ({ table, onRowSelect, onTableLoad }: TrackSelectorTa
     if (!table.options) table.options = {};
     Object.assign(table.options, {
         onTableLoad: onTableLoad,
-        rowSelect: { onRowSelect: handleRowSelect, enableMultiRowSelect: true, rowId: "id" },
+        rowSelect: {
+            onRowSelect: handleRowSelect,
+            enableMultiRowSelect: true,
+            rowId: "id",
+            ...(preloadedTrackIds ? { selectedValues: preloadedTrackIds } : {}),
+        },
     });
 
     useEffect(() => {

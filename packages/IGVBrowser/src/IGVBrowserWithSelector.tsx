@@ -1,8 +1,9 @@
 import IGVBrowser, { IGVBrowserProps } from "./IGVBrowser";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import TrackSelectorTable, { TableProps } from "./TrackSelectorTable";
 
 import type { IGVBrowserTrack } from "./types/data_models";
+import { Skeleton } from "@niagads/ui";
 import { findTrackConfigs } from "./utils/track_config";
 import { getLoadedTracks } from "./utils/browser";
 import { handleUpdateBrowserTracks } from "./utils/selector_actions";
@@ -11,6 +12,10 @@ import styles from "./styles/TrackSelectorSection.module.css";
 interface IGVBrowserWithSelectorProps extends IGVBrowserProps {
     selectorTable?: TableProps;
     referenceTracks?: IGVBrowserTrack[];
+}
+
+interface IGVBrowserState {
+    preloadedTrackIds: string[];
 }
 
 export type { IGVBrowserWithSelectorProps };
@@ -22,17 +27,21 @@ export default function IGVBrowserWithSelector({
 }: IGVBrowserWithSelectorProps) {
     const [selectedTracks, setSelectedTracks] = useState<string[]>([]);
     const [browser, setBrowser] = useState<any>(null);
-    const [loading, setIsLoading] = useState<boolean>(true);
+    const [browserIsLoading, setBrowserIsLoading] = useState<boolean>(true);
     const [trackSelector, setTrackSelector] = useState<string[] | null>(null);
+    const [preloadedTrackIds, setPreloadedTrackIds] = useState<string[]>([]);
 
-    // initialize browser state
-    const initializeBrowser = (b: any, state: any) => {
-        b && setBrowser(b);
+    const initializeBrowser = (b: any, state: IGVBrowserState) => {
+        if (b) {
+            setPreloadedTrackIds(state.preloadedTrackIds);
+            setBrowser(b);
+        }
     };
 
     useEffect(() => {
         if (browser) {
-            setIsLoading(false);
+            console.log(preloadedTrackIds);
+            setBrowserIsLoading(false);
         }
     }, [browser]);
 
@@ -41,8 +50,12 @@ export default function IGVBrowserWithSelector({
         setSelectedTracks(rowSelection);
     };
 
+    const handleRemoveTrackFromBrowser = (removedTracks: string[]) => {
+        console.log(removedTracks);
+    };
+
     useEffect(() => {
-        if (!loading && browser) {
+        if (!browserIsLoading) {
             const loadedTracks = getLoadedTracks(browser, browser.config.alwaysOnTracks);
             const selectedTrackConfigs = findTrackConfigs(trackConfig!, selectedTracks);
             handleUpdateBrowserTracks(browser, selectedTrackConfigs);
@@ -50,28 +63,33 @@ export default function IGVBrowserWithSelector({
             // TODO - handle removal of tracks from genome browser->trackselectorstate w/toggleTrackSelection()
             // note that handle load/unload return a list of ids that can be used to pass to toggleTrackSelection
         }
-    }, [selectedTracks, loading, browser, trackConfig]);
+    }, [selectedTracks, browserIsLoading, browser, trackConfig]);
 
     const { onBrowserLoad, onTrackRemoved, onTrackAdded, ...filteredBrowserProps } = restBrowserProps;
+
     return (
         <>
             <IGVBrowser
                 trackConfig={trackConfig}
                 onBrowserLoad={initializeBrowser}
-                onTrackRemoved={toggleTrack}
+                onTrackRemoved={handleRemoveTrackFromBrowser}
                 {...filteredBrowserProps}
             />
 
-            {selectorTable && (
-                <div className={styles.trackSelectorSection}>
-                    <div className={styles.trackSelectorSectionTitle}>Select Tracks</div>
+            <div className={styles.trackSelectorSection}>
+                <div className={styles.trackSelectorSectionTitle}>Select Tracks</div>
+                {browserIsLoading || !selectorTable?.data ? (
+                    <Skeleton type="table"></Skeleton>
+                ) : (
                     <TrackSelectorTable
-                        table={selectorTable}
+                        table={selectorTable!}
                         onRowSelect={toggleTrack}
                         onTableLoad={setTrackSelector}
+                        onTrackRemoved={handleRemoveTrackFromBrowser}
+                        {...(preloadedTrackIds?.length > 0 ? { preloadedTrackIds } : {})}
                     />
-                </div>
-            )}
+                )}
+            </div>
         </>
     );
 }
