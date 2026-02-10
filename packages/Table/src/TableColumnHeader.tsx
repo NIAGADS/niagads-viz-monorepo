@@ -2,7 +2,6 @@ import { ArrowDownUp, ArrowDownNarrowWide as SortAscIcon, ArrowUpWideNarrow as S
 import { Header, flexRender } from "@tanstack/react-table";
 import React from "react";
 
-import { Filter } from "./Filter";
 import { HelpIconWrapper } from "@niagads/ui";
 import { TableRow } from "./TableProperties";
 import { _get } from "@niagads/common";
@@ -10,7 +9,6 @@ import styles from "./styles/table.module.css";
 
 interface TableColumnHeaderProps {
     header: Header<TableRow, unknown>;
-    areFiltersOpen: boolean;
 }
 
 const SORT_ICONS = {
@@ -19,7 +17,7 @@ const SORT_ICONS = {
     desc: SortDescIcon,
 };
 
-export const TableColumnHeader = ({ header, areFiltersOpen }: TableColumnHeaderProps) => {
+export const TableColumnHeader = ({ header }: TableColumnHeaderProps) => {
     const isSorted = header.column.getIsSorted();
     const SortIcon = SORT_ICONS[isSorted !== false ? isSorted : "sort"];
     const description = _get("description", header.column.columnDef.meta);
@@ -61,7 +59,6 @@ export const TableColumnHeader = ({ header, areFiltersOpen }: TableColumnHeaderP
                     ) : null}
                 </div>
             </div>
-            {header.column.getCanFilter() && areFiltersOpen && <Filter column={header.column} />}
         </th>
     );
 };

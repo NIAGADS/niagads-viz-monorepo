@@ -65,12 +65,12 @@ const __resolveCell = (userCell: GenericCell | GenericCell[], column: GenericCol
 // the HeaderGroup API will take column visibility into account
 
 // render the table header
-const __renderTableHeader = (hGroups: HeaderGroup<TableRow>[], areFiltersOpen: boolean) => (
+const __renderTableHeader = (hGroups: HeaderGroup<TableRow>[]) => (
     <thead>
         {hGroups.map((headerGroup: HeaderGroup<TableRow>) => (
             <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
-                    return <TableColumnHeader key={header.id} header={header} areFiltersOpen={areFiltersOpen} />;
+                    return <TableColumnHeader key={header.id} header={header} />;
                 })}
             </tr>
         ))}
@@ -125,10 +125,15 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
         __setInitialColumnVisibility(options?.defaultColumns, columns)
     );
     const [showOnlySelected, setShowOnlySelected] = useState(false);
-    const [areFiltersOpen, setAreFiltersOpen] = useState(false);
     const initialRender = useRef(true); // to regulate callbacks affected by the initial state
     const enableRowSelect = !!options?.rowSelect;
     const disableColumnFilters = false; // FIXME- renable after working -- !!options?.disableColumnFilters;
+
+    useEffect(() => {
+        if (options?.columnFilters?.externalColumnFilters) {
+            setColumnFilters([...columnFilters, ...options.columnFilters.externalColumnFilters])
+        }
+    }, [options?.columnFilters])
 
     // Translate GenericColumns provided by user into React Table ColumnDefs
     // also adds in checkbox column if rowSelect options are set for the table
@@ -186,6 +191,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
                     meta: {
                         description: _get("description", col),
                         type: _get("type", col),
+                        filterType: _get("filterType", col)
                     },
                     cell: (props) => renderCell(props.cell.row.original[col.id] as Cell),
                 })
@@ -307,7 +313,6 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
                     table={table}
                     tableId={id}
                     enableExport={!!!options?.disableExport}
-                    openFilters={() => setAreFiltersOpen(!areFiltersOpen)}
                 />
                 <PaginationControls id={id} table={table} />
             </div>
@@ -328,8 +333,9 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
                     />
                 </div>
             )}
-            {columnFilters.length > 0 && (
+            {table.getAllColumns().some(x => x.columnDef.enableColumnFilter) && (
                 <ColumnFilterControls
+                    filterableColumns={table.getAllColumns().filter(x => x.columnDef.enableColumnFilter)}
                     activeFilters={columnFilters}
                     onRemoveAll={() => setColumnFilters([])}
                     onRemoveFilter={(filter) => setColumnFilters((prev) => prev.filter((f) => f !== filter))}
@@ -337,7 +343,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
             )}
             <div className={styles["table-container"]}>
                 <table className={`${styles["table-layout"]} ${styles["table-border"]} ${styles["table-text"]}`}>
-                    {__renderTableHeader(table.getHeaderGroups(), areFiltersOpen)}
+                    {__renderTableHeader(table.getHeaderGroups())}
                     <tbody>
                         {rowModel.rows.map((row) => (
                             <tr key={row.id} className={styles["table-dtr"]}>
