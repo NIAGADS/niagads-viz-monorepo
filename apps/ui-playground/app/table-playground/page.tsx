@@ -6,11 +6,7 @@ import { TABLE_DEFINITION } from "./tables/association-test-table";
 const TablePlayground = () => {
     return (
         <div>
-            <Table 
-                id="test-table"
-                columns={TABLE_DEFINITION.columns}
-                data={TABLE_DEFINITION.data}
-            />
+            <Table id="test-table" columns={TABLE_DEFINITION.columns} data={TABLE_DEFINITION.data} />
         </div>
     );
 };
