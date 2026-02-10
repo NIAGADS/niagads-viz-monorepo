@@ -32,7 +32,6 @@ export default function IGVBrowserWithSelector({
     const tableJustInitialized = useRef(true);
 
     const handleRowSelect = (rows: RowSelectionState) => {
-        console.log(rows);
         setSelectedTracks(Object.keys(rows));
     };
 
@@ -46,7 +45,6 @@ export default function IGVBrowserWithSelector({
     useEffect(() => {
         if (browser) {
             setBrowserIsLoading(false);
-            console.log(preloadedTrackIds);
         }
     }, [browser]);
 
@@ -55,12 +53,13 @@ export default function IGVBrowserWithSelector({
     };
 
     useEffect(() => {
+        console.log(preloadedTrackIds);
         if (!browserIsLoading) {
             const selectedTrackConfigs = findTrackConfigs(trackConfig!, selectedTracks);
             handleUpdateBrowserTracks(browser, selectedTrackConfigs);
             // TODO - handle removal of tracks from genome browser
         }
-    }, [selectedTracks, browserIsLoading, browser, trackConfig]);
+    }, [selectedTracks, preloadedTrackIds, browserIsLoading, browser, trackConfig]);
 
     const { onBrowserLoad, onTrackRemoved, onTrackAdded, ...filteredBrowserProps } = restBrowserProps;
 
