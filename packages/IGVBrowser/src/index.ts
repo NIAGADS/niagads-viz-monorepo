@@ -8,7 +8,7 @@ import { handleUpdateBrowserTracks } from "./utils/selector_actions";
 
 export type { IGVBrowserProps } from "./IGVBrowser";
 export type { IGVBrowserWithSelectorProps, SelectorTableProps } from "./IGVBrowserWithSelector";
-export type { IGVBrowserTrack, IGVBrowserQueryParams } from "./types/data_models";
+export type { IGVBrowserTrack } from "./types/data_models";
 export {
     IGVBrowser,
     VariantReferenceTrack,

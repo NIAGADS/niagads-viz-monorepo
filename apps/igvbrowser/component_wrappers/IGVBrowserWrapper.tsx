@@ -1,8 +1,17 @@
 "use client";
 
-import { IGVBrowser, IGVBrowserWithSelector, VariantReferenceTrack } from "@niagads/igv";
+// FIXME: search URL -> remove later to use default from NIAGADS Open Access API
 
-import Table from "@niagads/table";
+import { IGVBrowserWithSelector, VariantReferenceTrack } from "@niagads/igv";
+
+export interface IGVBrowserQueryParams {
+    locus?: string;
+    file?: string | string[];
+    roiLabel?: string; // TODO - not yet handled in IGVBrowser component
+    highlight?: boolean; // TODO - not yet handled in IGVBrowser component
+    track?: string | string[];
+    filesAreIndexed?: boolean;
+}
 
 interface IGVBrowserWrapperProps {
     trackConfig: any;
@@ -17,37 +26,27 @@ export default function IGVBrowserWrapper({
     inclVariantReference,
     queryParams,
 }: IGVBrowserWrapperProps) {
-    const referenceTracks = inclVariantReference ? [VariantReferenceTrack] : undefined;
-    const handleRowSelect = (rows: any) => {
-        alert(rows);
-    };
     return (
         <>
             <IGVBrowserWithSelector
                 trackConfig={trackConfig}
                 selectorTable={selectorTable}
-                referenceTracks={referenceTracks}
                 genome={"GRCh38"}
                 searchUrl={"/service/track/feature?id=$FEATURE$&flank=1000"}
+                {...(inclVariantReference ? { referenceTracks: [VariantReferenceTrack] } : {})}
+                {...(queryParams.locus ? { locus: queryParams.locus } : {})}
+                {...(queryParams.track
+                    ? { defaultTracks: Array.isArray(queryParams.track) ? queryParams.track : [queryParams.track] }
+                    : {})}
+                {...(queryParams.file
+                    ? {
+                          files: {
+                              urls: Array.isArray(queryParams.file) ? queryParams.file : [queryParams.file],
+                              indexed: queryParams.filesAreIndexed,
+                          },
+                      }
+                    : {})}
             />
-            <Table
-                id={selectorTable.id}
-                columns={selectorTable.columns}
-                data={selectorTable.data}
-                options={{
-                    ...(selectorTable.options || {}),
-                    // onTableLoad: setTrackSelector,
-                    rowSelect: {
-                        header: "Select",
-                        onRowSelect: handleRowSelect,
-                        enableMultiRowSelect: true,
-                        rowId: "id",
-                        // ...(preloadedTrackIds ? { selectedValues: preloadedTrackIds } : {}),
-                    },
-                    disableExport: true,
-                    disableColumnFilters: true,
-                }}
-            ></Table>
         </>
     );
 }

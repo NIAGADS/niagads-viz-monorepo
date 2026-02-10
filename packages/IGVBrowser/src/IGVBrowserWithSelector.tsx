@@ -2,10 +2,7 @@ import IGVBrowser, { IGVBrowserProps } from "./IGVBrowser";
 import React, { useEffect, useState } from "react";
 import Table, { TableProps } from "@niagads/table";
 
-import type { IGVBrowserTrack } from "./types/data_models";
-import { Skeleton } from "@niagads/ui";
 import { findTrackConfigs } from "./utils/track_config";
-import { getLoadedTracks } from "./utils/browser";
 import { handleUpdateBrowserTracks } from "./utils/selector_actions";
 import styles from "./styles/TrackSelectorSection.module.css";
 
@@ -38,7 +35,7 @@ export default function IGVBrowserWithSelector({
 
     const initializeBrowser = (b: any, state: IGVBrowserState) => {
         if (b) {
-            setPreloadedTrackIds(state.preloadedTrackIds);
+            // setPreloadedTrackIds(state.preloadedTrackIds);
             setBrowser(b);
         }
     };
@@ -49,21 +46,14 @@ export default function IGVBrowserWithSelector({
         }
     }, [browser]);
 
-    // toggle tracks
-    const toggleTrack = (rowSelection: string[]) => {
-        setSelectedTracks(rowSelection);
-    };
-
     const handleRemoveTrackFromBrowser = (removedTracks: string[]) => {
         console.log(removedTracks);
     };
 
     useEffect(() => {
         if (!browserIsLoading) {
-            const loadedTracks = getLoadedTracks(browser, browser.config.alwaysOnTracks);
             const selectedTrackConfigs = findTrackConfigs(trackConfig!, selectedTracks);
             handleUpdateBrowserTracks(browser, selectedTrackConfigs);
-
             // TODO - handle removal of tracks from genome browser->trackselectorstate w/toggleTrackSelection()
             // note that handle load/unload return a list of ids that can be used to pass to toggleTrackSelection
         }
@@ -76,34 +66,31 @@ export default function IGVBrowserWithSelector({
             <IGVBrowser
                 trackConfig={trackConfig}
                 onBrowserLoad={initializeBrowser}
-                onTrackRemoved={handleRemoveTrackFromBrowser}
+                // onTrackRemoved={handleRemoveTrackFromBrowser}
                 {...filteredBrowserProps}
             />
 
             <div className={styles.trackSelectorSection}>
                 <div className={styles.trackSelectorSectionTitle}>Select Tracks</div>
-                {browserIsLoading ? (
-                    <Skeleton type="table"></Skeleton>
-                ) : (
-                    <Table
-                        id={selectorTable.id}
-                        columns={selectorTable.columns}
-                        data={selectorTable.data}
-                        options={{
-                            ...(selectorTable.options || {}),
-                            // onTableLoad: setTrackSelector,
-                            rowSelect: {
-                                header: "Select",
-                                onRowSelect: handleRowSelect,
-                                enableMultiRowSelect: true,
-                                rowId: "id",
-                                // ...(preloadedTrackIds ? { selectedValues: preloadedTrackIds } : {}),
-                            },
-                            disableExport: true,
-                            disableColumnFilters: true,
-                        }}
-                    ></Table>
-                )}
+
+                <Table
+                    id={selectorTable.id}
+                    columns={selectorTable.columns}
+                    data={selectorTable.data}
+                    options={{
+                        // ...(selectorTable.options || {}),
+                        // onTableLoad: setTrackSelector,
+                        rowSelect: {
+                            header: "",
+                            onRowSelect: handleRowSelect,
+                            enableMultiRowSelect: true,
+                            rowId: "id",
+                            // ...(preloadedTrackIds ? { selectedValues: preloadedTrackIds } : {}),
+                        },
+                        disableExport: true,
+                        disableColumnFilters: true,
+                    }}
+                ></Table>
             </div>
         </>
     );

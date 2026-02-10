@@ -1,10 +1,10 @@
 // TODO: fix loading fallback handling; it is incorrect
 
 import { ALWAYS_ON_TRACKS, DEFAULT_FLANK, FEATURE_SEARCH_URL } from "./config/_constants";
-import { IGVBrowserQueryParams, IGVBrowserTrack } from "./types/data_models";
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { findTrackConfigs, resolveTrackConfigs } from "./utils/track_config";
+import { resolveTrackConfigs, resolveTrackIds } from "./utils/track_config";
 
+import { IGVBrowserTrack } from "./types/data_models";
 import { Skeleton } from "@niagads/ui";
 import { _genomes } from "./config/_igvGenomes";
 import { loadTracks } from "./utils/browser";
@@ -15,41 +15,32 @@ import { trackPopover } from "./tracks/feature_popovers";
  */
 function standardizeRange(locus: string): string {
     if (!locus) return locus;
-
-    // , or ... in a range, replace them
+    // , or ... in a range, clean it up
     return locus.replace(/,/g, "").replace("...", "-");
 }
 
 /**
- * Loads all tracks (both reference and file-based) into the IGV browser.
+ * Bulk load all initial tracks (reference, default and file-based) into the IGV browser.
  * @param browser IGV browser instance.
  * @param config PreloadedTrackConfig object containing tracks and files to load.
  * @returns Promise resolving to an array of loaded track IDs (from config.tracks).
  */
 async function loadInitialTracks(browser: any, config: PreloadedTrackConfig) {
-    // do one load
     const allTracks: IGVBrowserTrack[] = [...(config?.tracks ?? []), ...((config?.files ?? []) as IGVBrowserTrack[])];
     await loadTracks(browser, allTracks);
-
-    return config.tracks ? config.tracks.map((t: IGVBrowserTrack) => t.id) : [];
+    return config.tracks ? resolveTrackIds(config.tracks) : [];
 }
 
-/**
- * Props for the IGVBrowser React component.
- * @property genome - Genome assembly identifier (e.g., "GRCh38").
- * @property searchUrl - URL endpoint for feature search queries.
- * @property tracks - Optional array of track configuration objects to load.
- * @property locus - Optional initial locus (region or gene name) to display.
- * @property hideNavigation - Optional flag to hide browser navigation controls.
- * @property allowQueryParameters - Optional flag to enable support for query parameters in the URL.
- * @property onTrackRemoved - Optional callback fired when a track is removed.
- * @property onBrowserLoad - Optional callback fired when browser is loaded.
- * @property onLocusChanged - Optional callback fired when locus changes.
- */
+interface FileTrackUrls {
+    urls: string[];
+    indexed: boolean;
+}
+
 export interface IGVBrowserProps {
     /** Genome assembly identifier (e.g., "GRCh38") */
     genome?: string;
-    /** URL endpoint for feature search queries, should take a `feature` and a `flank` parameter; defaults to GenomicsDB Feature search */
+    /** URL endpoint for feature search queries, should take a `feature` and a `flank` parameter;
+     *  defaults to NIAGADS Open Access API feature search */
     searchUrl?: string;
     /** Array of track configuration objects to load */
     trackConfig?: IGVBrowserTrack[];
@@ -57,10 +48,8 @@ export interface IGVBrowserProps {
     referenceTracks?: string[] | IGVBrowserTrack[];
     /** Tracks to load by default (list of trackIds) */
     defaultTracks?: string[] | IGVBrowserTrack[];
-    /** URLs of files to load */
-    files?: string[];
-    /** flag indicating if files are indexed */
-    filesAreIndexed?: boolean;
+    /** URLs of files to load & flag indicating if they are indexed*/
+    files?: FileTrackUrls;
     /** Initial locus (region or gene name) to display */
     locus?: string;
     /** Flag to hide browser navigation controls */
@@ -89,8 +78,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
     trackConfig,
     referenceTracks,
     defaultTracks,
-    files,
-    filesAreIndexed = true,
+    files = { urls: [], indexed: true },
     hideNavigation = false,
     onBrowserLoad,
     onTrackRemoved,
@@ -146,17 +134,17 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
             ptConfig.tracks = tracks.filter((track) => !seen.has(track.id) && seen.add(track.id));
 
             if (files) {
-                const uniqueUrls = Array.from(new Set(files));
+                const uniqueUrls = Array.from(new Set(files.urls));
                 ptConfig.files = uniqueUrls.map((url: string) => {
                     const id = "file_" + url.split("/").pop()!.replace(/\..+$/, "");
-                    return filesAreIndexed
+                    return files.indexed
                         ? { url: url, indexURL: `${url}.tbi`, name: `USER: ${id}`, id: id }
                         : { url: url, name: `USER: ${id}`, id: id };
                 });
             }
         }
         return ptConfig;
-    }, [referenceTracks, defaultTracks, files, filesAreIndexed, trackConfig]);
+    }, [referenceTracks, defaultTracks, files, trackConfig]);
 
     useEffect(() => {
         setIsClient(true);
