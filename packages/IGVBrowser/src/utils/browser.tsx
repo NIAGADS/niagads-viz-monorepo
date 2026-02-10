@@ -74,3 +74,71 @@ export const loadTrack = async (browser: any, track: IGVBrowserTrack) => {
 export const loadTracks = async (browser: any, tracks: IGVBrowserTrack[]) => {
     for await (const _ of tracks.map((t) => loadTrack(browser, t)));
 };
+
+/**
+ * Loads selected tracks into the IGV browser that are not already loaded.
+ *
+ * @param browser - IGV browser instance.
+ * @param selectedTrackConfigs - Array of IGVBrowserTrack objects to be loaded.
+ * @param loadedTrackIds - Array of track IDs currently loaded in the browser.
+ * @returns Promise resolving to an array of newly added track IDs.
+ */
+export async function handleAddTracksToBrowser(
+    browser: any,
+    selectedTrackConfigs: IGVBrowserTrack[],
+    loadedTrackIds: string[]
+): Promise<string[]> {
+    const tracksToAdd = selectedTrackConfigs.filter((track: IGVBrowserTrack) => !loadedTrackIds.includes(track.id));
+    if (tracksToAdd.length > 0) {
+        await loadTracks(browser, tracksToAdd);
+        return tracksToAdd.map((track) => track.id);
+    }
+    return [];
+}
+
+/**
+ * Removes tracks from the IGV browser that are no longer selected.
+ *
+ * @param browser - IGV browser instance.
+ * @param selectedTrackConfigs - Array of IGVBrowserTrack objects that should remain loaded.
+ * @param loadedTrackIds - Array of track IDs currently loaded in the browser.
+ * @returns Promise resolving to an array of removed track IDs.
+ */
+export async function handleRemoveTracksFromBrowser(
+    browser: any,
+    selectedTrackConfigs: IGVBrowserTrack[],
+    loadedTrackIds: string[]
+): Promise<string[]> {
+    const tracksToRemove = loadedTrackIds.filter(
+        (id: string) => !selectedTrackConfigs.some((track) => track.id === id)
+    );
+
+    for (const trackId of tracksToRemove) {
+        removeTrackById(browser, trackId);
+    }
+
+    return tracksToRemove;
+}
+
+/**
+ * Adds or removes tracks in the IGV browser based on the action provided.
+ *
+ * @param browser - IGV browser instance.
+ * @param action - Either "ADD" or "REMOVE" to specify the operation.
+ * @param selectedTrackConfigs - Array of IGVBrowserTrack objects representing the desired tracks to be loaded.
+ * @returns Promise resolving to an array of track IDs that were added or removed.
+ *
+ * @example
+ * // In a React component effect:
+ * useEffect(() => {
+ *   if (!loading && browser) {
+ *     selectedTrackConfigs = findTrackConfigs(trackConfig, selectedTracks)
+ *     handleUpdateBrowserTracks(browser, action, selectedTrackConfigs)
+ *   }
+ * }, [action, selectedTracks, loading, browser]);
+ */
+export async function handleUpdateBrowserTracks(browser: any, selectedTrackConfigs: IGVBrowserTrack[]) {
+    const loadedTrackIds = getLoadedTracks(browser, browser.config.alwaysOnTracks);
+    await handleAddTracksToBrowser(browser, selectedTrackConfigs, loadedTrackIds);
+    await handleRemoveTracksFromBrowser(browser, selectedTrackConfigs, loadedTrackIds);
+}

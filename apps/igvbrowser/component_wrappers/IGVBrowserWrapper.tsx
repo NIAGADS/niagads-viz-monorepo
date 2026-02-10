@@ -32,6 +32,7 @@ export default function IGVBrowserWrapper({
                 trackConfig={trackConfig}
                 selectorTable={selectorTable}
                 genome={"GRCh38"}
+                hideNavigation={true}
                 searchUrl={"/service/track/feature?id=$FEATURE$&flank=1000"}
                 {...(inclVariantReference ? { referenceTracks: [VariantReferenceTrack] } : {})}
                 {...(queryParams.locus ? { locus: queryParams.locus } : {})}

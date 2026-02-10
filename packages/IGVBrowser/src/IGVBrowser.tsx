@@ -54,10 +54,8 @@ export interface IGVBrowserProps {
     locus?: string;
     /** Flag to hide browser navigation controls */
     hideNavigation?: boolean;
-    /** Callback fired when tracks are removed */
-    onTrackRemoved?: (trackIds: string[]) => void;
-    /** Callback fired when tracks are added (e.g., from url parameter) */
-    onTrackAdded?: (trackIds: string[]) => void;
+    /** Callback fired when tracks is removed */
+    onTrackRemoved?: (trackId: string) => void;
     /** Callback fired when browser is loaded */
     onBrowserLoad?: (browser: any) => void;
     /** Callback fired when locus changes */
@@ -82,7 +80,6 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
     hideNavigation = false,
     onBrowserLoad,
     onTrackRemoved,
-    onTrackAdded,
     onLocusChanged,
 }) => {
     const [isClient, setIsClient] = useState(false);
@@ -179,7 +176,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
                         // handle track removed
                         browser.on("trackremoved", function (track: any) {
                             if (onTrackRemoved) {
-                                onTrackRemoved([track.config.id]);
+                                onTrackRemoved(track.config.id);
                             }
                         });
 

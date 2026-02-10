@@ -77,11 +77,11 @@ const __isValidRowId = (data: TableData, columnId: string) => {
 };
 
 // builds data structure to initialize row selection state
-const __setInitialRowSelection = (columnIds: string[] | undefined) => {
+const __setInitialRowSelection = (rowIds: string[] | undefined) => {
     const rSelection: RowSelectionState = {};
-    if (columnIds) {
-        columnIds.forEach((colId) => {
-            rSelection[colId] = true;
+    if (rowIds) {
+        rowIds.forEach((rowId) => {
+            rSelection[rowId] = true;
         });
     }
     return rSelection;
@@ -117,9 +117,15 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
         __setInitialColumnVisibility(options?.defaultColumns, columns)
     );
     const [showOnlySelected, setShowOnlySelected] = useState(false);
+
     const initialRender = useRef(true); // to regulate callbacks affected by the initial state
+
     const enableRowSelect = !!options?.rowSelect;
     const disableColumnFilters = true; // FIXME- renable after working -- !!options?.disableColumnFilters;
+
+    const toggleRowSelectionState = (rowId: string) => {
+        table.getRow(rowId).toggleSelected();
+    };
 
     // Translate GenericColumns provided by user into React Table ColumnDefs
     // also adds in checkbox column if rowSelect options are set for the table
@@ -301,11 +307,11 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
                     <RowSelectionControls
                         selectedRows={table.getSelectedRowModel().rows}
                         displayColumn={options.rowSelect?.rowId!} // if row select is enabled, rowId must be defined
-                        onToggleSelectedFilter={() => {
-                            if (showOnlySelected) {
+                        onToggleSelectedFilter={(isFiltered: boolean) => {
+                            if (isFiltered) {
                                 setColumnFilters([]);
                             }
-                            setShowOnlySelected(!showOnlySelected);
+                            setShowOnlySelected(isFiltered);
                         }}
                         onRemoveAll={() => {
                             table.resetRowSelection(true);
