@@ -5,6 +5,7 @@ import Table, { TableProps } from "@niagads/table";
 import { findTrackConfigs } from "./utils/track_config";
 import { handleUpdateBrowserTracks } from "./utils/selector_actions";
 import styles from "./styles/TrackSelectorSection.module.css";
+import { useRef } from "react";
 
 export type { TableProps as SelectorTableProps };
 
@@ -27,15 +28,17 @@ export default function IGVBrowserWithSelector({
     const [browser, setBrowser] = useState<any>(null);
     const [browserIsLoading, setBrowserIsLoading] = useState<boolean>(true);
     const [trackSelector, setTrackSelector] = useState<string[] | null>(null);
-    const [preloadedTrackIds, setPreloadedTrackIds] = useState<string[]>([]);
+    const [preloadedTrackIds, setPreloadedTrackIds] = useState<string[] | null>(null);
+    const tableJustInitialized = useRef(true);
 
     const handleRowSelect = (rows: RowSelectionState) => {
+        console.log(rows);
         setSelectedTracks(Object.keys(rows));
     };
 
     const initializeBrowser = (b: any, state: IGVBrowserState) => {
         if (b) {
-            // setPreloadedTrackIds(state.preloadedTrackIds);
+            setPreloadedTrackIds(state.preloadedTrackIds);
             setBrowser(b);
         }
     };
@@ -43,6 +46,7 @@ export default function IGVBrowserWithSelector({
     useEffect(() => {
         if (browser) {
             setBrowserIsLoading(false);
+            console.log(preloadedTrackIds);
         }
     }, [browser]);
 
@@ -54,8 +58,7 @@ export default function IGVBrowserWithSelector({
         if (!browserIsLoading) {
             const selectedTrackConfigs = findTrackConfigs(trackConfig!, selectedTracks);
             handleUpdateBrowserTracks(browser, selectedTrackConfigs);
-            // TODO - handle removal of tracks from genome browser->trackselectorstate w/toggleTrackSelection()
-            // note that handle load/unload return a list of ids that can be used to pass to toggleTrackSelection
+            // TODO - handle removal of tracks from genome browser
         }
     }, [selectedTracks, browserIsLoading, browser, trackConfig]);
 
@@ -85,7 +88,7 @@ export default function IGVBrowserWithSelector({
                             onRowSelect: handleRowSelect,
                             enableMultiRowSelect: true,
                             rowId: "id",
-                            // ...(preloadedTrackIds ? { selectedValues: preloadedTrackIds } : {}),
+                            ...(preloadedTrackIds ? { selectedValues: preloadedTrackIds } : {}),
                         },
                         disableExport: true,
                         disableColumnFilters: true,
