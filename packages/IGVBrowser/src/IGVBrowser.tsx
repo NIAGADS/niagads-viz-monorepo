@@ -59,7 +59,7 @@ export interface IGVBrowserProps {
     /** Callback fired when tracks are added (e.g., from url parameter) */
     onTrackAdded?: (trackIds: string[]) => void;
     /** Callback fired when browser is loaded */
-    onBrowserLoad?: (browser: any, state: any) => void;
+    onBrowserLoad?: (browser: any) => void;
     /** Callback fired when locus changes */
     onLocusChanged?: (browser: any) => void;
 }
@@ -86,11 +86,9 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
     onLocusChanged,
 }) => {
     const [isClient, setIsClient] = useState(false);
-
     const [igv, setIGV] = useState<any>(null);
-
     const [browserIsLoading, setBrowserIsLoading] = useState<boolean>(true);
-    const [browser, setBrowser] = useState<any>(null);
+    // const [browser, setBrowser] = useState<any>(null);
 
     const containerRef = useRef(null);
     const isDragging = useRef(false);
@@ -204,17 +202,15 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
                             onLocusChanged && onLocusChanged(loc);
                         });
 
-                        const initialState = initialTrackConfiguration
-                            ? { preloadedTrackIds: await loadInitialTracks(browser, initialTrackConfiguration) }
-                            : {};
+                        await loadInitialTracks(browser, initialTrackConfiguration);
 
                         // add browser to state
-                        setBrowser(browser);
+                        // setBrowser(browser);
                         setBrowserIsLoading(false);
 
                         // callback to parent component, if exist
                         if (onBrowserLoad) {
-                            onBrowserLoad(browser, initialState);
+                            onBrowserLoad(browser);
                         }
                     });
                 }
