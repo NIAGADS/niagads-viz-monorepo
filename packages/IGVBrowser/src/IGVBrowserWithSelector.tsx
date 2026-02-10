@@ -1,6 +1,6 @@
 import IGVBrowser, { IGVBrowserProps } from "./IGVBrowser";
-import React, { Suspense, useEffect, useState } from "react";
-import TrackSelectorTable, { TableProps } from "./TrackSelectorTable";
+import React, { useEffect, useState } from "react";
+import Table, { TableProps } from "@niagads/table";
 
 import type { IGVBrowserTrack } from "./types/data_models";
 import { Skeleton } from "@niagads/ui";
@@ -9,16 +9,17 @@ import { getLoadedTracks } from "./utils/browser";
 import { handleUpdateBrowserTracks } from "./utils/selector_actions";
 import styles from "./styles/TrackSelectorSection.module.css";
 
-interface IGVBrowserWithSelectorProps extends IGVBrowserProps {
-    selectorTable?: TableProps;
-    referenceTracks?: IGVBrowserTrack[];
+export type { TableProps as SelectorTableProps };
+
+export interface IGVBrowserWithSelectorProps extends IGVBrowserProps {
+    selectorTable: TableProps;
 }
 
 interface IGVBrowserState {
     preloadedTrackIds: string[];
 }
 
-export type { IGVBrowserWithSelectorProps };
+type RowSelectionState = Record<string, boolean>;
 
 export default function IGVBrowserWithSelector({
     selectorTable,
@@ -31,6 +32,10 @@ export default function IGVBrowserWithSelector({
     const [trackSelector, setTrackSelector] = useState<string[] | null>(null);
     const [preloadedTrackIds, setPreloadedTrackIds] = useState<string[]>([]);
 
+    const handleRowSelect = (rows: RowSelectionState) => {
+        setSelectedTracks(Object.keys(rows));
+    };
+
     const initializeBrowser = (b: any, state: IGVBrowserState) => {
         if (b) {
             setPreloadedTrackIds(state.preloadedTrackIds);
@@ -40,7 +45,6 @@ export default function IGVBrowserWithSelector({
 
     useEffect(() => {
         if (browser) {
-            console.log(preloadedTrackIds);
             setBrowserIsLoading(false);
         }
     }, [browser]);
@@ -78,18 +82,33 @@ export default function IGVBrowserWithSelector({
 
             <div className={styles.trackSelectorSection}>
                 <div className={styles.trackSelectorSectionTitle}>Select Tracks</div>
-                {browserIsLoading || !selectorTable?.data ? (
+                {browserIsLoading ? (
                     <Skeleton type="table"></Skeleton>
                 ) : (
-                    <TrackSelectorTable
-                        table={selectorTable!}
-                        onRowSelect={toggleTrack}
-                        onTableLoad={setTrackSelector}
-                        onTrackRemoved={handleRemoveTrackFromBrowser}
-                        {...(preloadedTrackIds?.length > 0 ? { preloadedTrackIds } : {})}
-                    />
+                    <Table
+                        id={selectorTable.id}
+                        columns={selectorTable.columns}
+                        data={selectorTable.data}
+                        options={{
+                            ...(selectorTable.options || {}),
+                            // onTableLoad: setTrackSelector,
+                            rowSelect: {
+                                header: "Select",
+                                onRowSelect: handleRowSelect,
+                                enableMultiRowSelect: true,
+                                rowId: "id",
+                                // ...(preloadedTrackIds ? { selectedValues: preloadedTrackIds } : {}),
+                            },
+                            disableExport: true,
+                            disableColumnFilters: true,
+                        }}
+                    ></Table>
                 )}
             </div>
         </>
     );
 }
+
+//  {...(preloadedTrackIds?.length > 0 ? { preloadedTrackIds } : {})}
+/*
+ */
