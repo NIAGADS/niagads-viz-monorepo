@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import IGVBrowser, { IGVBrowserProps } from "./IGVBrowser";
 
 import { Skeleton } from "@niagads/ui";
-import { useRef } from "react";
 import styles from "./styles/TrackSelectorSection.module.css";
 import { getLoadedTracks, handleUpdateBrowserTracks } from "./utils/browser";
 import { findTrackConfigs, resolveTrackIds } from "./utils/track_config";
