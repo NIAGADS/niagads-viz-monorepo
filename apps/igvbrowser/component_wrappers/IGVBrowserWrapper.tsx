@@ -2,7 +2,7 @@
 
 // FIXME: search URL -> remove later to use default from NIAGADS Open Access API
 
-import { IGVBrowserWithSelector, VariantReferenceTrack } from "@niagads/igv";
+import { IGVBrowser, IGVBrowserWithSelector, VariantReferenceTrack } from "@niagads/igv";
 
 export interface IGVBrowserQueryParams {
     locus?: string;
@@ -15,39 +15,48 @@ export interface IGVBrowserQueryParams {
 
 interface IGVBrowserWrapperProps {
     trackConfig: any;
-    selectorTable?: any;
-    inclVariantReference: boolean;
+    locus?: string;
+    inclVariantReference?: boolean;
+    inclTrackSelector?: boolean;
+    hideNavigation?: boolean;
     queryParams?: any;
 }
 
 export default function IGVBrowserWrapper({
+    locus,
     trackConfig,
-    selectorTable,
     inclVariantReference,
+    inclTrackSelector,
+    hideNavigation,
     queryParams,
 }: IGVBrowserWrapperProps) {
+    const browserProps = {
+        trackConfig,
+        ...(locus ? { locus: locus } : {}),
+        ...(hideNavigation ? { hideNavigation: true } : {}),
+        searchUrl: "/service/track/feature?id=$FEATURE$&flank=1000",
+        ...(inclVariantReference ? { referenceTracks: [VariantReferenceTrack] } : {}),
+        ...(queryParams.locus ? { locus: queryParams.locus } : {}),
+        ...(queryParams.track
+            ? { defaultTracks: Array.isArray(queryParams.track) ? queryParams.track : [queryParams.track] }
+            : {}),
+        ...(queryParams.file
+            ? {
+                  files: {
+                      urls: Array.isArray(queryParams.file) ? queryParams.file : [queryParams.file],
+                      indexed: queryParams.filesAreIndexed,
+                  },
+              }
+            : {}),
+    };
+
     return (
         <>
-            <IGVBrowserWithSelector
-                trackConfig={trackConfig}
-                selectorTable={selectorTable}
-                genome={"GRCh38"}
-                hideNavigation={true}
-                searchUrl={"/service/track/feature?id=$FEATURE$&flank=1000"}
-                {...(inclVariantReference ? { referenceTracks: [VariantReferenceTrack] } : {})}
-                {...(queryParams.locus ? { locus: queryParams.locus } : {})}
-                {...(queryParams.track
-                    ? { defaultTracks: Array.isArray(queryParams.track) ? queryParams.track : [queryParams.track] }
-                    : {})}
-                {...(queryParams.file
-                    ? {
-                          files: {
-                              urls: Array.isArray(queryParams.file) ? queryParams.file : [queryParams.file],
-                              indexed: queryParams.filesAreIndexed,
-                          },
-                      }
-                    : {})}
-            />
+            {inclTrackSelector ? (
+                <IGVBrowserWithSelector {...browserProps} />
+            ) : (
+                <IGVBrowser {...browserProps}></IGVBrowser>
+            )}
         </>
     );
 }

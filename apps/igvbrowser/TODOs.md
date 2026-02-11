@@ -1,9 +1,7 @@
 # IGV Browser TODOs
 
-* coordinate track deselect in track selector table when removed from browser (currently broken)
 * update production docker build
   * challenge: track config copy
-* track selecter needs to be loading until browser is fully loaded
   
 ## URL params
 
@@ -22,7 +20,8 @@
 * set up re-write rule for `/api-proxy` to the live <https://api.niagads.org>
 * remove `/service` redirects
 * Update `/record` redirects to remove the `/app` path when the new GenomicsDB is released
+* reassess `/file` path
 
 ## IGVBrowser Config
 
-* remove `searchUrl` from `IGVBrowser` component properties to allow use of the default `/api` (`FEATURE_SEARCH_URL` in the component).
+* remove `searchUrl` from `IGVBrowser` component properties to allow use of the default `/api-proxy` (`FEATURE_SEARCH_URL` in the component).

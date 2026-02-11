@@ -19,7 +19,7 @@ const nextConfig: NextConfig = {
                 destination: "https://www.niagads.org/genomics/files/:path*",
             },
             /*  {
-                source: "/api/:path*",
+                source: "/api-proxy/:path*",
                 destination: `${process.env.NIAGADS_API_HOST}/:path*`,
                 basePath: false,
             },*/
