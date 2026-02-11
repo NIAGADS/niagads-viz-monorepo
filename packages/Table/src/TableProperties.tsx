@@ -1,15 +1,13 @@
-import { BasicType } from "@niagads/common";
 import { CellType, GenericCell } from "./Cell";
-import { RowSelectionState, RowData } from "@tanstack/react-table";
 
-export interface RowSelectOptions {
-    onRowSelect: (rowSelection: RowSelectionState) => void; // behavior on select
-    onExternalRowToggle?: () => string; // basically a function to pass the row that is affected
+import { BasicType } from "@niagads/common";
+import { RowData } from "@tanstack/react-table";
+
+export interface RowSelectColumnConfig {
     header: string;
     description?: string;
-    enableMultiRowSelect?: boolean; // optional: allow selection of multiple rows, false if missing
-    selectedValues?: string[]; // a list of unique row identifiers the be selected in advance
-    rowId: string; // specify a field containing unique values to return as the row_id (e.g., browser track key) instead of the index
+    enableMultiSelect?: boolean; // optional: allow selection of multiple rows, false if missing
+    rowUniqueKey: string; // specify a field containing unique values to return as the row_id
 }
 
 interface SortConfig {
@@ -30,10 +28,10 @@ export interface TableConfig {
     description?: string; // optional: descriptive text describing the table for info popup
     disableColumnFilters?: boolean; // optional: disables all filtering on table columns when TRUE
     disableExport?: boolean; // optional: disables exporting
-    rowSelect?: RowSelectOptions; // optional: enables row selection and related state change options
+    rowSelectColumn?: RowSelectColumnConfig; // optional: enables row selection and related state change options
     defaultColumns?: string[]; // optional: any column ids not listed will be hidden by default
+    enableRowSelect?: boolean;
     onTableLoad?: any;
-    disableMultiSelect?: boolean; //optional: only allows a single row to be selected; uses radio buttons instead of checkboxes
 }
 
 export type TableRow = Record<string, GenericCell | GenericCell[]>;

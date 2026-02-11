@@ -1,5 +1,5 @@
-import { Button, Checkbox, RadioButton } from "@niagads/ui";
 import { Cell, GenericCell, getCellValue, renderCell, resolveCell, validateCellType } from "./Cell";
+import { Checkbox, RadioButton } from "@niagads/ui";
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -71,20 +71,24 @@ const __renderTableHeader = (hGroups: HeaderGroup<TableRow>[], tableId: string) 
 
 // checks to see if a field contains a unique value for each row in the table
 // allowing it to be used as a valid "primary key" or row_id for row selection
-const __isValidRowId = (data: TableData, columnId: string) => {
+const __isValidUniqueKey = (data: TableData, columnId: string) => {
     const values = data.map((row) => getCellValue(row[columnId as keyof typeof row] as Cell));
     return Array.from(new Set(values)).length == data.length;
 };
 
 // builds data structure to initialize row selection state
-const __setInitialRowSelection = (rowIds: string[] | undefined) => {
-    const rSelection: RowSelectionState = {};
-    if (rowIds) {
-        rowIds.forEach((rowId) => {
-            rSelection[rowId] = true;
-        });
+const __resolveRowSelectionState = (state: RowSelectionState | string[] | undefined): RowSelectionState => {
+    if (state) {
+        if (Array.isArray(state)) {
+            if (state.length > 0) {
+                return Object.fromEntries(state.map((rowId) => [rowId, true])) as RowSelectionState;
+            }
+            return {} as RowSelectionState;
+        }
+        return state as RowSelectionState;
     }
-    return rSelection;
+
+    return {};
 };
 
 // builds data structure to initialize row selection state
@@ -103,28 +107,27 @@ export interface TableProps {
     options?: TableConfig;
     columns: GenericColumn[];
     data: TableData;
+    rowSelection?: RowSelectionState | string[];
+    onRowSelectionChange?: (state: RowSelectionState) => void;
 }
 
 // TODO: use table options to initialize the state (e.g., initial sort, initial filter)
-const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
+const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection, onRowSelectionChange }) => {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [globalFilter, setGlobalFilter] = useState("");
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-    const [rowSelection, setRowSelection] = useState<RowSelectionState>(
-        __setInitialRowSelection(options?.rowSelect?.selectedValues)
-    );
+
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
         __setInitialColumnVisibility(options?.defaultColumns, columns)
     );
     const [showOnlySelected, setShowOnlySelected] = useState(false);
 
-    const initialRender = useRef(true); // to regulate callbacks affected by the initial state
+    const enableRowSelect = !!options?.enableRowSelect;
 
-    const enableRowSelect = !!options?.rowSelect;
-    const disableColumnFilters = true; // FIXME- renable after working -- !!options?.disableColumnFilters;
-
-    const toggleRowSelectionState = (rowId: string) => {
-        table.getRow(rowId).toggleSelected();
+    const handleRowSelectionChange = (updater: any) => {
+        // a row's getToggleSelectedHandler returns an `updater` function
+        // that needs to be called to get the RowSelectionState
+        onRowSelectionChange ? onRowSelectionChange(updater()) : updater();
     };
 
     // Translate GenericColumns provided by user into React Table ColumnDefs
@@ -133,13 +136,13 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
         const columnHelper = createColumnHelper<TableRow>();
         const columnDefs: ColumnDef<TableRow>[] = [];
         if (enableRowSelect) {
-            const multiSelect: boolean = !!options?.rowSelect?.enableMultiRowSelect;
+            const multiSelect: boolean = !!options?.rowSelectColumn?.enableMultiSelect;
             columnDefs.push({
                 id: "select-col",
-                header: ({ table }) => options?.rowSelect?.header,
+                header: ({ table }) => options?.rowSelectColumn?.header,
                 enableHiding: false,
-                enableSorting: true, // FIXME: enable sorting doesn't seem to work / header.canSort() returns false
-                meta: { description: options?.rowSelect?.description },
+                enableSorting: false,
+                meta: { description: options?.rowSelectColumn?.description },
                 cell: ({ row }) =>
                     multiSelect ? (
                         <Checkbox
@@ -174,7 +177,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
                 columnHelper.accessor((row) => getCellValue(row[col.id as keyof typeof row] as Cell), {
                     id: col.id,
                     header: _get("header", col, toTitleCase(col.id)),
-                    enableColumnFilter: _get("canFilter", col, true) && !disableColumnFilters,
+                    enableColumnFilter: _get("canFilter", col, true) && !options?.disableColumnFilters,
                     enableGlobalFilter: !col.disableGlobalFilter,
                     enableSorting: !col.disableSorting,
                     sortingFn: __resolveSortingFn(col) as SortingFnOption<TableRow>,
@@ -237,7 +240,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
         onGlobalFilterChange: setGlobalFilter,
         state: {
             sorting,
-            rowSelection,
+            rowSelection: __resolveRowSelectionState(rowSelection),
             globalFilter,
             columnFilters,
             columnVisibility,
@@ -251,24 +254,21 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
     };
 
     if (enableRowSelect) {
-        const enableMultiRowSelect = !!options?.rowSelect?.enableMultiRowSelect;
         Object.assign(reactTableOptions, {
-            enableMultiRowSelection: enableMultiRowSelect,
-            onRowSelectionChange: setRowSelection, //hoist up the row selection state to your own scope
+            enableMultiRowSelection: !!options?.rowSelectColumn?.enableMultiSelect,
+            onRowSelectionChange: handleRowSelectionChange, //hoist up the row selection state to your own scope
         });
 
-        const rowIdColumn = options?.rowSelect?.rowId;
-        if (!!rowIdColumn) {
-            // -@ts-expect-error: useMemo used conditionally
-            // const isValidRowId = useMemo(() => __isValidRowId(resolvedData, rowIdColumn), [rowIdColumn]);
-            const isValidRowId = __isValidRowId(resolvedData, rowIdColumn);
-            if (isValidRowId) {
+        const uniqueKey = options?.rowSelectColumn?.rowUniqueKey;
+        if (!!uniqueKey) {
+            if (__isValidUniqueKey(resolvedData, uniqueKey)) {
                 Object.assign(reactTableOptions, {
-                    getRowId: (row: TableRow) => getCellValue(row[rowIdColumn as keyof typeof row] as Cell),
+                    getRowId: (row: TableRow) => getCellValue(row[uniqueKey as keyof typeof row] as Cell),
                 });
             } else {
                 throw Error(
-                    `The field ${rowIdColumn} does not contain a unique value for each row.  It cannot be used as the 'rowId' for the rowSelect callback.`
+                    `The field ${uniqueKey} does not contain a unique value for each row. ` +
+                        `It cannot be used as the 'unique key' for the rowSelect callback.`
                 );
             }
         }
@@ -279,22 +279,19 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
     const rowModel = showOnlySelected ? table.getSelectedRowModel() : table.getRowModel();
 
     useLayoutEffect(() => {
-        if (options?.onTableLoad) {
-            // TODO: if (initialRender.current)  // not sure if necessary - initialRender is a useRef / from GenomicsDB code; has to do w/pre-selected rows
-            if (table) {
-                options.onTableLoad(table);
-            }
+        if (table && options?.onTableLoad) {
+            options.onTableLoad(table);
         }
     }, [table]);
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (initialRender.current) {
             // necessary to prevent actions on pre-selected rows
             initialRender.current = false;
             return;
         }
-        options?.rowSelect?.onRowSelect(rowSelection);
-    }, [rowSelection]);
+        onRowSelectionChange && onRowSelectionChange(__resolveRowSelectionState(rowSelection) || {});
+    }, [rowSelection]);*/
 
     return table ? (
         <div className={styles["table-outer-container"]}>
@@ -306,7 +303,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options }) => {
                 <div>
                     <RowSelectionControls
                         selectedRows={table.getSelectedRowModel().rows}
-                        displayColumn={options.rowSelect?.rowId!} // if row select is enabled, rowId must be defined
+                        displayColumn={options.rowSelectColumn?.rowUniqueKey!} // if row select is enabled, rowId must be defined
                         onToggleSelectedFilter={(isFiltered: boolean) => {
                             if (isFiltered) {
                                 setColumnFilters([]);

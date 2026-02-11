@@ -1,11 +1,11 @@
-import Table, { TableProps } from "@niagads/table";
-import React, { useEffect, useState } from "react";
 import IGVBrowser, { IGVBrowserProps } from "./IGVBrowser";
+import React, { useEffect, useState } from "react";
+import Table, { TableProps } from "@niagads/table";
+import { findTrackConfigs, resolveTrackIds } from "./utils/track_config";
 
 import { Skeleton } from "@niagads/ui";
+import { handleUpdateBrowserTracks } from "./utils/browser";
 import styles from "./styles/TrackSelectorSection.module.css";
-import { getLoadedTracks, handleUpdateBrowserTracks } from "./utils/browser";
-import { findTrackConfigs, resolveTrackIds } from "./utils/track_config";
 
 export type { TableProps as SelectorTableProps };
 
@@ -13,24 +13,17 @@ export interface IGVBrowserWithSelectorProps extends IGVBrowserProps {
     selectorTable: TableProps;
 }
 
-type RowSelectionState = Record<string, boolean>;
-
 export default function IGVBrowserWithSelector({
     selectorTable,
     trackConfig,
+    defaultTracks,
     ...restBrowserProps
 }: IGVBrowserWithSelectorProps) {
-    const [selectedTracks, setSelectedTracks] = useState<string[]>([]);
+    const [selectedTracks, setSelectedTracks] = useState<string[]>(defaultTracks ? resolveTrackIds(defaultTracks) : []);
     const [browser, setBrowser] = useState<any>(null);
-    const [trackSelector, setTrackSelector] = useState<any>(null);
-
-    const handleRowSelect = (rows: RowSelectionState) => {
-        setSelectedTracks(Object.keys(rows));
-    };
 
     const handleTrackRemovedFromBrowser = (trackId: string) => {
-        //toggleRowSelected(trackId, false);
-        console.log(`Removed track: ${trackId}`);
+        setSelectedTracks((tracks) => tracks.filter((id) => id !== trackId));
     };
 
     useEffect(() => {
@@ -40,8 +33,13 @@ export default function IGVBrowserWithSelector({
         }
     }, [selectedTracks, browser, trackConfig]);
 
-    const { onBrowserLoad, onTrackRemoved, defaultTracks, ...filteredBrowserProps } = restBrowserProps;
+    const handleTrackSelectionChange = (state: any) => {
+        console.log(state);
+        setSelectedTracks(Object.keys(state));
+    };
 
+    const { onBrowserLoad, onTrackRemoved, ...filteredBrowserProps } = restBrowserProps;
+    console.log(selectedTracks);
     return (
         <>
             <IGVBrowser
@@ -61,15 +59,16 @@ export default function IGVBrowserWithSelector({
                         id={selectorTable.id}
                         columns={selectorTable.columns}
                         data={selectorTable.data}
+                        rowSelection={selectedTracks}
+                        onRowSelectionChange={handleTrackSelectionChange}
                         options={{
                             ...(selectorTable.options || {}),
-                            rowSelect: {
+                            enableRowSelect: true,
+                            rowSelectColumn: {
                                 header: "",
-                                onRowSelect: handleRowSelect,
                                 description: "toggle row check box to add/remove the track to/from the Genome Browser",
-                                enableMultiRowSelect: true,
-                                rowId: "id",
-                                ...(defaultTracks ? { selectedValues: resolveTrackIds(defaultTracks) } : {}),
+                                enableMultiSelect: true,
+                                rowUniqueKey: "id",
                             },
                             disableExport: true,
                             disableColumnFilters: true,
