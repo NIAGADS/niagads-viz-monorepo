@@ -1,6 +1,5 @@
-import fetchTrackConfig, { buildTrackSelectorTable } from "@/utils/track-config";
-
 import IGVBrowserWrapper from "@/component_wrappers/IGVBrowserWrapper";
+import fetchTrackConfig from "@/utils/track-config";
 
 interface PageProps {
     searchParams: Promise<Record<string, string | string[]>>;
