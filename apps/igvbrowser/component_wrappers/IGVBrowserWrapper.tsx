@@ -2,7 +2,7 @@
 
 // FIXME: search URL -> remove later to use default from NIAGADS Open Access API
 
-import { IGVBrowser, IGVBrowserWithSelector, VariantReferenceTrack } from "@niagads/igv";
+import { IGVBrowser, IGVBrowserWithSelector, IGVBrowserWithSelectorProps } from "@niagads/igv";
 
 export interface IGVBrowserQueryParams {
     locus?: string;
@@ -35,7 +35,7 @@ export default function IGVBrowserWrapper({
         ...(locus ? { locus: locus } : {}),
         ...(hideNavigation ? { hideNavigation: true } : {}),
         searchUrl: "/service/track/feature?id=$FEATURE$&flank=1000",
-        ...(inclVariantReference ? { referenceTracks: [VariantReferenceTrack] } : {}),
+        ...(!inclVariantReference ? { referenceTracks: [] } : {}),
         ...(queryParams.locus ? { locus: queryParams.locus } : {}),
         ...(queryParams.track
             ? { defaultTracks: Array.isArray(queryParams.track) ? queryParams.track : [queryParams.track] }

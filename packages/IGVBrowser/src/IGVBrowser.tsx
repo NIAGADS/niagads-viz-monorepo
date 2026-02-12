@@ -1,6 +1,6 @@
 // TODO: fix loading fallback handling; it is incorrect
 
-import { ALWAYS_ON_TRACKS, DEFAULT_FLANK, FEATURE_SEARCH_URL } from "./config/_constants";
+import { ALWAYS_ON_TRACKS, DEFAULT_FLANK, FEATURE_SEARCH_URL, VariantReferenceTrack } from "./config/_constants";
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { resolveTrackConfigs, resolveTrackIds } from "./utils/track_config";
 
@@ -74,7 +74,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
     searchUrl = FEATURE_SEARCH_URL,
     locus,
     trackConfig,
-    referenceTracks,
+    referenceTracks = [VariantReferenceTrack],
     defaultTracks,
     files = { urls: [], indexed: true },
     hideNavigation = false,

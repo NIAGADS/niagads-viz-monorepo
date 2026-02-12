@@ -1,6 +1,6 @@
 export const _genomes = [
     {
-        id: "hg38_refseq",
+        id: "GRCh38_refseq",
         name: "Human (GRCh38/hg38)",
         fastaURL: "https://s3.amazonaws.com/igv.broadinstitute.org/genomes/seq/hg38/hg38.fa",
         indexURL: "https://s3.amazonaws.com/igv.broadinstitute.org/genomes/seq/hg38/hg38.fa.fai",

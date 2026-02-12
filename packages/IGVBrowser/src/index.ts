@@ -14,7 +14,5 @@ export {
     handleUpdateBrowserTracks,
     IGVBrowser,
     IGVBrowserWithSelector,
-    loadTracks,
-    removeTrackById,
     VariantReferenceTrack,
 };
