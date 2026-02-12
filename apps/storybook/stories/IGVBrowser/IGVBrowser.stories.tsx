@@ -37,8 +37,7 @@ NIAGADS also has the following custom tracks:
         searchUrl: { control: "text" },
         locus: { control: "text" },
         hideNavigation: { control: "boolean" },
-        allowQueryParameters: { control: "boolean" },
-        tracks: { control: "object" },
+        trackConfig: { control: "object" },
         onBrowserLoad: { action: "onBrowserLoad" },
         onTrackRemoved: { action: "onTrackRemoved" },
         onLocusChanged: { action: "onLocusChanged" },
@@ -47,7 +46,7 @@ NIAGADS also has the following custom tracks:
 
 export default meta;
 
-const defaultTracks: IGVBrowserTrack[] = [
+const trackConfig: IGVBrowserTrack[] = [
     VariantReferenceTrack,
     {
         id: "NGFGXQTL0002",
@@ -66,10 +65,10 @@ const defaultTracks: IGVBrowserTrack[] = [
 export const WithNavigation: StoryObj<typeof IGVBrowser> = {
     args: {
         genome: "GRCh38",
-        tracks: defaultTracks,
+        defaultTracks: [trackConfig[1]],
+        referenceTracks: [VariantReferenceTrack],
         locus: "ABCA7",
         hideNavigation: false,
-        allowQueryParameters: false,
         onBrowserLoad: noop,
         onTrackRemoved: noop,
         onLocusChanged: noop,
@@ -80,10 +79,9 @@ export const WithNavigation: StoryObj<typeof IGVBrowser> = {
 export const WithoutNavigation: StoryObj<typeof IGVBrowser> = {
     args: {
         genome: "GRCh38",
-        tracks: defaultTracks,
+        trackConfig: trackConfig,
         locus: "ABCA7",
         hideNavigation: true,
-        allowQueryParameters: false,
         onBrowserLoad: noop,
         onTrackRemoved: noop,
         onLocusChanged: noop,

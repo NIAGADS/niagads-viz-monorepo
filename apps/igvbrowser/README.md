@@ -18,6 +18,8 @@ If you have questions, encounter issues, or would like to request new features, 
 
 ## Production Docker Build
 
+> **NOTE**: Production Docker Build is not yet available.
+
 ### 1. Checkout the IGV Browser Code
 
 ```bash
@@ -53,7 +55,9 @@ cp custom/browser.config.sample custom/browser.config
 * `NEXT_PUBLIC_LOGO`: Path or URL to logo
 * `NEXT_PUBLIC_HOME`: Home page URL
 * `INCL_TRACK_SELECTOR`: Show track selector (TRUE/FALSE)
-* `INCL_VARIANT_REFERENCE`: Show variant reference (TRUE/FALSE)
+* `INCL_VARIANT_REFERENCE`: Include the variant reference track (TRUE/FALSE)
+* `HIDE_NAVIGATION`: Hide the browser navigation controls (TRUE/FALSE)
+* `INITIAL_LOCUS`: Initial locus or gene to display (e.g., ABCA7)
 * `TRACK_CONFIG`: Track configuration options
 
 ### Docker Configuration
@@ -68,4 +72,23 @@ Adjust the port and environment variables as needed for your deployment.
 
 For more details, see the [IGVBrowser Microservice documentation](https://github.com/NIAGADS/igvbrowser-microservice).
 
-## Developer Build
+## For Developers
+
+Follow instructions in the main project README for [initializing the monorepo](../../README.md#initialize-your-workspace) and [building the package dependencies](../../README.md#building-packages).
+
+To deploy, without linking hot reloads to the `packages` (e.g. `@niagads/ui`, `@niagads/table` etc), you can just deploy as a standard next.js app in the application director (`/apps/igvbrowser`) by doing the following
+
+```bash
+cd apps/igvbrowser
+npm run dev
+```
+
+To link hot reloads to the `packages`, first make sure you are in the project (mono-repo) root, and then run:
+
+```bash
+npm run genomicsdb
+```
+
+There is troubleshooting information for `nx` in the mono-repo README.
+
+Follow instructions from main project README for [building](../../README.md#igvbrowser)
