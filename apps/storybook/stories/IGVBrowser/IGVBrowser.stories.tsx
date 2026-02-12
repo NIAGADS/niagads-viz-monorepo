@@ -10,24 +10,7 @@ const meta: Meta<typeof IGVBrowser> = {
         docs: {
             description: {
                 component: `
-## IGVBrowser Track Configuration
-
-For instructions on configuring tracks, see the official IGV documentation:
-
-[IGV.js Track Config](https://igv.org/doc/igvjs/#tracks/Tracks/)
-
-You can pass custom tracks using the tracks prop. See the
-IGVBrowserTrack type for required fields.
-
-NIAGADS also has the following custom tracks:
-
-* GWAS Summary Statistics: details coming soon
-* QTL Summary Statistics: For reading hipFG standardized xQTL track data 
-> follow guidelines in the IGV documentation, but add the following:
-  * autoscale: true
-  * format: bed3+17
-  * infoURL: /record
-  * if QTL tracks are sharded, provide one file name, substiting $CHR for the chromosome number (not include the "chr") in one file
+TBA - link to README
 `,
             },
         },
