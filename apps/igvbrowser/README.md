@@ -1,5 +1,7 @@
 # NIAGADS IGV Genome Browser
 
+> **Note**: this application is not yet production ready; README is out of date
+
 A stand-alone genome browser application for NIAGADS, based on IGV. This app provides the complete functionality of the IGV browser, customized for integration with NIAGADS services and NIAGADS hosted data, including variants and annotations from the Alzhemier's Disease Sequencing Project (ADSP):
 
 ## Reference Tracks
