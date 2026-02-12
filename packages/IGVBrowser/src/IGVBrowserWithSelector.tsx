@@ -95,7 +95,6 @@ export default function IGVBrowserWithSelector({
     }, [selectedTracks, browser, trackConfig]);
 
     const handleTrackSelectionChange = (state: any) => {
-        console.log(state);
         setSelectedTracks(Object.keys(state));
     };
 

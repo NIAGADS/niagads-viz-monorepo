@@ -8,6 +8,7 @@ import {
     SortingFnOption,
     SortingState,
     TableOptions,
+    Updater,
     VisibilityState,
     createColumnHelper,
     flexRender,
@@ -21,7 +22,7 @@ import {
 } from "@tanstack/react-table";
 import { GenericColumn, getColumn } from "./Column";
 import { PaginationControls, TableToolbar } from "./ControlElements";
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useLayoutEffect, useMemo, useState } from "react";
 import { TableConfig, TableData, TableRow } from "./TableProperties";
 import { _get, _hasOwnProperty, toTitleCase } from "@niagads/common";
 
@@ -124,11 +125,13 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection,
 
     const enableRowSelect = !!options?.enableRowSelect;
 
-    const handleRowSelectionChange = (updater: any) => {
-        // a row's getToggleSelectedHandler returns an `updater` function
-        // that needs to be called to get the RowSelectionState
-        onRowSelectionChange ? onRowSelectionChange(updater()) : updater();
-    };
+    const handleRowSelectionChange = useCallback(
+        (updater: Updater<RowSelectionState>) => {
+            const next = typeof updater === "function" ? updater(__resolveRowSelectionState(rowSelection)) : updater;
+            onRowSelectionChange && onRowSelectionChange(next);
+        },
+        [rowSelection, onRowSelectionChange]
+    );
 
     // Translate GenericColumns provided by user into React Table ColumnDefs
     // also adds in checkbox column if rowSelect options are set for the table
@@ -283,15 +286,6 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection,
             options.onTableLoad(table);
         }
     }, [table]);
-
-    /*useEffect(() => {
-        if (initialRender.current) {
-            // necessary to prevent actions on pre-selected rows
-            initialRender.current = false;
-            return;
-        }
-        onRowSelectionChange && onRowSelectionChange(__resolveRowSelectionState(rowSelection) || {});
-    }, [rowSelection]);*/
 
     return table ? (
         <div className={styles["table-outer-container"]}>
