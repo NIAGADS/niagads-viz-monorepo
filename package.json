@@ -10,6 +10,7 @@
         "genomicsdb-debug": "concurrently \"npm run watch\" \"npx lerna run genomicsdb-debug\"",
         "genomicsdb-prod": "npx lerna run genomicsdb-prod",
         "genomicsdb-build": "npx lerna run genomicsdb-build",
+        "ui-playground": "concurrently \"npm run watch\" \"npx lerna run ui-playground\"",
         "lint": "npx prettier . --write",
         "clean-dist": "find . -name 'dist' -type d -prune -exec rm -rf '{}' +",
         "clean-node-modules": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +",
@@ -26,7 +27,8 @@
         "packages/UI",
         "apps/storybook",
         "apps/genomicsdb",
-        "apps/igvbrowser"
+        "apps/igvbrowser",
+        "apps/ui-playground"
     ],
     "devDependencies": {
         "concurrently": "^9.1.2",
