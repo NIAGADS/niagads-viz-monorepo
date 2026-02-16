@@ -46,6 +46,10 @@ function getReader(config: any, genome: any, chr: string) {
         shardConfig.indexURL = config.indexURL.replace("$CHR", chrId);
     }
 
+    // TODO: catch sharded bigBed
+    /* if (shardConfig.url.toLowerCase().includes("bigbed")) {
+        return new igv.BWReader(shardConfig, genome);
+    } */
     return new igv.FeatureFileReader(shardConfig, genome);
 }
 
