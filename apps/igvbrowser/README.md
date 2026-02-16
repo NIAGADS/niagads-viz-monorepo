@@ -47,20 +47,27 @@ cp docker.env.sample docker.env
 
 Copy `custom/browser.config.sample` to `custom/browser.config` and edit as needed:
 
+##### Application ENV
+
 ```bash
 cp custom/browser.config.sample custom/browser.config
 ```
+
+Public facing environment:
 
 * `NEXT_PUBLIC_BASE_URL`: Base URL for the browser (default: <http://localhost:3000>)
 * `NEXT_PUBLIC_NAME`: Display name for the browser
 * `NEXT_PUBLIC_DESCRIPTION`: Description or link
 * `NEXT_PUBLIC_LOGO`: Path or URL to logo
 * `NEXT_PUBLIC_HOME`: Home page URL
-* `INCL_TRACK_SELECTOR`: Show track selector (TRUE/FALSE)
-* `INCL_VARIANT_REFERENCE`: Include the variant reference track (TRUE/FALSE)
-* `HIDE_NAVIGATION`: Hide the browser navigation controls (TRUE/FALSE)
-* `INITIAL_LOCUS`: Initial locus or gene to display (e.g., ABCA7)
-* `TRACK_CONFIG`: Track configuration options
+
+Browser Configuration:
+
+* `INCL_TRACK_SELECTOR`: Show track selector (TRUE/FALSE).  Defaults to TRUE.
+* `INCL_VARIANT_REFERENCE`: Include the variant reference track (TRUE/FALSE). Defaults to TRUE.
+* `HIDE_NAVIGATION`: Hide the browser navigation controls (TRUE/FALSE). Defaults to FALSE.
+* `INITIAL_LOCUS`: Initial locus or gene to display.  Defaults to ABCA7.
+* `TRACK_CONFIG`: file name or URL target for track configuration (maybe a .json file or an API endpoint that serves configuration JSON)
 
 ### Docker Configuration
 
@@ -79,6 +86,14 @@ For more details, see the [IGVBrowser Microservice documentation](https://github
 Follow instructions in the main project README for [initializing the monorepo](../../README.md#initialize-your-workspace) and [building the package dependencies](../../README.md#building-packages).
 
 To deploy, without linking hot reloads to the `packages` (e.g. `@niagads/ui`, `@niagads/table` etc), you can just deploy as a standard next.js app in the application director (`/apps/igvbrowser`) by doing the following
+
+Copy the `browser.config.sample` to `.env.local` and configure for your application.
+
+```bash
+cp custom/browser.config.sample ../.env.local
+```
+
+See [Application ENV](#application-env) section for details on configuration options. A locally hosted track-configuration file is `test-track-config.json` is available in the `public` directory.  By default the application will look for a locally hosted file there, with the name determined by the `TRACK_CONFIG` environmental setting.
 
 ```bash
 cd apps/igvbrowser
