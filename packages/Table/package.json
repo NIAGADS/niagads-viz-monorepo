@@ -1,6 +1,6 @@
 {
     "name": "@niagads/table",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "scripts": {
         "build": "rollup -c"
     },
@@ -30,8 +30,8 @@
         "typescript": "^5"
     },
     "dependencies": {
-        "@niagads/common": "^0.0.1",
-        "@niagads/ui": "^0.0.1",
+        "@niagads/common": "^0.1.0",
+        "@niagads/ui": "^0.1.0",
         "@tanstack/react-table": "^8.11.8",
         "export-from-json": "github:NIAGADS/export-from-json#niagads",
         "lodash.countby": "^4.6.0",
