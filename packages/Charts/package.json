@@ -1,7 +1,6 @@
 {
     "name": "@niagads/charts",
     "version": "0.1.0",
-    "private": true,
     "description": "NIAGADS Common Charting React Component Library",
     "repository": {
         "type": "git",
