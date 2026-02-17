@@ -1,9 +1,7 @@
+import $ from "jquery";
+import { VCFInfo } from "../types/data_models";
 // modified from https://github.com/igvteam/igv.js/tree/master/js/variant/variantTrack.js
 import igv from "igv/dist/igv.esm";
-import $ from "jquery";
-
-import { VCFInfo } from "@browser-types/files";
-import { FEATURE_INFO_BASE_URL } from "@data/_constants";
 
 const DEFAULT_POPOVER_WINDOW = 100000000;
 const DEFAULT_VISIBILITY_WINDOW = 1000000;
@@ -21,11 +19,7 @@ const COLOR_BY_FIELDS: ColorByCategory[] = [
     { field: "filter", label: "CADD Score", default: "Not reported" },
     { field: "is_adsp_variant", label: "ADSP Variant", default: "No" },
     { field: "impact", label: "Consequence Severity", default: "NONE" },
-    {
-        field: "consequence",
-        label: "Consequence Type",
-        default: "other / no predicted consequence",
-    },
+    { field: "consequence", label: "Consequence Type", default: "other / no predicted consequence" },
     { field: "is_coding", label: "Coding Variant", default: "No" },
 ];
 
@@ -34,9 +28,7 @@ class VariantServiceTrack extends igv.TrackBase {
         // this way we can use the description() function to color the tracks
         if (config.hasOwnProperty("description")) {
             if (config.hasOwnProperty("metadata")) {
-                config.metadata = Object.assign(config.metadata, {
-                    Descripton: config.description,
-                });
+                config.metadata = Object.assign(config.metadata, { Descripton: config.description });
             } else {
                 config.metadata = { Description: config.description };
             }
@@ -71,6 +63,7 @@ class VariantServiceTrack extends igv.TrackBase {
         this.hetvarColor = config.hetvarColor || "rgb(34,12,253)";
         this.sortDirection = "ASC";
         this.type = config.type || "variant";
+        this.infoURL = config.infoURL || undefined;
 
         this.colorBy = config.colorBy === undefined ? DEFAULT_COLOR_BY : config.colorBy; // Can be undefined => default
         this._initColorBy = config.colorBy === undefined ? DEFAULT_COLOR_BY : config.colorBy;
@@ -138,13 +131,7 @@ class VariantServiceTrack extends igv.TrackBase {
         if (this.header === undefined) {
             this.header = await this.getHeader();
         }
-        return this.featureSource.getFeatures({
-            chr,
-            start,
-            end,
-            bpPerPixel,
-            visibilityWindow: this.visibilityWindow,
-        });
+        return this.featureSource.getFeatures({ chr, start, end, bpPerPixel, visibilityWindow: this.visibilityWindow });
     }
 
     hasSamples() {
@@ -184,9 +171,7 @@ class VariantServiceTrack extends igv.TrackBase {
 
     draw(options: any) {
         const { context, pixelWidth, pixelHeight, bpPerPixel, bpStart, pixelTop, features } = options;
-        igv.IGVGraphics.fillRect(context, 0, pixelTop, pixelWidth, pixelHeight, {
-            fillStyle: "rgb(255, 255, 255)",
-        });
+        igv.IGVGraphics.fillRect(context, 0, pixelTop, pixelWidth, pixelHeight, { fillStyle: "rgb(255, 255, 255)" });
 
         const vGap = "SQUISHED" === this.displayMode ? this.squishedVGap : this.expandedVGap;
         const rc = "COLLAPSED" === this.displayMode ? 1 : this.nVariantRows;
@@ -207,7 +192,7 @@ class VariantServiceTrack extends igv.TrackBase {
             const bpEnd = bpStart + pixelWidth * bpPerPixel + 1;
 
             // Loop through variants.  A variant == a row in a VCF file
-            for (let variant of features) {
+            for (const variant of features) {
                 if (variant.end < bpStart) continue;
                 if (variant.start > bpEnd) break;
 
@@ -218,7 +203,7 @@ class VariantServiceTrack extends igv.TrackBase {
 
                 // Compute pixel width.   Minimum width is 3 pixels,  if > 5 pixels create gap between variants
                 let x = Math.round((variant.start - bpStart) / bpPerPixel);
-                let x1 = Math.round((variant.end - bpStart) / bpPerPixel);
+                const x1 = Math.round((variant.end - bpStart) / bpPerPixel);
                 let w = Math.max(1, x1 - x);
                 if (w < 3) {
                     w = 3;
@@ -229,9 +214,7 @@ class VariantServiceTrack extends igv.TrackBase {
                 }
                 // context.fillStyle = this.getVariantColor(variant);
                 // context.fillRect(x, y, w, h);
-                igv.IGVGraphics.fillRect(context, x, y, w, h, {
-                    fillStyle: this.getVariantColor(variant),
-                });
+                igv.IGVGraphics.fillRect(context, x, y, w, h, { fillStyle: this.getVariantColor(variant) });
                 variant.pixelRect = { x, y, w, h };
 
                 // Loop though the calls for this variant.  There will potentially be a call for each sample.
@@ -241,7 +224,7 @@ class VariantServiceTrack extends igv.TrackBase {
                     this.sampleHeight = nVariantRows * (callHeight + vGap); // For each sample, there is a call for each variant at this position
 
                     let sampleNumber = 0;
-                    for (let callSet of callSets) {
+                    for (const callSet of callSets) {
                         const call = variant.calls[callSet.id];
                         if (call) {
                             const row = "COLLAPSED" === this.displayMode ? 0 : variant.row;
@@ -252,7 +235,7 @@ class VariantServiceTrack extends igv.TrackBase {
                             let noCall = false;
 
                             if (call.genotype) {
-                                for (let g of call.genotype) {
+                                for (const g of call.genotype) {
                                     if ("." === g) {
                                         noCall = true;
                                         break;
@@ -277,9 +260,7 @@ class VariantServiceTrack extends igv.TrackBase {
                                 fillStyle = this.hetvarColor;
                             }
 
-                            igv.IGVGraphics.fillRect(context, x, py, w, callHeight, {
-                                fillStyle: fillStyle,
-                            });
+                            igv.IGVGraphics.fillRect(context, x, py, w, callHeight, { fillStyle: fillStyle });
 
                             callSet.pixelRect = { x, y: py, w, h: callHeight };
                         }
@@ -293,7 +274,7 @@ class VariantServiceTrack extends igv.TrackBase {
     }
 
     getConsequenceValue(conseqStr: string) {
-        let conseqValue = conseqStr.replace(/ /g, "_");
+        const conseqValue = conseqStr.replace(/ /g, "_");
         return conseqValue.includes(",") ? conseqValue.split(",")[0] : conseqValue;
     }
 
@@ -323,13 +304,13 @@ class VariantServiceTrack extends igv.TrackBase {
             case "is_adsp_variant":
                 return info.is_adsp_variant;
             case "impact":
-                return info.most_severe_consequence !== null ? info.most_severe_consequence.impact : "*";
+                return info.most_severe_consequence !== null ? info.most_severe_consequence?.impact : "*";
             case "consequence":
                 return info.most_severe_consequence !== null
-                    ? this.getConsequenceValue(info.most_severe_consequence.conseq)
+                    ? this.getConsequenceValue(info.most_severe_consequence?.conseq as string)
                     : "*";
             case "is_coding":
-                return info.most_severe_consequence !== null ? info.most_severe_consequence.is_coding : "*";
+                return info.most_severe_consequence !== null ? info.most_severe_consequence?.is_coding : "*";
             default:
                 return "*";
         }
@@ -402,8 +383,8 @@ class VariantServiceTrack extends igv.TrackBase {
         const genomeID = this.browser.genome.id;
         const sampleInformation = this.browser.sampleInformation;
 
-        let popupData = [];
-        for (let v of featureList) {
+        const popupData = [];
+        for (const v of featureList) {
             const f = v._f || v; // Get real variant from psuedo-variant, e.g. whole genome or SV mate
 
             if (popupData.length > 1) {
@@ -429,17 +410,14 @@ class VariantServiceTrack extends igv.TrackBase {
                     popupData.push({ name: "Phase set", value: call.phaseset });
                 }
                 if (call.genotypeLikelihood !== undefined) {
-                    popupData.push({
-                        name: "genotypeLikelihood",
-                        value: call.genotypeLikelihood.toString(),
-                    });
+                    popupData.push({ name: "genotypeLikelihood", value: call.genotypeLikelihood.toString() });
                 }
 
                 if (sampleInformation) {
-                    var attr = sampleInformation.getAttributes(call.callSetName);
+                    const attr = sampleInformation.getAttributes(call.callSetName);
                     if (attr) {
                         Object.keys(attr).forEach(function (attrName) {
-                            var displayText = attrName.replace(/([A-Z])/g, " $1");
+                            let displayText = attrName.replace(/([A-Z])/g, " $1");
                             displayText = displayText.charAt(0).toUpperCase() + displayText.slice(1);
                             popupData.push({ name: displayText, value: attr[attrName] });
                         });
@@ -452,22 +430,23 @@ class VariantServiceTrack extends igv.TrackBase {
                     popupData.push("<hr/>");
                 } */
 
-                const recHref = FEATURE_INFO_BASE_URL;
                 const color = this.getVariantColor(call);
 
-                popupData.push({
-                    name: "Variant:",
-                    html: `<a target="_blank" href="${recHref}/variant/${call.id}">${call.info.display_id}</a>`,
-                    title: "View NIAGADS GenomicsDB record for variant " + call.info.display_id,
-                });
+                if (this.infoURL) {
+                    const recHref = this.infoURL + "/variant/" + call.id;
+                    popupData.push({
+                        name: "Variant:",
+                        html: `<a target="_blank" href="${recHref}">${call.info.display_id}</a>`,
+                        title: "Learn more about this variant: " + call.info.display_id,
+                    });
+                } else {
+                    popupData.push({ name: "Variant:", value: call.info.display_id });
+                }
 
                 if (call.info.ref_snp_id !== null) {
                     popupData.push({ name: "Ref SNP ID:", value: call.info.ref_snp_id });
                 }
-                popupData.push({
-                    name: "Location:",
-                    value: call.chr + ":" + call.info.location,
-                });
+                popupData.push({ name: "Location:", value: call.chr + ":" + call.info.location });
                 popupData.push({ name: "Allele:", value: call.info.display_allele });
 
                 if (this.colorBy === "type") {
@@ -524,11 +503,7 @@ class VariantServiceTrack extends igv.TrackBase {
                     }
 
                     if (this.colorBy === "impact") {
-                        popupData.push({
-                            name: "Impact:",
-                            value: msc.impact,
-                            color: color,
-                        });
+                        popupData.push({ name: "Impact:", value: msc.impact, color: color });
                     } else {
                         popupData.push({ name: "Impact:", value: msc.impact });
                     }
@@ -546,11 +521,16 @@ class VariantServiceTrack extends igv.TrackBase {
                         });
                     }
                     if (msc.impacted_gene !== null) {
-                        popupData.push({
-                            name: "Impacted Gene:",
-                            html: `<a target="_blank" href="${recHref}/gene/${msc.impacted_gene}">${msc.impacted_gene_symbol}</a>`,
-                            title: "View GenomicsDB record for gene " + msc.impacted_gene_symbol,
-                        });
+                        if (this.infoURL) {
+                            const recHref = this.infoURL + "/gene/" + msc.impacted_gene;
+                            popupData.push({
+                                name: "Impacted Gene:",
+                                html: `<a target="_blank" href="${recHref}">${msc.impacted_gene_symbol}</a>`,
+                                title: "Learn more about gene: " + msc.impacted_gene_symbol,
+                            });
+                        } else {
+                            popupData.push({ name: "Impacted Gene:", value: msc.impacted_gene_symbol });
+                        }
                     }
                 }
             }
@@ -563,19 +543,15 @@ class VariantServiceTrack extends igv.TrackBase {
         menuItems.push("<hr/>");
         const $e = $('<div class="igv-track-menu-category igv-track-menu-border-top">');
         $e.text("Color by:");
-        menuItems.push({
-            name: undefined,
-            object: $e,
-            click: undefined,
-            init: undefined,
-        });
+        menuItems.push({ name: undefined, object: $e, click: undefined, init: undefined });
 
         COLOR_BY_FIELDS.forEach((item: ColorByCategory) => {
             const selected = this.colorBy === item.field;
             // don't color by ADSP variant for ADSP tracks
             if (item.field === "is_adsp_variant") {
-                !this.config.id.includes("ADSP") &&
+                if (!this.config.id.includes("ADSP")) {
                     menuItems.push(this.colorByCB({ key: item.field, label: item.label }, selected));
+                }
             } else {
                 menuItems.push(this.colorByCB({ key: item.field, label: item.label }, selected));
             }
@@ -598,15 +574,14 @@ class VariantServiceTrack extends igv.TrackBase {
         }
 
         menuItems.push({ object: $('<div class="igv-track-menu-border-top">') });
-        for (let displayMode of ["COLLAPSED", "SQUISHED", "EXPANDED"]) {
-            var lut = {
-                COLLAPSED: "Collapse",
-                SQUISHED: "Squish",
-                EXPANDED: "Expand",
-            };
-
+        const lut = {
+            COLLAPSED: "Collapse",
+            SQUISHED: "Squish",
+            EXPANDED: "Expand",
+        };
+        for (const displayMode of Object.keys(lut)) {
             menuItems.push({
-                //@ts-ignore
+                // @ts-expect-error: keys of lut
                 object: $(igv.createCheckbox(lut[displayMode], displayMode === this.displayMode)),
                 click: () => {
                     this.displayMode = displayMode;
@@ -623,9 +598,9 @@ class VariantServiceTrack extends igv.TrackBase {
                 label: "Add SVs to circular view",
                 click: () => {
                     const inView = [];
-                    for (let viewport of this.trackView.viewports) {
+                    for (const viewport of this.trackView.viewports) {
                         const refFrame = viewport.referenceFrame;
-                        for (let f of viewport.getCachedFeatures()) {
+                        for (const f of viewport.getCachedFeatures()) {
                             if (f.end >= refFrame.start && f.start <= refFrame.end) {
                                 inView.push(f);
                             }
@@ -634,10 +609,7 @@ class VariantServiceTrack extends igv.TrackBase {
 
                     const chords = igv.makeVCFChords(inView);
                     const color = igv.IGVColor.addAlpha(this._color || this.defaultColor, 0.5);
-                    this.browser.circularView.addChords(chords, {
-                        track: this.name,
-                        color: color,
-                    });
+                    this.browser.circularView.addChords(chords, { track: this.name, color: color });
                 },
             });
         }
@@ -645,7 +617,6 @@ class VariantServiceTrack extends igv.TrackBase {
         return menuItems;
     }
 
-    //@ts-ignore
     contextMenuItemList(clickState: any) {
         // Experimental JBrowse circular view integration
         if (this.browser.circularView && true === this.browser.circularViewVisible) {
@@ -662,16 +633,15 @@ class VariantServiceTrack extends igv.TrackBase {
                             : this.featureSource.featureCache.queryFeatures(refFrame.chr, refFrame.start, refFrame.end);
                     const chords = igv.makeVCFChords(inView);
                     const color = igv.IGVColor.addAlpha(this._color || this.defaultColor, 0.5);
-                    this.browser.circularView.addChords(chords, {
-                        track: this.name,
-                        color: color,
-                    });
+                    this.browser.circularView.addChords(chords, { track: this.name, color: color });
                 },
             });
 
             list.push("<hr/>");
             return list;
         }
+
+        return;
     }
 
     description() {
@@ -685,7 +655,7 @@ class VariantServiceTrack extends igv.TrackBase {
 
         if (this.config) {
             if (this.config.metadata) {
-                for (let key of Object.keys(this.config.metadata)) {
+                for (const key of Object.keys(this.config.metadata)) {
                     const value = this.config.metadata[key];
                     str += wrapKeyValue(key, value);
                 }
@@ -739,13 +709,7 @@ class VariantServiceTrack extends igv.TrackBase {
                 this.trackView.repaintViews();
             }
         };
-        //@ts-ignore
-        return {
-            name: undefined,
-            object: $e,
-            click: clickHandler,
-            init: undefined,
-        };
+        return { name: undefined, object: $e, click: clickHandler, init: undefined };
     }
 
     getState() {
@@ -796,7 +760,7 @@ function expandGenotype(call: any, variant: any) {
             gt = "No Call";
         } else {
             const altArray = variant.alternateBases.split(",");
-            for (let allele of call.genotype) {
+            for (const allele of call.genotype) {
                 if (gt.length > 0) {
                     gt += "|";
                 }
@@ -805,7 +769,7 @@ function expandGenotype(call: any, variant: any) {
                 } else if (allele === 0) {
                     gt += variant.referenceBases;
                 } else {
-                    let alt = altArray[allele - 1].replace("<", "&lt;");
+                    const alt = altArray[allele - 1].replace("<", "&lt;");
                     gt += alt;
                 }
             }

@@ -2,16 +2,18 @@ import { TableProps as Table } from "@niagads/table";
 
 export const TABLE_DEFINTION: Table = {
     id: "metadata_query_by_region_and_filter",
+    onRowSelectionChange: (selectedRows: any) => alert(`Selection: ${JSON.stringify(selectedRows)}`),
     options: {
         disableColumnFilters: true,
-        rowSelect: {
-            header: "Selected Tracks",
-            description: "select a track to add to the genome browser",
-            onRowSelect: (selectedRows: any) => alert(`Selection: ${JSON.stringify(selectedRows)}`),
-            enableMultiRowSelect: true,
-            rowId: "track_id",
+        enableRowSelect: true,
+        rowSelectColumn: {
+            header: "Selected Row",
+            description: "select a row",
+            enableMultiSelect: true,
+            rowUniqueKey: "track_id",
         },
     },
+
     columns: [
         { id: "track_id", header: "Track ID" },
         { id: "name", header: "Name" },

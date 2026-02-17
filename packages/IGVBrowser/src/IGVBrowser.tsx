@@ -1,299 +1,227 @@
-// TODO: streaming w/Suspense and fallback instead
+// TODO: fix loading fallback handling; it is incorrect
 
-import { BrowserChangeEvent, QueryParams, ReferenceFrame } from "./types/browser";
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Session, TrackBaseOptions } from "./types/tracks";
-import { VariantPValueTrack, VariantServiceTrack as VariantTrack, trackPopover } from "./tracks";
-import {
-    addDefaultFlank,
-    cleanTracks,
-    convertStringToTrackNames,
-    createROIFromLocusRange,
-    downloadObjectAsJson,
-    getLoadedTracks,
-    loadTracks,
-    removeTracks,
-    selectTracksFromURLParams,
-} from "./utils";
+import { ALWAYS_ON_TRACKS, DEFAULT_FLANK, FEATURE_SEARCH_URL, VariantReferenceTrack } from "./config/_constants";
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { resolveTrackConfigs, resolveTrackIds } from "./utils/track_config";
 
-import { DEFAULT_FLANK } from "./common/_constants";
-import { _genomes } from "./common/_igvGenomes";
-import find from "lodash.find";
-import igv from "igv/dist/igv.esm";
-import noop from "lodash.noop";
-import { useSessionStorage } from "usehooks-ts";
+import { IGVBrowserTrack } from "./types/data_models";
+import { Skeleton } from "@niagads/ui";
+import { _genomes } from "./config/_igvGenomes";
+import { loadTracks } from "./utils/browser";
+import { trackPopover } from "./tracks/feature_popovers";
 
-interface IGVBrowserProps {
-    featureSearchUrl: string;
-    genome: string;
+/**
+ * cleans up range-based locus
+ */
+function standardizeRange(locus: string): string {
+    if (!locus) return locus;
+    // , or ... in a range, clean it up
+    return locus.replace(/,/g, "").replace("...", "-");
+}
+
+/**
+ * Bulk load all initial tracks (reference, default and file-based) into the IGV browser.
+ * @param browser IGV browser instance.
+ * @param config PreloadedTrackConfig object containing tracks and files to load.
+ * @returns Promise resolving to an array of loaded track IDs (from config.tracks).
+ */
+async function loadInitialTracks(browser: any, config: PreloadedTrackConfig) {
+    const allTracks: IGVBrowserTrack[] = [...(config?.tracks ?? []), ...((config?.files ?? []) as IGVBrowserTrack[])];
+    await loadTracks(browser, allTracks);
+    return config.tracks ? resolveTrackIds(config.tracks) : [];
+}
+
+interface FileTrackUrls {
+    urls: string[];
+    indexed: boolean;
+}
+
+export interface IGVBrowserProps {
+    /** Genome assembly identifier (e.g., "GRCh38") */
+    genome?: string;
+    /** URL endpoint for feature search queries, should take a `feature` and a `flank` parameter;
+     *  defaults to NIAGADS Open Access API feature search */
+    searchUrl?: string;
+    /** Array of track configuration objects to load */
+    trackConfig?: IGVBrowserTrack[];
+    /** Additional Reference tracks (not removable) */
+    referenceTracks?: string[] | IGVBrowserTrack[];
+    /** Tracks to load by default (list of trackIds) */
+    defaultTracks?: string[] | IGVBrowserTrack[];
+    /** URLs of files to load & flag indicating if they are indexed*/
+    files?: FileTrackUrls;
+    /** Initial locus (region or gene name) to display */
     locus?: string;
-    onTrackRemoved?: (track: string) => void;
-    onBrowserLoad?: (Browser: any) => void;
-    tracks: TrackBaseOptions[];
+    /** Flag to hide browser navigation controls */
+    hideNavigation?: boolean;
+    /** Callback fired when tracks is removed */
+    onTrackRemoved?: (trackId: string) => void;
+    /** Callback fired when browser is loaded */
+    onBrowserLoad?: (browser: any) => void;
+    /** Callback fired when locus changes */
+    onLocusChanged?: (browser: any) => void;
+}
+
+type FileTrackConfig = Partial<IGVBrowserTrack>;
+
+interface PreloadedTrackConfig {
+    tracks?: IGVBrowserTrack[];
+    files?: FileTrackConfig[];
 }
 
 const IGVBrowser: React.FC<IGVBrowserProps> = ({
-    featureSearchUrl,
-    genome,
+    genome = "GRCh38",
+    searchUrl = FEATURE_SEARCH_URL,
     locus,
+    trackConfig,
+    referenceTracks = [VariantReferenceTrack],
+    defaultTracks,
+    files = { urls: [], indexed: true },
+    hideNavigation = false,
     onBrowserLoad,
     onTrackRemoved,
-    tracks,
+    onLocusChanged,
 }) => {
-    const [browserIsLoaded, setBrowserIsLoaded] = useState<boolean>(false);
-    const [browser, setBrowser] = useState<any>(null);
-    const [browserChange, setBrowserChange] = useState<BrowserChangeEvent>("none");
-    const [sessionJSON, setSessionJSON] = useSessionStorage<Session>("sessionJSON", null);
-    const isDragging = useRef<boolean>(false);
-
     const [isClient, setIsClient] = useState(false);
-    const containerRef = useRef(null);
+    const [igv, setIGV] = useState<any>(null);
+    const [browserIsLoading, setBrowserIsLoading] = useState<boolean>(true);
+    // const [browser, setBrowser] = useState<any>(null);
 
-    const memoOptions: any = useMemo(() => {
-        const referenceTrackConfig: any = find(_genomes, { id: genome });
-        return {
-            locus: locus || "ABCA7",
+    const containerRef = useRef(null);
+    const isDragging = useRef(false);
+
+    const opts: any = useMemo(() => {
+        const genomeReference = _genomes.find((g) => g.id === genome);
+        let browserOpts: any = {
+            locus: standardizeRange(locus || "ABCA7"),
             showAllChromosomes: false,
             flanking: DEFAULT_FLANK,
             minimumBases: 40,
+            showNavigation: !hideNavigation,
             search: {
-                url: `${featureSearchUrl}$FEATURE$&flank=${DEFAULT_FLANK}`,
+                url: searchUrl,
             },
-            reference: {
-                id: genome,
-                name: referenceTrackConfig.name,
-                fastaURL: referenceTrackConfig.fastaURL,
-                indexURL: referenceTrackConfig.indexURL,
-                cytobandURL: referenceTrackConfig.cytobandURL,
-                tracks: referenceTrackConfig.tracks,
-            },
+            reference: genomeReference,
             loadDefaultGenomes: false,
-            genomeList: _genomes,
+            genomeList: [genomeReference],
+            alwaysOnTracks: [
+                ...ALWAYS_ON_TRACKS,
+                ...(referenceTracks
+                    ? resolveTrackConfigs(trackConfig, referenceTracks)
+                          .filter((t) => t.removable !== true)
+                          .map((t) => t.id)
+                    : []),
+            ],
         };
+
+        return browserOpts;
     }, [genome, locus]);
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-    useEffect(() => {
-        // setting initial session due to component load/reload
-        if (browserIsLoaded && memoOptions && tracks) {
-            const queryParams = getQueryParams();
 
-            if (Object.keys(queryParams).length !== 0) {
-                if (queryParams.hasOwnProperty("tracks")) loadTracks(queryParams.tracks, browser);
-                else loadTracks(tracks, browser);
-                if (queryParams.hasOwnProperty("locus")) {
-                    browser.search(queryParams.locus);
-                    browser.loadROI(queryParams.roi);
-                }
-                onBrowserChange("loadfromqueryparams");
-            } else if (sessionJSON != null) {
-                loadTracks(sessionJSON.tracks, browser);
-                if (sessionJSON.hasOwnProperty("roi")) browser.loadROI(sessionJSON.roi);
-                if (sessionJSON.hasOwnProperty("locus")) browser.search(sessionJSON.locus);
-            } else {
-                loadTracks(tracks, browser);
-                onBrowserChange("initialload");
+    const initialTrackConfiguration = useMemo<PreloadedTrackConfig>(() => {
+        const ptConfig: PreloadedTrackConfig = {};
+
+        if (trackConfig) {
+            let tracks: IGVBrowserTrack[] = referenceTracks ? resolveTrackConfigs(trackConfig, referenceTracks) : [];
+            if (defaultTracks) {
+                tracks.push(...resolveTrackConfigs(trackConfig, defaultTracks));
             }
-        }
-    }, [browserIsLoaded]);
+            const seen = new Set();
+            ptConfig.tracks = tracks.filter((track) => !seen.has(track.id) && seen.add(track.id));
 
-    useLayoutEffect(() => {
-        if (isClient && containerRef.current) {
-            const targetDiv = containerRef.current;
-            // const targetDiv = document.getElementById("genome-browser");
-
-            if (memoOptions != null) {
-                igv.registerTrackClass("gwas_service", VariantPValueTrack);
-                igv.registerTrackClass("qtl", VariantPValueTrack);
-                igv.registerTrackClass("variant_service", VariantTrack);
-
-                igv.createBrowser(targetDiv, memoOptions).then(function (browser: any) {
-                    // custom track popovers
-                    browser.on("trackclick", trackPopover);
-
-                    browser.on("trackremoved", (track: any) => {
-                        onTrackRemoved && onTrackRemoved(track);
-                        onBrowserChange("trackremoved");
-                    });
-
-                    browser.on("locuschange", (referenceFrameList: ReferenceFrame[]) => {
-                        !isDragging.current && onBrowserChange("locuschange");
-                    });
-
-                    browser.on("trackdrag", () => {
-                        if (!isDragging.current) {
-                            isDragging.current = true;
-                        }
-                    });
-
-                    browser.on("trackdragend", () => {
-                        isDragging.current = false;
-                        onBrowserChange("locuschange");
-                    });
-
-                    browser.on("updateuserdefinedroi", (manager: any) => {
-                        onBrowserChange("updateuserdefinedroi");
-                    });
-
-                    // add browser to state
-                    setBrowser(browser);
-                    setBrowserIsLoaded(true);
-
-                    // callback to parent component, if exist
-                    if (onBrowserLoad) {
-                        onBrowserLoad(browser);
-                    } else {
-                        noop();
-                    }
+            if (files) {
+                const uniqueUrls = Array.from(new Set(files.urls));
+                ptConfig.files = uniqueUrls.map((url: string) => {
+                    const id = "file_" + url.split("/").pop()!.replace(/\..+$/, "");
+                    return files.indexed
+                        ? { url: url, indexURL: `${url}.tbi`, name: `USER: ${id}`, id: id }
+                        : { url: url, name: `USER: ${id}`, id: id };
                 });
             }
         }
-    }, [isClient]);
+        return ptConfig;
+    }, [referenceTracks, defaultTracks, files, trackConfig]);
 
     useEffect(() => {
-        if (browserChange !== "none") {
-            createSessionObj(browserChange).then((sessionObj) => {
-                setSessionJSON(sessionObj);
-            });
-            setBrowserChange("none");
-        }
-    }, [browserChange]);
-
-    const onBrowserChange = useCallback((changeType: BrowserChangeEvent) => {
-        setBrowserChange(changeType);
+        setIsClient(true);
     }, []);
 
-    const handleSaveSession = async () => {
-        if (browserIsLoaded) {
-            let sessionObj = await createSessionObj("savesession");
-            sessionObj = cleanSessionObj(sessionObj);
-            downloadObjectAsJson(sessionObj, "NIAGADS_IGV_session");
-        } else {
-            alert("Wait until the browser is loaded before saving");
-        }
-    };
+    useLayoutEffect(() => {
+        if (isClient && containerRef.current) {
+            // lazy load of igv library to avoid `window is not defined` ReferenceError
+            async function loadIGV() {
+                const { default: mod } = await import("igv/dist/igv.esm");
+                setIGV(mod);
+            }
 
-    // FIXME: correct the error checking, just have each case return instead of break
-    const createSessionObj = async (changeType: BrowserChangeEvent) => {
-        let sessionObj: Session;
+            async function registerTracks() {
+                const { default: VariantServiceTrack } = await import("./tracks/VariantServiceTrack");
+                const { default: VariantPValueTrack } = await import("./tracks/VariantPValueTrack");
+                igv.registerTrackClass("gwas_service", VariantPValueTrack);
+                igv.registerTrackClass("qtl", VariantPValueTrack);
+                igv.registerTrackClass("variant_service", VariantServiceTrack);
+            }
 
-        switch (changeType) {
-            case "initialload":
-                sessionObj = {
-                    tracks: tracks,
-                    roi: [],
-                    // FIXME: nothing should be hardcoded
-                    locus: "chr19:1,038,997-1,066,572",
-                };
-                break;
-            case "locuschange":
-                sessionObj = {
-                    tracks: sessionJSON.tracks,
-                    roi: sessionJSON.roi,
-                    locus: browser.currentLoci(),
-                };
-                break;
-            case "updateuserdefinedroi":
-                sessionObj = {
-                    tracks: sessionJSON.tracks,
-                    roi: [
-                        {
-                            features: await browser.getUserDefinedROIs(),
-                            isUserDefined: true,
-                        },
-                    ],
-                    locus: sessionJSON.locus,
-                };
-                break;
-            case "loadsession":
-            case "loadfromqueryparams":
-                sessionObj = {
-                    tracks: cleanTracks(getLoadedTracks(browser)),
-                    roi: [
-                        {
-                            features: await browser.getUserDefinedROIs(),
-                            isUserDefined: true,
-                        },
-                    ],
-                    locus: browser.currentLoci(),
-                };
-                break;
-            case "trackremoved":
-                sessionObj = {
-                    tracks: cleanTracks(getLoadedTracks(browser)),
-                    roi: sessionJSON.roi,
-                    locus: sessionJSON.locus,
-                };
-                break;
-            case "savesession":
-                sessionObj = {
-                    tracks: sessionJSON.tracks,
-                    roi: sessionJSON.roi,
-                    locus: sessionJSON.locus,
-                };
-            default:
-                console.error("changeType is not an expected value, it is: ", changeType);
-        }
+            if (!igv) {
+                loadIGV();
+            } else {
+                // register custom track classes
+                const targetDiv = containerRef.current;
+                registerTracks();
 
-        return sessionObj;
-    };
+                if (opts != null) {
+                    igv.createBrowser(targetDiv, opts).then(async function (browser: any) {
+                        // custom track popovers
+                        browser.on("trackclick", trackPopover);
 
-    const handleLoadFileClick = (jsonObj: Session) => {
-        removeTracks(browser);
-        loadTracks(jsonObj.tracks, browser);
-        if (jsonObj.hasOwnProperty("roi")) {
-            browser.clearROIs();
-            browser.loadROI();
-        }
-        if (jsonObj.hasOwnProperty("locus")) browser.search(jsonObj.locus);
-        onBrowserChange("loadsession");
-    };
+                        // handle track removed
+                        browser.on("trackremoved", function (track: any) {
+                            if (onTrackRemoved) {
+                                onTrackRemoved(track.config.id);
+                            }
+                        });
 
-    const getQueryParams = () => {
-        let params: QueryParams = {};
-        const queryParams = new URLSearchParams(window.location.search);
-        if (queryParams.has("tracks"))
-            params.tracks = selectTracksFromURLParams(tracks, convertStringToTrackNames(queryParams.get("tracks")));
-        if (queryParams.has("locus")) {
-            params.locus = addDefaultFlank(queryParams.get("locus"));
-            params.roi = createROIFromLocusRange(queryParams.get("locus"));
-        }
-        return params;
-    };
+                        // handle locus change; useful for saving a session
+                        browser.on("locuschange", function (referenceFrameList: any) {
+                            if (!isDragging.current) {
+                                let loc = referenceFrameList.map((rf: any) => rf.getLocusString()).join("%20");
+                                onLocusChanged && onLocusChanged(loc);
+                            }
+                        });
 
-    const cleanSessionObj = (obj: Session) => {
-        //remove reader and metadata to prepare session for download
-        obj.tracks.map((track) => {
-            for (let property in track) {
-                //@ts-ignore
-                if (property === "reader") delete track.reader;
-                else if (property === "metadata") {
-                    //@ts-ignore
-                    let description = track.metadata.Description;
-                    //@ts-ignore
-                    delete track.metadata;
-                    track.description = description;
+                        // track when dragging ends so can accurately register a locus change
+                        browser.on("trackdrag", () => {
+                            isDragging.current = true;
+                        });
+
+                        browser.on("trackdragend", () => {
+                            isDragging.current = false;
+                            let loc = browser.referenceFrameList.map((rf: any) => rf.getLocusString()).join("%20");
+                            onLocusChanged && onLocusChanged(loc);
+                        });
+
+                        await loadInitialTracks(browser, initialTrackConfiguration);
+
+                        // add browser to state
+                        // setBrowser(browser);
+                        setBrowserIsLoading(false);
+
+                        // callback to parent component, if exist
+                        if (onBrowserLoad) {
+                            onBrowserLoad(browser);
+                        }
+                    });
                 }
             }
-        });
+        }
+    }, [isClient, igv]);
 
-        //remove refereence object
-        tracks = tracks.filter((track) => track.id !== "reference");
-
-        return obj;
-    };
-
-    if (!isClient) {
-        return <div>Loading...</div>;
-    }
-
-    return (
-        <>
-            <span ref={containerRef} style={{ width: "100%" }} id="genome-browser" />
-        </>
+    return !isClient && browserIsLoading ? (
+        <Skeleton type="table" />
+    ) : (
+        <div ref={containerRef} className="w-full" id="genome-browser"></div>
     );
 };
 
+// FIXME: which one should be default?
 export const MemoIGVBrowser = React.memo(IGVBrowser);
 export default IGVBrowser;
