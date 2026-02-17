@@ -1,6 +1,5 @@
 {
     "name": "@niagads/igv",
-    "private": "false",
     "version": "0.0.1",
     "description": "NIAGADS IGV Browser Component",
     "repository": {
