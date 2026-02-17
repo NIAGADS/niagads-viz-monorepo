@@ -49,5 +49,6 @@
             "types": "./dist/client/index.d.ts"
         },
         "./package.json": "./package.json"
-    }
+    },
+    "gitHead": "5962101eb3af53695309d0340fe9b9c8e0bcaef4"
 }
