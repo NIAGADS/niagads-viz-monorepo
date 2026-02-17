@@ -34,8 +34,12 @@ npm i @niagads/ui
 
 Dynamic table component. See project [storybook](https://niagads.github.io/niagads-viz-monorepo/) for documentation and usage examples.
 
+#### IGVBrowser
+
+Components wrapping a customized [igv.js](igv.js) genome browser that pull data directly from files hosted on FILER or through data adapters that query the NIAGADS Open Access API. Also includes customized track selectors and filtering using the `@niagads/table` component.
+
 ```bash
-npm i @niagads/table
+npm i @niagads/igvbrowser
 ```
 
 ### Under development
@@ -43,10 +47,6 @@ npm i @niagads/table
 #### Gosling
 
 Components wrapping [gosling.js](https://gosling-lang.org/) genomics visualizations that pull data directly from files hosted on FILER or through data adapters that query the NIAGADS Open Access API.
-
-#### IGVBrowser
-
-Components wrapping a customized [igv.js](igv.js) genome browser that pull data directly from files hosted on FILER or through data adapters that query the NIAGADS Open Access API. Also includes customized track selectors and filtering using the `@niagads/table` component.
 
 #### LocusZoom
 
@@ -74,9 +74,9 @@ npm run storybook
 
 ### track-collection-microservice
 
-### igvbrowser-microservice
+### igvbrowser (app)
 
-> temporarily just a test-application
+Standalone, configurable IGV-based Genome Browser Application.  See <https://github.com/NIAGADS/igvbrowser-microservice> for more information.
 
 ## For Developers
 
@@ -100,11 +100,11 @@ npx lerna run build --concurrency 1
 ```
 
 or in short-hand:
-   
+
 ```bash
 npm run build
 ```
-	
+
 > **Note**: The `--concurrency 1` flag is not required, but stops the lerna command from trying to build each package in parallel, avoiding race conditions and build failures when a dependent package builds faster than a dependency. This sort of race condition can occur randomly.
 
 > **Note**: `npx` should come with `npm` 5.2+, but sometimes it does not get installed if you use `nvm` to manage node versions.  
@@ -124,13 +124,9 @@ npm run storybook
 
 > **Note:** if you get a message that `nx` is not found, install globally with the following command: `npm i -g nx`. Depending on your system setup, you may need to use `sudo`.
 
-#### Run GenomicsDB
+#### Run Application
 
-see README in the GenomicsDB application directory.
-
-#### Run a microservice
-
-More information coming soon.
+see README in the relevant application directory.
 
 ### Lerna package and application management
 

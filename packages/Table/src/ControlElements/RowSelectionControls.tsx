@@ -8,7 +8,7 @@ import { TrashIcon } from "lucide-react";
 interface RowSelectionControlsProps {
     selectedRows: Row<TableRow>[];
     displayColumn: string;
-    onToggleSelectedFilter: () => void;
+    onToggleSelectedFilter: (isFiltered: boolean) => void;
     onRemoveAll: () => void;
 }
 
@@ -23,7 +23,7 @@ export const RowSelectionControls = ({
 
     useEffect(() => {
         if (didMount.current) {
-            onToggleSelectedFilter();
+            onToggleSelectedFilter(isFiltered);
         } else {
             didMount.current = true;
         }
