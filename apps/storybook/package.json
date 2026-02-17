@@ -11,10 +11,10 @@
         "react-dom": "^19.1.0"
     },
     "devDependencies": {
-        "@niagads/common": "^0.0.1",
-        "@niagads/table": "^0.0.1",
-        "@niagads/ui": "^0.0.1",
-        "@niagads/igv": "^0.0.1",
+        "@niagads/common": "^0.1.0",
+        "@niagads/igv": "^0.1.0",
+        "@niagads/table": "^0.1.0",
+        "@niagads/ui": "^0.1.0",
         "@storybook/addon-controls": "^8.6.10",
         "@storybook/addon-essentials": "^8.2.8",
         "@storybook/addon-interactions": "^8.2.8",
@@ -24,11 +24,11 @@
         "@storybook/nextjs": "^8.2.8",
         "@storybook/react": "^8.2.8",
         "@storybook/test": "^8.2.8",
-        "http-proxy-middleware": "^3.0.3",
         "css-loader": "^6.8.1",
+        "http-proxy-middleware": "^3.0.3",
         "postcss-loader": "^8.1.0",
         "ts-loader": "^9.4.4"
     },
     "private": "true",
-    "version": "0.0.1"
+    "version": "0.1.0"
 }

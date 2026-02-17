@@ -1,7 +1,6 @@
 {
     "name": "@niagads/igv",
-    "private": "true",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "description": "NIAGADS IGV Browser Component",
     "repository": {
         "type": "git",
@@ -12,20 +11,20 @@
         "build": "rollup -c"
     },
     "dependencies": {
-        "@niagads/common": "^0.0.1",
-        "@niagads/ui": "^0.0.1",
-        "@niagads/table": "^0.0.1",
+        "@niagads/common": "^0.1.0",
+        "@niagads/table": "^0.1.0",
+        "@niagads/ui": "^0.1.0",
         "igv": "github:NIAGADS/igv.js#NIAGADS-01102025",
         "jquery": "^3.7.1"
     },
     "devDependencies": {
-        "@types/jquery": "^3.5.32",
-        "@types/lodash.find": "^4.6.9",
-        "@types/lodash.noop": "^3.0.9",
         "@rollup/plugin-commonjs": "^28.0.2",
         "@rollup/plugin-node-resolve": "^16.0.0",
         "@rollup/plugin-terser": "^0.4.4",
         "@rollup/plugin-typescript": "^12.1.2",
+        "@types/jquery": "^3.5.32",
+        "@types/lodash.find": "^4.6.9",
+        "@types/lodash.noop": "^3.0.9",
         "postcss-import": "^16.1.1",
         "rollup": "^4.28.1",
         "rollup-plugin-delete": "^2.1.0",
@@ -44,5 +43,6 @@
             "default": "./dist/index.js",
             "types": "./dist/index.d.ts"
         }
-    }
+    },
+    "gitHead": "5962101eb3af53695309d0340fe9b9c8e0bcaef4"
 }
