@@ -30,6 +30,7 @@ import { CustomSortingFunctions } from "./TableSortingFunctions";
 import { RowSelectionControls } from "./ControlElements/RowSelectionControls";
 import { TableColumnHeader } from "./TableColumnHeader";
 import styles from "./styles/table.module.css";
+import { ColumnFilterControls } from "./ControlElements/ColumnFilterControls";
 
 const __resolveSortingFn = (col: GenericColumn) => {
     if (col.type === "boolean") {
@@ -39,6 +40,13 @@ const __resolveSortingFn = (col: GenericColumn) => {
         return "scientific";
     }
     return "alphanumeric";
+};
+
+const __resolveFilterFn = (col: GenericColumn) => {
+    if (col.type === "float" || col.type === "p_value") {
+        return "inNumberRange";
+    }
+    return "includesString";
 };
 
 // wrapper to catch any errors thrown during cell type and properties validation so that
@@ -58,12 +66,12 @@ const __resolveCell = (userCell: GenericCell | GenericCell[], column: GenericCol
 // the HeaderGroup API will take column visibility into account
 
 // render the table header
-const __renderTableHeader = (hGroups: HeaderGroup<TableRow>[], tableId: string) => (
+const __renderTableHeader = (hGroups: HeaderGroup<TableRow>[]) => (
     <thead>
         {hGroups.map((headerGroup: HeaderGroup<TableRow>) => (
             <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
-                    return <TableColumnHeader key={header.id} header={header} tableId={tableId} />;
+                    return <TableColumnHeader key={header.id} header={header} />;
                 })}
             </tr>
         ))}
@@ -184,10 +192,12 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection,
                     enableGlobalFilter: !col.disableGlobalFilter,
                     enableSorting: !col.disableSorting,
                     sortingFn: __resolveSortingFn(col) as SortingFnOption<TableRow>,
+                    filterFn: __resolveFilterFn(col),
                     enableHiding: !_get("required", col, false), // if required is true, enableHiding is false
                     meta: {
                         description: _get("description", col),
                         type: _get("type", col),
+                        filterType: _get("filterType", col)
                     },
                     cell: (props) => renderCell(props.cell.row.original[col.id] as Cell),
                 })
@@ -290,7 +300,11 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection,
     return table ? (
         <div className={styles["table-outer-container"]}>
             <div className={styles["table-controls-container"]}>
-                <TableToolbar table={table} tableId={id} enableExport={!!!options?.disableExport} />
+                <TableToolbar
+                    table={table}
+                    tableId={id}
+                    enableExport={!!!options?.disableExport}
+                />
                 <PaginationControls id={id} table={table} />
             </div>
             {enableRowSelect && (
@@ -310,9 +324,17 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection,
                     />
                 </div>
             )}
+            {table.getAllColumns().some(x => x.columnDef.enableColumnFilter) && (
+                <ColumnFilterControls
+                    filterableColumns={table.getAllColumns().filter(x => x.columnDef.enableColumnFilter)}
+                    activeFilters={columnFilters}
+                    onRemoveAll={() => setColumnFilters([])}
+                    onRemoveFilter={(filter) => setColumnFilters((prev) => prev.filter((f) => f !== filter))}
+                />
+            )}
             <div className={styles["table-container"]}>
                 <table className={`${styles["table-layout"]} ${styles["table-border"]} ${styles["table-text"]}`}>
-                    {__renderTableHeader(table.getHeaderGroups(), id)}
+                    {__renderTableHeader(table.getHeaderGroups())}
                     <tbody>
                         {rowModel.rows.map((row) => (
                             <tr key={row.id} className={styles["table-dtr"]}>

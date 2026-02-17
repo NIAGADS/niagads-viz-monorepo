@@ -10,6 +10,10 @@ export interface RowSelectColumnConfig {
     rowUniqueKey: string; // specify a field containing unique values to return as the row_id
 }
 
+export interface ColumnFilterOptions {
+    externalColumnFilters: ColumnFiltersState;
+}
+
 interface SortConfig {
     [column: string]: "asc" | "desc";
 }
@@ -41,6 +45,7 @@ export type TableData = TableRow[];
 declare module "@tanstack/react-table" {
     interface ColumnMeta<TData extends RowData, TValue> {
         type?: CellType;
+        filterType?: ColumnFilterType;
         description?: string;
     }
 }
