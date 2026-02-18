@@ -15,7 +15,8 @@
         "@niagads/table": "^0.1.0",
         "@niagads/ui": "^0.1.0",
         "igv": "github:NIAGADS/igv.js#NIAGADS-01102025",
-        "jquery": "^3.7.1"
+        "jquery": "^3.7.1",
+        "tslib": "^2"
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^28.0.2",

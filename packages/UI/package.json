@@ -27,7 +27,8 @@
         "@niagads/common": "^0.1.0",
         "lucide-react": "^0.513.0",
         "react-tooltip": "^5.28.0",
-        "style-inject": "^0.3.0"
+        "style-inject": "^0.3.0",
+        "tslib": "^2"
     },
     "files": [
         "dist"
