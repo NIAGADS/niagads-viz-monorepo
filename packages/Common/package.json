@@ -1,6 +1,6 @@
 {
     "name": "@niagads/common",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "scripts": {
         "build": "rollup -c"
     },
@@ -16,6 +16,9 @@
         "rollup-plugin-dts": "^6.1.1",
         "rollup-plugin-peer-deps-external": "^2.2.4",
         "rollup-plugin-postcss": "^4.0.2"
+    },
+    "dependencies": {
+        "tslib": "^2"
     },
     "main": "dist/index.js",
     "types": "dist/index.d.ts",

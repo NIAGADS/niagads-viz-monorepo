@@ -1,6 +1,6 @@
 {
     "name": "@niagads/igv",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "NIAGADS IGV Browser Component",
     "repository": {
         "type": "git",
@@ -11,11 +11,12 @@
         "build": "rollup -c"
     },
     "dependencies": {
-        "@niagads/common": "^0.1.0",
-        "@niagads/table": "^0.1.0",
-        "@niagads/ui": "^0.1.0",
+        "@niagads/common": "^0.1.1",
+        "@niagads/table": "^0.1.1",
+        "@niagads/ui": "^0.1.1",
         "igv": "github:NIAGADS/igv.js#NIAGADS-01102025",
-        "jquery": "^3.7.1"
+        "jquery": "^3.7.1",
+        "tslib": "^2"
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^28.0.2",

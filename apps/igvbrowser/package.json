@@ -1,6 +1,6 @@
 {
     "name": "igvbrowser",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "private": true,
     "scripts": {
         "igvbrowser": "npm run dev",
@@ -9,9 +9,9 @@
         "lint": "next lint"
     },
     "dependencies": {
-        "@niagads/common": "^0.1.0",
-        "@niagads/igv": "^0.1.0",
-        "@niagads/ui": "^0.1.0",
+        "@niagads/common": "^0.1.1",
+        "@niagads/igv": "^0.1.1",
+        "@niagads/ui": "^0.1.1",
         "lucide-react": "^0.513.0",
         "next": "^15.4.8",
         "react": "^19.2.1",

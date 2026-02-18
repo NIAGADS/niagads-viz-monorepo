@@ -1,6 +1,6 @@
 {
     "name": "@niagads/charts",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "NIAGADS Common Charting React Component Library",
     "repository": {
         "type": "git",
@@ -36,13 +36,14 @@
         "./package.json": "./package.json"
     },
     "dependencies": {
-        "@niagads/common": "^0.1.0",
-        "@niagads/ui": "^0.1.0",
+        "@niagads/common": "^0.1.1",
+        "@niagads/ui": "^0.1.1",
         "@nivo/bar": "^0.99.0",
         "@nivo/core": "^0.99.0",
         "plotly.js": "^3.0.1",
         "react-plotly.js": "^2.6.0",
-        "swr": "^2.3.6"
+        "swr": "^2.3.6",
+        "tslib": "^2"
     },
     "gitHead": "5962101eb3af53695309d0340fe9b9c8e0bcaef4"
 }

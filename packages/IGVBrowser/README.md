@@ -5,7 +5,7 @@ Embedabble react component wrapping an [_igv.js_](https://github.com/igvteam/igv
 ## Installation
 
 ```bash
-npm install @niagads/igvbrowser
+npm install @niagads/igv
 ```
 
 ## Usage
