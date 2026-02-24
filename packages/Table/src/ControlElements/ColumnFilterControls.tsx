@@ -2,7 +2,7 @@ import { Button, Card, FilterChip, FilterChipBar, InlineIcon } from "@niagads/ui
 import React, { useState } from "react";
 
 import { Column, ColumnFilter, ColumnFiltersState } from "@tanstack/react-table";
-import { ChevronDown, ChevronRight, ListFilterPlus, TrashIcon } from "lucide-react";
+import { ChevronDown, ChevronRight, TrashIcon } from "lucide-react";
 import AdvancedFilter from "../Filter";
 
 interface ColumnFilterControlsProps {
@@ -17,6 +17,21 @@ export const ColumnFilterControls = ({ filterableColumns, activeFilters, onRemov
 
     return (
         <div>
+            {activeFilters.length > 0 && (
+                <FilterChipBar label={"Active Column Filters:"}>
+                    <Button color="default" onClick={onRemoveAll}>
+                        <InlineIcon icon={<TrashIcon size={18} />}>Remove all</InlineIcon>
+                    </Button>
+                    {activeFilters.map((filter) => (
+                        <FilterChip
+                            key={`filter-chip-${filter.id}`}
+                            label={filter.id}
+                            value={`${filter.value}`}
+                            onRemove={() => onRemoveFilter(filter)}
+                        />
+                    ))}
+                </FilterChipBar>
+            )}
             <Card variant="full">
                 <div >
                     <div onClick={() => setAreFiltersOpen(!areFiltersOpen)}>
@@ -24,21 +39,6 @@ export const ColumnFilterControls = ({ filterableColumns, activeFilters, onRemov
                             <span>Advanced Filters</span>
                         </InlineIcon>
                     </div>
-                    {activeFilters.length > 0 && (
-                        <FilterChipBar label={"Active Column Filters:"}>
-                            <Button color="default" onClick={onRemoveAll}>
-                                <InlineIcon icon={<TrashIcon size={18} />}>Remove all</InlineIcon>
-                            </Button>
-                            {activeFilters.map((filter) => (
-                                <FilterChip
-                                    key={`filter-chip-${filter.id}`}
-                                    label={filter.id}
-                                    value={`${filter.value}`}
-                                    onRemove={() => onRemoveFilter(filter)}
-                                />
-                            ))}
-                        </FilterChipBar>
-                    )}
                 </div>
                 <div>
                     {areFiltersOpen && filterableColumns.map(column => (

@@ -1,17 +1,14 @@
 import { CellType, GenericCell } from "./Cell";
 
 import { BasicType } from "@niagads/common";
-import { RowData } from "@tanstack/react-table";
+import { ColumnFiltersState, RowData } from "@tanstack/react-table";
+import { ColumnFilterType } from "./Column";
 
 export interface RowSelectColumnConfig {
     header: string;
     description?: string;
     enableMultiSelect?: boolean; // optional: allow selection of multiple rows, false if missing
     rowUniqueKey: string; // specify a field containing unique values to return as the row_id
-}
-
-export interface ColumnFilterOptions {
-    externalColumnFilters: ColumnFiltersState;
 }
 
 interface SortConfig {

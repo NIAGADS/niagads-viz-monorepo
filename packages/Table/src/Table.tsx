@@ -22,7 +22,7 @@ import {
 } from "@tanstack/react-table";
 import { GenericColumn, getColumn } from "./Column";
 import { PaginationControls, TableToolbar } from "./ControlElements";
-import React, { useCallback, useLayoutEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { TableConfig, TableData, TableRow } from "./TableProperties";
 import { _get, _hasOwnProperty, toTitleCase } from "@niagads/common";
 
@@ -32,85 +32,6 @@ import { TableColumnHeader } from "./TableColumnHeader";
 import styles from "./styles/table.module.css";
 import { ColumnFilterControls } from "./ControlElements/ColumnFilterControls";
 
-const __resolveSortingFn = (col: GenericColumn) => {
-    if (col.type === "boolean") {
-        return "boolean";
-    }
-    if (col.type === "float") {
-        return "scientific";
-    }
-    return "alphanumeric";
-};
-
-const __resolveFilterFn = (col: GenericColumn) => {
-    if (col.type === "float" || col.type === "p_value") {
-        return "inNumberRange";
-    }
-    return "includesString";
-};
-
-// wrapper to catch any errors thrown during cell type and properties validation so that
-// user can more easily identify the problematic table cell by row/column
-const __resolveCell = (userCell: GenericCell | GenericCell[], column: GenericColumn, rowId: number) => {
-    try {
-        return resolveCell(userCell, column, rowId);
-    } catch (e: any) {
-        throw Error(
-            "Validation Error parsing field value for row " + rowId + " column `" + column.id + "`.\n" + e.message
-        );
-    }
-};
-
-// TODO: (maybe?) catch hidden to skip during rendering
-// NOTE: according to documentation https://tanstack.com/table/latest/docs/guide/column-visibility#column-visibility-state
-// the HeaderGroup API will take column visibility into account
-
-// render the table header
-const __renderTableHeader = (hGroups: HeaderGroup<TableRow>[]) => (
-    <thead>
-        {hGroups.map((headerGroup: HeaderGroup<TableRow>) => (
-            <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                    return <TableColumnHeader key={header.id} header={header} />;
-                })}
-            </tr>
-        ))}
-    </thead>
-);
-
-// checks to see if a field contains a unique value for each row in the table
-// allowing it to be used as a valid "primary key" or row_id for row selection
-const __isValidUniqueKey = (data: TableData, columnId: string) => {
-    const values = data.map((row) => getCellValue(row[columnId as keyof typeof row] as Cell));
-    return Array.from(new Set(values)).length == data.length;
-};
-
-// builds data structure to initialize row selection state
-const __resolveRowSelectionState = (state: RowSelectionState | string[] | undefined): RowSelectionState => {
-    if (state) {
-        if (Array.isArray(state)) {
-            if (state.length > 0) {
-                return Object.fromEntries(state.map((rowId) => [rowId, true])) as RowSelectionState;
-            }
-            return {} as RowSelectionState;
-        }
-        return state as RowSelectionState;
-    }
-
-    return {};
-};
-
-// builds data structure to initialize row selection state
-const __setInitialColumnVisibility = (defaultColumns: string[] | undefined, columns: GenericColumn[]) => {
-    const visibility: VisibilityState = {};
-    if (defaultColumns) {
-        columns.forEach((col) => {
-            visibility[col.id] = defaultColumns.includes(col.id);
-        });
-    }
-    return visibility;
-};
-
 export interface TableProps {
     id: string;
     options?: TableConfig;
@@ -118,10 +39,11 @@ export interface TableProps {
     data: TableData;
     rowSelection?: RowSelectionState | string[];
     onRowSelectionChange?: (state: RowSelectionState) => void;
+    externalColumnFilters?: ColumnFiltersState;
 }
 
 // TODO: use table options to initialize the state (e.g., initial sort, initial filter)
-const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection, onRowSelectionChange }) => {
+const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection, onRowSelectionChange, externalColumnFilters }) => {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [globalFilter, setGlobalFilter] = useState("");
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -140,6 +62,12 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection,
         },
         [rowSelection, onRowSelectionChange]
     );
+
+    useEffect(() => {
+        if (externalColumnFilters) {
+            setColumnFilters(prev => [...prev.filter(cf => columns.find(c => c.canFilter)?.id == cf.id), ...externalColumnFilters]);
+        }
+    }, [externalColumnFilters])
 
     // Translate GenericColumns provided by user into React Table ColumnDefs
     // also adds in checkbox column if rowSelect options are set for the table
@@ -352,6 +280,85 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection,
     ) : (
         <div>No data</div>
     );
+};
+
+const __resolveSortingFn = (col: GenericColumn) => {
+    if (col.type === "boolean") {
+        return "boolean";
+    }
+    if (col.type === "float") {
+        return "scientific";
+    }
+    return "alphanumeric";
+};
+
+const __resolveFilterFn = (col: GenericColumn) => {
+    if (col.type === "float" || col.type === "p_value") {
+        return "inNumberRange";
+    }
+    return "includesString";
+};
+
+// wrapper to catch any errors thrown during cell type and properties validation so that
+// user can more easily identify the problematic table cell by row/column
+const __resolveCell = (userCell: GenericCell | GenericCell[], column: GenericColumn, rowId: number) => {
+    try {
+        return resolveCell(userCell, column, rowId);
+    } catch (e: any) {
+        throw Error(
+            "Validation Error parsing field value for row " + rowId + " column `" + column.id + "`.\n" + e.message
+        );
+    }
+};
+
+// TODO: (maybe?) catch hidden to skip during rendering
+// NOTE: according to documentation https://tanstack.com/table/latest/docs/guide/column-visibility#column-visibility-state
+// the HeaderGroup API will take column visibility into account
+
+// render the table header
+const __renderTableHeader = (hGroups: HeaderGroup<TableRow>[]) => (
+    <thead>
+        {hGroups.map((headerGroup: HeaderGroup<TableRow>) => (
+            <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                    return <TableColumnHeader key={header.id} header={header} />;
+                })}
+            </tr>
+        ))}
+    </thead>
+);
+
+// checks to see if a field contains a unique value for each row in the table
+// allowing it to be used as a valid "primary key" or row_id for row selection
+const __isValidUniqueKey = (data: TableData, columnId: string) => {
+    const values = data.map((row) => getCellValue(row[columnId as keyof typeof row] as Cell));
+    return Array.from(new Set(values)).length == data.length;
+};
+
+// builds data structure to initialize row selection state
+const __resolveRowSelectionState = (state: RowSelectionState | string[] | undefined): RowSelectionState => {
+    if (state) {
+        if (Array.isArray(state)) {
+            if (state.length > 0) {
+                return Object.fromEntries(state.map((rowId) => [rowId, true])) as RowSelectionState;
+            }
+            return {} as RowSelectionState;
+        }
+        return state as RowSelectionState;
+    }
+
+    return {};
+};
+
+// builds data structure to initialize row selection state
+const __setInitialColumnVisibility = (defaultColumns: string[] | undefined, columns: GenericColumn[]) => {
+    const visibility: VisibilityState = {};
+    if (defaultColumns) {
+        columns.forEach((col) => {
+            visibility[col.id] = defaultColumns.includes(col.id);
+        });
+    }
+    return visibility;
 };
 
 export default Table;
