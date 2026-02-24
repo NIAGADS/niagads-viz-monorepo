@@ -12,7 +12,12 @@ interface ColumnFilterControlsProps {
     onRemoveFilter: (filter: ColumnFilter) => void;
 }
 
-export const ColumnFilterControls = ({ filterableColumns, activeFilters, onRemoveAll, onRemoveFilter }: ColumnFilterControlsProps) => {
+export const ColumnFilterControls = ({
+    filterableColumns,
+    activeFilters,
+    onRemoveAll,
+    onRemoveFilter,
+}: ColumnFilterControlsProps) => {
     const [areFiltersOpen, setAreFiltersOpen] = useState(false);
 
     return (
@@ -33,7 +38,7 @@ export const ColumnFilterControls = ({ filterableColumns, activeFilters, onRemov
                 </FilterChipBar>
             )}
             <Card variant="full">
-                <div >
+                <div>
                     <div onClick={() => setAreFiltersOpen(!areFiltersOpen)}>
                         <InlineIcon icon={areFiltersOpen ? <ChevronDown /> : <ChevronRight />}>
                             <span>Advanced Filters</span>
@@ -41,9 +46,8 @@ export const ColumnFilterControls = ({ filterableColumns, activeFilters, onRemov
                     </div>
                 </div>
                 <div>
-                    {areFiltersOpen && filterableColumns.map(column => (
-                        <AdvancedFilter key={column.id} column={column} />
-                    ))}
+                    {areFiltersOpen &&
+                        filterableColumns.map((column) => <AdvancedFilter key={column.id} column={column} />)}
                 </div>
             </Card>
         </div>

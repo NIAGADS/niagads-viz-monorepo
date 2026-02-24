@@ -16,7 +16,7 @@ export const TABLE_DEFINITION: Table = {
         ],
     },
     columns: [
-        { id: "relative_position", canFilter: true, header: "Relative Position" },
+        { id: "relative_position", header: "Relative Position" },
         {
             id: "variant_link",
             type: "link",
@@ -35,6 +35,7 @@ export const TABLE_DEFINITION: Table = {
             type: "boolean",
             // format: { nullValue: false },
             disableGlobalFilter: true,
+            canFilter: true,
         },
         { id: "ref_snp_id", header: "RefSNP ID" },
         {
@@ -42,6 +43,7 @@ export const TABLE_DEFINITION: Table = {
             header: "Impact",
             description:
                 "Most severe impact predicted for this variant on the gene, using the ADSP Annotation Pipeline",
+            canFilter: true,
         },
 
         {
@@ -49,14 +51,21 @@ export const TABLE_DEFINITION: Table = {
             header: "Consequence",
             description:
                 "Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline",
+            canFilter: true,
         },
         { id: "population" },
         { id: "diagnosis" },
         { id: "neuropathology", required: true },
         { id: "tissue" },
         { id: "biomarker" },
-        { id: "gender" },
-        { id: "genotype" },
+        {
+            id: "gender",
+            canFilter: true,
+        },
+        {
+            id: "genotype",
+            canFilter: true,
+        },
         { id: "covariates" },
     ],
     data: [

@@ -72,6 +72,4 @@ const Filter = ({ column }: FilterProps) => {
     );
 };
 
-
-
 export default Filter;

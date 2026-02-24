@@ -44,7 +44,16 @@ export interface TableProps {
 }
 
 // TODO: use table options to initialize the state (e.g., initial sort, initial filter)
-const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection, onRowSelectionChange, externalColumnFilters, onExternalFilterRemoved }) => {
+const Table: React.FC<TableProps> = ({
+    id,
+    columns,
+    data,
+    options,
+    rowSelection,
+    onRowSelectionChange,
+    externalColumnFilters,
+    onExternalFilterRemoved,
+}) => {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [globalFilter, setGlobalFilter] = useState("");
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -66,9 +75,12 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection,
 
     useEffect(() => {
         if (externalColumnFilters) {
-            setColumnFilters(prev => [...prev.filter(cf => columns.find(c => c.canFilter)?.id == cf.id), ...externalColumnFilters]);
+            setColumnFilters((prev) => [
+                ...prev.filter((cf) => columns.find((c) => c.canFilter)?.id == cf.id),
+                ...externalColumnFilters,
+            ]);
         }
-    }, [externalColumnFilters])
+    }, [externalColumnFilters]);
 
     // Translate GenericColumns provided by user into React Table ColumnDefs
     // also adds in checkbox column if rowSelect options are set for the table
@@ -126,7 +138,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection,
                     meta: {
                         description: _get("description", col),
                         type: _get("type", col),
-                        filterType: _get("filterType", col)
+                        filterType: _get("filterType", col),
                     },
                     cell: (props) => renderCell(props.cell.row.original[col.id] as Cell),
                 })
@@ -229,11 +241,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection,
     return table ? (
         <div className={styles["table-outer-container"]}>
             <div className={styles["table-controls-container"]}>
-                <TableToolbar
-                    table={table}
-                    tableId={id}
-                    enableExport={!!!options?.disableExport}
-                />
+                <TableToolbar table={table} tableId={id} enableExport={!!!options?.disableExport} />
                 <PaginationControls id={id} table={table} />
             </div>
             {enableRowSelect && (
@@ -253,14 +261,14 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection,
                     />
                 </div>
             )}
-            {table.getAllColumns().some(x => x.columnDef.enableColumnFilter) && (
+            {table.getAllColumns().some((x) => x.columnDef.enableColumnFilter) && (
                 <ColumnFilterControls
-                    filterableColumns={table.getAllColumns().filter(x => x.columnDef.enableColumnFilter)}
+                    filterableColumns={table.getAllColumns().filter((x) => x.columnDef.enableColumnFilter)}
                     activeFilters={columnFilters}
                     onRemoveAll={() => setColumnFilters([])}
                     onRemoveFilter={(filter) => {
                         setColumnFilters((prev) => prev.filter((f) => f !== filter));
-                        if (onExternalFilterRemoved && externalColumnFilters?.find(x => x.id === filter.id)) {
+                        if (onExternalFilterRemoved && externalColumnFilters?.find((x) => x.id === filter.id)) {
                             onExternalFilterRemoved(filter.id);
                         }
                     }}
