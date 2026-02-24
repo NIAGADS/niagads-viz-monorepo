@@ -42,7 +42,7 @@ export const ColumnFilterControls = ({ filterableColumns, activeFilters, onRemov
                 </div>
                 <div>
                     {areFiltersOpen && filterableColumns.map(column => (
-                        <AdvancedFilter column={column} />
+                        <AdvancedFilter key={column.id} column={column} />
                     ))}
                 </div>
             </Card>

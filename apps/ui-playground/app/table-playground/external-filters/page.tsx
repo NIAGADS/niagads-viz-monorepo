@@ -23,7 +23,16 @@ const TablePlayground = () => {
                 <TextInput value={filterOneValue} onChange={val => setFilterOneValue(val)} />
                 <TextInput value={filterTwoValue} onChange={val => setFilterTwoValue(val)} />
             </Card>
-            <Table id="test-table" columns={TABLE_DEFINITION.columns} data={TABLE_DEFINITION.data} externalColumnFilters={externalFilters} />
+            <Table
+                id="test-table"
+                columns={TABLE_DEFINITION.columns}
+                data={TABLE_DEFINITION.data}
+                externalColumnFilters={externalFilters}
+                onExternalFilterRemoved={(id) => {
+                    if (id === "ref_snp_id") setFilterOneValue("");
+                    if (id === "gene_consequence") setFilterTwoValue("");
+                }}
+            />
         </div>
     );
 };

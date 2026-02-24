@@ -40,10 +40,11 @@ export interface TableProps {
     rowSelection?: RowSelectionState | string[];
     onRowSelectionChange?: (state: RowSelectionState) => void;
     externalColumnFilters?: ColumnFiltersState;
+    onExternalFilterRemoved?: (filterId: string) => void;
 }
 
 // TODO: use table options to initialize the state (e.g., initial sort, initial filter)
-const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection, onRowSelectionChange, externalColumnFilters }) => {
+const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection, onRowSelectionChange, externalColumnFilters, onExternalFilterRemoved }) => {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [globalFilter, setGlobalFilter] = useState("");
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -116,7 +117,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection,
                 columnHelper.accessor((row) => getCellValue(row[col.id as keyof typeof row] as Cell), {
                     id: col.id,
                     header: _get("header", col, toTitleCase(col.id)),
-                    enableColumnFilter: _get("canFilter", col, true) && !options?.disableColumnFilters,
+                    enableColumnFilter: _get("canFilter", col, false) && !options?.disableColumnFilters,
                     enableGlobalFilter: !col.disableGlobalFilter,
                     enableSorting: !col.disableSorting,
                     sortingFn: __resolveSortingFn(col) as SortingFnOption<TableRow>,
@@ -257,7 +258,12 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection,
                     filterableColumns={table.getAllColumns().filter(x => x.columnDef.enableColumnFilter)}
                     activeFilters={columnFilters}
                     onRemoveAll={() => setColumnFilters([])}
-                    onRemoveFilter={(filter) => setColumnFilters((prev) => prev.filter((f) => f !== filter))}
+                    onRemoveFilter={(filter) => {
+                        setColumnFilters((prev) => prev.filter((f) => f !== filter));
+                        if (onExternalFilterRemoved && externalColumnFilters?.find(x => x.id === filter.id)) {
+                            onExternalFilterRemoved(filter.id);
+                        }
+                    }}
                 />
             )}
             <div className={styles["table-container"]}>

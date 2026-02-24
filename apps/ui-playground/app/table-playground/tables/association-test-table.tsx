@@ -16,16 +16,15 @@ export const TABLE_DEFINITION: Table = {
         ],
     },
     columns: [
-        { id: "relative_position", header: "Relative Position" },
+        { id: "relative_position", canFilter: true, header: "Relative Position" },
         {
             id: "variant_link",
             type: "link",
             header: "Variant",
-            canFilter: false,
             required: true,
         },
         { id: "pvalue", header: "p-value", type: "float", required: true },
-        { id: "allele", header: "Test Allele", canFilter: false },
+        { id: "allele", header: "Test Allele" },
         { id: "track_name_link", header: "Track", type: "link", required: true },
         { id: "track_description", header: "Track Description" },
         {
