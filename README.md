@@ -6,7 +6,12 @@ This project **will** contain React component libraries, JavaScript visualizatio
 
 ## Documentation
 
-See project [storybook](https://niagads.github.io/niagads-viz-monorepo/) for documentation and usage examples.
+See project [storybook](https://niagads.github.io/niagads-viz-monorepo/) for UI library documentation and usage examples.
+See indivdual application READMEs for deployment instructions.
+
+## Requirements
+
+- Node 24 / we recommend using [nvm](https://github.com/nvm-sh/nvm) to manage installed `nvm` versions as this will likely change.
 
 ## Packages
 

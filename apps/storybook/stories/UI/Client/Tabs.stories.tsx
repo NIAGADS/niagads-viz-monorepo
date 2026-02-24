@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { TabHeader, TabBody, Tabs, Tab } from "@niagads/ui/client";
 
 //@ts-nocheck

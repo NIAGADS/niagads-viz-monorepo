@@ -1,5 +1,5 @@
 import { CheckCircle, Info, XCircle } from "lucide-react";
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/nextjs-vite";
 
 import { Badge } from "@niagads/ui";
 import React from "react";
