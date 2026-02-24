@@ -1,3 +1,4 @@
 import BarChart from "./BarChart";
+import Histogram from "./Histogram";
 
-export { BarChart };
+export { BarChart, Histogram };
