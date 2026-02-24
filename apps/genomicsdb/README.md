@@ -52,6 +52,7 @@ To link hot reloads to the `packages`, first make sure you are in the project (m
 ```bash
 npm run genomicsdb
 ```
+
 There is troubleshooting information for `nx` in the mono-repo README.
 
 ## Docker Deployment
@@ -64,7 +65,7 @@ There is troubleshooting information for `nx` in the mono-repo README.
 
 For now: the `docker-compose.yaml`, `genomicsdb.Dockerfile`, and `genomicsdb.docker.env.sample` have been **moved to the root monorepo directory**, so that the Docker container can be deployed despite the broken build
 
-* rename `genomicsdb.docker.env.sample`  to `.env` and follow the instructions as in the [Environment Section](#environment).
+- rename `genomicsdb.docker.env.sample`  to `.env` and follow the instructions as in the [Environment Section](#environment).
 
 ### Environment
 
@@ -79,7 +80,6 @@ and edit as necessary for your envronment:
 - **KEYDB_DATA_DIR**: cache data is not stored in the docker container, please provide the full path to the data storage location on the host machine
 
 > Create the parent directories for the KEYDB_DATA_DIR only; Docker will create the target directory.  i.e., if your KEYDB_DATA_DIR is `/data/cache/keydb`, create the `/data/cache` parent directories only.
-
 
 ### Deployment
 

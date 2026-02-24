@@ -1,6 +1,6 @@
 {
     "name": "@niagads/table",
-    "version": "0.0.1",
+    "version": "0.1.1",
     "scripts": {
         "build": "rollup -c"
     },
@@ -19,22 +19,19 @@
         "@types/react": "^18.2.0",
         "@types/react-dom": "^18.2.0",
         "autoprefixer": "^10.4.17",
-        "css-loader": "^6.8.1",
         "postcss": "^8.4.35",
         "postcss-import": "^16.1.1",
-        "postcss-loader": "^8.1.0",
         "rollup": "^4.28.1",
         "rollup-plugin-delete": "^2.1.0",
         "rollup-plugin-dts": "^6.1.1",
         "rollup-plugin-peer-deps-external": "^2.2.4",
         "rollup-plugin-postcss": "^4.0.2",
         "ts-interface-builder": "^0.3.3",
-        "ts-loader": "^9.4.4",
-        "typescript": "^4.9.5"
+        "typescript": "^5"
     },
     "dependencies": {
-        "@niagads/common": "^0.0.1",
-        "@niagads/ui": "^0.0.1",
+        "@niagads/common": "^0.1.1",
+        "@niagads/ui": "^0.1.1",
         "@tanstack/react-table": "^8.11.8",
         "export-from-json": "github:NIAGADS/export-from-json#niagads",
         "lodash.countby": "^4.6.0",
@@ -45,7 +42,8 @@
         "lucide-react": "^0.513.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "style-inject": "^0.3.0"
+        "style-inject": "^0.3.0",
+        "tslib": "^2"
     },
     "files": [
         "dist"
@@ -59,5 +57,6 @@
             "types": "./dist/index.d.ts"
         },
         "./package.json": "./package.json"
-    }
+    },
+    "gitHead": "5962101eb3af53695309d0340fe9b9c8e0bcaef4"
 }

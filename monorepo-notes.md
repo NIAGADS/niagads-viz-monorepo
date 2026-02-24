@@ -12,6 +12,10 @@
 - lodash.get, lodash.merge, lodash.noop, lodash.find (& @types for each)
 - igv: `https://github.com/NIAGADS/igv.js.git#NIAGADS`
 
+#### TODO - igv-microservice
+
+- broke when IGV Browser implemented moved to @niagads/igv -- needs to be revisited, but is not essential
+
 ### Gosling
 
 - react 18 (unsure about 19 support)

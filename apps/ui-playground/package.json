@@ -1,0 +1,25 @@
+{
+    "name": "ui-playground",
+    "version": "0.1.1",
+    "private": true,
+    "scripts": {
+        "ui-playground": "next dev"
+    },
+    "dependencies": {
+        "@niagads/charts": "^0.1.1",
+        "@niagads/common": "^0.1.1",
+        "@niagads/table": "^0.1.1",
+        "@niagads/ui": "^0.1.1",
+        "next": "16.1.6",
+        "react": "19.2.3",
+        "react-dom": "19.2.3"
+    },
+    "devDependencies": {
+        "@types/node": "^20",
+        "@types/react": "^19",
+        "@types/react-dom": "^19",
+        "eslint": "^9",
+        "eslint-config-next": "16.1.6",
+        "typescript": "^5"
+    }
+}

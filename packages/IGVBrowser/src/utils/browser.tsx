@@ -1,83 +1,144 @@
-import { TrackBaseOptions, IGVTrackOptions, ROIFeature, ROISet } from "../types/tracks";
-import { ReferenceFrame } from "../types/browser";
-import { decodeBedXY } from "../decoders/bedDecoder";
-import { resolveTrackReader } from "./tracks";
-import { DEFAULT_FLANK } from "../common/_constants";
+import { ALWAYS_ON_TRACKS } from "../config/_constants";
+import { IGVBrowserTrack } from "../types/data_models";
+import { getViewTrackIdentifier } from "./views";
+import { resolveServiceTrackReader } from "./track_config";
 
-const ALWAYS_ON_TRACKS = ["ideogram", "ruler", "sequence", "ENSEMBL_GENE"];
+/**
+ * Returns the list of loaded track IDs in the browser, excluding always-on tracks.
+ * @param browser IGV browser instance.
+ * @param alwaysOnTracks Array of track IDs that should always be excluded (default: ALWAYS_ON_TRACKS).
+ * @returns Array of loaded track IDs (excluding always-on tracks).
+ */
+export const getLoadedTracks = (browser: any, alwaysOnTracks: string[] = ALWAYS_ON_TRACKS): string[] =>
+    (browser?.trackViews ?? [])
+        .map((view: any) => getViewTrackIdentifier(view))
+        .filter((track: string) => !alwaysOnTracks.includes(track));
 
-// FIXME: do all of these functions need to be exported? which are internal
+/**
+ * Checks if a specific track is loaded in the browser.
+ * @param browser IGV browser instance.
+ * @param config Track configuration object.
+ * @returns True if the track is loaded, false otherwise.
+ */
+export const trackIsLoaded = (browser: any, config: IGVBrowserTrack) =>
+    getLoadedTracks(browser, []).includes(config.id);
 
-// functions for maninpulating IGV browser object
-export const loadTrack = async (config: any, browser: any) => {
-    await browser.loadTrack(config);
+/**
+ * Removes a track from the browser by its ID. Finds by ID to avoid duplicate names.
+ *  from https://github.com/igvteam/igv.js/blob/0dfb1f7b02d9660ff1ef0169899c4711496158e8/js/browser.js#L1104
+ * @param browser IGV browser instance.
+ * @param trackId ID of the track to remove.
+ */
+export const removeTrackById = (browser: any, trackId: string) => {
+    const trackViews = browser?.trackViews ?? [];
+    const trackView = trackViews.filter((view: any) => getViewTrackIdentifier(view) === trackId);
+    browser.removeTrack(trackView[0].track);
 };
 
-export const loadTracks = (tracks: TrackBaseOptions[], browser: any) => {
-    for (const track of tracks as IGVTrackOptions[]) {
-        if (track.type.includes("_service")) {
-            track.reader = resolveTrackReader(track.type, {
+/**
+ * Loads a single track into the IGV browser, handling special formats and service types.
+ * Dynamically imports decoders/readers as needed based on track properties.
+ * @param browser IGV browser instance.
+ * @param track Track configuration object to load.
+ */
+export const loadTrack = async (browser: any, track: IGVBrowserTrack) => {
+    if ("format" in track) {
+        // does it match bedX+Y?
+        if (track.format.match("^bed\\d{1,2}\\+\\d+$") != null) {
+            const { default: decodeBedXY } = await import("../decoders/bedDecoder");
+            track.decode = decodeBedXY;
+        }
+    }
+    if (track.url.includes("$CHR")) {
+        const { default: ShardedBedReader } = await import("../readers/ShardedBedReader");
+        track.reader = new ShardedBedReader(track, browser.genome);
+    }
+    if (track.type.includes("_service")) {
+        track.reader = await resolveServiceTrackReader(
+            {
                 endpoint: track.url,
                 track: track.id,
-            });
-        }
-        if ("format" in track) {
-            if (track.format.match("^bed\\d{1,2}\\+\\d+$") != null) {
-                // does it match bedX+Y?
-                track.decode = decodeBedXY;
-            }
-        }
-        // load
-        browser.loadTrack(track);
+            },
+            track.type
+        );
     }
+
+    await browser.loadTrack(track);
 };
 
-export const cleanTracks = (tracks: TrackBaseOptions[]): TrackBaseOptions[] => {
-    // FIXME: filter once, put all conditions in one filter
-    //remove sequence
-    tracks = tracks.filter((track) => track.type !== "sequence");
+/**
+ * Loads multiple tracks into the IGV browser asynchronously.
+ * @param browser IGV browser instance.
+ * @param tracks Array of track configuration objects to load.
+ */
+export const loadTracks = async (browser: any, tracks: IGVBrowserTrack[]) => {
+    for await (const _ of tracks.map((t) => loadTrack(browser, t)));
+};
 
-    //remove refereence object
-    tracks = tracks.filter((track) => track.id !== "reference");
-
-    //remove any functions
-    for (const track of tracks) {
-        for (const prop in track) {
-            if (typeof prop === "function") delete track[prop];
-        }
+/**
+ * Loads selected tracks into the IGV browser that are not already loaded.
+ *
+ * @param browser - IGV browser instance.
+ * @param selectedTrackConfigs - Array of IGVBrowserTrack objects to be loaded.
+ * @param loadedTrackIds - Array of track IDs currently loaded in the browser.
+ * @returns Promise resolving to an array of newly added track IDs.
+ */
+export async function handleAddTracksToBrowser(
+    browser: any,
+    selectedTrackConfigs: IGVBrowserTrack[],
+    loadedTrackIds: string[]
+): Promise<string[]> {
+    const tracksToAdd = selectedTrackConfigs.filter((track: IGVBrowserTrack) => !loadedTrackIds.includes(track.id));
+    if (tracksToAdd.length > 0) {
+        await loadTracks(browser, tracksToAdd);
+        return tracksToAdd.map((track) => track.id);
     }
-    return tracks;
-};
+    return [];
+}
 
-export const createLocusString = (referenceFrameList: ReferenceFrame[]): string => {
-    const frame = referenceFrameList[0];
-    return `${frame.chr}:${frame.start}-${frame.end}`;
-};
+/**
+ * Removes tracks from the IGV browser that are no longer selected.
+ *
+ * @param browser - IGV browser instance.
+ * @param selectedTrackConfigs - Array of IGVBrowserTrack objects that should remain loaded.
+ * @param loadedTrackIds - Array of track IDs currently loaded in the browser.
+ * @returns Promise resolving to an array of removed track IDs.
+ */
+export async function handleRemoveTracksFromBrowser(
+    browser: any,
+    selectedTrackConfigs: IGVBrowserTrack[],
+    loadedTrackIds: string[]
+): Promise<string[]> {
+    const tracksToRemove = loadedTrackIds.filter(
+        (id: string) => !selectedTrackConfigs.some((track) => track.id === id)
+    );
 
-export const addDefaultFlank = (locus: string) => {
-    const [chr, range] = locus.split(":");
-    const [start, end] = range.split("-");
+    for (const trackId of tracksToRemove) {
+        removeTrackById(browser, trackId);
+    }
 
-    const numStart = parseInt(start) - DEFAULT_FLANK;
-    const numEnd = parseInt(end) + DEFAULT_FLANK;
+    return tracksToRemove;
+}
 
-    return `${chr}:${numStart}-${numEnd}`;
-};
-
-export const createROIFromLocusRange = (roiString: string): ROISet[] => {
-    const [chr, range] = roiString.split(":");
-    const [start, end] = range.split("-");
-
-    const feature: ROIFeature = {
-        chr: chr,
-        start: parseFloat(start),
-        end: parseFloat(end),
-    };
-
-    return [
-        {
-            features: [feature],
-            isUserDefined: true,
-        },
-    ];
-};
+/**
+ * Adds or removes tracks in the IGV browser based on the action provided.
+ *
+ * @param browser - IGV browser instance.
+ * @param action - Either "ADD" or "REMOVE" to specify the operation.
+ * @param selectedTrackConfigs - Array of IGVBrowserTrack objects representing the desired tracks to be loaded.
+ * @returns Promise resolving to an array of track IDs that were added or removed.
+ *
+ * @example
+ * // In a React component effect:
+ * useEffect(() => {
+ *   if (!loading && browser) {
+ *     selectedTrackConfigs = findTrackConfigs(trackConfig, selectedTracks)
+ *     handleUpdateBrowserTracks(browser, action, selectedTrackConfigs)
+ *   }
+ * }, [action, selectedTracks, loading, browser]);
+ */
+export async function handleUpdateBrowserTracks(browser: any, selectedTrackConfigs: IGVBrowserTrack[]) {
+    const loadedTrackIds = getLoadedTracks(browser, browser.config.alwaysOnTracks);
+    await handleAddTracksToBrowser(browser, selectedTrackConfigs, loadedTrackIds);
+    await handleRemoveTracksFromBrowser(browser, selectedTrackConfigs, loadedTrackIds);
+}

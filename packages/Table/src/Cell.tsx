@@ -245,7 +245,7 @@ export const resolveCell = (
     Object.assign(resolvedCell as any, { type: resolvedCellType });
 
     // assign column formatting based on cell type
-    const fOptions = _get("format", column);
+    const fOptions = column.format;
     if (fOptions) {
         if (resolvedCellType == "boolean") {
             const value = _get("value", resolvedCell);
@@ -269,6 +269,13 @@ export const resolveCell = (
             nullValue: _get("nullValue", fOptions),
             naValue: _get("naValue", fOptions, DEFAULT_NA_VALUE),
         });
+
+        // assign color information if the user has supplied a color map
+        if (fOptions.colorMap) {
+            Object.assign(resolvedCell as any, {
+                color: fOptions.colorMap[`${_get("value", resolvedCell)}`] || "gray",
+            });
+        }
     }
 
     Object.assign(resolvedCell as any, { columnId: column.id, rowId: rowId });
