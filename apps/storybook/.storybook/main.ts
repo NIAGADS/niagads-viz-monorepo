@@ -1,71 +1,25 @@
-import type { StorybookConfig } from "@storybook/nextjs";
+import type { StorybookConfig } from "@storybook/nextjs-vite";
+// This file has been automatically migrated to valid ESM format by Storybook.
+import { createRequire } from "node:module";
+
+const require = createRequire(import.meta.url);
 
 const config: StorybookConfig = {
-    stories: ["../stories/**/*.mdx", "../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
+    stories: ["../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
+
     core: {
         disableTelemetry: true, // Disables telemetry (tracking / usage stats)
     },
+
     typescript: {
         reactDocgen: "react-docgen-typescript",
     },
-    addons: [
-        "@storybook/addon-links",
-        "@storybook/addon-essentials",
-        "@storybook/addon-interactions",
-        {
-            name: "@storybook/addon-styling-webpack",
-            options: {
-                rules: [
-                    {
-                        test: /\.module\.css$/,
-                        sideEffects: true,
-                        use: [
-                            require.resolve("style-loader"),
-                            {
-                                loader: require.resolve("css-loader"),
-                                options: {
-                                    importLoaders: 1,
-                                    modules: true,
-                                },
-                            },
-                            {
-                                loader: require.resolve("postcss-loader"),
-                                options: {
-                                    implementation: require.resolve("postcss"),
-                                },
-                            },
-                        ],
-                    },
-                    {
-                        test: /\.css$/,
-                        exclude: /\.module\.css$/,
-                        sideEffects: true,
-                        use: [
-                            require.resolve("style-loader"),
-                            {
-                                loader: require.resolve("css-loader"),
-                                options: {
-                                    importLoaders: 1,
-                                },
-                            },
-                            {
-                                loader: require.resolve("postcss-loader"),
-                                options: {
-                                    implementation: require.resolve("postcss"),
-                                },
-                            },
-                        ],
-                    },
-                ],
-            },
-        },
-    ],
+
+    addons: ["@storybook/addon-links", "@storybook/addon-docs"],
+
     framework: {
-        name: "@storybook/nextjs",
+        name: "@storybook/nextjs-vite",
         options: {},
-    },
-    docs: {
-        autodocs: "tag",
     },
 };
 export default config;
