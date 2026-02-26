@@ -1,11 +1,11 @@
+import type { StorybookConfig } from "@storybook/nextjs-vite";
 // This file has been automatically migrated to valid ESM format by Storybook.
 import { createRequire } from "node:module";
-import type { StorybookConfig } from "@storybook/nextjs-vite";
 
 const require = createRequire(import.meta.url);
 
 const config: StorybookConfig = {
-    stories: ["../stories/**/*.mdx", "../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
+    stories: ["../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
 
     core: {
         disableTelemetry: true, // Disables telemetry (tracking / usage stats)
