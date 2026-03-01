@@ -1,7 +1,8 @@
-import { ButtonGroup, TextInput } from "@niagads/ui";
+import { Button, ButtonGroup, TextInput, InlineIcon } from "@niagads/ui";
 import React, { useCallback, useMemo } from "react";
 import { Table as ReactTable, Column as ReactTableColumn } from "@tanstack/react-table";
 import { TableExportControls, exportTable } from "./TableExportControls";
+import { ListFilterPlus } from "lucide-react";
 
 import { ColumnControls } from "./ColumnControls";
 import { TableRow } from "../TableProperties";

@@ -1,7 +1,7 @@
 "use client";
 
 import Table from "@niagads/table";
-import { TABLE_DEFINITION } from "./tables/association-test-table";
+import { TABLE_DEFINITION } from "../tables/association-test-table";
 
 const TablePlayground = () => {
     return (

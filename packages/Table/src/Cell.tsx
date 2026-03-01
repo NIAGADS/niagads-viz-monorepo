@@ -121,7 +121,7 @@ const __resolveValue = (props: Cell): BasicType => {
 
 const __resolveBooleanValue = (props: BooleanCell): BasicType => {
     const displayText = _get("displayText", props);
-    return displayText ? displayText : __resolveValue(props);
+    return displayText ? displayText : `${__resolveValue(props)}`;
 };
 
 const __resolveFloatValue = (props: FloatCell): BasicType => {

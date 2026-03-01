@@ -41,7 +41,7 @@ export const ActionMenu = ({
             <Button
                 id={buttonId}
                 color={buttonColor}
-                className={styles.toggle}
+                // className={styles.toggle} removing this style to keep all buttons consistent -- can add back if this was intentional
                 onClick={() => setOpen((o) => !o)}
                 aria-expanded={open}
             >
