@@ -1,4 +1,3 @@
-import Link from "next/link";
 import React from "react";
 import styles from "./styles/footer.module.css";
 
@@ -27,9 +26,9 @@ export const Footer = ({ siteName, links }: FooterProps) => {
                 <div className={styles["footer-right"]}>
                     <nav className={styles["footer-nav"]}>
                         {links.map((link, i) => (
-                            <Link key={i} href={link.url} className={styles["footer-link"]}>
+                            <a key={i} href={link.url} className={styles["footer-link"]}>
                                 {link.display}
-                            </Link>
+                            </a>
                         ))}
                     </nav>
                 </div>

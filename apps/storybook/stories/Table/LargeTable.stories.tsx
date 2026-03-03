@@ -1,5 +1,5 @@
 //@ts-nocheck
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
 import Table from "@niagads/table";
 import { TABLE_DEFINTION as table } from "../../examples/tables/table_large_numeric_values";
