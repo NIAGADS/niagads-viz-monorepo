@@ -25,7 +25,7 @@ const PieChart = ({ id, data, onClick }: PieChartProps) => {
             ...row,
             color: `hsl(${Math.floor((row.value / total) * gradient)}, 70%, 50%)`,
         }));
-    }, [data]) 
+    }, [data]);
 
     return (
         <div className={styles["chart-wrapper"]}>
@@ -35,7 +35,7 @@ const PieChart = ({ id, data, onClick }: PieChartProps) => {
                 margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
                 padAngle={0.5}
                 cornerRadius={2}
-                colors={{ datum: 'data.color' }}
+                colors={{ datum: "data.color" }}
                 activeOuterRadiusOffset={8}
                 arcLinkLabelsSkipAngle={10}
                 arcLinkLabelsTextColor="#333333"
