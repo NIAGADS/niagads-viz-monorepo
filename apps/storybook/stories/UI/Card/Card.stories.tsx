@@ -1,5 +1,5 @@
 import { Card, CardBody, CardHeader, FeatureCard } from "@niagads/ui";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
 import { Default as CardBodyStory } from "./CardBody.stories";
 import { Default as CardHeaderStory } from "./CardHeader.stories";
