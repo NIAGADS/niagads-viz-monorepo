@@ -53,7 +53,7 @@ const PieChart = ({ id, data, onClick }: PieChartProps) => {
                         itemHeight: 16,
                     },
                 ]}
-                onClick={(row) => onClick && onClick(row.data.id)}
+                onClick={(dataRow) => onClick && onClick(`${dataRow.id}`)}
             />
         </div>
     );
