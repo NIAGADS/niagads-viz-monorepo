@@ -138,7 +138,11 @@ const Table: React.FC<TableProps> = ({
                     meta: {
                         description: _get("description", col),
                         type: _get("type", col),
-                        filterType: _get("filterType", col),
+                        filterType: col.canFilter
+                            ? col.filterType === "external"
+                                ? "external"
+                                : "internal"
+                            : undefined,
                     },
                     cell: (props) => renderCell(props.cell.row.original[col.id] as Cell),
                 })

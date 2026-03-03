@@ -37,7 +37,12 @@ export const TABLE_DEFINITION: Table = {
             disableGlobalFilter: true,
             canFilter: true,
         },
-        { id: "ref_snp_id", header: "RefSNP ID" },
+        {
+            id: "ref_snp_id",
+            header: "RefSNP ID",
+            canFilter: true,
+            filterType: "external",
+        },
         {
             id: "gene_impact",
             header: "Impact",
