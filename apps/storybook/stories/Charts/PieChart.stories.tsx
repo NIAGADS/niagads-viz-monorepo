@@ -51,5 +51,6 @@ export const Default: Story = {
                 value: 8,
             },
         ],
+        onClick: (key) => console.log(key),
     },
 };
