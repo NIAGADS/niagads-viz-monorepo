@@ -1,7 +1,8 @@
 import { CellType, GenericCell } from "./Cell";
 
 import { BasicType } from "@niagads/common";
-import { RowData } from "@tanstack/react-table";
+import { ColumnFiltersState, RowData } from "@tanstack/react-table";
+import { ColumnFilterType } from "./Column";
 
 export interface RowSelectColumnConfig {
     header: string;
@@ -41,6 +42,7 @@ export type TableData = TableRow[];
 declare module "@tanstack/react-table" {
     interface ColumnMeta<TData extends RowData, TValue> {
         type?: CellType;
+        filterType?: ColumnFilterType;
         description?: string;
     }
 }
