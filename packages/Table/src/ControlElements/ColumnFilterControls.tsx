@@ -30,7 +30,7 @@ export const ColumnFilterControls = ({
                     {activeFilters.map((filter) => (
                         <FilterChip
                             key={`filter-chip-${filter.id}`}
-                            label={filter.id}
+                            label={filterableColumns.find((x) => x.id === filter.id)?.columnDef.header as string}
                             value={`${filter.value}`}
                             onRemove={() => onRemoveFilter(filter)}
                         />
@@ -47,7 +47,12 @@ export const ColumnFilterControls = ({
                 </div>
                 <div>
                     {areFiltersOpen &&
-                        filterableColumns.map((column) => <AdvancedFilter key={column.id} column={column} />)}
+                        filterableColumns.map(
+                            (column) =>
+                                column.columnDef.meta?.filterType === "internal" && (
+                                    <AdvancedFilter key={column.id} column={column} />
+                                )
+                        )}
                 </div>
             </Card>
         </div>
