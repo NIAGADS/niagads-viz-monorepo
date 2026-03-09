@@ -226,18 +226,33 @@ npx lerna publish <initial_version>
 
 #### Subsequent releases
 
-- Create and publish (push) a temporary branch for the release
+For subsequent releases, you can run a script to handle all steps required for building and releasing packages.
+
+```bash
+./scripts/release.sh
+```
+
+Alternatively, you can do the release manually by running each command in that script.
+
+Below is an overview of each step in the script:
+
+- Create and publish (push) a temporary git branch for the release
+
+```bash
+git checkout -b release/<mm-dd-yyyy>
+git push --set-upstream origin release/<mm-dd-yyyy>
+```
+
+- Clean up all old `dist` folders and rebuild the packages using our npm script
+
+```bash
+npm run build-fresh
+```
 
 - Increment the versions using lerna
 
 ```bash
-npx lerna version
-```
-
-- Rebuild the packages fresh using lerna
-
-```bash
-npx lerna run build-fresh
+npx lerna version --no-private
 ```
 
 - Publish the packages
