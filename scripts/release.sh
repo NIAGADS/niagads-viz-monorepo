@@ -2,10 +2,13 @@
 # script for automatically running every step required to release packages to npm
 # see the README for more information
 
-BRANCH_NAME=$(echo "release/$(date '+%m-%d-%Y')")
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+RELEASE_BRANCH=$(echo "release/$(date '+%m-%d-%Y')")
 
-git checkout -b $BRANCH_NAME
-git push --set-upstream origin $BRANCH_NAME
+if [[ "$CURRENT_BRANCH" != "$RELEASE_BRANCH" ]]; then
+    git checkout -b $BRANCH_NAME
+    git push --set-upstream origin $BRANCH_NAME
+fi
 
 npm run build-fresh
 
