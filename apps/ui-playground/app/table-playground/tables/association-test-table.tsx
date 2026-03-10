@@ -40,8 +40,6 @@ export const TABLE_DEFINITION: Table = {
         {
             id: "ref_snp_id",
             header: "RefSNP ID",
-            canFilter: true,
-            filterType: "external",
         },
         {
             id: "gene_impact",
@@ -58,7 +56,7 @@ export const TABLE_DEFINITION: Table = {
                 "Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline",
             canFilter: true,
         },
-        { id: "population" },
+        { id: "population", canFilter: true, filterType: "external" },
         { id: "diagnosis" },
         { id: "neuropathology", required: true },
         { id: "tissue" },

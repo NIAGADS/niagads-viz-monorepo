@@ -3,17 +3,38 @@
 import Table from "@niagads/table";
 import { TABLE_DEFINITION } from "../tables/association-test-table";
 import { Card, TextInput } from "@niagads/ui";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { PieChart, PieChartDataRow } from "@niagads/charts";
 
 const TablePlayground = () => {
     const [externalFilters, setExternalFilters] = useState<any[]>([]);
     const [filterOneValue, setFilterOneValue] = useState("");
     const [filterTwoValue, setFilterTwoValue] = useState("");
 
+    const populationData = useMemo(() => {
+        return TABLE_DEFINITION.data.reduce((prev, curr) => {
+            const pop = curr.population?.valueOf() as string;
+            const i = prev.findIndex((x) => x.id === pop);
+            if (i !== -1) {
+                prev[i].value += 1;
+                return prev;
+            }
+
+            return [
+                ...prev,
+                {
+                    id: pop,
+                    label: pop,
+                    value: 1,
+                },
+            ];
+        }, [] as PieChartDataRow[]);
+    }, [TABLE_DEFINITION]);
+
     useEffect(() => {
         const filters = [];
         if (filterOneValue) {
-            filters.push({ id: "ref_snp_id", value: filterOneValue });
+            filters.push({ id: "population", value: filterOneValue });
         }
         if (filterTwoValue) {
             filters.push({ id: "gene_consequence", value: filterTwoValue });
@@ -24,7 +45,7 @@ const TablePlayground = () => {
     return (
         <div>
             <Card variant="full">
-                <TextInput value={filterOneValue} onChange={(val) => setFilterOneValue(val)} />
+                <PieChart id="pop-chart-test" data={populationData} onClick={(val) => setFilterOneValue(val)} />
                 <TextInput value={filterTwoValue} onChange={(val) => setFilterTwoValue(val)} />
             </Card>
             <Table
@@ -33,7 +54,7 @@ const TablePlayground = () => {
                 data={TABLE_DEFINITION.data}
                 externalColumnFilters={externalFilters}
                 onExternalFilterRemoved={(id) => {
-                    if (id === "ref_snp_id") setFilterOneValue("");
+                    if (id === "population") setFilterOneValue("");
                     if (id === "gene_consequence") setFilterTwoValue("");
                 }}
             />
