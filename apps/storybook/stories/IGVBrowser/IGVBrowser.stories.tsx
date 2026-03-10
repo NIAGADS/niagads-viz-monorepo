@@ -57,6 +57,7 @@ export const WithNavigation: StoryObj<typeof IGVBrowser> = {
         onLocusChanged: noop,
     },
     render: (args) => <IGVBrowser {...args} />,
+    tags: ["!dev"], // hide for now
 };
 
 export const WithoutNavigation: StoryObj<typeof IGVBrowser> = {
@@ -70,4 +71,5 @@ export const WithoutNavigation: StoryObj<typeof IGVBrowser> = {
         onLocusChanged: noop,
     },
     render: (args) => <IGVBrowser {...args} />,
+    tags: ["!dev"], // hide for now
 };
