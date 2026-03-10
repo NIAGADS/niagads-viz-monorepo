@@ -1,5 +1,7 @@
-import React, { useMemo } from "react";
-import { BarTooltipProps, ResponsiveBar } from "@nivo/bar";
+import * as d3 from "d3";
+
+import React, { useEffect, useMemo, useRef, useState } from "react";
+
 import { AxisOptions } from "./types";
 
 interface HistogramProps {
@@ -13,11 +15,11 @@ interface HistogramProps {
 
 interface BinDatum {
     bin: string;
-    /** Rendered bar height — clamped to yAxis.cap if set */
+    /** Rendered bar height — clamped to cap if set */
     count: number;
     /** Original count before capping */
     actualCount: number;
-    /** 1 if this bar was capped, 0 otherwise (boolean encoded as number for BarDatum compat) */
+    /** 1 if this bar was capped, 0 otherwise (boolean encoded as number for compatibility) */
     capped: number;
     [key: string]: string | number;
 }
@@ -50,24 +52,10 @@ const computeBins = (data: number[], numBins: number, min: number, max: number, 
     });
 };
 
-const HistogramTooltip = ({ data }: BarTooltipProps<BinDatum> & { cap?: number }) => {
-    const binData = data.data as unknown as BinDatum;
-    return (
-        <div
-            style={{
-                background: "white",
-                border: "1px solid #ccc",
-                borderRadius: 4,
-                padding: "6px 10px",
-                fontSize: 13,
-            }}
-        >
-            <br />n = <strong>{binData.actualCount}</strong>
-        </div>
-    );
-};
-
 const Histogram = ({ data, numBins = 10, cap, xAxis, yAxis }: HistogramProps) => {
+    const svgRef = useRef<SVGSVGElement>(null);
+    const [hoveredBin, setHoveredBin] = useState<number | null>(null);
+
     const filteredData = useMemo(() => {
         const bounded = data.filter((v) => Number.isFinite(v));
         const domainMin = xAxis?.min ?? Math.min(...bounded);
@@ -83,40 +71,141 @@ const Histogram = ({ data, numBins = 10, cap, xAxis, yAxis }: HistogramProps) =>
         [filteredData, numBins, domainMin, domainMax, cap]
     );
 
-    return (
-        <ResponsiveBar
-            data={binData}
-            keys={["count"]}
-            indexBy="bin"
-            margin={{ top: 40, right: 40, bottom: 80, left: 80 }}
-            padding={0.05}
-            enableGridY={true}
-            enableGridX={false}
-            // Show a label only on capped bars: "n=actualCount"
-            enableLabel={true}
-            label={(datum) => ((datum.data as BinDatum).capped ? `> ${cap}` : "")}
-            labelSkipWidth={0}
-            labelSkipHeight={0}
-            tooltip={(props) => <HistogramTooltip {...(props as BarTooltipProps<BinDatum>)} />}
-            axisBottom={{
-                legend: xAxis?.label ?? "",
-                legendOffset: 56,
-                legendPosition: "middle",
-                tickRotation: -35,
-                truncateTickAt: 20,
-            }}
-            axisLeft={{
-                legend: yAxis?.label ?? "Count",
-                legendOffset: -60,
-                legendPosition: "middle",
-            }}
-            valueScale={{
-                type: "linear",
-                ...(yAxis?.min !== undefined ? { min: yAxis.min } : { min: 0 }),
-                ...(cap !== undefined ? { max: cap } : yAxis?.max !== undefined ? { max: yAxis.max } : {}),
-            }}
-        />
-    );
+    useEffect(() => {
+        if (!svgRef.current || binData.length === 0) return;
+
+        const margin = { top: 40, right: 40, bottom: 80, left: 80 };
+        const width = 960 - margin.left - margin.right;
+        const height = 500 - margin.top - margin.bottom;
+
+        // Clear previous content
+        d3.select(svgRef.current).selectAll("*").remove();
+
+        const svg = d3
+            .select(svgRef.current)
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        // X scale
+        const xScale = d3
+            .scaleBand<string>()
+            .domain(binData.map((d) => d.bin))
+            .range([0, width])
+            .padding(0.05);
+
+        // Y scale
+        const yMax = cap ?? Math.max(...binData.map((d) => d.count));
+        const yMin = yAxis?.min ?? 0;
+        const yScaleMax = yAxis?.max ?? yMax;
+
+        const yScale = d3.scaleLinear().domain([yMin, yScaleMax]).range([height, 0]);
+
+        // Draw grid lines
+        svg.append("g")
+            .attr("class", "grid")
+            .attr("opacity", 0.1)
+            .call(
+                d3
+                    .axisLeft(yScale)
+                    .tickSize(-width)
+                    .tickFormat(() => "")
+            );
+
+        // Draw bars
+        svg.selectAll(".bar")
+            .data(binData)
+            .enter()
+            .append("rect")
+            .attr("class", "bar")
+            .attr("x", (d: any) => xScale((d as BinDatum).bin)!)
+            .attr("y", (d: any) => yScale((d as BinDatum).count))
+            .attr("width", xScale.bandwidth())
+            .attr("height", (d: any) => height - yScale((d as BinDatum).count))
+            .attr("fill", (d: any, i: number) => (i === hoveredBin ? "#4a90e2" : "#5e7fb8"))
+            .attr("opacity", 0.8)
+            .on("mouseenter", (event: any, d: any) => {
+                const binIndex = binData.indexOf(d as BinDatum);
+                setHoveredBin(binIndex);
+            })
+            .on("mouseleave", () => {
+                setHoveredBin(null);
+            });
+
+        // Draw labels on capped bars
+        svg.selectAll(".bar-label")
+            .data(binData)
+            .enter()
+            .append("text")
+            .attr("class", "bar-label")
+            .attr("x", (d: any) => xScale((d as BinDatum).bin)! + xScale.bandwidth() / 2)
+            .attr("y", (d: any) => yScale((d as BinDatum).count) - 5)
+            .attr("text-anchor", "middle")
+            .attr("font-size", 12)
+            .attr("fill", "#333")
+            .text((d: any) => ((d as BinDatum).capped ? `> ${cap}` : ""))
+            .style("pointer-events", "none");
+
+        // X axis
+        svg.append("g")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(xScale))
+            .append("text")
+            .attr("x", width / 2)
+            .attr("y", 56)
+            .attr("fill", "#000")
+            .attr("text-anchor", "middle")
+            .attr("font-size", 14)
+            .text(xAxis?.label ?? "");
+
+        svg.selectAll(".tick text").attr("transform", "rotate(-35)").attr("text-anchor", "end").attr("font-size", 11);
+
+        // Y axis
+        svg.append("g")
+            .call(d3.axisLeft(yScale))
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - margin.left)
+            .attr("x", 0 - height / 2)
+            .attr("dy", "1em")
+            .attr("fill", "#000")
+            .attr("text-anchor", "middle")
+            .attr("font-size", 14)
+            .text(yAxis?.label ?? "Count");
+
+        // Tooltip
+        const tooltip = d3
+            .select("body")
+            .append("div")
+            .style("position", "absolute")
+            .style("background", "white")
+            .style("border", "1px solid #ccc")
+            .style("border-radius", "4px")
+            .style("padding", "6px 10px")
+            .style("font-size", "13px")
+            .style("pointer-events", "none")
+            .style("opacity", 0);
+
+        svg.selectAll(".bar")
+            .on("mousemove", (event: any, d: any) => {
+                const binData = d as BinDatum;
+                tooltip
+                    .style("opacity", 1)
+                    .html(`n = <strong>${binData.actualCount}</strong>`)
+                    .style("left", event.pageX + 10 + "px")
+                    .style("top", event.pageY - 10 + "px");
+            })
+            .on("mouseleave", () => {
+                tooltip.style("opacity", 0);
+            });
+
+        return () => {
+            tooltip.remove();
+        };
+    }, [binData, cap, hoveredBin, xAxis?.label, yAxis?.label, yAxis?.min, yAxis?.max]);
+
+    return <svg ref={svgRef}></svg>;
 };
 
 export default Histogram;
