@@ -3,13 +3,13 @@ import { ResponsivePie } from "@nivo/pie";
 
 import styles from "./styles/common.module.css";
 
-interface PieChartDataRow {
+export interface PieChartDataRow {
     id: string;
     label: string;
     value: number;
 }
 
-interface PieChartProps {
+export interface PieChartProps {
     id: string;
     data: PieChartDataRow[];
     onClick?: (key: string) => void;

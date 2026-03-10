@@ -10,7 +10,10 @@ export default function TableWrapper({ id, data, columns }: TableProps) {
         });
 
         //const options: TableConfig = { disableColumnFilters: true, defaultColumns: defaultColumns, onTableLoad: };
-        const options: TableConfig = { disableColumnFilters: true, defaultColumns: defaultColumns };
+        const options: TableConfig = {
+            disableColumnFilters: true,
+            defaultColumns: defaultColumns,
+        };
 
         return <Table id={id} data={data} columns={columns} options={options} />;
     }, [id]);

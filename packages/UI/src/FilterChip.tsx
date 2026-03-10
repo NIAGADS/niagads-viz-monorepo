@@ -5,6 +5,7 @@ import styles from "./styles/filterchip.module.css";
 
 export interface FilterChipProps extends StylingProps {
     label: string;
+    value?: string;
     onRemove?: () => void;
     selected?: boolean;
     disabled?: boolean;
@@ -12,6 +13,7 @@ export interface FilterChipProps extends StylingProps {
 
 export const FilterChip = ({
     label,
+    value,
     onRemove,
     selected = false,
     className = "",
@@ -35,6 +37,7 @@ export const FilterChip = ({
                 </button>
             )}
             <span className={styles.label}>{label}</span>
+            {value && <span className={styles.value}>{value}</span>}
         </span>
     );
 };
