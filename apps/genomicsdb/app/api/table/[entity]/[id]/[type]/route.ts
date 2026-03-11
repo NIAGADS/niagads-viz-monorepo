@@ -28,7 +28,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<ro
 }
 
 const buildTableEndpoint = (entity: string, id: string, type: string, queryParams: string) => {
-    const url = `http://localhost:3001/api-proxy/record/${entity}/${id}/${type}${queryParams}`;
+    const url = `${process.env.INTERNAL_BACKEND_SERVICE_URL}/record/${entity}/${id}/${type}${queryParams}`;
     const view = url.includes("?") ? "&view=table" : "?view=table";
     return `${url}${view}`;
 };

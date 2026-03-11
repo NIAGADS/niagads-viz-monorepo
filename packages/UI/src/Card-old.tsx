@@ -11,20 +11,13 @@ interface CardHeaderProps {
     children: ReactNode;
 }
 
-type CardSpan = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
-type CardVariant = "default";
+type CardVariant = "half" | "third" | "two-thirds" | "full";
 
 interface CardProps extends StylingProps {
     href?: string;
-    onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+    onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void | null;
     children: ReactNode;
-
-    /** Layout: how many columns to span in a 12-col grid */
-    span?: CardSpan;
-
-    /** Visual styling variant (not layout) */
-    variant?: CardVariant;
-
+    variant: CardVariant;
     hover?: boolean;
     outline?: boolean;
 }
@@ -37,19 +30,16 @@ export const Card = ({
     onClick,
     children,
     className,
-    span = 12,
-    variant = "default",
+    variant = "full",
     hover = false,
     outline = true,
-    ...rest
+    ...rest /// for things like aria*- and role along w/typing against the React.HTMLAtts...
 }: CardProps & React.HTMLAttributes<HTMLDivElement>) => {
-    const isClickable = Boolean(href || onClick);
+    const isClickable = href || onClick;
     const useHoverStyles = hover || isClickable;
-
     const classes = [
         styles.card,
-        styles[`card-span-${span}`], // CSS: .card-span-1 ... .card-span-12
-        styles[`card-variant-${variant}`], // CSS optional: .card-variant-default
+        styles[`card-${variant}`],
         isClickable && styles["card-link"],
         useHoverStyles && styles["with-hover"],
         outline && styles["with-outline"],
@@ -61,46 +51,26 @@ export const Card = ({
     const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
         if (href) {
             window.location.href = href;
-            return;
+        } else if (onClick) {
+            onClick(event as any);
         }
-        onClick?.(event);
-    };
-
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-        if (!isClickable) return;
-
-        // Enter/Space should activate "click" for keyboard users
-        if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            // synthesize click behavior
-            if (href) {
-                window.location.href = href;
-                return;
-            }
-            onClick?.((event as unknown) as React.MouseEvent<HTMLDivElement>);
-        }
+        // else do nothing
     };
 
     return (
-        <div
-            className={classes}
-            onClick={isClickable ? handleClick : undefined}
-            onKeyDown={isClickable ? handleKeyDown : undefined}
-            role={isClickable ? "link" : rest.role}
-            tabIndex={isClickable ? 0 : rest.tabIndex}
-            {...rest}
-        >
+        <div className={classes} onClick={isClickable ? handleClick : undefined} {...rest}>
             {children}
         </div>
     );
 };
 
-interface FeatureCardProps extends Omit<CardProps, "children" | "variant">, StylingProps {
+interface FeatureCardProps extends Omit<CardProps, "children">, StylingProps {
     icon: React.ElementType;
     title: string;
     description: string;
 }
 
+// note: this assumes the `icon` is a lucide-react icon
 export const FeatureCard = ({
     icon,
     title,
