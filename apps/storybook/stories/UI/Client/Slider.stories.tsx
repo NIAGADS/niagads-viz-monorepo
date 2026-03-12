@@ -3,6 +3,40 @@ import React, { useState } from "react";
 
 import { Slider } from "@niagads/ui/client";
 
+type SliderVariant = "single" | "min" | "max" | "range";
+
+const SliderDemo: React.FC<{ variant: SliderVariant; label: string }> = ({ variant, label }) => {
+    const initialValues: Record<SliderVariant, number[]> = {
+        single: [50],
+        min: [50],
+        max: [50],
+        range: [25, 75],
+    };
+
+    const [value, setValue] = React.useState(initialValues[variant]);
+    const min = 0;
+    const max = 100;
+    const step = 5;
+
+    return (
+        <div style={{ maxWidth: 400, margin: "0 auto" }}>
+            <Slider
+                name={variant + "Slider"}
+                label={label}
+                value={value}
+                min={min}
+                max={max}
+                step={step}
+                variant={variant}
+                onChange={setValue}
+            />
+            <div style={{ marginTop: 16, fontSize: 14, color: "#374151" }}>
+                <strong>Current Value:</strong> {value[0]}
+            </div>
+        </div>
+    );
+};
+
 const meta: Meta<typeof Slider> = {
     title: "UI/Client/Slider",
     component: Slider,
@@ -17,35 +51,7 @@ const meta: Meta<typeof Slider> = {
 export default meta;
 type Story = StoryObj<typeof Slider>;
 
-export const Display: Story = {
-    args: {
-        name: "test slider",
-        label: "Test Slider",
-        variant: "default",
-        value: [20, 50],
-        min: 0,
-        max: 100,
-        step: 10,
-        onChange: (n) => console.log(n),
-    },
-};
-
-export const OneThumb = () => {
-    const [value, setValue] = useState([50]);
-
-    return (
-        <div>
-            <Slider name="testSlider" value={value} min={0} max={100} step={5} onChange={(v) => setValue(v)} />
-        </div>
-    );
-};
-
-export const TwoThumbs: React.FC = () => {
-    const [value, setValue] = useState([25, 75]);
-
-    return (
-        <div>
-            <Slider name="testSlider" value={value} min={0} max={100} step={5} onChange={(v) => setValue(v)} />
-        </div>
-    );
-};
+export const SingleSlider = () => <SliderDemo variant="single" label="Single Slider" />;
+export const MinSlider = () => <SliderDemo variant="min" label="Min Slider (highlight min→value)" />;
+export const MaxSlider = () => <SliderDemo variant="max" label="Max Slider (highlight value→max)" />;
+export const RangeSlider = () => <SliderDemo variant="range" label="Range Slider (highlight range)" />;
