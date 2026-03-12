@@ -23,7 +23,10 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
     const numBins = opts.numBins || 10;
     const histogramGenerator = d3.bin().domain([min!, max!]).thresholds(numBins);
     const bins = histogramGenerator(data);
-
+    let binSize: number | undefined = undefined;
+    if (bins.length > 0) {
+        binSize = bins[0].x1! - bins[0].x0!;
+    }
     // Plotting
     // Set up dimensions
     const margin = opts.margin || { top: 20, right: 30, bottom: 40, left: 40 };
@@ -121,4 +124,6 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
         .attr("y", 15)
         .attr("text-anchor", "middle")
         .text("Count"); */
+
+    return binSize;
 }

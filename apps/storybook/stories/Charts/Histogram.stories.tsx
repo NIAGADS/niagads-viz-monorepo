@@ -1,6 +1,20 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import React, { useState } from "react";
 
 import { Histogram } from "@niagads/charts";
+
+// Demo wrapper to show selected range in parent div
+const HistogramWithSliderDemo = (props: any) => {
+    const [selected, setSelected] = useState<number[]>(props.initialSelection ?? []);
+    return (
+        <div>
+            <div style={{ marginBottom: 12, fontSize: 16 }}>
+                Selected range: {selected.length === 0 ? "(none)" : selected.join(" – ")}
+            </div>
+            <Histogram {...props} initialSelection={selected} onRangeSelect={setSelected} />
+        </div>
+    );
+};
 
 // Generate skewed data with right tail (values between 0 and 1)
 const generateSkewedData = (count: number): number[] => {
@@ -39,6 +53,11 @@ const meta: Meta<typeof Histogram> = {
             control: { type: "object" },
             description: "Histogram options (HistogramOptions)",
         },
+        enableRangeSelect: {
+            control: { type: "boolean" },
+            description: "Show slider for range selection",
+            defaultValue: false,
+        },
     },
     args: {
         data: exampleData,
@@ -50,6 +69,7 @@ const meta: Meta<typeof Histogram> = {
             xMin: 0,
             xMax: 1,
         },
+        enableRangeSelect: false,
     },
 };
 
@@ -64,5 +84,22 @@ export const Default: Story = {
             xLabel: "score",
             aspectRatio: 0.5,
         },
+    },
+};
+
+export const WithSlider: Story = {
+    render: (args) => <HistogramWithSliderDemo {...args} />,
+    args: {
+        data: exampleData,
+        opts: {
+            numBins: 25,
+            xLabel: "score",
+            aspectRatio: 0.5,
+            xMin: 0,
+            xMax: 1,
+        },
+        enableRangeSelect: true,
+        rangeSelectionType: "max",
+        initialSelection: [1],
     },
 };
