@@ -1,7 +1,7 @@
 import { HistogramOptions, histogram } from "./d3/histogramChart";
 import React, { useEffect, useRef, useState } from "react";
 
-import { Slider } from "../../UI/src/client/Slider";
+import { Slider } from "@niagads/ui/client";
 import styles from "./styles/Charts.module.css";
 
 interface HistogramProps {
