@@ -1,199 +1,124 @@
 import * as d3 from "d3";
 
-export interface D3BinDatum {
-    bin: string;
-    count: number;
-    actualCount: number;
-    capped: number;
-}
-
 export interface HistogramOptions {
-    margin?: { top: number; right: number; bottom: number; left: number };
-    cap?: number;
-    useFrequencies?: boolean;
-    xLabel?: string;
-    yLabel?: string;
-    yMin?: number;
-    yMax?: number;
+    numBins: number;
+    xMin?: number;
+    xMax?: number;
+    xLabel: string;
     aspectRatio?: number; // height = width * aspectRatio
+    margin?: { top: number; right: number; bottom: number; left: number };
 }
 
-export function histogram(container: HTMLElement, initialData: D3BinDatum[], opts: HistogramOptions = {}) {
-    const options: Required<Pick<HistogramOptions, "margin" | "useFrequencies" | "aspectRatio">> &
-        Omit<HistogramOptions, "margin" | "useFrequencies" | "aspectRatio"> = {
-        margin: { top: 40, right: 40, bottom: 80, left: 80 },
-        useFrequencies: false,
-        aspectRatio: 0.52, // default ~500/960
-        ...opts,
-    };
-
-    const { margin, aspectRatio } = options;
-
-    let currentData = initialData;
-    let width = 0;
-    let height = 0;
-    let innerWidth = 0;
-    let innerHeight = 0;
-
-    d3.select(container).selectAll("*").remove();
-
-    const svg = d3
-        .select(container)
-        .append("svg")
-        .style("width", "100%")
-        .style("height", "auto")
-        .attr("preserveAspectRatio", "xMidYMid meet");
-
-    const root = svg.append("g");
-
-    const gridG = root.append("g").attr("opacity", 0.08).attr("pointer-events", "none");
-    const barsG = root.append("g");
-    const labelsG = root.append("g");
-    const xAxisG = root.append("g");
-    const yAxisG = root.append("g");
-
-    const yAxisLabel = yAxisG
-        .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("text-anchor", "middle")
-        .attr("font-size", 14);
-
-    const xScale = d3.scaleBand<string>().padding(0.05);
-    const yScale = d3.scaleLinear<number, number>();
-
-    const tooltip = d3
-        .select("body")
-        .append("div")
-        .style("position", "absolute")
-        .style("background", "white")
-        .style("border", "1px solid #ccc")
-        .style("border-radius", "4px")
-        .style("padding", "6px 10px")
-        .style("font-size", "13px")
-        .style("pointer-events", "none")
-        .style("opacity", 0);
-
-    function computeLayout() {
-        const rect = container.getBoundingClientRect();
-        width = rect.width;
-        height = width * aspectRatio;
-
-        innerWidth = width - margin.left - margin.right;
-        innerHeight = height - margin.top - margin.bottom;
-
-        svg.attr("viewBox", `0 0 ${width} ${height}`);
-
-        root.attr("transform", `translate(${margin.left},${margin.top})`);
-
-        xScale.range([0, innerWidth]);
-        yScale.range([innerHeight, 0]);
-
-        xAxisG.attr("transform", `translate(0,${innerHeight})`);
-
-        yAxisLabel.attr("y", -margin.left + 15).attr("x", -innerHeight / 2);
+export function histogram(container: HTMLElement, data: number[], opts: HistogramOptions) {
+    // Helper to get bin value (count)
+    function getBinValue(bin: d3.Bin<number, number>): number {
+        return bin.length;
     }
 
-    function render(data: D3BinDatum[], localOpts: HistogramOptions = {}) {
-        const o = { ...options, ...localOpts };
-        currentData = data;
+    // Calculate min and max
+    const min = opts.xMin || d3.min(data);
+    const max = opts.xMax || d3.max(data);
 
-        xScale.domain(data.map((d) => d.bin));
+    // Set up bins
+    const numBins = opts.numBins || 10;
+    const histogramGenerator = d3.bin().domain([min!, max!]).thresholds(numBins);
+    const bins = histogramGenerator(data);
 
-        // When using frequencies, counts are expected to be in [0,1]. Ignore `cap` in
-        // frequency mode (it doesn't make sense to cap frequencies), but allow an
-        // explicit `yMax` override. Otherwise prefer cap/yMax or fall back to data max.
-        const yMax = o.useFrequencies ? (o.yMax ?? 1) : (o.cap ?? o.yMax ?? d3.max(data, (d) => d.count) ?? 0);
-        const yMin = o.yMin ?? 0;
+    // Plotting
+    // Set up dimensions
+    const margin = opts.margin || { top: 20, right: 30, bottom: 40, left: 40 };
+    const parent = container.parentElement || container;
+    const width = parent.clientWidth || 600;
+    const aspectRatio = opts.aspectRatio || 0.5;
+    const height = parent.clientHeight || width * aspectRatio;
 
-        yScale.domain([yMin, yMax]).nice();
+    // Remove previous SVG if exists
+    d3.select(container).select("svg").remove();
 
-        gridG.call(
-            d3
-                .axisLeft(yScale)
-                .tickSize(-innerWidth)
-                .tickFormat(() => "")
-        );
+    const svg = d3.select(container).append("svg").attr("width", width).attr("height", height);
 
-        barsG
-            .selectAll<SVGRectElement, D3BinDatum>("rect")
-            .data(data, (d) => d.bin)
-            .join(
-                (enter) =>
-                    enter.append("rect").attr("fill", "#5e7fb8").attr("stroke", "#333").attr("stroke-width", 0.5),
-                (update) => update,
-                (exit) => exit.remove()
-            )
-            .attr("x", (d) => xScale(d.bin)!)
-            .attr("width", xScale.bandwidth())
-            .attr("y", (d) => yScale(d.count))
-            .attr("height", (d) => innerHeight - yScale(d.count))
-            .on("mousemove", (event, d) => {
-                const label = o.useFrequencies
-                    ? `${(d.actualCount * 100).toFixed(2)}%`
-                    : `n = ${Math.round(d.actualCount)}`;
+    const plotWidth = width - margin.left - margin.right;
+    const plotHeight = height - margin.top - margin.bottom;
 
-                tooltip
-                    .style("opacity", 1)
-                    .html(`<strong>${label}</strong>`)
-                    .style("left", event.pageX + 10 + "px")
-                    .style("top", event.pageY - 10 + "px");
-            })
-            .on("mouseleave", () => tooltip.style("opacity", 0));
+    const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
-        labelsG
-            .selectAll<SVGTextElement, D3BinDatum>("text")
-            .data(data, (d) => d.bin)
-            .join(
-                (enter) =>
-                    enter.append("text").attr("text-anchor", "middle").attr("font-size", 12).attr("fill", "#333"),
-                (update) => update,
-                (exit) => exit.remove()
-            )
-            .attr("x", (d) => xScale(d.bin)! + xScale.bandwidth() / 2)
-            .attr("y", (d) => yScale(d.count) - 5)
-            .text((d) => (d.capped && !o.useFrequencies && o.cap ? `> ${o.cap}` : ""));
+    // X scale
+    const x = d3.scaleLinear().domain([min!, max!]).range([0, plotWidth]);
 
-        xAxisG.call(d3.axisBottom(xScale));
+    // Y scale
+    const y = d3
+        .scaleLinear()
+        .domain([0, d3.max(bins, getBinValue)!])
+        .nice()
+        .range([plotHeight, 0]);
 
-        if (o.useFrequencies) {
-            yAxisG.call(d3.axisLeft(yScale).tickFormat((d) => `${(+d * 100).toFixed(1)}%`));
-            yAxisLabel.text(o.yLabel ?? "Frequency");
-        } else {
-            yAxisG.call(d3.axisLeft(yScale));
-            yAxisLabel.text(o.yLabel ?? "Count");
-        }
+    // Bars
+    const bar = g
+        .selectAll("rect")
+        .data(bins)
+        .enter()
+        .append("rect")
+        .attr("x", (d: d3.Bin<number, number>) => x(d.x0!))
+        .attr("y", (d: d3.Bin<number, number>) => y(getBinValue(d)))
+        .attr("width", (d: d3.Bin<number, number>) => x(d.x1!) - x(d.x0!))
+        .attr("height", (d: d3.Bin<number, number>) => plotHeight - y(getBinValue(d)))
+        .attr("fill", "#b0c4de") // blue-grey fill (light steel blue)
+        .attr("stroke", "steelblue") // steelblue border
+        .attr("stroke-width", 1.5);
 
-        xAxisG
-            .selectAll(".tick text")
-            .attr("transform", "rotate(-35)")
-            .attr("text-anchor", "end")
-            .attr("font-size", 11);
+    // Tooltip div
+    let tooltip = d3.select(container).select<HTMLDivElement>(".histogram-tooltip");
+    if (tooltip.empty()) {
+        tooltip = d3
+            .select(container)
+            .append<HTMLDivElement>("div")
+            .attr("class", "histogram-tooltip")
+            .style("position", "absolute")
+            .style("pointer-events", "none")
+            .style("background", "rgba(255,255,255,0.95)")
+            .style("border", "1px solid #888")
+            .style("padding", "6px 10px")
+            .style("border-radius", "4px")
+            .style("font-size", "13px")
+            .style("color", "#222")
+            .style("box-shadow", "0 2px 8px rgba(0,0,0,0.15)")
+            .style("display", "none");
     }
 
-    let lastWidth = 0;
-
-    const resizeObserver = new ResizeObserver((entries) => {
-        const newWidth = entries[0].contentRect.width;
-        if (newWidth === lastWidth) return;
-        lastWidth = newWidth;
-
-        computeLayout();
-        render(currentData);
+    bar.on("mousemove", function (event, d) {
+        const freq = (d.length / data.length).toFixed(2);
+        tooltip
+            .style("display", "block")
+            .html(
+                `<strong>Count:</strong> ${d.length}<br>` +
+                    `<strong>Percent:</strong> ${freq}<br>` +
+                    `<strong>Bin:</strong> [${d.x0?.toFixed(2)}, ${d.x1?.toFixed(2)})`
+            )
+            .style("left", event.offsetX + 20 + "px")
+            .style("top", event.offsetY - 10 + "px");
+    }).on("mouseleave", function () {
+        tooltip.style("display", "none");
     });
 
-    resizeObserver.observe(container);
+    // X Axis
+    g.append("g").attr("transform", `translate(0,${plotHeight})`).call(d3.axisBottom(x));
 
-    computeLayout();
-    render(initialData);
+    // Y Axis - EGA commented out b/c I kind of like it w/out the axis
+    // g.append("g").call(d3.axisLeft(y));
 
-    return {
-        update(newData: D3BinDatum[], newOpts: HistogramOptions = {}) {
-            render(newData, newOpts);
-        },
-        destroy() {
-            resizeObserver.disconnect();
-            tooltip.remove();
-            svg.remove();
-        },
-    };
+    // X Label
+
+    svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", height - 5)
+        .attr("text-anchor", "middle")
+        .text(opts.xLabel);
+
+    // Y Label
+    /*svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -height / 2)
+        .attr("y", 15)
+        .attr("text-anchor", "middle")
+        .text("Count"); */
 }

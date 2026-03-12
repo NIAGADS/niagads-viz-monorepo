@@ -35,29 +35,21 @@ const meta: Meta<typeof Histogram> = {
             control: { type: "object" },
             description: "Array of numeric values to histogram",
         },
-        numBins: {
-            control: { type: "number", min: 5, max: 50, step: 1 },
-            description: "Number of bins to divide the data into",
-        },
-        cap: {
-            control: { type: "number", min: 0, step: 1 },
-            description: "Optional cap on bar height; capped bars show actual count label",
-        },
-        xAxis: {
+        opts: {
             control: { type: "object" },
-            description: "X-axis configuration (label, min, max)",
-        },
-        yAxis: {
-            control: { type: "object" },
-            description: "Y-axis configuration (label, min, max)",
+            description: "Histogram options (HistogramOptions)",
         },
     },
     args: {
         data: exampleData,
-        numBins: 15,
-        cap: undefined,
-        xAxis: { label: "Value", min: undefined, max: undefined },
-        yAxis: { label: "Count", min: undefined, max: undefined },
+        opts: {
+            numBins: 15,
+            xLabel: "Value",
+            aspectRatio: 0.5,
+            margin: { top: 20, right: 30, bottom: 40, left: 40 },
+            xMin: 0,
+            xMax: 1,
+        },
     },
 };
 
@@ -67,28 +59,10 @@ type Story = StoryObj<typeof Histogram>;
 export const Default: Story = {
     args: {
         data: exampleData,
-        numBins: 25,
-        xAxis: { label: "p-value", min: 0, max: 1.0 },
-        yAxis: { label: "Counts" },
-    },
-};
-
-export const WithFrequencies: Story = {
-    args: {
-        data: exampleData,
-        numBins: 25,
-        xAxis: { label: "p-value", min: 0, max: 1.0 },
-        yAxis: { label: undefined },
-        useFrequencies: true,
-    },
-};
-
-export const WithCap: Story = {
-    args: {
-        data: exampleData,
-        numBins: 25,
-        cap: 50,
-        xAxis: { label: "p-value", min: 0, max: 1.0 },
-        yAxis: { label: "Count" },
+        opts: {
+            numBins: 25,
+            xLabel: "score",
+            aspectRatio: 0.5,
+        },
     },
 };
