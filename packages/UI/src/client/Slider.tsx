@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "../styles/slider.module.css";
 
+export type SliderVariant = "single" | "min" | "max" | "range";
 interface SliderProps {
     /** Unique identifier for the slider */
     name: string;
@@ -15,7 +16,7 @@ interface SliderProps {
     /** Step increment */
     step: number;
     /** Slider type: "single" (free), "min" (highlight min→value), "max" (highlight value→max), "range" (two thumbs) */
-    variant?: "single" | "min" | "max" | "range";
+    variant?: SliderVariant;
     /** Callback when value changes */
     onChange: (v: number[]) => void;
 }
