@@ -1,5 +1,5 @@
 import { Cell, GenericCell, getCellValue, renderCell, resolveCell, validateCellType } from "./Cell";
-import { Checkbox, RadioButton } from "@niagads/ui";
+import { Alert, Checkbox, RadioButton } from "@niagads/ui";
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -279,20 +279,31 @@ const Table: React.FC<TableProps> = ({
                 />
             )}
             <div className={styles["table-container"]}>
-                <table className={`${styles["table-layout"]} ${styles["table-border"]} ${styles["table-text"]}`}>
-                    {__renderTableHeader(table.getHeaderGroups())}
-                    <tbody>
-                        {rowModel.rows.map((row) => (
-                            <tr key={row.id} className={styles["table-dtr"]}>
-                                {row.getVisibleCells().map((cell) => (
-                                    <td className={styles["table-td"]} key={`${row.id}-${cell.id}`}>
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                    </td>
-                                ))}
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                {rowModel.rows.length > 0 ? (
+                    <table className={`${styles["table-layout"]} ${styles["table-border"]} ${styles["table-text"]}`}>
+                        {__renderTableHeader(table.getHeaderGroups())}
+                        <tbody>
+                            {rowModel.rows.map((row) => (
+                                <tr key={row.id} className={styles["table-dtr"]}>
+                                    {row.getVisibleCells().map((cell) => (
+                                        <td className={styles["table-td"]} key={`${row.id}-${cell.id}`}>
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </td>
+                                    ))}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                ) : columnFilters.length > 0 || globalFilter.length > 0 ? (
+                    <Alert variant="info" message="No rows meet the selected search or filter criteria.">
+                        <span>
+                            Unfiltered table contains {data.length} rows. Remove or adjust filter/search criteria to
+                            view.
+                        </span>
+                    </Alert>
+                ) : (
+                    <Alert variant="info" message="This table contains no rows." />
+                )}
             </div>
         </div>
     ) : (
