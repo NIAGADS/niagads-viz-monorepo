@@ -2,11 +2,15 @@ export const DEFAULT_FLANK = 1000;
 export const ALWAYS_ON_TRACKS = ["ideogram", "ruler", "sequence", "ENSEMBL_GENE"];
 export const HASH_PREFIX = "#/locus/";
 
-export const FEATURE_SEARCH_URL = `/api/feature-lookup?id=$FEATURE$&flank=${DEFAULT_FLANK}`;
+export const API_ROOT = "https://api.niagads.org";
+export const LEGACY_API_ROOT = `${API_ROOT}/genomics/legacy`;
+export const FEATURE_SEARCH_URL = `${API_ROOT}/genomics/service/igvbrowser/feature?id=$FEATURE$&flank=${DEFAULT_FLANK}`;
+
+export const GENOMICSDB_ROOT = "https://www.niagads.org/genomics/app";
 
 export const VariantReferenceTrack = {
     name: "ADSP R4 Variants",
-    url: "/service/track/variant",
+    url: `${LEGACY_API_ROOT}/service/track/variant`,
     type: "variant_service",
     format: "webservice",
     visibilityWindow: 100000,

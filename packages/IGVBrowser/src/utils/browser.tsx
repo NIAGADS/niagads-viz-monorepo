@@ -1,4 +1,5 @@
-import { ALWAYS_ON_TRACKS } from "../config/_constants";
+import { ALWAYS_ON_TRACKS, GENOMICSDB_ROOT } from "../config/_constants";
+
 import { IGVBrowserTrack } from "../types/data_models";
 import { getViewTrackIdentifier } from "./views";
 import { resolveServiceTrackReader } from "./track_config";
@@ -61,6 +62,9 @@ export const loadTrack = async (browser: any, track: IGVBrowserTrack) => {
             },
             track.type
         );
+    }
+    if (track.infoURL && track.infoURL === "/record") {
+        track.infoURL = `${GENOMICSDB_ROOT}/record`;
     }
 
     await browser.loadTrack(track);

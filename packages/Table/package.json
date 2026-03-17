@@ -1,6 +1,6 @@
 {
     "name": "@niagads/table",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "scripts": {
         "build": "rollup -c"
     },
@@ -24,8 +24,8 @@
         "typescript": "^5"
     },
     "dependencies": {
-        "@niagads/common": "^0.1.1",
-        "@niagads/ui": "^0.1.1",
+        "@niagads/common": "^0.1.2",
+        "@niagads/ui": "^0.1.2",
         "@tanstack/react-table": "^8.11.8",
         "export-from-json": "github:NIAGADS/export-from-json#niagads",
         "lucide-react": "^0.513.0",
