@@ -1,3 +1,5 @@
+import { GENOMICSDB_ROOT } from "./_constants";
+
 export const _genomes = [
     {
         id: "GRCh38_refseq",
@@ -38,14 +40,15 @@ export const _genomes = [
                 description: "Gene models from ENSEMBL",
                 format: "gff3",
                 filterTypes: ["chromosome"],
-                url: "/files/tracks/gene/hs.GRCh38.108.gff3.gz",
-                indexURL: "/files/tracks/gene/hs.GRCh38.108.gff3.gz.tbi",
+                url: "https://wanglab-genomicsdb.s3.us-east-1.amazonaws.com/public/website-data/GRCh38/tracks/gene/hs.GRCh38.108.gff3.gz",
+                indexURL:
+                    "https://wanglab-genomicsdb.s3.us-east-1.amazonaws.com/public/website-data/GRCh38/tracks/gene/hs.GRCh38.108.gff3.gz.tbi",
                 visibilityWindow: -1,
                 supportsWholeGenome: false,
                 removable: false,
                 order: 1000000,
                 colorBy: "biotype",
-                infoURL: "/gene/$$",
+                infoURL: `${GENOMICSDB_ROOT}/record/gene/$$`,
                 color: (feature: any) => {
                     const value = feature.geneObject
                         ? feature.geneObject.getAttributeValue("biotype")

@@ -34,7 +34,8 @@ export default function IGVBrowserWrapper({
         trackConfig,
         ...(locus ? { locus: locus } : {}),
         ...(hideNavigation ? { hideNavigation: true } : {}),
-        searchUrl: "/service/track/feature?id=$FEATURE$&flank=1000",
+
+        // genome: "GRCh38_refseq",
         ...(!inclVariantReference ? { referenceTracks: [] } : {}),
         ...(queryParams.locus ? { locus: queryParams.locus } : {}),
         ...(queryParams.track
