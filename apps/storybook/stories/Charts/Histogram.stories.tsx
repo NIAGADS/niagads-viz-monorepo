@@ -10,7 +10,7 @@ const HistogramWithSliderDemo = (props: any) => {
     return (
         <div>
             <div style={{ marginBottom: 12, fontSize: 16 }}>
-                Selected range: {selected.length === 0 ? "(none)" : selected.join(" – ")}
+                Selected range (chart parent state): {selected.length === 0 ? "(none)" : selected.join(" – ")}
             </div>
             <Histogram {...props} initialSelection={selected} onRangeSelect={setSelected} />
         </div>
