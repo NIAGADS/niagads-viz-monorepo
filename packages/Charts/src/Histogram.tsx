@@ -1,4 +1,4 @@
-import { HistogramOptions, histogram } from "./d3/histogramChart";
+import { HistogramOptions, histogram, updateHistogramHighlight } from "./d3/histogramChart";
 import React, { useEffect, useRef, useState } from "react";
 
 import { Slider } from "@niagads/ui/client";
@@ -17,20 +17,33 @@ const Histogram = ({
     data,
     enableRangeSelect,
     rangeSelectionType,
-    initialSelection,
+    initialSelection = [],
     onRangeSelect,
     opts,
 }: HistogramProps) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
 
     const [binSize, setBinSize] = useState<number | undefined>(undefined);
+    const [selectedRange, setSelectedRange] = useState<number[]>(initialSelection);
 
     useEffect(() => {
         if (containerRef.current) {
-            const size = histogram(containerRef.current, data, opts);
+            const size = histogram(containerRef.current, data, {
+                ...opts,
+            });
             setBinSize(size!);
+            if (initialSelection) {
+                updateHistogramHighlight(containerRef.current, selectedRange);
+            }
         }
     }, [data, opts]);
+
+    useEffect(() => {
+        if (containerRef.current) {
+            updateHistogramHighlight(containerRef.current, selectedRange);
+        }
+        onRangeSelect && onRangeSelect(selectedRange);
+    }, [selectedRange]);
 
     return (
         <div>
@@ -43,7 +56,7 @@ const Histogram = ({
                     max={opts.xMax ?? Math.max(...data)}
                     step={binSize}
                     variant={rangeSelectionType ?? "max"}
-                    onChange={onRangeSelect}
+                    onChange={setSelectedRange}
                 />
             )}
         </div>

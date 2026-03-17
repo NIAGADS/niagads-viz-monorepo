@@ -7,6 +7,45 @@ export interface HistogramOptions {
     xLabel: string;
     aspectRatio?: number; // height = width * aspectRatio
     margin?: { top: number; right: number; bottom: number; left: number };
+    selectedRange?: number[]; // [min, max] for highlighting bins
+}
+
+interface HistogramState {
+    bins: d3.Bin<number, number>[];
+    opts: HistogramOptions;
+    x: d3.ScaleLinear<number, number>;
+}
+
+function isSelected(d: d3.Bin<number, number>, selectedRange?: number[]): boolean {
+    return !!(
+        selectedRange &&
+        selectedRange.length >= 1 &&
+        d.x0! >= selectedRange[0] &&
+        (selectedRange.length === 1 || d.x1! <= selectedRange[1])
+    );
+}
+
+function applyFill(d: d3.Bin<number, number>, opts: HistogramOptions): string {
+    const selected = isSelected(d, opts.selectedRange);
+
+    if (opts.xMax !== undefined && d.x0 === opts.xMax) {
+        return selected ? "#FF8C00" : "#ffb6c1"; // dark orange if selected, light pink otherwise
+    }
+    return selected ? "#FFA500" : "#b0c4de"; // orange if selected, light steel blue otherwise
+}
+
+function applyStroke(d: d3.Bin<number, number>, opts: HistogramOptions): string {
+    const selected = isSelected(d, opts.selectedRange);
+
+    if (opts.xMax !== undefined && d.x0 === opts.xMax) {
+        return selected ? "#CC6600" : "#ff69b4"; // darker orange if selected, hot pink otherwise
+    }
+    return selected ? "#CC6600" : "steelblue"; // darker orange if selected, steelblue otherwise
+}
+
+function applyStrokeWidth(d: d3.Bin<number, number>, opts: HistogramOptions): number {
+    const selected = isSelected(d, opts.selectedRange);
+    return selected ? 2.5 : 1.5; // thicker stroke when selected
 }
 
 export function histogram(container: HTMLElement, data: number[], opts: HistogramOptions) {
@@ -79,25 +118,25 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
 
     // Bars
     const bar = g
-        .selectAll("rect")
-        .data(bins)
-        .enter()
-        .append("rect")
-        .attr("x", (d: d3.Bin<number, number>) => x(d.x0!))
-        .attr("y", (d: d3.Bin<number, number>) => y(getBinValue(d)))
-        .attr("width", (d: d3.Bin<number, number>) => x(d.x1!) - x(d.x0!))
-        .attr("height", (d: d3.Bin<number, number>) => plotHeight - y(getBinValue(d)))
-        .attr("fill", (d: d3.Bin<number, number>) =>
-            opts.xMax !== undefined && d.x0 === opts.xMax
-                ? "#ffb6c1" // light pink for overflow bin
-                : "#b0c4de"
-        )
-        .attr("stroke", (d: d3.Bin<number, number>) =>
-            opts.xMax !== undefined && d.x0 === opts.xMax
-                ? "#ff69b4" // hot pink border for overflow bin
-                : "steelblue"
-        )
-        .attr("stroke-width", 1.5);
+        .selectAll<SVGRectElement, d3.Bin<number, number>>("rect")
+        .data(bins, (_d, i) => i)
+        .join(
+            (enter) =>
+                enter
+                    .append("rect")
+                    .attr("x", (d: d3.Bin<number, number>) => x(d.x0!))
+                    .attr("y", (d: d3.Bin<number, number>) => y(getBinValue(d)))
+                    .attr("width", (d: d3.Bin<number, number>) => x(d.x1!) - x(d.x0!))
+                    .attr("height", (d: d3.Bin<number, number>) => plotHeight - y(getBinValue(d)))
+                    .attr("fill", (d: d3.Bin<number, number>) => applyFill(d, opts))
+                    .attr("stroke", (d: d3.Bin<number, number>) => applyStroke(d, opts))
+                    .attr("stroke-width", (d: d3.Bin<number, number>) => applyStrokeWidth(d, opts)),
+            (update) =>
+                update
+                    .attr("fill", (d: d3.Bin<number, number>) => applyFill(d, opts))
+                    .attr("stroke", (d: d3.Bin<number, number>) => applyStroke(d, opts))
+                    .attr("stroke-width", (d: d3.Bin<number, number>) => applyStrokeWidth(d, opts))
+        );
 
     // Tooltip div
     let tooltip = d3.select(container).select<HTMLDivElement>(".histogram-tooltip");
@@ -163,13 +202,26 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
         .attr("text-anchor", "middle")
         .text(opts.xLabel);
 
-    // Y Label
-    /*svg.append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("x", -height / 2)
-        .attr("y", 15)
-        .attr("text-anchor", "middle")
-        .text("Count"); */
+    // Store state on SVG node for later updates
+    (svg.node() as any).__histogramState__ = {
+        bins,
+        opts,
+        x,
+    } as HistogramState;
 
     return binSize;
+}
+
+export function updateHistogramHighlight(container: HTMLElement, selectedRange?: number[]) {
+    const svg = d3.select(container).select<SVGSVGElement>("svg");
+    const state = (svg.node() as any).__histogramState__ as HistogramState | undefined;
+
+    if (!state) return;
+
+    // Update bars with new selected range
+    svg.selectAll<SVGRectElement, d3.Bin<number, number>>("rect")
+        .data(state.bins, (_d, i) => i)
+        .attr("fill", (d: d3.Bin<number, number>) => applyFill(d, { ...state.opts, selectedRange }))
+        .attr("stroke", (d: d3.Bin<number, number>) => applyStroke(d, { ...state.opts, selectedRange }))
+        .attr("stroke-width", (d: d3.Bin<number, number>) => applyStrokeWidth(d, { ...state.opts, selectedRange }));
 }

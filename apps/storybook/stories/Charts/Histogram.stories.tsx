@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import React, { useState } from "react";
 
 import { Histogram } from "@niagads/charts";
+import { TABLE_DEFINTION as largeNumericTable } from "../../examples/tables/table_large_numeric_values";
 
 // Demo wrapper to show selected range in parent div
 const HistogramWithSliderDemo = (props: any) => {
@@ -87,19 +88,39 @@ export const Default: Story = {
     },
 };
 
-export const WithSlider: Story = {
-    render: (args) => <HistogramWithSliderDemo {...args} />,
+// Extract -log10(pvalue) from table data
+const pvalueData = largeNumericTable.data.map((row) => {
+    const p = parseFloat(row.pvalue as string);
+    return parseFloat((-Math.log10(p)).toFixed(2));
+});
+
+export const PValueHistogram: Story = {
+    render: (args) => <Histogram {...args} />,
     args: {
-        data: exampleData,
+        data: pvalueData as number[],
         opts: {
-            numBins: 25,
-            xLabel: "score",
+            numBins: 50,
+            xLabel: "-log10p",
             aspectRatio: 0.5,
             xMin: 0,
-            xMax: 1,
+            xMax: 50,
+        },
+    },
+};
+
+export const PValueHistogramWithSlider: Story = {
+    render: (args) => <HistogramWithSliderDemo {...args} />,
+    args: {
+        data: pvalueData as number[],
+        opts: {
+            numBins: 50,
+            xLabel: "-log10p",
+            aspectRatio: 0.5,
+            xMin: 0,
+            xMax: 50,
         },
         enableRangeSelect: true,
         rangeSelectionType: "max",
-        initialSelection: [1],
+        initialSelection: [7],
     },
 };
