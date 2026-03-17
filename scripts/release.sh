@@ -7,7 +7,7 @@ RELEASE_BRANCH=$(echo "release/$(date '+%m-%d-%Y')")
 
 if [[ "$CURRENT_BRANCH" != "$RELEASE_BRANCH" ]]; then
     git checkout -b $BRANCH_NAME
-    git push --set-upstream origin $BRANCH_NAME
+    git push --set-upstream origin $RELEASE_BRANCH
 fi
 
 npm run build-fresh
