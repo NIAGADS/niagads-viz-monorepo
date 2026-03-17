@@ -100,6 +100,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
             showNavigation: !hideNavigation,
             search: {
                 url: searchUrl,
+                chromosomeField: "chr",
             },
             reference: genomeReference,
             loadDefaultGenomes: false,
