@@ -85,7 +85,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
     const [isClient, setIsClient] = useState(false);
     const [igv, setIGV] = useState<any>(null);
     const [browserIsLoading, setBrowserIsLoading] = useState<boolean>(true);
-    // const [browser, setBrowser] = useState<any>(null);
+    const [browser, setBrowser] = useState<any>(null);
 
     const containerRef = useRef(null);
     const isDragging = useRef(false);
@@ -121,24 +121,29 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
     const initialTrackConfiguration = useMemo<PreloadedTrackConfig>(() => {
         const ptConfig: PreloadedTrackConfig = {};
 
-        if (trackConfig) {
-            let tracks: IGVBrowserTrack[] = referenceTracks ? resolveTrackConfigs(trackConfig, referenceTracks) : [];
-            if (defaultTracks) {
-                tracks.push(...resolveTrackConfigs(trackConfig, defaultTracks));
-            }
-            const seen = new Set();
-            ptConfig.tracks = tracks.filter((track) => !seen.has(track.id) && seen.add(track.id));
+        // not checking to see if trackConfig exists b/c will throw error if now trackConfig and ID lookup
+        // is needed when you try to resolve tracks
 
-            if (files) {
-                const uniqueUrls = Array.from(new Set(files.urls));
-                ptConfig.files = uniqueUrls.map((url: string) => {
-                    const id = "file_" + url.split("/").pop()!.replace(/\..+$/, "");
-                    return files.indexed
-                        ? { url: url, indexURL: `${url}.tbi`, name: `USER: ${id}`, id: id }
-                        : { url: url, name: `USER: ${id}`, id: id };
-                });
-            }
+        let tracks: IGVBrowserTrack[] = referenceTracks ? resolveTrackConfigs(trackConfig, referenceTracks) : [];
+
+        if (defaultTracks) {
+            tracks.push(...resolveTrackConfigs(trackConfig, defaultTracks));
         }
+
+        // use set operations to make sure we are not duplicating loaded tracks
+        const seen = new Set();
+        ptConfig.tracks = tracks.filter((track) => !seen.has(track.id) && seen.add(track.id));
+
+        if (files) {
+            const uniqueUrls = Array.from(new Set(files.urls));
+            ptConfig.files = uniqueUrls.map((url: string) => {
+                const id = "file_" + url.split("/").pop()!.replace(/\..+$/, "");
+                return files.indexed
+                    ? { url: url, indexURL: `${url}.tbi`, name: `USER: ${id}`, id: id }
+                    : { url: url, name: `USER: ${id}`, id: id };
+            });
+        }
+
         return ptConfig;
     }, [referenceTracks, defaultTracks, files, trackConfig]);
 
@@ -205,6 +210,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
                         // add browser to state
                         // setBrowser(browser);
                         setBrowserIsLoading(false);
+                        setBrowser(browser); // need to save to handle locus, session state
 
                         // callback to parent component, if exist
                         if (onBrowserLoad) {
@@ -215,6 +221,13 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
             }
         }
     }, [isClient, igv]);
+
+    // handle parent state changes (e.g., locus, track config)
+    useEffect(() => {
+        if (browser) {
+            browser.search(locus);
+        }
+    }, [locus]);
 
     return !isClient && browserIsLoading ? (
         <Skeleton type="table" />
