@@ -31,7 +31,7 @@ export default function IGVBrowserWithSelector({
     useEffect(() => {
         // this is for handling when parent changes default tracks (e.g., dynamic selector table)
         setSelectedTracks(defaultTracks ? resolveTrackIds(defaultTracks) : []);
-    }, [defaultTracks]);
+    }, [trackConfig]);
 
     // if a selectorTable definition is provided, use that
     // otherwise build one from the trackConfig
