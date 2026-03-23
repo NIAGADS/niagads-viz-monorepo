@@ -25,7 +25,7 @@ class VariantPValueTrack extends igv.TrackBase {
         this.popoverWindow = config.popoverWindow === undefined ? DEFAULT_POPOVER_WINDOW : config.popoverWindow;
         this.maxValue = config.max || 100;
         // this.minThreshold = 1 * (10**(this.maxValue * -1))
-
+        this.visibilityWindow = config.visibilityWindow;
         this.colorScales = config.color
             ? new igv.ConstantColorScale(config.color)
             : this.config.type === "qtl"

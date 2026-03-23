@@ -1,4 +1,4 @@
-import { ALWAYS_ON_TRACKS, GENOMICSDB_ROOT } from "../config/_constants";
+import { ALWAYS_ON_TRACKS, GENOMICSDB_ROOT, QTL_VISIBILITY_WINDOW } from "../config/_constants";
 
 import { IGVBrowserTrack } from "../types/data_models";
 import { getViewTrackIdentifier } from "./views";
@@ -64,6 +64,8 @@ export const loadTrack = async (browser: any, track: IGVBrowserTrack) => {
         if (track.format?.match("^bed\\d{1,2}\\+\\d+$") != null) {
             const { default: decodeBedXY } = await import("../decoders/bedDecoder");
             track.decode = decodeBedXY;
+            track.visibilityWindow = QTL_VISIBILITY_WINDOW;
+            track.supportsWholeGenome = false;
         }
     }
     if (track.url.includes("$CHR")) {

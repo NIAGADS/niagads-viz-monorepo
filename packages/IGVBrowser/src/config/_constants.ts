@@ -1,5 +1,6 @@
 import { IGVBrowserTrack } from "../types/data_models";
 
+export const QTL_VISIBILITY_WINDOW = 1000000;
 export const DEFAULT_FLANK = 1000;
 export const ALWAYS_ON_TRACKS = ["ideogram", "ruler", "sequence", "ENSEMBL_GENE"];
 export const HASH_PREFIX = "#/locus/";

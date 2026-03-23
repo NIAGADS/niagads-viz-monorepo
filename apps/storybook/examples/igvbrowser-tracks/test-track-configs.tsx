@@ -3,14 +3,15 @@ export const qtlTracks: IGVBrowserTrack[] = [
     {
         id: "NGFGXQTL0002",
         name: "Knight-ADRC-mQTL-PC",
-        url: "https://tf.lisanwanglab.org/GADB/FILER2/Annotationtracks/ADSP_FunGen_xQTL/v1/Knight-ADRC/mQTL/bh_significant/bed3plus17_qtl/hg38/FunGenADv1.Knight-ADRC.mQTL.PC.NGFGXQTL0002_v1_19_snp_bh.20260330.bed.gz",
+        url: "https://tf.lisanwanglab.org/GADB/FILER2/Annotationtracks/ADSP_FunGen_xQTL/v1/Knight-ADRC/mQTL/bh_significant/bed3plus17_qtl/hg38/FunGenADv1.Knight-ADRC.mQTL.PC.NGFGXQTL0002_v1_$CHR_snp_bh.20260330.bed.gz",
         description: "Example ADSP FunGen Track (sharded by chr)",
         infoURL: "/record",
         format: "bed6+14",
         type: "qtl",
         indexURL:
-            "https://tf.lisanwanglab.org/GADB/FILER2/Annotationtracks/ADSP_FunGen_xQTL/v1/Knight-ADRC/mQTL/bh_significant/bed3plus17_qtl/hg38/FunGenADv1.Knight-ADRC.mQTL.PC.NGFGXQTL0002_v1_19_snp_bh.20260330.bed.gz.tbi",
+            "https://tf.lisanwanglab.org/GADB/FILER2/Annotationtracks/ADSP_FunGen_xQTL/v1/Knight-ADRC/mQTL/bh_significant/bed3plus17_qtl/hg38/FunGenADv1.Knight-ADRC.mQTL.PC.NGFGXQTL0002_v1_$CHR_snp_bh.20260330.bed.gz.tbi",
         autoscale: true,
+
         metadata: {
             cell_type: "PC",
             tissue_category: "Brain",
