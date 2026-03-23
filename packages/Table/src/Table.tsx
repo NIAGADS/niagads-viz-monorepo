@@ -1,5 +1,5 @@
-import { Cell, GenericCell, getCellValue, renderCell, resolveCell, validateCellType } from "./Cell";
 import { Alert, Checkbox, RadioButton } from "@niagads/ui";
+import { Cell, GenericCell, getCellValue, renderCell, resolveCell, validateCellType } from "./Cell";
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -22,15 +22,15 @@ import {
 } from "@tanstack/react-table";
 import { GenericColumn, getColumn } from "./Column";
 import { PaginationControls, TableToolbar } from "./ControlElements";
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
+import React, { ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { TableConfig, TableData, TableRow } from "./TableProperties";
 import { _get, _hasOwnProperty, toTitleCase } from "@niagads/common";
 
+import { ColumnFilterControls } from "./ControlElements/ColumnFilterControls";
 import { CustomSortingFunctions } from "./TableSortingFunctions";
 import { RowSelectionControls } from "./ControlElements/RowSelectionControls";
 import { TableColumnHeader } from "./TableColumnHeader";
 import styles from "./styles/table.module.css";
-import { ColumnFilterControls } from "./ControlElements/ColumnFilterControls";
 
 export interface TableProps {
     id: string;
@@ -124,7 +124,8 @@ const Table: React.FC<TableProps> = ({
             } catch (e: any) {
                 throw Error("Error processing column definition for `" + col.id + "`.\n" + e.message);
             }
-
+            console.log("set column def");
+            console.log(col);
             columnDefs.push(
                 columnHelper.accessor((row) => getCellValue(row[col.id as keyof typeof row] as Cell), {
                     id: col.id,
@@ -149,7 +150,7 @@ const Table: React.FC<TableProps> = ({
             );
         });
         return columnDefs;
-    }, []);
+    }, [columns]);
 
     const resolvedData = useMemo<TableData>(() => {
         const tableData: TableData = [];
@@ -181,7 +182,7 @@ const Table: React.FC<TableProps> = ({
             throw Error(e.message);
         }
         return tableData;
-    }, [columns]);
+    }, [columns, data]);
 
     // build table options conditionally
     // cannot memoize this b/c it depends on the state;
@@ -287,7 +288,7 @@ const Table: React.FC<TableProps> = ({
                                 <tr key={row.id} className={styles["table-dtr"]}>
                                     {row.getVisibleCells().map((cell) => (
                                         <td className={styles["table-td"]} key={`${row.id}-${cell.id}`}>
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext()) as ReactNode}
                                         </td>
                                     ))}
                                 </tr>
