@@ -224,7 +224,6 @@ const DynamicTrackConfigWrapper = (props: any) => {
                 </span>
             </form>
             <div style={{ flex: 1, overflow: "auto" }}>
-                <p>Current default tracks {JSON.stringify(defaultTracks)}</p>
                 <IGVBrowserWithSelector
                     {...props}
                     locus={locus}

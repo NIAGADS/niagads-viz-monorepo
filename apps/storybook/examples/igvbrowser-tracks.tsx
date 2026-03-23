@@ -21,7 +21,7 @@ export const qtlTracks: IGVBrowserTrack[] = [
     {
         id: "NGFGXQTL0002-bigBed",
         name: "Knight-ADRC-mQTL-PC",
-        url: "https://tf.lisanwanglab.org/GADB/FILER2/Annotationtracks/ADSP_FunGen_xQTL/v1/Knight-ADRC/mQTL/qvalue_significant/bed3plus17_qtl/hg38/FunGenADv1.Knight-ADRC.mQTL.PC.NGFGXQTL0002_v1_$CHR_snp_qsig.SNP_qvalue_significant.20250901.bigBed",
+        url: "https://tf.lisanwanglab.org/GADB/FILER2/Annotationtracks/ADSP_FunGen_xQTL/v1/Knight-ADRC/mQTL/qvalue_significant/bed3plus17_qtl/hg38/FunGenADv1.Knight-ADRC.mQTL.PC.NGFGXQTL0002_v1_19_snp_qsig.SNP_qvalue_significant.20250901.bigBed",
         description: "Example ADSP FunGen Track (sharded by chr; bigBed binary)",
         infoURL: "/record",
         type: "qtl",
