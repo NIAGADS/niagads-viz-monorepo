@@ -17,7 +17,7 @@ export const VariantReferenceTrack = {
     supportsWholeGenome: false,
     queryable: true,
     description:
-        "Variants from the Alzheimer''s Disease Sequencing Project (ADSP) 36K R4 whole genome sequencing effort - INDELs and SNVs that passed the ADSP biallelic quality control (QC) criteria. Variants are annotated by the ADSP Annotation Pipeline.",
+        "Variants from the Alzheimer's Disease Sequencing Project (ADSP) 36K R4 whole genome sequencing effort - INDELs and SNVs that passed the ADSP biallelic quality control (QC) criteria. Variants are annotated by the ADSP Annotation Pipeline.",
     id: "ADSP_R4",
     order: 1,
     infoURL: "/record",
