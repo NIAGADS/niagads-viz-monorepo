@@ -2,7 +2,7 @@ import { IGVBrowser, IGVBrowserTrack, IGVBrowserWithSelector } from "@niagads/ig
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 // Story with parent component and external locus controls
 import React, { useState } from "react";
-import { histoneModTracks, qtlTracks } from "../../examples/igvbrowser-tracks";
+import { histoneModTracks, qtlTracks } from "../../examples/igvbrowser-tracks/test-track-configs";
 
 const noop = () => {};
 
