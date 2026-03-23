@@ -1,3 +1,5 @@
+import { IGVBrowserTrack } from "../types/data_models";
+
 export const DEFAULT_FLANK = 1000;
 export const ALWAYS_ON_TRACKS = ["ideogram", "ruler", "sequence", "ENSEMBL_GENE"];
 export const HASH_PREFIX = "#/locus/";
@@ -8,7 +10,7 @@ export const FEATURE_SEARCH_URL = `${API_ROOT}/genomics/service/igvbrowser/featu
 
 export const GENOMICSDB_ROOT = "https://www.niagads.org/genomics/app";
 
-export const VariantReferenceTrack = {
+export const VariantReferenceTrack: IGVBrowserTrack = {
     name: "ADSP R4 Variants",
     url: `${LEGACY_API_ROOT}/service/track/variant`,
     type: "variant_service",
