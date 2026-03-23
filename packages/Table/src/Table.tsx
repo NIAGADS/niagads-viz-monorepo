@@ -124,8 +124,6 @@ const Table: React.FC<TableProps> = ({
             } catch (e: any) {
                 throw Error("Error processing column definition for `" + col.id + "`.\n" + e.message);
             }
-            console.log("set column def");
-            console.log(col);
             columnDefs.push(
                 columnHelper.accessor((row) => getCellValue(row[col.id as keyof typeof row] as Cell), {
                     id: col.id,
