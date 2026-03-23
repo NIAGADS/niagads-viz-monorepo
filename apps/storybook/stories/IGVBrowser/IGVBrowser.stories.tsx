@@ -136,9 +136,9 @@ export const WithExternalLocusControl: StoryObj<typeof IGVBrowser> = {
 
 const DynamicTrackConfigWrapper = (props: any) => {
     const [locus, setLocus] = useState("ABCA7");
-    const [trackConfig, setTrackConfig] = useState<any>(histoneModTracks);
-    const [defaultTracks, setDefaultTracks] = useState<string[]>(histoneModTracks.slice(3, 5).map((track) => track.id));
-    const [trackConfigSelection, setTrackConfigSelection] = useState<"qtl" | "histone">("histone");
+    const [trackConfig, setTrackConfig] = useState<any>(qtlTracks);
+    const [defaultTracks, setDefaultTracks] = useState<string[]>(qtlTracks.slice(3, 5).map((track) => track.id));
+    const [trackConfigSelection, setTrackConfigSelection] = useState<"qtl" | "histone">("qtl");
 
     const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
