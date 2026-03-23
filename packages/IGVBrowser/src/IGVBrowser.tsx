@@ -2,12 +2,12 @@
 
 import { ALWAYS_ON_TRACKS, DEFAULT_FLANK, FEATURE_SEARCH_URL, VariantReferenceTrack } from "./config/_constants";
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { clearTrackView, loadTracks } from "./utils/browser";
 import { resolveTrackConfigs, resolveTrackIds } from "./utils/track_config";
 
 import { IGVBrowserTrack } from "./types/data_models";
 import { Skeleton } from "@niagads/ui";
 import { _genomes } from "./config/_igvGenomes";
-import { loadTracks } from "./utils/browser";
 import { trackPopover } from "./tracks/feature_popovers";
 
 /**
@@ -145,7 +145,7 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
         }
 
         return ptConfig;
-    }, [referenceTracks, defaultTracks, files, trackConfig]);
+    }, []);
 
     useEffect(() => {
         setIsClient(true);
@@ -228,6 +228,22 @@ const IGVBrowser: React.FC<IGVBrowserProps> = ({
             browser.search(locus);
         }
     }, [locus]);
+
+    useEffect(() => {
+        const handleDefaultTrackChange = async () => {
+            clearTrackView(browser, opts.alwaysOnTracks);
+
+            if (defaultTracks) {
+                const tracks: IGVBrowserTrack[] = resolveTrackConfigs(trackConfig, defaultTracks);
+                await loadInitialTracks(browser, initialTrackConfiguration);
+            }
+        };
+        // OK just to test if browserIsLoading to avoid initial render b/c
+        // initial tracks are loaded before browserIsLoading === False
+        if (!browserIsLoading && browser) {
+            handleDefaultTrackChange();
+        }
+    }, [defaultTracks, trackConfig, browserIsLoading, browser]);
 
     return !isClient && browserIsLoading ? (
         <Skeleton type="table" />

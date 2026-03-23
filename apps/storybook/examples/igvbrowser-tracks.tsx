@@ -19,6 +19,22 @@ export const qtlTracks: IGVBrowserTrack[] = [
         },
     },
     {
+        id: "NGFGXQTL0002-bigBed",
+        name: "Knight-ADRC-mQTL-PC",
+        url: "https://tf.lisanwanglab.org/GADB/FILER2/Annotationtracks/ADSP_FunGen_xQTL/v1/Knight-ADRC/mQTL/qvalue_significant/bed3plus17_qtl/hg38/FunGenADv1.Knight-ADRC.mQTL.PC.NGFGXQTL0002_v1_$CHR_snp_qsig.SNP_qvalue_significant.20250901.bigBed",
+        description: "Example ADSP FunGen Track (sharded by chr; bigBed binary)",
+        infoURL: "/record",
+        type: "qtl",
+        format: "bigBed",
+        autoscale: true,
+        metadata: {
+            cell_type: "PC",
+            tissue_category: "Brain",
+            data_source: "ADSP FunGen",
+            data_category: "mQTL",
+        },
+    },
+    {
         id: "NGGTXAMZZNCCLT",
         name: "GTEx_v8 Amygdala eQTL SNP significant associations",
         url: "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Amygdala_eQTL_GTEx_signif_SNP.bed.gz",
@@ -259,5 +275,128 @@ export const qtlTracks: IGVBrowserTrack[] = [
             data_source: "GTEx_v8",
             data_category: "eQTL",
         },
+    },
+];
+
+export const histoneModTracks: IGVBrowserTrack[] = [
+    {
+        id: "NGENCGJKW7FPIO",
+        type: "annotation",
+        format: "bed",
+        url: "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/Histone_ChIP-seq/narrowpeak/hg38/2/ENCFF031KAY.bed.gz",
+        name: "ENCODE SK-N-SH (repl. 1) Histone ChIP-seq H3F3A-histone-mark peaks",
+        indexURL:
+            "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/Histone_ChIP-seq/narrowpeak/hg38/2/ENCFF031KAY.bed.gz.tbi",
+        metadata: { tissue: "Brain", biosample: "SK-N-SH", feature_type: "histone modification" },
+        description:
+            "ENCODE SK-N-SH (repl. 1) Histone ChIP-seq H3F3A-histone-mark peaks (narrowPeak) [Experiment: ENCSR125IJY] [Life stage: Child]",
+    },
+    {
+        id: "NGENCLMGVCCVU5",
+        type: "annotation",
+        format: "bed",
+        url: "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/Histone_ChIP-seq/narrowpeak/hg38/2/ENCFF072LKH.bed.gz",
+        name: "ENCODE A549 (repl. 1, 2) Histone ChIP-seq H3K79me2-histone-mark replicated peaks",
+        indexURL:
+            "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/Histone_ChIP-seq/narrowpeak/hg38/2/ENCFF072LKH.bed.gz.tbi",
+        metadata: { tissue: "Lung", biosample: "A549", feature_type: "histone modification" },
+        description:
+            "ENCODE A549 (repl. 1, 2) Histone ChIP-seq H3K79me2-histone-mark replicated peaks (narrowPeak) [Experiment: ENCSR000ATP] [Life stage: Adult]",
+    },
+    {
+        id: "NGENCPSBXRQLAO",
+        type: "annotation",
+        format: "bed",
+        url: "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/Histone_ChIP-seq/narrowpeak/hg38/2/ENCFF093WVD.bed.gz",
+        name: "ENCODE B cell (repl. 1, 2) Histone ChIP-seq H3K4me2-histone-mark peaks",
+        indexURL:
+            "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/Histone_ChIP-seq/narrowpeak/hg38/2/ENCFF093WVD.bed.gz.tbi",
+        metadata: { tissue: "Immune", biosample: "B cell", feature_type: "histone modification" },
+        description:
+            "ENCODE B cell (repl. 1, 2) Histone ChIP-seq H3K4me2-histone-mark peaks (narrowPeak) [Experiment: ENCSR000AUY] [Life stage: Adult]",
+    },
+    {
+        id: "NGENCCZEHVEZGV",
+        type: "annotation",
+        format: "bed",
+        url: "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/Histone_ChIP-seq/narrowpeak/hg38/2/ENCFF104TZR.bed.gz",
+        name: "ENCODE SK-N-SH (repl. 2) Histone ChIP-seq H3F3A-histone-mark peaks",
+        indexURL:
+            "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/Histone_ChIP-seq/narrowpeak/hg38/2/ENCFF104TZR.bed.gz.tbi",
+        metadata: { tissue: "Brain", biosample: "SK-N-SH", feature_type: "histone modification" },
+        description:
+            "ENCODE SK-N-SH (repl. 2) Histone ChIP-seq H3F3A-histone-mark peaks (narrowPeak) [Experiment: ENCSR125IJY] [Life stage: Child]",
+    },
+    {
+        id: "NGENCYN6PVQ4BX",
+        type: "annotation",
+        format: "bed",
+        url: "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/Histone_ChIP-seq/narrowpeak/hg38/2/ENCFF169JAH.bed.gz",
+        name: "ENCODE NCI-H929 (repl. 1, 2) Histone ChIP-seq H3K9ac-histone-mark peaks",
+        indexURL:
+            "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/Histone_ChIP-seq/narrowpeak/hg38/2/ENCFF169JAH.bed.gz.tbi",
+        metadata: { tissue: "Immune", biosample: "NCI-H929", feature_type: "histone modification" },
+        description:
+            "ENCODE NCI-H929 (repl. 1, 2) Histone ChIP-seq H3K9ac-histone-mark peaks (narrowPeak) [Experiment: ENCSR327OGS] [Life stage: Adult]",
+    },
+    {
+        id: "NGENCIPGE3C3CS",
+        type: "annotation",
+        format: "bed",
+        url: "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/Histone_ChIP-seq/narrowpeak/hg38/2/ENCFF204TFB.bed.gz",
+        name: "ENCODE NCI-H929 (repl. 1, 2) Histone ChIP-seq H3F3A-histone-mark peaks",
+        indexURL:
+            "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/Histone_ChIP-seq/narrowpeak/hg38/2/ENCFF204TFB.bed.gz.tbi",
+        metadata: { tissue: "Immune", biosample: "NCI-H929", feature_type: "histone modification" },
+        description:
+            "ENCODE NCI-H929 (repl. 1, 2) Histone ChIP-seq H3F3A-histone-mark peaks (narrowPeak) [Experiment: ENCSR536SZD] [Life stage: Adult]",
+    },
+    {
+        id: "NGENCEYA5CPR6W",
+        type: "annotation",
+        format: "bed",
+        url: "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/Histone_ChIP-seq/narrowpeak/hg38/2/ENCFF216RKJ.bed.gz",
+        name: "ENCODE B cell (repl. 1) Histone ChIP-seq H3K4me2-histone-mark peaks",
+        indexURL:
+            "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/Histone_ChIP-seq/narrowpeak/hg38/2/ENCFF216RKJ.bed.gz.tbi",
+        metadata: { tissue: "Immune", biosample: "B cell", feature_type: "histone modification" },
+        description:
+            "ENCODE B cell (repl. 1) Histone ChIP-seq H3K4me2-histone-mark peaks (narrowPeak) [Experiment: ENCSR000AUY] [Life stage: Adult]",
+    },
+    {
+        id: "NGENCZC7MXWKIH",
+        type: "annotation",
+        format: "bed",
+        url: "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/Histone_ChIP-seq/narrowpeak/hg38/2/ENCFF255KIY.bed.gz",
+        name: "ENCODE A549 (repl. 2) Histone ChIP-seq H3K79me2-histone-mark peaks",
+        indexURL:
+            "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/Histone_ChIP-seq/narrowpeak/hg38/2/ENCFF255KIY.bed.gz.tbi",
+        metadata: { tissue: "Lung", biosample: "A549", feature_type: "histone modification" },
+        description:
+            "ENCODE A549 (repl. 2) Histone ChIP-seq H3K79me2-histone-mark peaks (narrowPeak) [Experiment: ENCSR000ATP] [Life stage: Adult]",
+    },
+    {
+        id: "NGENCGBPZNVMAZ",
+        type: "annotation",
+        format: "bed",
+        url: "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/Histone_ChIP-seq/narrowpeak/hg38/2/ENCFF266RWG.bed.gz",
+        name: "ENCODE SK-N-SH (repl. 1, 2) Histone ChIP-seq H3K36me3-histone-mark peaks",
+        indexURL:
+            "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/Histone_ChIP-seq/narrowpeak/hg38/2/ENCFF266RWG.bed.gz.tbi",
+        metadata: { tissue: "Brain", biosample: "SK-N-SH", feature_type: "histone modification" },
+        description:
+            "ENCODE SK-N-SH (repl. 1, 2) Histone ChIP-seq H3K36me3-histone-mark peaks (narrowPeak) [Experiment: ENCSR978CNH] [Life stage: Child]",
+    },
+    {
+        id: "NGENCQPL2EBDFY",
+        type: "annotation",
+        format: "bed",
+        url: "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/Histone_ChIP-seq/narrowpeak/hg38/2/ENCFF273SVR.bed.gz",
+        name: "ENCODE KMS-11 (repl. 2) Histone ChIP-seq H3K4me2-histone-mark peaks",
+        indexURL:
+            "https://tf.lisanwanglab.org/GADB/Annotationtracks/ENCODE/data/Histone_ChIP-seq/narrowpeak/hg38/2/ENCFF273SVR.bed.gz.tbi",
+        metadata: { tissue: "Immune", biosample: "KMS-11", feature_type: "histone modification" },
+        description:
+            "ENCODE KMS-11 (repl. 2) Histone ChIP-seq H3K4me2-histone-mark peaks (narrowPeak) [Experiment: ENCSR806XIU] [Life stage: Adult]",
     },
 ];
