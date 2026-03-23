@@ -243,16 +243,19 @@ class VariantPValueTrack extends igv.TrackBase {
                         if (this.infoURL) {
                             const href = `${this.infoURL}/gene/${f.gene_id}`;
                             data.push({
-                                name: "Target",
+                                name: "Gene",
                                 html: `<a target="_blank" href="${href}">${geneDisplay}</a>`,
                                 title: `Learn more about gene: ${geneDisplay}`,
                             });
                         } else {
-                            data.push({ name: "Target", value: geneDisplay });
+                            data.push({ name: "Gene", value: geneDisplay });
                         }
                     }
 
                     if ("info" in f) {
+                        if ("target" in f.info) {
+                            data.push({ name: "Target", value: f.info.target });
+                        }
                         if ("qtl_dist_to_target" in f.info) {
                             data.push({
                                 name: "Dist. to Target",
