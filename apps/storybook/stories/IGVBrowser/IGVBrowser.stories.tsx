@@ -41,7 +41,6 @@ export const Default: StoryObj<typeof IGVBrowser> = {
         onLocusChanged: noop,
     },
     render: (args) => <IGVBrowser {...args} />,
-    tags: ["dev"], // hide for now
 };
 
 export const WithSelectorAndDefaultTracks: StoryObj<typeof IGVBrowserWithSelector> = {
@@ -55,7 +54,6 @@ export const WithSelectorAndDefaultTracks: StoryObj<typeof IGVBrowserWithSelecto
         onLocusChanged: noop,
     },
     render: (args) => <IGVBrowserWithSelector {...args} />,
-    tags: ["dev"], // hide for now
 };
 
 const LocusControlWrapper = (props: any) => {
@@ -244,7 +242,6 @@ export const WithDynamicTrackConfigs: StoryObj<typeof IGVBrowser> = {
         onLocusChanged: noop,
     },
     render: (args) => <DynamicTrackConfigWrapper {...args} />,
-    tags: ["dev"],
     parameters: {
         docs: {
             description: {
