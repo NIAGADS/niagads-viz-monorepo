@@ -1,11 +1,12 @@
-import { APITableResponse, ProcessedTableResponse, TableSection } from "@/lib/types";
+
+import { APITableResponse, TableSection } from "@/lib/types";
 import { Alert, Card, CardBody, CardHeader, LoadingSpinner } from "@niagads/ui";
 import PaginationMessage from "../PaginationMessage";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import useSWR from "swr";
 import { APIPagination, _isEmpty } from "@niagads/common";
 import Table, { TableConfig } from "@niagads/table";
-import { Histogram, PieChart, PieChartDataRow } from "@niagads/charts";
+import { Histogram } from "@niagads/charts";
 
 export interface RecordTableProps {
     tableDef: TableSection;
@@ -15,16 +16,13 @@ export interface RecordTableProps {
 }
 
 const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTableProps) => {
-    const [externalFilters, setExternalFilters] = useState<any[]>([]);
-
-    const { data, error, isLoading } = useSWR<ProcessedTableResponse>(
+    const { data, error, isLoading } = useSWR<APITableResponse>(
         `/api/table/${recordType}/${recordId}/${tableDef.endpoint}`,
         (url: string) => fetch(url).then((res) => res.json())
     );
 
     const options: TableConfig | undefined = useMemo(() => {
         if (data) {
-            console.log(data)
             const defaultColumns = data.table.columns.map((c: any, index) => {
                 if (index < 8 || c["id"].startsWith("num_") || c["id"] === "url") return c["id"];
             });
@@ -46,7 +44,7 @@ const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTabl
     return isLoading ? (
         <LoadingSpinner />
     ) : error ? (
-        <Alert variant="error" message="Error loading table">
+        <Alert variant="error" message="Error fetching table data">
             <div>
                 {JSON.stringify(error)}
             </div>
@@ -55,33 +53,21 @@ const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTabl
         <Alert variant="info" message="This table contains no data" />
     ) : (
         <div>
-            {data?.pagination.total_num_pages || 0 > 1 && (
+            {(data as APITableResponse).pagination.total_num_pages > 1 && (
                 <PaginationMessage
                     pagination={(data as APITableResponse).pagination}
                     endpoint={`/record/${recordType}/${recordId}${tableDef.endpoint}`}
                 />
             )}
-            {tableDef.tableType === "associations" && (
-                <AssociationsTableFilters
-                    pValues={data?.extraData.negLog10PValues}
-                    populationData={data?.extraData.populationData}
-                    onExternalFilterChange={(colName, value) => setExternalFilters(prev => {
-                        const i = prev.findIndex(x => x.id === colName);
-
-                        if (i >= 0) {
-                            return prev[i].value = value;
-                        }
-
-                        return [...prev, {id: colName, value: value }];
-                    })}
-                />
-            )}
+            <Card variant="full">
+                <div></div>
+            </Card>
             <Table
                 id={tableDef.id}
-                columns={data?.table.columns || []}
-                data={data?.table.data || []}
+                columns={(data as APITableResponse).table.columns}
+                data={(data as APITableResponse).table.data}
                 options={options}
-                externalColumnFilters={externalFilters}
+                externalColumnFilters={}
             />
         </div>
     );
@@ -90,20 +76,11 @@ const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTabl
 export default RecordTable;
 
 interface AssociationsTableFiltersProps {
-    onExternalFilterChange: (colName: string, value: any) => void;
-    pValues: number[] ;
-    populationData: PieChartDataRow[];
+
 }
 
-const AssociationsTableFilters = ({
-    onExternalFilterChange,
-    pValues,
-    populationData,
-}: AssociationsTableFiltersProps) => {
+const AssociationsTableFilters = ({}: AssociationsTableFiltersProps) => {
+
     return (
-        <Card variant="full">
-            <Histogram enableRangeSelect rangeSelectionType="max" data={pValues} onRangeSelect={(range) => onExternalFilterChange("neg_log10_pvalues", range)} opts={{xLabel: "test", numBins: 15}}/>
-            <PieChart id={"test"} data={populationData} onClick={(key) => onExternalFilterChange("population", key)} />
-        </Card>
     )
 };
