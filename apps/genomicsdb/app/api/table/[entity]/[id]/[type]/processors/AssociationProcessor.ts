@@ -31,6 +31,10 @@ const AssociationProcessor = (rawTable: APITableResponse) => {
             c.canFilter = true;
             c.filterType = "external";
         }
+        if (c.id === "trait_categories") {
+            c.canFilter = true;
+            c.filterType = "external";
+        }
         if (c.id === "is_adsp_variant") {
             c.canFilter = true;
             c.filterType = "internal";
@@ -39,7 +43,7 @@ const AssociationProcessor = (rawTable: APITableResponse) => {
             c.canFilter = true;
             c.filterType = "internal";
         }
-        if (c.id === "impact") {
+        if (c.id === "consequence_terms") {
             c.canFilter = true;
             c.filterType = "internal";
         }

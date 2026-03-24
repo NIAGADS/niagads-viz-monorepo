@@ -76,7 +76,7 @@ const Table: React.FC<TableProps> = ({
     useEffect(() => {
         if (externalColumnFilters) {
             setColumnFilters((prev) => [
-                ...prev.filter((cf) => columns.find((c) => c.canFilter)?.id == cf.id),
+                ...prev.filter((cf) => columns.find((c) => c.filterType === "internal")?.id == cf.id),
                 ...externalColumnFilters,
             ]);
         }

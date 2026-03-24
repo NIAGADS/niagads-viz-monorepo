@@ -1,5 +1,5 @@
 import { APITableResponse, ProcessedTableResponse, TableSection } from "@/lib/types";
-import { Alert, Card, CardBody, CardHeader, LoadingSpinner } from "@niagads/ui";
+import { Alert, Card, LoadingSpinner } from "@niagads/ui";
 import PaginationMessage from "../PaginationMessage";
 import { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
@@ -17,6 +17,8 @@ export interface RecordTableProps {
 const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTableProps) => {
     const [externalFilters, setExternalFilters] = useState<any[]>([]);
 
+    // useEffect(() => console.log(externalFilters), [externalFilters]);
+
     const { data, error, isLoading } = useSWR<ProcessedTableResponse>(
         `/api/table/${recordType}/${recordId}/${tableDef.endpoint}`,
         (url: string) => fetch(url).then((res) => res.json())
@@ -24,7 +26,6 @@ const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTabl
 
     const options: TableConfig | undefined = useMemo(() => {
         if (data) {
-            console.log(data)
             const defaultColumns = data.table.columns.map((c: any, index) => {
                 if (index < 8 || c["id"].startsWith("num_") || c["id"] === "url") return c["id"];
             });
@@ -69,7 +70,9 @@ const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTabl
                         const i = prev.findIndex(x => x.id === colName);
 
                         if (i >= 0) {
-                            return prev[i].value = value;
+                            const copy = [...prev];
+                            copy[i].value = value;
+                            return copy;
                         }
 
                         return [...prev, {id: colName, value: value }];
@@ -102,8 +105,11 @@ const AssociationsTableFilters = ({
 }: AssociationsTableFiltersProps) => {
     return (
         <Card variant="full">
-            <Histogram enableRangeSelect rangeSelectionType="max" data={pValues} onRangeSelect={(range) => onExternalFilterChange("neg_log10_pvalues", range)} opts={{xLabel: "test", numBins: 15}}/>
-            <PieChart id={"test"} data={populationData} onClick={(key) => onExternalFilterChange("population", key)} />
+            <div style={{display: "flex", height: "100%", minHeight: "200px"}}>
+                <Histogram enableRangeSelect rangeSelectionType="max" data={pValues} onRangeSelect={(range) => onExternalFilterChange("neg_log10_pvalue", range)} opts={{xLabel: "test", numBins: 50, xMax: 50}}/>
+                {/* <PieChart id={"popPie"} data={populationData} onClick={(key) => onExternalFilterChange("population", key)} /> */}
+                <PieChart id={"traitPie"} data={populationData} onClick={(key) => onExternalFilterChange("trait_category", key)} />
+            </div>
         </Card>
     )
 };
