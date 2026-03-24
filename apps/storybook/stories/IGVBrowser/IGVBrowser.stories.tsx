@@ -129,7 +129,6 @@ export const WithExternalLocusControl: StoryObj<typeof IGVBrowser> = {
         onLocusChanged: noop,
     },
     render: (args) => <LocusControlWrapper {...args} />,
-    tags: ["dev"],
 };
 
 const DynamicTrackConfigWrapper = (props: any) => {

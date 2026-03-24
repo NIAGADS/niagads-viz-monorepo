@@ -11,11 +11,11 @@
         "react-dom": "^19.1.0"
     },
     "devDependencies": {
-        "@niagads/common": "^0.1.1",
-        "@niagads/igv": "^0.1.1",
-        "@niagads/table": "^0.1.1",
-        "@niagads/ui": "^0.1.1",
-        "@niagads/charts": "^0.1.1",
+        "@niagads/common": "^0.2.1",
+        "@niagads/igv": "^0.2.1",
+        "@niagads/table": "^0.2.1",
+        "@niagads/ui": "^0.2.1",
+        "@niagads/charts": "^0.2.1",
         "@storybook/addon-links": "^10.2.12",
         "css-loader": "^6.8.1",
         "http-proxy-middleware": "^3.0.3",

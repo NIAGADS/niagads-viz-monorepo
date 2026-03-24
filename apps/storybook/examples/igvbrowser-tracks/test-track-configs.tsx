@@ -6,7 +6,7 @@ export const qtlTracks: IGVBrowserTrack[] = [
         url: "https://tf.lisanwanglab.org/GADB/FILER2/Annotationtracks/ADSP_FunGen_xQTL/v1/Knight-ADRC/mQTL/bh_significant/bed3plus17_qtl/hg38/FunGenADv1.Knight-ADRC.mQTL.PC.NGFGXQTL0002_v1_$CHR_snp_bh.20260330.bed.gz",
         description: "Example ADSP FunGen Track (sharded by chr)",
         infoURL: "/record",
-        format: "bed6+14",
+        format: "bed3+17",
         type: "qtl",
         indexURL:
             "https://tf.lisanwanglab.org/GADB/FILER2/Annotationtracks/ADSP_FunGen_xQTL/v1/Knight-ADRC/mQTL/bh_significant/bed3plus17_qtl/hg38/FunGenADv1.Knight-ADRC.mQTL.PC.NGFGXQTL0002_v1_$CHR_snp_bh.20260330.bed.gz.tbi",
@@ -44,7 +44,7 @@ export const qtlTracks: IGVBrowserTrack[] = [
         description:
             "GTEx_v8 Anterior cingulate cortex BA24 eQTL eQTL SNP significant associations (bed6+14 qtl) [Life stage: Adult]",
         infoURL: "/record",
-        format: "bed6+14",
+        format: "bed3+17",
         type: "qtl",
         indexURL:
             "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Anterior_cingulate_cortex_BA24_eQTL_GTEx_signif_SNP.bed.gz.tbi",
@@ -63,7 +63,7 @@ export const qtlTracks: IGVBrowserTrack[] = [
         description:
             "GTEx_v8 Caudate basal ganglia eQTL eQTL SNP significant associations (bed6+14 qtl) [Life stage: Adult]",
         infoURL: "/record",
-        format: "bed6+14",
+        format: "bed3+17",
         type: "qtl",
         indexURL:
             "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Caudate_basal_ganglia_eQTL_GTEx_signif_SNP.bed.gz.tbi",
@@ -82,7 +82,7 @@ export const qtlTracks: IGVBrowserTrack[] = [
         description:
             "GTEx_v8 Cerebellar hemisphere eQTL eQTL SNP significant associations (bed6+14 qtl) [Life stage: Adult]",
         infoURL: "/record",
-        format: "bed6+14",
+        format: "bed3+17",
         type: "qtl",
         indexURL:
             "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Cerebellar_hemisphere_eQTL_GTEx_signif_SNP.bed.gz.tbi",
@@ -100,7 +100,7 @@ export const qtlTracks: IGVBrowserTrack[] = [
         url: "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Cerebellum_eQTL_GTEx_signif_SNP.bed.gz",
         description: "GTEx_v8 Cerebellum eQTL eQTL SNP significant associations (bed6+14 qtl) [Life stage: Adult]",
         infoURL: "/record",
-        format: "bed6+14",
+        format: "bed3+17",
         type: "qtl",
         indexURL:
             "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Cerebellum_eQTL_GTEx_signif_SNP.bed.gz.tbi",
