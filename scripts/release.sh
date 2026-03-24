@@ -14,4 +14,4 @@ npm run build-fresh
 
 npx lerna version --no-private
 
-npx release from-package
+npx lerna publish from-package
