@@ -28,6 +28,11 @@ export default function IGVBrowserWithSelector({
         setSelectedTracks((tracks) => tracks.filter((id) => id !== trackId));
     };
 
+    useEffect(() => {
+        // this is for handling when parent changes default tracks (e.g., dynamic selector table)
+        setSelectedTracks(defaultTracks ? resolveTrackIds(defaultTracks) : []);
+    }, [trackConfig]);
+
     // if a selectorTable definition is provided, use that
     // otherwise build one from the trackConfig
     const trackSelectorTable = useMemo(() => {
@@ -92,7 +97,7 @@ export default function IGVBrowserWithSelector({
             const selectedTrackConfigs = findTrackConfigs(trackConfig!, selectedTracks);
             handleUpdateBrowserTracks(browser, selectedTrackConfigs);
         }
-    }, [selectedTracks, browser, trackConfig]);
+    }, [selectedTracks, browser]);
 
     const handleTrackSelectionChange = (state: any) => {
         setSelectedTracks(Object.keys(state));

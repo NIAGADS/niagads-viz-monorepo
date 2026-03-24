@@ -47,7 +47,7 @@ export interface IGVBrowserTrack {
     maxHeight?: number;
     order?: number;
     color?: string; //if a function, don't export
-
+    supportsWholeGenome?: boolean;
     queryable?: boolean;
     metadata?: any;
 }

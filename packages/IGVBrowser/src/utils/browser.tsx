@@ -1,4 +1,4 @@
-import { ALWAYS_ON_TRACKS, GENOMICSDB_ROOT } from "../config/_constants";
+import { ALWAYS_ON_TRACKS, GENOMICSDB_ROOT, QTL_VISIBILITY_WINDOW } from "../config/_constants";
 
 import { IGVBrowserTrack } from "../types/data_models";
 import { getViewTrackIdentifier } from "./views";
@@ -37,6 +37,22 @@ export const removeTrackById = (browser: any, trackId: string) => {
 };
 
 /**
+ * Removes all loaded tracks from the IGV browser except those in alwaysOnTracks.
+ *  from https://github.com/igvteam/igv.js/blob/0dfb1f7b02d9660ff1ef0169899c4711496158e8/js/browser.js#L1104
+ * @param browser IGV browser instance.
+ * @param alwaysOnTracks Array of track IDs that should not be removed (default: ALWAYS_ON_TRACKS).
+ */
+export const clearTrackView = (browser: any, alwaysOnTracks: string[] = ALWAYS_ON_TRACKS) => {
+    const trackViews = browser?.trackViews ?? [];
+    trackViews.forEach((view: any) => {
+        const id = getViewTrackIdentifier(view);
+        if (!alwaysOnTracks.includes(id)) {
+            browser.removeTrack(view.track);
+        }
+    });
+};
+
+/**
  * Loads a single track into the IGV browser, handling special formats and service types.
  * Dynamically imports decoders/readers as needed based on track properties.
  * @param browser IGV browser instance.
@@ -45,16 +61,18 @@ export const removeTrackById = (browser: any, trackId: string) => {
 export const loadTrack = async (browser: any, track: IGVBrowserTrack) => {
     if ("format" in track) {
         // does it match bedX+Y?
-        if (track.format.match("^bed\\d{1,2}\\+\\d+$") != null) {
+        if (track.format?.match("^bed\\d{1,2}\\+\\d+$") != null) {
             const { default: decodeBedXY } = await import("../decoders/bedDecoder");
             track.decode = decodeBedXY;
+            track.visibilityWindow = QTL_VISIBILITY_WINDOW;
+            track.supportsWholeGenome = false;
         }
     }
     if (track.url.includes("$CHR")) {
         const { default: ShardedBedReader } = await import("../readers/ShardedBedReader");
         track.reader = new ShardedBedReader(track, browser.genome);
     }
-    if (track.type.includes("_service")) {
+    if (track.type?.includes("_service")) {
         track.reader = await resolveServiceTrackReader(
             {
                 endpoint: track.url,

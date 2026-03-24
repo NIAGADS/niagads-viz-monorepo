@@ -79,6 +79,18 @@ The following command will run storybook and automatically build packages as you
 npm run storybook
 ```
 
+> **DEVELOPERS NOTE**: to "hide" a story from the published storybook, add the 'dev' tag to your story defintion.  For example:
+
+```javascript
+export const MyStory: StoryObj<typeof Component> = {
+    args: {
+        ...
+    },
+    render: (args) => <Component {...args} />,
+    tags: ["dev"], // hide in production
+};
+```
+
 ### niagads-api-client
 
 > temporarily moved to own repo until we can break tailwindcss dependendency (niagads-api)

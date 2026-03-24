@@ -2,7 +2,7 @@
     "name": "niagads-viz-js.storybook",
     "scripts": {
         "storybook": "npx storybook dev -p 6006 --no-open",
-        "build-storybook": "storybook build",
+        "build-storybook": "storybook build --tags '!dev'",
         "storybook-docs": "storybook dev --docs"
     },
     "dependencies": {
