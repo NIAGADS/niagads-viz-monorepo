@@ -20,22 +20,6 @@ export const qtlTracks: IGVBrowserTrack[] = [
         },
     },
     {
-        id: "NGFGXQTL0002-bigBed",
-        name: "Knight-ADRC-mQTL-PC",
-        url: "https://wanglab-genomicsdb.s3.us-east-1.amazonaws.com/test/fungen_chr19_test.bigBed",
-        description: "Example ADSP FunGen Track (sharded by chr; bigBed binary)",
-        infoURL: "/record",
-        type: "qtl",
-        format: "bigBed6+14",
-        autoscale: true,
-        metadata: {
-            cell_type: "PC",
-            tissue_category: "Brain",
-            data_source: "ADSP FunGen",
-            data_category: "mQTL",
-        },
-    },
-    {
         id: "NGGTXAMZZNCCLT",
         name: "GTEx_v8 Amygdala eQTL SNP significant associations",
         url: "https://tf.lisanwanglab.org/GADB/Annotationtracks/GTEx/v8/eQTL/significant/bed3plus17_qtl/hg38/formatted_output_Amygdala_eQTL_GTEx_signif_SNP.bed.gz",
