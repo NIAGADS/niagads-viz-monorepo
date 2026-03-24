@@ -6,7 +6,7 @@ CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 RELEASE_BRANCH=$(echo "release/$(date '+%m-%d-%Y')")
 
 if [[ "$CURRENT_BRANCH" != "$RELEASE_BRANCH" ]]; then
-    git checkout -b $BRANCH_NAME
+    git checkout -b $RELEASE_BRANCH
     git push --set-upstream origin $RELEASE_BRANCH
 fi
 
