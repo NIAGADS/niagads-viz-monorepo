@@ -23,6 +23,7 @@ const TARGET_GENE_SYMBOL_FIELD = "target_gene_symbol";
 const TARGET_GENE_ID_FIELD = "target_ensembl_id";
 const VARIANT_ID_FIELD = "variant_id";
 const IGNORE_OPTIONAL_FIELDS = new Set(["user_input", "target_info"]);
+
 //const NEG_LOG10_P_CAP = 50;
 
 interface Popup {
@@ -74,7 +75,7 @@ function decodeBedXY(tokens: any, header: any) {
     parseOptionalFields(feature, tokens, X, header.columnNames, IGNORE_OPTIONAL_FIELDS);
 
     feature.setP(tokens, fieldIndexMap);
-    feature.setTarget(tokens, fieldIndexMap);
+    feature.setGene(tokens, fieldIndexMap);
     feature.setVariant(tokens, fieldIndexMap);
 
     return feature;
@@ -256,7 +257,7 @@ class BedXYFeature {
         }
     }
 
-    setTarget(tokens: any, fieldIndexMap: Record<string, number>) {
+    setGene(tokens: any, fieldIndexMap: Record<string, number>) {
         const indexSymbol = fieldIndexMap[TARGET_GENE_SYMBOL_FIELD];
         const targetGeneSymbol = indexSymbol !== undefined ? tokens[indexSymbol] : undefined;
 

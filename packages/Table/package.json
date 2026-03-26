@@ -1,6 +1,6 @@
 {
     "name": "@niagads/table",
-    "version": "0.1.2",
+    "version": "0.2.1",
     "scripts": {
         "build": "rollup -c"
     },
@@ -24,15 +24,17 @@
         "typescript": "^5"
     },
     "dependencies": {
-        "@niagads/common": "^0.1.2",
-        "@niagads/ui": "^0.1.2",
+        "@niagads/common": "^0.2.1",
+        "@niagads/ui": "^0.2.1",
         "@tanstack/react-table": "^8.11.8",
         "export-from-json": "github:NIAGADS/export-from-json#niagads",
         "lucide-react": "^0.513.0",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0",
         "style-inject": "^0.3.0",
         "tslib": "^2"
+    },
+    "peerDependencies": {
+        "react": "^19.2.1",
+        "react-dom": "^19.2.1"
     },
     "files": [
         "dist"

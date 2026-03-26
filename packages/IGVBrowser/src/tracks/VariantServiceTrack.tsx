@@ -52,7 +52,6 @@ class VariantServiceTrack extends igv.TrackBase {
         this.expandedGroupGap = config.expandedGroupGap || 10;
         this.squishedGroupGap = config.squishedGroupGap || 5;
         this.featureHeight = config.featureHeight || 14;
-        this.visibilityWindow = config.visibilityWindow;
         this.featureSource = igv.FeatureSource(config, this.browser.genome);
         this.noGenotypeColor = config.noGenotypeColor || "rgb(200,180,180)";
         this.noCallColor = config.noCallColor || "rgb(225, 225, 225)";
