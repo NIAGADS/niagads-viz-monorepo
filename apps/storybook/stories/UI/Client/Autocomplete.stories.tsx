@@ -23,15 +23,12 @@ const suggestions = [
     "blueberry",
     "raspberry",
     "blackberry",
-]
+];
 
 const AutocompleteDemo = () => {
     return (
         <div style={{ maxWidth: 400, margin: "0 auto" }}>
-            <Autocomplete 
-                suggestions={suggestions}
-                onSelect={(s) => alert("you have selected: " + s)}
-            />
+            <Autocomplete suggestions={suggestions} onSelect={(s) => alert("you have selected: " + s)} />
         </div>
     );
 };

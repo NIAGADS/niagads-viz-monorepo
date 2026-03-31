@@ -42,14 +42,7 @@ interface APISearchProps {
     placeholder?: string;
 }
 
-export const APISearch = ({
-    suggestions,
-    onSearch,
-    onClick,
-    onValueChange,
-    error,
-    placeholder,
-}: APISearchProps) => {
+export const APISearch = ({ suggestions, onSearch, onClick, onValueChange, error, placeholder }: APISearchProps) => {
     const [query, setQuery] = useState("");
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [highlightedIndex, setHighlightedIndex] = useState(-1);
