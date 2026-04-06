@@ -1,57 +1,94 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import React, { useState } from "react";
+import { RangeSlider as RSlider, RangeSliderVariant, Slider } from "@niagads/ui/client";
+import React, { useEffect, useState } from "react";
 
-import { Slider } from "@niagads/ui/client";
+import { Range } from "@niagads/common";
 
-type SliderVariant = "single" | "min" | "max" | "range";
-
-const SliderDemo: React.FC<{ variant: SliderVariant; label: string }> = ({ variant, label }) => {
-    const initialValues: Record<SliderVariant, number[]> = {
-        single: [50],
-        min: [50],
-        max: [50],
-        range: [25, 75],
-    };
-
-    const [value, setValue] = React.useState(initialValues[variant]);
-    const min = 0;
-    const max = 100;
-    const step = 5;
+// Parent component for basic Slider
+const SliderDemo = () => {
+    const [value, setValue] = useState<number>(50);
 
     return (
-        <div style={{ maxWidth: 400, margin: "0 auto" }}>
+        <div style={{ padding: "2rem", maxWidth: "500px" }}>
             <Slider
-                name={variant + "Slider"}
-                label={label}
+                name="single-slider"
+                label="Select a value"
                 value={value}
-                min={min}
-                max={max}
-                step={step}
-                variant={variant}
+                min={0}
+                max={100}
+                step={1}
                 onChange={setValue}
             />
-            <div style={{ marginTop: 16, fontSize: 14, color: "#374151" }}>
-                <strong>Current Value:</strong> {value[0]}
+            <div style={{ marginTop: "1rem", padding: "1rem", backgroundColor: "#f0f0f0", borderRadius: "4px" }}>
+                <p>
+                    <strong>Current Value:</strong> {value}
+                </p>
             </div>
         </div>
     );
 };
 
-const meta: Meta<typeof Slider> = {
+const RangeSliderDemo = ({ variant }: { variant: RangeSliderVariant }) => {
+    const [rangeValue, setRangeValue] = useState<Range>();
+
+    useEffect(() => {
+        if (variant === "range") setRangeValue({ min: 50, max: 75 });
+        else if (variant === "max") setRangeValue({ min: 0, max: 50 });
+        else setRangeValue({ min: 50, max: 100 });
+    }, []);
+
+    return (
+        <div style={{ padding: "2rem", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "2rem" }}>
+            {rangeValue && (
+                <div style={{ maxWidth: "400px" }}>
+                    <h3>Range - {variant} </h3>
+
+                    <RSlider
+                        name="range-slider"
+                        label="Select a range"
+                        value={rangeValue}
+                        min={0}
+                        max={100}
+                        step={1}
+                        variant={variant}
+                        onChange={(v: Range) => setRangeValue(v)}
+                    />
+
+                    <div
+                        style={{ marginTop: "1rem", padding: "1rem", backgroundColor: "#f0f0f0", borderRadius: "4px" }}
+                    >
+                        <p>
+                            <strong>Current Range:</strong> [{rangeValue.min}, {rangeValue.max}]
+                        </p>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+// Storybook Meta Configuration
+const meta: Meta = {
     title: "UI/Client/Slider",
-    component: Slider,
-    parameters: {
-        // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
-        layout: "centered",
-    },
-    // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
     tags: ["autodocs"],
 };
 
 export default meta;
-type Story = StoryObj<typeof Slider>;
+type Story = StoryObj<typeof meta>;
 
-export const SingleSlider = () => <SliderDemo variant="single" label="Single Slider" />;
-export const MinSlider = () => <SliderDemo variant="min" label="Min Slider (highlight min→value)" />;
-export const MaxSlider = () => <SliderDemo variant="max" label="Max Slider (highlight value→max)" />;
-export const RangeSlider = () => <SliderDemo variant="range" label="Range Slider (highlight range)" />;
+// Story: Basic Slider
+export const BasicSlider: Story = {
+    render: () => <SliderDemo />,
+};
+
+export const MinSlider: Story = {
+    render: () => <RangeSliderDemo variant="min" />,
+};
+
+export const MaxSlider: Story = {
+    render: () => <RangeSliderDemo variant="max" />,
+};
+
+export const RangeSlider: Story = {
+    render: () => <RangeSliderDemo variant="range" />,
+};
