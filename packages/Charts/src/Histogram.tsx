@@ -1,8 +1,9 @@
 import { AxisConfig, DisplayProps } from "./d3/types";
 import { HistogramOptions, histogram, updateHistogramHighlight } from "./d3/histogramChart";
+import { RangeSlider, Slider } from "@niagads/ui/client";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
-import { Slider } from "@niagads/ui/client";
+import { Range } from "@niagads/common";
 import styles from "./styles/Charts.module.css";
 
 interface HistogramProps extends AxisConfig {
@@ -38,53 +39,66 @@ const Histogram = ({ data, numBins, min, max, label, displayOpts }: HistogramPro
 export default Histogram;
 
 interface RangeSelectHistogramProps extends HistogramProps {
-    selectionStrategy?: "min" | "max" | "range";
-    selectedLowerBound?: number;
-    selectedUpperBound?: number;
-    onRangeSelect: (range: number[]) => void;
+    selectionStrategy: "min" | "max" | "range";
+    initialSelection: Range;
+    onRangeSelect: (range: Range) => void;
 }
-/*
 
-const RangeSelectHistogram = ({ data, numBins, xAxis, display }: HistogramProps) => {
+export const RangeSelectHistogram = ({
+    data,
+    numBins,
+    min,
+    max,
+    label,
+    displayOpts,
+    selectionStrategy,
+    initialSelection,
+    onRangeSelect,
+}: RangeSelectHistogramProps) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
+    const [sliderStepSize, setSliderStepSize] = useState<number | null>(null);
+    const [selection, setSelection] = useState<Range>(initialSelection);
 
-    const [binSize, setBinSize] = useState<number | undefined>(undefined);
-    const [selectedRange, setSelectedRange] = useState<number[]>(initialSelection);
+    const opts: HistogramOptions = {
+        numBins: numBins,
+        xAxis: { min: min, max: max, label: label },
+        displayOpts: displayOpts,
+        selectedRange: selection,
+    };
 
     useEffect(() => {
         if (containerRef.current) {
-            const size = histogram(containerRef.current, data, {
+            const stepSize = histogram(containerRef.current, data, {
                 ...opts,
             });
-            setBinSize(size!);
-            if (initialSelection) {
-                updateHistogramHighlight(containerRef.current, selectedRange);
+            setSliderStepSize(stepSize!);
+            if (selection) {
+                updateHistogramHighlight(containerRef.current, selection);
             }
         }
     }, [data, opts]);
 
     useEffect(() => {
         if (containerRef.current) {
-            updateHistogramHighlight(containerRef.current, selectedRange);
+            updateHistogramHighlight(containerRef.current, selection);
         }
-        onRangeSelect && onRangeSelect(selectedRange);
-    }, [selectedRange]);
+        onRangeSelect && onRangeSelect(selection);
+    }, [selection]);
 
     return (
         <div>
             <div ref={containerRef} className={styles.chartContainer} />
-            {enableRangeSelect && binSize && (
-                <Slider
+            {sliderStepSize && (
+                <RangeSlider
                     name="histogram-slider-selection"
-                    value={initialSelection ?? []}
-                    min={opts.xMin ?? Math.min(...data)}
-                    max={opts.xMax ?? Math.max(...data)}
-                    step={binSize}
-                    variant={rangeSelectionType ?? "max"}
-                    onChange={setSelectedRange}
+                    value={selection}
+                    min={min ?? Math.min(...data)}
+                    max={max ?? Math.max(...data)}
+                    step={sliderStepSize}
+                    variant={selectionStrategy ?? "range"}
+                    onChange={setSelection}
                 />
             )}
         </div>
     );
 };
-*/

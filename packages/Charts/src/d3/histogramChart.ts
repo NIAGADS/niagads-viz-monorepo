@@ -2,6 +2,8 @@ import * as d3 from "d3";
 
 import { AxisConfig, DisplayProps } from "./types";
 
+import { Range } from "@niagads/common";
+
 const HISTOGRAM_COLORS = {
     bar: "#7ea7c7",
     barHover: "#5d8fb8",
@@ -22,7 +24,7 @@ export interface HistogramOptions {
     numBins: number;
     xAxis?: AxisConfig;
     displayOpts?: DisplayProps;
-    selectedRange?: number[]; // [min, max] for highlighting bins
+    selectedRange?: Range; // [min, max] for highlighting bins
 }
 
 interface HistogramState {
@@ -31,13 +33,8 @@ interface HistogramState {
     x: d3.ScaleLinear<number, number>;
 }
 
-function isSelected(d: d3.Bin<number, number>, selectedRange?: number[]): boolean {
-    return !!(
-        selectedRange &&
-        selectedRange.length >= 1 &&
-        d.x0! >= selectedRange[0] &&
-        (selectedRange.length === 1 || d.x1! <= selectedRange[1])
-    );
+function isSelected(d: d3.Bin<number, number>, selectedRange?: Range): boolean {
+    return !!(selectedRange && d.x0! >= selectedRange.min && d.x1! <= selectedRange.max);
 }
 
 function applyFill(d: d3.Bin<number, number>, opts: HistogramOptions): string {
@@ -309,7 +306,7 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
     return binSize;
 }
 
-export function updateHistogramHighlight(container: HTMLElement, selectedRange?: number[]) {
+export function updateHistogramHighlight(container: HTMLElement, selectedRange?: Range) {
     const svg = d3.select(container).select<SVGSVGElement>("svg");
     const state = (svg.node() as any).__histogramState__ as HistogramState | undefined;
 

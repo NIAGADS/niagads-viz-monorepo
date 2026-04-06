@@ -1,21 +1,8 @@
+import { Histogram, RangeSelectHistogram } from "@niagads/charts";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
-import { Histogram } from "@niagads/charts";
 import { TABLE_DEFINTION as largeNumericTable } from "../../examples/tables/table_large_numeric_values";
 import { useState } from "react";
-
-// Demo wrapper to show selected range in parent div
-const HistogramWithSliderDemo = (props: any) => {
-    const [selected, setSelected] = useState<number[]>(props.initialSelection ?? []);
-    return (
-        <div>
-            <div style={{ marginBottom: 12, fontSize: 16 }}>
-                Selected range (chart parent state): {selected.length === 0 ? "(none)" : selected.join(" – ")}
-            </div>
-            <Histogram {...props} initialSelection={selected} onRangeSelect={setSelected} />
-        </div>
-    );
-};
 
 // Generate skewed data with right tail (values between 0 and 1)
 const generateSkewedData = (count: number): number[] => {
@@ -117,21 +104,27 @@ export const PValueHistogram: Story = {
     },
 };
 
-/*
-export const PValueHistogramWithSlider: Story = {
-    render: (args) => <HistogramWithSliderDemo {...args} />,
+// RangeSelectHistogram story using pvalueData
+export const PValueRangeSelectHistogram = {
+    render: (args: any) => {
+        const [selected, setSelected] = useState([5, 10]);
+        return (
+            <div>
+                <div style={{ marginBottom: 12, fontSize: 16 }}>
+                    Selected range: {selected[0]} – {selected[1]}
+                </div>
+                <RangeSelectHistogram {...args} initialSelection={selected} onRangeSelect={setSelected} />
+            </div>
+        );
+    },
     args: {
         data: pvalueData as number[],
-        opts: {
-            numBins: 50,
-            xLabel: "-log10p",
-            aspectRatio: 0.5,
-            xMin: 0,
-            xMax: 50,
-        },
-        enableRangeSelect: true,
-        rangeSelectionType: "max",
-        initialSelection: [7],
+        numBins: 50,
+        min: 0,
+        max: 50,
+        label: "-log10p",
+        displayOpts: undefined,
+        selectionStrategy: "range",
+        initialSelection: [5, 10],
     },
 };
-*/
