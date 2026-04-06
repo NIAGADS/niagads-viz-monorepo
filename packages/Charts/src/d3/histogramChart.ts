@@ -72,7 +72,7 @@ function applyHoverFill(d: d3.Bin<number, number>, opts: HistogramOptions): stri
     return HISTOGRAM_COLORS.barHover;
 }
 
-function getRoundedTopBarPath(xPos: number, yPos: number, width: number, height: number, radius = 4): string {
+function getRoundedTopBarPath(xPos: number, yPos: number, width: number, height: number, radius = 2): string {
     const safeWidth = Math.max(0, width);
     const safeHeight = Math.max(0, height);
     const cappedRadius = Math.min(radius, safeWidth / 2, safeHeight);
