@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import React, { useState } from "react";
 
 import { Histogram } from "@niagads/charts";
 import { TABLE_DEFINTION as largeNumericTable } from "../../examples/tables/table_large_numeric_values";
+import { useState } from "react";
 
 // Demo wrapper to show selected range in parent div
 const HistogramWithSliderDemo = (props: any) => {
@@ -50,27 +50,38 @@ const meta: Meta<typeof Histogram> = {
             control: { type: "object" },
             description: "Array of numeric values to histogram",
         },
-        opts: {
-            control: { type: "object" },
-            description: "Histogram options (HistogramOptions)",
+        numBins: {
+            control: { type: "number" },
+            description: "Number of bins",
+            defaultValue: 15,
         },
-        enableRangeSelect: {
-            control: { type: "boolean" },
-            description: "Show slider for range selection",
-            defaultValue: false,
+        min: {
+            control: { type: "number" },
+            description: "Minimum value for x-axis",
+            defaultValue: 0,
+        },
+        max: {
+            control: { type: "number" },
+            description: "Maximum value for x-axis",
+            defaultValue: 1,
+        },
+        label: {
+            control: { type: "text" },
+            description: "Label for x-axis",
+            defaultValue: "Value",
+        },
+        displayOpts: {
+            control: { type: "object" },
+            description: "Display options (DisplayProps)",
         },
     },
     args: {
         data: exampleData,
-        opts: {
-            numBins: 15,
-            xLabel: "Value",
-            aspectRatio: 0.5,
-            margin: { top: 20, right: 30, bottom: 40, left: 40 },
-            xMin: 0,
-            xMax: 1,
-        },
-        enableRangeSelect: false,
+        numBins: 15,
+        min: 0,
+        max: 1,
+        label: "Value",
+        displayOpts: undefined,
     },
 };
 
@@ -80,11 +91,11 @@ type Story = StoryObj<typeof Histogram>;
 export const Default: Story = {
     args: {
         data: exampleData,
-        opts: {
-            numBins: 25,
-            xLabel: "score",
-            aspectRatio: 0.5,
-        },
+        numBins: 25,
+        min: 0,
+        max: 1,
+        label: "score",
+        displayOpts: undefined,
     },
 };
 
@@ -98,16 +109,15 @@ export const PValueHistogram: Story = {
     render: (args) => <Histogram {...args} />,
     args: {
         data: pvalueData as number[],
-        opts: {
-            numBins: 50,
-            xLabel: "-log10p",
-            aspectRatio: 0.5,
-            xMin: 0,
-            xMax: 50,
-        },
+        numBins: 50,
+        min: 0,
+        max: 50,
+        label: "-log10p",
+        displayOpts: undefined,
     },
 };
 
+/*
 export const PValueHistogramWithSlider: Story = {
     render: (args) => <HistogramWithSliderDemo {...args} />,
     args: {
@@ -124,3 +134,4 @@ export const PValueHistogramWithSlider: Story = {
         initialSelection: [7],
     },
 };
+*/

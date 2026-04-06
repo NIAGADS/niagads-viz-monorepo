@@ -1,5 +1,7 @@
 import * as d3 from "d3";
 
+import { AxisConfig, DisplayProps } from "./types";
+
 const HISTOGRAM_COLORS = {
     bar: "#7ea7c7",
     barHover: "#5d8fb8",
@@ -18,11 +20,8 @@ const HISTOGRAM_COLORS = {
 
 export interface HistogramOptions {
     numBins: number;
-    xMin?: number;
-    xMax?: number;
-    xLabel: string;
-    aspectRatio?: number; // height = width * aspectRatio
-    margin?: { top: number; right: number; bottom: number; left: number };
+    xAxis?: AxisConfig;
+    displayOpts?: DisplayProps;
     selectedRange?: number[]; // [min, max] for highlighting bins
 }
 
@@ -43,8 +42,7 @@ function isSelected(d: d3.Bin<number, number>, selectedRange?: number[]): boolea
 
 function applyFill(d: d3.Bin<number, number>, opts: HistogramOptions): string {
     const selected = isSelected(d, opts.selectedRange);
-
-    if (opts.xMax !== undefined && d.x0 === opts.xMax) {
+    if (d.x0 === opts.xAxis?.max) {
         return selected ? HISTOGRAM_COLORS.barSelected : HISTOGRAM_COLORS.barOverflow;
     }
     return selected ? HISTOGRAM_COLORS.barSelected : HISTOGRAM_COLORS.bar;
@@ -53,7 +51,7 @@ function applyFill(d: d3.Bin<number, number>, opts: HistogramOptions): string {
 function applyStroke(d: d3.Bin<number, number>, opts: HistogramOptions): string {
     const selected = isSelected(d, opts.selectedRange);
 
-    if (opts.xMax !== undefined && d.x0 === opts.xMax) {
+    if (d.x0 === opts.xAxis?.max) {
         return selected ? HISTOGRAM_COLORS.strokeSelected : HISTOGRAM_COLORS.strokeOverflow;
     }
     return selected ? HISTOGRAM_COLORS.strokeSelected : HISTOGRAM_COLORS.stroke;
@@ -68,19 +66,13 @@ function applyHoverFill(d: d3.Bin<number, number>, opts: HistogramOptions): stri
     if (isSelected(d, opts.selectedRange)) {
         return HISTOGRAM_COLORS.barSelected;
     }
-    if (opts.xMax !== undefined && d.x0 === opts.xMax) {
+    if (d.x0 === opts.xAxis?.max) {
         return HISTOGRAM_COLORS.strokeOverflow;
     }
     return HISTOGRAM_COLORS.barHover;
 }
 
-function getRoundedTopBarPath(
-    xPos: number,
-    yPos: number,
-    width: number,
-    height: number,
-    radius = 4
-): string {
+function getRoundedTopBarPath(xPos: number, yPos: number, width: number, height: number, radius = 4): string {
     const safeWidth = Math.max(0, width);
     const safeHeight = Math.max(0, height);
     const cappedRadius = Math.min(radius, safeWidth / 2, safeHeight);
@@ -117,8 +109,8 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
     }
 
     // Calculate min and max
-    const binMin = opts.xMin || d3.min(data);
-    const binMax = opts.xMax || d3.max(data);
+    const binMin = opts.xAxis?.min || d3.min(data);
+    const binMax = opts.xAxis?.max || d3.max(data);
 
     // Set up bins
     const numBins = opts.numBins || 10;
@@ -127,10 +119,11 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
     let bins: d3.Bin<number, number>[] = [];
     let binSize: number | undefined = undefined;
 
-    if (opts.xMax !== undefined) {
+    if (opts.xAxis?.max !== undefined) {
         // Split data into normal and overflow
-        const cappedData = data.filter((d) => d <= opts.xMax!);
-        const overflowData = data.filter((d) => d > opts.xMax!);
+        const cap = opts.xAxis.max;
+        const cappedData = data.filter((d) => d <= cap);
+        const overflowData = data.filter((d) => d > cap);
         bins = histogramGenerator(cappedData);
         if (bins.length > 0) {
             binSize = bins[0].x1! - bins[0].x0!;
@@ -138,8 +131,8 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
         if (overflowData.length > 0) {
             // Create overflow bin matching d3.bin structure
             const overflowBin = Object.assign(overflowData, {
-                x0: opts.xMax!,
-                x1: opts.xMax! + (binSize || 1),
+                x0: cap,
+                x1: cap + (binSize || 1),
                 length: overflowData.length,
             });
             bins.push(overflowBin as d3.Bin<number, number>);
@@ -152,10 +145,10 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
     }
     // Plotting
     // Set up dimensions
-    const margin = opts.margin || { top: 20, right: 24, bottom: 52, left: 44 };
+    const margin = opts.displayOpts?.margin || { top: 20, right: 24, bottom: 52, left: 44 };
     const parent = container.parentElement || container;
     const width = parent.clientWidth || 600;
-    const aspectRatio = opts.aspectRatio || 0.5;
+    const aspectRatio = opts.displayOpts?.aspectRatio || 0.5;
     const height = parent.clientHeight || width * aspectRatio;
 
     // Remove previous SVG if exists
@@ -186,12 +179,16 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
 
     g.append("g")
         .attr("class", "histogram-grid")
-        .call(d3.axisLeft(y).ticks(4).tickSize(-plotWidth).tickFormat(() => ""))
+        .call(
+            d3
+                .axisLeft(y)
+                .ticks(4)
+                .tickSize(-plotWidth)
+                .tickFormat(() => "")
+        )
         .call((grid) => {
             grid.select(".domain").remove();
-            grid.selectAll(".tick line")
-                .attr("stroke", HISTOGRAM_COLORS.grid)
-                .attr("stroke-dasharray", "3 4");
+            grid.selectAll(".tick line").attr("stroke", HISTOGRAM_COLORS.grid).attr("stroke-dasharray", "3 4");
         });
 
     // Bars
@@ -252,14 +249,14 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
 
     bar.on("mousemove", function (event, d) {
         d3.select(this).attr("fill", applyHoverFill(d, opts)).attr("opacity", 1);
-
+        const cap = opts.xAxis?.max;
         const freq = ((d.length / data.length) * 100).toFixed(1);
-        const hasOverflow = opts.xMax !== undefined && bins.length > 0 && bins[bins.length - 1].x0 === opts.xMax;
+        const hasOverflow = cap !== undefined && bins.length > 0 && bins[bins.length - 1].x0 === cap;
         const lastRegularBinIdx = hasOverflow ? bins.length - 2 : bins.length - 1;
 
         let binLabel: string;
-        if (hasOverflow && d.x0! === opts.xMax) {
-            binLabel = `> ${opts.xMax.toFixed(1)}`;
+        if (hasOverflow && d.x0! === cap) {
+            binLabel = `> ${cap.toFixed(1)}`;
         } else if (d === bins[lastRegularBinIdx]) {
             binLabel = `[${d.x0?.toFixed(1)}, ${d.x1?.toFixed(1)}]`;
         } else {
@@ -276,9 +273,7 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
             .style("left", event.offsetX + 20 + "px")
             .style("top", event.offsetY - 10 + "px");
     }).on("mouseleave", function (_event, d) {
-        d3.select(this)
-            .attr("fill", applyFill(d, opts))
-            .attr("opacity", 0.92);
+        d3.select(this).attr("fill", applyFill(d, opts)).attr("opacity", 0.92);
         tooltip.style("display", "none");
     });
 
@@ -290,9 +285,7 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
         .call((axis) => {
             axis.select(".domain").attr("stroke", HISTOGRAM_COLORS.axis).attr("stroke-width", 1);
             axis.selectAll(".tick line").attr("stroke", HISTOGRAM_COLORS.axis);
-            axis.selectAll(".tick text")
-                .style("font-size", "12px")
-                .style("fill", HISTOGRAM_COLORS.axis);
+            axis.selectAll(".tick text").style("font-size", "12px").style("fill", HISTOGRAM_COLORS.axis);
         });
 
     // X Label
@@ -304,7 +297,7 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
         .style("font-size", "13px")
         .style("font-weight", "600")
         .style("fill", HISTOGRAM_COLORS.label)
-        .text(opts.xLabel);
+        .text(opts.xAxis?.label || "");
 
     // Store state on SVG node for later updates
     (svg.node() as any).__histogramState__ = {
