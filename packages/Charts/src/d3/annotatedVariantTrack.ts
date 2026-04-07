@@ -1,6 +1,5 @@
 import * as d3 from "d3";
 import { DisplayProps } from "./types";
-import { Range } from "@niagads/common";
 
 const THEME = {
     backgroundFill: "#f3f6fa",
@@ -25,6 +24,11 @@ const THEME = {
 
 const DEFAULT_MARGIN = { top: 90, right: 90, bottom: 90, left: 90 };
 
+interface Range {
+    start: number;
+    end: number;
+}
+
 /**
  * Base interface for positioned and styled elements with start/end coordinates
  */
@@ -36,6 +40,7 @@ interface TrackBaseElement extends Range {
 interface RegionTrack extends TrackBaseElement {}
 
 interface VariantAnnotation {
+    id: string;
     position: number;
     value: number;
     trait: string;
@@ -70,7 +75,7 @@ interface TraitLegendBlock extends TrackBaseElement {
     group: string;
 }
 
-interface AnnotationPopup {
+interface AnnotationTrack {
     position: number;
     align: "left" | "right";
     lines: string[];
@@ -87,7 +92,6 @@ export interface AnnotatedVariantTrackOptions {
         introns: IntronTrack[];
         exons: ExonTrack[];
     };
-    annotations?: AnnotationPopup[];
 }
 
 interface Layout {
@@ -474,7 +478,7 @@ function drawTraitLegend(
 
 function drawAnnotations(
     svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
-    annotations: AnnotationPopup[],
+    annotations: AnnotationTrack[],
     x: d3.ScaleLinear<number, number>,
     layout: Layout
 ) {
@@ -517,6 +521,18 @@ function drawAnnotations(
                 .text(line);
         });
     });
+}
+
+function generateAnnotationTracks(variants: VariantAnnotation[]): AnnotationTrack[] {
+    // Convert variant annotations to annotation tracks
+    // Each variant becomes an annotation with its trait and value info
+    return variants.map((variant) => ({
+        position: variant.position,
+        align: Math.random() > 0.5 ? "left" : "right", // Alternate alignment to avoid overlap
+        lines: [variant.trait, `p=${variant.value.toExponential(2)}`],
+        titleLineCount: 1,
+        showDot: true,
+    }));
 }
 
 function generateTraitLegend(
@@ -594,6 +610,9 @@ export function annotatedVariantTrack(container: HTMLElement, opts: AnnotatedVar
         },
     };
 
+    // Generate annotation tracks from variants
+    const annotationTracks = generateAnnotationTracks(opts.variants);
+
     // Clean up existing SVG and tooltip
     d3.select(container).select("svg").remove();
     d3.select(container).select(".annotated-variant-track-tooltip").remove();
@@ -642,5 +661,5 @@ export function annotatedVariantTrack(container: HTMLElement, opts: AnnotatedVar
     drawOverviewTrack(svg, x, width, margin, backgroundBands, layout);
     drawGenes(svg, x, width, margin, opts.gene, layout);
     drawTraitLegend(svg, x, width, margin, traitLegend, layout, svg, tooltip);
-    drawAnnotations(svg, opts.annotations || [], x, layout);
+    drawAnnotations(svg, annotationTracks, x, layout);
 }
