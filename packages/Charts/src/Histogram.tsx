@@ -1,7 +1,7 @@
 import { AxisConfig, DisplayProps } from "./d3/types";
 import { HistogramOptions, histogram, updateHistogramHighlight } from "./d3/histogramChart";
 import { RangeSlider, Slider } from "@niagads/ui/client";
-import React, { useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { Range } from "@niagads/common";
 import styles from "./styles/Charts.module.css";
@@ -12,12 +12,12 @@ interface HistogramProps extends AxisConfig {
     displayOpts?: DisplayProps;
 }
 
-const Histogram = ({ data, numBins, min, max, label, displayOpts }: HistogramProps) => {
+const Histogram = ({ data, numBins, max, label, displayOpts }: HistogramProps) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
 
     const opts: HistogramOptions = {
         numBins: numBins,
-        xAxis: { min: min, max: max, label: label },
+        xAxis: { max: max, label: label },
         displayOpts: displayOpts,
     };
 
@@ -56,12 +56,13 @@ export const RangeSelectHistogram = ({
     const [sliderStepSize, setSliderStepSize] = useState<number | null>(null);
     const [selectedRange, setSelectedRange] = useState<Range>(range);
 
-    const dataMin = useMemo(() => Math.min(...data), [data]);
-    const dataMax = useMemo(() => Math.max(...data), [data]);
+    const dataMin = useMemo(() => Math.floor(Math.min(...data)), [data]);
+    const dataMax = useMemo(() => Math.ceil(Math.max(...data)), [data]);
     const hasOverflow = max && dataMax > max;
 
     const opts: HistogramOptions = {
         numBins: numBins,
+        binDomain: { min: dataMin, max: dataMax },
         xAxis: { max: max, label: label },
         displayOpts: displayOpts,
         selectedRange: selectedRange,
@@ -126,12 +127,13 @@ export const ThresholdSelectHistogram = ({
     const [selectedRange, setSelectedRange] = useState<Range>();
     const [selectedLimit, setSelectedLimit] = useState<number>(limit);
 
-    const dataMin = useMemo(() => Math.min(...data), [data]);
-    const dataMax = useMemo(() => Math.max(...data), [data]);
+    const dataMin = useMemo(() => Math.floor(Math.min(...data)), [data]);
+    const dataMax = useMemo(() => Math.ceil(Math.max(...data)), [data]);
     const hasOverflow = max && dataMax > max;
 
     const opts: HistogramOptions = {
         numBins: numBins,
+        binDomain: { min: dataMin, max: dataMax },
         xAxis: { max: max, label: label },
         displayOpts: displayOpts,
         selectedRange: selectedRange,

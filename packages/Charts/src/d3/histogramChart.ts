@@ -23,6 +23,7 @@ const HISTOGRAM_COLORS = {
 
 export interface HistogramOptions {
     numBins: number;
+    binDomain?: Range; // minimum bin start, maximum bin end
     xAxis?: AxisConfig;
     displayOpts?: DisplayProps;
     selectedRange?: Range; // [min, max] for highlighting bins
@@ -107,8 +108,8 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
     }
 
     // Calculate min and max
-    const binMin = opts.xAxis?.min || d3.min(data);
-    const binMax = opts.xAxis?.max || d3.max(data);
+    let binMin = opts.xAxis?.min || opts.binDomain?.min || Math.floor(d3.min(data)!);
+    const binMax = opts.xAxis?.max || opts.binDomain?.max || Math.ceil(d3.max(data)!);
 
     // Set up bins
     const numBins = opts.numBins || 10;
