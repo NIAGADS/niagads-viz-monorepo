@@ -530,9 +530,7 @@ function generateTraitLegend(
     const uniqueTraits = Array.from(new Set(variants.map((v) => v.trait))).sort();
 
     // Create d3 color scale
-    const colorScale = d3.scaleOrdinal<string, string>()
-        .domain(uniqueTraits)
-        .range(d3.schemeCategory10);
+    const colorScale = d3.scaleOrdinal<string, string>().domain(uniqueTraits).range(d3.schemeCategory10);
 
     // Generate legend blocks spanning the domain
     const domainSpan = domain[1] - domain[0] || 1;
