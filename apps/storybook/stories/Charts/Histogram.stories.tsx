@@ -1,21 +1,12 @@
+import {
+    Histogram,
+    RangeSelectHistogram as RSHistogram,
+    ThresholdSelectHistogram as TSHistogram,
+} from "@niagads/charts";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import React, { useState } from "react";
 
-import { Histogram } from "@niagads/charts";
 import { TABLE_DEFINTION as largeNumericTable } from "../../examples/tables/table_large_numeric_values";
-
-// Demo wrapper to show selected range in parent div
-const HistogramWithSliderDemo = (props: any) => {
-    const [selected, setSelected] = useState<number[]>(props.initialSelection ?? []);
-    return (
-        <div>
-            <div style={{ marginBottom: 12, fontSize: 16 }}>
-                Selected range (chart parent state): {selected.length === 0 ? "(none)" : selected.join(" – ")}
-            </div>
-            <Histogram {...props} initialSelection={selected} onRangeSelect={setSelected} />
-        </div>
-    );
-};
+import { useState } from "react";
 
 // Generate skewed data with right tail (values between 0 and 1)
 const generateSkewedData = (count: number): number[] => {
@@ -50,27 +41,38 @@ const meta: Meta<typeof Histogram> = {
             control: { type: "object" },
             description: "Array of numeric values to histogram",
         },
-        opts: {
-            control: { type: "object" },
-            description: "Histogram options (HistogramOptions)",
+        numBins: {
+            control: { type: "number" },
+            description: "Number of bins",
+            defaultValue: 15,
         },
-        enableRangeSelect: {
-            control: { type: "boolean" },
-            description: "Show slider for range selection",
-            defaultValue: false,
+        min: {
+            control: { type: "number" },
+            description: "Minimum value for x-axis",
+            defaultValue: 0,
+        },
+        max: {
+            control: { type: "number" },
+            description: "Maximum value for x-axis",
+            defaultValue: 1,
+        },
+        label: {
+            control: { type: "text" },
+            description: "Label for x-axis",
+            defaultValue: "Value",
+        },
+        displayOpts: {
+            control: { type: "object" },
+            description: "Display options (DisplayProps)",
         },
     },
     args: {
         data: exampleData,
-        opts: {
-            numBins: 15,
-            xLabel: "Value",
-            aspectRatio: 0.5,
-            margin: { top: 20, right: 30, bottom: 40, left: 40 },
-            xMin: 0,
-            xMax: 1,
-        },
-        enableRangeSelect: false,
+        numBins: 15,
+        min: 0,
+        max: 1,
+        label: "Value",
+        displayOpts: undefined,
     },
 };
 
@@ -80,11 +82,11 @@ type Story = StoryObj<typeof Histogram>;
 export const Default: Story = {
     args: {
         data: exampleData,
-        opts: {
-            numBins: 25,
-            xLabel: "score",
-            aspectRatio: 0.5,
-        },
+        numBins: 25,
+        min: 0,
+        max: 1,
+        label: "score",
+        displayOpts: undefined,
     },
 };
 
@@ -94,33 +96,84 @@ const pvalueData = largeNumericTable.data.map((row) => {
     return parseFloat((-Math.log10(p)).toFixed(2));
 });
 
-export const PValueHistogram: Story = {
+export const OverflowHistogram: Story = {
     render: (args) => <Histogram {...args} />,
     args: {
         data: pvalueData as number[],
-        opts: {
-            numBins: 50,
-            xLabel: "-log10p",
-            aspectRatio: 0.5,
-            xMin: 0,
-            xMax: 50,
-        },
+        numBins: 50,
+        min: 0,
+        max: 50,
+        label: "-log10p",
+        displayOpts: undefined,
     },
 };
 
-export const PValueHistogramWithSlider: Story = {
-    render: (args) => <HistogramWithSliderDemo {...args} />,
+// RangeSelectHistogram story using pvalueData
+export const RangeSelectHistogram = {
+    render: (args: any) => {
+        const [selected, setSelected] = useState();
+        return (
+            <div>
+                <div style={{ marginBottom: 12, fontSize: 16 }}>Selected range: {JSON.stringify(selected)}</div>
+                <RSHistogram {...args} onRangeSelect={setSelected} />
+            </div>
+        );
+    },
     args: {
         data: pvalueData as number[],
-        opts: {
-            numBins: 50,
-            xLabel: "-log10p",
-            aspectRatio: 0.5,
-            xMin: 0,
-            xMax: 50,
-        },
-        enableRangeSelect: true,
-        rangeSelectionType: "max",
-        initialSelection: [7],
+        numBins: 50,
+        min: 0,
+        max: 50,
+        label: "-log10p",
+        displayOpts: undefined,
+        range: { min: 7, max: 25 },
+    },
+};
+
+export const MinThresholdSelectHistogram = {
+    render: (args: any) => {
+        const [selected, setSelected] = useState();
+
+        return (
+            <div>
+                {selected && (
+                    <div style={{ marginBottom: 12, fontSize: 16 }}>Selected range: {JSON.stringify(selected)}</div>
+                )}
+                <TSHistogram {...args} onRangeSelect={setSelected} />
+            </div>
+        );
+    },
+    args: {
+        data: pvalueData as number[],
+        numBins: 50,
+        max: 50,
+        label: "-log10p",
+        displayOpts: undefined,
+        limit: 7,
+        limitType: "min",
+    },
+};
+
+export const MaxThresholdSelectHistogram = {
+    render: (args: any) => {
+        const [selected, setSelected] = useState();
+
+        return (
+            <div>
+                {selected && (
+                    <div style={{ marginBottom: 12, fontSize: 16 }}>Selected range: {JSON.stringify(selected)}</div>
+                )}
+                <TSHistogram {...args} onRangeSelect={setSelected} />
+            </div>
+        );
+    },
+    args: {
+        data: pvalueData as number[],
+        numBins: 50,
+        max: 50,
+        label: "-log10p",
+        displayOpts: undefined,
+        limit: 7,
+        limitType: "max",
     },
 };

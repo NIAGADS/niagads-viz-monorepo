@@ -1,6 +1,7 @@
-import { BaseRecord } from "@/lib/types";
-import { BarChart } from "@niagads/charts";
 import { APIResponse, getUrlParam } from "@niagads/common";
+
+import { BarChart } from "@niagads/charts";
+import { BaseRecord } from "@/lib/types";
 import { LoadingSpinner } from "@niagads/ui";
 import useSWR from "swr";
 
@@ -30,9 +31,8 @@ const buildChartUrl = (record: BaseRecord, tableUrl: string) => {
 
     const trait = getUrlParam(tableUrl, "trait")!;
     const source = getUrlParam(tableUrl, "source")!;
-    const pvalue = getUrlParam(tableUrl, "pvalue")!;
 
-    return `${base_url}?content=counts&trait=${trait}&source=${source}&pvalue=${pvalue}`;
+    return `${base_url}?content=counts&trait=${trait}&source=${source}`;
 };
 
 const transformData = (response: APIResponse): Record<string, any>[] => {

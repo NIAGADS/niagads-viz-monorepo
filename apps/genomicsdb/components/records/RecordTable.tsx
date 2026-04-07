@@ -1,12 +1,12 @@
-import { APITableResponse, TableSection } from "@/lib/types";
-
-import { Card, CardBody, CardHeader, LoadingSpinner } from "@niagads/ui";
-import PaginationMessage from "../PaginationMessage";
-import TableWrapper from "../TableWrapper";
-import { useEffect } from "react";
-import useSWR from "swr";
 import { APIPagination, _isEmpty } from "@niagads/common";
-import { FileWarning } from "lucide-react";
+import { APITableResponse, ProcessedTableResponse, TableSection } from "@/lib/types";
+import { Alert, Card, LoadingSpinner } from "@niagads/ui";
+import { ThresholdSelectHistogram as Histogram, PieChart, PieChartDataRow } from "@niagads/charts";
+import Table, { TableConfig } from "@niagads/table";
+import { useEffect, useMemo, useState } from "react";
+
+import PaginationMessage from "../PaginationMessage";
+import useSWR from "swr";
 
 export interface RecordTableProps {
     tableDef: TableSection;
@@ -16,10 +16,26 @@ export interface RecordTableProps {
 }
 
 const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTableProps) => {
-    const { data, error, isLoading } = useSWR<APITableResponse>(
+    const [externalFilters, setExternalFilters] = useState<any[]>([]);
+
+    // useEffect(() => console.log(externalFilters), [externalFilters]);
+
+    const { data, error, isLoading } = useSWR<ProcessedTableResponse>(
         `/api/table/${recordType}/${recordId}/${tableDef.endpoint}`,
         (url: string) => fetch(url).then((res) => res.json())
     );
+
+    const options: TableConfig | undefined = useMemo(() => {
+        if (data && !_isEmpty(data?.table)) {
+            const defaultColumns = data.table.columns.map((c: any, index) => {
+                if (index < 8 || c["id"].startsWith("num_") || c["id"] === "url") return c["id"];
+            });
+
+            return {
+                defaultColumns: defaultColumns,
+            };
+        }
+    }, [data]);
 
     // Call onTableLoad when data is loaded and valid to return the result size
     // to the parent
@@ -29,32 +45,89 @@ const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTabl
         }
     }, [isLoading, data]);
 
-    if (isLoading) return <LoadingSpinner />;
-
-    if (error) return <div>{JSON.stringify(error)}</div>;
-
-    return _isEmpty(data?.table) ? (
-        <Card variant="full">
-            <CardHeader>
-                <FileWarning />
-            </CardHeader>
-            <CardBody>This table contains no rows.</CardBody>
-        </Card>
+    return isLoading ? (
+        <LoadingSpinner />
+    ) : error ? (
+        <Alert variant="error" message="Error loading table">
+            <div>{JSON.stringify(error)}</div>
+        </Alert>
+    ) : _isEmpty(data?.table) ? (
+        <Alert variant="info" message="This table contains no data" />
     ) : (
         <div>
-            {(data as APITableResponse).pagination.total_num_pages > 1 && (
-                <PaginationMessage
-                    pagination={(data as APITableResponse).pagination}
-                    endpoint={`/record/${recordType}/${recordId}${tableDef.endpoint}`}
+            {data?.pagination.total_num_pages ||
+                (0 > 1 && (
+                    <PaginationMessage
+                        pagination={(data as APITableResponse).pagination}
+                        endpoint={`/record/${recordType}/${recordId}${tableDef.endpoint}`}
+                    />
+                ))}
+            {tableDef.tableType === "associations" && (
+                <AssociationsTableFilters
+                    pValues={data?.extraData.negLog10PValues}
+                    populationData={data?.extraData.populationData}
+                    onExternalFilterChange={(colName, value) =>
+                        setExternalFilters((prev) => {
+                            const i = prev.findIndex((x) => x.id === colName);
+
+                            if (i >= 0) {
+                                const copy = [...prev];
+                                copy[i].value = value;
+                                return copy;
+                            }
+
+                            return [...prev, { id: colName, value: value }];
+                        })
+                    }
                 />
             )}
-            <TableWrapper
+            <Table
                 id={tableDef.id}
-                columns={(data as APITableResponse).table.columns}
-                data={(data as APITableResponse).table.data}
+                columns={data?.table.columns || []}
+                data={data?.table.data || []}
+                options={options}
+                externalColumnFilters={externalFilters}
             />
         </div>
     );
 };
 
 export default RecordTable;
+
+interface AssociationsTableFiltersProps {
+    onExternalFilterChange: (colName: string, value: any) => void;
+    pValues: number[];
+    populationData: PieChartDataRow[];
+}
+
+const AssociationsTableFilters = ({
+    onExternalFilterChange,
+    pValues,
+    populationData,
+}: AssociationsTableFiltersProps) => {
+    return (
+        <Card variant="full">
+            <div style={{ display: "flex", height: "100%", minHeight: "200px" }}>
+                <Histogram
+                    data={pValues}
+                    numBins={50}
+                    max={50}
+                    label="-log10 pvalue"
+                    limit={7}
+                    limitType="max"
+                    onRangeSelect={(range) =>
+                        onExternalFilterChange("neg_log10_pvalue", range ? [range.min, range.max] : [0, 7])
+                    }
+                />
+                {/* <PieChart id={"popPie"} data={populationData} onClick={(key) => onExternalFilterChange("population", key)} /> */}
+            </div>
+            <div>
+                <PieChart
+                    id={"traitPie"}
+                    data={populationData}
+                    onClick={(key) => onExternalFilterChange("trait_category", key)}
+                />
+            </div>
+        </Card>
+    );
+};

@@ -1,13 +1,13 @@
-import { APITableResponse } from "@/lib/types";
+import { APITableResponse, TableType } from "@/lib/types";
 import { NextRequest } from "next/server";
-import { resolveProcessor, TableTypes } from "./processors";
+import { resolveProcessor } from "./processors";
 
 // export const dynamic = 'force-static'
 
 interface routeParams {
     entity: string;
     id: string;
-    type: TableTypes;
+    type: TableType;
 }
 
 export async function GET(request: NextRequest, { params }: { params: Promise<routeParams> }) {
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<ro
 
     const processor = resolveProcessor(type);
 
-    return Response.json({ ...rawTable, table: processor(rawTable) });
+    return Response.json(processor(rawTable));
 }
 
 const buildTableEndpoint = (entity: string, id: string, type: string, queryParams: string) => {

@@ -1,6 +1,7 @@
-import BarChart from "./BarChart";
-import Histogram from "./Histogram";
+import Histogram, { RangeSelectHistogram, ThresholdSelectHistogram } from "./Histogram";
 import PieChart, { PieChartDataRow } from "./PieChart";
 
-export { BarChart, Histogram, PieChart };
+import BarChart from "./BarChart";
+
+export { BarChart, Histogram, RangeSelectHistogram, ThresholdSelectHistogram, PieChart };
 export type { PieChartDataRow };
