@@ -1,7 +1,8 @@
 import "../styles/global.css";
 
-export * from "./Autocomplete";
 export * from "./ActionMenu";
-export * from "./TooltipClient";
-export * from "./Tabs";
+export * from "./APISearch";
+export * from "./Autocomplete";
 export * from "./Slider";
+export * from "./Tabs";
+export * from "./TooltipClient";
