@@ -26,7 +26,7 @@ const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTabl
     );
 
     const options: TableConfig | undefined = useMemo(() => {
-        if (data) {
+        if (data && !_isEmpty(data?.table)) {
             const defaultColumns = data.table.columns.map((c: any, index) => {
                 if (index < 8 || c["id"].startsWith("num_") || c["id"] === "url") return c["id"];
             });
