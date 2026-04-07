@@ -1,4 +1,8 @@
-import { Histogram, RangeSelectHistogram } from "@niagads/charts";
+import {
+    Histogram,
+    RangeSelectHistogram as RSHistogram,
+    ThresholdSelectHistogram as TSHistogram,
+} from "@niagads/charts";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
 import { TABLE_DEFINTION as largeNumericTable } from "../../examples/tables/table_large_numeric_values";
@@ -92,7 +96,7 @@ const pvalueData = largeNumericTable.data.map((row) => {
     return parseFloat((-Math.log10(p)).toFixed(2));
 });
 
-export const PValueHistogram: Story = {
+export const OverflowHistogram: Story = {
     render: (args) => <Histogram {...args} />,
     args: {
         data: pvalueData as number[],
@@ -105,15 +109,13 @@ export const PValueHistogram: Story = {
 };
 
 // RangeSelectHistogram story using pvalueData
-export const PValueRangeSelectHistogram = {
+export const RangeSelectHistogram = {
     render: (args: any) => {
-        const [selected, setSelected] = useState([5, 10]);
+        const [selected, setSelected] = useState();
         return (
             <div>
-                <div style={{ marginBottom: 12, fontSize: 16 }}>
-                    Selected range: {selected[0]} – {selected[1]}
-                </div>
-                <RangeSelectHistogram {...args} initialSelection={selected} onRangeSelect={setSelected} />
+                <div style={{ marginBottom: 12, fontSize: 16 }}>Selected range: {JSON.stringify(selected)}</div>
+                <RSHistogram {...args} onRangeSelect={setSelected} />
             </div>
         );
     },
@@ -124,7 +126,54 @@ export const PValueRangeSelectHistogram = {
         max: 50,
         label: "-log10p",
         displayOpts: undefined,
-        selectionStrategy: "range",
-        initialSelection: [5, 10],
+        range: { min: 7, max: 25 },
+    },
+};
+
+export const MinThresholdSelectHistogram = {
+    render: (args: any) => {
+        const [selected, setSelected] = useState();
+
+        return (
+            <div>
+                {selected && (
+                    <div style={{ marginBottom: 12, fontSize: 16 }}>Selected range: {JSON.stringify(selected)}</div>
+                )}
+                <TSHistogram {...args} onRangeSelect={setSelected} />
+            </div>
+        );
+    },
+    args: {
+        data: pvalueData as number[],
+        numBins: 50,
+        max: 50,
+        label: "-log10p",
+        displayOpts: undefined,
+        limit: 7,
+        limitType: "min",
+    },
+};
+
+export const MaxThresholdSelectHistogram = {
+    render: (args: any) => {
+        const [selected, setSelected] = useState();
+
+        return (
+            <div>
+                {selected && (
+                    <div style={{ marginBottom: 12, fontSize: 16 }}>Selected range: {JSON.stringify(selected)}</div>
+                )}
+                <TSHistogram {...args} onRangeSelect={setSelected} />
+            </div>
+        );
+    },
+    args: {
+        data: pvalueData as number[],
+        numBins: 50,
+        max: 50,
+        label: "-log10p",
+        displayOpts: undefined,
+        limit: 7,
+        limitType: "max",
     },
 };

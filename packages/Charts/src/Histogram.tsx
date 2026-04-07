@@ -1,7 +1,7 @@
 import { AxisConfig, DisplayProps } from "./d3/types";
 import { HistogramOptions, histogram, updateHistogramHighlight } from "./d3/histogramChart";
 import { RangeSlider, Slider } from "@niagads/ui/client";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 
 import { Range } from "@niagads/common";
 import styles from "./styles/Charts.module.css";
@@ -27,7 +27,7 @@ const Histogram = ({ data, numBins, min, max, label, displayOpts }: HistogramPro
                 ...opts,
             });
         }
-    }, [data, opts]);
+    }, []);
 
     return (
         <div>
@@ -39,31 +39,32 @@ const Histogram = ({ data, numBins, min, max, label, displayOpts }: HistogramPro
 export default Histogram;
 
 interface RangeSelectHistogramProps extends HistogramProps {
-    selectionStrategy: "min" | "max" | "range";
-    initialSelection: Range;
-    onRangeSelect: (range: Range) => void;
+    range: Range;
+    onRangeSelect: (value: Range) => void;
 }
 
 export const RangeSelectHistogram = ({
     data,
     numBins,
-    min,
     max,
     label,
     displayOpts,
-    selectionStrategy,
-    initialSelection,
+    range,
     onRangeSelect,
 }: RangeSelectHistogramProps) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const [sliderStepSize, setSliderStepSize] = useState<number | null>(null);
-    const [selection, setSelection] = useState<Range>(initialSelection);
+    const [selectedRange, setSelectedRange] = useState<Range>(range);
+
+    const dataMin = useMemo(() => Math.min(...data), [data]);
+    const dataMax = useMemo(() => Math.max(...data), [data]);
+    const hasOverflow = max && dataMax > max;
 
     const opts: HistogramOptions = {
         numBins: numBins,
-        xAxis: { min: min, max: max, label: label },
+        xAxis: { max: max, label: label },
         displayOpts: displayOpts,
-        selectedRange: selection,
+        selectedRange: selectedRange,
     };
 
     useEffect(() => {
@@ -72,18 +73,18 @@ export const RangeSelectHistogram = ({
                 ...opts,
             });
             setSliderStepSize(stepSize!);
-            if (selection) {
-                updateHistogramHighlight(containerRef.current, selection);
+            if (selectedRange) {
+                updateHistogramHighlight(containerRef.current, selectedRange);
             }
         }
-    }, [data, opts]);
+    }, []);
 
     useEffect(() => {
         if (containerRef.current) {
-            updateHistogramHighlight(containerRef.current, selection);
+            updateHistogramHighlight(containerRef.current, selectedRange);
         }
-        onRangeSelect && onRangeSelect(selection);
-    }, [selection]);
+        onRangeSelect && onRangeSelect(selectedRange);
+    }, [selectedRange]);
 
     return (
         <div>
@@ -91,12 +92,92 @@ export const RangeSelectHistogram = ({
             {sliderStepSize && (
                 <RangeSlider
                     name="histogram-slider-selection"
-                    value={selection}
-                    min={min ?? Math.min(...data)}
-                    max={max ?? Math.max(...data)}
+                    value={selectedRange}
+                    min={dataMin}
+                    max={hasOverflow ? max + sliderStepSize : dataMax}
                     step={sliderStepSize}
-                    variant={selectionStrategy ?? "range"}
-                    onChange={setSelection}
+                    onChange={setSelectedRange}
+                    displayRange={false}
+                />
+            )}
+        </div>
+    );
+};
+
+type LimitType = "min" | "max";
+interface ThresholdSelectHistogramProps extends HistogramProps {
+    limit: number;
+    limitType: LimitType;
+    onRangeSelect: (value: Range) => void;
+}
+
+export const ThresholdSelectHistogram = ({
+    data,
+    numBins,
+    max,
+    label,
+    displayOpts,
+    limit,
+    limitType,
+    onRangeSelect,
+}: ThresholdSelectHistogramProps) => {
+    const containerRef = useRef<HTMLDivElement | null>(null);
+    const [sliderStepSize, setSliderStepSize] = useState<number | null>(null);
+    const [selectedRange, setSelectedRange] = useState<Range>();
+    const [selectedLimit, setSelectedLimit] = useState<number>(limit);
+
+    const dataMin = useMemo(() => Math.min(...data), [data]);
+    const dataMax = useMemo(() => Math.max(...data), [data]);
+    const hasOverflow = max && dataMax > max;
+
+    const opts: HistogramOptions = {
+        numBins: numBins,
+        xAxis: { max: max, label: label },
+        displayOpts: displayOpts,
+        selectedRange: selectedRange,
+    };
+
+    useEffect(() => {
+        if (limitType == "min") {
+            setSelectedRange({ min: dataMin, max: selectedLimit });
+        } else {
+            setSelectedRange({ min: selectedLimit, max: dataMax });
+        }
+    }, [selectedLimit]);
+
+    useEffect(() => {
+        if (containerRef.current) {
+            const stepSize = histogram(containerRef.current, data, {
+                ...opts,
+            });
+            setSliderStepSize(stepSize!);
+            if (selectedRange) {
+                updateHistogramHighlight(containerRef.current, selectedRange);
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        if (containerRef.current) {
+            updateHistogramHighlight(containerRef.current, selectedRange);
+        }
+
+        onRangeSelect && onRangeSelect(selectedRange!);
+    }, [selectedRange]);
+
+    return (
+        <div>
+            <div ref={containerRef} className={styles.chartContainer} />
+            {sliderStepSize && (
+                <Slider
+                    name="histogram-slider-selection"
+                    value={selectedLimit}
+                    min={dataMin}
+                    max={hasOverflow ? max + sliderStepSize : dataMax}
+                    step={sliderStepSize}
+                    variant={limitType}
+                    displayRange={false}
+                    onChange={setSelectedLimit}
                 />
             )}
         </div>
