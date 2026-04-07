@@ -8,6 +8,7 @@ const HISTOGRAM_COLORS = {
     bar: "#7ea7c7",
     barHover: "#5d8fb8",
     barSelected: "#d97706",
+    barSelectedHover: "#b85a00",
     barOverflow: "#c58a9f",
     stroke: "#587894",
     strokeSelected: "#a65b00",
@@ -61,10 +62,10 @@ function applyStrokeWidth(d: d3.Bin<number, number>, opts: HistogramOptions): nu
 
 function applyHoverFill(d: d3.Bin<number, number>, opts: HistogramOptions): string {
     if (isSelected(d, opts.selectedRange)) {
-        return HISTOGRAM_COLORS.barSelected;
+        return HISTOGRAM_COLORS.barSelectedHover;
     }
     if (d.x0 === opts.xAxis?.max) {
-        return HISTOGRAM_COLORS.strokeOverflow;
+        return HISTOGRAM_COLORS.barHover;
     }
     return HISTOGRAM_COLORS.barHover;
 }
@@ -312,10 +313,13 @@ export function updateHistogramHighlight(container: HTMLElement, selectedRange?:
 
     if (!state) return;
 
+    // Update stored selection so hover handlers use current state
+    state.opts.selectedRange = selectedRange;
+
     // Update bars with new selected range
     svg.selectAll<SVGPathElement, d3.Bin<number, number>>(".histogram-bar")
         .data(state.bins, (_d, i) => i)
-        .attr("fill", (d: d3.Bin<number, number>) => applyFill(d, { ...state.opts, selectedRange }))
-        .attr("stroke", (d: d3.Bin<number, number>) => applyStroke(d, { ...state.opts, selectedRange }))
-        .attr("stroke-width", (d: d3.Bin<number, number>) => applyStrokeWidth(d, { ...state.opts, selectedRange }));
+        .attr("fill", (d: d3.Bin<number, number>) => applyFill(d, state.opts))
+        .attr("stroke", (d: d3.Bin<number, number>) => applyStroke(d, state.opts))
+        .attr("stroke-width", (d: d3.Bin<number, number>) => applyStrokeWidth(d, state.opts));
 }
