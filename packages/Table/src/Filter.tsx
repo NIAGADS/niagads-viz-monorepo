@@ -26,7 +26,7 @@ const Filter = ({ column }: FilterProps) => {
                 </div>
             ) : sortedUniqueValues.length < 31 ? (
                 <div>
-                    <Autocomplete 
+                    <Autocomplete
                         suggestions={sortedUniqueValues}
                         onSelect={(selection) => column.setFilterValue(selection)}
                     />
