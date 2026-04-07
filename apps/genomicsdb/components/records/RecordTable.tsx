@@ -1,7 +1,7 @@
 import { APIPagination, _isEmpty } from "@niagads/common";
 import { APITableResponse, ProcessedTableResponse, TableSection } from "@/lib/types";
 import { Alert, Card, LoadingSpinner } from "@niagads/ui";
-import { Histogram, PieChart, PieChartDataRow } from "@niagads/charts";
+import { ThresholdSelectHistogram as Histogram, PieChart, PieChartDataRow } from "@niagads/charts";
 import Table, { TableConfig } from "@niagads/table";
 import { useEffect, useMemo, useState } from "react";
 
@@ -108,8 +108,20 @@ const AssociationsTableFilters = ({
     return (
         <Card variant="full">
             <div style={{ display: "flex", height: "100%", minHeight: "200px" }}>
-                <Histogram data={pValues} numBins={50} max={50} label="-log10 pvalue" />
+                <Histogram
+                    data={pValues}
+                    numBins={50}
+                    max={50}
+                    label="-log10 pvalue"
+                    limit={7}
+                    limitType="max"
+                    onRangeSelect={(range) =>
+                        onExternalFilterChange("neg_log10_pvalue", range ? [range.min, range.max] : [0, 7])
+                    }
+                />
                 {/* <PieChart id={"popPie"} data={populationData} onClick={(key) => onExternalFilterChange("population", key)} /> */}
+            </div>
+            <div>
                 <PieChart
                     id={"traitPie"}
                     data={populationData}
@@ -119,5 +131,3 @@ const AssociationsTableFilters = ({
         </Card>
     );
 };
-
-//<Histogram enableRangeSelect rangeSelectionType="max" data={pValues} onRangeSelect={(range) => onExternalFilterChange("neg_log10_pvalue", range)} opts={{xLabel: "test", numBins: 50, xMax: 50}}/>
