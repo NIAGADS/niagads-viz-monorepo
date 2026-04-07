@@ -97,7 +97,7 @@ export const RangeSelectHistogram = ({
                     max={hasOverflow ? max + sliderStepSize : dataMax}
                     step={sliderStepSize}
                     onChange={setSelectedRange}
-                    displayRange={false}
+                    displayRangeLabels={false}
                 />
             )}
         </div>
@@ -176,7 +176,7 @@ export const ThresholdSelectHistogram = ({
                     max={hasOverflow ? max + sliderStepSize : dataMax}
                     step={sliderStepSize}
                     variant={limitType}
-                    displayRange={false}
+                    displayRangeLabels={false}
                     onChange={setSelectedLimit}
                 />
             )}

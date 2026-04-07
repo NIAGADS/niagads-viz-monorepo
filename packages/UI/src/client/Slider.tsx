@@ -13,11 +13,21 @@ interface SliderProps {
     max: number;
     step: number;
     variant: SliderVariant;
-    displayRange?: boolean;
+    displayRangeLabels?: boolean; // display
     onChange: (v: number) => void;
 }
 
-export const Slider = ({ name, label, value, min, max, step, variant, displayRange = true, onChange }: SliderProps) => {
+export const Slider = ({
+    name,
+    label,
+    value,
+    min,
+    max,
+    step,
+    variant,
+    displayRangeLabels = true,
+    onChange,
+}: SliderProps) => {
     const trackRef = React.useRef<HTMLDivElement>(null);
     // Handle single/min/max slider change
     const handleSingleChange = (v: number) => {
@@ -88,7 +98,7 @@ export const Slider = ({ name, label, value, min, max, step, variant, displayRan
                 </div>
             </div>
 
-            {displayRange && (
+            {displayRangeLabels && (
                 <div className={styles.bounds}>
                     <span className={styles.boundLabel}>{min}</span>
                     <span className={styles.boundLabel}>{max}</span>
@@ -110,7 +120,7 @@ export const RangeSlider = ({
     min,
     max,
     step,
-    displayRange = true,
+    displayRangeLabels = true,
     onChange,
 }: RangeSliderProps) => {
     const trackRef = React.useRef<HTMLDivElement>(null);
@@ -233,7 +243,7 @@ export const RangeSlider = ({
                 />
             </div>
 
-            {displayRange && (
+            {displayRangeLabels && (
                 <div className={styles.bounds}>
                     <span className={styles.boundLabel}>{min}</span>
                     <span className={styles.boundLabel}>{max}</span>
