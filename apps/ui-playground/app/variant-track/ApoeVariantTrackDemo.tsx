@@ -22,16 +22,7 @@ type AssociationRecord = {
     } | null;
 };
 
-const TRAIT_COLORS = [
-    "#79b6dc",
-    "#76ad5d",
-    "#f0bd42",
-    "#df7b4d",
-    "#4d7fbe",
-    "#9d7db1",
-    "#a8bf57",
-    "#6ea7cf",
-];
+const TRAIT_COLORS = ["#79b6dc", "#76ad5d", "#f0bd42", "#df7b4d", "#4d7fbe", "#9d7db1", "#a8bf57", "#6ea7cf"];
 
 function parsePosition(variantId?: string) {
     if (!variantId) return Number.NaN;
@@ -46,21 +37,21 @@ function formatMb(value: number) {
 function clusterIntervals(values: number[], gapThreshold: number) {
     const sorted = values.slice().sort((a, b) => a - b);
 
-    return sorted.reduce(
-        (clusters, value) => {
-            const lastCluster = clusters[clusters.length - 1];
-            if (!lastCluster || value - lastCluster[lastCluster.length - 1] > gapThreshold) {
-                clusters.push([value]);
-            } else {
-                lastCluster.push(value);
-            }
-            return clusters;
-        },
-        [] as number[][]
-    );
+    return sorted.reduce((clusters, value) => {
+        const lastCluster = clusters[clusters.length - 1];
+        if (!lastCluster || value - lastCluster[lastCluster.length - 1] > gapThreshold) {
+            clusters.push([value]);
+        } else {
+            lastCluster.push(value);
+        }
+        return clusters;
+    }, [] as number[][]);
 }
 
-function selectTopVariantsByTraitCategory<T extends { traitCategory: string; score: number }>(records: T[], limit: number) {
+function selectTopVariantsByTraitCategory<T extends { traitCategory: string; score: number }>(
+    records: T[],
+    limit: number
+) {
     return Array.from(
         records.reduce((groups, record) => {
             const existing = groups.get(record.traitCategory) || [];
@@ -104,7 +95,9 @@ function buildTrackConfig(associations: AssociationRecord[]): AnnotatedVariantTr
     ] as [number, number];
 
     const traitCategories = Array.from(new Set(topVariants.map((record) => record.traitCategory)));
-    const colorByTrait = new Map(traitCategories.map((trait, index) => [trait, TRAIT_COLORS[index % TRAIT_COLORS.length]]));
+    const colorByTrait = new Map(
+        traitCategories.map((trait, index) => [trait, TRAIT_COLORS[index % TRAIT_COLORS.length]])
+    );
     const domainSpan = domain[1] - domain[0] || 1;
 
     const genePositions = topVariants.map((record) => record.position);
@@ -123,60 +116,23 @@ function buildTrackConfig(associations: AssociationRecord[]): AnnotatedVariantTr
         },
     ];
 
-    const legendBlockWidth = domainSpan / Math.max(traitCategories.length, 1);
-    const legendBlocks = traitCategories.map((trait, index) => ({
-        start: domain[0] + index * legendBlockWidth,
-        end: domain[0] + (index + 1) * legendBlockWidth,
-        fill: colorByTrait.get(trait) || TRAIT_COLORS[0],
-        group: trait,
-        label: trait,
-    }));
-
     const tickValues = Array.from({ length: 6 }, (_, index) => domain[0] + (index / 5) * domainSpan);
 
     return {
+        displayOpts: {
+            width: 1200,
+            height: 500,
+        },
         domain,
-        scaleBand: {
-            ticks: tickValues.map((value) => ({
-                value,
-                label: formatMb(value),
+        variants: topVariants
+            .slice()
+            .sort((a, b) => a.position - b.position)
+            .map((record) => ({
+                position: record.position,
+                value: record.score,
+                trait: record.traitCategory,
             })),
-            highlightedRegion: {
-                start: focusRegion[0],
-                end: focusRegion[1],
-                label: "APOE",
-            },
-        },
-        variants: {
-            guideRegion: {
-                start: focusRegion[0],
-                end: focusRegion[1],
-            },
-            items: topVariants
-                .slice()
-                .sort((a, b) => a.position - b.position)
-                .map((record) => ({
-                    position: record.position,
-                    value: record.score,
-                    color: colorByTrait.get(record.traitCategory) || TRAIT_COLORS[0],
-                    group: record.traitCategory,
-                    radius: record.score > topVariants[0].score * 0.7 ? 8 : 6,
-                    label: record.rsid,
-                })),
-        },
-        overviewTrack: {
-            baselineHeight: 3,
-            baselineStroke: "#a8b5c2",
-            segments: [],
-        },
-        genes,
-        traitLegend: {
-            blocks: legendBlocks,
-            highlightedRegion: {
-                start: legendBlocks[Math.max(legendBlocks.length - 1, 0)]?.start || domain[0],
-                end: legendBlocks[Math.max(legendBlocks.length - 1, 0)]?.end || domain[1],
-            },
-        },
+        gene: genes[0],
     };
 }
 
@@ -191,18 +147,8 @@ export default function ApoeVariantTrackDemo({ associations }: { associations: u
     }, [config]);
 
     return (
-        <main style={{ minHeight: "100vh", padding: "24px", background: "#f2f5f9" }}>
-            <div style={{ maxWidth: "1320px", margin: "0 auto" }}>
-                <div
-                    ref={containerRef}
-                    style={{
-                        background: "#ffffff",
-                        borderRadius: "10px",
-                        overflow: "hidden",
-                        boxShadow: "0 14px 30px rgba(68, 84, 108, 0.08)",
-                    }}
-                />
-            </div>
-        </main>
+        <div style={{ maxWidth: "1320px", margin: "0 auto" }}>
+            <div ref={containerRef} />
+        </div>
     );
 }

@@ -70,6 +70,6 @@ export interface APIErrorResponse {
 }
 
 export interface Range {
-    min: number;
-    max: number;
+    start: number;
+    end: number;
 }
