@@ -18,11 +18,11 @@ const AssociationProcessor = (rawTable: APITableResponse) => {
         }
         if (c.id === "id") {
             c.type = "link";
-        } 
+        }
         if (c.id === "track_id") {
             c.header = "Track";
             c.type = "link";
-        } 
+        }
         if (c.id === "neg_log10_pvalue") {
             c.canFilter = true;
             c.filterType = "external";
@@ -49,7 +49,7 @@ const AssociationProcessor = (rawTable: APITableResponse) => {
         }
 
         return [...p, c];
-    }, [] as GenericColumn[])
+    }, [] as GenericColumn[]);
 
     // process / add data as needed
     const processedData = rawTable.table.data.map((row) => {
@@ -67,7 +67,6 @@ const AssociationProcessor = (rawTable: APITableResponse) => {
 
         return processedRow;
     });
-
 
     const populationData = rawTable.table.data.reduce((prev, curr) => {
         const pop = curr.population?.valueOf() as string;
@@ -87,16 +86,16 @@ const AssociationProcessor = (rawTable: APITableResponse) => {
         ];
     }, [] as PieChartDataRow[]);
 
-    return { 
-        pagination: rawTable.pagination, 
+    return {
+        pagination: rawTable.pagination,
         table: {
             columns: processedColumns,
             data: processedData,
         },
         extraData: {
             populationData: populationData,
-            negLog10PValues: rawTable.table.data.map(x => x.neg_log10_pvalue)
-        }
+            negLog10PValues: rawTable.table.data.map((x) => x.neg_log10_pvalue),
+        },
     };
 };
 
