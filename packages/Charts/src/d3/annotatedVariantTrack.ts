@@ -83,20 +83,26 @@ interface AnnotationTrack {
     showDot: boolean;
 }
 
+interface Feature extends Range {}
+
 export interface AnnotatedVariantTrackOptions {
     displayOpts: DisplayProps;
     domain: [number, number];
     variants: VariantAnnotation[];
     gene: {
         label: string;
-        introns: IntronTrack[];
-        exons: ExonTrack[];
+        introns: Feature[];
+        exons: Feature[];
+        start: number;
+        end: number;
     };
 }
 
 interface Layout {
     scaleY: number;
     scaleHeight: number;
+    variantMinStemHeight: number;
+    variantMaxStemHeight: number;
     variantsBaseY: number;
     guideTopY: number;
     guideBottomY: number;
@@ -107,6 +113,10 @@ interface Layout {
     geneLabelDy: number;
     traitLegendY: number;
     traitLegendHeight: number;
+}
+
+interface PositionedTraitLegendBlock extends TraitLegendBlock {
+    index: number;
 }
 
 function resolveDimensions(container: HTMLElement, displayOpts: DisplayProps) {
@@ -127,9 +137,11 @@ function buildXScale(
         .range([margin.left, width - margin.right]);
 }
 
-function createDefaultScaleTicks(domain: [number, number]): TrackTick[] {
-    const scale = d3.scaleLinear().domain(domain);
-    return scale.ticks(6).map((value) => ({
+function createDefaultScaleTicks(domain: [number, number], pixelWidth: number = 1200): TrackTick[] {
+    // Generate ticks based on available pixel width for better spacing
+    const tickCount = Math.max(4, Math.floor(pixelWidth / 200)); // ~1 tick per 200px
+    const scale = d3.scaleLinear().domain(domain).range([0, pixelWidth]);
+    return scale.ticks(tickCount).map((value) => ({
         value,
         label: `${(value / 1_000_000).toFixed(2)}Mb`,
     }));
@@ -139,42 +151,40 @@ function resolveLayout(height: number, displayOpts: DisplayProps): Layout {
     const margin = displayOpts.margin || DEFAULT_MARGIN;
     const contentHeight = height - margin.top - margin.bottom;
     const scaleY = margin.top;
-    const scaleHeight = 24;
-    const variantsBaseY = margin.top + contentHeight * 0.34;
-    const guideTopY = scaleY + scaleHeight + 11;
-    const guideBottomY = variantsBaseY + 12;
-    const geneY = variantsBaseY + 115;
-    const traitLegendY = geneY + 110;
+    const scaleHeight = 12;
+    const variantMinStemHeight = 8;
+    const variantMaxStemHeight = Math.max(56, Math.min(96, contentHeight * 0.22));
+    const minTopClearance = 38;
+    const variantsBaseY = Math.max(
+        margin.top + contentHeight * 0.28,
+        scaleY + scaleHeight + minTopClearance + variantMaxStemHeight
+    );
+    const guideTopY = scaleY + scaleHeight + 10;
+    const guideBottomY = variantsBaseY + 10;
+    const overviewBandY = variantsBaseY + 16;
+    const traitLegendY = scaleY - 18;
+    const geneY = variantsBaseY + 34;
 
     return {
         scaleY,
         scaleHeight,
+        variantMinStemHeight,
+        variantMaxStemHeight,
         variantsBaseY,
         guideTopY,
         guideBottomY,
-        overviewBandY: variantsBaseY + 20,
+        overviewBandY,
         overviewBandHeight: 14,
         geneY,
         geneLabelX: margin.left + 86,
         geneLabelDy: 16,
         traitLegendY,
-        traitLegendHeight: 22,
+        traitLegendHeight: 12,
     };
 }
 
 function drawBackground(svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, width: number, height: number) {
-    const defs = svg.append("defs");
-    const gradient = defs
-        .append("radialGradient")
-        .attr("id", "variant-track-panel-gradient")
-        .attr("cx", "32%")
-        .attr("cy", "18%");
-
-    gradient.append("stop").attr("offset", "0%").attr("stop-color", THEME.panelGradientStart);
-    gradient.append("stop").attr("offset", "100%").attr("stop-color", THEME.panelGradientEnd);
-
-    svg.append("rect").attr("width", width).attr("height", height).attr("fill", THEME.backgroundFill);
-    svg.append("rect").attr("width", width).attr("height", height).attr("fill", "url(#variant-track-panel-gradient)");
+    return;
 }
 
 function drawScaleBand(
@@ -183,7 +193,12 @@ function drawScaleBand(
     width: number,
     margin: { top: number; right: number; bottom: number; left: number },
     ticks: TrackTick[],
-    layout: Layout
+    layout: Layout,
+    highlightedRegion?: {
+        start: number;
+        end: number;
+        label: string;
+    }
 ) {
     const chartLeft = margin.left;
     const chartRight = width - margin.right;
@@ -227,6 +242,35 @@ function drawScaleBand(
         .style("font-size", "12px")
         .style("fill", THEME.mutedTextColor)
         .text((d) => d.label);
+
+    if (highlightedRegion) {
+        const regionStart = Math.max(highlightedRegion.start, x.domain()[0]);
+        const regionEnd = Math.min(highlightedRegion.end, x.domain()[1]);
+        const regionWidth = Math.max(36, x(regionEnd) - x(regionStart));
+        const regionX = x(regionStart);
+
+        group
+            .append("rect")
+            .attr("x", regionX)
+            .attr("y", layout.scaleY - 3)
+            .attr("width", regionWidth)
+            .attr("height", 18)
+            .attr("rx", 2)
+            .attr("fill", "#68b6e8")
+            .attr("stroke", "#5d86ad")
+            .attr("stroke-width", 1);
+
+        group
+            .append("text")
+            .attr("x", regionX + regionWidth / 2)
+            .attr("y", layout.scaleY + 6)
+            .attr("text-anchor", "middle")
+            .attr("dominant-baseline", "middle")
+            .style("font-size", "11px")
+            .style("font-weight", 700)
+            .style("fill", "#ffffff")
+            .text(highlightedRegion.label);
+    }
 }
 
 function drawVariants(
@@ -234,13 +278,17 @@ function drawVariants(
     x: d3.ScaleLinear<number, number>,
     annotations: VariantAnnotation[],
     colorByTrait: Map<string, string>,
-    layout: Layout
+    layout: Layout,
+    tooltip: d3.Selection<HTMLDivElement, unknown, null, undefined>
 ) {
     const group = svg.append("g");
 
     // Calculate maxValue from annotation values
     const maxValue = d3.max(annotations, (d) => d.value) || 1;
-    const heightScale = d3.scaleLinear().domain([0, maxValue]).range([8, 78]);
+    const heightScale = d3
+        .scaleLinear()
+        .domain([0, maxValue])
+        .range([layout.variantMinStemHeight, layout.variantMaxStemHeight]);
 
     // Transform annotations to styled tracks
     const variants: VariantTrack[] = annotations.map((annotation) => ({
@@ -249,6 +297,25 @@ function drawVariants(
         radius: 4,
         strokeWidth: 1.5,
     }));
+
+    const showTooltip = (event: MouseEvent, datum: VariantTrack) => {
+        const pValueText = Number.isFinite(datum.value)
+            ? datum.value > 50
+                ? "p-value < 1e-50"
+                : `p-value = ${(10 ** -datum.value).toExponential(2)}`
+            : String(datum.value);
+        tooltip
+            .style("display", "block")
+            .html(
+                `Trait: <span style="color:${datum.color}">${datum.trait}</span><br />${pValueText}<br />Variant: ${datum.id}`
+            )
+            .style("left", `${event.offsetX + 14}px`)
+            .style("top", `${event.offsetY - 34}px`);
+    };
+
+    const hideTooltip = () => {
+        tooltip.style("display", "none");
+    };
 
     group
         .selectAll(".variant-track-stem")
@@ -262,7 +329,18 @@ function drawVariants(
         .attr("y2", (d) => layout.variantsBaseY - heightScale(d.value))
         .attr("stroke", (d) => d.color)
         .attr("stroke-width", (d) => d.strokeWidth)
-        .attr("stroke-linecap", "round");
+        .attr("stroke-linecap", "round")
+        .on("mouseenter", function (event, datum) {
+            d3.select(this).attr("stroke-width", datum.strokeWidth + 1);
+            showTooltip(event, datum);
+        })
+        .on("mousemove", function (event, datum) {
+            showTooltip(event, datum);
+        })
+        .on("mouseleave", function (_event, datum) {
+            d3.select(this).attr("stroke-width", datum.strokeWidth);
+            hideTooltip();
+        });
 
     group
         .selectAll(".variant-track-dot")
@@ -273,15 +351,97 @@ function drawVariants(
         .attr("cx", (d) => x(d.position))
         .attr("cy", (d) => layout.variantsBaseY - heightScale(d.value))
         .attr("r", (d) => d.radius)
-        .attr("fill", (d) => d.color);
+        .attr("fill", (d) => d.color)
+        .on("mouseenter", function (event, datum) {
+            d3.select(this).attr("r", datum.radius + 1.5);
+            showTooltip(event, datum);
+        })
+        .on("mousemove", function (event, datum) {
+            showTooltip(event, datum);
+        })
+        .on("mouseleave", function (_event, datum) {
+            d3.select(this).attr("r", datum.radius);
+            hideTooltip();
+        });
 }
 
-function drawOverviewTrack(
+function drawGenes(
     svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
     x: d3.ScaleLinear<number, number>,
     width: number,
     margin: { top: number; right: number; bottom: number; left: number },
-    backgroundBands: BackgroundBand[],
+    gene: {
+        label: string;
+        introns: Feature[];
+        exons: Feature[];
+    },
+    layout: Layout
+) {
+    const chartLeft = margin.left;
+    const chartRight = width - margin.right;
+    const geneY = layout.geneY;
+
+    // Draw row background
+    const group = svg.append("g");
+    group
+        .append("rect")
+        .attr("x", chartLeft)
+        .attr("y", geneY - 14)
+        .attr("width", chartRight - chartLeft)
+        .attr("height", 28)
+        .attr("fill", THEME.geneRowBackground);
+
+    // Draw introns
+    group
+        .selectAll(".variant-track-intron")
+        .data(gene.introns)
+        .join("line")
+        .attr("x1", (d) => x(d.start))
+        .attr("x2", (d) => x(d.end))
+        .attr("y1", geneY)
+        .attr("y2", geneY)
+        .attr("stroke", THEME.geneLine)
+        .attr("stroke-width", 3);
+
+    // Draw exons
+    group
+        .selectAll(".variant-track-exon")
+        .data(gene.exons)
+        .join("rect")
+        .attr("x", (d) => x(d.start))
+        .attr("y", geneY - 10)
+        .attr("width", (d) => Math.max(0, x(d.end) - x(d.start)))
+        .attr("height", 20)
+        .attr("fill", "#4c89bb")
+        .attr("stroke", "#4c89bb")
+        .attr("stroke-width", 1);
+
+    group
+        .append("text")
+        .attr("x", margin.left + 12)
+        .attr("y", geneY)
+        .attr("text-anchor", "start")
+        .attr("dominant-baseline", "middle")
+        .style("font-size", "14px")
+        .style("font-weight", 700)
+        .style("fill", THEME.textColor)
+        .text(gene.label);
+
+    group
+        .append("line")
+        .attr("x1", chartLeft)
+        .attr("x2", chartRight)
+        .attr("y1", geneY + 22)
+        .attr("y2", geneY + 22)
+        .attr("stroke", THEME.connectorColor)
+        .attr("stroke-width", 1.5);
+
+}
+
+function drawOverviewTrack(
+    svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
+    width: number,
+    margin: { top: number; right: number; bottom: number; left: number },
     layout: Layout
 ) {
     const chartLeft = margin.left;
@@ -295,81 +455,7 @@ function drawOverviewTrack(
         .attr("y1", layout.variantsBaseY)
         .attr("y2", layout.variantsBaseY)
         .attr("stroke", THEME.overviewLine)
-        .attr("stroke-width", 12);
-
-    group.selectAll(".variant-track-overview-segment").data([]).join("rect");
-
-    group
-        .selectAll(".variant-track-background-band")
-        .data(backgroundBands)
-        .join("rect")
-        .attr("x", (d) => x(d.start))
-        .attr("y", (d) => layout.overviewBandY)
-        .attr("width", (d) => Math.max(0, x(d.end) - x(d.start)))
-        .attr("height", (d) => d.height)
-        .attr("fill", (d) => d.fill || THEME.overviewFill);
-}
-
-function drawGenes(
-    svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
-    x: d3.ScaleLinear<number, number>,
-    width: number,
-    margin: { top: number; right: number; bottom: number; left: number },
-    gene: {
-        label: string;
-        introns: IntronTrack[];
-        exons: ExonTrack[];
-    },
-    layout: Layout
-) {
-    const chartLeft = margin.left;
-    const chartRight = width - margin.right;
-    const geneY = layout.geneY;
-
-    // Draw row background
-    const group = svg.append("g");
-    group
-        .append("rect")
-        .attr("x", chartLeft)
-        .attr("y", geneY - 24)
-        .attr("width", chartRight - chartLeft)
-        .attr("height", 48)
-        .attr("fill", THEME.geneRowBackground);
-
-    // Draw introns
-    group
-        .selectAll(".variant-track-intron")
-        .data(gene.introns)
-        .join("line")
-        .attr("x1", (d) => x(d.start))
-        .attr("x2", (d) => x(d.end))
-        .attr("y1", geneY)
-        .attr("y2", geneY)
-        .attr("stroke", (d) => d.stroke || THEME.geneLine)
-        .attr("stroke-width", (d) => d.strokeWidth);
-
-    // Draw exons
-    group
-        .selectAll(".variant-track-exon")
-        .data(gene.exons)
-        .join("rect")
-        .attr("x", (d) => x(d.start))
-        .attr("y", (d) => geneY - (d.height || 20) / 2)
-        .attr("width", (d) => Math.max(0, x(d.end) - x(d.start)))
-        .attr("height", (d) => d.height || 20)
-        .attr("fill", (d) => d.fill)
-        .attr("stroke", (d) => d.stroke)
-        .attr("stroke-width", (d) => d.strokeWidth);
-
-    // Draw label
-    group
-        .append("text")
-        .attr("x", layout.geneLabelX)
-        .attr("y", geneY - layout.geneLabelDy)
-        .style("font-size", "18px")
-        .style("font-weight", 700)
-        .style("fill", THEME.textColor)
-        .text(gene.label);
+        .attr("stroke-width", 3);
 }
 
 function drawTraitLegend(
@@ -389,34 +475,55 @@ function drawTraitLegend(
     const chartLeft = margin.left;
     const chartRight = width - margin.right;
     const group = svg.append("g");
+    const legendLineLeft = margin.left + 84;
+    const legendLineRight = chartRight - 8;
+    const legendPadding = 20;
+    const blockGap = 0;
+    const blockAreaLeft = legendLineLeft + legendPadding;
+    const blockAreaRight = legendLineRight - legendPadding;
+    const usableBlockWidth = Math.max(
+        0,
+        blockAreaRight - blockAreaLeft - blockGap * Math.max(legend.blocks.length - 1, 0)
+    );
+    const legendBlocks: PositionedTraitLegendBlock[] = legend.blocks.map((block, index) => ({ ...block, index }));
+    const blockWidth = Math.min(64, Math.max(10, usableBlockWidth / Math.max(legendBlocks.length, 1)));
 
-    if (legend.rowBackground) {
-        group
-            .append("rect")
-            .attr("x", chartLeft)
-            .attr("y", layout.traitLegendY - legend.rowBackground.height / 2)
-            .attr("width", chartRight - chartLeft)
-            .attr("height", legend.rowBackground.height)
-            .attr("fill", legend.rowBackground.fill)
-            .attr("stroke", legend.rowBackground.stroke || "none");
-    }
+    group
+        .append("line")
+        .attr("x1", legendLineLeft)
+        .attr("x2", legendLineRight)
+        .attr("y1", layout.traitLegendY)
+        .attr("y2", layout.traitLegendY)
+        .attr("stroke", THEME.overviewLine)
+        .attr("stroke-width", 2.5);
+
+    group
+        .append("text")
+        .attr("x", margin.left + 12)
+        .attr("y", layout.traitLegendY)
+        .attr("text-anchor", "start")
+        .attr("dominant-baseline", "middle")
+        .style("font-size", "14px")
+        .style("font-weight", 700)
+        .style("fill", THEME.textColor)
+        .text("Traits");
 
     group
         .selectAll(".variant-track-legend-block")
-        .data(legend.blocks)
+        .data(legendBlocks)
         .join("rect")
         .attr("class", "variant-track-legend-block")
         .attr("data-group", (d) => d.group)
-        .attr("x", (d) => x(d.start))
+        .attr("x", (d) => blockAreaLeft + d.index * (blockWidth + blockGap))
         .attr("y", layout.traitLegendY - layout.traitLegendHeight / 2)
-        .attr("width", (d) => Math.max(0, x(d.end) - x(d.start)))
+        .attr("width", blockWidth)
         .attr("height", layout.traitLegendHeight)
         .attr("fill", (d) => d.fill)
         .attr("stroke", (d) => d.stroke)
         .attr("stroke-width", (d) => d.strokeWidth);
 
     group
-        .selectAll<SVGRectElement, TraitLegendBlock>(".variant-track-legend-block")
+        .selectAll<SVGRectElement, PositionedTraitLegendBlock>(".variant-track-legend-block")
         .on("mouseenter", function (event, datum) {
             const traitKey = datum.group;
             if (!traitKey) return;
@@ -571,47 +678,11 @@ export function annotatedVariantTrack(container: HTMLElement, opts: AnnotatedVar
     const margin = opts.displayOpts?.margin || DEFAULT_MARGIN;
     const { width, height } = resolveDimensions(container, opts.displayOpts);
 
-    // Compute background bands from domain
-    const backgroundBands = [
-        {
-            start: opts.domain[0],
-            end: opts.domain[0] + (opts.domain[1] - opts.domain[0]) * 0.33,
-            fill: THEME.overviewFill,
-            height: 16,
-            stroke: "none",
-            strokeWidth: 0,
-        },
-        {
-            start: opts.domain[0] + (opts.domain[1] - opts.domain[0]) * 0.34,
-            end: opts.domain[0] + (opts.domain[1] - opts.domain[0]) * 0.66,
-            fill: THEME.overviewFillAlt,
-            height: 16,
-            stroke: "none",
-            strokeWidth: 0,
-        },
-        {
-            start: opts.domain[0] + (opts.domain[1] - opts.domain[0]) * 0.67,
-            end: opts.domain[1],
-            fill: THEME.overviewFill,
-            height: 16,
-            stroke: "none",
-            strokeWidth: 0,
-        },
-    ] as unknown as BackgroundBand[];
-
     // Generate trait legend from variants
     const { blocks: legendBlocks, colorByTrait } = generateTraitLegend(opts.variants, opts.domain);
     const traitLegend = {
         blocks: legendBlocks,
-        rowBackground: {
-            height: 58,
-            fill: THEME.traitLegendRowBackground,
-            stroke: THEME.traitLegendRowBorder,
-        },
     };
-
-    // Generate annotation tracks from variants
-    const annotationTracks = generateAnnotationTracks(opts.variants);
 
     // Clean up existing SVG and tooltip
     d3.select(container).select("svg").remove();
@@ -653,13 +724,16 @@ export function annotatedVariantTrack(container: HTMLElement, opts: AnnotatedVar
     const layout = resolveLayout(height, opts.displayOpts);
 
     // Draw scale band with default ticks
-    const scaleBandTicks = createDefaultScaleTicks(opts.domain);
-    drawScaleBand(svg, x, width, margin, scaleBandTicks, layout);
+    const scaleBandTicks = createDefaultScaleTicks(opts.domain, width - margin.left - margin.right);
+    drawScaleBand(svg, x, width, margin, scaleBandTicks, layout, {
+        start: opts.gene.start,
+        end: opts.gene.end,
+        label: opts.gene.label,
+    });
 
     // Draw all components
-    drawVariants(svg, x, opts.variants, colorByTrait, layout);
-    drawOverviewTrack(svg, x, width, margin, backgroundBands, layout);
-    drawGenes(svg, x, width, margin, opts.gene, layout);
+    drawVariants(svg, x, opts.variants, colorByTrait, layout, tooltip);
+    drawOverviewTrack(svg, width, margin, layout);
     drawTraitLegend(svg, x, width, margin, traitLegend, layout, svg, tooltip);
-    drawAnnotations(svg, annotationTracks, x, layout);
+    drawGenes(svg, x, width, margin, opts.gene, layout);
 }

@@ -1,20 +1,21 @@
-import ApoeVariantTrackDemo from "./ApoeVariantTrackDemo";
+import TrackDemo from "./TrackDemo";
 
-const APOE_ASSOCIATIONS_ENDPOINT = "http://localhost:8005/record/gene/APOE/associations?source=GWAS";
+const GENE_ID = "APOE";
+const endpoint = `https://api.niagads.org/genomics/record/gene/${GENE_ID}/associations?source=GWAS`;
 
-async function getApoeAssociations() {
-    const response = await fetch(APOE_ASSOCIATIONS_ENDPOINT, { cache: "no-store" });
+async function getAssociations() {
+    const response = await fetch(endpoint, { cache: "no-store" });
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch APOE associations: ${response.status}`);
+        throw new Error(`Failed to fetch associations: ${response.status}`);
     }
 
     const payload = (await response.json()) as { data?: unknown[] };
     return payload.data || [];
 }
 
-export default async function ApoeVariantTrackPage() {
-    const associations = await getApoeAssociations();
+export default async function TopVariantTrack() {
+    const associations = await getAssociations();
 
-    return <ApoeVariantTrackDemo associations={associations} />;
+    return <TrackDemo associations={associations} />;
 }

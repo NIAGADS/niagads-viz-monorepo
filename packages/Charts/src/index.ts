@@ -2,6 +2,7 @@ import Histogram, { RangeSelectHistogram, ThresholdSelectHistogram } from "./His
 import PieChart, { PieChartDataRow } from "./PieChart";
 
 import BarChart from "./BarChart";
+import { annotatedVariantTrack, AnnotatedVariantTrackOptions } from "./d3/annotatedVariantTrack";
 
-export { BarChart, Histogram, RangeSelectHistogram, ThresholdSelectHistogram, PieChart };
-export type { PieChartDataRow };
+export { BarChart, Histogram, RangeSelectHistogram, ThresholdSelectHistogram, PieChart, annotatedVariantTrack };
+export type { PieChartDataRow, AnnotatedVariantTrackOptions };
