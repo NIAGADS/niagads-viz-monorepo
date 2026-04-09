@@ -25,9 +25,14 @@ import {
 interface VariantTrack extends VariantDatum {
     color: string;
     radius: number;
+    renderedX: number;
+    renderedY: number;
 }
 
 const selectedTraitByContainer = new WeakMap<HTMLElement, string | null>();
+const TOOLTIP_ROW_LIMIT = 5;
+const TOOLTIP_X_TOLERANCE = 6;
+const TOOLTIP_Y_TOLERANCE = 6;
 
 export interface GeneVariantPValueManhattanPlotOptions {
     displayOpts: DisplayProps;
@@ -44,7 +49,8 @@ function drawVariants(
     annotations: VariantDatum[],
     colorByTrait: Map<string, string>,
     layout: Layout,
-    tooltip: d3.Selection<HTMLDivElement, unknown, null, undefined>
+    tooltip: d3.Selection<HTMLDivElement, unknown, null, undefined>,
+    selectedTrait: string | null
 ) {
     const group = svg.append("g");
     const { maxValue, heightScale } = createValueHeightScale(annotations, layout);
@@ -54,22 +60,70 @@ function drawVariants(
         ...annotation,
         color: colorByTrait.get(annotation.trait) || "#2f6f9f",
         radius: 2.5,
+        renderedX: x(annotation.position),
+        renderedY: layout.variantsBaseY - heightScale(annotation.value),
     }));
 
-    const showTooltip = (event: MouseEvent, datum: VariantTrack) => {
-        const pValueText = Number.isFinite(datum.value)
-            ? datum.value > 50
-                ? "p-value < 1e-50"
-                : `p-value = ${(10 ** -datum.value).toExponential(2)}`
-            : String(datum.value);
+    const formatPValue = (value: number) => {
+        if (!Number.isFinite(value)) return String(value);
+        if (value > 200) {
+            return `1e-${Math.round(value)}`;
+        }
+        return (10 ** -value).toExponential(2);
+    };
+
+    const buildTooltipHtml = (datum: VariantTrack) => {
+        const relevantVariants = variants
+            .filter(
+                (variant) =>
+                    Math.abs(variant.renderedX - datum.renderedX) <= TOOLTIP_X_TOLERANCE &&
+                    Math.abs(variant.renderedY - datum.renderedY) <= TOOLTIP_Y_TOLERANCE
+            )
+            .filter((variant) => !selectedTrait || variant.trait === selectedTrait)
+            .sort((a, b) => b.value - a.value);
+
+        if (!relevantVariants.length) {
+            return null;
+        }
+
+        const seen = new Set<string>();
+        const dedupedVariants = relevantVariants.filter((variant) => {
+            const pValueDisplay = formatPValue(variant.value);
+            const key = `${variant.trait}::${variant.id}::${pValueDisplay}`;
+            if (seen.has(key)) {
+                return false;
+            }
+            seen.add(key);
+            return true;
+        });
+
+        const visibleRows = dedupedVariants.slice(0, TOOLTIP_ROW_LIMIT);
+        const hiddenCount = Math.max(0, dedupedVariants.length - visibleRows.length);
+        const rows = visibleRows
+            .map(
+                (variant) =>
+                    `<tr><td style="padding:2px 10px 2px 0;color:${variant.color};">${variant.trait}</td><td style="padding:2px 10px 2px 0;">${variant.id}</td><td style="padding:2px 0 2px 0;text-align:right;">${formatPValue(variant.value)}</td></tr>`
+            )
+            .join("");
+        const overflowRow = hiddenCount
+            ? `<tr><td colspan="3" style="padding-top:4px;color:${THEME.mutedTextColor};">...plus ${hiddenCount} more</td></tr>`
+            : "";
 
         tooltip
             .style("display", "block")
             .html(
-                `Trait: <span style="color:${datum.color}">${datum.trait}</span><br />${pValueText}<br />Variant: ${datum.id}`
-            )
-            .style("left", `${event.offsetX + 14}px`)
-            .style("top", `${event.offsetY - 34}px`);
+                `<table style="border-collapse:collapse;"><thead><tr><th style="padding:0 10px 4px 0;text-align:left;">Trait</th><th style="padding:0 10px 4px 0;text-align:left;">Variant</th><th style="padding:0 0 4px 0;text-align:right;">p-value</th></tr></thead><tbody>${rows}${overflowRow}</tbody></table>`
+            );
+
+        return true;
+    };
+
+    const showTooltip = (event: MouseEvent, datum: VariantTrack) => {
+        if (!buildTooltipHtml(datum)) {
+            hideTooltip();
+            return;
+        }
+        tooltip.style("left", `${event.offsetX + 14}px`).style("top", `${event.offsetY - 34}px`);
     };
 
     const hideTooltip = () => {
@@ -118,6 +172,7 @@ export function geneVariantPValueManhattanPlot(container: HTMLElement, opts: Gen
         .style("font-family", THEME.fontFamily);
 
     const tooltip = createPlotTooltip(container, "gene-variant-pvalue-manhattan-plot-tooltip");
+    tooltip.style("white-space", "normal");
 
     drawBackground(svg, width, height);
     const x = buildXScale(width, margin, opts.domain);
@@ -130,7 +185,7 @@ export function geneVariantPValueManhattanPlot(container: HTMLElement, opts: Gen
         label: opts.gene.label,
     });
 
-    drawVariants(svg, x, width, margin, visibleVariants, colorByTrait, layout, tooltip);
+    drawVariants(svg, x, width, margin, visibleVariants, colorByTrait, layout, tooltip, selectedTrait);
     drawOverviewTrack(svg, width, margin, layout);
 
     const applyActiveTrait = (rootSvg: d3.Selection<SVGSVGElement, unknown, null, undefined>, traitKey: string | null) => {
