@@ -412,6 +412,8 @@ export function drawTraitLegend(
     handlers: {
         onEnter: (rootSvg: d3.Selection<SVGSVGElement, unknown, null, undefined>, traitKey: string) => void;
         onLeave: (rootSvg: d3.Selection<SVGSVGElement, unknown, null, undefined>) => void;
+        onClick?: (traitKey: string) => void;
+        isSelected?: (traitKey: string) => boolean;
     }
 ) {
     const chartRight = width - margin.right;
@@ -428,6 +430,15 @@ export function drawTraitLegend(
     );
     const legendBlocks: PositionedTraitLegendBlock[] = legend.blocks.map((block, index) => ({ ...block, index }));
     const blockWidth = Math.min(64, Math.max(10, usableBlockWidth / Math.max(legendBlocks.length, 1)));
+    const applyLegendBlockStyle = <D extends TraitLegendBlock>(
+        selection: d3.Selection<SVGRectElement, D, any, any>,
+        isActive: boolean
+    ) => {
+        selection
+            .attr("fill", (d) => (isActive ? d3.color(d.fill)?.brighter(0.5).formatHex() || d.fill : d.fill))
+            .attr("stroke", (d) => (isActive ? THEME.hoverStroke : d.stroke))
+            .attr("stroke-width", (d) => (isActive ? 2.5 : d.strokeWidth));
+    };
 
     group
         .append("line")
@@ -461,17 +472,29 @@ export function drawTraitLegend(
         .attr("height", layout.traitLegendHeight)
         .attr("fill", (d) => d.fill)
         .attr("stroke", (d) => d.stroke)
-        .attr("stroke-width", (d) => d.strokeWidth)
+        .attr("stroke-width", (d) => d.strokeWidth);
+
+    if (handlers.onClick) {
+        group.selectAll<SVGRectElement, PositionedTraitLegendBlock>(".variant-track-legend-block").style("cursor", "pointer");
+    }
+
+    group
+        .selectAll<SVGRectElement, PositionedTraitLegendBlock>(".variant-track-legend-block")
         .on("mouseenter", function (event, datum) {
             const traitKey = datum.group;
             if (!traitKey) return;
 
             handlers.onEnter(rootSvg, traitKey);
 
-            d3.select(this)
-                .attr("fill", d3.color(datum.fill)?.brighter(0.5).formatHex() || datum.fill)
-                .attr("stroke", THEME.hoverStroke)
-                .attr("stroke-width", 2.5);
+            const isSelected = handlers.isSelected?.(traitKey) || false;
+            if (!handlers.isSelected || !handlers.isSelected(traitKey)) {
+                applyLegendBlockStyle(d3.select<SVGRectElement, PositionedTraitLegendBlock>(this as SVGRectElement), true);
+            } else {
+                applyLegendBlockStyle(
+                    d3.select<SVGRectElement, PositionedTraitLegendBlock>(this as SVGRectElement),
+                    isSelected
+                );
+            }
 
             tooltip
                 .style("display", "block")
@@ -489,13 +512,25 @@ export function drawTraitLegend(
         .on("mouseleave", function () {
             handlers.onLeave(rootSvg);
 
-            d3.select<SVGRectElement, TraitLegendBlock>(this)
-                .attr("fill", (d) => d.fill)
-                .attr("stroke", (d) => d.stroke)
-                .attr("stroke-width", (d) => d.strokeWidth);
+            const selection = d3.select<SVGRectElement, PositionedTraitLegendBlock>(this as SVGRectElement);
+            const traitKey = selection.datum().group;
+            applyLegendBlockStyle(selection, handlers.isSelected?.(traitKey) || false);
 
             tooltip.style("display", "none");
+        })
+        .on("click", function (_event, datum) {
+            if (!handlers.onClick) return;
+            handlers.onClick(datum.group);
         });
+
+    if (handlers.isSelected) {
+        group.selectAll<SVGRectElement, PositionedTraitLegendBlock>(".variant-track-legend-block").each(function (datum) {
+            applyLegendBlockStyle(
+                d3.select<SVGRectElement, PositionedTraitLegendBlock>(this as SVGRectElement),
+                handlers.isSelected?.(datum.group) || false
+            );
+        });
+    }
 
     if (!legend.highlightedRegion) return;
 

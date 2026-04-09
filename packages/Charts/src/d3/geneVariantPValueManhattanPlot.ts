@@ -27,6 +27,8 @@ interface VariantTrack extends VariantDatum {
     radius: number;
 }
 
+const selectedTraitByContainer = new WeakMap<HTMLElement, string | null>();
+
 export interface GeneVariantPValueManhattanPlotOptions {
     displayOpts: DisplayProps;
     domain: [number, number];
@@ -103,6 +105,7 @@ export function geneVariantPValueManhattanPlot(container: HTMLElement, opts: Gen
     const visibleVariants = filterVariantsToDomain(opts.variants, opts.domain);
     const { blocks: legendBlocks, colorByTrait } = generateTraitLegend(visibleVariants, opts.domain);
     const traitLegend = { blocks: legendBlocks };
+    const selectedTrait = selectedTraitByContainer.get(container) || null;
 
     d3.select(container).select("svg").remove();
 
@@ -129,21 +132,29 @@ export function geneVariantPValueManhattanPlot(container: HTMLElement, opts: Gen
 
     drawVariants(svg, x, width, margin, visibleVariants, colorByTrait, layout, tooltip);
     drawOverviewTrack(svg, width, margin, layout);
+
+    const applyActiveTrait = (rootSvg: d3.Selection<SVGSVGElement, unknown, null, undefined>, traitKey: string | null) => {
+        rootSvg
+            .selectAll<SVGCircleElement, VariantTrack>(".variant-track-dot")
+            .attr("opacity", (d) => (!traitKey || d.trait === traitKey ? 1 : 0.22))
+            .attr("fill", (d) => (!traitKey ? THEME.neutralVariantFill : d.trait === traitKey ? d.color : THEME.neutralVariantFill))
+            .attr("r", (d) => (!traitKey || d.trait !== traitKey ? d.radius : d.radius + 0.5));
+    };
+
+    applyActiveTrait(svg, selectedTrait);
+
     drawTraitLegend(svg, x, width, margin, traitLegend, layout, svg, tooltip, {
         onEnter: (rootSvg, traitKey) => {
-            rootSvg
-                .selectAll<SVGCircleElement, VariantTrack>(".variant-track-dot")
-                .attr("opacity", (d) => (d.trait === traitKey ? 1 : 0.22))
-                .attr("fill", (d) => (d.trait === traitKey ? d.color : THEME.neutralVariantFill))
-                .attr("r", (d) => (d.trait === traitKey ? d.radius + 0.5 : d.radius));
+            applyActiveTrait(rootSvg, selectedTrait || traitKey);
         },
         onLeave: (rootSvg) => {
-            rootSvg
-                .selectAll<SVGCircleElement, VariantTrack>(".variant-track-dot")
-                .attr("opacity", 1)
-                .attr("fill", THEME.neutralVariantFill)
-                .attr("r", (d) => d.radius);
+            applyActiveTrait(rootSvg, selectedTrait);
         },
+        onClick: (traitKey) => {
+            selectedTraitByContainer.set(container, selectedTrait === traitKey ? null : traitKey);
+            geneVariantPValueManhattanPlot(container, opts);
+        },
+        isSelected: (traitKey) => selectedTrait === traitKey,
     });
     drawGenes(svg, x, width, margin, opts.gene, layout);
 }
