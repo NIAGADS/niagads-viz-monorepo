@@ -560,14 +560,18 @@ function drawTraitLegend(
             rootSvg
                 .selectAll<SVGCircleElement, VariantTrack>(".variant-track-dot")
                 .attr("opacity", (d) => (d.trait === traitKey ? 1 : 0.22))
-                .attr("stroke", (d) => (d.trait === traitKey ? THEME.hoverStroke : "none"))
-                .attr("stroke-width", (d) => (d.trait === traitKey ? 1.5 : 0));
+                .attr("stroke", "none")
+                .attr("stroke-width", 0);
 
             rootSvg
                 .selectAll<SVGLineElement, VariantTrack>(".variant-track-stem")
                 .attr("opacity", (d) => (d.trait === traitKey ? 1 : 0.18));
 
-            d3.select(this).attr("stroke", THEME.hoverStroke).attr("stroke-width", 2);
+            d3.select(this)
+                .attr("opacity", 1)
+                .attr("fill", d3.color(datum.fill)?.brighter(0.5).formatHex() || datum.fill)
+                .attr("stroke", THEME.hoverStroke)
+                .attr("stroke-width", 2.5);
 
             tooltip
                 .style("display", "block")
@@ -592,6 +596,8 @@ function drawTraitLegend(
             rootSvg.selectAll<SVGLineElement, VariantTrack>(".variant-track-stem").attr("opacity", 1);
 
             d3.select<SVGRectElement, TraitLegendBlock>(this)
+                .attr("opacity", 1)
+                .attr("fill", (d) => d.fill)
                 .attr("stroke", (d) => d.stroke)
                 .attr("stroke-width", (d) => d.strokeWidth);
 
