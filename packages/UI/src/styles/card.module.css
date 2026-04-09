@@ -90,6 +90,14 @@
 .card-span-11 { grid-column: span 11; }
 .card-span-12 { grid-column: span 12; }
 
+/* Legacy layout aliases — add these to card.module.css
+   alongside the existing .card-span-* classes.
+   Delete after all usages are migrated to span prop.    */
+.card-full       { grid-column: span 12; }
+.card-half       { grid-column: span 6; }
+.card-two-thirds { grid-column: span 8; }
+.card-third      { grid-column: span 4; }
+
 /* Optional: variant hook (safe even if you don’t use it yet) */
 .card-variant-default {}
 
@@ -134,4 +142,6 @@
     .card-span-12 {
         grid-column: span 12;
     }
+
+    
 }
