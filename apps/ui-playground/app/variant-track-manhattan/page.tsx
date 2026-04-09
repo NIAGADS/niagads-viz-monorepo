@@ -1,3 +1,4 @@
+import { Alert } from "@niagads/ui";
 import GeneVariantPValueManhattanDemo from "./GeneVariantPValueManhattanDemo";
 
 const GENE_ID = "APOE";
@@ -17,5 +18,13 @@ async function getAssociations() {
 export default async function VariantTrackManhattanPage() {
     const associations = await getAssociations();
 
-    return <GeneVariantPValueManhattanDemo associations={associations} />;
+    return (
+        <div>
+            <p style={{ padding: "24px" }}>
+                Hover points to inspect the top overlapping associations at that location. Click a trait block to pin
+                its highlight and filter tooltip rows to that trait; click again to clear.
+            </p>
+            <GeneVariantPValueManhattanDemo associations={associations} />
+        </div>
+    );
 }
