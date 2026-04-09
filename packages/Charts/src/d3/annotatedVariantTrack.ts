@@ -276,12 +276,17 @@ function drawScaleBand(
 function drawVariants(
     svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
     x: d3.ScaleLinear<number, number>,
+    width: number,
+    margin: { top: number; right: number; bottom: number; left: number },
     annotations: VariantAnnotation[],
     colorByTrait: Map<string, string>,
     layout: Layout,
     tooltip: d3.Selection<HTMLDivElement, unknown, null, undefined>
 ) {
     const group = svg.append("g");
+    const chartLeft = margin.left;
+    const chartRight = width - margin.right;
+    const genomeWideSignificanceThreshold = 7.30103;
 
     // Calculate maxValue from annotation values
     const maxValue = d3.max(annotations, (d) => d.value) || 1;
@@ -289,6 +294,30 @@ function drawVariants(
         .scaleLinear()
         .domain([0, maxValue])
         .range([layout.variantMinStemHeight, layout.variantMaxStemHeight]);
+
+    if (genomeWideSignificanceThreshold <= maxValue) {
+        const thresholdY = layout.variantsBaseY - heightScale(genomeWideSignificanceThreshold);
+        group
+            .append("line")
+            .attr("x1", chartLeft)
+            .attr("x2", chartRight)
+            .attr("y1", thresholdY)
+            .attr("y2", thresholdY)
+            .attr("stroke", "#c7cdd6")
+            .attr("stroke-width", 1.5)
+            .attr("stroke-dasharray", "6 6");
+
+        group
+            .append("text")
+            .attr("x", margin.left + 12)
+            .attr("y", thresholdY - 10)
+            .attr("text-anchor", "start")
+            .attr("dominant-baseline", "middle")
+            .style("font-size", "12px")
+            .style("font-weight", 400)
+            .style("fill", THEME.mutedTextColor)
+            .text("p = 5e⁻⁸");
+    }
 
     // Transform annotations to styled tracks
     const variants: VariantTrack[] = annotations.map((annotation) => ({
@@ -732,7 +761,7 @@ export function annotatedVariantTrack(container: HTMLElement, opts: AnnotatedVar
     });
 
     // Draw all components
-    drawVariants(svg, x, opts.variants, colorByTrait, layout, tooltip);
+    drawVariants(svg, x, width, margin, opts.variants, colorByTrait, layout, tooltip);
     drawOverviewTrack(svg, width, margin, layout);
     drawTraitLegend(svg, x, width, margin, traitLegend, layout, svg, tooltip);
     drawGenes(svg, x, width, margin, opts.gene, layout);
