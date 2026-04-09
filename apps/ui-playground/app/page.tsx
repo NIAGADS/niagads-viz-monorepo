@@ -12,7 +12,10 @@ export default function Home() {
                     <Link href="/table-playground/external-filters">Table Playground: External Filters</Link>
                 </li>
                 <li>
-                    <Link href="/variant-track">Variant Track Playground (APOE)</Link>
+                    <Link href="/variant-track">Variant Track Playground: Top Variants / Gene </Link>
+                </li>
+                <li>
+                    <Link href="/variant-track-manhattan">Variant Track Playground: Manhattan / Gene</Link>
                 </li>
             </ul>
         </main>
