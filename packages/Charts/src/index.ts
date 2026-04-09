@@ -2,7 +2,7 @@ import Histogram, { RangeSelectHistogram, ThresholdSelectHistogram } from "./His
 import PieChart, { PieChartDataRow } from "./PieChart";
 
 import BarChart from "./BarChart";
-import { annotatedVariantTrack, AnnotatedVariantTrackOptions } from "./d3/annotatedVariantTrack";
+import { geneVariantPValuePlot, GeneVariantPValuePlotOptions } from "./d3/geneVariantPValuePlot";
 
-export { BarChart, Histogram, RangeSelectHistogram, ThresholdSelectHistogram, PieChart, annotatedVariantTrack };
-export type { PieChartDataRow, AnnotatedVariantTrackOptions };
+export { BarChart, Histogram, RangeSelectHistogram, ThresholdSelectHistogram, PieChart, geneVariantPValuePlot };
+export type { PieChartDataRow, GeneVariantPValuePlotOptions };

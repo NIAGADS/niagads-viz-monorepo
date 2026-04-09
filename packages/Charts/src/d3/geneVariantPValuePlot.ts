@@ -85,7 +85,7 @@ interface AnnotationTrack {
 
 interface Feature extends Range {}
 
-export interface AnnotatedVariantTrackOptions {
+export interface GeneVariantPValuePlotOptions {
     displayOpts: DisplayProps;
     domain: [number, number];
     variants: VariantAnnotation[];
@@ -703,7 +703,7 @@ function generateTraitLegend(
     return { blocks, colorByTrait };
 }
 
-export function annotatedVariantTrack(container: HTMLElement, opts: AnnotatedVariantTrackOptions) {
+export function geneVariantPValuePlot(container: HTMLElement, opts: GeneVariantPValuePlotOptions) {
     const margin = opts.displayOpts?.margin || DEFAULT_MARGIN;
     const { width, height } = resolveDimensions(container, opts.displayOpts);
 

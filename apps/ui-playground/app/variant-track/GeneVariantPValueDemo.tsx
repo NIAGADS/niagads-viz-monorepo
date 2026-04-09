@@ -1,6 +1,6 @@
 "use client";
 
-import { AnnotatedVariantTrackOptions, annotatedVariantTrack } from "@niagads/charts";
+import { GeneVariantPValuePlotOptions, geneVariantPValuePlot } from "@niagads/charts";
 import { useEffect, useMemo, useRef } from "react";
 import { model } from "./apoe_gene_model";
 
@@ -43,7 +43,7 @@ function selectTopVariantsByTraitCategory<T extends { traitCategory: string; sco
     ).flatMap(([_traitCategory, group]) => group.sort((a, b) => b.score - a.score).slice(0, limit));
 }
 
-function buildTrackConfig(associations: AssociationRecord[]): AnnotatedVariantTrackOptions {
+function buildTrackConfig(associations: AssociationRecord[]): GeneVariantPValuePlotOptions {
     const normalized = associations
         .map((record) => {
             const position = parsePosition(record.variant?.id);
@@ -122,13 +122,13 @@ function buildTrackConfig(associations: AssociationRecord[]): AnnotatedVariantTr
     };
 }
 
-export default function TrackDemo({ associations }: { associations: unknown[] }) {
+export default function GeneVariantPValueDemo({ associations }: { associations: unknown[] }) {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const config = useMemo(() => buildTrackConfig(associations as AssociationRecord[]), [associations]);
 
     useEffect(() => {
         if (containerRef.current) {
-            annotatedVariantTrack(containerRef.current, config);
+            geneVariantPValuePlot(containerRef.current, config);
         }
     }, [config]);
 

@@ -1,4 +1,4 @@
-import TrackDemo from "./TrackDemo";
+import GeneVariantPValueDemo from "./GeneVariantPValueDemo";
 
 const GENE_ID = "APOE";
 const endpoint = `https://api.niagads.org/genomics/record/gene/${GENE_ID}/associations?source=GWAS`;
@@ -17,5 +17,5 @@ async function getAssociations() {
 export default async function TopVariantTrack() {
     const associations = await getAssociations();
 
-    return <TrackDemo associations={associations} />;
+    return <GeneVariantPValueDemo associations={associations} />;
 }
