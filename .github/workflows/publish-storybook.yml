@@ -1,21 +1,24 @@
 # Builds storybook and deploys it to github pages
 
 on:
-    push:
-        branches:
-            - "main"
+  push:
+    branches:
+      - "main"
 
 permissions:
-    contents: read
-    pages: write
-    id-token: write
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        steps:
-            - id: build-publish-storybook
-              uses: bitovi/github-actions-storybook-to-github-pages@v1.0.3
-              with:
-                  path: apps/storybook/storybook-static
-                  build_command: npm run build && npx lerna run build-storybook
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - id: build-publish-storybook
+        uses: bitovi/github-actions-storybook-to-github-pages@v1.0.3
+        with:
+          path: apps/storybook/storybook-static
+          build_command: npm run build && npx lerna run build-storybook

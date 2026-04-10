@@ -2,17 +2,17 @@ import { TableProps as Table } from "@niagads/table";
 
 export const TABLE_DEFINTION: Table = {
     id: "text_fields_only",
+    rowSelection: ["R5", "R2"],
+    onRowSelectionChange: (selectedRows: any) => alert(`Selection: ${JSON.stringify(selectedRows)}`),
     options: {
         initialize: { sort: { publication_date: "asc" } },
-        //disableExport: true,
         disableColumnFilters: true,
-        rowSelect: {
+        enableRowSelect: true,
+        rowSelectColumn: {
             header: "ROI",
             description: "select row to target",
-            onRowSelect: (selectedRows: any) => alert(`Selection: ${JSON.stringify(selectedRows)}`),
-            enableMultiRowSelect: true,
-            selectedValues: ["R5", "R2"],
-            rowId: "id",
+            enableMultiSelect: true,
+            rowUniqueKey: "id",
         },
     },
     columns: [

@@ -227,8 +227,18 @@ export interface APITableResponse {
     table: TableProps;
 }
 
+export interface ProcessedTableResponse {
+    request: Request;
+    pagination: APIPagination;
+    table: TableProps;
+    extraData: Record<string, any>;
+}
+
+export type TableType = "associations" | "genes" | "variants" | "function" | "pathways" | "frequencies";
+
 export interface TableSection extends AnchoredSectionBase {
     endpoint: string;
+    tableType?: TableType;
     wrapper?: string;
     data?: APITableResponse | null;
     error?: string | null;

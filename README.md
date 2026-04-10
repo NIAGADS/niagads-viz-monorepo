@@ -6,7 +6,18 @@ This project **will** contain React component libraries, JavaScript visualizatio
 
 ## Documentation
 
-See project [storybook](https://niagads.github.io/niagads-viz-monorepo/) for documentation and usage examples.
+See project [storybook](https://niagads.github.io/niagads-viz-monorepo/) for UI library documentation and usage examples.
+See indivdual application READMEs for deployment instructions.
+
+## Requirements
+
+### Node
+
+- Node >24, <25
+
+The project is configured to work with [nvm](https://github.com/nvm-sh/nvm).  Once nvm is installed, run `nvm use` in the project root. If the required version of `Node` is not installed, it will give prompt you install the required version.  If it is installed, nvm, will switch to the expected Node version.
+
+> NOTE: `npm` is set to `engine-strict=true` and will raise an `Unsupported Engine` error if the Node version does not match the engine defined in the root `package.json`.
 
 ## Packages
 
@@ -34,8 +45,12 @@ npm i @niagads/ui
 
 Dynamic table component. See project [storybook](https://niagads.github.io/niagads-viz-monorepo/) for documentation and usage examples.
 
+#### IGVBrowser
+
+Components wrapping a customized [igv.js](igv.js) genome browser that pull data directly from files hosted on FILER or through data adapters that query the NIAGADS Open Access API. Also includes customized track selectors and filtering using the `@niagads/table` component.
+
 ```bash
-npm i @niagads/table
+npm i @niagads/igvbrowser
 ```
 
 ### Under development
@@ -43,10 +58,6 @@ npm i @niagads/table
 #### Gosling
 
 Components wrapping [gosling.js](https://gosling-lang.org/) genomics visualizations that pull data directly from files hosted on FILER or through data adapters that query the NIAGADS Open Access API.
-
-#### IGVBrowser
-
-Components wrapping a customized [igv.js](igv.js) genome browser that pull data directly from files hosted on FILER or through data adapters that query the NIAGADS Open Access API. Also includes customized track selectors and filtering using the `@niagads/table` component.
 
 #### LocusZoom
 
@@ -68,15 +79,27 @@ The following command will run storybook and automatically build packages as you
 npm run storybook
 ```
 
+> **DEVELOPERS NOTE**: to "hide" a story from the published storybook, add the 'dev' tag to your story defintion.  For example:
+
+```javascript
+export const MyStory: StoryObj<typeof Component> = {
+    args: {
+        ...
+    },
+    render: (args) => <Component {...args} />,
+    tags: ["dev"], // hide in production
+};
+```
+
 ### niagads-api-client
 
 > temporarily moved to own repo until we can break tailwindcss dependendency (niagads-api)
 
 ### track-collection-microservice
 
-### igvbrowser-microservice
+### igvbrowser (app)
 
-> temporarily just a test-application
+Standalone, configurable IGV-based Genome Browser Application.  See <https://github.com/NIAGADS/igvbrowser-microservice> for more information.
 
 ## For Developers
 
@@ -100,11 +123,11 @@ npx lerna run build --concurrency 1
 ```
 
 or in short-hand:
-   
+
 ```bash
 npm run build
 ```
-	
+
 > **Note**: The `--concurrency 1` flag is not required, but stops the lerna command from trying to build each package in parallel, avoiding race conditions and build failures when a dependent package builds faster than a dependency. This sort of race condition can occur randomly.
 
 > **Note**: `npx` should come with `npm` 5.2+, but sometimes it does not get installed if you use `nvm` to manage node versions.  
@@ -124,13 +147,9 @@ npm run storybook
 
 > **Note:** if you get a message that `nx` is not found, install globally with the following command: `npm i -g nx`. Depending on your system setup, you may need to use `sudo`.
 
-#### Run GenomicsDB
+#### Run Application
 
-see README in the GenomicsDB application directory.
-
-#### Run a microservice
-
-More information coming soon.
+see README in the relevant application directory.
 
 ### Lerna package and application management
 
@@ -219,18 +238,33 @@ npx lerna publish <initial_version>
 
 #### Subsequent releases
 
-- Create and publish (push) a temporary branch for the release
+For subsequent releases, you can run a script to handle all steps required for building and releasing packages.
+
+```bash
+./scripts/release.sh
+```
+
+Alternatively, you can do the release manually by running each command in that script.
+
+Below is an overview of each step in the script:
+
+- Create and publish (push) a temporary git branch for the release
+
+```bash
+git checkout -b release/<mm-dd-yyyy>
+git push --set-upstream origin release/<mm-dd-yyyy>
+```
+
+- Clean up all old `dist` folders and rebuild the packages using our npm script
+
+```bash
+npm run build-fresh
+```
 
 - Increment the versions using lerna
 
 ```bash
-npx lerna version
-```
-
-- Rebuild the packages fresh using lerna
-
-```bash
-npx lerna run build-fresh
+npx lerna version --no-private
 ```
 
 - Publish the packages

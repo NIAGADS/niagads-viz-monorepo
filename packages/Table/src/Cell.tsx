@@ -1,14 +1,13 @@
-import React, { ReactNode } from "react";
-
-import { BasicType, Modify, TypeMapper, Expand, NAString } from "@niagads/common";
-import { _isJSON, _deepCopy, _hasOwnProperty, _get, _isNull, _isNA } from "@niagads/common";
-import { Color } from "@niagads/common";
-
-import { Text, TextList } from "./CellRenderers/BasicText";
+import { Badge, BadgeIconType, BooleanBadge } from "./CellRenderers/Badge";
+import { BasicType, Expand, Modify, NAString, TypeMapper } from "@niagads/common";
 import { Link, LinkList } from "./CellRenderers/Link";
+import React, { ReactNode } from "react";
+import { Text, TextList } from "./CellRenderers/BasicText";
+import { _deepCopy, _get, _hasOwnProperty, _isJSON, _isNA, _isNull } from "@niagads/common";
+
+import { Color } from "@niagads/common";
 import { Float } from "./CellRenderers/Number";
 import { GenericColumn } from "./Column";
-import { Badge, BooleanBadge, BadgeIconType } from "./CellRenderers/Badge";
 import { PercentageBar } from "./CellRenderers/SparkChart";
 
 export const DEFAULT_NA_VALUE = "NA";
@@ -121,7 +120,7 @@ const __resolveValue = (props: Cell): BasicType => {
 
 const __resolveBooleanValue = (props: BooleanCell): BasicType => {
     const displayText = _get("displayText", props);
-    return displayText ? displayText : __resolveValue(props);
+    return displayText ? displayText : `${__resolveValue(props)}`;
 };
 
 const __resolveFloatValue = (props: FloatCell): BasicType => {

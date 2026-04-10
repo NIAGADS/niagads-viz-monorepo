@@ -1,6 +1,6 @@
 "use client";
 
-import { Autocomplete } from "@niagads/ui/client";
+import { APISearch } from "@niagads/ui/client";
 import { SearchResult } from "@/lib/types";
 import { prefixClientRoute } from "@/lib/utils";
 import { useRouter } from "next/navigation";
@@ -37,7 +37,7 @@ export function EnhancedSearch({
     };
 
     return (
-        <Autocomplete
+        <APISearch
             suggestions={data || (error ? [] : null)} // if there's an error set the suggestions to be an empty array to display suggestions instead of loading spinner
             error={`${error}`}
             onSearch={(term) => handleSearch(term)}

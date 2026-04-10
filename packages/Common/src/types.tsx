@@ -68,3 +68,8 @@ export interface APIErrorResponse {
     stack_trace?: string;
     request?: string;
 }
+
+export interface Range {
+    min: number;
+    max: number;
+}

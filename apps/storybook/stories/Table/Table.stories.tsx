@@ -1,5 +1,5 @@
 //@ts-nocheck
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
 import Table from "@niagads/table";
 import { TABLE_DEFINTION as table } from "../../examples/tables/table_text_fields_only";
@@ -22,7 +22,7 @@ export const Default: Story = {
     args: {
         id: table.id,
         columns: table.columns,
-        options: table.options,
+        options: Object.assign(table.options, { enableRowSelect: false }),
         data: table.data,
     },
 };

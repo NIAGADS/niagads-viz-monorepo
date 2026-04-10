@@ -26,6 +26,21 @@
 .label {
     margin-left: 6px;
 }
+.value {
+    margin-left: 6px;
+    padding: 3px;
+
+    font-size: xx-small;
+
+    border-style: solid;
+    border-radius: 10px;
+    border-width: thin;
+    border-color: var(--secondary-blue);
+
+    background: var(--secondary-blue);
+
+    color: var(--text-inverse);
+}
 .removeBtn {
     background: none;
     border: none;

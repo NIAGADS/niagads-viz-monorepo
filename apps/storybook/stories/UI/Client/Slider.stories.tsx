@@ -1,51 +1,107 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { RangeSlider as RSlider, Slider } from "@niagads/ui/client";
 import React, { useState } from "react";
 
-import { Slider } from "@niagads/ui/client";
+import { Range } from "@niagads/common";
 
-const meta: Meta<typeof Slider> = {
+// Slider story with controls
+const SliderStory = (props: any) => {
+    const [value, setValue] = useState<number>(props.value ?? 50);
+    return (
+        <div style={{ padding: "2rem", maxWidth: "500px" }}>
+            <Slider {...props} value={value} onChange={setValue} />
+            <div style={{ marginTop: "1rem", padding: "1rem", backgroundColor: "#f0f0f0", borderRadius: "4px" }}>
+                <p>
+                    <strong>Current Value:</strong> {value}
+                </p>
+            </div>
+        </div>
+    );
+};
+
+// RangeSlider story with controls
+const RangeSliderStory = (props: any) => {
+    const [rangeValue, setRangeValue] = useState<Range>(props.value ?? { min: 25, max: 75 });
+    return (
+        <div style={{ padding: "2rem", maxWidth: "500px" }}>
+            <RSlider {...props} value={rangeValue} onChange={setRangeValue} />
+            <div style={{ marginTop: "1rem", padding: "1rem", backgroundColor: "#f0f0f0", borderRadius: "4px" }}>
+                <p>
+                    <strong>Current Range:</strong> [{rangeValue.min}, {rangeValue.max}]
+                </p>
+            </div>
+        </div>
+    );
+};
+
+const meta: Meta = {
     title: "UI/Client/Slider",
-    component: Slider,
-    parameters: {
-        // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
-        layout: "centered",
-    },
-    // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
     tags: ["autodocs"],
+    argTypes: {
+        name: { control: "text", defaultValue: "slider" },
+        label: { control: "text", defaultValue: "Select a value" },
+        min: { control: "number", defaultValue: 0 },
+        max: { control: "number", defaultValue: 100 },
+        step: { control: "number", defaultValue: 1 },
+        value: { control: "number", defaultValue: 50 },
+        variant: {
+            control: "radio",
+            options: ["single", "min", "max"],
+            defaultValue: "single",
+        },
+    },
 };
 
 export default meta;
-type Story = StoryObj<typeof Slider>;
+type Story = StoryObj<typeof meta>;
 
-export const Display: Story = {
+export const BasicSlider: Story = {
     args: {
-        name: "test slider",
-        label: "Test Slider",
-        variant: "default",
-        value: [20, 50],
+        name: "single-slider",
+        label: "Select a value",
         min: 0,
         max: 100,
-        step: 10,
-        onChange: (n) => console.log(n),
+        step: 1,
+        value: 50,
+        variant: "single",
     },
+    render: (args) => <SliderStory {...args} />,
 };
 
-export const OneThumb = () => {
-    const [value, setValue] = useState([50]);
-
-    return (
-        <div>
-            <Slider name="testSlider" value={value} min={0} max={100} step={5} onChange={(v) => setValue(v)} />
-        </div>
-    );
+export const MinSlider: Story = {
+    args: {
+        name: "min-slider",
+        label: "Pick minimum",
+        min: 0,
+        max: 100,
+        step: 1,
+        value: 25,
+        variant: "min",
+    },
+    render: (args) => <SliderStory {...args} />,
 };
 
-export const TwoThumbs: React.FC = () => {
-    const [value, setValue] = useState([25, 75]);
+export const MaxSlider: Story = {
+    args: {
+        name: "max-slider",
+        label: "Pick maximum",
+        min: 0,
+        max: 100,
+        step: 1,
+        value: 75,
+        variant: "max",
+    },
+    render: (args) => <SliderStory {...args} />,
+};
 
-    return (
-        <div>
-            <Slider name="testSlider" value={value} min={0} max={100} step={5} onChange={(v) => setValue(v)} />
-        </div>
-    );
+export const RangeSlider: Story = {
+    args: {
+        name: "range-slider",
+        label: "Select a range",
+        min: 0,
+        max: 100,
+        step: 1,
+        value: { min: 25, max: 75 },
+    },
+    render: (args) => <RangeSliderStory {...args} />,
 };

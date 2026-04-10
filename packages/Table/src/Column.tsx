@@ -10,6 +10,8 @@ export interface ColumnFilterConfig {
     filterFn?: string; // TODO: should by keys for CustomFilteringFunctions / FilterFns
 }
 
+export type ColumnFilterType = "internal" | "external";
+
 // can be used to color values in the column based on value
 export type ColorMap = Record<string, Color>;
 
@@ -28,7 +30,8 @@ export interface GenericColumn {
     id: string;
     description?: string;
     type?: CellType;
-    canFilter?: boolean; // defaults to TRUE
+    canFilter?: boolean; // defaults to FALSE
+    filterType?: ColumnFilterType; // defaults to TRUE
     disableGlobalFilter?: boolean; // defaults to FALSE
     disableSorting?: boolean; // defaults to FALSE
     required?: boolean; // if required = true then cannot be hidden

@@ -1,5 +1,5 @@
 import { BadgeIconType, BooleanBadge } from "@niagads/table";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
 const meta: Meta<typeof BooleanBadge> = {
     title: "Table/Cell/Boolean Badge",
