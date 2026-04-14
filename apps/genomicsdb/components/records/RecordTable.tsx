@@ -1,5 +1,5 @@
 import { APIPagination, _isEmpty } from "@niagads/common";
-import { APITableResponse, ProcessedTableResponse, TableSection } from "@/lib/types";
+import { APITableResponse, ProcessedTableResponse, TableSection, TableType } from "@/lib/types";
 import { Alert, Card, LoadingSpinner } from "@niagads/ui";
 import { ThresholdSelectHistogram as Histogram, PieChart, PieChartDataRow } from "@niagads/charts";
 import Table, { TableConfig } from "@niagads/table";
@@ -7,22 +7,22 @@ import { useEffect, useMemo, useState } from "react";
 
 import PaginationMessage from "../PaginationMessage";
 import useSWR from "swr";
+import { getTable } from "@/app/actions/TableActions";
 
 export interface RecordTableProps {
+    tableType: TableType;
     tableDef: TableSection;
     recordType: string;
     recordId: string;
     onTableLoad?: (pagination: APIPagination) => void;
 }
 
-const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTableProps) => {
+const RecordTable = ({tableDef, recordType, recordId, onTableLoad }: RecordTableProps) => {
     const [externalFilters, setExternalFilters] = useState<any[]>([]);
 
-    // useEffect(() => console.log(externalFilters), [externalFilters]);
-
     const { data, error, isLoading } = useSWR<ProcessedTableResponse>(
-        `/api/table/${recordType}/${recordId}/${tableDef.endpoint}`,
-        (url: string) => fetch(url).then((res) => res.json())
+        `test`,
+        async () => await getTable(tableDef.tableType, recordType, recordId, tableDef.endpoint)
     );
 
     const options: TableConfig | undefined = useMemo(() => {

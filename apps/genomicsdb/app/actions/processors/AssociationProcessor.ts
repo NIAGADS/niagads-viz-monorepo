@@ -7,6 +7,7 @@ import { GenericColumn } from "@niagads/table";
 
 const AssociationProcessor = (rawTable: APITableResponse) => {
     // process existing columns
+    console.log(rawTable);
     const processedColumns: GenericColumn[] = rawTable.table.columns.reduce((p, c) => {
         if (c.id === "relative_position") {
             c.format = { ...c.format };
@@ -87,8 +88,9 @@ const AssociationProcessor = (rawTable: APITableResponse) => {
     }, [] as PieChartDataRow[]);
 
     return {
-        pagination: rawTable.pagination,
+        ...rawTable,
         table: {
+            ...rawTable.table,
             columns: processedColumns,
             data: processedData,
         },
