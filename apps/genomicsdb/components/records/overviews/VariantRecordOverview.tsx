@@ -4,7 +4,6 @@ import { RecordOverview, renderRecordTitle } from "./RecordOverview";
 import { BadgeCheck } from "lucide-react";
 import { ExternalUrls } from "@/data/reference";
 import { MostSevereConsequenceCard } from "./MostSevereConsequenceCard";
-import { RecordActionToolbar } from "../RecordActionToolbar";
 import { RecordLink } from "@/components/Link";
 import RecordSectionUnderConstructionAlert from "../RecordSectionUnderConstructionAlert";
 // import VariantAssociationSummaryChart from "./VariantGeneticAssociationSummaryChart";
@@ -57,7 +56,6 @@ const VariantRecordOverview = ({ record }: { record: VariantRecord }) => {
                             </div>
                         </div>
                     </div>
-                    <RecordActionToolbar id="variant-actions" record={record} />
                 </CardBody>
             </Card>
 

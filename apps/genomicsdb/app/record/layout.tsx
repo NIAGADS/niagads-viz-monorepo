@@ -4,9 +4,7 @@ export default async function RecordPageLayout({ children }: { children: React.R
     return (
         <div className={`${styles.pageContainer} ${styles.pageContainerCapped}`}>
             <div className={styles.content}>
-                <div className={styles.container}>
-                    <div className={styles.contentSection}>{children}</div>
-                </div>
+                <div className={styles.contentSection}>{children}</div>
             </div>
         </div>
     );

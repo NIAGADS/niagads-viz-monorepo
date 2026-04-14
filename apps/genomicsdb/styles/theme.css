@@ -14,6 +14,27 @@
     /* Layout */
     --header-height: 70px;
     --sidebar-width: 270px;
+
+    /* Utility */
+    --shadow: 0 1px 3px rgba(30, 42, 58, 0.07), 0 4px 12px rgba(30, 42, 58, 0.05);
+
+    /* Colors */
+    --blue-dark: #293241;
+    --blue: #3d5a80;
+    --blue-mid: #4a7fc1;
+    --blue-lt: #ddeaf8;
+    --yellow: #ffc665;
+    --accent: #3b82c4;
+    --teal: #0f7ea6;
+    --bg: #f2f4f8;
+    --surface: #ffffff;
+    --border: #dde3ef;
+    --text: #1e2a3a;
+    --muted: #6b7a95;
+    --success-green: #059669;
+    --warning-amber: #d97706;
+    --error-red: #dc2626;
+    --error-red-light: #fee2e2;
 }
 
 body {

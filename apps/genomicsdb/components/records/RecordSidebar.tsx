@@ -1,83 +1,98 @@
 "use client";
 
-import { AnchoredPageSection, PAGE_SECTION_ICONS as ICONS, RecordType } from "@/lib/types";
-
-import Link from "next/link";
-import badgeStyles from "./styles/record-type.module.css";
-import styles from "./styles/record-sidebar.module.css";
+import { AnchoredPageSection } from "@/lib/types";
+import { ChevronDown, ChevronLeft, ChevronUp } from "lucide-react";
 import { useState } from "react";
-import { RECORD_PAGE_SECTIONS } from "@/data/sections";
+import styles from "./styles/record-sidebar.module.css";
 
-const SCROLL_OFFSET = 70; // adjust for the header height
-interface SidebarProps {
-    title: string;
-    recordType: RecordType;
-    isOpen?: boolean; // hold-over
+interface RecordSidebarProps {
+    sections: AnchoredPageSection[];
+    onToggleCollapse: () => void;
 }
 
-export const RecordSidebar = ({ title, recordType }: SidebarProps) => {
-    const [isOpen, setIsOpen] = useState(true);
-    const [activeFilter, setActiveFilter] = useState("overview");
-    const items = RECORD_PAGE_SECTIONS[recordType];
-    // note: this actually is never happening b/c of the next/link
-    const handleItemClick = (itemId: string) => {
-        const element = document.getElementById(itemId);
-        if (element) {
-            const y = element.getBoundingClientRect().top + window.pageYOffset - SCROLL_OFFSET;
-            window.scrollTo({ top: y, behavior: "smooth" });
-        }
-    };
+const RecordSidebar = ({ sections, onToggleCollapse }: RecordSidebarProps) => {
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+    const [activeNav, setActiveNav] = useState(sections[0].id);
+    const [navExpanded, setNavExpanded] = useState<Record<string, boolean>>(
+        sections.reduce((prev, s) => ({ ...prev, [`${s.id}`]: false }), {})
+    );
+    const mobileOpen = false;
 
-    const renderSidebarItem = (item: AnchoredPageSection) => {
-        const isActive = activeFilter === item.id;
-        const Icon = ICONS[item.icon];
+    const toggleNavExpand = (id: string) => setNavExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
 
-        // the next/link is handling the scroll, we need to style it b/c right
-        // now the button is just providing styling
-        return (
-            <div key={item.id}>
-                <button
-                    className={[styles.item, isActive ? styles.itemActive : ""].join(" ")}
-                    onClick={() => handleItemClick(item.id)}
-                    aria-current={isActive ? "page" : undefined}
-                >
-                    <Icon className={styles.itemIcon} size={18} aria-hidden="true" />
-                    <Link href={`#${item.id}`} className={styles.itemText}>
-                        {item.label}
-                    </Link>
-                    {/*<span className="flex-1 text-left">{item.label}</span>*/}
-                </button>
-            </div>
-        );
+    const scrollTo = (id: string) => {
+        // TODO: handle opening correct tab
+        setTimeout(() => {
+            const el = document.getElementById(`section-${id}`);
+            if (el && !el.classList.contains("open")) {
+                const header = el.querySelector(".collapsible-section-header") as HTMLElement;
+                header.click();
+            }
+            setTimeout(() => el?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+        }, 10);
     };
 
     return (
         <aside
-            className={[styles.sidebar, isOpen ? styles.open : ""].join(" ")}
-            role="navigation"
-            aria-label="Secondary navigation"
+            className={`${styles["sidebar"]} ${sidebarCollapsed ? styles["collapsed"] : ""} ${mobileOpen ? styles["mobile-open"] : ""}`}
         >
-            <div className={styles.header}>
-                <h2 className={styles.title}>
-                    {" "}
-                    <div
-                        className={[styles.recordTypeBadge, badgeStyles.recordTypeBadge, badgeStyles[recordType]].join(
-                            " "
-                        )}
-                    >
-                        {recordType}
-                    </div>
-                    {/*title*/} Annotation
-                </h2>
-                {/*<button
-                    className={styles.toggle}
-                    onClick={() => handleCollapse()}
-                    aria-label={isOpen ? "Collapse sidebar" : "Expand sidebar"}
+            <div className={styles["sidebar-record"]}>
+                <span className={styles["sidebar-record-name"]}>
+                    <em>APOE</em>
+                </span>
+                <button
+                    className={styles["sidebar-toggle"]}
+                    onClick={() => {
+                        setSidebarCollapsed((p) => !p);
+                        onToggleCollapse();
+                    }}
                 >
-                    {isOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
-                </button>*/}
+                    <ChevronLeft />
+                </button>
             </div>
-            <nav className={styles.nav}>{items.map((item) => renderSidebarItem(item))}</nav>
+            <nav className={styles["sidebar-nav"]}>
+                {sections.map((item) => {
+                    const hasChildren = item.tables && item.tables.length > 0;
+                    const isExpanded = navExpanded[item.id];
+                    const isActive = activeNav === item.id;
+                    const isActiveParent = hasChildren && activeNav === item.id;
+                    return (
+                        <div key={item.id}>
+                            <div
+                                className={`${styles["nav-item"]} ${isActive ? "active" : ""} ${isActiveParent ? "active-parent" : ""} ${hasChildren && isExpanded ? "open" : ""}`}
+                                onClick={() => (hasChildren ? toggleNavExpand(item.id) : scrollTo(item.id))}
+                            >
+                                {/* <SvgIcon className="nav-icon" d={icons[item.icon]} size={15} /> */}
+                                <span className={styles["nav-label"]}>{item.label}</span>
+                                {hasChildren && (navExpanded[item.id] ? <ChevronUp /> : <ChevronDown />)}
+                            </div>
+                            {hasChildren && (
+                                <div
+                                    className={styles["subnav"]}
+                                    style={{ maxHeight: isExpanded && !sidebarCollapsed ? 300 : 0 }}
+                                >
+                                    {item.tables!.map((child) => (
+                                        <div
+                                            key={child.id}
+                                            className={`${styles["subnav-item"]} ${activeNav === child.id ? styles["active"] : ""}`}
+                                            onClick={() => console.log("click")}
+                                        >
+                                            <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis" }}>
+                                                {child.label}
+                                            </span>
+                                            <span className={styles["nav-badge"]}>
+                                                {child.data?.pagination.total_num_records}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    );
+                })}
+            </nav>
         </aside>
     );
 };
+
+export default RecordSidebar;

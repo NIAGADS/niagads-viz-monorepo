@@ -4,7 +4,6 @@ import { Card, CardBody, CardHeader } from "@niagads/ui";
 import { RecordOverview, renderRecordTitle } from "./RecordOverview";
 import { ExternalUrls } from "@/data/reference";
 import { GeneRecord } from "@/lib/types";
-import { RecordActionToolbar } from "../RecordActionToolbar";
 import { RecordLink } from "../../Link";
 import { genomicLocationToSpan } from "@/lib/utils";
 import styles from "../styles/record.module.css";
@@ -47,7 +46,6 @@ const GeneRecordOverview = ({ record }: { record: GeneRecord }) => {
                             </div>
                         </div>
                     </div>
-                    <RecordActionToolbar id="gene-actions" record={record} />
                 </CardBody>
             </Card>
 

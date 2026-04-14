@@ -1,32 +1,47 @@
-// generic RecordPage
+"use client";
 
-import { BaseRecord, EntityRecord, RecordType } from "@/lib/types";
-
+import { useState } from "react";
+import { EntityRecord, RecordType } from "@/lib/types";
+import { RECORD_PAGE_SECTIONS } from "@/data/sections";
 import RecordAnnotationSection from "./RecordAnnotationSection";
-import { fetchRecord } from "@/lib/route-handlers";
-import { getOverview } from "@/lib/record-handlers";
+import RecordSidebar from "./RecordSidebar";
+import RecordToolbar from "./RecordToolbar";
 
-const RecordPage = async ({ record_type, id }: BaseRecord) => {
-    // need to fetch here b/c we need to pass the stable record.id through to sections to fetch tables
-    const record: EntityRecord = (await fetchRecord(record_type, id)) as EntityRecord;
+import styles from "./styles/record-page.module.css";
 
-    // check for structural variant
-    const recordType: RecordType =
-        record.record_type === "variant" && record.is_structural_variant === true
-            ? "structural_variant"
-            : record.record_type;
+interface RecordPageProps {
+    recordId: string;
+    recordType: RecordType;
+    recordData: EntityRecord;
+}
 
-    // determine section identities/values from record_type
-    const OverviewComponent = await getOverview(recordType);
+const RecordPage = ({ recordId, recordType, recordData }: RecordPageProps) => {
+    const sections = RECORD_PAGE_SECTIONS[recordType];
+
+    const [mobileOpen, setMobileOpen] = useState(false);
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+    const title =
+        recordData.record_type === "gene"
+            ? recordData.symbol
+            : recordData.record_type === "region"
+              ? recordData.id
+              : recordData.record_type === "variant"
+                ? recordData.allele_string
+                : recordData.name;
 
     return (
         <>
-            {/*<RecordSidebar
-                title={record.id}
-                recordType={recordType}
-            />*/}
-            <OverviewComponent record={record} />
-            <RecordAnnotationSection id={record.id} record_type={recordType}></RecordAnnotationSection>
+            {/* Mobile FAB */}
+            {mobileOpen && <div className={styles["sidebar-overlay"]} onClick={() => setMobileOpen(false)} />}
+            <button className={styles["sidebar-fab"]} onClick={() => setMobileOpen((p) => !p)}></button>
+            <div className={styles["record-shell"]}>
+                <RecordSidebar sections={sections} onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)} />
+                <div className={`${styles["record-content"]} ${sidebarCollapsed ? styles["sidebar-collapsed"] : ""}`}>
+                    <RecordToolbar title={title} subtitle={recordData.record_type === "gene" ? recordData.name : ""} id={recordId} />
+                    <RecordAnnotationSection sections={sections} id={recordId} recordType={recordType} />
+                </div>
+            </div>
         </>
     );
 };

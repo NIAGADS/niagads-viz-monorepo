@@ -1,0 +1,38 @@
+/* ── PAGE HEADER ── */
+.page-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 28px;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    /* position: sticky; top: var(--topbar-h); z-index: 50; */
+}
+
+.page-header-left {
+    flex: 1;
+    min-width: 0;
+}
+
+.page-title {
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--blue-dark);
+    font-style: italic;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+}
+
+.page-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 3px;
+}
+
+.page-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    padding-top: 3px;
+}
