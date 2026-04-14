@@ -5,7 +5,7 @@ import RecordSectionUnderConstructionAlert from "./RecordSectionUnderConstructio
 import RecordTableSection from "./RecordTableSection";
 import React from "react";
 
-import styles from "./styles/record.module.css";
+import styles from "./styles/record-annotation-section.module.css";
 
 interface RecordAnnotationSectionProps {
     id: string;
@@ -15,7 +15,7 @@ interface RecordAnnotationSectionProps {
 
 const RecordAnnotationSection = ({ id, recordType, sections }: RecordAnnotationSectionProps) => {
     return (
-        <div id={id} className="">
+        <div id={id} className={styles["annotation-container"]}>
             {sections.map(section =>
                 section.tables && (
                     <div id={section.id} key={section.id}>
