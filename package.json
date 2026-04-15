@@ -24,6 +24,7 @@
         "packages/LocusZoom",
         "packages/Table",
         "packages/Charts",
+        "packages/AI",
         "packages/UI",
         "apps/storybook",
         "apps/genomicsdb",

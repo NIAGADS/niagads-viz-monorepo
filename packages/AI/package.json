@@ -1,0 +1,56 @@
+{
+    "name": "@niagads/ai",
+    "version": "0.1.0",
+    "description": "NIAGADS AI React components and retrieval clients",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/NIAGADS/niagads-viz-monorepo.git"
+    },
+    "homepage": "https://github.com/NIAGADS/niagads-viz-monorepo/tree/main/packages/AI",
+    "license": "GPL-3.0-only",
+    "scripts": {
+        "build": "rollup -c"
+    },
+    "devDependencies": {
+        "@rollup/plugin-commonjs": "^28.0.2",
+        "@rollup/plugin-node-resolve": "^16.0.0",
+        "@rollup/plugin-terser": "^0.4.4",
+        "@rollup/plugin-typescript": "^12.1.2",
+        "@types/react": "^19.2.0",
+        "@types/react-dom": "^19.2.0",
+        "postcss-import": "^16.1.1",
+        "rollup": "^4.28.1",
+        "rollup-plugin-delete": "^2.1.0",
+        "rollup-plugin-dts": "^6.1.1",
+        "rollup-plugin-peer-deps-external": "^2.2.4",
+        "rollup-plugin-postcss": "^4.0.2",
+        "typescript": "^5"
+    },
+    "dependencies": {
+        "@tanstack/ai": "latest",
+        "@tanstack/ai-client": "latest",
+        "@tanstack/ai-openai": "latest",
+        "@tanstack/ai-react": "latest",
+        "lucide-react": "^0.513.0",
+        "style-inject": "^0.3.0",
+        "tslib": "^2",
+        "zod": "^4.0.0"
+    },
+    "peerDependencies": {
+        "react": "^19.2.0",
+        "react-dom": "^19.2.0"
+    },
+    "files": [
+        "dist"
+    ],
+    "publishConfig": {
+        "access": "public"
+    },
+    "exports": {
+        ".": {
+            "default": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        },
+        "./package.json": "./package.json"
+    }
+}

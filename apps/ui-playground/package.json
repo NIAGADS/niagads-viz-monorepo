@@ -7,9 +7,12 @@
     },
     "dependencies": {
         "@niagads/charts": "^0.2.1",
+        "@niagads/ai": "^0.1.0",
         "@niagads/common": "^0.2.1",
         "@niagads/table": "^0.2.1",
         "@niagads/ui": "^0.2.1",
+        "@tanstack/ai": "latest",
+        "@tanstack/ai-openai": "latest",
         "next": "16.1.6",
         "react": "19.2.3",
         "react-dom": "19.2.3"
