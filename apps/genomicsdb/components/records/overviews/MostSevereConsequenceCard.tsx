@@ -39,7 +39,7 @@ export const MostSevereConsequenceCard = ({ conseq }: { conseq: PredictedConsequ
     const numTerms = consequence_terms.length;
 
     return (
-        <Card variant="third">
+        <Card span={4}>
             <CardHeader>Most Severe Predicted Consequence</CardHeader>
             <CardBody>
                 <>

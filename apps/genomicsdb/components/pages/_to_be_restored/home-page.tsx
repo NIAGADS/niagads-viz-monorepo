@@ -1,9 +1,9 @@
 "use client";
 
 import { BarChart3, Database, Search } from "lucide-react";
-import { Button, Card } from "@niagads/ui";
+import { Button, Card, FeatureCard } from "@niagads/ui";
 
-import { EnhancedSearch } from "../EnhancedSearch";
+//import { EnhancedSearch } from "../EnhancedSearch";
 import styles from "@/components/styles/HomePage.module.css";
 import { useRouter } from "next/navigation";
 
@@ -51,10 +51,10 @@ export function HomePage() {
                     </p>
 
                     <div className={styles["heroSearch"]}>
-                        <EnhancedSearch
+                        {/*<EnhancedSearch
                             placeholder="Search genes, variants, or genomic regions (e.g., APOE, rs429358)"
                             autoRoute={true}
-                        />
+                        />*/}
                     </div>
 
                     <div className={styles["heroButtons"]}>
@@ -83,11 +83,13 @@ export function HomePage() {
 
                     <div className={styles["featureGrid"]}>
                         {features.map((feature, index) => (
-                            <Card key={`feature-${index}`} variant="third">
-                                <feature.icon className={styles["featureIcon"]} />
-                                <h3 className={styles["featureTitle"]}>{feature.title}</h3>
-                                <p className={styles["featureDescription"]}>{feature.description}</p>
-                            </Card>
+                            <FeatureCard
+                                key={`feature-${index}`}
+                                span={4}
+                                icon={feature.icon}
+                                title={feature.title}
+                                description={feature.description}
+                            ></FeatureCard>
                         ))}
                     </div>
                 </div>
@@ -131,34 +133,23 @@ export function HomePage() {
                         </p>
                     </div>
 
+                    {/*FIXME: what type of Cards would these be?*/}
                     <div className={styles["featureGrid"]}>
-                        <Card
-                            variant="third"
-                            style={{ cursor: "pointer" }}
-                            onClick={() => router.push("/record/gene/APOE")}
-                        >
+                        <Card span={4} onClick={() => router.push("/record/gene/APOE")}>
                             <div className={styles["featureTitle"]}>Explore APOE</div>
                             <p className={styles["featureDescription"]}>
                                 Investigate the most well-known Alzheimer's risk gene and its variants
                             </p>
                         </Card>
 
-                        <Card
-                            variant="third"
-                            style={{ cursor: "pointer" }}
-                            onClick={() => router.push("/search?q=Alzheimer's disease")}
-                        >
+                        <Card span={4} onClick={() => router.push("/search?q=Alzheimer's disease")}>
                             <div className={styles["featureTitle"]}>AD GWAS Data</div>
                             <p className={styles["featureDescription"]}>
                                 Browse genome-wide association studies for Alzheimer's disease
                             </p>
                         </Card>
 
-                        <Card
-                            variant="third"
-                            style={{ cursor: "pointer" }}
-                            onClick={() => router.push("/record/variant/chr19:44908684")}
-                        >
+                        <Card span={4} hover={true} onClick={() => router.push("/record/variant/chr19:44908684")}>
                             <div className={styles["featureTitle"]}>Chromosome 19</div>
                             <p className={styles["featureDescription"]}>
                                 Explore variants on chromosome 19, enriched for AD associations

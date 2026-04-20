@@ -1,8 +1,8 @@
 import { Button, Card, FilterChip, FilterChipBar, InlineIcon } from "@niagads/ui";
+import { ChevronDown, ChevronRight, TrashIcon } from "lucide-react";
+import { Column, ColumnFilter, ColumnFiltersState } from "@tanstack/react-table";
 import React, { useState } from "react";
 
-import { Column, ColumnFilter, ColumnFiltersState } from "@tanstack/react-table";
-import { ChevronDown, ChevronRight, TrashIcon } from "lucide-react";
 import AdvancedFilter from "../Filter";
 
 interface ColumnFilterControlsProps {
@@ -37,7 +37,7 @@ export const ColumnFilterControls = ({
                     ))}
                 </FilterChipBar>
             )}
-            <Card variant="full">
+            <Card>
                 <div>
                     <div onClick={() => setAreFiltersOpen(!areFiltersOpen)}>
                         <InlineIcon icon={areFiltersOpen ? <ChevronDown /> : <ChevronRight />}>

@@ -1,10 +1,11 @@
 "use client";
 
-import Table from "@niagads/table";
-import { TABLE_DEFINITION } from "../tables/association-test-table";
 import { Card, TextInput } from "@niagads/ui";
-import { useEffect, useMemo, useState } from "react";
 import { PieChart, PieChartDataRow } from "@niagads/charts";
+import { useEffect, useMemo, useState } from "react";
+
+import { TABLE_DEFINITION } from "../tables/association-test-table";
+import Table from "@niagads/table";
 
 const TablePlayground = () => {
     const [externalFilters, setExternalFilters] = useState<any[]>([]);
@@ -44,7 +45,7 @@ const TablePlayground = () => {
 
     return (
         <div>
-            <Card variant="full">
+            <Card>
                 <PieChart id="pop-chart-test" data={populationData} onClick={(val) => setFilterOneValue(val)} />
                 <TextInput value={filterTwoValue} onChange={(val) => setFilterTwoValue(val)} />
             </Card>

@@ -106,7 +106,7 @@ const AssociationsTableFilters = ({
     populationData,
 }: AssociationsTableFiltersProps) => {
     return (
-        <Card variant="full">
+        <Card>
             <div style={{ display: "flex", height: "100%", minHeight: "200px" }}>
                 <Histogram
                     data={pValues}

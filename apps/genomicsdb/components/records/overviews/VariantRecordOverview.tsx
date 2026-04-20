@@ -20,7 +20,7 @@ const VariantRecordOverview = ({ record }: { record: VariantRecord }) => {
     return (
         <RecordOverview>
             {/* Variant Information Card - 1/3 width */}
-            <Card variant="third">
+            <Card span={4}>
                 <CardHeader>
                     {renderRecordTitle(record.id, record.ref_snp_id, ExternalUrls.DBSNP_URL, record.record_type)}
                 </CardHeader>
@@ -67,7 +67,7 @@ const VariantRecordOverview = ({ record }: { record: VariantRecord }) => {
 
             {/* Chart placeholders - 2/3 width */}
             {record.is_structural_variant !== true && (
-                <Card variant="two-thirds">
+                <Card span={6}>
                     <CardHeader>Variant Associations</CardHeader>
                     <CardBody>
                         {/*<VariantAssociationSummaryChart recordId={record.id} />*/}
