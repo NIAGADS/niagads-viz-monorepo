@@ -5,8 +5,8 @@ import { AssociationTraitCategory, AssociationTraitSource, GeneticAssociationSum
 import { _fetch, fetchRecordAssociations } from "@/lib/route-handlers";
 
 import { InlineError } from "@/components/ErrorAlerts";
-import Placeholder from "../placeholder";
 import { Series } from "@niagads/charts";
+import { Skeleton } from "@niagads/ui";
 
 type RelativePosition = "in gene" | "upstream" | "downstream";
 
@@ -104,7 +104,7 @@ export async function GeneAssociationSummaryChart({ recordId }: AssociationSumma
     const series: Series = build_chart_series(summary);
     return (
         <div>
-            <Placeholder type={"chart"} />
+            <Skeleton type={"default"} />
         </div>
     );
 }
