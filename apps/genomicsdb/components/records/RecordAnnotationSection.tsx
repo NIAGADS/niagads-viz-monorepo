@@ -3,7 +3,7 @@
 import { AnchoredPageSection, RecordType } from "@/lib/types";
 import RecordSectionUnderConstructionAlert from "./RecordSectionUnderConstructionAlert";
 import RecordTableSection from "./RecordTableSection";
-import React from "react";
+import React, { RefObject } from "react";
 
 import styles from "./styles/record-annotation-section.module.css";
 
@@ -11,13 +11,14 @@ interface RecordAnnotationSectionProps {
     id: string;
     recordType: RecordType;
     sections: AnchoredPageSection[];
+    sectionRefs: Record<string, RefObject<HTMLElement>>;
 }
 
-const RecordAnnotationSection = ({ id, recordType, sections }: RecordAnnotationSectionProps) => {
+const RecordAnnotationSection = ({ id, recordType, sections, sectionRefs }: RecordAnnotationSectionProps) => {
     return (
         <div id={id} className={styles["annotation-container"]}>
             {sections.map(section =>
-                section.tables && (
+                section.tables ? (
                     <div id={section.id} key={section.id}>
                         <RecordSectionHeader
                             key={`${section.id}-header`}
@@ -30,6 +31,8 @@ const RecordAnnotationSection = ({ id, recordType, sections }: RecordAnnotationS
                             <RecordTableSection recordId={id} recordType={recordType} tables={section.tables} />
                         )}
                     </div>
+                ) : (
+                    <span ref={sectionRefs[section.id]}>{section.label}</span>
                 )
             )}
         </div>

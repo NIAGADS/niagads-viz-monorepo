@@ -6,10 +6,12 @@ import styles from "../styles/tabs.module.css";
 
 interface TabsProps extends StylingProps {
     children: ReactElement<TabProps>[];
+    onTabChange?: (tabId: string) => void;
+    selectedTab?: string;
 }
 
-export const Tabs = ({ children }: TabsProps) => {
-    const [selectedId, setSelectedId] = useState<string | null>(children[0].props.id);
+export const Tabs = ({ children, onTabChange, selectedTab }: TabsProps) => {
+    const [selectedId, setSelectedId] = useState<string | null>(selectedTab || children[0].props.id);
     const tabsId = useId();
 
     return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Ref, RefObject, useRef, useState } from "react";
 import { EntityRecord, RecordType } from "@/lib/types";
 import { RECORD_PAGE_SECTIONS } from "@/data/sections";
 import RecordAnnotationSection from "./RecordAnnotationSection";
@@ -18,8 +18,22 @@ interface RecordPageProps {
 const RecordPage = ({ recordId, recordType, recordData }: RecordPageProps) => {
     const sections = RECORD_PAGE_SECTIONS[recordType];
 
-    const [mobileOpen, setMobileOpen] = useState(false);
+    const sectionRefs = sections.reduce((prev, section) => {
+        if (section.tables) {
+            return {
+                ...prev,
+                ...section.tables.reduce((prev, table) => ({...prev, [table.id]: useRef(null)}), {} as Record<string, RefObject<HTMLElement | null>>)
+            }
+        } else {
+            return {
+                ...prev,
+                [section.id]: useRef(null)
+            }
+        }
+    }, {} as Record<string, RefObject<HTMLElement | null>>);
+
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+    const [selectedSection, setSelectedSection] = useState();
 
     const title =
         recordData.record_type === "gene"
@@ -32,14 +46,11 @@ const RecordPage = ({ recordId, recordType, recordData }: RecordPageProps) => {
 
     return (
         <>
-            {/* Mobile FAB */}
-            {mobileOpen && <div className={styles["sidebar-overlay"]} onClick={() => setMobileOpen(false)} />}
-            <button className={styles["sidebar-fab"]} onClick={() => setMobileOpen((p) => !p)}></button>
             <div className={styles["record-shell"]}>
-                <RecordSidebar sections={sections} onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)} />
+                <RecordSidebar title={title} sections={sections} onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)} onSectionSelect={(sectionId) => sectionRefs[sectionId].current?.scrollIntoView()} />
                 <div className={`${styles["record-content"]} ${sidebarCollapsed ? styles["sidebar-collapsed"] : ""}`}>
                     <RecordToolbar title={title} subtitle={recordData.record_type === "gene" ? recordData.name : ""} id={recordId} />
-                    <RecordAnnotationSection sections={sections} id={recordId} recordType={recordType} />
+                    <RecordAnnotationSection sections={sections} sectionRefs={sectionRefs} id={recordId} recordType={recordType} />
                 </div>
             </div>
         </>

@@ -14,26 +14,6 @@ interface RecordTableSectionProps {
     recordType: string;
 }
 
-interface TabTitleProps {
-    label: string;
-    pagination?: APIPagination;
-}
-
-const TabTitle = ({ label, pagination }: TabTitleProps) => {
-    return (
-        <div className="flex">
-            {label}
-            {pagination ? (
-                <span className={styles.badge}>{pagination.total_num_records}</span>
-            ) : (
-                <span className={styles.tab_header_spinner}>
-                    <LoadingSpinner message="" size="sm" />
-                </span>
-            )}
-        </div>
-    );
-};
-
 const RecordTableSection = ({ tables, recordId, recordType }: RecordTableSectionProps) => {
     const [pagination, setPagination] = useState<TablePagination>({});
 
@@ -55,6 +35,26 @@ const RecordTableSection = ({ tables, recordId, recordType }: RecordTableSection
                 </Tab>
             ))}
         </Tabs>
+    );
+};
+
+interface TabTitleProps {
+    label: string;
+    pagination?: APIPagination;
+}
+
+const TabTitle = ({ label, pagination }: TabTitleProps) => {
+    return (
+        <div className="flex">
+            {label}
+            {pagination ? (
+                <span className={styles.badge}>{pagination.total_num_records}</span>
+            ) : (
+                <span className={styles.tab_header_spinner}>
+                    <LoadingSpinner message="" size="sm" />
+                </span>
+            )}
+        </div>
     );
 };
 
