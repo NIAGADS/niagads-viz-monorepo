@@ -1,0 +1,77 @@
+/* RenderingTestTable.css */
+.badge-purple {
+    display: inline-block;
+    padding: 0.25em 0.75em;
+    background: #ede7f6; /* light purple */
+    color: #4b006e; /* deep purple for contrast */
+    border-radius: 1em;
+    font-weight: 600;
+    font-size: 0.95em;
+    transition:
+        background 0.2s,
+        color 0.2s;
+    cursor: default;
+}
+.badge-purple:hover {
+    background: #d1b3ff; /* slightly darker on hover */
+    color: #fff;
+}
+
+.red-text {
+    color: red;
+}
+
+.blue-text {
+    color: blue;
+}
+
+.green-text {
+    color: green;
+}
+.orange-txt {
+    color: orange;
+}
+
+.approval-badge {
+    color: white;
+    background: green;
+}
+
+.failure-badge {
+    color: red;
+    bordercolor: red;
+    background: #ffe5e5;
+}
+
+.link-button {
+    display: inline-block;
+    padding: 0.5em 1em;
+    background: #007bff;
+    color: white;
+    border: 1px solid #0056b3;
+    border-radius: 0.25em;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+        background 0.2s,
+        border-color 0.2s;
+}
+
+.link-button:hover {
+    background: #0056b3;
+    border-color: #003d82;
+}
+
+.link-button:active {
+    background: #003d82;
+    border-color: #002752;
+}
+
+.pvalue-badge {
+    background: #cccccc;
+    color: black;
+    padding: 0.25em 0.75em;
+    border-radius: 0.8em;
+    display: inline-block;
+}

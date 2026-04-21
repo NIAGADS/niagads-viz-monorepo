@@ -1,8 +1,9 @@
-import { HelpIconWrapper, renderTooltip } from "@niagads/ui";
-import React, { ReactNode, useState } from "react";
-import { TextRenderer, buildElementStyle, renderNullValue } from "./TextRenderer";
+import React, { useId, useState } from "react";
+import { TextRenderer, renderNullValue } from "./TextRenderer";
 import { _deepCopy, _get, _hasOwnProperty, _isJSON, _isNA, _isNull } from "@niagads/common";
 
+import { DEFAULT_NA_VALUE } from "../Cell";
+import { HelpIconWrapper } from "@niagads/ui";
 import { StylingProps } from "@niagads/ui";
 import styles from "../styles/cell.module.css";
 
@@ -20,36 +21,19 @@ export const StyledText = ({ value, className = "", style = {} }: StyledTextProp
     );
 };
 
-interface TextWithInfoProps {
-    text: ReactNode;
-    message: string;
-    asInfoLink?: boolean; // display as info link instead of as icon
-}
-
-export const TextWithInfo = ({ text, message, asInfoLink }: TextWithInfoProps) => {
-    if (asInfoLink) {
-        const infoLink = <div className={styles.infoLink}>{text}</div>;
-        return <>{renderTooltip(infoLink, message)}</>;
-    }
-    return (
-        <HelpIconWrapper message={message} variant={"info"}>
-            {text}
-        </HelpIconWrapper>
-    );
-};
-
 export const TextList = <T,>({ props }: TextRenderer<T>) => {
+    const id = useId();
     const items = _get("items", props);
     if (items) {
         const numItems = items.length - 1;
         return items.map((iProps: any, index: number) => (
-            <div key={index}>
-                <Text props={iProps}></Text>
+            <div key={`item-${id}-${index}`}>
+                <Text key={`text-${id}-${index}`} props={iProps}></Text>
                 {index < numItems ? ` // ` : ""}
             </div>
         ));
     }
-    return renderNullValue();
+    return renderNullValue(_get("nullValue", props, DEFAULT_NA_VALUE));
 };
 
 export const Text = <T,>({ props }: TextRenderer<T>) => {
@@ -57,11 +41,11 @@ export const Text = <T,>({ props }: TextRenderer<T>) => {
 
     // handle NAs
     if (_isNull(value)) {
-        return renderNullValue(_get("nullValue", props));
+        return renderNullValue(_get("nullValue", props, DEFAULT_NA_VALUE));
     }
 
     if (_isNA(value)) {
-        return renderNullValue();
+        return renderNullValue(_get("naValue", props, DEFAULT_NA_VALUE));
     }
 
     // handle large text
@@ -71,13 +55,18 @@ export const Text = <T,>({ props }: TextRenderer<T>) => {
     }
 
     // styling
-    const style = buildElementStyle(props);
-    const styledText = <StyledText value={value} style={style} />;
+    const style = _get("style", props);
+    const className = _get("className", props);
+    const styledText = <StyledText value={value} style={style} className={className} />;
 
-    // tooltips
-    if (_hasOwnProperty("tooltip", props)) {
-        const asInfoLink = _get("inlineTooltip", props, false); // tooltip
-        return <TextWithInfo text={styledText} message={_get("tooltip", props)} asInfoLink={asInfoLink} />;
+    // info bubbles
+    const info = _get("info", props);
+    if (info) {
+        return (
+            <HelpIconWrapper message={info} variant={"info"}>
+                {styledText}
+            </HelpIconWrapper>
+        );
     }
 
     return styledText;
@@ -97,10 +86,10 @@ export const LargeText = <T,>({ props }: TextRenderer<T>) => {
     }
 
     if (_isNA(value)) {
-        return renderNullValue();
+        return renderNullValue(_get("naValue", props, DEFAULT_NA_VALUE));
     }
 
-    const hasTooltip = _hasOwnProperty("tooltip", props);
+    const hasTooltip = _hasOwnProperty("info", props);
     const maxLength = _get("truncateTo", props, DEFAULT_MAX_LENGTH);
     const truncatedValue = `${value.slice(0, maxLength - 3)}...`;
 
@@ -111,8 +100,9 @@ export const LargeText = <T,>({ props }: TextRenderer<T>) => {
     }
 
     // styling
-    const style = buildElementStyle(props);
-    const styledText = <StyledText value={isExpanded ? value : truncatedValue} style={style} />;
+    const style = _get("style", props);
+    const className = _get("className", props);
+    const styledText = <StyledText value={isExpanded ? value : truncatedValue} style={style} className={className} />;
 
     const action = isExpanded ? "Show Less" : "Show More";
     return (

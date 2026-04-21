@@ -1,16 +1,27 @@
 import { Badge, BadgeIconType, BooleanBadge } from "./CellRenderers/Badge";
-import { BasicType, Expand, Modify, NAString, TypeMapper } from "@niagads/common";
+import {
+    BasicType,
+    Expand,
+    Modify,
+    NAString,
+    TypeMapper,
+    _deepCopy,
+    _get,
+    _hasOwnProperty,
+    _isJSON,
+    _isNA,
+    _isNull,
+} from "@niagads/common";
 import { Link, LinkList } from "./CellRenderers/Link";
-import React, { ReactNode } from "react";
+import React, { CSSProperties } from "react";
 import { Text, TextList } from "./CellRenderers/BasicText";
-import { _deepCopy, _get, _hasOwnProperty, _isJSON, _isNA, _isNull } from "@niagads/common";
 
-import { Color } from "@niagads/common";
 import { Float } from "./CellRenderers/Number";
 import { GenericColumn } from "./Column";
+import { LinkTarget } from "./CellRenderers";
 import { PercentageBar } from "./CellRenderers/SparkChart";
 
-export const DEFAULT_NA_VALUE = "NA";
+export const DEFAULT_NA_VALUE = "n/a";
 
 export type GenericCell = BasicType | Record<string, any> | null;
 
@@ -21,6 +32,8 @@ export type AbstractCell = {
     columnId: number;
     nullValue?: BasicType | null; // if not set, treats null as NA
     naValue?: NAString; // (internal) value to assign to NAs for consistency, defaults to `NA`
+    className?: string;
+    style?: CSSProperties;
 };
 
 export type StringCell = Expand<Modify<AbstractCell, { type: "string"; value: string }>>;
@@ -31,9 +44,7 @@ export type FloatCell = Expand<Modify<AbstractCell, { type: "float"; value: numb
 
 export type PValueCell = Expand<Modify<FloatCell, { type: "p_value" }>>;
 
-export type TextCell = Expand<
-    Modify<AbstractCell, { type: "text"; truncateTo?: number; color?: Color; tooltip?: string }>
->;
+export type TextCell = Expand<Modify<AbstractCell, { type: "text"; truncateTo?: number; info?: string }>>;
 
 export type TextListCell = Expand<Modify<AbstractCell, { type: "text_list"; value: string; items: TextCell[] }>>;
 
@@ -42,9 +53,8 @@ export type BadgeCell = Expand<
         TextCell,
         {
             type: "badge";
-            backgroundColor?: Color;
-            borderColor?: Color;
             icon?: BadgeIconType;
+            iconOnly?: boolean;
         }
     >
 >;
@@ -60,11 +70,11 @@ export type BooleanCell = Expand<
     >
 >;
 
-export type LinkCell = Expand<Modify<AbstractCell, { type: "link"; url: string; tooltip?: string }>>;
+export type LinkCell = Expand<Modify<AbstractCell, { type: "link"; url: string; info?: string; target?: LinkTarget }>>;
 
 export type LinkListCell = Expand<Modify<AbstractCell, { type: "link_list"; value: string; items: LinkCell[] }>>;
 
-export type PercentageBarCell = Expand<Modify<FloatCell, { type: "percentage_bar"; colors?: [Color, Color] }>>;
+export type PercentageBarCell = Expand<Modify<FloatCell, { type: "percentage_bar" }>>;
 
 export type Cell =
     | PercentageBarCell
@@ -244,35 +254,43 @@ export const resolveCell = (
     Object.assign(resolvedCell as any, { type: resolvedCellType });
 
     // assign column formatting based on cell type
-    const fOptions = column.format;
-    if (fOptions) {
+    const formattingOpts = column.format;
+    if (formattingOpts) {
+        // assign common column properties
+        Object.assign(resolvedCell as any, {
+            nullValue: _get("nullValue", formattingOpts),
+            naValue: _get("naValue", formattingOpts, DEFAULT_NA_VALUE),
+        });
+
         if (resolvedCellType == "boolean") {
             const value = _get("value", resolvedCell);
-            const trueDisplay = _get("trueValue", fOptions);
+            const trueDisplay = _get("trueValue", formattingOpts);
             if (trueDisplay && value === true) {
                 Object.assign(resolvedCell as BooleanCell, {
                     displayText: trueDisplay,
                 });
             }
         }
-
         if (resolvedCellType == "float") {
-            const precision = _get("precision", fOptions);
+            const precision = _get("precision", formattingOpts);
             if (precision) {
                 Object.assign(resolvedCell as FloatCell, { precision: precision });
             }
         }
+    }
 
-        // assign common column properties
-        Object.assign(resolvedCell as any, {
-            nullValue: _get("nullValue", fOptions),
-            naValue: _get("naValue", fOptions, DEFAULT_NA_VALUE),
-        });
-
+    const stylingOpts = column.styling;
+    if (stylingOpts) {
         // assign color information if the user has supplied a color map
-        if (fOptions.colorMap) {
+        if (stylingOpts.getClassName) {
             Object.assign(resolvedCell as any, {
-                color: fOptions.colorMap[`${_get("value", resolvedCell)}`] || "gray",
+                className: stylingOpts.getClassName(_get("value", resolvedCell)) || null,
+            });
+        }
+
+        if (stylingOpts.getStyle) {
+            Object.assign(resolvedCell as any, {
+                style: stylingOpts.getStyle(_get("value", resolvedCell)) || {},
             });
         }
     }

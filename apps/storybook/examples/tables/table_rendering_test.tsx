@@ -1,35 +1,67 @@
+import "../../examples/tables/rendering-test.css";
+
+import { Color, colorscale } from "@niagads/common";
+
 import { TableProps as Table } from "@niagads/table";
+
+const pvalueStylingFn = (pvalue: number) => {
+    const strValue = String(pvalue);
+    let neglog10p = undefined;
+    if (strValue.includes("e-")) {
+        const parts = strValue.split("e-");
+        const exponent = parseInt(parts[1]);
+        if (exponent > 50) {
+            neglog10p = 50;
+        }
+    }
+    if (!neglog10p) {
+        neglog10p = -Math.log10(pvalue);
+    }
+    const scale = colorscale({
+        thresholds: [0.3, 3, 6, 7.3, 50],
+        colors: [
+            "rgba(60,80,100,1)",
+            "rgb(254,220,220)",
+            "rgb(252,140,140)",
+            "rgb(255,200,120)",
+            "rgb(150,230,150)",
+            "rgb(150,210,255)",
+        ],
+    });
+    const bgColor: Color = scale(neglog10p);
+
+    return { backgroundColor: bgColor };
+};
 
 export const TABLE_DEFINTION: Table = {
     id: "rendering_test",
     data: [
         {
-            label: { color: "blue", value: "r1" },
-            population: "european",
+            label: { className: "blue-text", value: "r1" },
+            population: { value: "european", className: "badge-purple" },
             valid: true,
-            count: 5,
+            count: { value: 5, className: "badge-purple" },
             percent: 0.5,
-            p_value: { value: 0.000001, color: "red" },
+            p_value: { value: 0.000001, className: "red-text" },
             website: { url: "https://amazon.com", value: "Amazon" },
             state: {
                 value: "PASS",
-                color: "white",
-                backgroundColor: "green",
+                className: "approval-badge",
                 icon: "solidCheck",
             },
         },
         {
-            label: { value: "r2", tooltip: "my favorite group" },
+            label: { value: "r2", info: "my favorite group" },
             population: {
                 value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Turpis massa sed elementum tempus. Aenean sed adipiscing diam donec adipiscing tristique. Maecenas sed enim ut sem viverra aliquet.",
-                color: "purple",
+                className: "red-text",
             },
-            valid: { value: false, color: "green" },
+            valid: { value: false, className: "green-text" },
             count: 6,
             p_value: { value: 0.0000510001, precision: 3 },
             percent: 0.2,
             website: null,
-            state: { value: "PASS", backgroundColor: "green" },
+            state: { value: "PASS" },
         },
         {
             label: "r3",
@@ -38,17 +70,16 @@ export const TABLE_DEFINTION: Table = {
             count: 0,
             percent: { value: 0.9121335 },
             p_value: 0.0000999,
-            website: { url: "https://google.com", tooltip: "google!" },
+            website: { url: "https://google.com", info: "google!" },
             state: null,
         },
         {
             label: "r4",
-            valid: { value: true, icon: "solidCheck", color: "orange" },
+            valid: { value: true, icon: "solidCheck", className: "orange" },
             count: null,
             population: {
-                color: "teal",
                 value: "other",
-                tooltip: "non-standard population",
+                info: "non-standard population",
             },
             percent: null,
             p_value: { value: 0.222, precision: 2 },
@@ -56,10 +87,8 @@ export const TABLE_DEFINTION: Table = {
             state: {
                 value: "FAIL",
                 icon: "warning",
-                color: "red",
-                borderColor: "red",
-                backgroundColor: "#ffe5e5",
-                tooltip: "This one did't pass :(",
+                className: "failure-badge",
+                info: "This one did't pass :(",
             },
         },
     ],
@@ -79,16 +108,13 @@ export const TABLE_DEFINTION: Table = {
             header: "Population",
             id: "population",
             description: "sample population",
-            format: {
-                nullValue: "NA",
-            },
         },
         {
             header: "Is Valid?",
             id: "valid",
             description: "boolean test",
             type: "boolean",
-            format: { nullValue: "NA", trueValue: "Yes" },
+            format: { nullValue: "Not Applicable", trueValue: "Yes" },
         },
         {
             header: "Count",
@@ -109,10 +135,15 @@ export const TABLE_DEFINTION: Table = {
             format: {
                 precision: 1,
             },
+            styling: {
+                getClassName: (pvalue: number) => "pvalue-badge",
+                getStyle: pvalueStylingFn,
+            },
         },
         {
             header: "Website",
             id: "website",
+            styling: { getClassName: (value: any) => "link-button" },
             // type: "link"
         },
     ],

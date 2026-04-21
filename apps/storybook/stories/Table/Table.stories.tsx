@@ -22,7 +22,7 @@ export const Default: Story = {
     args: {
         id: table.id,
         columns: table.columns,
-        options: Object.assign(table.options, { enableRowSelect: false }),
+        // options: Object.assign(table.options!, { enableRowSelect: false }),
         data: table.data,
     },
 };

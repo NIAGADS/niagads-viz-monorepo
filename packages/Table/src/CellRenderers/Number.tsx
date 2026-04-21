@@ -1,9 +1,9 @@
-import React from "react";
-
 import { TextRenderer, renderNullValue } from "./TextRenderer";
-import { Text } from "./BasicText";
-
 import { _get, _isNA, _isNull, toExponential, toFixedWithoutZeros } from "@niagads/common";
+
+import { DEFAULT_NA_VALUE } from "../Cell";
+import React from "react";
+import { Text } from "./BasicText";
 
 export const formatFloat = (value: number, precision: number = 2) => {
     const formattedValue: any = toExponential(value, precision);
@@ -17,11 +17,11 @@ export const Float = <T,>({ props }: TextRenderer<T>) => {
     let value = _get("value", props);
 
     if (_isNull(value)) {
-        return renderNullValue(_get("nullValue", props));
+        return renderNullValue(_get("nullValue", props, DEFAULT_NA_VALUE));
     }
 
     if (_isNA(value)) {
-        return renderNullValue();
+        return renderNullValue(_get("naValue", props, DEFAULT_NA_VALUE));
     }
 
     const cellType = _get("type", props);

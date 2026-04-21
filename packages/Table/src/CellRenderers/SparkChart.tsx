@@ -1,6 +1,7 @@
 import { TextRenderer, renderNullValue } from "./TextRenderer";
 import { _get, _isNA, _isNull } from "@niagads/common";
 
+import { DEFAULT_NA_VALUE } from "../Cell";
 import React from "react";
 import { formatFloat } from "./Number";
 import styles from "../styles/cell.module.css";
@@ -9,11 +10,11 @@ export const PercentageBar = <T,>({ props }: TextRenderer<T>) => {
     const value = _get("value", props);
 
     if (_isNull(value)) {
-        return renderNullValue(_get("nullValue", props));
+        return renderNullValue(_get("nullValue", props, DEFAULT_NA_VALUE));
     }
 
     if (_isNA(value)) {
-        return renderNullValue();
+        return renderNullValue(_get("naValue", props, DEFAULT_NA_VALUE));
     }
 
     const formattedValue = formatFloat(value, _get("precision", props, 2));
