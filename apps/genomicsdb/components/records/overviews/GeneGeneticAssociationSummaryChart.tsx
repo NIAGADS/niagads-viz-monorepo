@@ -5,7 +5,7 @@ import { AssociationTraitCategory, AssociationTraitSource, GeneticAssociationSum
 import { _fetch, fetchRecordAssociations } from "@/lib/route-handlers";
 
 import { InlineError } from "@/components/ErrorAlerts";
-import Placeholder from "../placeholder";
+import Placeholder from "../Placeholder/placeholder";
 import { Series } from "@niagads/charts";
 
 type RelativePosition = "in gene" | "upstream" | "downstream";

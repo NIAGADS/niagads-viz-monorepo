@@ -86,25 +86,8 @@
     padding: 1rem;
 }
 
-.pageContainer {
-    display: flex;
 
-    min-height: calc(100vh - var(--header-height));
-    margin-top: 0;
-}
 
-.pageContainerCapped {
-    height: calc(100vh - var(--header-height));
-}
-
-.content {
-    overflow: auto;
-    width: 100%; /* EGA -temp w/out sidebar */
-}
-
-.contentSection {
-    margin-top: 0;
-}
 
 @media (max-width: 1024px) {
     .overviewGrid {
