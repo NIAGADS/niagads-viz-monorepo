@@ -69,7 +69,7 @@ const RecordSidebar = ({ title, sections, onToggleCollapse, onSectionSelect }: R
                                             <div
                                                 key={child.id}
                                                 className={`${styles["subnav-item"]} ${activeNav === child.id ? styles["active"] : ""}`}
-                                                onClick={() => onSectionSelect(child.id)}
+                                                onClick={() => onSectionSelect(item.id)}
                                             >
                                                 <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis" }}>
                                                     {child.label}
