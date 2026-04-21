@@ -1,11 +1,8 @@
-import { BaseRecord, RegionRecord } from "@/lib/types";
+import { RegionRecord } from "@/lib/types";
 import { Card, CardBody, CardHeader, HelpIconWrapper } from "@niagads/ui";
 
-import { ExternalUrls } from "@/data/reference";
-import RecordSectionUnderConstructionAlert from "../RecordSectionUnderConstructionAlert";
-import { genomicLocationToSpan } from "@/lib/utils";
 import { renderRecordTitle } from "./RecordOverview";
-import styles from "../styles/record.module.css";
+import styles from "./overview.module.css";
 
 const MAX_SPAN_FOR_SMALL_VARIANTS = 50000;
 

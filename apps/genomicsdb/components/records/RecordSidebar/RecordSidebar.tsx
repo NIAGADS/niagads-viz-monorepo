@@ -3,7 +3,7 @@
 import { AnchoredPageSection } from "@/lib/types";
 import { ChevronDown, ChevronLeft, ChevronUp } from "lucide-react";
 import { useState } from "react";
-import styles from "./styles/record-sidebar.module.css";
+import styles from "./record-sidebar.module.css";
 
 interface RecordSidebarProps {
     title: string;

@@ -1,5 +1,6 @@
 import { Button } from "@niagads/ui";
-import styles from "./styles/record-toolbar.module.css";
+
+import styles from "./record-toolbar.module.css";
 
 interface RecordToolbarProps {
     id: string;

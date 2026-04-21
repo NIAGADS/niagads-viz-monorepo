@@ -1,11 +1,11 @@
 "use client";
 
 import { AnchoredPageSection, RecordType } from "@/lib/types";
-import RecordSectionUnderConstructionAlert from "./RecordSectionUnderConstructionAlert";
-import RecordTableSection from "./RecordTableSection";
+import RecordSectionUnderConstructionAlert from "../RecordSectionUnderConstructionAlert";
+import RecordTableSection from "../RecordTableSection/RecordTableSection";
 import React, { RefObject } from "react";
 
-import styles from "./styles/record-annotation-section.module.css";
+import styles from "./record-annotation-section.module.css";
 
 interface RecordAnnotationSectionProps {
     id: string;
@@ -17,7 +17,7 @@ interface RecordAnnotationSectionProps {
 const RecordAnnotationSection = ({ id, recordType, sections, sectionRefs }: RecordAnnotationSectionProps) => {
     return (
         <div id={id} className={styles["annotation-container"]}>
-            {sections.map(section =>
+            {sections.map((section) =>
                 section.tables ? (
                     <div id={section.id} key={section.id}>
                         <RecordSectionHeader

@@ -4,9 +4,10 @@ import React, { useState } from "react";
 import { TablePagination, TableSection } from "@/lib/types";
 import { APIPagination } from "@niagads/common";
 import { Tabs, Tab, TabHeader, TabBody } from "@niagads/ui/client";
-import styles from "./styles/record-table-section.module.css";
-import RecordTable from "./RecordTable";
 import { LoadingSpinner } from "@niagads/ui";
+import RecordTable from "../RecordTable";
+
+import styles from "./record-table-section.module.css";
 
 interface RecordTableSectionProps {
     tables: TableSection[];

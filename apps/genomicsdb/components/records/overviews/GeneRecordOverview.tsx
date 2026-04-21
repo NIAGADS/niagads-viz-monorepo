@@ -6,7 +6,7 @@ import { ExternalUrls } from "@/data/reference";
 import { GeneRecord } from "@/lib/types";
 import { RecordLink } from "../../Link";
 import { genomicLocationToSpan } from "@/lib/utils";
-import styles from "../styles/record.module.css";
+import styles from "./overview.module.css";
 import { GWAS_ASSOC_SECTION } from "@/data/sections";
 import AssociationSummaryChart from "../../charts/AssociationSummaryChart";
 

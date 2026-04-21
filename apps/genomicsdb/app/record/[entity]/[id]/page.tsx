@@ -1,4 +1,4 @@
-import RecordPage from "@/components/records/RecordPage";
+import RecordPage from "@/components/records/RecordPage/RecordPage";
 import { EntityRecord, RecordPageProps } from "@/lib/types";
 import { assertValidRecordType } from "@/lib/record-handlers";
 import { fetchRecord } from "@/lib/route-handlers";
