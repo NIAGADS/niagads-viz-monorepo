@@ -19,23 +19,8 @@ const RecordPage = ({ recordId, recordType, recordData }: RecordPageProps) => {
     const sections = RECORD_PAGE_SECTIONS[recordType];
 
     const sectionRefs = sections.reduce(
-        (prev, section) => {
-            if (section.tables) {
-                return {
-                    ...prev,
-                    ...section.tables.reduce(
-                        (prev, table) => ({ ...prev, [table.id]: useRef(null) }),
-                        {} as Record<string, RefObject<HTMLElement | null>>
-                    ),
-                };
-            } else {
-                return {
-                    ...prev,
-                    [section.id]: useRef(null),
-                };
-            }
-        },
-        {} as Record<string, RefObject<HTMLElement | null>>
+        (prev, section) => ({ ...prev, [section.id]: useRef(null) }),
+        {} as Record<string, RefObject<HTMLDivElement | null>>
     );
 
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -57,7 +42,7 @@ const RecordPage = ({ recordId, recordType, recordData }: RecordPageProps) => {
                     title={title}
                     sections={sections}
                     onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
-                    onSectionSelect={(sectionId) => sectionRefs[sectionId].current?.scrollIntoView()}
+                    onSectionSelect={(sectionId) => sectionRefs[sectionId]?.current?.scrollIntoView()}
                 />
                 <div className={`${styles["record-content"]} ${sidebarCollapsed ? styles["sidebar-collapsed"] : ""}`}>
                     <RecordToolbar

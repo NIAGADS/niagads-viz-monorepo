@@ -4,6 +4,7 @@ import { AnchoredPageSection, RecordType } from "@/lib/types";
 import RecordSectionUnderConstructionAlert from "../RecordSectionUnderConstructionAlert";
 import RecordTableSection from "../RecordTableSection/RecordTableSection";
 import React, { RefObject } from "react";
+import { CollapsibleSection } from "@niagads/ui/client";
 
 import styles from "./record-annotation-section.module.css";
 
@@ -11,30 +12,25 @@ interface RecordAnnotationSectionProps {
     id: string;
     recordType: RecordType;
     sections: AnchoredPageSection[];
-    sectionRefs: Record<string, RefObject<HTMLElement>>;
+    sectionRefs: any;
 }
 
 const RecordAnnotationSection = ({ id, recordType, sections, sectionRefs }: RecordAnnotationSectionProps) => {
     return (
         <div id={id} className={styles["annotation-container"]}>
-            {sections.map((section) =>
-                section.tables ? (
-                    <div id={section.id} key={section.id}>
-                        <RecordSectionHeader
-                            key={`${section.id}-header`}
-                            title={section.label}
-                            description={section.description}
-                        ></RecordSectionHeader>
-                        {section.underConstruction ? (
+            {sections.map((section) => (
+                <CollapsibleSection key={section.id} ref={sectionRefs[section.id]} id={section.id} title={section.label}>
+                    {section.tables ? (
+                        section.underConstruction ? (
                             <RecordSectionUnderConstructionAlert section={section.label} />
                         ) : (
                             <RecordTableSection recordId={id} recordType={recordType} tables={section.tables} />
-                        )}
-                    </div>
-                ) : (
-                    <span ref={sectionRefs[section.id]}>{section.label}</span>
-                )
-            )}
+                        )
+                    ) : (
+                        <span ref={sectionRefs[section.id]}>{section.label}</span>
+                    )}
+                </CollapsibleSection>
+            ))}
         </div>
     );
 };

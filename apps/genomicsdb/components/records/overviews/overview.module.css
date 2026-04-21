@@ -86,9 +86,6 @@
     padding: 1rem;
 }
 
-
-
-
 @media (max-width: 1024px) {
     .overviewGrid {
         grid-template-columns: repeat(2, 1fr);

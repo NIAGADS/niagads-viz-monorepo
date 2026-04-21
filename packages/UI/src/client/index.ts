@@ -6,3 +6,4 @@ export * from "./Autocomplete";
 export * from "./Slider";
 export * from "./Tabs";
 export * from "./TooltipClient";
+export * from "./CollapsibleSection/CollapsibleSection";
