@@ -142,7 +142,7 @@ interface FeatureCardProps extends Omit<CardProps, "children">, StylingProps {
      * Icon component. Must accept `className` and `size` props (Lucide-compatible).
      * If using a different icon library, wrap it to normalise these props.
      */
-    icon: ElementType<{ className?: string; size?: number }>;
+    icon?: ElementType<{ className?: string; size?: number }>;
     title: string;
     description: string;
 }
@@ -158,7 +158,7 @@ export const FeatureCard = ({
         {...cardProps}
         className={[className, styles["feature-card"]].filter(Boolean).join(" ")}
     >
-        <Icon className={styles["feature-icon"]} size={48} />
+        {Icon && <Icon className={styles["feature-icon"]} size={48} />}
         <h3 className={styles["feature-title"]}>{title}</h3>
         <p className={styles["feature-description"]}>{description}</p>
     </Card>
