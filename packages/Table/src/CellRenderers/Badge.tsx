@@ -42,7 +42,7 @@ export const Badge = <T,>({ props }: TextRenderer<T>) => {
         component = <Icon className={className} style={style} size={24} />;
     } else {
         component = (
-            <UIBadge style={style} className={className} icon={Icon ? <Icon size={18} /> : undefined}>
+            <UIBadge variant={"pill"} style={style} className={className} icon={Icon ? <Icon size={18} /> : undefined}>
                 {value}
             </UIBadge>
         );
@@ -69,6 +69,7 @@ export const BooleanBadge = <T,>({ props }: TextRenderer<T>) => {
 
     const displayProps = {
         value: value.toString(),
+        iconOnly: _hasOwnProperty("icon", props),
     };
 
     const hasCustomStyling = _hasOwnProperty("classNames", props) || _hasOwnProperty("style", props);

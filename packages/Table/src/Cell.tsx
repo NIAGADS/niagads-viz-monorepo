@@ -256,7 +256,6 @@ export const resolveCell = (
     // assign column formatting based on cell type
     const formattingOpts = column.format;
     if (formattingOpts) {
-        // assign common column properties
         Object.assign(resolvedCell as any, {
             nullValue: _get("nullValue", formattingOpts),
             naValue: _get("naValue", formattingOpts, DEFAULT_NA_VALUE),
@@ -279,18 +278,26 @@ export const resolveCell = (
         }
     }
 
+    // assign styling opts; but let local cell values override column level valus
     const stylingOpts = column.styling;
     if (stylingOpts) {
-        // assign color information if the user has supplied a color map
         if (stylingOpts.getClassName) {
+            const className = [_get("className", resolvedCell), stylingOpts.getClassName(_get("value", resolvedCell))]
+                .filter(Boolean)
+                .join(" ");
             Object.assign(resolvedCell as any, {
-                className: stylingOpts.getClassName(_get("value", resolvedCell)) || null,
+                className: className || null,
             });
         }
 
         if (stylingOpts.getStyle) {
+            const style = {
+                ...(stylingOpts.getStyle(_get("value", resolvedCell)) || {}),
+                ...(_get("style", resolvedCell) || {}),
+            };
+
             Object.assign(resolvedCell as any, {
-                style: stylingOpts.getStyle(_get("value", resolvedCell)) || {},
+                style: Object.keys(style).length ? style : null,
             });
         }
     }

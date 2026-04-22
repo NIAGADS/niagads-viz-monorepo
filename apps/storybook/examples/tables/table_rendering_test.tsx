@@ -1,98 +1,10 @@
-import "../../examples/tables/rendering-test.css";
-
-import { Color, colorscale } from "@niagads/common";
+import "../../examples/tables/custom_table_cell_styles.css";
 
 import { TableProps as Table } from "@niagads/table";
-
-const pvalueStylingFn = (pvalue: number) => {
-    const strValue = String(pvalue);
-    let neglog10p = undefined;
-    if (strValue.includes("e-")) {
-        const parts = strValue.split("e-");
-        const exponent = parseInt(parts[1]);
-        if (exponent > 50) {
-            neglog10p = 50;
-        }
-    }
-    if (!neglog10p) {
-        neglog10p = -Math.log10(pvalue);
-    }
-    const scale = colorscale({
-        thresholds: [0.3, 3, 6, 7.3, 50],
-        colors: [
-            "rgba(60,80,100,1)",
-            "rgb(254,220,220)",
-            "rgb(252,140,140)",
-            "rgb(255,200,120)",
-            "rgb(150,230,150)",
-            "rgb(150,210,255)",
-        ],
-    });
-    const bgColor: Color = scale(neglog10p);
-
-    return { backgroundColor: bgColor };
-};
+import { getPvalueStyle } from "./styling_functions";
 
 export const TABLE_DEFINTION: Table = {
     id: "rendering_test",
-    data: [
-        {
-            label: { className: "blue-text", value: "r1" },
-            population: { value: "european", className: "badge-purple" },
-            valid: true,
-            count: { value: 5, className: "badge-purple" },
-            percent: 0.5,
-            p_value: { value: 0.000001, className: "red-text" },
-            website: { url: "https://amazon.com", value: "Amazon" },
-            state: {
-                value: "PASS",
-                className: "approval-badge",
-                icon: "solidCheck",
-            },
-        },
-        {
-            label: { value: "r2", info: "my favorite group" },
-            population: {
-                value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Turpis massa sed elementum tempus. Aenean sed adipiscing diam donec adipiscing tristique. Maecenas sed enim ut sem viverra aliquet.",
-                className: "red-text",
-            },
-            valid: { value: false, className: "green-text" },
-            count: 6,
-            p_value: { value: 0.0000510001, precision: 3 },
-            percent: 0.2,
-            website: null,
-            state: { value: "PASS" },
-        },
-        {
-            label: "r3",
-            population: null,
-            valid: null,
-            count: 0,
-            percent: { value: 0.9121335 },
-            p_value: 0.0000999,
-            website: { url: "https://google.com", info: "google!" },
-            state: null,
-        },
-        {
-            label: "r4",
-            valid: { value: true, icon: "solidCheck", className: "orange" },
-            count: null,
-            population: {
-                value: "other",
-                info: "non-standard population",
-            },
-            percent: null,
-            p_value: { value: 0.222, precision: 2 },
-            website: { value: "FedEx" },
-            state: {
-                value: "FAIL",
-                icon: "warning",
-                className: "failure-badge",
-                info: "This one did't pass :(",
-            },
-        },
-    ],
-
     columns: [
         {
             header: "Label",
@@ -137,7 +49,7 @@ export const TABLE_DEFINTION: Table = {
             },
             styling: {
                 getClassName: (pvalue: number) => "pvalue-badge",
-                getStyle: pvalueStylingFn,
+                getStyle: getPvalueStyle,
             },
         },
         {
@@ -145,6 +57,63 @@ export const TABLE_DEFINTION: Table = {
             id: "website",
             styling: { getClassName: (value: any) => "link-button" },
             // type: "link"
+        },
+    ],
+    data: [
+        {
+            label: { className: "blue-text", value: "r1" },
+            population: { value: "european", className: "badge-purple" },
+            valid: true,
+            count: { value: 5, className: "badge-purple" },
+            percent: 0.5,
+            p_value: { value: 0.000001, className: "red-text" },
+            website: { url: "https://amazon.com", value: "Amazon" },
+            state: {
+                value: "PASS",
+                className: "approval-badge",
+                icon: "circleCheck",
+            },
+        },
+        {
+            label: { value: "r2", info: "my favorite group" },
+            population: {
+                value: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Turpis massa sed elementum tempus. Aenean sed adipiscing diam donec adipiscing tristique. Maecenas sed enim ut sem viverra aliquet.",
+                className: "red-text",
+            },
+            valid: { value: false },
+            count: 6,
+            p_value: { value: 0.0000510001, precision: 3 },
+            percent: 0.2,
+            website: null,
+            state: { value: "PASS" },
+        },
+        {
+            label: "r3",
+            population: null,
+            valid: null,
+            count: 0,
+            percent: { value: 0.9121335 },
+            p_value: 0.0000999,
+            website: { url: "https://google.com", info: "google!" },
+            state: null,
+        },
+        {
+            label: "r4",
+            valid: { value: true, icon: "circleCheck", style: { color: "orange" } },
+            count: null,
+            population: {
+                value: "other",
+                info: "non-standard population",
+            },
+            percent: null,
+            p_value: { value: 0.222, precision: 2 },
+            website: { value: "FedEx" },
+            state: {
+                value: "FAIL",
+                icon: "warning",
+                className: "failure-badge",
+                info: "This one did't pass :(",
+            },
         },
     ],
 };

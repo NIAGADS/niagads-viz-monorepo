@@ -70,8 +70,37 @@
 
 .pvalue-badge {
     background: #cccccc;
-    color: black;
     padding: 0.25em 0.75em;
     border-radius: 0.8em;
     display: inline-block;
+}
+
+.modifier {
+}
+
+.high {
+}
+
+.low {
+}
+
+.moderate {
+    background: cornflowerblue;
+}
+
+.moderate {
+    background: goldenrod;
+}
+
+.upstream {
+    background: green;
+}
+
+.downstream {
+    background: red;
+}
+
+.is_adsp_variant {
+    color: red
+    background: white
 }
