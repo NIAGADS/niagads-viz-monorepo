@@ -3,44 +3,67 @@
 } */
 
 .nullValue {
-    color: var(--gray-300);
+    /* color: var(--gray-300); */
+    color: var(--muted-light, #9aadc4);
+    font-style: italic;
 }
 
 .sparkContainer {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    gap: 6px;
 }
 
 .spark {
-    height: 20px;
+    /* height: 20px; */
+    height: 18px;
     display: inline-block;
 }
 
 .sparkValue {
     width: 35px;
     align-self: center;
+    color: var(--muted, #6b7a95);
 }
 
 .sparkBar {
-    width: 100px;
+    /* width: 100px; */
+    width: 90px;
+    border-radius: 2px;
+    overflow: hidden;
 }
 
 .sparkBarObserved {
     background-color: #16a34a; /* Tailwind green-600 */
+    background-color: var(--success-green, #059669);
+
 }
 
 .sparkBarRemainder {
     background-color: #d1d5db; /* Tailwind gray-300 */
+    background-color: var(--border, #dde3ef);
+
 }
 
 .truncatedText {
-    max-width: 300px;
+    /* max-width: 300px; */
+    max-width: 280px;
     word-break: break-word;
+    line-height: 1.5;
+    color: var(--text, #1e2a3a);
 }
 
+.link {
+    color: var(--blue, #3d5a80);
+    text-decoration: none;
+    cursor: pointer;
+}
 .link:hover,
 .infoLink:hover {
     text-decoration: underline;
+    color: var(--blue-mid, #4a7fc1);
+
 }
 
 .infoLink {
@@ -48,5 +71,8 @@
     text-decoration: underline;
     text-decoration-style: dashed;
     text-decoration-color: --var(--secondary-blue); /* Tailwind blue-700 */
-    text-underline-offset: 4px;
+    /* text-underline-offset: 4px; */
+    text-decoration-color: var(--blue-mid, #4a7fc1);
+    text-underline-offset: 3px;
+    color: var(--blue, #3d5a80);
 }
