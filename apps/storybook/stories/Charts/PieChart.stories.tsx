@@ -5,13 +5,6 @@ import { PieChart } from "@niagads/charts";
 const meta = {
     title: "Charts/PieChart",
     component: PieChart,
-    decorators: [
-        (Story) => (
-            <div style={{ minWidth: "400px", minHeight: "400px" }}>
-                <Story />
-            </div>
-        ),
-    ],
     parameters: {
         layout: "centered",
     },
@@ -23,7 +16,6 @@ type Story = StoryObj<typeof PieChart>;
 
 export const Default: Story = {
     args: {
-        id: "test",
         data: [
             {
                 id: "test1",

@@ -1,7 +1,9 @@
-import React, { useMemo } from "react";
-import { ResponsivePie } from "@nivo/pie";
+import { PieChartDataPoint, PieChartOptions, pieChart } from "./d3/pieChart";
+import React, { useEffect, useMemo, useRef } from "react";
 
-import styles from "./styles/common.module.css";
+import { COLOR_BLIND_FRIENDLY_PALETTES } from "@niagads/common";
+import { DisplayProps } from "./d3/types";
+import styles from "./styles/Charts.module.css";
 
 export interface PieChartDataRow {
     id: string;
@@ -10,51 +12,70 @@ export interface PieChartDataRow {
 }
 
 export interface PieChartProps {
-    id: string;
     data: PieChartDataRow[];
     onClick?: (key: string) => void;
+    displayOpts?: DisplayProps;
+    legendPosition?: "top" | "right" | "bottom" | "left" | "none";
 }
 
-const PieChart = ({ id, data, onClick }: PieChartProps) => {
-    const total = data.reduce((total, row) => (total += row.value), 0);
-
-    // calculates color based on value
-    const gradient = 260;
-    const dataWithColors = useMemo(() => {
-        return data.map((row) => ({
-            ...row,
-            color: `hsl(${Math.floor((row.value / total) * gradient)}, 70%, 50%)`,
-        }));
+const Legend = ({ data }: { data: PieChartDataRow[] }) => {
+    const colorScale = useMemo(() => {
+        const scale: Record<string, string> = {};
+        data.forEach((d, i) => {
+            scale[d.id] = COLOR_BLIND_FRIENDLY_PALETTES.eight_color[i % 8];
+        });
+        return scale;
     }, [data]);
 
     return (
-        <div className={styles["chart-wrapper"]}>
-            <ResponsivePie
-                id={id}
-                data={dataWithColors}
-                margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
-                padAngle={0.5}
-                cornerRadius={2}
-                colors={{ datum: "data.color" }}
-                activeOuterRadiusOffset={8}
-                arcLinkLabelsSkipAngle={10}
-                arcLinkLabelsTextColor="#333333"
-                arcLinkLabelsThickness={2}
-                arcLinkLabelsColor={{ from: "color" }}
-                arcLabelsSkipAngle={10}
-                arcLabelsTextColor={{ from: "color", modifiers: [["darker", 2]] }}
-                legends={[
-                    {
-                        anchor: "bottom-right",
-                        direction: "column",
-                        translateX: 120,
-                        itemsSpacing: 3,
-                        itemWidth: 100,
-                        itemHeight: 16,
-                    },
-                ]}
-                onClick={(dataRow) => onClick && onClick(`${dataRow.data.id}`)}
+        <div className={styles.legend}>
+            {data.map((item) => (
+                <div key={item.id} className={styles["legend-item"]}>
+                    <div
+                        className={styles["legend-color"]}
+                        style={{
+                            backgroundColor: colorScale[item.id],
+                        }}
+                    />
+                    <span className={styles["legend-label"]}>{item.label}</span>
+                </div>
+            ))}
+        </div>
+    );
+};
+
+const PieChart = ({ data, onClick, displayOpts, legendPosition = "right" }: PieChartProps) => {
+    const containerRef = useRef<HTMLDivElement | null>(null);
+    const chartRef = useRef<HTMLDivElement | null>(null);
+
+    const chartWidth = displayOpts?.width || 300;
+    const chartHeight = chartWidth * (displayOpts?.aspectRatio || 1);
+
+    useEffect(() => {
+        if (chartRef.current && data.length > 0) {
+            const opts: PieChartOptions = {
+                displayOpts: displayOpts,
+                onClick: onClick,
+            };
+            pieChart(chartRef.current, data, opts);
+        }
+    }, [data, onClick, displayOpts]);
+
+    return (
+        <div
+            ref={containerRef}
+            className={`${styles["pie-chart-wrapper"]} ${styles[`pie-chart-wrapper-${legendPosition}`]}`}
+        >
+            <div
+                ref={chartRef}
+                style={{ width: `${chartWidth}px`, height: `${chartHeight}px` }}
+                className={styles["pie-container"]}
             />
+            {legendPosition !== "none" && (
+                <div className={styles["legend-wrapper"]}>
+                    <Legend data={data} />
+                </div>
+            )}
         </div>
     );
 };
