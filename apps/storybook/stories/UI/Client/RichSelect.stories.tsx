@@ -22,8 +22,8 @@ const meta: Meta<typeof RichSelect> = {
             control: "text",
             description: "Currently selected option value",
         },
-        onSelect: {
-            action: "selected",
+        onChange: {
+            action: "changed",
             description: "Callback fired when an option is selected",
         },
     },
@@ -98,9 +98,9 @@ const Interactive = (args: any) => {
             <RichSelect
                 {...args}
                 value={selected}
-                onSelect={(value) => {
+                onChange={(value: string) => {
                     setSelected(value);
-                    args.onSelect?.(value);
+                    args.onChange?.(value);
                 }}
             />
             {selected && <p style={{ marginTop: "1rem" }}>Selected: {selected}</p>}
