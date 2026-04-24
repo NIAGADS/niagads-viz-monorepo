@@ -5,12 +5,12 @@ import styles from "../styles/richselect.module.css";
 
 interface RichSelectProps {
     options: Record<string, ReactNode>;
-    onSelect: (selection: string) => void;
+    onChange: (selection: string) => void;
     placeholder?: string;
     value?: string;
 }
 
-export const RichSelect = ({ options, onSelect, placeholder, value }: RichSelectProps) => {
+export const RichSelect = ({ options, onChange, placeholder, value }: RichSelectProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [highlightedIndex, setHighlightedIndex] = useState(-1);
     const [selectedValue, setSelectedValue] = useState(value || "");
@@ -73,7 +73,7 @@ export const RichSelect = ({ options, onSelect, placeholder, value }: RichSelect
 
     const handleSelect = (option: string) => {
         setSelectedValue(option);
-        onSelect(option);
+        onChange(option);
         setIsOpen(false);
         setHighlightedIndex(-1);
     };
