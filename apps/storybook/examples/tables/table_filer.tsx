@@ -1,6 +1,6 @@
-import { TableProps as Table } from "@niagads/table";
+import { TableConfig } from "@niagads/table";
 
-export const TABLE_DEFINTION: Table = {
+export const TABLE_DEFINTION: TableConfig = {
     id: "metadata_query_by_region_and_filter",
     onRowSelectionChange: (selectedRows: any) => alert(`Selection: ${JSON.stringify(selectedRows)}`),
     options: {

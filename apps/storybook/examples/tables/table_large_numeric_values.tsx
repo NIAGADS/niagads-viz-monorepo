@@ -2,7 +2,7 @@ import "../../examples/tables/custom_table_cell_styles.css";
 
 import { getPvalueStyle, getRelativePositionClassName } from "./styling_functions";
 
-import { TableProps as Table } from "@niagads/table";
+import { TableConfig as Table } from "@niagads/table";
 
 export const TABLE_DEFINTION: Table = {
     id: "large_numeric_example",

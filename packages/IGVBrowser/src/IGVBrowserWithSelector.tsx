@@ -1,6 +1,6 @@
 import IGVBrowser, { IGVBrowserProps } from "./IGVBrowser";
 import React, { useEffect, useMemo, useState } from "react";
-import Table, { TableProps } from "@niagads/table";
+import Table, { TableConfig } from "@niagads/table";
 import { findTrackConfigs, resolveTrackIds } from "./utils/track_config";
 
 import { IGVBrowserTrack } from "./types/data_models";
@@ -8,10 +8,10 @@ import { Skeleton } from "@niagads/ui";
 import { handleUpdateBrowserTracks } from "./utils/browser";
 import styles from "./styles/TrackSelectorSection.module.css";
 
-export type { TableProps as SelectorTableProps };
+export type { TableConfig as SelectorTableProps };
 
 export interface IGVBrowserWithSelectorProps extends IGVBrowserProps {
-    selectorTable?: TableProps;
+    selectorTable?: TableConfig;
     trackConfig: IGVBrowserTrack[]; // make required
 }
 

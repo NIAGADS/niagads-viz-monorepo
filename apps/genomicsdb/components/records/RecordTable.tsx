@@ -2,7 +2,7 @@ import { APIPagination, _isEmpty } from "@niagads/common";
 import { APITableResponse, ProcessedTableResponse, TableSection } from "@/lib/types";
 import { Alert, Card, LoadingSpinner } from "@niagads/ui";
 import { ThresholdSelectHistogram as Histogram, PieChart, PieChartDataRow } from "@niagads/charts";
-import Table, { TableConfig } from "@niagads/table";
+import Table, { TableOptions } from "@niagads/table";
 import { useEffect, useMemo, useState } from "react";
 
 import PaginationMessage from "../PaginationMessage";
@@ -25,7 +25,7 @@ const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTabl
         (url: string) => fetch(url).then((res) => res.json())
     );
 
-    const options: TableConfig | undefined = useMemo(() => {
+    const options: TableOptions | undefined = useMemo(() => {
         if (data && !_isEmpty(data?.table)) {
             const defaultColumns = data.table.columns.map((c: any, index) => {
                 if (index < 8 || c["id"].startsWith("num_") || c["id"] === "url") return c["id"];

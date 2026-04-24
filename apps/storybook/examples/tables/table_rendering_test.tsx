@@ -1,6 +1,6 @@
 import "../../examples/tables/custom_table_cell_styles.css";
 
-import { TableProps as Table } from "@niagads/table";
+import { TableConfig as Table } from "@niagads/table";
 import { getPvalueStyle } from "./styling_functions";
 
 export const TABLE_DEFINTION: Table = {

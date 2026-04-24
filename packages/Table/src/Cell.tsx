@@ -1,4 +1,3 @@
-import { Badge, BadgeIconType, BooleanBadge } from "./CellRenderers/Badge";
 import {
     BasicType,
     Expand,
@@ -12,14 +11,15 @@ import {
     _isNA,
     _isNull,
 } from "@niagads/common";
-import { Link, LinkList } from "./CellRenderers/Link";
 import React, { CSSProperties } from "react";
+import { Badge, BadgeIconType, BooleanBadge } from "./CellRenderers/Badge";
 import { Text, TextList } from "./CellRenderers/BasicText";
+import { Link, LinkList } from "./CellRenderers/Link";
 
-import { Float } from "./CellRenderers/Number";
 import { LinkTarget } from "./CellRenderers";
+import { Float } from "./CellRenderers/Number";
 import { PercentageBar } from "./CellRenderers/SparkChart";
-import { TableColumn } from "./Column";
+import { TableColumn } from "./types";
 
 export const DEFAULT_NA_VALUE = "n/a";
 
