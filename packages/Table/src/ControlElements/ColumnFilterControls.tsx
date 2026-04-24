@@ -22,21 +22,7 @@ export const ColumnFilterControls = ({
 
     return (
         <div>
-            {activeFilters.length > 0 && (
-                <FilterChipBar label={"Active Column Filters:"}>
-                    <Button color="default" onClick={onRemoveAll}>
-                        <InlineIcon icon={<TrashIcon size={18} />}>Remove all</InlineIcon>
-                    </Button>
-                    {activeFilters.map((filter) => (
-                        <FilterChip
-                            key={`filter-chip-${filter.id}`}
-                            label={filterableColumns.find((x) => x.id === filter.id)?.columnDef.header as string}
-                            value={`${filter.value}`}
-                            onRemove={() => onRemoveFilter(filter)}
-                        />
-                    ))}
-                </FilterChipBar>
-            )}
+            
             <Card>
                 <div>
                     <div onClick={() => setAreFiltersOpen(!areFiltersOpen)}>
@@ -55,6 +41,21 @@ export const ColumnFilterControls = ({
                         )}
                 </div>
             </Card>
+            {activeFilters.length > 0 && (
+                <FilterChipBar label={"Active Column Filters:"}>
+                    <Button color="default" onClick={onRemoveAll}>
+                        <InlineIcon icon={<TrashIcon size={18} />}>Remove all</InlineIcon>
+                    </Button>
+                    {activeFilters.map((filter) => (
+                        <FilterChip
+                            key={`filter-chip-${filter.id}`}
+                            label={filterableColumns.find((x) => x.id === filter.id)?.columnDef.header as string}
+                            value={`${filter.value}`}
+                            onRemove={() => onRemoveFilter(filter)}
+                        />
+                    ))}
+                </FilterChipBar>
+            )}
         </div>
     );
 };

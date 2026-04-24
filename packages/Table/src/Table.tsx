@@ -243,10 +243,7 @@ const Table: React.FC<TableProps> = ({
 
     return table ? (
         <div className={styles["table-outer-container"]}>
-            <div className={styles["table-controls-container"]}>
-                <TableToolbar table={table} tableId={id} enableExport={!!!options?.disableExport} />
-                <PaginationControls id={id} table={table} />
-            </div>
+           
             {enableRowSelect && (
                 <div>
                     <RowSelectionControls
@@ -277,6 +274,10 @@ const Table: React.FC<TableProps> = ({
                     }}
                 />
             )}
+             <div className={styles["table-controls-container"]}>
+                <TableToolbar table={table} tableId={id} enableExport={!!!options?.disableExport} />
+                <PaginationControls id={id} table={table} />
+            </div>
             <div className={styles["table-container"]}>
                 {rowModel.rows.length > 0 ? (
                     <table className={`${styles["table-layout"]} ${styles["table-border"]} ${styles["table-text"]}`}>
