@@ -128,14 +128,14 @@ export default function IGVBrowserWithSelector({
                         options={{
                             ...(trackSelectorTable.options || {}),
                             enableRowSelect: true,
-                            rowSelectColumn: {
+                            rowSelectOpts: {
                                 header: "",
                                 description: "Select tracks to display in the Genome Browser",
                                 enableMultiSelect: true,
                                 rowUniqueKey: "id",
                             },
-                            disableExport: true,
-                            disableColumnFilters: true,
+                            enableExport: false,
+                            enableColumnFilters: false,
                         }}
                     ></Table>
                 )}

@@ -5,7 +5,7 @@ import { TableExportControls, exportTable } from "./TableExportControls";
 import { ListFilterPlus } from "lucide-react";
 
 import { ColumnControls } from "./ColumnControls";
-import { TableRow } from "../TableProperties";
+import { TableRow } from "../types";
 import { _get } from "@niagads/common";
 import styles from "../styles/controls.module.css";
 

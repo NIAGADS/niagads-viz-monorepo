@@ -1,6 +1,6 @@
 import { SortingFn, SortingFnOption } from "@tanstack/react-table";
 import { Row } from "@tanstack/react-table";
-import { TableRow } from "./TableProperties";
+import { TableRow } from "./types";
 
 const booleanSort: SortingFn<TableRow> = (rowA: Row<TableRow>, rowB: Row<TableRow>, columnId: string) => {
     return _compareBasic(rowA.getValue(columnId), rowB.getValue(columnId));

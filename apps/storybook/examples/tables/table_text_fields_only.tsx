@@ -6,9 +6,9 @@ export const TABLE_DEFINTION: Table = {
     onRowSelectionChange: (selectedRows: any) => alert(`Selection: ${JSON.stringify(selectedRows)}`),
     options: {
         initialize: { sort: { publication_date: "asc" } },
-        disableColumnFilters: true,
+        enableColumnFilters: false,
         enableRowSelect: true,
-        rowSelectColumn: {
+        rowSelectOpts: {
             header: "ROI",
             description: "select row to target",
             enableMultiSelect: true,

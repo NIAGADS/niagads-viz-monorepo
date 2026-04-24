@@ -1,12 +1,18 @@
-import React, { ReactNode, useMemo } from "react";
-import { _get, _isNA } from "@niagads/common";
+/* TODOs
+- how to handle NAs
+    - what to do when all values are NA (pre-filtered/post-filtered)
+- what to do when all values are the same (pre-filtered/post-filtered)
+- fitler ordering: charts, booleans, multiselect, select?
+*/
 
-import { ActionMenu } from "@niagads/ui/client";
-import { Badge } from "@niagads/ui";
-import { Checkbox } from "@niagads/ui";
+import React, { ReactNode, useMemo } from "react";
+
+import { Badge, Checkbox } from "@niagads/ui";
+import { ActionMenu, RichSelect } from "@niagads/ui/client";
+
 import { Column } from "@tanstack/react-table";
 import { Filter as FilterIcon } from "lucide-react";
-import { RichSelect } from "@niagads/ui/client";
+
 import styles from "./styles/filter.module.css";
 
 const NUMERIC_CELL_TYPES = ["float", "integer", "pvalue", "percentage_cell"];

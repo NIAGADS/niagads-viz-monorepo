@@ -4,9 +4,9 @@ export const TABLE_DEFINTION: Table = {
     id: "metadata_query_by_region_and_filter",
     onRowSelectionChange: (selectedRows: any) => alert(`Selection: ${JSON.stringify(selectedRows)}`),
     options: {
-        disableColumnFilters: true,
+        enableColumnFilters: true,
         enableRowSelect: true,
-        rowSelectColumn: {
+        rowSelectOpts: {
             header: "Selected Row",
             description: "select a row",
             enableMultiSelect: true,

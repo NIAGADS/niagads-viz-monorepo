@@ -2,7 +2,7 @@ import { Button, FilterChip, FilterChipBar, InlineIcon, Toggle } from "@niagads/
 import React, { useEffect, useState } from "react";
 
 import { Row } from "@tanstack/react-table";
-import { TableRow } from "../TableProperties";
+import { TableRow } from "../types";
 import { TrashIcon } from "lucide-react";
 
 interface RowSelectionControlsProps {

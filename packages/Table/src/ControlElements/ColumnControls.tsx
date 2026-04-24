@@ -5,7 +5,7 @@ import { ActionMenu } from "@niagads/ui/client";
 import { Column } from "@tanstack/react-table";
 import { Columns3 } from "lucide-react";
 import { TableColumn } from "../Column";
-import { TableRow } from "../TableProperties";
+import { TableRow } from "../types";
 import styles from "../styles/controls.module.css";
 
 interface ColumnControlsProps {

@@ -8,7 +8,7 @@ import {
     RowSelectionState,
     SortingFnOption,
     SortingState,
-    TableOptions,
+    TableOptions as ReactTableOptions,
     Updater,
     VisibilityState,
     createColumnHelper,
@@ -23,8 +23,7 @@ import {
 } from "@tanstack/react-table";
 import { PaginationControls, TableToolbar } from "./ControlElements";
 import React, { ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
-import { TableColumn, getColumn } from "./Column";
-import { TableConfig, TableData, TableRow } from "./TableProperties";
+import { TableOptions, TableData, TableRow, TableColumn } from "./types";
 import { _get, toTitleCase } from "@niagads/common";
 
 import { ColumnFilterControls } from "./ControlElements/ColumnFilterControls";
@@ -35,7 +34,7 @@ import styles from "./styles/table.module.css";
 
 export interface TableProps {
     id: string;
-    options?: TableConfig;
+    options?: TableOptions;
     columns: TableColumn[];
     data: TableData;
     rowSelection?: RowSelectionState | string[];
@@ -43,7 +42,7 @@ export interface TableProps {
 }
 
 // TODO: use table options to initialize the state (e.g., initial sort, initial filter)
-const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection, onRowSelectionChange }) => {
+const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange }: TableProps) => {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [globalFilter, setGlobalFilter] = useState("");
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -51,6 +50,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection,
         __setInitialColumnVisibility(options?.defaultColumns, columns)
     );
     const [showOnlySelected, setShowOnlySelected] = useState(false);
+    const [showColumnFilters, setShowColumnFilters] = useState(false);
 
     const enableRowSelect = !!options?.enableRowSelect;
 
@@ -155,7 +155,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection,
 
                 const tableRow: TableRow = {};
                 for (const [columnId, value] of Object.entries(row)) {
-                    const currentColumn = getColumn(columnId, columns);
+                    const currentColumn = __getColumn(columnId, columns);
                     if (currentColumn === undefined) {
                         throw new Error("Invalid column name found in table data definition `" + columnId + "`");
                     }
@@ -172,7 +172,7 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection,
     // build table options conditionally
     // cannot memoize this b/c it depends on the state;
     // doing so leads to very slow rerenders
-    const reactTableOptions: TableOptions<TableRow> = {
+    const reactTableOptions: ReactTableOptions<TableRow> = {
         data: resolvedData,
         columns: resolvedColumns,
         getCoreRowModel: getCoreRowModel(),
@@ -224,14 +224,17 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection,
 
     useLayoutEffect(() => {
         if (table && options?.onTableLoad) {
+            setShowColumnFilters(
+                !!options?.enableColumnFilters && table.getAllColumns().some((col) => col.columnDef.enableColumnFilter)
+            );
             options.onTableLoad(table);
         }
-    }, [table]);
+    }, [options, table]);
 
     return table ? (
         <div className={styles["table-outer-container"]}>
             <div className={styles["table-controls-container"]}>
-                <TableToolbar table={table} tableId={id} enableExport={!!!options?.disableExport} />
+                <TableToolbar table={table} tableId={id} enableExport={!!options?.enableExport} />
                 <PaginationControls id={id} table={table} />
             </div>
             {enableRowSelect && (
@@ -251,16 +254,13 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection,
                     />
                 </div>
             )}
-            {table.getAllColumns().some((x) => x.columnDef.enableColumnFilter) && (
+            {showColumnFilters && (
                 <ColumnFilterControls
                     filterableColumns={table.getAllColumns().filter((x) => x.columnDef.enableColumnFilter)}
                     activeFilters={columnFilters}
                     onRemoveAll={() => setColumnFilters([])}
                     onRemoveFilter={(filter) => {
                         setColumnFilters((prev) => prev.filter((f) => f !== filter));
-                        /*if (onExternalFilterRemoved && externalColumnFilters?.find((x) => x.id === filter.id)) {
-                            onExternalFilterRemoved(filter.id);
-                        } */
                     }}
                 />
             )}
@@ -298,6 +298,10 @@ const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection,
 };
 
 const __resolveSortingFn = (col: TableColumn) => {
+    if (col.sortingFn) {
+        return col.sortingFn;
+    }
+
     if (col.type === "boolean") {
         return "boolean";
     }
@@ -386,6 +390,10 @@ const __setInitialColumnVisibility = (defaultColumns: string[] | undefined, colu
         });
     }
     return visibility;
+};
+
+export const __getColumn = (columnId: string, columns: TableColumn[]) => {
+    return columns.find((col) => col.id === columnId);
 };
 
 export default Table;
