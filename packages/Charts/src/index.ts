@@ -1,5 +1,5 @@
 import Histogram, { RangeSelectHistogram, ThresholdSelectHistogram } from "./Histogram";
-import PieChart, { PieChartDataRow } from "./PieChart";
+import PieChart, { PieChartDataRow } from "./PieChart/PieChart";
 
 import BarChart from "./BarChart";
 

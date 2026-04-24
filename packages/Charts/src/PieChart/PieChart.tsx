@@ -1,9 +1,9 @@
-import { PieChartDataPoint, PieChartOptions, pieChart } from "./d3/pieChart";
-import React, { useEffect, useMemo, useRef } from "react";
+import { PieChartOptions, pieChart, updatePieChartSelection } from "../PieChart/pieChart";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { COLOR_BLIND_FRIENDLY_PALETTES } from "@niagads/common";
-import { DisplayProps } from "./d3/types";
-import styles from "./styles/Charts.module.css";
+import { DisplayProps } from "../d3/types";
+import styles from "./PieChart.module.css";
 
 export interface PieChartDataRow {
     id: string;
@@ -47,19 +47,33 @@ const Legend = ({ data }: { data: PieChartDataRow[] }) => {
 const PieChart = ({ data, onClick, displayOpts, legendPosition = "right" }: PieChartProps) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const chartRef = useRef<HTMLDivElement | null>(null);
+    const [selectedId, setSelectedId] = useState<string | undefined>();
 
     const chartWidth = displayOpts?.width || 300;
     const chartHeight = chartWidth * (displayOpts?.aspectRatio || 1);
 
+    const handleSelect = (id: string) => {
+        setSelectedId(id);
+        onClick?.(id);
+    };
+
+    // Initial chart draw (runs once on mount)
     useEffect(() => {
         if (chartRef.current && data.length > 0) {
             const opts: PieChartOptions = {
                 displayOpts: displayOpts,
-                onClick: onClick,
+                onClick: handleSelect,
             };
             pieChart(chartRef.current, data, opts);
         }
-    }, [data, onClick, displayOpts]);
+    }, []);
+
+    // Update selection styling (runs when selectedId changes)
+    useEffect(() => {
+        if (chartRef.current && selectedId !== undefined) {
+            updatePieChartSelection(chartRef.current, selectedId);
+        }
+    }, [selectedId]);
 
     return (
         <div
