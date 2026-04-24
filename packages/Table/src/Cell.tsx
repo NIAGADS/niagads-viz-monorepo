@@ -17,9 +17,9 @@ import React, { CSSProperties } from "react";
 import { Text, TextList } from "./CellRenderers/BasicText";
 
 import { Float } from "./CellRenderers/Number";
-import { GenericColumn } from "./Column";
 import { LinkTarget } from "./CellRenderers";
 import { PercentageBar } from "./CellRenderers/SparkChart";
+import { TableColumn } from "./Column";
 
 export const DEFAULT_NA_VALUE = "n/a";
 
@@ -42,7 +42,7 @@ export type IntegerCell = Expand<Modify<AbstractCell, { type: "integer"; value: 
 
 export type FloatCell = Expand<Modify<AbstractCell, { type: "float"; value: number | null; precision?: number }>>;
 
-export type PValueCell = Expand<Modify<FloatCell, { type: "p_value" }>>;
+export type PValueCell = Expand<Modify<FloatCell, { type: "pvalue" }>>;
 
 export type TextCell = Expand<Modify<AbstractCell, { type: "text"; truncateTo?: number; info?: string }>>;
 
@@ -93,32 +93,21 @@ export type Cell =
 type CellTypeMapper = TypeMapper<Cell>;
 export type CellType = keyof CellTypeMapper;
 
-// this does not include LinkList & TextList b/c those are internal cell types
-const CELL_TYPE_VALIDATION_REFERENCE = [
-    "boolean",
-    "abstract",
-    "float",
-    "p_value",
-    "text",
-    "annotated_text",
-    "badge",
-    "link",
-    "integer",
-    "percentage_bar",
-];
-
 // validates cell type specified at runtime or by user is valid
 // if cell type is undefined, returns "abstract"
+// this does not include LinkList & TextList b/c those are internal cell types
+const CELL_TYPES = ["percentage_bar", "float", "string", "abstract", "integer", "pvalue", "badge", "boolean", "link"];
+
 export const validateCellType = (ctype: string | undefined): CellType => {
     if (ctype === undefined) {
-        return "abstract" as CellType;
+        return "string" as CellType;
     }
 
-    if (typeof ctype === "string" && CELL_TYPE_VALIDATION_REFERENCE.includes(ctype)) {
+    if (CELL_TYPES.includes(ctype)) {
         return ctype as CellType; // type assertion satisfies compiler
     }
 
-    throw new Error("Invalid data type `" + ctype + "`");
+    throw new Error("Invalid table cell type `" + ctype + "`");
 };
 
 // catch NULLs and NAs
@@ -159,7 +148,7 @@ export const getCellValue = (cellProps: Cell | Cell[]): any => {
                 return __resolveBooleanValue(cellProps as BooleanCell);
             case "float":
                 return __resolveFloatValue(cellProps as FloatCell);
-            case "p_value":
+            case "pvalue":
                 return __resolvePValueValue(cellProps as PValueCell);
             default:
                 return __resolveValue(cellProps);
@@ -188,7 +177,7 @@ const __resolveListCell = (cells: GenericCell[]) => {
 
 export const resolveCell = (
     cell: GenericCell | GenericCell[],
-    column: GenericColumn,
+    column: TableColumn,
     rowId: number
 ): GenericCell | GenericCell[] => {
     let resolvedCellType = _get("type", column, "abstract");
@@ -254,7 +243,7 @@ export const resolveCell = (
     Object.assign(resolvedCell as any, { type: resolvedCellType });
 
     // assign column formatting based on cell type
-    const formattingOpts = column.format;
+    const formattingOpts = column.valueDisplayOpts;
     if (formattingOpts) {
         Object.assign(resolvedCell as any, {
             nullValue: _get("nullValue", formattingOpts),
@@ -319,7 +308,7 @@ export const renderCell = (cell: Cell) => {
         case "badge":
             return <Badge key={`cell-${cell.rowId}-${cell.columnId}`} props={cell}></Badge>;
         case "float":
-        case "p_value":
+        case "pvalue":
             return <Float key={`cell-${cell.rowId}-${cell.columnId}`} props={cell}></Float>;
         case "integer":
             return <Float key={`cell-${cell.rowId}-${cell.columnId}`} props={cell}></Float>;

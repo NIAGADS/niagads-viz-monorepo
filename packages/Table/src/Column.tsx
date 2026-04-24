@@ -1,26 +1,27 @@
-import { BasicType, Color, ColorScale, NAString } from "@niagads/common";
+import { BasicType, NAString } from "@niagads/common";
 
 import { CellType } from "./Cell";
+import { FilterFnOption } from "@tanstack/react-table";
+import { TableRow } from "./TableProperties";
 
 export interface ColumnSortConfig {
     sortingFn?: string; // TODO: should be keys for CustomSortingFunctions / SortingFns
 }
 
-export interface ColumnFilterConfig {
-    initial?: BasicType | null; // optional: table will be initially filtered by this column / value, missing or null = no initial filter
-    filterFn?: string; // TODO: should by keys for CustomFilteringFunctions / FilterFns
+export type ColumnFilterType = "histogram" | "pie" | "select" | "multiselect";
+
+export interface ColumnFilteringOpts {
+    filterType?: ColumnFilterType; // defaults based on data type in column
+    filterFn?: FilterFnOption<TableRow>; // defaults based on data type in  column
+    // valueTransformFn?: (value: BasicType) => BasicType; // for transforming value for filter display
 }
 
-export type ColumnFilterType = "internal" | "external";
-
-// can be used to color values in the column based on value
-export type ColorMap = Record<string, Color>;
-
-export interface ColumnStyling {
+export interface ColumnStylingOpts {
     getClassName?: (value: any) => string;
     getStyle?: (value: any) => React.CSSProperties;
 }
-export interface ColumnValueFormat {
+
+export interface ValueDisplayOpts {
     nullValue?: BasicType | null; // value to assign for nulls; e.g., for booleans, set nullValue = false to treat NULL as FALSE; if not set treats as NA
     naValue?: NAString; // value to assign for NAs; default `NA`
     trueValue?: BasicType; // for booleans; defaults to TRUE
@@ -29,20 +30,20 @@ export interface ColumnValueFormat {
 
 // allowable fields provided by users
 // TODO: custom sorting /filtering functions?!
-export interface GenericColumn {
+export interface TableColumn {
     header?: string;
     id: string;
     description?: string;
-    type?: CellType;
-    canFilter?: boolean; // defaults to FALSE
-    filterType?: ColumnFilterType; // defaults to TRUE
-    disableGlobalFilter?: boolean; // defaults to FALSE
-    disableSorting?: boolean; // defaults to FALSE
+    type?: CellType; // defaults to string
+    enableGlobalFilter?: boolean; // defaults to FALSE
+    enableColumnFilter?: boolean; // defaults to TRUE
+    enableSorting?: boolean; // defaults to TRUE
     required?: boolean; // if required = true then cannot be hidden
-    format?: ColumnValueFormat;
-    styling?: ColumnStyling;
+    filterOpts?: ColumnFilteringOpts;
+    valueDisplayOpts?: ValueDisplayOpts;
+    styling?: ColumnStylingOpts;
 }
 
-export const getColumn = (columnId: string, columns: GenericColumn[]) => {
+export const getColumn = (columnId: string, columns: TableColumn[]) => {
     return columns.find((col) => col.id === columnId);
 };

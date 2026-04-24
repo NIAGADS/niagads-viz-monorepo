@@ -1,12 +1,12 @@
 import { CellType, GenericCell } from "./Cell";
+import { ColumnFilterType, ColumnFilteringOpts, ValueDisplayOpts } from "./Column";
+import { ColumnFiltersState, RowData } from "@tanstack/react-table";
 
 import { BasicType } from "@niagads/common";
-import { ColumnFiltersState, RowData } from "@tanstack/react-table";
-import { ColumnFilterType } from "./Column";
 
-export interface RowSelectColumnConfig {
-    header: string;
-    description?: string;
+export interface RowSelectOptions {
+    header: string; // select column header
+    description?: string; // select column description
     enableMultiSelect?: boolean; // optional: allow selection of multiple rows, false if missing
     rowUniqueKey: string; // specify a field containing unique values to return as the row_id
 }
@@ -29,7 +29,7 @@ export interface TableConfig {
     description?: string; // optional: descriptive text describing the table for info popup
     disableColumnFilters?: boolean; // optional: disables all filtering on table columns when TRUE
     disableExport?: boolean; // optional: disables exporting
-    rowSelectColumn?: RowSelectColumnConfig; // optional: enables row selection and related state change options
+    rowSelectOpts?: RowSelectOptions; // optional: enables row selection and related state change options
     defaultColumns?: string[]; // optional: any column ids not listed will be hidden by default
     enableRowSelect?: boolean;
     onTableLoad?: any;
@@ -41,8 +41,10 @@ export type TableData = TableRow[];
 //allows us to expose some of our custom column properties and access them after they've been converted to tanstack columns
 declare module "@tanstack/react-table" {
     interface ColumnMeta<TData extends RowData, TValue> {
-        type?: CellType;
+        type: CellType;
         filterType?: ColumnFilterType;
+        naValue?: string;
+        trueValue?: BasicType;
         description?: string;
     }
 }

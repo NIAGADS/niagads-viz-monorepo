@@ -1,8 +1,9 @@
 import { Alert, Checkbox, RadioButton } from "@niagads/ui";
-import { Cell, GenericCell, getCellValue, renderCell, resolveCell, validateCellType } from "./Cell";
+import { Cell, DEFAULT_NA_VALUE, GenericCell, getCellValue, renderCell, resolveCell, validateCellType } from "./Cell";
 import {
     ColumnDef,
     ColumnFiltersState,
+    FilterFnOption,
     HeaderGroup,
     RowSelectionState,
     SortingFnOption,
@@ -20,11 +21,11 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-import { GenericColumn, getColumn } from "./Column";
 import { PaginationControls, TableToolbar } from "./ControlElements";
 import React, { ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { TableColumn, getColumn } from "./Column";
 import { TableConfig, TableData, TableRow } from "./TableProperties";
-import { _get, _hasOwnProperty, toTitleCase } from "@niagads/common";
+import { _get, toTitleCase } from "@niagads/common";
 
 import { ColumnFilterControls } from "./ControlElements/ColumnFilterControls";
 import { CustomSortingFunctions } from "./TableSortingFunctions";
@@ -35,29 +36,17 @@ import styles from "./styles/table.module.css";
 export interface TableProps {
     id: string;
     options?: TableConfig;
-    columns: GenericColumn[];
+    columns: TableColumn[];
     data: TableData;
     rowSelection?: RowSelectionState | string[];
     onRowSelectionChange?: (state: RowSelectionState) => void;
-    externalColumnFilters?: ColumnFiltersState;
-    onExternalFilterRemoved?: (filterId: string) => void;
 }
 
 // TODO: use table options to initialize the state (e.g., initial sort, initial filter)
-const Table: React.FC<TableProps> = ({
-    id,
-    columns,
-    data,
-    options,
-    rowSelection,
-    onRowSelectionChange,
-    externalColumnFilters,
-    onExternalFilterRemoved,
-}) => {
+const Table: React.FC<TableProps> = ({ id, columns, data, options, rowSelection, onRowSelectionChange }) => {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [globalFilter, setGlobalFilter] = useState("");
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
         __setInitialColumnVisibility(options?.defaultColumns, columns)
     );
@@ -73,14 +62,14 @@ const Table: React.FC<TableProps> = ({
         [rowSelection, onRowSelectionChange]
     );
 
-    useEffect(() => {
+    /* useEffect(() => {
         if (externalColumnFilters) {
             setColumnFilters((prev) => [
                 ...prev.filter((cf) => columns.find((c) => c.filterType === "internal")?.id == cf.id),
                 ...externalColumnFilters,
             ]);
         }
-    }, [externalColumnFilters]);
+    }, [externalColumnFilters]); */
 
     // Translate GenericColumns provided by user into React Table ColumnDefs
     // also adds in checkbox column if rowSelect options are set for the table
@@ -88,13 +77,13 @@ const Table: React.FC<TableProps> = ({
         const columnHelper = createColumnHelper<TableRow>();
         const columnDefs: ColumnDef<TableRow>[] = [];
         if (enableRowSelect) {
-            const multiSelect: boolean = !!options?.rowSelectColumn?.enableMultiSelect;
+            const multiSelect: boolean = !!options?.rowSelectOpts?.enableMultiSelect;
             columnDefs.push({
                 id: "select-col",
-                header: ({ table }) => options?.rowSelectColumn?.header,
+                header: ({ table }) => options?.rowSelectOpts?.header,
                 enableHiding: false,
                 enableSorting: false,
-                meta: { description: options?.rowSelectColumn?.description },
+                meta: { description: options?.rowSelectOpts?.description, type: "abstract" },
                 cell: ({ row }) =>
                     multiSelect ? (
                         <Checkbox
@@ -118,7 +107,7 @@ const Table: React.FC<TableProps> = ({
             });
         }
 
-        columns.forEach((col: GenericColumn) => {
+        columns.forEach((col: TableColumn) => {
             try {
                 col.type = validateCellType(col.type as string);
             } catch (e: any) {
@@ -128,20 +117,18 @@ const Table: React.FC<TableProps> = ({
                 columnHelper.accessor((row) => getCellValue(row[col.id as keyof typeof row] as Cell), {
                     id: col.id,
                     header: _get("header", col, toTitleCase(col.id)),
-                    enableColumnFilter: _get("canFilter", col, false) && !options?.disableColumnFilters,
-                    enableGlobalFilter: !col.disableGlobalFilter,
-                    enableSorting: !col.disableSorting,
+                    enableColumnFilter: col.enableColumnFilter,
+                    enableGlobalFilter: col.enableGlobalFilter,
+                    enableSorting: col.enableSorting,
                     sortingFn: __resolveSortingFn(col) as SortingFnOption<TableRow>,
                     filterFn: __resolveFilterFn(col),
-                    enableHiding: !_get("required", col, false), // if required is true, enableHiding is false
+                    enableHiding: !col.required, // if required is true, enableHiding is false
                     meta: {
-                        description: _get("description", col),
-                        type: _get("type", col),
-                        filterType: col.canFilter
-                            ? col.filterType === "external"
-                                ? "external"
-                                : "internal"
-                            : undefined,
+                        type: col.type,
+                        filterType: col.filterOpts?.filterType,
+                        description: col.description,
+                        naValue: col.valueDisplayOpts?.naValue || DEFAULT_NA_VALUE,
+                        trueValue: col.valueDisplayOpts?.trueValue || "TRUE",
                     },
                     cell: (props) => renderCell(props.cell.row.original[col.id] as Cell),
                 })
@@ -212,11 +199,11 @@ const Table: React.FC<TableProps> = ({
 
     if (enableRowSelect) {
         Object.assign(reactTableOptions, {
-            enableMultiRowSelection: !!options?.rowSelectColumn?.enableMultiSelect,
+            enableMultiRowSelection: !!options?.rowSelectOpts?.enableMultiSelect,
             onRowSelectionChange: handleRowSelectionChange, //hoist up the row selection state to your own scope
         });
 
-        const uniqueKey = options?.rowSelectColumn?.rowUniqueKey;
+        const uniqueKey = options?.rowSelectOpts?.rowUniqueKey;
         if (!!uniqueKey) {
             if (__isValidUniqueKey(resolvedData, uniqueKey)) {
                 Object.assign(reactTableOptions, {
@@ -251,7 +238,7 @@ const Table: React.FC<TableProps> = ({
                 <div>
                     <RowSelectionControls
                         selectedRows={table.getSelectedRowModel().rows}
-                        displayColumn={options.rowSelectColumn?.rowUniqueKey!} // if row select is enabled, rowId must be defined
+                        displayColumn={options.rowSelectOpts?.rowUniqueKey!} // if row select is enabled, rowId must be defined
                         onToggleSelectedFilter={(isFiltered: boolean) => {
                             if (isFiltered) {
                                 setColumnFilters([]);
@@ -271,9 +258,9 @@ const Table: React.FC<TableProps> = ({
                     onRemoveAll={() => setColumnFilters([])}
                     onRemoveFilter={(filter) => {
                         setColumnFilters((prev) => prev.filter((f) => f !== filter));
-                        if (onExternalFilterRemoved && externalColumnFilters?.find((x) => x.id === filter.id)) {
+                        /*if (onExternalFilterRemoved && externalColumnFilters?.find((x) => x.id === filter.id)) {
                             onExternalFilterRemoved(filter.id);
-                        }
+                        } */
                     }}
                 />
             )}
@@ -310,7 +297,7 @@ const Table: React.FC<TableProps> = ({
     );
 };
 
-const __resolveSortingFn = (col: GenericColumn) => {
+const __resolveSortingFn = (col: TableColumn) => {
     if (col.type === "boolean") {
         return "boolean";
     }
@@ -320,16 +307,28 @@ const __resolveSortingFn = (col: GenericColumn) => {
     return "alphanumeric";
 };
 
-const __resolveFilterFn = (col: GenericColumn) => {
-    if (col.type === "float" || col.type === "p_value") {
+// FIXME: boolean?
+const __resolveFilterFn = (col: TableColumn): FilterFnOption<TableRow> => {
+    if (col.filterOpts?.filterFn) {
+        return col.filterOpts.filterFn;
+    }
+    if (typeof col.type === "number") {
         return "inNumberRange";
     }
-    return "includesString";
+    if (typeof col.type === "string") {
+        if (col.filterOpts?.filterType === "multiselect") {
+            return "arrIncludesAll";
+        } else {
+            return "equals";
+        }
+    }
+
+    return "equals";
 };
 
 // wrapper to catch any errors thrown during cell type and properties validation so that
 // user can more easily identify the problematic table cell by row/column
-const __resolveCell = (userCell: GenericCell | GenericCell[], column: GenericColumn, rowId: number) => {
+const __resolveCell = (userCell: GenericCell | GenericCell[], column: TableColumn, rowId: number) => {
     try {
         return resolveCell(userCell, column, rowId);
     } catch (e: any) {
@@ -379,7 +378,7 @@ const __resolveRowSelectionState = (state: RowSelectionState | string[] | undefi
 };
 
 // builds data structure to initialize row selection state
-const __setInitialColumnVisibility = (defaultColumns: string[] | undefined, columns: GenericColumn[]) => {
+const __setInitialColumnVisibility = (defaultColumns: string[] | undefined, columns: TableColumn[]) => {
     const visibility: VisibilityState = {};
     if (defaultColumns) {
         columns.forEach((col) => {

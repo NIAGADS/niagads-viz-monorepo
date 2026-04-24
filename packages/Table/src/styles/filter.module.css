@@ -1,0 +1,18 @@
+.filter-checkbox-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    padding: 1rem;
+    min-width: 400px;
+}
+
+.filter-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-checkbox-label {
+    font-size: 0.875rem;
+    flex: 1;
+}

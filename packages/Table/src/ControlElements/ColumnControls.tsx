@@ -4,13 +4,13 @@ import { TextInput, Toggle, ToggleGroup } from "@niagads/ui";
 import { ActionMenu } from "@niagads/ui/client";
 import { Column } from "@tanstack/react-table";
 import { Columns3 } from "lucide-react";
-import { GenericColumn } from "../Column";
+import { TableColumn } from "../Column";
 import { TableRow } from "../TableProperties";
 import styles from "../styles/controls.module.css";
 
 interface ColumnControlsProps {
     columns: Column<TableRow, unknown>[];
-    onSelect: (col: GenericColumn) => void;
+    onSelect: (col: TableColumn) => void;
 }
 export const ColumnControls = ({ columns, onSelect }: ColumnControlsProps) => {
     const [search, setSearch] = useState("");

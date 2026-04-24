@@ -18,7 +18,7 @@ export const ColumnFilterControls = ({
     onRemoveAll,
     onRemoveFilter,
 }: ColumnFilterControlsProps) => {
-    const [areFiltersOpen, setAreFiltersOpen] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
 
     return (
         <div>
@@ -39,20 +39,15 @@ export const ColumnFilterControls = ({
             )}
             <Card>
                 <div>
-                    <div onClick={() => setAreFiltersOpen(!areFiltersOpen)}>
-                        <InlineIcon icon={areFiltersOpen ? <ChevronDown /> : <ChevronRight />}>
-                            <span>Advanced Filters</span>
+                    <div onClick={() => setIsExpanded(!isExpanded)}>
+                        <InlineIcon icon={isExpanded ? <ChevronDown /> : <ChevronRight />}>
+                            <span>Filters</span>
                         </InlineIcon>
                     </div>
                 </div>
                 <div>
-                    {areFiltersOpen &&
-                        filterableColumns.map(
-                            (column) =>
-                                column.columnDef.meta?.filterType === "internal" && (
-                                    <AdvancedFilter key={column.id} column={column} />
-                                )
-                        )}
+                    {isExpanded &&
+                        filterableColumns.map((column) => <AdvancedFilter key={column.id} column={column} />)}
                 </div>
             </Card>
         </div>
