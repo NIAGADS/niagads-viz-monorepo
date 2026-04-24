@@ -79,6 +79,11 @@ export const RangeSelectHistogram = ({
         xAxis: { max: max, label: label },
         displayOpts: updatedDisplayOpts,
         selectedRange: selectedRange,
+        selection: {
+            mode: "range",
+            range: selectedRange,
+            onChange: setSelectedRange,
+        },
     };
 
     useEffect(() => {
@@ -137,7 +142,11 @@ export const ThresholdSelectHistogram = ({
 }: ThresholdSelectHistogramProps) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const [sliderStepSize, setSliderStepSize] = useState<number | null>(null);
-    const [selectedRange, setSelectedRange] = useState<Range>();
+    const dataMin = useMemo(() => Math.floor(Math.min(...data)), [data]);
+    const dataMax = useMemo(() => Math.ceil(Math.max(...data)), [data]);
+    const [selectedRange, setSelectedRange] = useState<Range>(() =>
+        limitType == "min" ? { min: dataMin, max: limit } : { min: limit, max: dataMax }
+    );
     const [selectedLimit, setSelectedLimit] = useState<number>(limit);
 
     const chartWidth = displayOpts?.width || 300;
@@ -149,8 +158,6 @@ export const ThresholdSelectHistogram = ({
         height: chartHeight,
     };
 
-    const dataMin = useMemo(() => Math.floor(Math.min(...data)), [data]);
-    const dataMax = useMemo(() => Math.ceil(Math.max(...data)), [data]);
     const hasOverflow = max && dataMax > max;
 
     const opts: HistogramOptions = {
@@ -159,6 +166,12 @@ export const ThresholdSelectHistogram = ({
         xAxis: { max: max, label: label },
         displayOpts: updatedDisplayOpts,
         selectedRange: selectedRange,
+        selection: {
+            mode: "threshold",
+            range: selectedRange,
+            thresholdHandle: limitType === "min" ? "max" : "min",
+            onChange: setSelectedRange,
+        },
     };
 
     useEffect(() => {
