@@ -16,15 +16,15 @@ interface FilterProps {
     column: Column<any, unknown>;
 }
 
-interface StringFilterProps extends FilterProps {
+interface TextFilterProps extends FilterProps {
     values: Record<string, number>;
 }
 
-const PieChartFilter = ({ column, values }: StringFilterProps) => {
+const PieChartFilter = ({ column, values }: TextFilterProps) => {
     return <div>Pie Chart: {column.columnDef.header?.toString()}</div>;
 };
 
-const RichSelectFilter = ({ column, values }: StringFilterProps) => {
+const RichSelectFilter = ({ column, values }: TextFilterProps) => {
     const opts = useMemo(() => {
         return Object.entries(values).reduce(
             (acc, [value, count]) => {
@@ -38,7 +38,7 @@ const RichSelectFilter = ({ column, values }: StringFilterProps) => {
     return <RichSelect placeholder={label} options={opts} onChange={(v) => column.setFilterValue(v)} />;
 };
 
-const CheckBoxFilter = ({ column, values }: StringFilterProps) => {
+const CheckBoxFilter = ({ column, values }: TextFilterProps) => {
     const opts = useMemo(() => {
         return Object.entries(values).reduce(
             (acc, [value, count]) => {
@@ -78,7 +78,29 @@ const CheckBoxFilter = ({ column, values }: StringFilterProps) => {
 };
 
 const BooleanFilter = ({ column }: FilterProps) => {
-    return <div>Boolean: {column.columnDef.header?.toString()}</div>;
+    const meta = column.columnDef.meta!;
+    const label: string = column.columnDef.header!.toString();
+    const filterValue = column.getFilterValue();
+
+    // Count true values using faceted values
+    const trueCount = Array.from(column.getFacetedUniqueValues().keys()).filter((val) => val === true).length;
+
+    return (
+        <div className={styles["filter-boolean-container"]}>
+            <div className={styles["filter-boolean-label"]}>{label}</div>
+            <div className={styles["filter-boolean-item"]}>
+                <Checkbox
+                    name={`${column.id}-boolean`}
+                    checked={filterValue === true}
+                    onChange={(e) => {
+                        column.setFilterValue(e.target.checked ? true : undefined);
+                    }}
+                />
+                <span className={styles["filter-boolean-value"]}>{meta.trueValue}</span>
+                <Badge style={{ fontSize: "0.75rem" }}>{trueCount}</Badge>
+            </div>
+        </div>
+    );
 };
 
 const NumericFilter = ({ column }: FilterProps) => {
@@ -95,7 +117,7 @@ const Filter = ({ column }: FilterProps) => {
         return <NumericFilter column={column} />;
     }
 
-    // string-based data
+    // text data
     // find and sort the unique values, accounting for NA
     // and realistic display limits
     // defaults always to Select unless user overrides
@@ -155,35 +177,3 @@ const Filter = ({ column }: FilterProps) => {
 };
 
 export default Filter;
-
-/* return (
-        <div>
-            {sortedUniqueValues.length < 11 ? (
-                <div>
-                    <Select
-                        id={`${column.id}-filter`}
-                        fields={sortedUniqueValues}
-                        onChange={(e) => column.setFilterValue(e.target.value)}
-                        value={(column.getFilterValue() as string) || "---"}
-                    />
-                </div>
-            ) : sortedUniqueValues.length < 31 ? (
-                <div>
-                    <Autocomplete
-                        suggestions={sortedUniqueValues}
-                        onSelect={(selection) => column.setFilterValue(selection)}
-                    />
-                </div>
-            ) : (
-                <div></div>
-                // TODO: decide if we want to use text filters for columns that have a lot of different values
-                // <div>
-                //     <TextInput
-                //         onChange={(value) => column.setFilterValue(value)}
-                //         placeholder={`Search...`}
-                //         value={(columnFilterValue ?? "") as string}
-                //     />
-                // </div>
-            )}
-        </div>
-    );*/

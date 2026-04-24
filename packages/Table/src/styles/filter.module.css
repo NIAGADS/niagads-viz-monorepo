@@ -16,3 +16,26 @@
     font-size: 0.875rem;
     flex: 1;
 }
+
+.filter-boolean-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-boolean-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.filter-boolean-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: space-between;
+}
+
+.filter-boolean-value {
+    font-size: 0.875rem;
+    flex: 1;
+}
