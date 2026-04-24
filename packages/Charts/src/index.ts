@@ -1,4 +1,4 @@
-import Histogram, { RangeSelectHistogram, ThresholdSelectHistogram } from "./Histogram";
+import Histogram, { RangeSelectHistogram, ThresholdSelectHistogram } from "./Histogram/Histogram";
 import PieChart, { PieChartDataRow } from "./PieChart/PieChart";
 
 import BarChart from "./BarChart";

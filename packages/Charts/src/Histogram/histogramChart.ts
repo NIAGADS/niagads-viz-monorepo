@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 
-import { AxisConfig, DisplayProps } from "./types";
+import { AxisConfig, DisplayProps } from "../d3/types";
 
 import { Range } from "@niagads/common";
 
@@ -158,8 +158,7 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
         .append("svg")
         .attr("width", width)
         .attr("height", height)
-        .style("display", "block")
-        .style("background", HISTOGRAM_COLORS.background);
+        .style("display", "block");
 
     const plotWidth = width - margin.left - margin.right;
     const plotHeight = height - margin.top - margin.bottom;

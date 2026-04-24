@@ -29,13 +29,6 @@ const meta: Meta<typeof Histogram> = {
         layout: "centered",
     },
     tags: ["autodocs"],
-    decorators: [
-        (Story) => (
-            <div style={{ width: "900px", height: "500px" }}>
-                <Story />
-            </div>
-        ),
-    ],
     argTypes: {
         data: {
             control: { type: "object" },

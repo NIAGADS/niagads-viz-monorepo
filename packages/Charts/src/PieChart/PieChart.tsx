@@ -52,6 +52,12 @@ const PieChart = ({ data, onClick, displayOpts, legendPosition = "right" }: PieC
     const chartWidth = displayOpts?.width || 300;
     const chartHeight = chartWidth * (displayOpts?.aspectRatio || 1);
 
+    const updatedDisplayOpts = {
+        ...displayOpts,
+        width: chartWidth,
+        height: chartHeight,
+    };
+
     const handleSelect = (id: string) => {
         setSelectedId(id);
         onClick?.(id);
@@ -61,7 +67,7 @@ const PieChart = ({ data, onClick, displayOpts, legendPosition = "right" }: PieC
     useEffect(() => {
         if (chartRef.current && data.length > 0) {
             const opts: PieChartOptions = {
-                displayOpts: displayOpts,
+                displayOpts: updatedDisplayOpts,
                 onClick: handleSelect,
             };
             pieChart(chartRef.current, data, opts);

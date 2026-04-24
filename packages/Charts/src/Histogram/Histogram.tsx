@@ -1,10 +1,9 @@
-import { AxisConfig, DisplayProps } from "./d3/types";
-import { HistogramOptions, histogram, updateHistogramHighlight } from "./d3/histogramChart";
+import { AxisConfig, DisplayProps } from "../d3/types";
+import { HistogramOptions, histogram, updateHistogramHighlight } from "./histogramChart";
 import { RangeSlider, Slider } from "@niagads/ui/client";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { Range } from "@niagads/common";
-import styles from "./styles/Charts.module.css";
 
 interface HistogramProps extends AxisConfig {
     data: number[];
@@ -15,10 +14,19 @@ interface HistogramProps extends AxisConfig {
 const Histogram = ({ data, numBins, max, label, displayOpts }: HistogramProps) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
 
+    const chartWidth = displayOpts?.width || 400;
+    const chartHeight = chartWidth * (displayOpts?.aspectRatio || 0.66);
+
+    const updatedDisplayOpts = {
+        ...displayOpts,
+        width: chartWidth,
+        height: chartHeight,
+    };
+
     const opts: HistogramOptions = {
         numBins: numBins,
         xAxis: { max: max, label: label },
-        displayOpts: displayOpts,
+        displayOpts: updatedDisplayOpts,
     };
 
     useEffect(() => {
@@ -29,11 +37,7 @@ const Histogram = ({ data, numBins, max, label, displayOpts }: HistogramProps) =
         }
     }, []);
 
-    return (
-        <div>
-            <div ref={containerRef} className={styles.chartContainer} />
-        </div>
-    );
+    return <div ref={containerRef} style={{ width: `${chartWidth}px`, height: `${chartHeight}px` }} />;
 };
 
 export default Histogram;
@@ -56,6 +60,15 @@ export const RangeSelectHistogram = ({
     const [sliderStepSize, setSliderStepSize] = useState<number | null>(null);
     const [selectedRange, setSelectedRange] = useState<Range>(range);
 
+    const chartWidth = displayOpts?.width || 300;
+    const chartHeight = chartWidth * (displayOpts?.aspectRatio || 0.66);
+
+    const updatedDisplayOpts = {
+        ...displayOpts,
+        width: chartWidth,
+        height: chartHeight,
+    };
+
     const dataMin = useMemo(() => Math.floor(Math.min(...data)), [data]);
     const dataMax = useMemo(() => Math.ceil(Math.max(...data)), [data]);
     const hasOverflow = max && dataMax > max;
@@ -64,7 +77,7 @@ export const RangeSelectHistogram = ({
         numBins: numBins,
         binDomain: { min: dataMin, max: dataMax },
         xAxis: { max: max, label: label },
-        displayOpts: displayOpts,
+        displayOpts: updatedDisplayOpts,
         selectedRange: selectedRange,
     };
 
@@ -89,7 +102,7 @@ export const RangeSelectHistogram = ({
 
     return (
         <div>
-            <div ref={containerRef} className={styles.chartContainer} />
+            <div ref={containerRef} style={{ width: `${chartWidth}px`, height: `${chartHeight}px` }} />
             {sliderStepSize && (
                 <RangeSlider
                     name="histogram-slider-selection"
@@ -127,6 +140,15 @@ export const ThresholdSelectHistogram = ({
     const [selectedRange, setSelectedRange] = useState<Range>();
     const [selectedLimit, setSelectedLimit] = useState<number>(limit);
 
+    const chartWidth = displayOpts?.width || 300;
+    const chartHeight = chartWidth * (displayOpts?.aspectRatio || 0.66);
+
+    const updatedDisplayOpts = {
+        ...displayOpts,
+        width: chartWidth,
+        height: chartHeight,
+    };
+
     const dataMin = useMemo(() => Math.floor(Math.min(...data)), [data]);
     const dataMax = useMemo(() => Math.ceil(Math.max(...data)), [data]);
     const hasOverflow = max && dataMax > max;
@@ -135,7 +157,7 @@ export const ThresholdSelectHistogram = ({
         numBins: numBins,
         binDomain: { min: dataMin, max: dataMax },
         xAxis: { max: max, label: label },
-        displayOpts: displayOpts,
+        displayOpts: updatedDisplayOpts,
         selectedRange: selectedRange,
     };
 
@@ -169,7 +191,7 @@ export const ThresholdSelectHistogram = ({
 
     return (
         <div>
-            <div ref={containerRef} className={styles.chartContainer} />
+            <div ref={containerRef} style={{ width: `${chartWidth}px`, height: `${chartHeight}px` }} />
             {sliderStepSize && (
                 <Slider
                     name="histogram-slider-selection"
