@@ -28,6 +28,7 @@ export const Default: Story = {
         );
     },
     args: {
+        legendPosition: "right",
         data: [
             {
                 id: "test1",

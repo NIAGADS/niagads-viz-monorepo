@@ -15,7 +15,7 @@ export interface PieChartProps {
     data: PieChartDataRow[];
     onClick?: (key: string) => void;
     displayOpts?: DisplayProps;
-    legendPosition?: "top" | "right" | "bottom" | "left" | "none";
+    legendPosition?: "right" | "bottom" | "none";
 }
 
 const Legend = ({ data }: { data: PieChartDataRow[] }) => {
