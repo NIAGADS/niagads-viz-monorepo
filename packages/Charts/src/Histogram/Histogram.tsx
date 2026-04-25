@@ -64,7 +64,7 @@ export const RangeSelectHistogram = ({
 }: RangeSelectHistogramProps) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
 
-    const chartWidth = displayOpts?.width || 300;
+    const chartWidth = displayOpts?.width || 400;
     const chartHeight = chartWidth * (displayOpts?.aspectRatio || 0.66);
 
     const updatedDisplayOpts = {
@@ -132,7 +132,7 @@ export const ThresholdSelectHistogram = ({
         [dataMin, dataMax]
     );
 
-    const chartWidth = displayOpts?.width || 300;
+    const chartWidth = displayOpts?.width || 400;
     const chartHeight = chartWidth * (displayOpts?.aspectRatio || 0.66);
 
     const updatedDisplayOpts = {

@@ -42,8 +42,12 @@ function snap(value: number, domainMin: number, step?: number): number {
 }
 
 function normalizeRange(selection: Range, domain: Range): Range {
+    console.log(`selection - ${selection.min} - ${selection.max}`);
+    console.log(`domain - ${domain.min} - ${domain.max}`);
     const min = clamp(selection.min, domain.min, domain.max);
     const max = clamp(selection.max, domain.min, domain.max);
+    console.log(`normalized - ${min} - ${max}`);
+
     return { min: Math.min(min, max), max: Math.max(min, max) };
 }
 
@@ -63,9 +67,7 @@ function getSelectionFromHandle(
     handleIndex: number
 ): Range {
     if (mode === "threshold") {
-        return thresholdHandle === "min"
-            ? { min: value, max: domain.max }
-            : { min: domain.min, max: value };
+        return thresholdHandle === "min" ? { min: value, max: domain.max } : { min: domain.min, max: value };
     }
 
     if (handleIndex === 0) {
@@ -169,33 +171,21 @@ export function createSelectionOverlay(opts: SelectionOverlayOptions): Selection
     }
 
     handles.call(
-        d3
-            .drag<SVGGElement, number>()
-            .on("drag", function (event, _d) {
-                const pointerX = clamp(event.x, 0, opts.xScale.range()[1]);
-                const rawValue = opts.xScale.invert(pointerX);
-                const snappedValue = clamp(
-                    snap(rawValue, opts.domain.min, opts.step),
-                    opts.domain.min,
-                    opts.domain.max
-                );
+        d3.drag<SVGGElement, number>().on("drag", function (event, _d) {
+            const pointerX = clamp(event.x, 0, opts.xScale.range()[1]);
+            const atRightEdge = pointerX >= opts.xScale.range()[1];
+            const rawValue = atRightEdge ? opts.domain.max : opts.xScale.invert(pointerX);
+            const snappedValue = clamp(snap(rawValue, opts.domain.min, opts.step), opts.domain.min, opts.domain.max);
 
-                const handleIndex = handles.nodes().indexOf(this);
-                const nextSelection = normalizeRange(
-                    getSelectionFromHandle(
-                        snappedValue,
-                        selection,
-                        opts.domain,
-                        opts.mode,
-                        thresholdHandle,
-                        handleIndex
-                    ),
-                    opts.domain
-                );
+            const handleIndex = handles.nodes().indexOf(this);
+            const nextSelection = normalizeRange(
+                getSelectionFromHandle(snappedValue, selection, opts.domain, opts.mode, thresholdHandle, handleIndex),
+                opts.domain
+            );
 
-                updateVisuals(nextSelection);
-                opts.onChange?.(nextSelection);
-            })
+            updateVisuals(nextSelection);
+            opts.onChange?.(nextSelection);
+        })
     );
 
     updateVisuals(selection);
