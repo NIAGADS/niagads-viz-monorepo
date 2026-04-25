@@ -1,7 +1,6 @@
-import { FilterFnOption, RowData, SortingFnOption } from "@tanstack/react-table";
-import { CellType, GenericCell } from "./Cell";
-
 import { BasicType, NAString } from "@niagads/common";
+import { CellType, GenericCell } from "./Cell";
+import { FilterFnOption, RowData, SortingFnOption } from "@tanstack/react-table";
 
 // initial table state
 interface SortConfig {
@@ -83,5 +82,10 @@ declare module "@tanstack/react-table" {
         naValue?: string;
         trueValue?: BasicType;
         description?: string;
+    }
+
+    // This "merges" your custom functions into the existing Column interface
+    interface Column<TData extends RowData, TValue> {
+        getAllValues: (filterNulls: boolean, naValue: string) => TValue[];
     }
 }

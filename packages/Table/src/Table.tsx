@@ -5,15 +5,16 @@ import {
     ColumnFiltersState,
     FilterFnOption,
     HeaderGroup,
+    TableOptions as ReactTableOptions,
     RowSelectionState,
     SortingFnOption,
     SortingState,
-    TableOptions as ReactTableOptions,
     Updater,
     VisibilityState,
     createColumnHelper,
     flexRender,
     getCoreRowModel,
+    getFacetedMinMaxValues,
     getFacetedRowModel,
     getFacetedUniqueValues,
     getFilteredRowModel,
@@ -23,7 +24,7 @@ import {
 } from "@tanstack/react-table";
 import { PaginationControls, TableToolbar } from "./ControlElements";
 import React, { ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
-import { TableOptions, TableData, TableRow, TableColumn } from "./types";
+import { TableColumn, TableData, TableOptions, TableRow } from "./types";
 import { _get, toTitleCase } from "@niagads/common";
 
 import { ColumnFilterControls } from "./ControlElements/ColumnFilterControls";
@@ -180,6 +181,7 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
         getFilteredRowModel: getFilteredRowModel(),
         getFacetedRowModel: getFacetedRowModel(),
         getFacetedUniqueValues: getFacetedUniqueValues(),
+        getFacetedMinMaxValues: getFacetedMinMaxValues(),
         globalFilterFn: "includesString",
         onGlobalFilterChange: setGlobalFilter,
         state: {
@@ -195,6 +197,21 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
         getSortedRowModel: getSortedRowModel(),
         sortingFns: CustomSortingFunctions,
         enableColumnResizing: true,
+
+        _features: [
+            {
+                // when column is initialized, create this function
+                createColumn: (column, table) => {
+                    column.getAllValues = (filterNulls: boolean = true, naValue: string = DEFAULT_NA_VALUE) => {
+                        let values = table.getCoreRowModel().flatRows.map((row) => row.getValue(column.id));
+                        if (filterNulls) {
+                            values = values.filter((v) => v != null && v !== naValue);
+                        }
+                        return values;
+                    };
+                },
+            },
+        ],
     };
 
     if (enableRowSelect) {

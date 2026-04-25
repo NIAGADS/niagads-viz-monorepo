@@ -65,6 +65,21 @@ export const _isEmpty = (value: Record<string, any> | null | undefined) => {
     return value === null || value === undefined || check(value);
 };
 
+export const negLog10 = (
+    value: number | string,
+    precision: number = 2,
+    cap: number | undefined = undefined
+): number => {
+    if (value.toString().includes("e-")) {
+        const exponent = parseInt((value + "").split("e")[1]);
+        if (exponent > 350) {
+            return cap && exponent > cap ? cap : exponent;
+        }
+    }
+    const neglog10p: number = -Math.log10(parseFloat(value + ""));
+    return cap && neglog10p > cap ? cap : parseFloat(toFixedWithoutZeros(neglog10p, precision));
+};
+
 export const toFixedWithoutZeros = (value: number, precision: number = 2) => {
     return Number.parseFloat(value.toFixed(precision)).toString();
 };

@@ -7,7 +7,7 @@ import styles from "./PieChart.module.css";
 
 export interface PieChartDataRow {
     id: string;
-    label: string;
+    label?: string;
     value: number;
 }
 
@@ -37,7 +37,7 @@ const Legend = ({ data }: { data: PieChartDataRow[] }) => {
                             backgroundColor: colorScale[item.id],
                         }}
                     />
-                    <span className={styles["legend-label"]}>{item.label}</span>
+                    <span className={styles["legend-label"]}>{item.label || item.id}</span>
                 </div>
             ))}
         </div>

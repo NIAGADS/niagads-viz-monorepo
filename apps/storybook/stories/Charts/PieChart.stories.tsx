@@ -46,8 +46,7 @@ export const Default: Story = {
                 value: 11,
             },
             {
-                id: "test4",
-                label: "Test 4",
+                id: "test4 - no label",
                 value: 19,
             },
             {

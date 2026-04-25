@@ -5,14 +5,15 @@
 - fitler ordering: charts, booleans, multiselect, select?
 */
 
-import React, { ReactNode, useMemo } from "react";
-
-import { Badge, Checkbox } from "@niagads/ui";
 import { ActionMenu, RichSelect } from "@niagads/ui/client";
+import { Alert, Badge, Checkbox } from "@niagads/ui";
+import { PieChart, PieChartDataRow, RangeSelectHistogram, ThresholdSelectHistogram } from "@niagads/charts";
+import { Range, negLog10 } from "@niagads/common";
+import React, { ReactNode, useEffect, useMemo } from "react";
 
 import { Column } from "@tanstack/react-table";
+import { DEFAULT_NA_VALUE } from "./Cell";
 import { Filter as FilterIcon } from "lucide-react";
-
 import styles from "./styles/filter.module.css";
 
 const NUMERIC_CELL_TYPES = ["float", "integer", "pvalue", "percentage_cell"];
@@ -27,7 +28,15 @@ interface TextFilterProps extends FilterProps {
 }
 
 const PieChartFilter = ({ column, values }: TextFilterProps) => {
-    return <div>Pie Chart: {column.columnDef.header?.toString()}</div>;
+    const chartData: PieChartDataRow[] = useMemo(
+        () =>
+            Object.entries(values).map(([key, count]) => ({
+                id: key,
+                value: count,
+            })),
+        [values]
+    );
+    return <PieChart data={chartData} legendPosition="bottom" onClick={(v) => column.setFilterValue(v)} />;
 };
 
 const RichSelectFilter = ({ column, values }: TextFilterProps) => {
@@ -99,7 +108,7 @@ const BooleanFilter = ({ column }: FilterProps) => {
                     name={`${column.id}-boolean`}
                     checked={filterValue === true}
                     onChange={(e) => {
-                        column.setFilterValue(e.target.checked ? true : undefined);
+                        column.setFilterValue(e.target.checked ? true : false);
                     }}
                 />
                 <span className={styles["filter-boolean-value"]}>{meta.trueValue}</span>
@@ -110,7 +119,52 @@ const BooleanFilter = ({ column }: FilterProps) => {
 };
 
 const NumericFilter = ({ column }: FilterProps) => {
-    return <div>Boolean: {column.columnDef.header?.toString()}</div>;
+    const naValue = column.columnDef.meta?.naValue || DEFAULT_NA_VALUE;
+    const isPvalue: boolean = column.columnDef.meta!.type === "pvalue";
+    const handleRangeFilter = (range: Range) => {
+        if (isPvalue) {
+            const threshold = Math.pow(10, -range.min);
+            column.setFilterValue(threshold);
+        } else {
+            // TODO / FIXME: create a filterFn that takes a range
+            column.setFilterValue(range);
+        }
+    };
+    const dataRange = column.getFacetedMinMaxValues();
+    if (dataRange) {
+        if (isPvalue) {
+            const values: number[] = (column.getAllValues(true, naValue) as number[]).map((v) => negLog10(v));
+            return (
+                <ThresholdSelectHistogram
+                    limit={7}
+                    limitType={"min"}
+                    onRangeSelect={handleRangeFilter}
+                    data={values}
+                    numBins={50}
+                />
+            );
+        } else {
+            const values: number[] = column.getAllValues(true, naValue) as number[];
+
+            return (
+                <RangeSelectHistogram
+                    range={{ min: dataRange[0], max: dataRange[1] }}
+                    onRangeSelect={handleRangeFilter}
+                    data={values}
+                    numBins={50}
+                />
+            );
+        }
+    }
+    return (
+        <Alert variant="info" message="No valid values">
+            <p>
+                No valid values available for this column after applying other filters. Only missing or NA values
+                remain.
+            </p>
+            <p>Try adjusting or clearing other filters to see more data for this column.</p>
+        </Alert>
+    );
 };
 
 const Filter = ({ column }: FilterProps) => {
@@ -128,24 +182,14 @@ const Filter = ({ column }: FilterProps) => {
     // and realistic display limits
     // defaults always to Select unless user overrides
     const sortedUniqueValues: Record<string, number> = useMemo(() => {
-        const valueCountHash: Record<string, number> = {};
-        let naValue: string | null = null;
-        let naCount: number = 0;
-
-        column.getFacetedUniqueValues().forEach((_, value) => {
-            valueCountHash[value] = (valueCountHash[value] || 0) + 1;
-            if (!naValue && value === meta.naValue) {
-                naValue = value;
-            }
-        });
-
-        // Remove NA value from hash if it is present in the data
-        if (naValue !== null) {
-            naCount = valueCountHash[naValue];
-            delete valueCountHash[naValue];
+        const naValue = meta.naValue || DEFAULT_NA_VALUE;
+        const uniqueValues: Map<string, number> = column.getFacetedUniqueValues();
+        const naCount: number | undefined = uniqueValues.get(naValue);
+        if (naCount) {
+            uniqueValues.delete(naValue);
         }
 
-        let sortedEntries = Object.entries(valueCountHash).sort((a, b) => b[1] - a[1]);
+        const sortedEntries = [...uniqueValues.entries()].sort((a, b) => b[1] - a[1]);
 
         // Truncate to MAX_FILTER_CATEGORIES and collapse residuals into "Other"
         const resultHash: Record<string, number> = {};
@@ -165,7 +209,7 @@ const Filter = ({ column }: FilterProps) => {
             });
         }
 
-        if (naValue) {
+        if (naCount) {
             resultHash[naValue] = naCount;
         }
         return resultHash;

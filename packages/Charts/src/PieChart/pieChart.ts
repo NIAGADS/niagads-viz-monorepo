@@ -5,7 +5,7 @@ import { DisplayProps } from "../d3/types";
 
 export interface PieChartDataPoint {
     id: string;
-    label: string;
+    label?: string;
     value: number;
 }
 
@@ -176,7 +176,7 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
             tooltip
                 .append("div")
                 .style("margin-bottom", "8px")
-                .html(`<strong>${d.data.label}</strong>: ${percentage}%`);
+                .html(`<strong>${d.data.label || d.data.id}</strong>: ${percentage}%`);
             tooltip.append("div").html(`${d.data.value} records`);
         })
         .on("mouseleave", (event: MouseEvent) => {
