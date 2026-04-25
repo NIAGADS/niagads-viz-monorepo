@@ -27,10 +27,9 @@ export interface HistogramOptions {
     binDomain?: Range; // minimum bin start, maximum bin end
     xAxis?: AxisConfig;
     displayOpts?: DisplayProps;
-    selectedRange?: Range; // [min, max] for highlighting bins
     selection?: {
         mode: SelectionMode;
-        range: Range;
+        selectedRange?: Range; // [min, max] for highlighting bins
         thresholdHandle?: ThresholdHandle;
         onChange?: (range: Range) => void;
     };
@@ -50,7 +49,7 @@ function isSelected(d: d3.Bin<number, number>, selectedRange?: Range): boolean {
 }
 
 function applyFill(d: d3.Bin<number, number>, opts: HistogramOptions): string {
-    const selected = isSelected(d, opts.selectedRange);
+    const selected = isSelected(d, opts.selection?.selectedRange);
     if (d.x0 === opts.xAxis?.max) {
         return selected ? HISTOGRAM_COLORS.barSelected : HISTOGRAM_COLORS.barOverflow;
     }
@@ -58,7 +57,7 @@ function applyFill(d: d3.Bin<number, number>, opts: HistogramOptions): string {
 }
 
 function applyStroke(d: d3.Bin<number, number>, opts: HistogramOptions): string {
-    const selected = isSelected(d, opts.selectedRange);
+    const selected = isSelected(d, opts.selection?.selectedRange);
 
     if (d.x0 === opts.xAxis?.max) {
         return selected ? HISTOGRAM_COLORS.strokeSelected : HISTOGRAM_COLORS.strokeOverflow;
@@ -67,12 +66,12 @@ function applyStroke(d: d3.Bin<number, number>, opts: HistogramOptions): string 
 }
 
 function applyStrokeWidth(d: d3.Bin<number, number>, opts: HistogramOptions): number {
-    const selected = isSelected(d, opts.selectedRange);
+    const selected = isSelected(d, opts.selection?.selectedRange);
     return selected ? 2 : 1;
 }
 
 function applyHoverFill(d: d3.Bin<number, number>, opts: HistogramOptions): string {
-    if (isSelected(d, opts.selectedRange)) {
+    if (isSelected(d, opts.selection?.selectedRange)) {
         return HISTOGRAM_COLORS.barSelectedHover;
     }
     if (d.x0 === opts.xAxis?.max) {
@@ -113,7 +112,7 @@ function getRoundedTopBarPath(xPos: number, yPos: number, width: number, height:
 
 export function histogram(container: HTMLElement, data: number[], opts: HistogramOptions) {
     function updateSelectedRange(nextSelection?: Range) {
-        opts.selectedRange = nextSelection;
+        opts.selection!.selectedRange = nextSelection;
         svg.selectAll<SVGPathElement, d3.Bin<number, number>>(".histogram-bar")
             .data(bins, (_d, i) => i)
             .attr("fill", (d: d3.Bin<number, number>) => applyFill(d, opts))
@@ -318,13 +317,16 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
 
     let selectionOverlay: HistogramState["selectionOverlay"];
     if (opts.selection) {
-        const selectionRange = opts.selection.range || opts.selectedRange;
+        const selectionRange = opts.selection.selectedRange;
         if (selectionRange) {
             selectionOverlay = createSelectionOverlay({
                 root: g,
                 xScale: x,
                 plotHeight,
-                domain: { min: binMin!, max: opts.xAxis?.max !== undefined ? opts.xAxis.max + (binSize || 1) : binMax! },
+                domain: {
+                    min: binMin!,
+                    max: opts.xAxis?.max !== undefined ? opts.xAxis.max + (binSize || 1) : binMax!,
+                },
                 selection: selectionRange,
                 mode: opts.selection.mode,
                 step: binSize,
@@ -348,24 +350,4 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
     } as HistogramState;
 
     return binSize;
-}
-
-export function updateHistogramHighlight(container: HTMLElement, selectedRange?: Range) {
-    const svg = d3.select(container).select<SVGSVGElement>("svg");
-    const state = (svg.node() as any).__histogramState__ as HistogramState | undefined;
-
-    if (!state) return;
-
-    // Update stored selection so hover handlers use current state
-    state.opts.selectedRange = selectedRange;
-    if (state.opts.selection && selectedRange) {
-        state.opts.selection.range = selectedRange;
-        state.selectionOverlay?.update(selectedRange);
-    }
-
-    svg.selectAll<SVGPathElement, d3.Bin<number, number>>(".histogram-bar")
-        .data(state.bins, (_d, i) => i)
-        .attr("fill", (d: d3.Bin<number, number>) => applyFill(d, state.opts))
-        .attr("stroke", (d: d3.Bin<number, number>) => applyStroke(d, state.opts))
-        .attr("stroke-width", (d: d3.Bin<number, number>) => applyStrokeWidth(d, state.opts));
 }

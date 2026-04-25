@@ -1,9 +1,9 @@
 import { AxisConfig, DisplayProps } from "../d3/types";
-import { HistogramOptions, histogram, updateHistogramHighlight } from "./histogramChart";
-import { RangeSlider, Slider } from "@niagads/ui/client";
+import { HistogramOptions, histogram } from "./histogramChart";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { Range } from "@niagads/common";
+import styles from "../Histogram/Histogram.module.css";
 
 interface HistogramProps extends AxisConfig {
     data: number[];
@@ -37,7 +37,13 @@ const Histogram = ({ data, numBins, max, label, displayOpts }: HistogramProps) =
         }
     }, []);
 
-    return <div ref={containerRef} style={{ width: `${chartWidth}px`, height: `${chartHeight}px` }} />;
+    return (
+        <div
+            ref={containerRef}
+            className={styles["histogram-container"]}
+            style={{ width: `${chartWidth}px`, height: `${chartHeight}px` }}
+        />
+    );
 };
 
 export default Histogram;
@@ -57,8 +63,6 @@ export const RangeSelectHistogram = ({
     onRangeSelect,
 }: RangeSelectHistogramProps) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
-    const [sliderStepSize, setSliderStepSize] = useState<number | null>(null);
-    const [selectedRange, setSelectedRange] = useState<Range>(range);
 
     const chartWidth = displayOpts?.width || 300;
     const chartHeight = chartWidth * (displayOpts?.aspectRatio || 0.66);
@@ -71,55 +75,33 @@ export const RangeSelectHistogram = ({
 
     const dataMin = useMemo(() => Math.floor(Math.min(...data)), [data]);
     const dataMax = useMemo(() => Math.ceil(Math.max(...data)), [data]);
-    const hasOverflow = max && dataMax > max;
 
     const opts: HistogramOptions = {
         numBins: numBins,
         binDomain: { min: dataMin, max: dataMax },
         xAxis: { max: max, label: label },
         displayOpts: updatedDisplayOpts,
-        selectedRange: selectedRange,
         selection: {
             mode: "range",
-            range: selectedRange,
-            onChange: setSelectedRange,
+            selectedRange: range,
+            onChange: onRangeSelect,
         },
     };
 
     useEffect(() => {
         if (containerRef.current) {
-            const stepSize = histogram(containerRef.current, data, {
+            histogram(containerRef.current, data, {
                 ...opts,
             });
-            setSliderStepSize(stepSize!);
-            if (selectedRange) {
-                updateHistogramHighlight(containerRef.current, selectedRange);
-            }
         }
     }, []);
 
-    useEffect(() => {
-        if (containerRef.current) {
-            updateHistogramHighlight(containerRef.current, selectedRange);
-        }
-        onRangeSelect && onRangeSelect(selectedRange);
-    }, [selectedRange]);
-
     return (
-        <div>
-            <div ref={containerRef} style={{ width: `${chartWidth}px`, height: `${chartHeight}px` }} />
-            {sliderStepSize && (
-                <RangeSlider
-                    name="histogram-slider-selection"
-                    value={selectedRange}
-                    min={dataMin}
-                    max={hasOverflow ? max + sliderStepSize : dataMax}
-                    step={sliderStepSize}
-                    onChange={setSelectedRange}
-                    displayRangeLabels={false}
-                />
-            )}
-        </div>
+        <div
+            ref={containerRef}
+            className={styles["histogram-container"]}
+            style={{ width: `${chartWidth}px`, height: `${chartHeight}px` }}
+        />
     );
 };
 
@@ -141,13 +123,14 @@ export const ThresholdSelectHistogram = ({
     onRangeSelect,
 }: ThresholdSelectHistogramProps) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
-    const [sliderStepSize, setSliderStepSize] = useState<number | null>(null);
+
     const dataMin = useMemo(() => Math.floor(Math.min(...data)), [data]);
     const dataMax = useMemo(() => Math.ceil(Math.max(...data)), [data]);
-    const [selectedRange, setSelectedRange] = useState<Range>(() =>
-        limitType == "min" ? { min: dataMin, max: limit } : { min: limit, max: dataMax }
+
+    const initialRange = useMemo(
+        () => (limitType == "min" ? { min: dataMin, max: limit } : { min: limit, max: dataMax }),
+        [dataMin, dataMax]
     );
-    const [selectedLimit, setSelectedLimit] = useState<number>(limit);
 
     const chartWidth = displayOpts?.width || 300;
     const chartHeight = chartWidth * (displayOpts?.aspectRatio || 0.66);
@@ -158,65 +141,41 @@ export const ThresholdSelectHistogram = ({
         height: chartHeight,
     };
 
-    const hasOverflow = max && dataMax > max;
-
     const opts: HistogramOptions = {
         numBins: numBins,
         binDomain: { min: dataMin, max: dataMax },
         xAxis: { max: max, label: label },
         displayOpts: updatedDisplayOpts,
-        selectedRange: selectedRange,
+
         selection: {
             mode: "threshold",
-            range: selectedRange,
+            selectedRange: initialRange,
             thresholdHandle: limitType === "min" ? "max" : "min",
-            onChange: setSelectedRange,
+            onChange: onRangeSelect,
         },
     };
 
-    useEffect(() => {
+    /* useEffect(() => {
         if (limitType == "min") {
-            setSelectedRange({ min: dataMin, max: selectedLimit });
+            setSelectedRange({ min: dataMin, max: selectedRange.max });
         } else {
-            setSelectedRange({ min: selectedLimit, max: dataMax });
+            setSelectedRange({ min: selectedRange.min, max: dataMax });
         }
-    }, [selectedLimit]);
+    }, [selectedRange]);*/
 
     useEffect(() => {
         if (containerRef.current) {
-            const stepSize = histogram(containerRef.current, data, {
+            histogram(containerRef.current, data, {
                 ...opts,
             });
-            setSliderStepSize(stepSize!);
-            if (selectedRange) {
-                updateHistogramHighlight(containerRef.current, selectedRange);
-            }
         }
     }, []);
 
-    useEffect(() => {
-        if (containerRef.current) {
-            updateHistogramHighlight(containerRef.current, selectedRange);
-        }
-
-        onRangeSelect && onRangeSelect(selectedRange!);
-    }, [selectedRange]);
-
     return (
-        <div>
-            <div ref={containerRef} style={{ width: `${chartWidth}px`, height: `${chartHeight}px` }} />
-            {sliderStepSize && (
-                <Slider
-                    name="histogram-slider-selection"
-                    value={selectedLimit}
-                    min={dataMin}
-                    max={hasOverflow ? max + sliderStepSize : dataMax}
-                    step={sliderStepSize}
-                    variant={limitType}
-                    displayRangeLabels={false}
-                    onChange={setSelectedLimit}
-                />
-            )}
-        </div>
+        <div
+            ref={containerRef}
+            className={styles["histogram-container"]}
+            style={{ width: `${chartWidth}px`, height: `${chartHeight}px` }}
+        />
     );
 };
