@@ -27,6 +27,13 @@ interface TextFilterProps extends FilterProps {
     values: Record<string, number>;
 }
 
+const NoValidValuesMessage = ({ columnName }: { columnName: string }) => (
+    <Alert variant="info" message={columnName}>
+        <p>No valid values available for this column after applying other filters. Only missing or NA values remain.</p>
+        <p>Try adjusting or clearing other filters to filter based on this column.</p>
+    </Alert>
+);
+
 const PieChartFilter = ({ column, values }: TextFilterProps) => {
     const chartData: PieChartDataRow[] = useMemo(
         () =>
@@ -156,34 +163,43 @@ const NumericFilter = ({ column }: FilterProps) => {
             );
         }
     }
-    return (
-        <Alert variant="info" message="No valid values">
-            <p>
-                No valid values available for this column after applying other filters. Only missing or NA values
-                remain.
-            </p>
-            <p>Try adjusting or clearing other filters to see more data for this column.</p>
-        </Alert>
-    );
+    return <NoValidValuesMessage columnName={column.columnDef.header!.toString()} />;
 };
 
 const Filter = ({ column }: FilterProps) => {
     const meta = column.columnDef.meta!;
+    const naValue = meta.naValue || DEFAULT_NA_VALUE;
 
-    if (meta.type === "boolean") {
-        return <BooleanFilter column={column} />;
-    }
     if (meta.type in NUMERIC_CELL_TYPES) {
         return <NumericFilter column={column} />;
     }
 
-    // text data
-    // find and sort the unique values, accounting for NA
-    // and realistic display limits
-    // defaults always to Select unless user overrides
+    const uniqueValues: Map<string, number> = column.getFacetedUniqueValues();
+    const naCount: number | undefined = uniqueValues.get(naValue);
+
+    // if only NAs, no further action needed
+    if (naCount && uniqueValues.size == 1) {
+        return <NoValidValuesMessage columnName={column.columnDef.header!.toString()} />;
+    }
+
+    if (meta.type === "boolean") {
+        return <BooleanFilter column={column} />;
+    }
+
+    // otherwise dealing w/some sort of text/categorical data
+    // sort the unique values by counts,
+    // accounting for NA and realistic display limits
+    // defaults always to RichSelect unless user overrides
+
+    // if NAs are present, temporarily remove
+    // will add them back in, it is just that NA can be the top value
+    if (naCount) {
+        uniqueValues.delete(naValue);
+    }
+
     const sortedUniqueValues: Record<string, number> = useMemo(() => {
         const naValue = meta.naValue || DEFAULT_NA_VALUE;
-        const uniqueValues: Map<string, number> = column.getFacetedUniqueValues();
+
         const naCount: number | undefined = uniqueValues.get(naValue);
         if (naCount) {
             uniqueValues.delete(naValue);
@@ -213,7 +229,7 @@ const Filter = ({ column }: FilterProps) => {
             resultHash[naValue] = naCount;
         }
         return resultHash;
-    }, [column.getSize()]);
+    }, [Array.from(uniqueValues.entries())]);
 
     if (meta.filterType === "pie") {
         return <PieChartFilter column={column} values={sortedUniqueValues} />;
