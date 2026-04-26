@@ -1,3 +1,4 @@
+import { Badge, BadgeIconType, BooleanBadge } from "./CellRenderers/Badge";
 import {
     BasicType,
     Expand,
@@ -11,13 +12,12 @@ import {
     _isNA,
     _isNull,
 } from "@niagads/common";
-import React, { CSSProperties } from "react";
-import { Badge, BadgeIconType, BooleanBadge } from "./CellRenderers/Badge";
-import { Text, TextList } from "./CellRenderers/BasicText";
 import { Link, LinkList } from "./CellRenderers/Link";
+import React, { CSSProperties } from "react";
+import { Text, TextList } from "./CellRenderers/BasicText";
 
-import { LinkTarget } from "./CellRenderers";
 import { Float } from "./CellRenderers/Number";
+import { LinkTarget } from "./CellRenderers";
 import { PercentageBar } from "./CellRenderers/SparkChart";
 import { TableColumn } from "./types";
 
@@ -35,8 +35,6 @@ export type AbstractCell = {
     className?: string;
     style?: CSSProperties;
 };
-
-export type StringCell = Expand<Modify<AbstractCell, { type: "string"; value: string }>>;
 
 export type IntegerCell = Expand<Modify<AbstractCell, { type: "integer"; value: number | null }>>;
 
@@ -96,11 +94,11 @@ export type CellType = keyof CellTypeMapper;
 // validates cell type specified at runtime or by user is valid
 // if cell type is undefined, returns "abstract"
 // this does not include LinkList & TextList b/c those are internal cell types
-const CELL_TYPES = ["percentage_bar", "float", "string", "abstract", "integer", "pvalue", "badge", "boolean", "link"];
+const CELL_TYPES = ["percentage_bar", "float", "text", "abstract", "integer", "pvalue", "badge", "boolean", "link"];
 
 export const validateCellType = (ctype: string | undefined): CellType => {
     if (ctype === undefined) {
-        return "string" as CellType;
+        return "abstract" as CellType;
     }
 
     if (CELL_TYPES.includes(ctype)) {

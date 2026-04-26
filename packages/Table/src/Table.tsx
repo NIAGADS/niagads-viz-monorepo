@@ -51,7 +51,7 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
         __setInitialColumnVisibility(options?.defaultColumns, columns)
     );
     const [showOnlySelected, setShowOnlySelected] = useState(false);
-    const [showColumnFilters, setShowColumnFilters] = useState(false);
+    const [showColumnFilters, setShowColumnFilters] = useState<boolean | null>(null);
 
     const enableRowSelect = !!options?.enableRowSelect;
 
@@ -118,9 +118,9 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
                 columnHelper.accessor((row) => getCellValue(row[col.id as keyof typeof row] as Cell), {
                     id: col.id,
                     header: _get("header", col, toTitleCase(col.id)),
-                    enableColumnFilter: col.enableColumnFilter,
-                    enableGlobalFilter: col.enableGlobalFilter,
-                    enableSorting: col.enableSorting,
+                    enableColumnFilter: !col.disableColumnFilter,
+                    enableGlobalFilter: !col.disableGlobalFilter,
+                    enableSorting: !col.disableSorting,
                     sortingFn: __resolveSortingFn(col) as SortingFnOption<TableRow>,
                     filterFn: __resolveFilterFn(col),
                     enableHiding: !col.required, // if required is true, enableHiding is false
@@ -240,15 +240,17 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
     const rowModel = showOnlySelected ? table.getSelectedRowModel() : table.getRowModel();
 
     useLayoutEffect(() => {
-        if (table && options?.onTableLoad) {
+        if (table) {
+            if (options?.onTableLoad) {
+                options.onTableLoad(table);
+            }
             setShowColumnFilters(
                 !!options?.enableColumnFilters && table.getAllColumns().some((col) => col.columnDef.enableColumnFilter)
             );
-            options.onTableLoad(table);
         }
     }, [options, table]);
 
-    return table ? (
+    return showColumnFilters !== null && table ? (
         <div className={styles["table-outer-container"]}>
             <div className={styles["table-controls-container"]}>
                 <TableToolbar table={table} tableId={id} enableExport={!!options?.enableExport} />

@@ -64,9 +64,9 @@ export interface TableColumn {
     id: string;
     description?: string;
     type?: CellType; // defaults to string
-    enableGlobalFilter?: boolean; // defaults to FALSE
-    enableColumnFilter?: boolean; // defaults to TRUE
-    enableSorting?: boolean; // defaults to TRUE
+    disableGlobalFilter?: boolean; // defaults to FALSE
+    disableColumnFilter?: boolean; // defaults to FALSE
+    disableSorting?: boolean; // defaults to FALSE
     required?: boolean; // if required = true then cannot be hidden
     filterOpts?: ColumnFilteringOpts;
     valueDisplayOpts?: ColumnValueDisplayOpts;

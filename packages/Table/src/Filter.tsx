@@ -29,8 +29,7 @@ interface TextFilterProps extends FilterProps {
 
 const NoValidValuesMessage = ({ columnName }: { columnName: string }) => (
     <Alert variant="info" message={columnName}>
-        <p>No valid values available for this column after applying other filters. Only missing or NA values remain.</p>
-        <p>Try adjusting or clearing other filters to filter based on this column.</p>
+        <p>No data available to filter for this column.</p>
     </Alert>
 );
 
@@ -43,7 +42,7 @@ const PieChartFilter = ({ column, values }: TextFilterProps) => {
             })),
         [values]
     );
-    return <PieChart data={chartData} legendPosition="bottom" onClick={(v) => column.setFilterValue(v)} />;
+    return <PieChart data={chartData} legendPosition="right" onClick={(v: string) => column.setFilterValue(v)} />;
 };
 
 const RichSelectFilter = ({ column, values }: TextFilterProps) => {

@@ -1,9 +1,9 @@
-import { Button, Card, FilterChip, FilterChipBar, InlineIcon } from "@niagads/ui";
+import { Button, Card, CardBody, CardHeader, FilterChip, FilterChipBar, InlineIcon } from "@niagads/ui";
 import { ChevronDown, ChevronRight, TrashIcon } from "lucide-react";
 import { Column, ColumnFilter, ColumnFiltersState } from "@tanstack/react-table";
 import React, { useState } from "react";
 
-import AdvancedFilter from "../Filter";
+import FilterComponent from "../Filter";
 
 interface ColumnFilterControlsProps {
     filterableColumns: Column<any, unknown>[];
@@ -38,17 +38,21 @@ export const ColumnFilterControls = ({
                 </FilterChipBar>
             )}
             <Card>
-                <div>
+                <CardHeader>
                     <div onClick={() => setIsExpanded(!isExpanded)}>
                         <InlineIcon icon={isExpanded ? <ChevronDown /> : <ChevronRight />}>
                             <span>Filters</span>
                         </InlineIcon>
                     </div>
-                </div>
-                <div>
+                </CardHeader>
+                <CardBody style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
                     {isExpanded &&
-                        filterableColumns.map((column) => <AdvancedFilter key={column.id} column={column} />)}
-                </div>
+                        filterableColumns.map((column) => (
+                            <Card layout="flex" key={`filter-card-${column.id}`} span={3} outline={false}>
+                                <FilterComponent key={`filter-${column.id}`} column={column} />
+                            </Card>
+                        ))}
+                </CardBody>
             </Card>
         </div>
     );
