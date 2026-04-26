@@ -1,10 +1,13 @@
 import "../../examples/tables/custom_table_cell_styles.css";
 
-import { TableConfig as Table } from "@niagads/table";
+import { TableConfig as Table, TableOptions } from "@niagads/table";
+
 import { getPvalueStyle } from "./styling_functions";
 
 export const TABLE_DEFINTION: Table = {
     id: "rendering_test",
+    options: { enableColumnFilters: false },
+
     columns: [
         {
             header: "Label",
@@ -26,7 +29,7 @@ export const TABLE_DEFINTION: Table = {
             id: "valid",
             description: "boolean test",
             type: "boolean",
-            format: { nullValue: "Not Applicable", trueValue: "Yes" },
+            valueDisplayOpts: { nullValue: "Not Applicable", trueValue: "Yes" },
         },
         {
             header: "Count",
@@ -38,13 +41,15 @@ export const TABLE_DEFINTION: Table = {
             id: "percent",
             description: "% bar test",
             type: "percentage_bar",
+            disableGlobalFilter: true,
         },
         {
             header: "p-Value",
             id: "p_value",
             description: "numeric test",
-            type: "p_value",
-            format: {
+            type: "pvalue",
+            disableGlobalFilter: true,
+            valueDisplayOpts: {
                 precision: 1,
             },
             styling: {

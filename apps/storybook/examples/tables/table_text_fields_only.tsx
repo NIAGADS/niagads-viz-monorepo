@@ -19,14 +19,14 @@ export const TABLE_DEFINTION: Table = {
         {
             id: "id",
             description: "test alternative field to return for row selection",
-            canFilter: false,
+            disableColumnFilter: true,
             required: true,
         },
         {
             id: "dataset_accession",
             header: "Accession",
             description: "NIAGADS or external repository accession number",
-            canFilter: false,
+            disableColumnFilter: true,
         },
         {
             id: "consortium",
