@@ -18,6 +18,11 @@
     box-shadow: var(--shadow);
 }
 
+/* Flex Layout */
+.card-flex {
+    flex: 1 1 250px;
+}
+
 .feature-card {
     padding: 2rem;
     text-align: center;
@@ -79,33 +84,119 @@ a.card {
 }
 
 /* ------------------------------------
+   Card Grid Container
+   12-column grid layout for Cards with span support
+------------------------------------- */
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1rem;
+}
+
+/* ------------------------------------
    Card span variants (12-col grid)
    matches: styles[`card-span-${span}`]
 ------------------------------------- */
 
-.card-span-1 { grid-column: span 1; }
-.card-span-2 { grid-column: span 2; }
-.card-span-3 { grid-column: span 3; }
-.card-span-4 { grid-column: span 4; }
-.card-span-5 { grid-column: span 5; }
-.card-span-6 { grid-column: span 6; }
-.card-span-7 { grid-column: span 7; }
-.card-span-8 { grid-column: span 8; }
-.card-span-9 { grid-column: span 9; }
-.card-span-10 { grid-column: span 10; }
-.card-span-11 { grid-column: span 11; }
-.card-span-12 { grid-column: span 12; }
+.card-span-1 {
+    grid-column: span 1;
+}
+.card-span-2 {
+    grid-column: span 2;
+}
+.card-span-3 {
+    grid-column: span 3;
+}
+.card-span-4 {
+    grid-column: span 4;
+}
+.card-span-5 {
+    grid-column: span 5;
+}
+.card-span-6 {
+    grid-column: span 6;
+}
+.card-span-7 {
+    grid-column: span 7;
+}
+.card-span-8 {
+    grid-column: span 8;
+}
+.card-span-9 {
+    grid-column: span 9;
+}
+.card-span-10 {
+    grid-column: span 10;
+}
+.card-span-11 {
+    grid-column: span 11;
+}
+.card-span-12 {
+    grid-column: span 12;
+}
+
+/* ------------------------------------
+   Card flex span variants
+   flex-basis as percentage (span/12)
+------------------------------------- */
+
+.card-flex-span-1 {
+    flex-basis: calc(100% / 12 * 1);
+}
+.card-flex-span-2 {
+    flex-basis: calc(100% / 12 * 2);
+}
+.card-flex-span-3 {
+    flex-basis: calc(100% / 12 * 3);
+}
+.card-flex-span-4 {
+    flex-basis: calc(100% / 12 * 4);
+}
+.card-flex-span-5 {
+    flex-basis: calc(100% / 12 * 5);
+}
+.card-flex-span-6 {
+    flex-basis: calc(100% / 12 * 6);
+}
+.card-flex-span-7 {
+    flex-basis: calc(100% / 12 * 7);
+}
+.card-flex-span-8 {
+    flex-basis: calc(100% / 12 * 8);
+}
+.card-flex-span-9 {
+    flex-basis: calc(100% / 12 * 9);
+}
+.card-flex-span-10 {
+    flex-basis: calc(100% / 12 * 10);
+}
+.card-flex-span-11 {
+    flex-basis: calc(100% / 12 * 11);
+}
+.card-flex-span-12 {
+    flex-basis: 100%;
+}
 
 /* Legacy layout aliases — add these to card.module.css
    alongside the existing .card-span-* classes.
    Delete after all usages are migrated to span prop.    */
-.card-full       { grid-column: span 12; }
-.card-half       { grid-column: span 6; }
-.card-two-thirds { grid-column: span 8; }
-.card-third      { grid-column: span 4; }
+.card-full {
+    grid-column: span 12;
+}
+.card-half {
+    grid-column: span 6;
+}
+.card-two-thirds {
+    grid-column: span 8;
+}
+.card-third {
+    grid-column: span 4;
+}
 
 /* Optional: variant hook (safe even if you don’t use it yet) */
-.card-variant-default {}
+.card-variant-default {
+}
 
 /* ------------------------------------
    Responsive behavior (simple + predictable)
@@ -148,6 +239,4 @@ a.card {
     .card-span-12 {
         grid-column: span 12;
     }
-
-    
 }
