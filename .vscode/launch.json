@@ -2,6 +2,23 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Debug Storybook",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:6006", // Ensure this matches your Storybook port
+            "webRoot": "${workspaceFolder}",
+            "sourceMaps": true,
+            "sourceMapPathOverrides": {
+                // Map the browser's "virtual" paths to your actual local folders
+                "vite:///packages/core/src/*": "${workspaceFolder}/packages/core/src/*",
+                "vite:///packages/ui/src/*": "${workspaceFolder}/packages/ui/src/*",
+                "/@fs/*": "/"
+            },
+            "pathMapping": {
+                "/@fs/": "/"
+            }
+        },
+        {
             "name": "genomicsdb: server-side",
             "type": "node-terminal",
             "request": "launch",
