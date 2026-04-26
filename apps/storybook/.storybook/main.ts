@@ -1,13 +1,9 @@
 import type { StorybookConfig } from "@storybook/nextjs-vite";
-// This file has been automatically migrated to valid ESM format by Storybook.
 import { createRequire } from "node:module";
-import { fileURLToPath } from "node:url";
-import { join } from "path";
-import path from "node:path";
+import { mergeConfig } from "vite";
+import path from "path";
 
 const require = createRequire(import.meta.url);
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const config: StorybookConfig = {
     stories: ["../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
@@ -27,53 +23,29 @@ const config: StorybookConfig = {
         options: {},
     },
 
-    // enable source maps and debugging in .tsx files
-    async viteFinal(config, options) {
-        const { mergeConfig } = await import("vite");
-        // Check if we are running in local dev mode
-        // Storybook's 'configType' is usually 'DEVELOPMENT' or 'PRODUCTION'
-        const isDev = options.configType === "DEVELOPMENT";
-        console.log("DIRNAME");
-        console.log(__dirname);
-
+    async viteFinal(config) {
         return mergeConfig(config, {
             resolve: {
-                alias: isDev
-                    ? [
-                          {
-                              find: "@niagads/table",
-                              replacement: join(__dirname, "../../../packages/Table/src/index.ts"),
-                          },
-                          {
-                              find: "@niagads/charts",
-                              replacement: join(__dirname, "../../../packages/Charts/src/index.ts"),
-                          },
-                          {
-                              find: "@niagads/ui",
-                              replacement: join(__dirname, "../../../packages/UI/src/index.ts"),
-                          },
-                          {
-                              find: "@niagads/common",
-                              replacement: join(__dirname, "../../../packages/Common/src/index.ts"),
-                          },
-                      ]
-                    : [],
-            },
-            // This part is for local development (npm run storybook)
-            server: {
-                sourcemap: true,
-                fs: {
-                    // Strictly allow the root of your monorepo
-                    allow: [path.resolve(__dirname, "../../../")],
+                alias: {
+                    // Explicitly point to /src instead of the package root
+                    "@niagads/table": path.resolve(import.meta.dirname, "../../../packages/Table/src"),
                 },
             },
-            // This part is for the production build (npm run build-storybook)
+
             build: {
+                // Force source maps to be generated even in development
                 sourcemap: true,
             },
-            // Optional: useful for debugging CSS/Sass in dev tools
-            css: {
-                devSourcemap: true,
+
+            optimizeDeps: {
+                // IMPORTANT: Prevent Vite from "pre-bundling" your packages into one big file
+                exclude: ["@miagads/table", "@my-org/ui"],
+            },
+            // Ensure the browser can access these files across monorepo boundaries
+            server: {
+                fs: {
+                    allow: ["../../../"], // Allow access to monorepo root
+                },
             },
         });
     },
