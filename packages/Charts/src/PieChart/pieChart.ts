@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 
-import { COLOR_BLIND_FRIENDLY_PALETTES } from "@niagads/common";
+import { COLOR_BLIND_FRIENDLY_PALETTES, _isNA } from "@niagads/common";
+
 import { DisplayProps } from "../d3/types";
 
 export interface PieChartDataPoint {
@@ -14,6 +15,8 @@ export interface PieChartOptions {
     onClick?: (id: string) => void;
     selectedId?: string;
 }
+
+export const NA_COLOR = "#a1a2a4ff";
 
 const PIE_CHART_COLORS = {
     arcStroke: "white",
@@ -30,6 +33,7 @@ const PIE_CHART_COLORS = {
     tooltipBorder: "0 2px 8px rgba(0, 0, 0, 0.15)",
     badgeTextLight: "white",
     badgeTextDark: "black",
+    arcFillNA: NA_COLOR,
 } as const;
 
 const PIE_CHART_SIZES = {
@@ -41,6 +45,8 @@ const PIE_CHART_SIZES = {
 } as const;
 
 const DEFAULT_MARGIN = { top: 10, right: 10, bottom: 10, left: 10 };
+
+const isNA = (data: PieChartDataPoint): boolean => (data.label && _isNA(data.label)) || _isNA(data.id);
 
 interface PieChartState {
     data: PieChartDataPoint[];
@@ -58,11 +64,17 @@ export function updatePieChartSelection(container: HTMLElement, selectedId?: str
     // Update stored selection state
     state.opts.selectedId = selectedId;
 
-    // Update arc styling with selection
+    // Use same NA logic as in initial render
+    const isNA = (data: PieChartDataPoint): boolean => (data.label && _isNA(data.label)) || _isNA(data.id);
+
     svg.selectAll<SVGPathElement, d3.PieArcDatum<PieChartDataPoint>>(".arc path")
-        .style("fill", (d: d3.PieArcDatum<PieChartDataPoint>) =>
-            d.data.id === selectedId ? PIE_CHART_COLORS.arcFillSelected : state.colorScale(d.data.id)
-        )
+        .style("fill", (d: d3.PieArcDatum<PieChartDataPoint>) => {
+            return d.data.id === selectedId
+                ? PIE_CHART_COLORS.arcFillSelected
+                : isNA(d.data)
+                  ? PIE_CHART_COLORS.arcFillNA
+                  : state.colorScale(d.data.id);
+        })
         .style("stroke-width", (d: d3.PieArcDatum<PieChartDataPoint>) =>
             d.data.id === selectedId ? PIE_CHART_COLORS.arcStrokeWidthSelected : PIE_CHART_COLORS.arcStrokeWidth
         )
@@ -152,7 +164,12 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
     // Add paths
     arcs.append("path")
         .attr("d", arc as any)
-        .attr("fill", (d) => colorScale(d.data.id))
+        .attr("fill", (d) => {
+            if (isNA(d.data)) {
+                return PIE_CHART_COLORS.arcFillNA;
+            }
+            return colorScale(d.data.id);
+        })
         .style("stroke", PIE_CHART_COLORS.arcStroke)
         .style("stroke-width", PIE_CHART_COLORS.arcStrokeWidth)
         .on("click", (event, d) => {
@@ -164,7 +181,8 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
             path.style("opacity", PIE_CHART_COLORS.arcOpacityHover.toString());
 
             const percentage = ((d.data.value / total) * 100).toFixed(1);
-            const sliceColor = colorScale(d.data.id);
+            // Use same color logic for tooltip border
+            const sliceColor = isNA(d.data) ? PIE_CHART_COLORS.arcFillNA : colorScale(d.data.id);
 
             tooltip
                 .style("left", event.pageX + 10 + "px")
