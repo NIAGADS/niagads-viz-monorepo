@@ -1,11 +1,10 @@
 import { AlertTriangle, Check, CheckCircle, Info, X, XCircle } from "lucide-react";
-import { TextRenderer, renderNullValue } from "./TextRenderer";
+import { TextRenderer, renderNullValue } from ".";
+import { Badge as UIBadge, renderTooltip } from "@niagads/ui";
 import { _get, _hasOwnProperty, _isNA, _isNull } from "@niagads/common";
 
-import { DEFAULT_NA_VALUE } from "../Cell";
+import { DEFAULT_NA_VALUE } from "../../types";
 import React from "react";
-import { Badge as UIBadge } from "@niagads/ui";
-import { renderTooltip } from "@niagads/ui";
 
 export const ICONS = {
     check: Check,

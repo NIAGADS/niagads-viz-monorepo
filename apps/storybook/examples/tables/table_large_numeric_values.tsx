@@ -86,7 +86,7 @@ export const TABLE_DEFINTION: Table = {
             ref_snp_id: "rs769449",
             pvalue: "4.77e-94",
             biomarker: "Aβ₄₂",
-            population: "European",
+            population: "Asian",
             genotype: null,
             track_description:
                 "summary statistics for CSF beta-amyloid 42 (Aβ₄₂) levels in cerebrospinal fluid (CSF) from 3146 participants across nine studies, adjusted for age, gender, and population stratification (Lifted Over from GRCh37 to GRCh38)",
@@ -115,7 +115,7 @@ export const TABLE_DEFINTION: Table = {
             pvalue: "9.66e-78",
             ref_snp_id: "rs71352238",
             biomarker: "Aβ₄₂",
-            population: "European",
+            population: "Asian",
             genotype: null,
             track_description:
                 "summary statistics for CSF beta-amyloid 42 (Aβ₄₂) levels in cerebrospinal fluid (CSF) from 3146 participants across nine studies, adjusted for age, gender, and population stratification (Lifted Over from GRCh37 to GRCh38)",
@@ -492,7 +492,7 @@ export const TABLE_DEFINTION: Table = {
             tissue: null,
             pvalue: "1.00e-55",
             biomarker: null,
-            population: "European",
+            population: "African American",
             genotype: null,
             track_description:
                 "summary statistics from a comparative study of neuropathological features of Alzheimer's disease and related dementias: NPs (presence versus absence), inclusive primary dataset allowing some incomplete documentation of pathological features (Lifted Over from GRCh37 to GRCh38)",
@@ -783,7 +783,7 @@ export const TABLE_DEFINTION: Table = {
             tissue: null,
             biomarker: null,
             genotype: null,
-            population: "European",
+            population: "African American",
             track_description:
                 "summary statistics from a comparative study of neuropathological features of Alzheimer's disease and related dementias: NPs (presence versus absence), inclusive primary dataset allowing some incomplete documentation of pathological features (Lifted Over from GRCh37 to GRCh38)",
             gene_consequence: null,
@@ -898,7 +898,7 @@ export const TABLE_DEFINTION: Table = {
             pvalue: "1.65e-46",
             ref_snp_id: "rs34095326",
             biomarker: "Aβ₄₂",
-            population: "European",
+            population: "Asian",
             genotype: null,
             track_description:
                 "summary statistics for CSF beta-amyloid 42 (Aβ₄₂) levels in cerebrospinal fluid (CSF) from 3146 participants across nine studies, adjusted for age, gender, and population stratification (Lifted Over from GRCh37 to GRCh38)",
@@ -1363,7 +1363,7 @@ export const TABLE_DEFINTION: Table = {
             pvalue: "3.39e-39",
             biomarker: null,
             genotype: null,
-            population: "European",
+            population: "African American",
             track_description:
                 "summary statistics from a comparative study of neuropathological features of Alzheimer's disease and related dementias: NPs (presence versus absence), inclusive primary dataset allowing some incomplete documentation of pathological features (Lifted Over from GRCh37 to GRCh38)",
             gene_consequence: null,

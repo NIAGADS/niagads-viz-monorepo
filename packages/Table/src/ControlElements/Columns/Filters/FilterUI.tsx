@@ -1,20 +1,12 @@
-/* TODOs
-- how to handle NAs
-    - what to do when all values are NA (pre-filtered/post-filtered)
-- what to do when all values are the same (pre-filtered/post-filtered)
-- fitler ordering: charts, booleans, multiselect, select?
-*/
-
-import { Alert, Badge, Card, Checkbox } from "@niagads/ui";
+import { Alert, Badge, Checkbox } from "@niagads/ui";
 import { PieChart, PieChartDataRow, RangeSelectHistogram, ThresholdSelectHistogram } from "@niagads/charts";
 import { Range, negLog10 } from "@niagads/common";
-import React, { ReactNode, useEffect, useMemo, useState } from "react";
+import React, { ReactNode, useMemo } from "react";
 
 import { Column } from "@tanstack/react-table";
-import { DEFAULT_NA_VALUE } from "./Cell";
-import { Filter as FilterIcon } from "lucide-react";
+import { DEFAULT_NA_VALUE } from "../../../types";
 import { RichSelect } from "@niagads/ui/client";
-import styles from "./styles/filter.module.css";
+import styles from "./filter.module.css";
 
 export const NUMERIC_CELL_TYPES = ["float", "integer", "pvalue", "percentage_cell"];
 const MAX_FILTER_CATEGORIES = 7;
@@ -253,8 +245,6 @@ const Filter = ({ column }: FilterProps) => {
         }
         return sortedValueHash;
     }, [Array.from(uniqueValues.entries())]);
-
-    console.log(`${column.id} - sorted-unique`, sortedUniqueValues);
 
     if (meta.type === "boolean") {
         return <BooleanFilter column={column} values={sortedUniqueValues} />;

@@ -171,7 +171,7 @@ export const ThresholdSelectHistogram = ({
                 ...opts,
             });
         }
-    }, []);
+    }, [data]);
 
     return (
         <>

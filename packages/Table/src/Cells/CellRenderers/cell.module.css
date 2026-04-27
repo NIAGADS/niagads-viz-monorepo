@@ -2,11 +2,11 @@
     font-family: "Inter", sans-serif;
 } */
 
-.nullValue {
+.null-value {
     color: var(--gray-300);
 }
 
-.sparkContainer {
+.spark-container {
     display: flex;
     flex-direction: row;
 }
@@ -16,34 +16,34 @@
     display: inline-block;
 }
 
-.sparkValue {
+.spark-value {
     width: 35px;
     align-self: center;
 }
 
-.sparkBar {
+.spark-bar {
     width: 100px;
 }
 
-.sparkBarObserved {
+.spark-bar-observed {
     background-color: #16a34a; /* Tailwind green-600 */
 }
 
-.sparkBarRemainder {
+.spark-bar-remainder {
     background-color: #d1d5db; /* Tailwind gray-300 */
 }
 
-.truncatedText {
+.truncated-text {
     max-width: 300px;
     word-break: break-word;
 }
 
 .link:hover,
-.infoLink:hover {
+.info-link:hover {
     text-decoration: underline;
 }
 
-.infoLink {
+.info-link {
     cursor: pointer;
     text-decoration: underline;
     text-decoration-style: dashed;

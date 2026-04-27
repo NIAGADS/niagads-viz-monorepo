@@ -1,6 +1,8 @@
 import { BasicType, NAString } from "@niagads/common";
-import { CellType, GenericCell } from "./Cell";
-import { FilterFnOption, RowData, SortingFnOption } from "@tanstack/react-table";
+import { CellType, TableCell } from "./Cells/types";
+import { FilterFnOption, RowData, SortingFn, SortingFnOption } from "@tanstack/react-table";
+
+export const DEFAULT_NA_VALUE = "n/a";
 
 // initial table state
 interface SortConfig {
@@ -34,7 +36,7 @@ export interface TableOptions {
     onTableLoad?: any;
 }
 
-export type TableRow = Record<string, GenericCell | GenericCell[]>;
+export type TableRow = Record<string, TableCell | TableCell[]>;
 export type TableData = TableRow[];
 
 export type ColumnFilterType = "histogram" | "pie" | "select" | "multiselect" | "boolean";
@@ -88,4 +90,11 @@ declare module "@tanstack/react-table" {
     interface Column<TData extends RowData, TValue> {
         getAllValues: (filterNulls?: boolean, naValue?: string) => TValue[];
     }
+
+    interface SortingFns {
+        boolean: SortingFn<any>;
+        scientific: SortingFn<any>;
+    }
+
+    interface FilterFns {}
 }

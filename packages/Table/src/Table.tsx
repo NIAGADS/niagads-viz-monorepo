@@ -1,14 +1,5 @@
 import { Alert, Checkbox, RadioButton } from "@niagads/ui";
-import {
-    Cell,
-    CellType,
-    DEFAULT_NA_VALUE,
-    GenericCell,
-    getCellValue,
-    renderCell,
-    resolveCell,
-    validateCellType,
-} from "./Cell";
+import { Cell, CellType, TableCell } from "./Cells/types";
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -31,14 +22,15 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-import { ColumnFilterType, TableColumn, TableData, TableOptions, TableRow } from "./types";
+import { ColumnFilterType, DEFAULT_NA_VALUE, TableColumn, TableData, TableOptions, TableRow } from "./types";
 import { PaginationControls, TableToolbar } from "./ControlElements";
 import React, { ReactNode, useCallback, useLayoutEffect, useMemo, useState } from "react";
 import { _get, toTitleCase } from "@niagads/common";
+import { booleanSort, scientificNotationSort } from "./ControlElements/Columns/sortingFunctions";
+import { getCellValue, renderCell, resolveCell, validateCellType } from "./Cells/utils";
 
-import { ColumnFilterControls } from "./ControlElements/ColumnFilterControls";
-import { CustomSortingFunctions } from "./TableSortingFunctions";
-import { NUMERIC_CELL_TYPES } from "./Filter";
+import { ColumnFilterControls } from "./ControlElements/Columns/ColumnFilterControls";
+import { NUMERIC_CELL_TYPES } from "./ControlElements/Columns/Filters/FilterUI";
 import { RowSelectionControls } from "./ControlElements/RowSelectionControls";
 import { TableColumnHeader } from "./TableColumnHeader";
 import styles from "./styles/table.module.css";
@@ -122,7 +114,7 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
                     enableColumnFilter: !col.disableColumnFilter,
                     enableGlobalFilter: !col.disableGlobalFilter,
                     enableSorting: !col.disableSorting,
-                    sortingFn: __resolveSortingFn(col) as SortingFnOption<TableRow>,
+                    sortingFn: __resolveSortingFn(col),
                     filterFn: __resolveFilterFn(col),
                     enableHiding: !col.required, // if required is true, enableHiding is false
                     meta: {
@@ -196,7 +188,7 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
         onColumnVisibilityChange: setColumnVisibility,
         onColumnFiltersChange: setColumnFilters,
         getSortedRowModel: getSortedRowModel(),
-        sortingFns: CustomSortingFunctions,
+        sortingFns: { boolean: booleanSort, scientific: scientificNotationSort },
         enableColumnResizing: true,
 
         _features: [
@@ -329,7 +321,7 @@ const __resolveFilterType = (cellType: CellType): ColumnFilterType => {
     return "select";
 };
 
-const __resolveSortingFn = (col: TableColumn) => {
+const __resolveSortingFn = (col: TableColumn): SortingFnOption<TableRow> => {
     if (col.sortingFn) {
         return col.sortingFn;
     }
@@ -364,7 +356,7 @@ const __resolveFilterFn = (col: TableColumn): FilterFnOption<TableRow> => {
 
 // wrapper to catch any errors thrown during cell type and properties validation so that
 // user can more easily identify the problematic table cell by row/column
-const __resolveCell = (userCell: GenericCell | GenericCell[], column: TableColumn, rowId: number) => {
+const __resolveCell = (userCell: TableCell | TableCell[], column: TableColumn, rowId: number) => {
     try {
         return resolveCell(userCell, column, rowId);
     } catch (e: any) {

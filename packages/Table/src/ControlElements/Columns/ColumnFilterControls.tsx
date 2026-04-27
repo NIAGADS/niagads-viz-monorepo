@@ -16,8 +16,8 @@ import { ChevronDown, ChevronRight, TrashIcon } from "lucide-react";
 import { Column, ColumnFilter, ColumnFiltersState } from "@tanstack/react-table";
 import React, { useEffect, useMemo, useState } from "react";
 
-import { ColumnFilterType } from "../types";
-import FilterComponent from "../Filter";
+import { ColumnFilterType } from "../../types";
+import FilterComponent from "./Filters/FilterUI";
 
 interface ColumnFilterControlsProps {
     filterableColumns: Column<any, unknown>[];

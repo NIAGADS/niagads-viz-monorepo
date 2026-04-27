@@ -1,11 +1,10 @@
+import { HelpIconWrapper, StylingProps } from "@niagads/ui";
 import React, { useId, useState } from "react";
-import { TextRenderer, renderNullValue } from "./TextRenderer";
+import { TextRenderer, renderNullValue } from ".";
 import { _deepCopy, _get, _hasOwnProperty, _isJSON, _isNA, _isNull } from "@niagads/common";
 
-import { DEFAULT_NA_VALUE } from "../Cell";
-import { HelpIconWrapper } from "@niagads/ui";
-import { StylingProps } from "@niagads/ui";
-import styles from "../styles/cell.module.css";
+import { DEFAULT_NA_VALUE } from "../../types";
+import styles from "./cell.module.css";
 
 const DEFAULT_MAX_LENGTH = 100;
 
@@ -106,10 +105,10 @@ export const LargeText = <T,>({ props }: TextRenderer<T>) => {
 
     const action = isExpanded ? "Show Less" : "Show More";
     return (
-        <div className={styles.truncatedText}>
+        <div className={styles["truncated-text"]}>
             {styledText}
             {"   "}
-            <a className={`text-xs ${styles.infoLink}`} onClick={toggleIsExpanded}>
+            <a className={`text-xs ${styles["info-link"]}`} onClick={toggleIsExpanded}>
                 {action}
             </a>
         </div>

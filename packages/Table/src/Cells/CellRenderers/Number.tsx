@@ -1,9 +1,8 @@
-import { TextRenderer, renderNullValue } from "./TextRenderer";
+import { Text, TextRenderer, renderNullValue } from ".";
 import { _get, _isNA, _isNull, toExponential, toFixedWithoutZeros } from "@niagads/common";
 
-import { DEFAULT_NA_VALUE } from "../Cell";
+import { DEFAULT_NA_VALUE } from "../../types";
 import React from "react";
-import { Text } from "./BasicText";
 
 export const formatFloat = (value: number, precision: number = 2) => {
     const formattedValue: any = toExponential(value, precision);

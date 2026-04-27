@@ -1,0 +1,8 @@
+.column-controls-container {
+    width: 200px;
+}
+
+.column-controls-container,
+.column-controls-toggle-container {
+    padding: 0.5rem;
+}

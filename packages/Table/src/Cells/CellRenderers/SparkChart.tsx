@@ -1,10 +1,9 @@
-import { TextRenderer, renderNullValue } from "./TextRenderer";
+import { TextRenderer, formatFloat, renderNullValue } from ".";
 import { _get, _isNA, _isNull } from "@niagads/common";
 
-import { DEFAULT_NA_VALUE } from "../Cell";
+import { DEFAULT_NA_VALUE } from "../../types";
 import React from "react";
-import { formatFloat } from "./Number";
-import styles from "../styles/cell.module.css";
+import styles from "./cell.module.css";
 
 export const PercentageBar = <T,>({ props }: TextRenderer<T>) => {
     const value = _get("value", props);
@@ -22,15 +21,15 @@ export const PercentageBar = <T,>({ props }: TextRenderer<T>) => {
     const remainder = 100.0 - observed;
 
     return (
-        <div className={styles.sparkContainer}>
-            <div className={styles.sparkValue}>{`${formattedValue}`}</div>
-            <div className={`${styles.spark} ${styles.sparkBar}`}>
+        <div className={styles["spark-container"]}>
+            <div className={styles["spark-value"]}>{`${formattedValue}`}</div>
+            <div className={`${styles.spark} ${styles["spark-bar"]}`}>
                 <div
-                    className={`${styles.spark} ${styles.sparkBar} ${styles.sparkBarObserved}`}
+                    className={`${styles.spark} ${styles["spark-bar"]} ${styles["spark-bar-observed"]}`}
                     style={{ width: observed }}
                 />
                 <div
-                    className={`${styles.spark} ${styles.sparkBar} ${styles.sparkBarRemainder}`}
+                    className={`${styles.spark} ${styles["spark-bar"]} ${styles["spark-bar-remainder"]}`}
                     style={{ width: remainder }}
                 />
             </div>
