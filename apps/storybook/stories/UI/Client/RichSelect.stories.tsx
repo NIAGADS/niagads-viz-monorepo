@@ -26,6 +26,7 @@ const meta: Meta<typeof RichSelect> = {
             action: "changed",
             description: "Callback fired when an option is selected",
         },
+        label: { control: "text" },
     },
 };
 
@@ -113,6 +114,7 @@ export const BasicOptions: Story = {
     args: {
         options: basicOptions,
         placeholder: "Choose an option",
+        label: "Basic",
     },
 };
 
@@ -121,6 +123,7 @@ export const WithIcons: Story = {
     args: {
         options: iconOptions,
         placeholder: "Select an option",
+        label: "With Icons",
     },
 };
 
@@ -129,6 +132,7 @@ export const WithEmojis: Story = {
     args: {
         options: richOptions,
         placeholder: "Select a fruit",
+        label: "With Emojis",
     },
 };
 
@@ -137,5 +141,6 @@ export const WithBadges: Story = {
     args: {
         options: StatusOptions,
         placeholder: "Select a status",
+        label: "With Badges",
     },
 };

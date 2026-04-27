@@ -1,10 +1,20 @@
 import { Alert, Checkbox, RadioButton } from "@niagads/ui";
-import { Cell, DEFAULT_NA_VALUE, GenericCell, getCellValue, renderCell, resolveCell, validateCellType } from "./Cell";
+import {
+    Cell,
+    CellType,
+    DEFAULT_NA_VALUE,
+    GenericCell,
+    getCellValue,
+    renderCell,
+    resolveCell,
+    validateCellType,
+} from "./Cell";
 import {
     ColumnDef,
     ColumnFiltersState,
     FilterFnOption,
     HeaderGroup,
+    Table as ReactTable,
     TableOptions as ReactTableOptions,
     RowSelectionState,
     SortingFnOption,
@@ -16,19 +26,19 @@ import {
     getCoreRowModel,
     getFacetedMinMaxValues,
     getFacetedRowModel,
-    getFacetedUniqueValues,
     getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
+import { ColumnFilterType, TableColumn, TableData, TableOptions, TableRow } from "./types";
 import { PaginationControls, TableToolbar } from "./ControlElements";
-import React, { ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
-import { TableColumn, TableData, TableOptions, TableRow } from "./types";
+import React, { ReactNode, useCallback, useLayoutEffect, useMemo, useState } from "react";
 import { _get, toTitleCase } from "@niagads/common";
 
 import { ColumnFilterControls } from "./ControlElements/ColumnFilterControls";
 import { CustomSortingFunctions } from "./TableSortingFunctions";
+import { NUMERIC_CELL_TYPES } from "./Filter";
 import { RowSelectionControls } from "./ControlElements/RowSelectionControls";
 import { TableColumnHeader } from "./TableColumnHeader";
 import styles from "./styles/table.module.css";
@@ -62,15 +72,6 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
         },
         [rowSelection, onRowSelectionChange]
     );
-
-    /* useEffect(() => {
-        if (externalColumnFilters) {
-            setColumnFilters((prev) => [
-                ...prev.filter((cf) => columns.find((c) => c.filterType === "internal")?.id == cf.id),
-                ...externalColumnFilters,
-            ]);
-        }
-    }, [externalColumnFilters]); */
 
     // Translate GenericColumns provided by user into React Table ColumnDefs
     // also adds in checkbox column if rowSelect options are set for the table
@@ -126,10 +127,10 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
                     enableHiding: !col.required, // if required is true, enableHiding is false
                     meta: {
                         type: col.type,
-                        filterType: col.filterOpts?.filterType,
+                        filterType: col.filterOpts?.filterType || __resolveFilterType(col.type),
                         description: col.description,
                         naValue: col.valueDisplayOpts?.naValue || DEFAULT_NA_VALUE,
-                        trueValue: col.valueDisplayOpts?.trueValue || "TRUE",
+                        trueValue: col.valueDisplayOpts?.trueValue || "true",
                     },
                     cell: (props) => renderCell(props.cell.row.original[col.id] as Cell),
                 })
@@ -180,7 +181,7 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
         getPaginationRowModel: getPaginationRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         getFacetedRowModel: getFacetedRowModel(),
-        getFacetedUniqueValues: getFacetedUniqueValues(),
+        getFacetedUniqueValues: getFacetedUniqueValues, // custom, see def at end
         getFacetedMinMaxValues: getFacetedMinMaxValues(),
         globalFilterFn: "includesString",
         onGlobalFilterChange: setGlobalFilter,
@@ -202,7 +203,7 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
             {
                 // when column is initialized, create this function
                 createColumn: (column, table) => {
-                    column.getAllValues = (filterNulls: boolean = true, naValue: string = DEFAULT_NA_VALUE) => {
+                    column.getAllValues = (filterNulls: boolean = false, naValue: string = DEFAULT_NA_VALUE) => {
                         let values = table.getCoreRowModel().flatRows.map((row) => row.getValue(column.id));
                         if (filterNulls) {
                             values = values.filter((v) => v != null && v !== naValue);
@@ -252,6 +253,17 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
 
     return showColumnFilters !== null && table ? (
         <div className={styles["table-outer-container"]}>
+            {showColumnFilters && (
+                <ColumnFilterControls
+                    filterableColumns={table.getAllColumns().filter((x) => x.columnDef.enableColumnFilter)}
+                    activeFilters={columnFilters}
+                    coreRowCount={table.getCoreRowModel().rows.length}
+                    onRemoveAll={() => setColumnFilters([])}
+                    onRemoveFilter={(filter) => {
+                        setColumnFilters((prev) => prev.filter((f) => f !== filter));
+                    }}
+                />
+            )}
             <div className={styles["table-controls-container"]}>
                 <TableToolbar table={table} tableId={id} enableExport={!!options?.enableExport} />
                 <PaginationControls id={id} table={table} />
@@ -272,16 +284,6 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
                         }}
                     />
                 </div>
-            )}
-            {showColumnFilters && (
-                <ColumnFilterControls
-                    filterableColumns={table.getAllColumns().filter((x) => x.columnDef.enableColumnFilter)}
-                    activeFilters={columnFilters}
-                    onRemoveAll={() => setColumnFilters([])}
-                    onRemoveFilter={(filter) => {
-                        setColumnFilters((prev) => prev.filter((f) => f !== filter));
-                    }}
-                />
             )}
             <div className={styles["table-container"]}>
                 {rowModel.rows.length > 0 ? (
@@ -314,6 +316,17 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
     ) : (
         <div>No data</div>
     );
+};
+
+const __resolveFilterType = (cellType: CellType): ColumnFilterType => {
+    if (NUMERIC_CELL_TYPES.includes(cellType)) {
+        return "histogram";
+    }
+    if (cellType === "boolean") {
+        return "boolean";
+    }
+
+    return "select";
 };
 
 const __resolveSortingFn = (col: TableColumn) => {
@@ -413,6 +426,37 @@ const __setInitialColumnVisibility = (defaultColumns: string[] | undefined, colu
 
 export const __getColumn = (columnId: string, columns: TableColumn[]) => {
     return columns.find((col) => col.id === columnId);
+};
+
+/* custom getFacetedUniqueValues
+ ** handles lists (delimited by //)
+ ** counts nulls and n/a (b/c tanstack-tables counts undefined as n/a, not null)
+ */
+const getFacetedUniqueValues = (table: ReactTable<TableRow>, columnId: string): (() => Map<any, number>) => {
+    // The returned function is what actually gets called by column.getFacetedUniqueValues()
+    return () => {
+        const uniqueValueMap = new Map<any, number>();
+
+        // Access the rows that have passed through previous filters
+        const facetedRows = table.getColumn(columnId)!.getFacetedRowModel().flatRows;
+
+        facetedRows.forEach((row: any) => {
+            const value = row.getValue(columnId);
+            if (typeof value === "string") {
+                // check for string lists
+                const values: string[] = value.includes("//") ? value.split(" // ") : [value];
+                values.forEach((v: string) => {
+                    const count = uniqueValueMap.get(v) ?? 0;
+                    uniqueValueMap.set(v, count + 1);
+                });
+            } else {
+                const count = uniqueValueMap.get(value) ?? 0;
+                uniqueValueMap.set(value, count + 1);
+            }
+        });
+
+        return uniqueValueMap;
+    };
 };
 
 export default Table;

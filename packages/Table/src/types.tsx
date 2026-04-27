@@ -37,7 +37,7 @@ export interface TableOptions {
 export type TableRow = Record<string, GenericCell | GenericCell[]>;
 export type TableData = TableRow[];
 
-export type ColumnFilterType = "histogram" | "pie" | "select" | "multiselect";
+export type ColumnFilterType = "histogram" | "pie" | "select" | "multiselect" | "boolean";
 
 export interface ColumnFilteringOpts {
     filterType?: ColumnFilterType; // defaults based on data type in column
@@ -86,6 +86,6 @@ declare module "@tanstack/react-table" {
 
     // This "merges" your custom functions into the existing Column interface
     interface Column<TData extends RowData, TValue> {
-        getAllValues: (filterNulls: boolean, naValue: string) => TValue[];
+        getAllValues: (filterNulls?: boolean, naValue?: string) => TValue[];
     }
 }

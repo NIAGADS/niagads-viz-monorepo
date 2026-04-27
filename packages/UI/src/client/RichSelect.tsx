@@ -7,10 +7,11 @@ interface RichSelectProps {
     options: Record<string, ReactNode>;
     onChange: (selection: string) => void;
     placeholder?: string;
+    label?: string;
     value?: string;
 }
 
-export const RichSelect = ({ options, onChange, placeholder, value }: RichSelectProps) => {
+export const RichSelect = ({ options, onChange, label, placeholder, value }: RichSelectProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [highlightedIndex, setHighlightedIndex] = useState(-1);
     const [selectedValue, setSelectedValue] = useState(value || "");
@@ -18,7 +19,12 @@ export const RichSelect = ({ options, onChange, placeholder, value }: RichSelect
     const containerRef = useRef<HTMLDivElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
 
-    const optionKeys = Object.keys(options);
+    const optionKeys = placeholder ? ["", ...Object.keys(options)] : Object.keys(options);
+
+    const longestOption = optionKeys.reduce((longest, key) => {
+        const text = key || placeholder || "";
+        return text.length > longest.length ? text : longest;
+    }, "");
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -79,54 +85,62 @@ export const RichSelect = ({ options, onChange, placeholder, value }: RichSelect
     };
 
     return (
-        <div className={styles["ui-customselect-container"]} ref={containerRef}>
-            <button
-                ref={buttonRef}
-                onClick={() => setIsOpen(!isOpen)}
-                className={styles["ui-select-button"]}
-                aria-haspopup="listbox"
-                aria-expanded={isOpen}
-                aria-label="Select option"
-            >
-                <span className={selectedValue ? styles["ui-select-value"] : styles["ui-select-placeholder"]}>
-                    {selectedValue || placeholder}
-                </span>
-                <ChevronDown
-                    size={16}
-                    className={`${styles["ui-select-chevron"]} ${isOpen ? styles["ui-chevron-open"] : ""}`}
-                    aria-hidden="true"
-                />
-            </button>
+        <div className={styles["rich-select-wrapper"]}>
+            {label && <label className={styles["rich-select-label"]}>{label}</label>}
+            <div className={styles["rich-select-container"]} ref={containerRef}>
+                <button
+                    ref={buttonRef}
+                    onClick={() => setIsOpen(!isOpen)}
+                    className={styles["rich-select-button"]}
+                    style={{ minWidth: `${longestOption.length * 8 + 40}px` }}
+                    aria-haspopup="listbox"
+                    aria-expanded={isOpen}
+                    aria-label="Select option"
+                >
+                    <span className={selectedValue ? styles["rich-select-value"] : styles["rich-select-placeholder"]}>
+                        {selectedValue || placeholder}
+                    </span>
+                    <ChevronDown
+                        size={16}
+                        className={`${styles["rich-select-chevron"]} ${isOpen ? styles["rich-chevron-open"] : ""}`}
+                        aria-hidden="true"
+                    />
+                </button>
 
-            {isOpen && (
-                <div className={styles["ui-customselect-dropdown"]} role="listbox">
-                    {optionKeys.length === 0 ? (
-                        <div className={styles["ui-customselect-no-results"]}>
-                            <div className={styles["ui-customselect-content"]}>
-                                <span className={styles["ui-customselect-text"]}>No options available</span>
-                            </div>
-                        </div>
-                    ) : (
-                        <div>
-                            {optionKeys.map((optionKey: string, index: number) => (
-                                <div
-                                    key={optionKey}
-                                    className={`${styles["ui-customselect-option"]} ${
-                                        index === highlightedIndex ? styles["ui-highlighted"] : ""
-                                    } ${optionKey === selectedValue ? styles["ui-selected"] : ""}`}
-                                    onClick={() => handleSelect(optionKey)}
-                                    onMouseEnter={() => setHighlightedIndex(index)}
-                                    role="option"
-                                    aria-selected={optionKey === selectedValue}
-                                >
-                                    <span className={styles["ui-customselect-text"]}>{optionKey}</span>
-                                    <div className={styles["ui-customselect-component"]}>{options[optionKey]}</div>
+                {isOpen && (
+                    <div className={styles["rich-select-dropdown"]} role="listbox">
+                        {optionKeys.length === 0 ? (
+                            <div className={styles["rich-select-no-results"]}>
+                                <div className={styles["rich-select-content"]}>
+                                    <span className={styles["rich-select-text"]}>No options available</span>
                                 </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            )}
+                            </div>
+                        ) : (
+                            <div>
+                                {optionKeys.map((optionKey: string, index: number) => (
+                                    <div
+                                        key={optionKey || "placeholder"}
+                                        className={`${styles["rich-select-option"]} ${
+                                            index === highlightedIndex ? styles["highlighted"] : ""
+                                        } ${optionKey === selectedValue ? styles["selected"] : ""}`}
+                                        onClick={() => handleSelect(optionKey)}
+                                        onMouseEnter={() => setHighlightedIndex(index)}
+                                        role="option"
+                                        aria-selected={optionKey === selectedValue}
+                                    >
+                                        <span className={styles["rich-select-text"]}>
+                                            {optionKey ? optionKey : placeholder}
+                                        </span>
+                                        {optionKey && (
+                                            <div className={styles["rich-select-component"]}>{options[optionKey]}</div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

@@ -39,9 +39,9 @@ export const TABLE_DEFINTION: Table = {
         {
             id: "pvalue",
             header: "p-value",
-            type: "float",
+            type: "pvalue",
             required: true,
-            disableColumnFilter: true,
+            disableColumnFilter: false,
             styling: { getClassName: (pvalue: number) => "pvalue-badge", getStyle: getPvalueStyle },
         },
         { id: "allele", header: "Test Allele", disableColumnFilter: true },
@@ -53,7 +53,6 @@ export const TABLE_DEFINTION: Table = {
             description:
                 "variant identified from ADSP whole-genome sequencing efforts that has passed the ADSP QC protocol; <em>NOT</em> an indicator of AD-risk",
             type: "boolean",
-            disableColumnFilter: true,
             styling: { getStyle: (value: any) => ({ color: "red" }) },
         },
         { id: "ref_snp_id", header: "RefSNP ID", disableColumnFilter: true },
@@ -71,7 +70,7 @@ export const TABLE_DEFINTION: Table = {
                 "Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline",
         },
         { id: "population", filterOpts: { filterType: "multiselect" } },
-        { id: "diagnosis" },
+        { id: "diagnosis", disableColumnFilter: true },
         { id: "neuropathology", required: true, filterOpts: { filterType: "pie" } },
         { id: "tissue" },
         { id: "biomarker" },

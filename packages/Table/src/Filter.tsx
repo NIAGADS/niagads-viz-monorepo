@@ -5,18 +5,18 @@
 - fitler ordering: charts, booleans, multiselect, select?
 */
 
-import { ActionMenu, RichSelect } from "@niagads/ui/client";
-import { Alert, Badge, Checkbox } from "@niagads/ui";
+import { Alert, Badge, Card, Checkbox } from "@niagads/ui";
 import { PieChart, PieChartDataRow, RangeSelectHistogram, ThresholdSelectHistogram } from "@niagads/charts";
 import { Range, negLog10 } from "@niagads/common";
-import React, { ReactNode, useEffect, useMemo } from "react";
+import React, { ReactNode, useEffect, useMemo, useState } from "react";
 
 import { Column } from "@tanstack/react-table";
 import { DEFAULT_NA_VALUE } from "./Cell";
 import { Filter as FilterIcon } from "lucide-react";
+import { RichSelect } from "@niagads/ui/client";
 import styles from "./styles/filter.module.css";
 
-const NUMERIC_CELL_TYPES = ["float", "integer", "pvalue", "percentage_cell"];
+export const NUMERIC_CELL_TYPES = ["float", "integer", "pvalue", "percentage_cell"];
 const MAX_FILTER_CATEGORIES = 7;
 
 interface FilterProps {
@@ -24,12 +24,13 @@ interface FilterProps {
 }
 
 interface TextFilterProps extends FilterProps {
+    column: Column<any, unknown>;
     values: Record<string, number>;
 }
 
 const NoValidValuesMessage = ({ columnName }: { columnName: string }) => (
     <Alert variant="info" message={columnName}>
-        <p>No data available to filter for this column.</p>
+        <p>Only N/A values remain. Adjust other filters to see valid options for this column.</p>
     </Alert>
 );
 
@@ -42,7 +43,15 @@ const PieChartFilter = ({ column, values }: TextFilterProps) => {
             })),
         [values]
     );
-    return <PieChart data={chartData} legendPosition="right" onClick={(v: string) => column.setFilterValue(v)} />;
+    return (
+        <PieChart
+            title={column.columnDef.header!.toString()}
+            data={chartData}
+            legendPosition="right"
+            onClick={(v: string) => column.setFilterValue(v)}
+            displayOpts={{ width: 200 }}
+        />
+    );
 };
 
 const RichSelectFilter = ({ column, values }: TextFilterProps) => {
@@ -55,8 +64,15 @@ const RichSelectFilter = ({ column, values }: TextFilterProps) => {
             {} as Record<string, ReactNode>
         );
     }, [values]);
-    const label: string = column.columnDef.header!.toString();
-    return <RichSelect placeholder={label} options={opts} onChange={(v) => column.setFilterValue(v)} />;
+
+    return (
+        <RichSelect
+            label={column.columnDef.header!.toString()}
+            placeholder={"Select ..."}
+            options={opts}
+            onChange={(v) => column.setFilterValue(v)}
+        />
+    );
 };
 
 const CheckBoxFilter = ({ column, values }: TextFilterProps) => {
@@ -75,7 +91,8 @@ const CheckBoxFilter = ({ column, values }: TextFilterProps) => {
     const label: string = column.columnDef.header!.toString();
 
     return (
-        <ActionMenu label={label} icon={FilterIcon}>
+        <>
+            <div>{label}</div>
             <div className={styles["filter-checkbox-grid"]}>
                 {optionKeys.map((optionKey) => (
                     <div key={optionKey} className={styles["filter-checkbox-item"]}>
@@ -94,31 +111,29 @@ const CheckBoxFilter = ({ column, values }: TextFilterProps) => {
                     </div>
                 ))}
             </div>
-        </ActionMenu>
+        </>
     );
 };
 
-const BooleanFilter = ({ column }: FilterProps) => {
+const BooleanFilter = ({ column, values }: TextFilterProps) => {
     const meta = column.columnDef.meta!;
+    const trueValue = meta.trueValue ? meta.trueValue.toString() : "true";
     const label: string = column.columnDef.header!.toString();
     const filterValue = column.getFilterValue();
-
-    // Count true values using faceted values
-    const trueCount = Array.from(column.getFacetedUniqueValues().keys()).filter((val) => val === true).length;
+    const trueCount = values[trueValue] || 0;
 
     return (
         <div className={styles["filter-boolean-container"]}>
-            <div className={styles["filter-boolean-label"]}>{label}</div>
             <div className={styles["filter-boolean-item"]}>
                 <Checkbox
                     name={`${column.id}-boolean`}
-                    checked={filterValue === true}
+                    checked={filterValue === trueValue}
                     onChange={(e) => {
-                        column.setFilterValue(e.target.checked ? true : false);
+                        column.setFilterValue(e.target.checked ? trueValue : undefined);
                     }}
                 />
-                <span className={styles["filter-boolean-value"]}>{meta.trueValue}</span>
-                <Badge style={{ fontSize: "0.75rem" }}>{trueCount}</Badge>
+                <span className={styles["filter-boolean-value"]}>{label}</span>
+                <Badge className={styles["filter-boolean-count"]}>{trueCount}</Badge>
             </div>
         </div>
     );
@@ -137,16 +152,20 @@ const NumericFilter = ({ column }: FilterProps) => {
         }
     };
     const dataRange = column.getFacetedMinMaxValues();
+    const title = column.columnDef.header!.toString();
     if (dataRange) {
         if (isPvalue) {
             const values: number[] = (column.getAllValues(true, naValue) as number[]).map((v) => negLog10(v));
             return (
                 <ThresholdSelectHistogram
                     limit={7}
-                    limitType={"min"}
+                    limitType={"max"}
                     onRangeSelect={handleRangeFilter}
                     data={values}
                     numBins={50}
+                    title={title}
+                    max={50}
+                    displayOpts={{ width: 250 }}
                 />
             );
         } else {
@@ -158,6 +177,8 @@ const NumericFilter = ({ column }: FilterProps) => {
                     onRangeSelect={handleRangeFilter}
                     data={values}
                     numBins={50}
+                    title={title}
+                    displayOpts={{ width: 250 }}
                 />
             );
         }
@@ -167,40 +188,27 @@ const NumericFilter = ({ column }: FilterProps) => {
 
 const Filter = ({ column }: FilterProps) => {
     const meta = column.columnDef.meta!;
-    const naValue = meta.naValue || DEFAULT_NA_VALUE;
 
-    if (meta.type in NUMERIC_CELL_TYPES) {
+    if (NUMERIC_CELL_TYPES.includes(meta.type)) {
         return <NumericFilter column={column} />;
     }
 
     const uniqueValues: Map<string, number> = column.getFacetedUniqueValues();
-    const naCount: number | undefined = uniqueValues.get(naValue);
 
+    // quick check if only NAs are left
+    const naValue = meta.naValue || DEFAULT_NA_VALUE;
+    const naCount: number = uniqueValues.get(naValue) || 0;
     // if only NAs, no further action needed
     if (naCount && uniqueValues.size == 1) {
         return <NoValidValuesMessage columnName={column.columnDef.header!.toString()} />;
-    }
-
-    if (meta.type === "boolean") {
-        return <BooleanFilter column={column} />;
     }
 
     // otherwise dealing w/some sort of text/categorical data
     // sort the unique values by counts,
     // accounting for NA and realistic display limits
     // defaults always to RichSelect unless user overrides
-
-    // if NAs are present, temporarily remove
-    // will add them back in, it is just that NA can be the top value
-    if (naCount) {
-        uniqueValues.delete(naValue);
-    }
-
     const sortedUniqueValues: Record<string, number> = useMemo(() => {
-        const naValue = meta.naValue || DEFAULT_NA_VALUE;
-
-        const naCount: number | undefined = uniqueValues.get(naValue);
-        if (naCount) {
+        if (naCount > 0) {
             uniqueValues.delete(naValue);
         }
 
@@ -224,11 +232,17 @@ const Filter = ({ column }: FilterProps) => {
             });
         }
 
-        if (naCount) {
+        if (naCount > 0) {
             resultHash[naValue] = naCount;
         }
         return resultHash;
     }, [Array.from(uniqueValues.entries())]);
+
+    console.log(`${column.id} - sorted-unique`, sortedUniqueValues);
+
+    if (meta.type === "boolean") {
+        return <BooleanFilter column={column} values={sortedUniqueValues} />;
+    }
 
     if (meta.filterType === "pie") {
         return <PieChartFilter column={column} values={sortedUniqueValues} />;

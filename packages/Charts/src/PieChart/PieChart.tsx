@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { COLOR_BLIND_FRIENDLY_PALETTES } from "@niagads/common";
 import { DisplayProps } from "../d3/types";
+import chartStyles from "../styles/Charts.module.css";
 import styles from "./PieChart.module.css";
 
 export interface PieChartDataRow {
@@ -16,6 +17,7 @@ export interface PieChartProps {
     onClick?: (key: string) => void;
     displayOpts?: DisplayProps;
     legendPosition?: "right" | "bottom" | "none";
+    title?: string;
 }
 
 const Legend = ({ data }: { data: PieChartDataRow[] }) => {
@@ -44,7 +46,7 @@ const Legend = ({ data }: { data: PieChartDataRow[] }) => {
     );
 };
 
-const PieChart = ({ data, onClick, displayOpts, legendPosition = "right" }: PieChartProps) => {
+const PieChart = ({ data, onClick, displayOpts, title, legendPosition = "right" }: PieChartProps) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const chartRef = useRef<HTMLDivElement | null>(null);
     const [selectedId, setSelectedId] = useState<string | undefined>();
@@ -82,21 +84,24 @@ const PieChart = ({ data, onClick, displayOpts, legendPosition = "right" }: PieC
     }, [selectedId]);
 
     return (
-        <div
-            ref={containerRef}
-            className={`${styles["pie-chart-wrapper"]} ${styles[`pie-chart-wrapper-${legendPosition}`]}`}
-        >
+        <>
+            {title && <div className={chartStyles["chart-title"]}>{title}</div>}
             <div
-                ref={chartRef}
-                style={{ width: `${chartWidth}px`, height: `${chartHeight}px` }}
-                className={styles["pie-container"]}
-            />
-            {legendPosition !== "none" && (
-                <div className={styles["legend-wrapper"]}>
-                    <Legend data={data} />
-                </div>
-            )}
-        </div>
+                ref={containerRef}
+                className={`${styles["pie-chart-wrapper"]} ${styles[`pie-chart-wrapper-${legendPosition}`]}`}
+            >
+                <div
+                    ref={chartRef}
+                    style={{ width: `${chartWidth}px`, height: `${chartHeight}px` }}
+                    className={styles["pie-container"]}
+                />
+                {legendPosition !== "none" && (
+                    <div className={styles["legend-wrapper"]}>
+                        <Legend data={data} />
+                    </div>
+                )}
+            </div>
+        </>
     );
 };
 

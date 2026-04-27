@@ -37,7 +37,7 @@ export const CardGrid = ({ children, className }: CardGridProps) => (
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
-type CardSpan = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+export type CardSpan = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 
 /**
  * Visual styling variant.

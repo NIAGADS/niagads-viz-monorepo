@@ -1,9 +1,22 @@
-.ui-customselect-container {
+.rich-select-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.rich-select-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+}
+
+.rich-select-container {
     position: relative;
     width: 100%;
 }
 
-.ui-select-button {
+.rich-select-button {
     width: 100%;
     padding: 0.75rem 1rem;
     border: 1px solid var(--gray-700);
@@ -20,18 +33,18 @@
     font-weight: 500;
 }
 
-.ui-select-button:hover {
+.rich-select-button:hover {
     border-color: var(--primary-blue);
     background-color: rgba(59, 130, 246, 0.04);
 }
 
-.ui-select-button:focus {
+.rich-select-button:focus {
     outline: none;
     border-color: var(--primary-blue);
     box-shadow: var(--focus-ring);
 }
 
-.ui-select-value {
+.rich-select-value {
     color: var(--text-primary);
     text-align: left;
     font-weight: 500;
@@ -40,7 +53,7 @@
     text-overflow: ellipsis;
 }
 
-.ui-select-placeholder {
+.rich-select-placeholder {
     color: var(--gray-500);
     text-align: left;
     font-weight: 400;
@@ -49,19 +62,19 @@
     text-overflow: ellipsis;
 }
 
-.ui-select-chevron {
+.rich-select-chevron {
     transition: transform var(--transition-fast);
     flex-shrink: 0;
     margin-left: 0.75rem;
     color: var(--gray-500);
 }
 
-.ui-select-chevron.ui-chevron-open {
+.rich-select-chevron.rich-chevron-open {
     transform: rotate(180deg);
     color: var(--primary-blue);
 }
 
-.ui-customselect-dropdown {
+.rich-select-dropdown {
     position: absolute;
     top: 100%;
     left: 0;
@@ -91,7 +104,7 @@
     }
 }
 
-.ui-customselect-option {
+.rich-select-option {
     padding: 0.875rem 1rem;
     cursor: pointer;
     transition: all var(--transition-fast);
@@ -104,23 +117,23 @@
     white-space: nowrap;
 }
 
-.ui-customselect-option:hover {
+.rich-select-option:hover {
     background-color: var(--hover-bg);
     border-left-color: var(--primary-blue);
 }
 
-.ui-customselect-option.ui-highlighted {
+.rich-select-option.highlighted {
     background-color: var(--hover-bg);
     border-left-color: var(--primary-blue);
 }
 
-.ui-customselect-option.ui-selected {
+.rich-select-option.selected {
     background-color: rgba(59, 130, 246, 0.08);
     border-left-color: var(--primary-blue);
     font-weight: 600;
 }
 
-.ui-customselect-no-results {
+.rich-select-no-results {
     padding: 1rem;
     color: var(--gray-500);
     display: flex;
@@ -130,7 +143,7 @@
     font-size: 0.875rem;
 }
 
-.ui-customselect-content {
+.rich-select-content {
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -138,12 +151,12 @@
     white-space: nowrap;
 }
 
-.ui-customselect-text {
+.rich-select-text {
     font-weight: 400;
     font-size: 1rem;
 }
 
-.ui-customselect-component {
+.rich-select-component {
     display: flex;
     align-items: center;
     margin-left: auto;

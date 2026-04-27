@@ -3,15 +3,17 @@ import { HistogramOptions, histogram } from "./histogramChart";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { Range } from "@niagads/common";
-import styles from "../Histogram/Histogram.module.css";
+import chartStyles from "../styles/Charts.module.css";
+import styles from "./Histogram.module.css";
 
 interface HistogramProps extends AxisConfig {
     data: number[];
     numBins: number;
+    title?: string;
     displayOpts?: DisplayProps;
 }
 
-const Histogram = ({ data, numBins, max, label, displayOpts }: HistogramProps) => {
+const Histogram = ({ data, title, numBins, max, label, displayOpts }: HistogramProps) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
 
     const chartWidth = displayOpts?.width || 400;
@@ -38,11 +40,14 @@ const Histogram = ({ data, numBins, max, label, displayOpts }: HistogramProps) =
     }, []);
 
     return (
-        <div
-            ref={containerRef}
-            className={styles["histogram-container"]}
-            style={{ width: `${chartWidth}px`, height: `${chartHeight}px` }}
-        />
+        <>
+            {title && <div className={chartStyles["chart-title"]}>{title}</div>}
+            <div
+                ref={containerRef}
+                className={styles["histogram-container"]}
+                style={{ width: `${chartWidth}px`, height: `${chartHeight}px` }}
+            />
+        </>
     );
 };
 
@@ -60,6 +65,7 @@ export const RangeSelectHistogram = ({
     label,
     displayOpts,
     range,
+    title,
     onRangeSelect,
 }: RangeSelectHistogramProps) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -97,11 +103,14 @@ export const RangeSelectHistogram = ({
     }, []);
 
     return (
-        <div
-            ref={containerRef}
-            className={styles["histogram-container"]}
-            style={{ width: `${chartWidth}px`, height: `${chartHeight}px` }}
-        />
+        <>
+            {title && <div className={chartStyles["chart-title"]}>{title}</div>}
+            <div
+                ref={containerRef}
+                className={styles["histogram-container"]}
+                style={{ width: `${chartWidth}px`, height: `${chartHeight}px` }}
+            />
+        </>
     );
 };
 
@@ -120,6 +129,7 @@ export const ThresholdSelectHistogram = ({
     displayOpts,
     limit,
     limitType,
+    title,
     onRangeSelect,
 }: ThresholdSelectHistogramProps) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -155,14 +165,6 @@ export const ThresholdSelectHistogram = ({
         },
     };
 
-    /* useEffect(() => {
-        if (limitType == "min") {
-            setSelectedRange({ min: dataMin, max: selectedRange.max });
-        } else {
-            setSelectedRange({ min: selectedRange.min, max: dataMax });
-        }
-    }, [selectedRange]);*/
-
     useEffect(() => {
         if (containerRef.current) {
             histogram(containerRef.current, data, {
@@ -172,10 +174,13 @@ export const ThresholdSelectHistogram = ({
     }, []);
 
     return (
-        <div
-            ref={containerRef}
-            className={styles["histogram-container"]}
-            style={{ width: `${chartWidth}px`, height: `${chartHeight}px` }}
-        />
+        <>
+            {title && <div className={chartStyles["chart-title"]}>{title}</div>}
+            <div
+                ref={containerRef}
+                className={styles["histogram-container"]}
+                style={{ width: `${chartWidth}px`, height: `${chartHeight}px` }}
+            />
+        </>
     );
 };

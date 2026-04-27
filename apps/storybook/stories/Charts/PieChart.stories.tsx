@@ -20,7 +20,7 @@ export const Default: Story = {
         const [selectedId, setSelectedId] = useState<string | null>(null);
         return (
             <div style={{ display: "flex", flexDirection: "column", gap: "16px", alignItems: "center" }}>
-                <div style={{ fontSize: "16px", fontWeight: "600" }}>
+                <div style={{ fontSize: "16px", color: "blue", marginBottom: "20px" }}>
                     {selectedId ? `Selected: ${selectedId}` : "Click a slice to select"}
                 </div>
                 <PieChart {...args} onClick={setSelectedId} />
@@ -29,6 +29,8 @@ export const Default: Story = {
     },
     args: {
         legendPosition: "right",
+        title: "Example Pie Chart",
+        displayOpts: { width: 300 },
         data: [
             {
                 id: "test1",
