@@ -53,6 +53,7 @@ interface PieChartState {
     opts: PieChartOptions;
     colorScale: d3.ScaleOrdinal<string, string>;
     total: number;
+    tooltip: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
 }
 
 export function updatePieChartSelection(container: HTMLElement, selectedId?: string): void {
@@ -81,6 +82,14 @@ export function updatePieChartSelection(container: HTMLElement, selectedId?: str
         .style("filter", (d: d3.PieArcDatum<PieChartDataPoint>) =>
             d.data.id === selectedId ? PIE_CHART_COLORS.arcFilterSelected : "none"
         );
+}
+
+export function destroyPieChart(container: HTMLElement): void {
+    const svg = d3.select(container).select<SVGSVGElement>("svg");
+    const state = (svg.node() as any)?.__pieChartState__ as PieChartState | undefined;
+
+    state?.tooltip.remove();
+    svg.remove();
 }
 
 export function pieChart(container: HTMLElement, data: PieChartDataPoint[], options: PieChartOptions = {}): void {
@@ -209,6 +218,7 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
         opts: options,
         colorScale,
         total,
+        tooltip,
     } as PieChartState;
 
     // Apply initial selection styling if selectedId is provided

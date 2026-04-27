@@ -1,5 +1,5 @@
 import { COLOR_BLIND_FRIENDLY_PALETTES, _isNA } from "@niagads/common";
-import { NA_COLOR, PieChartOptions, pieChart, updatePieChartSelection } from "../PieChart/pieChart";
+import { NA_COLOR, PieChartOptions, destroyPieChart, pieChart, updatePieChartSelection } from "../PieChart/pieChart";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { DisplayProps } from "../d3/types";
@@ -65,16 +65,24 @@ const PieChart = ({ data, onClick, displayOpts, title, legendPosition = "right" 
         onClick?.(id);
     };
 
-    // Initial chart draw (runs once on mount)
     useEffect(() => {
-        if (chartRef.current && data.length > 0) {
-            const opts: PieChartOptions = {
-                displayOpts: updatedDisplayOpts,
-                onClick: handleSelect,
-            };
-            pieChart(chartRef.current, data, opts);
-        }
-    }, []);
+        if (!chartRef.current) return;
+
+        destroyPieChart(chartRef.current);
+
+        const opts: PieChartOptions = {
+            displayOpts: updatedDisplayOpts,
+            onClick: handleSelect,
+            selectedId,
+        };
+        pieChart(chartRef.current, data, opts);
+
+        return () => {
+            if (chartRef.current) {
+                destroyPieChart(chartRef.current);
+            }
+        };
+    }, [data, displayOpts]);
 
     // Update selection styling (runs when selectedId changes)
     useEffect(() => {
