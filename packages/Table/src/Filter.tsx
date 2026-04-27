@@ -212,30 +212,46 @@ const Filter = ({ column }: FilterProps) => {
             uniqueValues.delete(naValue);
         }
 
-        const sortedEntries = [...uniqueValues.entries()].sort((a, b) => b[1] - a[1]);
-
         // Truncate to MAX_FILTER_CATEGORIES and collapse residuals into "Other"
-        const resultHash: Record<string, number> = {};
-        if (sortedEntries.length > MAX_FILTER_CATEGORIES) {
+        let sortedValueHash: Record<string, number> = {};
+        if (uniqueValues.size > MAX_FILTER_CATEGORIES) {
+            const topEntryHash: Record<string, number> = {};
+            const sortedEntries = [...uniqueValues.entries()].sort((a, b) => b[1] - a[1]);
             const topEntries = sortedEntries.slice(0, MAX_FILTER_CATEGORIES - 1);
             const otherCount = sortedEntries
                 .slice(MAX_FILTER_CATEGORIES - 1)
                 .reduce((sum, [, count]) => sum + count, 0);
             topEntries.forEach(([value, count]) => {
-                resultHash[value] = count;
+                topEntryHash[value] = count;
             });
 
-            resultHash["Other"] = otherCount;
+            // sort resultHash by value, alphabetically
+            sortedValueHash = Object.keys(topEntryHash)
+                .sort()
+                .reduce(
+                    (acc, key) => {
+                        acc[key] = topEntryHash[key];
+                        return acc;
+                    },
+                    {} as Record<string, number>
+                );
+            sortedValueHash["Other"] = otherCount;
         } else {
-            sortedEntries.forEach(([value, count]) => {
-                resultHash[value] = count;
-            });
+            sortedValueHash = Object.keys(Object.fromEntries(uniqueValues))
+                .sort()
+                .reduce(
+                    (acc, key) => {
+                        acc[key] = uniqueValues.get(key)!;
+                        return acc;
+                    },
+                    {} as Record<string, number>
+                );
         }
 
         if (naCount > 0) {
-            resultHash[naValue] = naCount;
+            sortedValueHash[naValue] = naCount;
         }
-        return resultHash;
+        return sortedValueHash;
     }, [Array.from(uniqueValues.entries())]);
 
     console.log(`${column.id} - sorted-unique`, sortedUniqueValues);
