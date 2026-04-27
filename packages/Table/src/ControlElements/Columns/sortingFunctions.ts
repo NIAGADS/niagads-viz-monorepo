@@ -1,4 +1,5 @@
-import { Row } from "@tanstack/react-table";
+import { Row, sortingFns } from "@tanstack/react-table";
+
 import { SortingFn } from "@tanstack/react-table";
 import { TableRow } from "../../types";
 import { _isNA } from "@niagads/common";

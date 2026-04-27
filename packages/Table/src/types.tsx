@@ -1,6 +1,8 @@
 import { BasicType, NAString } from "@niagads/common";
 import { CellType, TableCell } from "./Cells/types";
-import { FilterFnOption, RowData, SortingFn, SortingFnOption } from "@tanstack/react-table";
+import { FilterFn, FilterFnOption, RowData, SortingFn, SortingFnOption } from "@tanstack/react-table";
+
+import { RankingInfo } from "@tanstack/match-sorter-utils";
 
 export const DEFAULT_NA_VALUE = "n/a";
 
@@ -96,5 +98,14 @@ declare module "@tanstack/react-table" {
         scientific: SortingFn<any>;
     }
 
-    interface FilterFns {}
+    interface FilterMeta {
+        itemRank: RankingInfo;
+    }
+
+    interface FilterFns {
+        includesAny: FilterFn<any>;
+        pvalue: FilterFn<any>;
+        globalFuzzy: FilterFn<any>;
+        includes: FilterFn<any>;
+    }
 }

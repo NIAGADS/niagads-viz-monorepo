@@ -28,6 +28,12 @@ import React, { ReactNode, useCallback, useLayoutEffect, useMemo, useState } fro
 import { _get, toTitleCase } from "@niagads/common";
 import { booleanSort, scientificNotationSort } from "./ControlElements/Columns/sortingFunctions";
 import { getCellValue, renderCell, resolveCell, validateCellType } from "./Cells/utils";
+import {
+    globalFuzzyFilter,
+    includesAnyFilter,
+    includesFilter,
+    neglog10Filter,
+} from "./ControlElements/Columns/filterFunctions";
 
 import { ColumnFilterControls } from "./ControlElements/Columns/ColumnFilterControls";
 import { NUMERIC_CELL_TYPES } from "./ControlElements/Columns/Filters/FilterUI";
@@ -175,7 +181,7 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
         getFacetedRowModel: getFacetedRowModel(),
         getFacetedUniqueValues: getFacetedUniqueValues, // custom, see def at end
         getFacetedMinMaxValues: getFacetedMinMaxValues(),
-        globalFilterFn: "includesString",
+        globalFilterFn: "globalFuzzy",
         onGlobalFilterChange: setGlobalFilter,
         state: {
             sorting,
@@ -189,6 +195,12 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
         onColumnFiltersChange: setColumnFilters,
         getSortedRowModel: getSortedRowModel(),
         sortingFns: { boolean: booleanSort, scientific: scientificNotationSort },
+        filterFns: {
+            includes: includesFilter,
+            globalFuzzy: globalFuzzyFilter,
+            includesAny: includesAnyFilter,
+            pvalue: neglog10Filter,
+        },
         enableColumnResizing: true,
 
         _features: [
@@ -337,21 +349,27 @@ const __resolveSortingFn = (col: TableColumn): SortingFnOption<TableRow> => {
 
 // FIXME: boolean?
 const __resolveFilterFn = (col: TableColumn): FilterFnOption<TableRow> => {
+    if (col.filterOpts?.filterType === "multiselect") {
+        return "includesAny"; // multiselect & text lists
+    }
+
     if (col.filterOpts?.filterFn) {
         return col.filterOpts.filterFn;
     }
-    if (typeof col.type === "number") {
-        return "inNumberRange";
-    }
-    if (typeof col.type === "string") {
-        if (col.filterOpts?.filterType === "multiselect") {
-            return "arrIncludesAll";
-        } else {
-            return "equals";
-        }
+
+    if (col.type === "pvalue") {
+        return "pvalue";
     }
 
-    return "equals";
+    if (col.type === "float" || col.type === "integer") {
+        return "inNumberRange"; // FIXME: not really implemented yet
+    }
+    if (col.type === "boolean") {
+        return "equals";
+    }
+
+    // text field filtering; handles text lists
+    return "includes";
 };
 
 // wrapper to catch any errors thrown during cell type and properties validation so that
