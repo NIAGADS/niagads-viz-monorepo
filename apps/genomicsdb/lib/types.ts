@@ -15,7 +15,7 @@ import {
 
 // lib/types.ts - project type definitions
 import { APIPagination } from "@niagads/common";
-import { TableProps } from "@niagads/table";
+import { TableConfig } from "@niagads/table";
 
 // icons
 
@@ -212,7 +212,7 @@ interface AnchoredSectionBase {
 
 // generic placeholder b/c to avoid importing
 // client component in server component, if we need better typing
-// can import TableProps from @niagads/table in
+// can import TableConfig from @niagads/table in
 // the client component
 export interface NIAGADSTableProps {
     id: string;
@@ -224,13 +224,13 @@ export interface NIAGADSTableProps {
 export interface APITableResponse {
     request: Request;
     pagination: APIPagination;
-    table: TableProps;
+    table: TableConfig;
 }
 
 export interface ProcessedTableResponse {
     request: Request;
     pagination: APIPagination;
-    table: TableProps;
+    table: TableConfig;
     extraData: Record<string, any>;
 }
 

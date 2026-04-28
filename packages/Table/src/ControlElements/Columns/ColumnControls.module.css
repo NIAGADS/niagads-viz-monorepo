@@ -1,0 +1,23 @@
+/* ── COLUMN CONTROLS DROPDOWN ── */
+
+.column-controls-container {
+    width: 200px;
+    padding: 8px;
+}
+
+.column-controls-toggle-container {
+    padding: 6px 2px 2px;
+    max-height: 260px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border, #dde3ef) transparent;
+}
+
+.column-controls-toggle-container::-webkit-scrollbar {
+    width: 4px;
+}
+
+.column-controls-toggle-container::-webkit-scrollbar-thumb {
+    background: var(--border, #dde3ef);
+    border-radius: 2px;
+}

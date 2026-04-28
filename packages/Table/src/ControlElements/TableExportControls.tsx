@@ -5,7 +5,7 @@ import { ActionMenu } from "@niagads/ui/client";
 import { Download } from "lucide-react";
 import { Table as ReactTable } from "@tanstack/react-table";
 import exportFromJSON from "export-from-json";
-import styles from "../styles/controls.module.css";
+import styles from "./controls.module.css";
 
 const EXPORT_FILE_FORMATS = Object.keys(exportFromJSON.types).filter((f) => !["css", "html"].includes(f));
 type FileFormat = Exclude<keyof typeof exportFromJSON.types, "css" | "html">;

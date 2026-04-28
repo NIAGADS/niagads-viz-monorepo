@@ -26,6 +26,7 @@
     "dependencies": {
         "@niagads/common": "^0.2.1",
         "@niagads/ui": "^0.2.1",
+        "@tanstack/match-sorter-utils": "^8.19.4",
         "@tanstack/react-table": "^8.11.8",
         "export-from-json": "github:NIAGADS/export-from-json#niagads",
         "lucide-react": "^0.513.0",

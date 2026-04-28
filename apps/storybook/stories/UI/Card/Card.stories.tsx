@@ -1,4 +1,4 @@
-import { Card, CardBody, CardHeader, FeatureCard } from "@niagads/ui";
+import { Card, CardBody, CardGrid, CardHeader, FeatureCard } from "@niagads/ui";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
 import { Search } from "lucide-react";
@@ -133,14 +133,7 @@ export const ResponsiveSpanGrid: Story = {
     render: () => (
         <div style={{ display: "grid", gap: "1rem", width: "100%" }}>
             {spanRows.map((row, rowIndex) => (
-                <div
-                    key={rowIndex}
-                    style={{
-                        display: "grid",
-                        gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
-                        gap: "1rem",
-                    }}
-                >
+                <CardGrid key={rowIndex}>
                     {row.map((span, index) => (
                         <Card key={`${rowIndex}-${index}`} span={span} hover>
                             <CardHeader>{`span ${span}`}</CardHeader>
@@ -149,7 +142,7 @@ export const ResponsiveSpanGrid: Story = {
                             </CardBody>
                         </Card>
                     ))}
-                </div>
+                </CardGrid>
             ))}
         </div>
     ),

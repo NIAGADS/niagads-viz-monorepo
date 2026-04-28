@@ -1,67 +1,60 @@
 import { Alert, Checkbox, RadioButton } from "@niagads/ui";
-import { Cell, GenericCell, getCellValue, renderCell, resolveCell, validateCellType } from "./Cell";
+import { Cell, CellType, TableCell } from "./Cells/types";
 import {
     ColumnDef,
     ColumnFiltersState,
+    FilterFnOption,
     HeaderGroup,
+    Table as ReactTable,
+    TableOptions as ReactTableOptions,
     RowSelectionState,
     SortingFnOption,
     SortingState,
-    TableOptions,
     Updater,
     VisibilityState,
     createColumnHelper,
     flexRender,
     getCoreRowModel,
+    getFacetedMinMaxValues,
     getFacetedRowModel,
-    getFacetedUniqueValues,
     getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-import { GenericColumn, getColumn } from "./Column";
+import { ColumnFilterType, DEFAULT_NA_VALUE, TableColumn, TableData, TableOptions, TableRow } from "./types";
 import { PaginationControls, TableToolbar } from "./ControlElements";
-import React, { ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
-import { TableConfig, TableData, TableRow } from "./TableProperties";
-import { _get, _hasOwnProperty, toTitleCase } from "@niagads/common";
+import React, { ReactNode, useCallback, useLayoutEffect, useMemo, useState } from "react";
+import { _get, toTitleCase } from "@niagads/common";
+import { booleanSort, scientificNotationSort } from "./ControlElements/Columns/sortingFunctions";
+import { getCellValue, renderCell, resolveCell, validateCellType } from "./Cells/utils";
+import { globalFuzzyFilter, includesAnyFilter, neglog10Filter } from "./ControlElements/Columns/filterFunctions";
 
-import { ColumnFilterControls } from "./ControlElements/ColumnFilterControls";
-import { CustomSortingFunctions } from "./TableSortingFunctions";
+import { ColumnFilterControls } from "./ControlElements/Columns/ColumnFilterControls";
+import { NUMERIC_CELL_TYPES } from "./ControlElements/Columns/Filters/FilterUI";
 import { RowSelectionControls } from "./ControlElements/RowSelectionControls";
 import { TableColumnHeader } from "./TableColumnHeader";
 import styles from "./styles/table.module.css";
 
 export interface TableProps {
     id: string;
-    options?: TableConfig;
-    columns: GenericColumn[];
+    options?: TableOptions;
+    columns: TableColumn[];
     data: TableData;
     rowSelection?: RowSelectionState | string[];
     onRowSelectionChange?: (state: RowSelectionState) => void;
-    externalColumnFilters?: ColumnFiltersState;
-    onExternalFilterRemoved?: (filterId: string) => void;
 }
 
 // TODO: use table options to initialize the state (e.g., initial sort, initial filter)
-const Table: React.FC<TableProps> = ({
-    id,
-    columns,
-    data,
-    options,
-    rowSelection,
-    onRowSelectionChange,
-    externalColumnFilters,
-    onExternalFilterRemoved,
-}) => {
+const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange }: TableProps) => {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [globalFilter, setGlobalFilter] = useState("");
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
         __setInitialColumnVisibility(options?.defaultColumns, columns)
     );
     const [showOnlySelected, setShowOnlySelected] = useState(false);
+    const [showColumnFilters, setShowColumnFilters] = useState<boolean | null>(null);
 
     const enableRowSelect = !!options?.enableRowSelect;
 
@@ -73,28 +66,19 @@ const Table: React.FC<TableProps> = ({
         [rowSelection, onRowSelectionChange]
     );
 
-    useEffect(() => {
-        if (externalColumnFilters) {
-            setColumnFilters((prev) => [
-                ...prev.filter((cf) => columns.find((c) => c.filterType === "internal")?.id == cf.id),
-                ...externalColumnFilters,
-            ]);
-        }
-    }, [externalColumnFilters]);
-
     // Translate GenericColumns provided by user into React Table ColumnDefs
     // also adds in checkbox column if rowSelect options are set for the table
     const resolvedColumns = useMemo<ColumnDef<TableRow>[]>(() => {
         const columnHelper = createColumnHelper<TableRow>();
         const columnDefs: ColumnDef<TableRow>[] = [];
         if (enableRowSelect) {
-            const multiSelect: boolean = !!options?.rowSelectColumn?.enableMultiSelect;
+            const multiSelect: boolean = !!options?.rowSelectOpts?.enableMultiSelect;
             columnDefs.push({
                 id: "select-col",
-                header: ({ table }) => options?.rowSelectColumn?.header,
+                header: ({ table }) => options?.rowSelectOpts?.header,
                 enableHiding: false,
                 enableSorting: false,
-                meta: { description: options?.rowSelectColumn?.description },
+                meta: { description: options?.rowSelectOpts?.description, type: "abstract" },
                 cell: ({ row }) =>
                     multiSelect ? (
                         <Checkbox
@@ -118,7 +102,7 @@ const Table: React.FC<TableProps> = ({
             });
         }
 
-        columns.forEach((col: GenericColumn) => {
+        columns.forEach((col: TableColumn) => {
             try {
                 col.type = validateCellType(col.type as string);
             } catch (e: any) {
@@ -128,20 +112,18 @@ const Table: React.FC<TableProps> = ({
                 columnHelper.accessor((row) => getCellValue(row[col.id as keyof typeof row] as Cell), {
                     id: col.id,
                     header: _get("header", col, toTitleCase(col.id)),
-                    enableColumnFilter: _get("canFilter", col, false) && !options?.disableColumnFilters,
+                    enableColumnFilter: !col.disableColumnFilter,
                     enableGlobalFilter: !col.disableGlobalFilter,
                     enableSorting: !col.disableSorting,
-                    sortingFn: __resolveSortingFn(col) as SortingFnOption<TableRow>,
+                    sortingFn: __resolveSortingFn(col),
                     filterFn: __resolveFilterFn(col),
-                    enableHiding: !_get("required", col, false), // if required is true, enableHiding is false
+                    enableHiding: !col.required, // if required is true, enableHiding is false
                     meta: {
-                        description: _get("description", col),
-                        type: _get("type", col),
-                        filterType: col.canFilter
-                            ? col.filterType === "external"
-                                ? "external"
-                                : "internal"
-                            : undefined,
+                        type: col.type,
+                        filterType: col.filterOpts?.filterType || __resolveFilterType(col.type),
+                        description: col.description,
+                        naValue: col.valueDisplayOpts?.naValue || DEFAULT_NA_VALUE,
+                        trueValue: col.valueDisplayOpts?.trueValue || "true",
                     },
                     cell: (props) => renderCell(props.cell.row.original[col.id] as Cell),
                 })
@@ -168,7 +150,7 @@ const Table: React.FC<TableProps> = ({
 
                 const tableRow: TableRow = {};
                 for (const [columnId, value] of Object.entries(row)) {
-                    const currentColumn = getColumn(columnId, columns);
+                    const currentColumn = __getColumn(columnId, columns);
                     if (currentColumn === undefined) {
                         throw new Error("Invalid column name found in table data definition `" + columnId + "`");
                     }
@@ -185,15 +167,16 @@ const Table: React.FC<TableProps> = ({
     // build table options conditionally
     // cannot memoize this b/c it depends on the state;
     // doing so leads to very slow rerenders
-    const reactTableOptions: TableOptions<TableRow> = {
+    const reactTableOptions: ReactTableOptions<TableRow> = {
         data: resolvedData,
         columns: resolvedColumns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         getFacetedRowModel: getFacetedRowModel(),
-        getFacetedUniqueValues: getFacetedUniqueValues(),
-        globalFilterFn: "includesString",
+        getFacetedUniqueValues: getFacetedUniqueValues, // custom, see def at end
+        getFacetedMinMaxValues: getFacetedMinMaxValues(),
+        globalFilterFn: "globalFuzzy",
         onGlobalFilterChange: setGlobalFilter,
         state: {
             sorting,
@@ -206,17 +189,37 @@ const Table: React.FC<TableProps> = ({
         onColumnVisibilityChange: setColumnVisibility,
         onColumnFiltersChange: setColumnFilters,
         getSortedRowModel: getSortedRowModel(),
-        sortingFns: CustomSortingFunctions,
+        sortingFns: { boolean: booleanSort, scientific: scientificNotationSort },
+        filterFns: {
+            globalFuzzy: globalFuzzyFilter,
+            includesAny: includesAnyFilter,
+            pvalue: neglog10Filter,
+        },
         enableColumnResizing: true,
+
+        _features: [
+            {
+                // when column is initialized, create this function
+                createColumn: (column, table) => {
+                    column.getAllValues = (filterNulls: boolean = false, naValue: string = DEFAULT_NA_VALUE) => {
+                        let values = table.getCoreRowModel().flatRows.map((row) => row.getValue(column.id));
+                        if (filterNulls) {
+                            values = values.filter((v) => v != null && v !== naValue);
+                        }
+                        return values;
+                    };
+                },
+            },
+        ],
     };
 
     if (enableRowSelect) {
         Object.assign(reactTableOptions, {
-            enableMultiRowSelection: !!options?.rowSelectColumn?.enableMultiSelect,
+            enableMultiRowSelection: !!options?.rowSelectOpts?.enableMultiSelect,
             onRowSelectionChange: handleRowSelectionChange, //hoist up the row selection state to your own scope
         });
 
-        const uniqueKey = options?.rowSelectColumn?.rowUniqueKey;
+        const uniqueKey = options?.rowSelectOpts?.rowUniqueKey;
         if (!!uniqueKey) {
             if (__isValidUniqueKey(resolvedData, uniqueKey)) {
                 Object.assign(reactTableOptions, {
@@ -236,19 +239,38 @@ const Table: React.FC<TableProps> = ({
     const rowModel = showOnlySelected ? table.getSelectedRowModel() : table.getRowModel();
 
     useLayoutEffect(() => {
-        if (table && options?.onTableLoad) {
-            options.onTableLoad(table);
+        if (table) {
+            if (options?.onTableLoad) {
+                options.onTableLoad(table);
+            }
+            setShowColumnFilters(
+                !!options?.enableColumnFilters && table.getAllColumns().some((col) => col.columnDef.enableColumnFilter)
+            );
         }
-    }, [table]);
+    }, [options, table]);
 
-    return table ? (
+    return showColumnFilters !== null && table ? (
         <div className={styles["table-outer-container"]}>
-           
+            {showColumnFilters && (
+                <ColumnFilterControls
+                    filterableColumns={table.getAllColumns().filter((x) => x.columnDef.enableColumnFilter)}
+                    activeFilters={columnFilters}
+                    coreRowCount={table.getCoreRowModel().rows.length}
+                    onRemoveAll={() => setColumnFilters([])}
+                    onRemoveFilter={(filter) => {
+                        setColumnFilters((prev) => prev.filter((f) => f !== filter));
+                    }}
+                />
+            )}
+            <div className={styles["table-controls-container"]}>
+                <TableToolbar table={table} tableId={id} enableExport={!!options?.enableExport} />
+                <PaginationControls id={id} table={table} />
+            </div>
             {enableRowSelect && (
                 <div>
                     <RowSelectionControls
                         selectedRows={table.getSelectedRowModel().rows}
-                        displayColumn={options.rowSelectColumn?.rowUniqueKey!} // if row select is enabled, rowId must be defined
+                        displayColumn={options.rowSelectOpts?.rowUniqueKey!} // if row select is enabled, rowId must be defined
                         onToggleSelectedFilter={(isFiltered: boolean) => {
                             if (isFiltered) {
                                 setColumnFilters([]);
@@ -261,23 +283,6 @@ const Table: React.FC<TableProps> = ({
                     />
                 </div>
             )}
-            {table.getAllColumns().some((x) => x.columnDef.enableColumnFilter) && (
-                <ColumnFilterControls
-                    filterableColumns={table.getAllColumns().filter((x) => x.columnDef.enableColumnFilter)}
-                    activeFilters={columnFilters}
-                    onRemoveAll={() => setColumnFilters([])}
-                    onRemoveFilter={(filter) => {
-                        setColumnFilters((prev) => prev.filter((f) => f !== filter));
-                        if (onExternalFilterRemoved && externalColumnFilters?.find((x) => x.id === filter.id)) {
-                            onExternalFilterRemoved(filter.id);
-                        }
-                    }}
-                />
-            )}
-             <div className={styles["table-controls-container"]}>
-                <TableToolbar table={table} tableId={id} enableExport={!!!options?.disableExport} />
-                <PaginationControls id={id} table={table} />
-            </div>
             <div className={styles["table-container"]}>
                 {rowModel.rows.length > 0 ? (
                     <table className={`${styles["table-layout"]} ${styles["table-border"]} ${styles["table-text"]}`}>
@@ -311,7 +316,22 @@ const Table: React.FC<TableProps> = ({
     );
 };
 
-const __resolveSortingFn = (col: GenericColumn) => {
+const __resolveFilterType = (cellType: CellType): ColumnFilterType => {
+    if (NUMERIC_CELL_TYPES.includes(cellType)) {
+        return "histogram";
+    }
+    if (cellType === "boolean") {
+        return "boolean";
+    }
+
+    return "select";
+};
+
+const __resolveSortingFn = (col: TableColumn): SortingFnOption<TableRow> => {
+    if (col.sortingFn) {
+        return col.sortingFn;
+    }
+
     if (col.type === "boolean") {
         return "boolean";
     }
@@ -321,16 +341,33 @@ const __resolveSortingFn = (col: GenericColumn) => {
     return "alphanumeric";
 };
 
-const __resolveFilterFn = (col: GenericColumn) => {
-    if (col.type === "float" || col.type === "p_value") {
-        return "inNumberRange";
+const __resolveFilterFn = (col: TableColumn): FilterFnOption<TableRow> => {
+    if (col.filterOpts?.filterType === "multiselect") {
+        return "includesAny"; // multiselect & text lists
     }
-    return "includesString";
+
+    if (col.filterOpts?.filterFn) {
+        return col.filterOpts.filterFn;
+    }
+
+    if (col.type === "pvalue") {
+        return "pvalue";
+    }
+
+    if (col.type === "float" || col.type === "integer") {
+        return "inNumberRange"; // FIXME: not really implemented yet
+    }
+    if (col.type === "boolean") {
+        return "equals";
+    }
+
+    // text field filtering; handles text lists, other grouping
+    return "includesAny";
 };
 
 // wrapper to catch any errors thrown during cell type and properties validation so that
 // user can more easily identify the problematic table cell by row/column
-const __resolveCell = (userCell: GenericCell | GenericCell[], column: GenericColumn, rowId: number) => {
+const __resolveCell = (userCell: TableCell | TableCell[], column: TableColumn, rowId: number) => {
     try {
         return resolveCell(userCell, column, rowId);
     } catch (e: any) {
@@ -380,7 +417,7 @@ const __resolveRowSelectionState = (state: RowSelectionState | string[] | undefi
 };
 
 // builds data structure to initialize row selection state
-const __setInitialColumnVisibility = (defaultColumns: string[] | undefined, columns: GenericColumn[]) => {
+const __setInitialColumnVisibility = (defaultColumns: string[] | undefined, columns: TableColumn[]) => {
     const visibility: VisibilityState = {};
     if (defaultColumns) {
         columns.forEach((col) => {
@@ -388,6 +425,41 @@ const __setInitialColumnVisibility = (defaultColumns: string[] | undefined, colu
         });
     }
     return visibility;
+};
+
+export const __getColumn = (columnId: string, columns: TableColumn[]) => {
+    return columns.find((col) => col.id === columnId);
+};
+
+/* custom getFacetedUniqueValues
+ ** handles lists (delimited by //)
+ ** counts nulls and n/a (b/c tanstack-tables counts undefined as n/a, not null)
+ */
+const getFacetedUniqueValues = (table: ReactTable<TableRow>, columnId: string): (() => Map<any, number>) => {
+    // The returned function is what actually gets called by column.getFacetedUniqueValues()
+    return () => {
+        const uniqueValueMap = new Map<any, number>();
+
+        // Access the rows that have passed through previous filters
+        const facetedRows = table.getColumn(columnId)!.getFacetedRowModel().flatRows;
+
+        facetedRows.forEach((row: any) => {
+            const value = row.getValue(columnId);
+            if (typeof value === "string") {
+                // check for string lists
+                const values: string[] = value.includes("//") ? value.split(" // ") : [value];
+                values.forEach((v: string) => {
+                    const count = uniqueValueMap.get(v) ?? 0;
+                    uniqueValueMap.set(v, count + 1);
+                });
+            } else {
+                const count = uniqueValueMap.get(value) ?? 0;
+                uniqueValueMap.set(value, count + 1);
+            }
+        });
+
+        return uniqueValueMap;
+    };
 };
 
 export default Table;

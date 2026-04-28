@@ -1,6 +1,7 @@
 import type { StorybookConfig } from "@storybook/nextjs-vite";
-// This file has been automatically migrated to valid ESM format by Storybook.
 import { createRequire } from "node:module";
+import { mergeConfig } from "vite";
+import path from "path";
 
 const require = createRequire(import.meta.url);
 
@@ -21,5 +22,33 @@ const config: StorybookConfig = {
         name: "@storybook/nextjs-vite",
         options: {},
     },
+
+    async viteFinal(config) {
+        return mergeConfig(config, {
+            resolve: {
+                alias: {
+                    // Explicitly point to /src instead of the package root
+                    "@niagads/table": path.resolve(import.meta.dirname, "../../../packages/Table/src"),
+                },
+            },
+
+            build: {
+                // Force source maps to be generated even in development
+                sourcemap: true,
+            },
+
+            optimizeDeps: {
+                // IMPORTANT: Prevent Vite from "pre-bundling" your packages into one big file
+                exclude: ["@miagads/table", "@my-org/ui"],
+            },
+            // Ensure the browser can access these files across monorepo boundaries
+            server: {
+                fs: {
+                    allow: ["../../../"], // Allow access to monorepo root
+                },
+            },
+        });
+    },
 };
+
 export default config;

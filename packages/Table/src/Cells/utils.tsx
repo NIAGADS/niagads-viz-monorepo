@@ -1,124 +1,24 @@
-import { Badge, BadgeIconType, BooleanBadge } from "./CellRenderers/Badge";
-import {
-    BasicType,
-    Expand,
-    Modify,
-    NAString,
-    TypeMapper,
-    _deepCopy,
-    _get,
-    _hasOwnProperty,
-    _isJSON,
-    _isNA,
-    _isNull,
-} from "@niagads/common";
-import { Link, LinkList } from "./CellRenderers/Link";
-import React, { CSSProperties } from "react";
-import { Text, TextList } from "./CellRenderers/BasicText";
+import { Badge, BooleanBadge, Float, Link, LinkList, PercentageBar, Text, TextList } from "./CellRenderers";
+import { BasicType, _deepCopy, _get, _hasOwnProperty, _isJSON, _isNA, _isNull } from "@niagads/common";
+import { BooleanCell, CELL_TYPES, Cell, CellType, FloatCell, PValueCell, TableCell } from "./types";
+import { DEFAULT_NA_VALUE, TableColumn } from "../types";
 
-import { Float } from "./CellRenderers/Number";
-import { GenericColumn } from "./Column";
-import { LinkTarget } from "./CellRenderers";
-import { PercentageBar } from "./CellRenderers/SparkChart";
-
-export const DEFAULT_NA_VALUE = "n/a";
-
-export type GenericCell = BasicType | Record<string, any> | null;
-
-export type AbstractCell = {
-    type: "abstract";
-    value: BasicType | null;
-    rowId: number;
-    columnId: number;
-    nullValue?: BasicType | null; // if not set, treats null as NA
-    naValue?: NAString; // (internal) value to assign to NAs for consistency, defaults to `NA`
-    className?: string;
-    style?: CSSProperties;
-};
-
-export type StringCell = Expand<Modify<AbstractCell, { type: "string"; value: string }>>;
-
-export type IntegerCell = Expand<Modify<AbstractCell, { type: "integer"; value: number | null }>>;
-
-export type FloatCell = Expand<Modify<AbstractCell, { type: "float"; value: number | null; precision?: number }>>;
-
-export type PValueCell = Expand<Modify<FloatCell, { type: "p_value" }>>;
-
-export type TextCell = Expand<Modify<AbstractCell, { type: "text"; truncateTo?: number; info?: string }>>;
-
-export type TextListCell = Expand<Modify<AbstractCell, { type: "text_list"; value: string; items: TextCell[] }>>;
-
-export type BadgeCell = Expand<
-    Modify<
-        TextCell,
-        {
-            type: "badge";
-            icon?: BadgeIconType;
-            iconOnly?: boolean;
-        }
-    >
->;
-
-export type BooleanCell = Expand<
-    Modify<
-        BadgeCell,
-        {
-            type: "boolean";
-            value: boolean | null;
-            displayText?: BasicType; // what value to display (e.g., TRUE, Yes, Y, Coding, FALSE, N, No, etc)
-        }
-    >
->;
-
-export type LinkCell = Expand<Modify<AbstractCell, { type: "link"; url: string; info?: string; target?: LinkTarget }>>;
-
-export type LinkListCell = Expand<Modify<AbstractCell, { type: "link_list"; value: string; items: LinkCell[] }>>;
-
-export type PercentageBarCell = Expand<Modify<FloatCell, { type: "percentage_bar" }>>;
-
-export type Cell =
-    | PercentageBarCell
-    | FloatCell
-    | IntegerCell
-    | PValueCell
-    | AbstractCell
-    | TextCell
-    | TextListCell
-    | BadgeCell
-    | BooleanCell
-    | LinkCell
-    | LinkListCell;
-
-// create CellType which is a list string keys corresponding to allowable "types" of cells
-type CellTypeMapper = TypeMapper<Cell>;
-export type CellType = keyof CellTypeMapper;
-
-// this does not include LinkList & TextList b/c those are internal cell types
-const CELL_TYPE_VALIDATION_REFERENCE = [
-    "boolean",
-    "abstract",
-    "float",
-    "p_value",
-    "text",
-    "annotated_text",
-    "badge",
-    "link",
-    "integer",
-    "percentage_bar",
-];
+import React from "react";
 
 // validates cell type specified at runtime or by user is valid
 // if cell type is undefined, returns "abstract"
+// this does not include LinkList & TextList b/c those are internal cell types
+
 export const validateCellType = (ctype: string | undefined): CellType => {
     if (ctype === undefined) {
         return "abstract" as CellType;
     }
 
-    if (typeof ctype === "string" && CELL_TYPE_VALIDATION_REFERENCE.includes(ctype)) {
+    if (CELL_TYPES.includes(ctype)) {
         return ctype as CellType; // type assertion satisfies compiler
     }
 
-    throw new Error("Invalid data type `" + ctype + "`");
+    throw new Error("Invalid table cell type `" + ctype + "`");
 };
 
 // catch NULLs and NAs
@@ -159,7 +59,7 @@ export const getCellValue = (cellProps: Cell | Cell[]): any => {
                 return __resolveBooleanValue(cellProps as BooleanCell);
             case "float":
                 return __resolveFloatValue(cellProps as FloatCell);
-            case "p_value":
+            case "pvalue":
                 return __resolvePValueValue(cellProps as PValueCell);
             default:
                 return __resolveValue(cellProps);
@@ -167,15 +67,15 @@ export const getCellValue = (cellProps: Cell | Cell[]): any => {
     }
 };
 
-const __resolveLinkCell = (cell: GenericCell): GenericCell => {
+const __resolveLinkCell = (cell: TableCell): TableCell => {
     const value = _get("value", cell);
     const url = _get("url", cell);
     Object.assign(cell as any, { value: value ? value : url, type: "link" });
     return cell;
 };
 
-const __resolveListCell = (cells: GenericCell[]) => {
-    const values = cells.map((c: GenericCell) => _get("value", c));
+const __resolveListCell = (cells: TableCell[]) => {
+    const values = cells.map((c: TableCell) => _get("value", c));
     const value = values.join(" // ");
 
     return { type: "abstract", value: value, items: cells };
@@ -187,12 +87,12 @@ const __resolveListCell = (cells: GenericCell[]) => {
 // 1. makes sure user specified a cell type to the parent column if cell value is an object/JSON
 
 export const resolveCell = (
-    cell: GenericCell | GenericCell[],
-    column: GenericColumn,
+    cell: TableCell | TableCell[],
+    column: TableColumn,
     rowId: number
-): GenericCell | GenericCell[] => {
+): TableCell | TableCell[] => {
     let resolvedCellType = _get("type", column, "abstract");
-    let resolvedCell: GenericCell = {};
+    let resolvedCell: TableCell = {};
 
     if (Array.isArray(cell)) {
         if (resolvedCellType == "abstract") {
@@ -203,7 +103,7 @@ export const resolveCell = (
             );
         }
 
-        const cellList = cell.map((c: GenericCell) => resolveCell(c, column, rowId) as GenericCell);
+        const cellList = cell.map((c: TableCell) => resolveCell(c, column, rowId) as TableCell);
         if (resolvedCellType == "text") {
             resolvedCell = __resolveListCell(cellList);
             resolvedCellType = "text_list";
@@ -231,12 +131,6 @@ export const resolveCell = (
             } else {
                 resolvedCellType = "text";
             }
-            /* console.warn(
-                "`type` must be specified in the column defintion to correctly interpret structured values; assuming `" +
-                    resolvedCellType +
-                    "` cell: " +
-                    JSON.stringify(cell)
-            ); */
         }
 
         if (_get("value", resolvedCell) == null) {
@@ -254,7 +148,7 @@ export const resolveCell = (
     Object.assign(resolvedCell as any, { type: resolvedCellType });
 
     // assign column formatting based on cell type
-    const formattingOpts = column.format;
+    const formattingOpts = column.valueDisplayOpts;
     if (formattingOpts) {
         Object.assign(resolvedCell as any, {
             nullValue: _get("nullValue", formattingOpts),
@@ -319,7 +213,7 @@ export const renderCell = (cell: Cell) => {
         case "badge":
             return <Badge key={`cell-${cell.rowId}-${cell.columnId}`} props={cell}></Badge>;
         case "float":
-        case "p_value":
+        case "pvalue":
             return <Float key={`cell-${cell.rowId}-${cell.columnId}`} props={cell}></Float>;
         case "integer":
             return <Float key={`cell-${cell.rowId}-${cell.columnId}`} props={cell}></Float>;

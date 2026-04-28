@@ -1,29 +1,43 @@
-import React, { ReactNode, ElementType } from "react";
+import React, { ElementType, ReactNode } from "react";
 
 import { StylingProps } from "./types";
 import styles from "./styles/card.module.css";
 
 // ─── Sub-components ────────────────────────────────────────────────────────────
 
-interface CardBodyProps {
+interface CardBodyProps extends StylingProps {
     children: ReactNode;
 }
 
-interface CardHeaderProps {
+interface CardHeaderProps extends StylingProps {
     children: ReactNode;
 }
 
-export const CardBody = ({ children }: CardBodyProps) => (
-    <div className={styles["card-body"]}>{children}</div>
+export const CardBody = ({ children, style, className }: CardBodyProps) => (
+    <div style={style} className={`${className} ${styles["card-body"]}`}>
+        {children}
+    </div>
 );
 
-export const CardHeader = ({ children }: CardHeaderProps) => (
-    <div className={styles["card-header"]}>{children}</div>
+export const CardHeader = ({ children, style, className }: CardHeaderProps) => (
+    <div style={style} className={`${className} ${styles["card-header"]}`}>
+        {children}
+    </div>
+);
+
+// ─── CardGrid ───────────────────────────────────────────────────────────────────
+
+interface CardGridProps extends StylingProps {
+    children: ReactNode;
+}
+
+export const CardGrid = ({ children, className }: CardGridProps) => (
+    <div className={[styles["card-grid"], className].filter(Boolean).join(" ")}>{children}</div>
 );
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
-type CardSpan = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+export type CardSpan = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 
 /**
  * Visual styling variant.
@@ -32,6 +46,8 @@ type CardSpan = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
  * A matching CSS class (e.g. .card-variant-warning) must be added to card.module.css.
  */
 type CardVariant = "default";
+
+type CardLayout = "flex" | "grid";
 
 // ─── Card ──────────────────────────────────────────────────────────────────────
 
@@ -52,7 +68,11 @@ interface CardProps extends StylingProps, React.HTMLAttributes<HTMLElement> {
     onClick?: (event: React.MouseEvent<HTMLElement>) => void;
     children: ReactNode;
 
-    /** Layout: how many columns to span in a 12-col grid. Default: 12. */
+    /** Layout: how many columns to span in a 12-col grid. Default: 12.
+     * type of layout: flex or grid
+     */
+
+    layout?: CardLayout;
     span?: CardSpan;
 
     /**
@@ -75,6 +95,7 @@ export const Card = ({
     className,
     span = 12,
     variant = "default",
+    layout = "grid",
     hover = false,
     outline = true,
     ...rest
@@ -84,7 +105,8 @@ export const Card = ({
 
     const classes = [
         styles.card,
-        styles[`card-span-${span}`],
+        layout === "grid" && styles[`card-span-${span}`],
+        layout === "flex" && styles[`card-flex-span-${span}`],
         styles[`card-variant-${variant}`],
         isClickable && styles["card-link"],
         useHoverStyles && styles["with-hover"],
@@ -100,8 +122,8 @@ export const Card = ({
             if (process.env.NODE_ENV !== "production") {
                 console.warn(
                     "[Card] `href` was provided without a `LinkComponent`. " +
-                    "Pass your router's Link component (e.g. Next.js `Link`) to enable " +
-                    "client-side navigation. Falling back to a plain <a> tag."
+                        "Pass your router's Link component (e.g. Next.js `Link`) to enable " +
+                        "client-side navigation. Falling back to a plain <a> tag."
                 );
             }
             return (
@@ -147,17 +169,8 @@ interface FeatureCardProps extends Omit<CardProps, "children">, StylingProps {
     description: string;
 }
 
-export const FeatureCard = ({
-    icon: Icon,
-    title,
-    description,
-    className,
-    ...cardProps
-}: FeatureCardProps) => (
-    <Card
-        {...cardProps}
-        className={[className, styles["feature-card"]].filter(Boolean).join(" ")}
-    >
+export const FeatureCard = ({ icon: Icon, title, description, className, ...cardProps }: FeatureCardProps) => (
+    <Card {...cardProps} className={[className, styles["feature-card"]].filter(Boolean).join(" ")}>
         {Icon && <Icon className={styles["feature-icon"]} size={48} />}
         <h3 className={styles["feature-title"]}>{title}</h3>
         <p className={styles["feature-description"]}>{description}</p>

@@ -2,12 +2,14 @@ import "../../examples/tables/custom_table_cell_styles.css";
 
 import { getPvalueStyle, getRelativePositionClassName } from "./styling_functions";
 
-import { TableProps as Table } from "@niagads/table";
+import { TableConfig as Table } from "@niagads/table";
 
-export const TABLE_DEFINTION: Table = {
+export const TABLE_DEFINITION: Table = {
     id: "large_numeric_example",
     options: {
         initialize: { sort: { pvalue: "asc" }, filter: { pvalue: 5e-8 } },
+        enableExport: true,
+        enableColumnFilters: true,
         defaultColumns: [
             "relative_position",
             "variant_link",
@@ -16,6 +18,7 @@ export const TABLE_DEFINTION: Table = {
             "track_name_link",
             "ref_snp_id",
             "is_adsp_variant",
+            "population",
             "neuropathology",
         ],
     },
@@ -25,35 +28,35 @@ export const TABLE_DEFINTION: Table = {
             type: "badge",
             header: "Relative Position",
             styling: { getClassName: getRelativePositionClassName },
+            filterOpts: { filterType: "pie" },
         },
         {
             id: "variant_link",
             type: "link",
             header: "Variant",
-            canFilter: false,
             required: true,
+            disableColumnFilter: true,
         },
         {
             id: "pvalue",
             header: "p-value",
-            type: "float",
+            type: "pvalue",
             required: true,
+            disableColumnFilter: false,
             styling: { getClassName: (pvalue: number) => "pvalue-badge", getStyle: getPvalueStyle },
         },
-        { id: "allele", header: "Test Allele", canFilter: false },
-        { id: "track_name_link", header: "Track", type: "link", required: true },
-        { id: "track_description", header: "Track Description" },
+        { id: "allele", header: "Test Allele", disableColumnFilter: true },
+        { id: "track_name_link", header: "Track", type: "link", required: true, disableColumnFilter: true },
+        { id: "track_description", header: "Track Description", disableColumnFilter: true },
         {
             id: "is_adsp_variant",
             header: "ADSP Variant?",
             description:
                 "variant identified from ADSP whole-genome sequencing efforts that has passed the ADSP QC protocol; <em>NOT</em> an indicator of AD-risk",
             type: "boolean",
-            // format: { nullValue: false },
-            disableGlobalFilter: true,
             styling: { getStyle: (value: any) => ({ color: "red" }) },
         },
-        { id: "ref_snp_id", header: "RefSNP ID" },
+        { id: "ref_snp_id", header: "RefSNP ID", disableColumnFilter: true },
         {
             id: "gene_impact",
             header: "Impact",
@@ -67,9 +70,9 @@ export const TABLE_DEFINTION: Table = {
             description:
                 "Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline",
         },
-        { id: "population" },
-        { id: "diagnosis" },
-        { id: "neuropathology", required: true },
+        { id: "population", filterOpts: { filterType: "multiselect" } },
+        { id: "diagnosis", disableColumnFilter: true },
+        { id: "neuropathology", required: true, filterOpts: { filterType: "pie" } },
         { id: "tissue" },
         { id: "biomarker" },
         { id: "gender" },
@@ -84,7 +87,7 @@ export const TABLE_DEFINTION: Table = {
             ref_snp_id: "rs769449",
             pvalue: "4.77e-94",
             biomarker: "Aβ₄₂",
-            population: "European",
+            population: "Asian",
             genotype: null,
             track_description:
                 "summary statistics for CSF beta-amyloid 42 (Aβ₄₂) levels in cerebrospinal fluid (CSF) from 3146 participants across nine studies, adjusted for age, gender, and population stratification (Lifted Over from GRCh37 to GRCh38)",
@@ -103,7 +106,7 @@ export const TABLE_DEFINTION: Table = {
                 value: "CSF: Aβ₄₂ (GRCh38)",
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
-            neuropathology: null,
+            neuropathology: "PSP",
             relative_position: "in gene",
         },
         {
@@ -113,7 +116,7 @@ export const TABLE_DEFINTION: Table = {
             pvalue: "9.66e-78",
             ref_snp_id: "rs71352238",
             biomarker: "Aβ₄₂",
-            population: "European",
+            population: "Asian",
             genotype: null,
             track_description:
                 "summary statistics for CSF beta-amyloid 42 (Aβ₄₂) levels in cerebrospinal fluid (CSF) from 3146 participants across nine studies, adjusted for age, gender, and population stratification (Lifted Over from GRCh37 to GRCh38)",
@@ -132,7 +135,7 @@ export const TABLE_DEFINTION: Table = {
                 value: "CSF: Aβ₄₂ (GRCh38)",
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
-            neuropathology: null,
+            neuropathology: "PSP",
             relative_position: "upstream",
         },
         {
@@ -277,7 +280,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             gene_impact: null,
-            neuropathology: null,
+            neuropathology: "PD",
             relative_position: "upstream",
         },
         {
@@ -490,7 +493,7 @@ export const TABLE_DEFINTION: Table = {
             tissue: null,
             pvalue: "1.00e-55",
             biomarker: null,
-            population: "European",
+            population: "African American",
             genotype: null,
             track_description:
                 "summary statistics from a comparative study of neuropathological features of Alzheimer's disease and related dementias: NPs (presence versus absence), inclusive primary dataset allowing some incomplete documentation of pathological features (Lifted Over from GRCh37 to GRCh38)",
@@ -781,7 +784,7 @@ export const TABLE_DEFINTION: Table = {
             tissue: null,
             biomarker: null,
             genotype: null,
-            population: "European",
+            population: "African American",
             track_description:
                 "summary statistics from a comparative study of neuropathological features of Alzheimer's disease and related dementias: NPs (presence versus absence), inclusive primary dataset allowing some incomplete documentation of pathological features (Lifted Over from GRCh37 to GRCh38)",
             gene_consequence: null,
@@ -896,7 +899,7 @@ export const TABLE_DEFINTION: Table = {
             pvalue: "1.65e-46",
             ref_snp_id: "rs34095326",
             biomarker: "Aβ₄₂",
-            population: "European",
+            population: "Asian",
             genotype: null,
             track_description:
                 "summary statistics for CSF beta-amyloid 42 (Aβ₄₂) levels in cerebrospinal fluid (CSF) from 3146 participants across nine studies, adjusted for age, gender, and population stratification (Lifted Over from GRCh37 to GRCh38)",
@@ -1361,7 +1364,7 @@ export const TABLE_DEFINTION: Table = {
             pvalue: "3.39e-39",
             biomarker: null,
             genotype: null,
-            population: "European",
+            population: "African American",
             track_description:
                 "summary statistics from a comparative study of neuropathological features of Alzheimer's disease and related dementias: NPs (presence versus absence), inclusive primary dataset allowing some incomplete documentation of pathological features (Lifted Over from GRCh37 to GRCh38)",
             gene_consequence: null,
@@ -3583,7 +3586,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             gene_impact: null,
-            neuropathology: null,
+            neuropathology: "PD",
             relative_position: "upstream",
         },
         {

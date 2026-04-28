@@ -3,7 +3,7 @@ import { Header, flexRender } from "@tanstack/react-table";
 import React from "react";
 
 import { HelpIconWrapper } from "@niagads/ui";
-import { TableRow } from "./TableProperties";
+import { TableRow } from "./types";
 import { _get } from "@niagads/common";
 import styles from "./styles/table.module.css";
 

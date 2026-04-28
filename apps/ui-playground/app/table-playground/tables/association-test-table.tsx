@@ -1,4 +1,4 @@
-import { TableProps as Table } from "@niagads/table";
+import { TableConfig as Table } from "@niagads/table";
 
 export const TABLE_DEFINITION: Table = {
     id: "large_numeric_example",

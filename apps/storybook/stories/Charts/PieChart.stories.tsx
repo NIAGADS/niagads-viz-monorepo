@@ -1,17 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { useState } from "react";
 
 import { PieChart } from "@niagads/charts";
 
 const meta = {
     title: "Charts/PieChart",
     component: PieChart,
-    decorators: [
-        (Story) => (
-            <div style={{ minWidth: "400px", minHeight: "400px" }}>
-                <Story />
-            </div>
-        ),
-    ],
     parameters: {
         layout: "centered",
     },
@@ -22,8 +16,21 @@ export default meta;
 type Story = StoryObj<typeof PieChart>;
 
 export const Default: Story = {
+    render: (args) => {
+        const [selectedId, setSelectedId] = useState<string | null>(null);
+        return (
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px", alignItems: "center" }}>
+                <div style={{ fontSize: "16px", color: "blue", marginBottom: "20px" }}>
+                    {selectedId ? `Selected: ${selectedId}` : "Click a slice to select"}
+                </div>
+                <PieChart {...args} onClick={setSelectedId} />
+            </div>
+        );
+    },
     args: {
-        id: "test",
+        legendPosition: "right",
+        title: "Example Pie Chart",
+        displayOpts: { width: 300 },
         data: [
             {
                 id: "test1",
@@ -41,8 +48,7 @@ export const Default: Story = {
                 value: 11,
             },
             {
-                id: "test4",
-                label: "Test 4",
+                id: "test4 - no label",
                 value: 19,
             },
             {
@@ -51,6 +57,5 @@ export const Default: Story = {
                 value: 8,
             },
         ],
-        onClick: (key) => console.log(key),
     },
 };

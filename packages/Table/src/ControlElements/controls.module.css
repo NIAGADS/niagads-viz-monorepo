@@ -1,5 +1,5 @@
 /* ── TOOLBAR ── */
- 
+
 .table-toolbar-container {
     position: relative;
     display: flex;
@@ -13,16 +13,15 @@
 }
 
 /* ── PAGINATION ── */
- 
+
 .pagination-control-container {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 0.5rem;
     margin-right: 10px;
-
 }
- 
+
 .pagination-control-summary {
     font-size: 0.875rem;
     color: var(--muted, #6b7a95);
@@ -57,26 +56,10 @@
     padding: 5px 0;
 }
 
-/* ── COLUMN CONTROLS DROPDOWN ── */
-
-.column-controls-container {
-    width: 200px;
-    padding: 8px;
-}
-
-.column-controls-toggle-container {
-    padding: 6px 2px 2px;
-    max-height: 260px;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--border, #dde3ef) transparent;
-}
- 
-.column-controls-toggle-container::-webkit-scrollbar {
-    width: 4px;
-}
- 
-.column-controls-toggle-container::-webkit-scrollbar-thumb {
-    background: var(--border, #dde3ef);
-    border-radius: 2px;
+.table-toolbar-container {
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin: 0.5rem;
 }
