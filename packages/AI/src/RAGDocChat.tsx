@@ -3,27 +3,13 @@ import { fetchServerSentEvents, useChat } from "@tanstack/ai-react";
 
 import { Send } from "lucide-react";
 import { createChatClientOptions } from "@tanstack/ai-client";
+import styles from "./styles/ragdoc-chat.module.css";
 
-// Inline styles to avoid CSS module resolution issues
-const styles = {
-    container:
-        "flex flex-col gap-4 w-full min-h-[28rem] p-4 border border-[#d6dee6] rounded-lg bg-[#f7fafb] text-[#17202a]",
-    header: "flex items-center justify-between gap-4",
-    title: "m-0 text-base font-bold",
-    status: "text-[#64748b] text-xs",
-    messages: "flex flex-1 flex-col gap-3 min-h-[18rem] overflow-y-auto",
-    message: "max-w-[82%] p-3 border border-[#dbe3ea] rounded-lg bg-white leading-[1.45]",
-    assistant: "self-start",
-    user: "self-end border-[#b9d3e8] bg-[#e8f3fb]",
-    messageLabel: "mb-1 text-[#4b5563] text-xs font-bold uppercase",
-    messageText: "m-0 whitespace-pre-wrap",
-    toolEvent:
-        "inline-flex w-fit mt-2 px-2 py-1 border border-[#ccd8e2] rounded bg-[#edf4f7] text-[#455866] text-xs font-bold",
-    thinkingText: "m-0 text-[#52616f] italic whitespace-pre-wrap",
-    form: "flex gap-2",
-    input: "flex-1 min-w-0 px-3 py-2.5 border border-[#b8c7d3] rounded font-inherit",
-    button: "inline-flex items-center gap-1.5 px-3.5 py-2.5 border border-[#355f7b] rounded bg-[#355f7b] text-white cursor-pointer font-inherit font-bold disabled:border-[#9aa8b2] disabled:bg-[#9aa8b2] disabled:cursor-not-allowed",
-};
+const examplePrompts = [
+    "How does RAGDoc ingest documentation?",
+    "What happens during retrieval?",
+    "How should I deploy the service?",
+];
 
 /**
  * Properties for the RAGDocChat component.
@@ -137,13 +123,41 @@ export const RAGDocChat = ({
     return (
         <section className={`${styles.container} ${className ?? ""}`} aria-label={title}>
             <div className={styles.header}>
-                <h2 className={styles.title}>{title}</h2>
+                <div>
+                    <p className={styles.eyebrow}>Document Q&amp;A</p>
+                    <h2 className={styles.title}>{title}</h2>
+                </div>
                 {/* Display loading state or model name in the header */}
-                <span className={styles.status}>{isLoading ? "Thinking" : model}</span>
+                <span className={styles.status} data-loading={isLoading}>
+                    <span className={styles.statusDot} aria-hidden="true" />
+                    {isLoading ? "Thinking" : model}
+                </span>
             </div>
 
             {/* Messages container with aria-live for accessibility announcements */}
             <div className={styles.messages} aria-live="polite">
+                {messages.length === 0 ? (
+                    <div className={styles.emptyState}>
+                        <p className={styles.emptyTitle}>Start with a RAGDoc question.</p>
+                        <p className={styles.emptyCopy}>
+                            Ask about ingestion, retrieval, API behavior, or deployment and the assistant will use the
+                            mocked document context when relevant.
+                        </p>
+                        <div className={styles.promptList}>
+                            {examplePrompts.map((prompt) => (
+                                <button
+                                    className={styles.prompt}
+                                    key={prompt}
+                                    type="button"
+                                    onClick={() => setInput(prompt)}
+                                    disabled={isLoading}
+                                >
+                                    {prompt}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                ) : null}
                 {messages.map((message) => (
                     <article
                         key={message.id}
