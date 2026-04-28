@@ -5,7 +5,7 @@ import {
 } from "@niagads/charts";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
-import { TABLE_DEFINTION as largeNumericTable } from "../../examples/tables/table_large_numeric_values";
+import { TABLE_DEFINITION as largeNumericTable } from "../../examples/tables/table_large_numeric_values";
 import { useState } from "react";
 
 // Generate skewed data with right tail (values between 0 and 1)

@@ -4,7 +4,7 @@ import { getPvalueStyle, getRelativePositionClassName } from "./styling_function
 
 import { TableConfig as Table } from "@niagads/table";
 
-export const TABLE_DEFINTION: Table = {
+export const TABLE_DEFINITION: Table = {
     id: "large_numeric_example",
     options: {
         initialize: { sort: { pvalue: "asc" }, filter: { pvalue: 5e-8 } },
@@ -18,6 +18,7 @@ export const TABLE_DEFINTION: Table = {
             "track_name_link",
             "ref_snp_id",
             "is_adsp_variant",
+            "population",
             "neuropathology",
         ],
     },

@@ -2,7 +2,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
 import Table from "@niagads/table";
-import { TABLE_DEFINTION as table } from "../../examples/tables/table_large_numeric_values";
+import { TABLE_DEFINITION as table } from "../../examples/tables/table_large_numeric_values";
 
 const meta: Meta<typeof Table> = {
     title: "Table/Filter Table",
