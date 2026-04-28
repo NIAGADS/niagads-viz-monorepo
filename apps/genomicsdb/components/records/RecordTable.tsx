@@ -63,71 +63,15 @@ const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTabl
                     />
                 ))}
             {tableDef.tableType === "associations" && (
-                <AssociationsTableFilters
-                    pValues={data?.extraData.negLog10PValues}
-                    populationData={data?.extraData.populationData}
-                    onExternalFilterChange={(colName, value) =>
-                        setExternalFilters((prev) => {
-                            const i = prev.findIndex((x) => x.id === colName);
-
-                            if (i >= 0) {
-                                const copy = [...prev];
-                                copy[i].value = value;
-                                return copy;
-                            }
-
-                            return [...prev, { id: colName, value: value }];
-                        })
-                    }
+                <Table
+                    id={tableDef.id}
+                    columns={data?.table.columns || []}
+                    data={data?.table.data || []}
+                    options={options}
                 />
             )}
-            <Table
-                id={tableDef.id}
-                columns={data?.table.columns || []}
-                data={data?.table.data || []}
-                options={options}
-                externalColumnFilters={externalFilters}
-            />
         </div>
     );
 };
 
 export default RecordTable;
-
-interface AssociationsTableFiltersProps {
-    onExternalFilterChange: (colName: string, value: any) => void;
-    pValues: number[];
-    populationData: PieChartDataRow[];
-}
-
-const AssociationsTableFilters = ({
-    onExternalFilterChange,
-    pValues,
-    populationData,
-}: AssociationsTableFiltersProps) => {
-    return (
-        <Card>
-            <div style={{ display: "flex", height: "100%", minHeight: "200px" }}>
-                <Histogram
-                    data={pValues}
-                    numBins={50}
-                    max={50}
-                    label="-log10 pvalue"
-                    limit={7}
-                    limitType="max"
-                    onRangeSelect={(range) =>
-                        onExternalFilterChange("neg_log10_pvalue", range ? [range.min, range.max] : [0, 7])
-                    }
-                />
-                {/* <PieChart id={"popPie"} data={populationData} onClick={(key) => onExternalFilterChange("population", key)} /> */}
-            </div>
-            <div>
-                <PieChart
-                    id={"traitPie"}
-                    data={populationData}
-                    onClick={(key) => onExternalFilterChange("trait_category", key)}
-                />
-            </div>
-        </Card>
-    );
-};
