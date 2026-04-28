@@ -5,7 +5,7 @@ import { TABLE_DEFINITION as table } from "../../../../storybook/examples/tables
 
 const TablePlayground = () => {
     return (
-        <div>
+        <div style={{ padding: "1rem" }}>
             <Table id="test-table" columns={table.columns} data={table.data} options={table.options} />
         </div>
     );
