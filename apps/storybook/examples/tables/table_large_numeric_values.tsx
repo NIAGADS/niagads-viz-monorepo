@@ -106,7 +106,7 @@ export const TABLE_DEFINITION: Table = {
                 value: "CSF: Aβ₄₂ (GRCh38)",
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
-            neuropathology: null,
+            neuropathology: "PSP",
             relative_position: "in gene",
         },
         {
@@ -135,7 +135,7 @@ export const TABLE_DEFINITION: Table = {
                 value: "CSF: Aβ₄₂ (GRCh38)",
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
-            neuropathology: null,
+            neuropathology: "PSP",
             relative_position: "upstream",
         },
         {
@@ -280,7 +280,7 @@ export const TABLE_DEFINITION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             gene_impact: null,
-            neuropathology: null,
+            neuropathology: "PD",
             relative_position: "upstream",
         },
         {
@@ -3586,7 +3586,7 @@ export const TABLE_DEFINITION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             gene_impact: null,
-            neuropathology: null,
+            neuropathology: "PD",
             relative_position: "upstream",
         },
         {
