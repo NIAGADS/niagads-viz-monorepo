@@ -1,10 +1,11 @@
-import { COLOR_BLIND_FRIENDLY_PALETTES, _isNA } from "@niagads/common";
-import { NA_COLOR, PieChartOptions, destroyPieChart, pieChart, updatePieChartSelection } from "../PieChart/pieChart";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-
+import { COLOR_BLIND_FRIENDLY_PALETTES, _isNA } from "@niagads/common";
+import { NA_COLOR, PieChartOptions, destroyPieChart, pieChart, updatePieChartSelection } from "./d3PieChart";
 import { DisplayProps } from "../d3/types";
-import chartStyles from "../styles/Charts.module.css";
+
 import styles from "./PieChart.module.css";
+import chartStyles from "../styles/Charts.module.css"
+
 
 export interface PieChartDataRow {
     id: string;
