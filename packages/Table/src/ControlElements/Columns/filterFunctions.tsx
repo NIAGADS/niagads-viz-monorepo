@@ -24,24 +24,19 @@ export const neglog10Filter: FilterFn<any> = (row, columnId, filterValue) => {
 
 // for handling multi-selects, accounting for list text fields
 export const includesAnyFilter: FilterFn<any> = (row, columnId, filterValue: string[]) => {
-    const rowValues = row.getValue(columnId) as string[];
+    const rowValue = row.getValue(columnId) as string;
 
     if (!filterValue || filterValue.length === 0) return true;
-
-    return rowValues.some((value) => {
-        const values = value.includes("//") ? value.split(" // ") : [value];
-        return filterValue.some((val) => values.includes(val));
-    });
+    const values = rowValue.includes("//") ? rowValue.split(" // ") : [rowValue];
+    return filterValue.some((val) => values.includes(val));
 };
 
 // for handling list text fields
 export const includesFilter: FilterFn<any> = (row, columnId, filterValue: string) => {
-    const rowValues = row.getValue(columnId) as string[];
+    const rowValue = row.getValue(columnId) as string;
 
     if (!filterValue) return true;
 
-    return rowValues.some((value) => {
-        const values = value.includes("//") ? value.split(" // ") : [value];
-        return values.includes(filterValue);
-    });
+    const values = rowValue.includes("//") ? rowValue.split(" // ") : [rowValue];
+    return values.includes(filterValue);
 };
