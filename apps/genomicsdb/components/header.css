@@ -1,3 +1,20 @@
+
+/* CSS-only show header when scroll up, hide when scroll down - for browsers that support it */
+/* @supports (container-type: scroll-state) {
+    html {
+        container-type: scroll-state;
+    }
+
+    .header {
+        @container scroll-state(scrolled: bottom) {
+            translate: 0 -100%;
+        }
+        @container scroll-state(scrolled: top) {
+            translate: 0 0;
+        }
+    }
+} */
+
 .header {
     height: var(--header-height);
     background-color: var(--dark-blue);

@@ -88,13 +88,12 @@
 
 .pageContainer {
     display: flex;
-
     min-height: calc(100vh - var(--header-height));
     margin-top: 0;
 }
 
 .pageContainerCapped {
-    height: calc(100vh - var(--header-height));
+    min-height: calc(100vh - var(--header-height));
 }
 
 .content {

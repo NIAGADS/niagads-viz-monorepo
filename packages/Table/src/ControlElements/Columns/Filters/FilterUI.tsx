@@ -106,7 +106,7 @@ const CheckBoxFilter = ({ column, values, otherValues }: TextFilterProps) => {
     }, [values]);
 
     const optionKeys = Object.keys(opts);
-    const filterValues = column.getFilterValue() as string[];
+    const filterValues = (column.getFilterValue() as string[]) || [];
     const filterValuesIncludeOther = filterValues.some((item) => otherValues.includes(item));
     let selectedValues = filterValues.filter((item) => !otherValues.includes(item)) || [];
     if (filterValuesIncludeOther) {
