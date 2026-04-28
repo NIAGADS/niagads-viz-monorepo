@@ -106,6 +106,5 @@ declare module "@tanstack/react-table" {
         includesAny: FilterFn<any>;
         pvalue: FilterFn<any>;
         globalFuzzy: FilterFn<any>;
-        includes: FilterFn<any>;
     }
 }

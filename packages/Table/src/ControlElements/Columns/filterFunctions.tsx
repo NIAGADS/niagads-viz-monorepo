@@ -21,20 +21,11 @@ export const neglog10Filter: FilterFn<any> = (row, columnId, filterValue) => {
 };
 
 // for handling multi-selects, accounting for list text fields
+// and anything that might have "Other", so basically, all text fields
 export const includesAnyFilter: FilterFn<any> = (row, columnId, filterValue: string[]) => {
     const rowValue = row.getValue(columnId) as string;
 
     if (!filterValue || filterValue.length === 0) return true;
     const values = rowValue.includes("//") ? rowValue.split(" // ") : [rowValue];
     return filterValue.some((val) => values.includes(val));
-};
-
-// for handling list text fields
-export const includesFilter: FilterFn<any> = (row, columnId, filterValue: string) => {
-    const rowValue = row.getValue(columnId) as string;
-
-    if (!filterValue) return true;
-
-    const values = rowValue.includes("//") ? rowValue.split(" // ") : [rowValue];
-    return values.includes(filterValue);
 };

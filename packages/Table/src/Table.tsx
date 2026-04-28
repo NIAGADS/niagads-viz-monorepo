@@ -28,12 +28,7 @@ import React, { ReactNode, useCallback, useLayoutEffect, useMemo, useState } fro
 import { _get, toTitleCase } from "@niagads/common";
 import { booleanSort, scientificNotationSort } from "./ControlElements/Columns/sortingFunctions";
 import { getCellValue, renderCell, resolveCell, validateCellType } from "./Cells/utils";
-import {
-    globalFuzzyFilter,
-    includesAnyFilter,
-    includesFilter,
-    neglog10Filter,
-} from "./ControlElements/Columns/filterFunctions";
+import { globalFuzzyFilter, includesAnyFilter, neglog10Filter } from "./ControlElements/Columns/filterFunctions";
 
 import { ColumnFilterControls } from "./ControlElements/Columns/ColumnFilterControls";
 import { NUMERIC_CELL_TYPES } from "./ControlElements/Columns/Filters/FilterUI";
@@ -196,7 +191,6 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
         getSortedRowModel: getSortedRowModel(),
         sortingFns: { boolean: booleanSort, scientific: scientificNotationSort },
         filterFns: {
-            includes: includesFilter,
             globalFuzzy: globalFuzzyFilter,
             includesAny: includesAnyFilter,
             pvalue: neglog10Filter,
@@ -347,7 +341,6 @@ const __resolveSortingFn = (col: TableColumn): SortingFnOption<TableRow> => {
     return "alphanumeric";
 };
 
-// FIXME: boolean?
 const __resolveFilterFn = (col: TableColumn): FilterFnOption<TableRow> => {
     if (col.filterOpts?.filterType === "multiselect") {
         return "includesAny"; // multiselect & text lists
@@ -368,8 +361,8 @@ const __resolveFilterFn = (col: TableColumn): FilterFnOption<TableRow> => {
         return "equals";
     }
 
-    // text field filtering; handles text lists
-    return "includes";
+    // text field filtering; handles text lists, other grouping
+    return "includesAny";
 };
 
 // wrapper to catch any errors thrown during cell type and properties validation so that

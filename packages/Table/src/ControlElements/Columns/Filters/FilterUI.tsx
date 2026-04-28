@@ -1,7 +1,7 @@
 import { Alert, Badge, Checkbox } from "@niagads/ui";
 import { PieChart, PieChartDataRow, RangeSelectHistogram, ThresholdSelectHistogram } from "@niagads/charts";
 import { Range, negLog10 } from "@niagads/common";
-import React, { ReactNode, useMemo } from "react";
+import React, { ReactNode, useCallback, useMemo } from "react";
 
 import { Column } from "@tanstack/react-table";
 import { DEFAULT_NA_VALUE } from "../../../types";
@@ -18,6 +18,7 @@ interface FilterProps {
 interface TextFilterProps extends FilterProps {
     column: Column<any, unknown>;
     values: Record<string, number>;
+    otherValues: string[]; // array of values that make up the "Other" if exists
 }
 
 const NoValidValuesMessage = ({ columnName }: { columnName: string }) => (
@@ -26,7 +27,18 @@ const NoValidValuesMessage = ({ columnName }: { columnName: string }) => (
     </Alert>
 );
 
-const PieChartFilter = ({ column, values }: TextFilterProps) => {
+const __resolveTextFilterValue = (value: string | undefined, otherValues: string[]) => {
+    if (value === undefined) {
+        return value;
+    }
+    if (value === "Other") {
+        return otherValues;
+    } else {
+        return [value];
+    }
+};
+
+const PieChartFilter = ({ column, values, otherValues }: TextFilterProps) => {
     const chartData: PieChartDataRow[] = useMemo(
         () =>
             Object.entries(values).map(([key, count]) => ({
@@ -35,18 +47,19 @@ const PieChartFilter = ({ column, values }: TextFilterProps) => {
             })),
         [values]
     );
+
     return (
         <PieChart
             title={column.columnDef.header!.toString()}
             data={chartData}
             legendPosition="right"
-            onClick={(v: string) => column.setFilterValue(v)}
+            onClick={(v: string) => column.setFilterValue(__resolveTextFilterValue(v, otherValues))}
             displayOpts={{ width: 200 }}
         />
     );
 };
 
-const RichSelectFilter = ({ column, values }: TextFilterProps) => {
+const RichSelectFilter = ({ column, values, otherValues }: TextFilterProps) => {
     const opts = useMemo(() => {
         return Object.entries(values).reduce(
             (acc, [value, count]) => {
@@ -62,12 +75,26 @@ const RichSelectFilter = ({ column, values }: TextFilterProps) => {
             label={column.columnDef.header!.toString()}
             placeholder={"Select ..."}
             options={opts}
-            onChange={(v) => column.setFilterValue(v)}
+            onChange={(v) => column.setFilterValue(__resolveTextFilterValue(v, otherValues))}
         />
     );
 };
 
-const CheckBoxFilter = ({ column, values }: TextFilterProps) => {
+const CheckBoxFilter = ({ column, values, otherValues }: TextFilterProps) => {
+    const resolveFilterValue = useCallback(
+        (newFilterValues: string[]) => {
+            if (newFilterValues.length > 0) {
+                if (newFilterValues.includes("Other")) {
+                    let adjustedFilterValues: string[] = newFilterValues.filter((v) => v !== "Other");
+                    return [...adjustedFilterValues, ...otherValues];
+                }
+                return newFilterValues;
+            } else {
+                return undefined;
+            }
+        },
+        [otherValues]
+    );
     const opts = useMemo(() => {
         return Object.entries(values).reduce(
             (acc, [value, count]) => {
@@ -79,7 +106,12 @@ const CheckBoxFilter = ({ column, values }: TextFilterProps) => {
     }, [values]);
 
     const optionKeys = Object.keys(opts);
-    const selectedValues = (column.getFilterValue() as string[]) || [];
+    const filterValues = column.getFilterValue() as string[];
+    const filterValuesIncludeOther = filterValues.some((item) => otherValues.includes(item));
+    let selectedValues = filterValues.filter((item) => !otherValues.includes(item)) || [];
+    if (filterValuesIncludeOther) {
+        selectedValues.push("Other");
+    }
     const label: string = column.columnDef.header!.toString();
 
     return (
@@ -95,7 +127,7 @@ const CheckBoxFilter = ({ column, values }: TextFilterProps) => {
                                 const newValues = e.target.checked
                                     ? [...selectedValues, optionKey]
                                     : selectedValues.filter((v) => v !== optionKey);
-                                column.setFilterValue(newValues.length > 0 ? newValues : undefined);
+                                column.setFilterValue(resolveFilterValue(newValues));
                             }}
                         />
                         <span className={styles["filter-checkbox-label"]}>{optionKey}</span>
@@ -107,7 +139,7 @@ const CheckBoxFilter = ({ column, values }: TextFilterProps) => {
     );
 };
 
-const BooleanFilter = ({ column, values }: TextFilterProps) => {
+const BooleanFilter = ({ column, values }: Omit<TextFilterProps, "otherValues">) => {
     const meta = column.columnDef.meta!;
     const trueValue = meta.trueValue ? meta.trueValue.toString() : "true";
     const label: string = column.columnDef.header!.toString();
@@ -199,20 +231,28 @@ const Filter = ({ column }: FilterProps) => {
     // sort the unique values by counts,
     // accounting for NA and realistic display limits
     // defaults always to RichSelect unless user overrides
-    const sortedUniqueValues: Record<string, number> = useMemo(() => {
+    const { sortedValueHash: sortedUniqueValues, otherValueList: otherValues } = useMemo(() => {
         if (naCount > 0) {
             uniqueValues.delete(naValue);
         }
 
         // Truncate to MAX_FILTER_CATEGORIES and collapse residuals into "Other"
         let sortedValueHash: Record<string, number> = {};
+        let otherValueList: string[] = [];
         if (uniqueValues.size > MAX_FILTER_CATEGORIES) {
             const topEntryHash: Record<string, number> = {};
             const sortedEntries = [...uniqueValues.entries()].sort((a, b) => b[1] - a[1]);
             const topEntries = sortedEntries.slice(0, MAX_FILTER_CATEGORIES - 1);
-            const otherCount = sortedEntries
-                .slice(MAX_FILTER_CATEGORIES - 1)
-                .reduce((sum, [, count]) => sum + count, 0);
+
+            const { otherValueList: otherVals, otherCount } = sortedEntries.slice(MAX_FILTER_CATEGORIES - 1).reduce(
+                (acc, [value, count]) => ({
+                    otherValueList: [...acc.otherValueList, value],
+                    otherCount: acc.otherCount + count,
+                }),
+                { otherValueList: [] as string[], otherCount: 0 }
+            );
+            otherValueList = otherVals;
+
             topEntries.forEach(([value, count]) => {
                 topEntryHash[value] = count;
             });
@@ -243,7 +283,7 @@ const Filter = ({ column }: FilterProps) => {
         if (naCount > 0) {
             sortedValueHash[naValue] = naCount;
         }
-        return sortedValueHash;
+        return { sortedValueHash, otherValueList };
     }, [Array.from(uniqueValues.entries())]);
 
     if (meta.type === "boolean") {
@@ -251,14 +291,14 @@ const Filter = ({ column }: FilterProps) => {
     }
 
     if (meta.filterType === "pie") {
-        return <PieChartFilter column={column} values={sortedUniqueValues} />;
+        return <PieChartFilter column={column} values={sortedUniqueValues} otherValues={otherValues} />;
     }
 
     if (meta.filterType === "multiselect") {
-        return <CheckBoxFilter column={column} values={sortedUniqueValues} />;
+        return <CheckBoxFilter column={column} values={sortedUniqueValues} otherValues={otherValues} />;
     }
 
-    return <RichSelectFilter column={column} values={sortedUniqueValues} />;
+    return <RichSelectFilter column={column} values={sortedUniqueValues} otherValues={otherValues} />;
 };
 
 export default Filter;
