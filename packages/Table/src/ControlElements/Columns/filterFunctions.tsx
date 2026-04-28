@@ -1,15 +1,13 @@
 import { Range, negLog10 } from "@niagads/common";
+import { rankItem, rankings } from "@tanstack/match-sorter-utils";
 
 import { FilterFn } from "@tanstack/react-table";
-import { rankItem } from "@tanstack/match-sorter-utils";
 
 // fuzzy filter for global text search, allow typos, _ delimited words, etc.
-export const globalFuzzyFilter: FilterFn<any> = (row, columnId, filterValue) => {
-    // Rank the item solely to determine if it passes the threshold
+export const globalFuzzyFilter: FilterFn<any> = (row, columnId, filterValue: string) => {
+    // Rank the item and determine ranking type, pass contains
     const itemRank = rankItem(row.getValue(columnId), filterValue);
-
-    // Return the boolean result only
-    return itemRank.passed;
+    return itemRank.rank >= rankings.CONTAINS;
 };
 
 export const neglog10Filter: FilterFn<any> = (row, columnId, filterValue) => {
