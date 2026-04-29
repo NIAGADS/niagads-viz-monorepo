@@ -2,13 +2,14 @@
 
 import { Card, CardBody, CardHeader } from "@niagads/ui";
 import { RecordOverview, renderRecordTitle } from "./RecordOverview";
+
+import AssociationSummaryChart from "../../charts/AssociationSummaryChart";
 import { ExternalUrls } from "@/data/reference";
+import { GWAS_ASSOC_SECTION } from "@/data/sections";
 import { GeneRecord } from "@/lib/types";
 import { RecordLink } from "../../Link";
 import { genomicLocationToSpan } from "@/lib/utils";
-import styles from "./overview.module.css";
-import { GWAS_ASSOC_SECTION } from "@/data/sections";
-import AssociationSummaryChart from "../../charts/AssociationSummaryChart";
+import styles from "../styles/record.module.css";
 
 const GeneRecordOverview = ({ record }: { record: GeneRecord }) => {
     // Format location string: chr:start-end:strand / cytogenic_location
@@ -21,7 +22,7 @@ const GeneRecordOverview = ({ record }: { record: GeneRecord }) => {
     return (
         <RecordOverview>
             {/* Gene Information Card - 1/3 width */}
-            <Card variant="third">
+            <Card span={4}>
                 <CardHeader>
                     {renderRecordTitle(record.symbol, record.id, ExternalUrls.ENSEMBL_GENE_URL, record.record_type)}
                 </CardHeader>
@@ -50,7 +51,7 @@ const GeneRecordOverview = ({ record }: { record: GeneRecord }) => {
             </Card>
 
             {/* Chart placeholders - 2/3 width */}
-            <Card variant="two-thirds">
+            <Card span={6}>
                 <CardHeader>Genetic Associations</CardHeader>
                 <CardBody>
                     <div className="flex" style={{ height: "100%" }}>

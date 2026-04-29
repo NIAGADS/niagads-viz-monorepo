@@ -1,0 +1,11 @@
+.select-filter-grid-single {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.select-filter-grid-double {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}

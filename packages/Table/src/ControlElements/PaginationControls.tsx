@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useMemo, useState } from "react";
 
 import { Table as ReactTable } from "@tanstack/react-table";
-import styles from "../styles/controls.module.css";
+import styles from "./controls.module.css";
 
 interface PaginationControlsProps {
     id: string;

@@ -1,4 +1,5 @@
 import React, { ReactElement, ReactNode, useEffect, useId, useState } from "react";
+
 import { Card } from "../Card";
 import { HelpIconWrapper } from "../HelpIcon";
 import { StylingProps } from "../types";
@@ -29,7 +30,7 @@ export const Tabs = ({ children, onTabChange, selectedTab }: TabsProps) => {
                 ))}
             </div>
 
-            <Card variant="full" hover={false} role="tabpanel">
+            <Card hover={false} role="tabpanel">
                 {children.map((tab) => {
                     const isActive = tab.props.id === selectedId;
                     return (

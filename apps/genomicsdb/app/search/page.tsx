@@ -1,5 +1,3 @@
-import "@/app/globals.css";
-
 import { Card, LoadingSpinner } from "@niagads/ui";
 import { PageProps, SearchResult } from "@/lib/types";
 import React, { Suspense } from "react";
@@ -40,7 +38,7 @@ const SearchPage = async ({ searchParams }: PageProps) => {
                 </div>
             ) : (
                 <div className="max-text-width">
-                    <Card variant="full" outline={false}>
+                    <Card outline={false}>
                         <div className="content-header">
                             <div>
                                 <h1 className="content-title">Search Results</h1>

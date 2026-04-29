@@ -10,7 +10,7 @@ const RegionRecordOverview = async ({ record }: { record: RegionRecord }) => {
     return (
         <>
             {/* Gene Information Card - 1/3 width */}
-            <Card variant="third">
+            <Card span={4}>
                 <CardHeader>{renderRecordTitle(record.id, null, null, record.record_type)}</CardHeader>
                 <CardBody>
                     <div className={styles.infoContent}>
