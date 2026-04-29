@@ -2,7 +2,7 @@ import { APIPagination, _isEmpty } from "@niagads/common";
 import { APITableResponse, ProcessedTableResponse, TableSection } from "@/lib/types";
 import { Alert, Card, LoadingSpinner } from "@niagads/ui";
 import { ThresholdSelectHistogram as Histogram, PieChart, PieChartDataRow } from "@niagads/charts";
-import Table, { TableConfig } from "@niagads/table";
+import Table, { TableOptions } from "@niagads/table";
 import { useEffect, useMemo, useState } from "react";
 
 import PaginationMessage from "../PaginationMessage";
@@ -25,7 +25,7 @@ const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTabl
         (url: string) => fetch(url).then((res) => res.json())
     );
 
-    const options: TableConfig | undefined = useMemo(() => {
+    const options: TableOptions | undefined = useMemo(() => {
         if (data && !_isEmpty(data?.table)) {
             const defaultColumns = data.table.columns.map((c: any, index) => {
                 if (index < 8 || c["id"].startsWith("num_") || c["id"] === "url") return c["id"];
@@ -63,71 +63,15 @@ const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTabl
                     />
                 ))}
             {tableDef.tableType === "associations" && (
-                <AssociationsTableFilters
-                    pValues={data?.extraData.negLog10PValues}
-                    populationData={data?.extraData.populationData}
-                    onExternalFilterChange={(colName, value) =>
-                        setExternalFilters((prev) => {
-                            const i = prev.findIndex((x) => x.id === colName);
-
-                            if (i >= 0) {
-                                const copy = [...prev];
-                                copy[i].value = value;
-                                return copy;
-                            }
-
-                            return [...prev, { id: colName, value: value }];
-                        })
-                    }
+                <Table
+                    id={tableDef.id}
+                    columns={data?.table.columns || []}
+                    data={data?.table.data || []}
+                    options={options}
                 />
             )}
-            <Table
-                id={tableDef.id}
-                columns={data?.table.columns || []}
-                data={data?.table.data || []}
-                options={options}
-                externalColumnFilters={externalFilters}
-            />
         </div>
     );
 };
 
 export default RecordTable;
-
-interface AssociationsTableFiltersProps {
-    onExternalFilterChange: (colName: string, value: any) => void;
-    pValues: number[];
-    populationData: PieChartDataRow[];
-}
-
-const AssociationsTableFilters = ({
-    onExternalFilterChange,
-    pValues,
-    populationData,
-}: AssociationsTableFiltersProps) => {
-    return (
-        <Card variant="full">
-            <div style={{ display: "flex", height: "100%", minHeight: "200px" }}>
-                <Histogram
-                    data={pValues}
-                    numBins={50}
-                    max={50}
-                    label="-log10 pvalue"
-                    limit={7}
-                    limitType="max"
-                    onRangeSelect={(range) =>
-                        onExternalFilterChange("neg_log10_pvalue", range ? [range.min, range.max] : [0, 7])
-                    }
-                />
-                {/* <PieChart id={"popPie"} data={populationData} onClick={(key) => onExternalFilterChange("population", key)} /> */}
-            </div>
-            <div>
-                <PieChart
-                    id={"traitPie"}
-                    data={populationData}
-                    onClick={(key) => onExternalFilterChange("trait_category", key)}
-                />
-            </div>
-        </Card>
-    );
-};

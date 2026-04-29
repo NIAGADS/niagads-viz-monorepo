@@ -1,9 +1,15 @@
-import { TableProps as Table } from "@niagads/table";
+import "../../examples/tables/custom_table_cell_styles.css";
 
-export const TABLE_DEFINTION: Table = {
+import { getPvalueStyle, getRelativePositionClassName } from "./styling_functions";
+
+import { TableConfig as Table } from "@niagads/table";
+
+export const TABLE_DEFINITION: Table = {
     id: "large_numeric_example",
     options: {
         initialize: { sort: { pvalue: "asc" }, filter: { pvalue: 5e-8 } },
+        enableExport: true,
+        enableColumnFilters: true,
         defaultColumns: [
             "relative_position",
             "variant_link",
@@ -12,32 +18,45 @@ export const TABLE_DEFINTION: Table = {
             "track_name_link",
             "ref_snp_id",
             "is_adsp_variant",
+            "population",
             "neuropathology",
         ],
     },
     columns: [
-        { id: "relative_position", header: "Relative Position" },
+        {
+            id: "relative_position",
+            type: "badge",
+            header: "Relative Position",
+            styling: { getClassName: getRelativePositionClassName },
+            filterOpts: { filterType: "pie" },
+        },
         {
             id: "variant_link",
             type: "link",
             header: "Variant",
-            canFilter: false,
             required: true,
+            disableColumnFilter: true,
         },
-        { id: "pvalue", header: "p-value", type: "float", required: true },
-        { id: "allele", header: "Test Allele", canFilter: false },
-        { id: "track_name_link", header: "Track", type: "link", required: true },
-        { id: "track_description", header: "Track Description" },
+        {
+            id: "pvalue",
+            header: "p-value",
+            type: "pvalue",
+            required: true,
+            disableColumnFilter: false,
+            styling: { getClassName: (pvalue: number) => "pvalue-badge", getStyle: getPvalueStyle },
+        },
+        { id: "allele", header: "Test Allele", disableColumnFilter: true },
+        { id: "track_name_link", header: "Track", type: "link", required: true, disableColumnFilter: true },
+        { id: "track_description", header: "Track Description", disableColumnFilter: true },
         {
             id: "is_adsp_variant",
             header: "ADSP Variant?",
             description:
                 "variant identified from ADSP whole-genome sequencing efforts that has passed the ADSP QC protocol; <em>NOT</em> an indicator of AD-risk",
             type: "boolean",
-            // format: { nullValue: false },
-            disableGlobalFilter: true,
+            styling: { getStyle: (value: any) => ({ color: "red" }) },
         },
-        { id: "ref_snp_id", header: "RefSNP ID" },
+        { id: "ref_snp_id", header: "RefSNP ID", disableColumnFilter: true },
         {
             id: "gene_impact",
             header: "Impact",
@@ -51,9 +70,9 @@ export const TABLE_DEFINTION: Table = {
             description:
                 "Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline",
         },
-        { id: "population" },
-        { id: "diagnosis" },
-        { id: "neuropathology", required: true },
+        { id: "population", filterOpts: { filterType: "multiselect" } },
+        { id: "diagnosis", disableColumnFilter: true },
+        { id: "neuropathology", required: true, filterOpts: { filterType: "pie" } },
         { id: "tissue" },
         { id: "biomarker" },
         { id: "gender" },
@@ -68,26 +87,26 @@ export const TABLE_DEFINTION: Table = {
             ref_snp_id: "rs769449",
             pvalue: "4.77e-94",
             biomarker: "Aβ₄₂",
-            population: "European",
+            population: "Asian",
             genotype: null,
             track_description:
                 "summary statistics for CSF beta-amyloid 42 (Aβ₄₂) levels in cerebrospinal fluid (CSF) from 3146 participants across nine studies, adjusted for age, gender, and population stratification (Lifted Over from GRCh37 to GRCh38)",
             gene_consequence: "intron variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44906745:G:A:rs769449",
                 value: "19:44906745:G:A",
                 tooltip: "Browse record for variant: 19:44906745:G:A",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             track_name_link: {
                 url: "../track/NG00055_AB42",
                 value: "CSF: Aβ₄₂ (GRCh38)",
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
-            neuropathology: null,
+            neuropathology: "PSP",
             relative_position: "in gene",
         },
         {
@@ -97,14 +116,14 @@ export const TABLE_DEFINTION: Table = {
             pvalue: "9.66e-78",
             ref_snp_id: "rs71352238",
             biomarker: "Aβ₄₂",
-            population: "European",
+            population: "Asian",
             genotype: null,
             track_description:
                 "summary statistics for CSF beta-amyloid 42 (Aβ₄₂) levels in cerebrospinal fluid (CSF) from 3146 participants across nine studies, adjusted for age, gender, and population stratification (Lifted Over from GRCh37 to GRCh38)",
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44891079:T:C:rs71352238",
                 value: "19:44891079:T:C",
@@ -116,8 +135,8 @@ export const TABLE_DEFINTION: Table = {
                 value: "CSF: Aβ₄₂ (GRCh38)",
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
-            neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            neuropathology: "PSP",
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -133,7 +152,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892652:C:G:rs34404554",
                 value: "19:44892652:C:G",
@@ -146,7 +165,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -162,7 +181,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892887:C:T:rs11556505",
                 value: "19:44892887:C:T",
@@ -175,7 +194,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -191,7 +210,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892362:A:G:rs2075650",
                 value: "19:44892362:A:G",
@@ -204,7 +223,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -220,7 +239,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884339:G:A:rs12972970",
                 value: "19:44884339:G:A",
@@ -233,7 +252,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -249,7 +268,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884873:G:A:rs34342646",
                 value: "19:44884873:G:A",
@@ -261,8 +280,8 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             gene_impact: null,
-            neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            neuropathology: "PD",
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -278,7 +297,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884202:C:G:rs12972156",
                 value: "19:44884202:C:G",
@@ -291,7 +310,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -307,7 +326,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "GTAA",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44883210:G:GTAA:rs142042446",
                 value: "19:44883210:G:GTAA",
@@ -320,7 +339,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -336,7 +355,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44888997:C:T:rs6857",
                 value: "19:44888997:C:T",
@@ -349,7 +368,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -365,7 +384,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893408:G:T:rs59007384",
                 value: "19:44893408:G:T",
@@ -378,7 +397,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -394,7 +413,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44891712:T:G:rs184017",
                 value: "19:44891712:T:G",
@@ -407,7 +426,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -423,7 +442,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919589:G:A:rs56131196",
                 value: "19:44919589:G:A",
@@ -436,7 +455,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -452,7 +471,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892962:C:T:rs157582",
                 value: "19:44892962:C:T",
@@ -465,7 +484,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -474,7 +493,7 @@ export const TABLE_DEFINTION: Table = {
             tissue: null,
             pvalue: "1.00e-55",
             biomarker: null,
-            population: "European",
+            population: "African American",
             genotype: null,
             track_description:
                 "summary statistics from a comparative study of neuropathological features of Alzheimer's disease and related dementias: NPs (presence versus absence), inclusive primary dataset allowing some incomplete documentation of pathological features (Lifted Over from GRCh37 to GRCh38)",
@@ -494,7 +513,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -510,13 +529,13 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "missense variant",
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44908684:T:C:rs429358",
                 value: "19:44908684:T:C",
                 tooltip: "Browse record for variant: 19:44908684:T:C",
             },
-            gene_impact: { value: "MODERATE", color: "goldenrod" },
+            gene_impact: "MODERATE",
             track_name_link: {
                 url: "../track/NG00041_GRCh38_NP_RELAX",
                 value: "Neuritic plaques (presence vs. absence); relaxed (...",
@@ -552,7 +571,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -568,7 +587,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44885243:A:G:rs283811",
                 value: "19:44885243:A:G",
@@ -581,7 +600,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -597,7 +616,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44891079:T:C:rs71352238",
                 value: "19:44891079:T:C",
@@ -610,7 +629,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -626,7 +645,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44917997:G:A:rs12721046",
                 value: "19:44917997:G:A",
@@ -639,7 +658,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -655,7 +674,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892887:C:T:rs11556505",
                 value: "19:44892887:C:T",
@@ -668,7 +687,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -684,7 +703,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892362:A:G:rs2075650",
                 value: "19:44892362:A:G",
@@ -697,7 +716,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -713,7 +732,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44924977:G:A:rs66626994",
                 value: "19:44924977:G:A",
@@ -726,7 +745,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -755,7 +774,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -765,13 +784,13 @@ export const TABLE_DEFINTION: Table = {
             tissue: null,
             biomarker: null,
             genotype: null,
-            population: "European",
+            population: "African American",
             track_description:
                 "summary statistics from a comparative study of neuropathological features of Alzheimer's disease and related dementias: NPs (presence versus absence), inclusive primary dataset allowing some incomplete documentation of pathological features (Lifted Over from GRCh37 to GRCh38)",
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44912456:G:A:rs10414043",
                 value: "19:44912456:G:A",
@@ -784,7 +803,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -800,7 +819,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44888997:C:T:rs6857",
                 value: "19:44888997:C:T",
@@ -813,7 +832,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -829,7 +848,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "intron variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44906745:G:A:rs769449",
                 value: "19:44906745:G:A",
@@ -840,7 +859,7 @@ export const TABLE_DEFINTION: Table = {
                 value: "Neuritic plaques (presence vs. absence); relaxed (...",
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             neuropathology: "neuritic plaques",
             relative_position: "in gene",
         },
@@ -858,7 +877,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44888997:C:T:rs6857",
                 value: "19:44888997:C:T",
@@ -871,7 +890,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -880,14 +899,14 @@ export const TABLE_DEFINTION: Table = {
             pvalue: "1.65e-46",
             ref_snp_id: "rs34095326",
             biomarker: "Aβ₄₂",
-            population: "European",
+            population: "Asian",
             genotype: null,
             track_description:
                 "summary statistics for CSF beta-amyloid 42 (Aβ₄₂) levels in cerebrospinal fluid (CSF) from 3146 participants across nine studies, adjusted for age, gender, and population stratification (Lifted Over from GRCh37 to GRCh38)",
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892587:G:A:rs34095326",
                 value: "19:44892587:G:A",
@@ -900,7 +919,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -916,7 +935,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884873:G:A:rs34342646",
                 value: "19:44884873:G:A",
@@ -929,7 +948,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -945,7 +964,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44903416:G:A:rs10119",
                 value: "19:44903416:G:A",
@@ -958,7 +977,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -974,7 +993,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44888997:C:T:rs6857",
                 value: "19:44888997:C:T",
@@ -987,7 +1006,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1003,7 +1022,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884339:G:A:rs12972970",
                 value: "19:44884339:G:A",
@@ -1016,7 +1035,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1032,7 +1051,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893408:G:T:rs59007384",
                 value: "19:44893408:G:T",
@@ -1045,7 +1064,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1061,7 +1080,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893408:G:T:rs59007384",
                 value: "19:44893408:G:T",
@@ -1074,7 +1093,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1090,7 +1109,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915533:T:C:rs5117",
                 value: "19:44915533:T:C",
@@ -1103,7 +1122,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -1119,7 +1138,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919589:G:A:rs56131196",
                 value: "19:44919589:G:A",
@@ -1132,7 +1151,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -1148,7 +1167,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44891712:T:G:rs184017",
                 value: "19:44891712:T:G",
@@ -1161,7 +1180,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1177,7 +1196,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892962:C:T:rs157582",
                 value: "19:44892962:C:T",
@@ -1190,7 +1209,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1206,7 +1225,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893408:G:T:rs59007384",
                 value: "19:44893408:G:T",
@@ -1219,7 +1238,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1235,7 +1254,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44891712:T:G:rs184017",
                 value: "19:44891712:T:G",
@@ -1248,7 +1267,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1277,7 +1296,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1293,7 +1312,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892962:C:T:rs157582",
                 value: "19:44892962:C:T",
@@ -1306,7 +1325,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1335,7 +1354,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1345,13 +1364,13 @@ export const TABLE_DEFINTION: Table = {
             pvalue: "3.39e-39",
             biomarker: null,
             genotype: null,
-            population: "European",
+            population: "African American",
             track_description:
                 "summary statistics from a comparative study of neuropathological features of Alzheimer's disease and related dementias: NPs (presence versus absence), inclusive primary dataset allowing some incomplete documentation of pathological features (Lifted Over from GRCh37 to GRCh38)",
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44912921:G:T:rs483082",
                 value: "19:44912921:G:T",
@@ -1364,7 +1383,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -1380,7 +1399,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44891712:T:G:rs184017",
                 value: "19:44891712:T:G",
@@ -1393,7 +1412,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1409,13 +1428,13 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "missense variant",
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44908684:T:C:rs429358",
                 value: "19:44908684:T:C",
                 tooltip: "Browse record for variant: 19:44908684:T:C",
             },
-            gene_impact: { value: "MODERATE", color: "goldenrod" },
+            gene_impact: "MODERATE",
             track_name_link: {
                 url: "../track/NG00041_GRCh38_NFT_BSTAGES",
                 value: "Neurofibrillary tangles (ranked by Braak stages) (...",
@@ -1438,7 +1457,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892962:C:T:rs157582",
                 value: "19:44892962:C:T",
@@ -1451,7 +1470,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1467,7 +1486,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44888997:C:T:rs6857",
                 value: "19:44888997:C:T",
@@ -1480,7 +1499,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1509,7 +1528,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1525,7 +1544,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892887:C:T:rs11556505",
                 value: "19:44892887:C:T",
@@ -1538,7 +1557,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1554,7 +1573,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44891079:T:C:rs71352238",
                 value: "19:44891079:T:C",
@@ -1567,7 +1586,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1583,7 +1602,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892362:A:G:rs2075650",
                 value: "19:44892362:A:G",
@@ -1596,7 +1615,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1625,7 +1644,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1641,7 +1660,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892362:A:G:rs2075650",
                 value: "19:44892362:A:G",
@@ -1654,7 +1673,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1670,7 +1689,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44891079:T:C:rs71352238",
                 value: "19:44891079:T:C",
@@ -1683,7 +1702,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1699,7 +1718,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892887:C:T:rs11556505",
                 value: "19:44892887:C:T",
@@ -1712,7 +1731,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1741,7 +1760,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1757,7 +1776,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919589:G:A:rs56131196",
                 value: "19:44919589:G:A",
@@ -1770,7 +1789,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -1786,7 +1805,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893408:G:T:rs59007384",
                 value: "19:44893408:G:T",
@@ -1799,7 +1818,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1815,7 +1834,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919589:G:A:rs56131196",
                 value: "19:44919589:G:A",
@@ -1828,7 +1847,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -1844,7 +1863,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44891079:T:C:rs71352238",
                 value: "19:44891079:T:C",
@@ -1857,7 +1876,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1873,7 +1892,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892887:C:T:rs11556505",
                 value: "19:44892887:C:T",
@@ -1886,7 +1905,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1902,7 +1921,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892362:A:G:rs2075650",
                 value: "19:44892362:A:G",
@@ -1915,7 +1934,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1931,7 +1950,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "missense variant",
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44908684:T:C:rs429358",
                 value: "19:44908684:T:C",
@@ -1942,7 +1961,7 @@ export const TABLE_DEFINTION: Table = {
                 value: "Neuritic plaques (ranked by CERAD score) (GRCh38)",
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
-            gene_impact: { value: "MODERATE", color: "goldenrod" },
+            gene_impact: "MODERATE",
             neuropathology: "CERAD score // neuritic plaques",
             relative_position: "in gene",
         },
@@ -1960,7 +1979,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44891712:T:G:rs184017",
                 value: "19:44891712:T:G",
@@ -1973,7 +1992,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -1989,7 +2008,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44885243:A:G:rs283811",
                 value: "19:44885243:A:G",
@@ -2002,7 +2021,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -2018,7 +2037,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892962:C:T:rs157582",
                 value: "19:44892962:C:T",
@@ -2031,7 +2050,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -2060,7 +2079,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -2076,7 +2095,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44917997:G:A:rs12721046",
                 value: "19:44917997:G:A",
@@ -2089,7 +2108,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -2105,7 +2124,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44885243:A:G:rs283811",
                 value: "19:44885243:A:G",
@@ -2118,7 +2137,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -2147,7 +2166,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -2163,7 +2182,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892587:G:A:rs34095326",
                 value: "19:44892587:G:A",
@@ -2176,7 +2195,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -2192,7 +2211,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884873:G:A:rs34342646",
                 value: "19:44884873:G:A",
@@ -2205,7 +2224,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -2221,7 +2240,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884873:G:A:rs34342646",
                 value: "19:44884873:G:A",
@@ -2234,7 +2253,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -2250,7 +2269,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44885243:A:G:rs283811",
                 value: "19:44885243:A:G",
@@ -2263,7 +2282,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -2279,7 +2298,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919689:A:G:rs4420638",
                 value: "19:44919689:A:G",
@@ -2292,7 +2311,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -2308,7 +2327,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "missense variant",
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44908684:T:C:rs429358",
                 value: "19:44908684:T:C",
@@ -2319,7 +2338,7 @@ export const TABLE_DEFINTION: Table = {
                 value: "Neurofibrillary tangles (ranked by Braak groups) (...",
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
-            gene_impact: { value: "MODERATE", color: "goldenrod" },
+            gene_impact: "MODERATE",
             neuropathology: "Braak Stages // neurofibrillary tangles",
             relative_position: "in gene",
         },
@@ -2350,7 +2369,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -2366,7 +2385,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44903416:G:A:rs10119",
                 value: "19:44903416:G:A",
@@ -2379,7 +2398,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -2395,7 +2414,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "intron variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44906745:G:A:rs769449",
                 value: "19:44906745:G:A",
@@ -2406,7 +2425,7 @@ export const TABLE_DEFINTION: Table = {
                 value: "CSF: ptau (GRCh38)",
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             neuropathology: null,
             relative_position: "in gene",
         },
@@ -2424,7 +2443,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44910319:C:T:rs75627662",
                 value: "19:44910319:C:T",
@@ -2437,7 +2456,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -2453,7 +2472,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44912456:G:A:rs10414043",
                 value: "19:44912456:G:A",
@@ -2466,7 +2485,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -2482,7 +2501,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44917997:G:A:rs12721046",
                 value: "19:44917997:G:A",
@@ -2495,7 +2514,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -2524,7 +2543,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -2540,13 +2559,13 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "intron variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44906745:G:A:rs769449",
                 value: "19:44906745:G:A",
                 tooltip: "Browse record for variant: 19:44906745:G:A",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             track_name_link: {
                 url: "../track/NG00041_GRCh38_NFT_BSTAGES",
                 value: "Neurofibrillary tangles (ranked by Braak stages) (...",
@@ -2569,7 +2588,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44885243:A:G:rs283811",
                 value: "19:44885243:A:G",
@@ -2582,7 +2601,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -2598,7 +2617,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884873:G:A:rs34342646",
                 value: "19:44884873:G:A",
@@ -2611,7 +2630,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -2627,7 +2646,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44912921:G:T:rs483082",
                 value: "19:44912921:G:T",
@@ -2640,7 +2659,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -2656,7 +2675,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44924977:G:A:rs66626994",
                 value: "19:44924977:G:A",
@@ -2669,7 +2688,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -2685,7 +2704,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884339:G:A:rs12972970",
                 value: "19:44884339:G:A",
@@ -2698,7 +2717,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -2714,7 +2733,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44891079:T:C:rs71352238",
                 value: "19:44891079:T:C",
@@ -2727,7 +2746,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -2743,7 +2762,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884339:G:A:rs12972970",
                 value: "19:44884339:G:A",
@@ -2756,7 +2775,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -2772,7 +2791,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892887:C:T:rs11556505",
                 value: "19:44892887:C:T",
@@ -2785,7 +2804,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -2801,7 +2820,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892362:A:G:rs2075650",
                 value: "19:44892362:A:G",
@@ -2814,7 +2833,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -2830,7 +2849,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44912456:G:A:rs10414043",
                 value: "19:44912456:G:A",
@@ -2843,7 +2862,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -2859,7 +2878,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44917997:G:A:rs12721046",
                 value: "19:44917997:G:A",
@@ -2872,7 +2891,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -2901,7 +2920,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -2917,7 +2936,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44912921:G:T:rs483082",
                 value: "19:44912921:G:T",
@@ -2930,7 +2949,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -2946,7 +2965,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884339:G:A:rs12972970",
                 value: "19:44884339:G:A",
@@ -2959,7 +2978,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -2975,13 +2994,13 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "intron variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44906745:G:A:rs769449",
                 value: "19:44906745:G:A",
                 tooltip: "Browse record for variant: 19:44906745:G:A",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             track_name_link: {
                 url: "../track/NG00041_GRCh38_NP_CERAD",
                 value: "Neuritic plaques (ranked by CERAD score) (GRCh38)",
@@ -3004,7 +3023,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44912456:G:A:rs10414043",
                 value: "19:44912456:G:A",
@@ -3017,7 +3036,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -3046,7 +3065,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -3062,13 +3081,13 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "intron variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44906745:G:A:rs769449",
                 value: "19:44906745:G:A",
                 tooltip: "Browse record for variant: 19:44906745:G:A",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             track_name_link: {
                 url: "../track/NG00041_GRCh38_NFT_BGROUPS",
                 value: "Neurofibrillary tangles (ranked by Braak groups) (...",
@@ -3091,7 +3110,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44903416:G:A:rs10119",
                 value: "19:44903416:G:A",
@@ -3104,7 +3123,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -3120,7 +3139,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "intron variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44906745:G:A:rs769449",
                 value: "19:44906745:G:A",
@@ -3131,7 +3150,7 @@ export const TABLE_DEFINTION: Table = {
                 value: "CSF: tau (GRCh38)",
                 tooltip: "Browse track: CSF: tau (GRCh38)",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             neuropathology: null,
             relative_position: "in gene",
         },
@@ -3149,7 +3168,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919589:G:A:rs56131196",
                 value: "19:44919589:G:A",
@@ -3162,7 +3181,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -3178,7 +3197,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44924977:G:A:rs66626994",
                 value: "19:44924977:G:A",
@@ -3191,7 +3210,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -3207,7 +3226,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "missense variant",
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44908684:T:C:rs429358",
                 value: "19:44908684:T:C",
@@ -3218,7 +3237,7 @@ export const TABLE_DEFINTION: Table = {
                 value: "Neuritic plaques (presence vs. absence); conservat...",
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
-            gene_impact: { value: "MODERATE", color: "goldenrod" },
+            gene_impact: "MODERATE",
             neuropathology: "neuritic plaques",
             relative_position: "in gene",
         },
@@ -3236,7 +3255,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915533:T:C:rs5117",
                 value: "19:44915533:T:C",
@@ -3249,7 +3268,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -3265,7 +3284,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884873:G:A:rs34342646",
                 value: "19:44884873:G:A",
@@ -3278,7 +3297,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -3294,7 +3313,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44891079:T:C:rs71352238",
                 value: "19:44891079:T:C",
@@ -3307,7 +3326,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -3323,7 +3342,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44903416:G:A:rs10119",
                 value: "19:44903416:G:A",
@@ -3336,7 +3355,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -3352,7 +3371,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915533:T:C:rs5117",
                 value: "19:44915533:T:C",
@@ -3365,7 +3384,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -3381,7 +3400,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44888997:C:T:rs6857",
                 value: "19:44888997:C:T",
@@ -3394,7 +3413,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -3410,7 +3429,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44912921:G:T:rs483082",
                 value: "19:44912921:G:T",
@@ -3423,7 +3442,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -3439,7 +3458,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892587:G:A:rs34095326",
                 value: "19:44892587:G:A",
@@ -3452,7 +3471,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -3468,7 +3487,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892652:C:G:rs34404554",
                 value: "19:44892652:C:G",
@@ -3481,7 +3500,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -3497,7 +3516,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892887:C:T:rs11556505",
                 value: "19:44892887:C:T",
@@ -3510,7 +3529,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -3526,7 +3545,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "missense variant",
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44908684:T:C:rs429358",
                 value: "19:44908684:T:C",
@@ -3537,7 +3556,7 @@ export const TABLE_DEFINTION: Table = {
                 value: "CSF: ptau (GRCh38)",
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
-            gene_impact: { value: "MODERATE", color: "goldenrod" },
+            gene_impact: "MODERATE",
             neuropathology: null,
             relative_position: "in gene",
         },
@@ -3555,7 +3574,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892362:A:G:rs2075650",
                 value: "19:44892362:A:G",
@@ -3567,8 +3586,8 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             gene_impact: null,
-            neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            neuropathology: "PD",
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -3584,7 +3603,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44924977:G:A:rs66626994",
                 value: "19:44924977:G:A",
@@ -3597,7 +3616,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -3613,7 +3632,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915533:T:C:rs5117",
                 value: "19:44915533:T:C",
@@ -3626,7 +3645,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -3642,7 +3661,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884339:G:A:rs12972970",
                 value: "19:44884339:G:A",
@@ -3655,7 +3674,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -3671,7 +3690,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892587:G:A:rs34095326",
                 value: "19:44892587:G:A",
@@ -3684,7 +3703,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -3700,7 +3719,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "missense variant",
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44908684:T:C:rs429358",
                 value: "19:44908684:T:C",
@@ -3711,7 +3730,7 @@ export const TABLE_DEFINTION: Table = {
                 value: "Neuritic plaques (presence vs. absence) (GRCh38)",
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
-            gene_impact: { value: "MODERATE", color: "goldenrod" },
+            gene_impact: "MODERATE",
             neuropathology: "neuritic plaques",
             relative_position: "in gene",
         },
@@ -3729,7 +3748,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919589:G:A:rs56131196",
                 value: "19:44919589:G:A",
@@ -3742,7 +3761,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -3758,7 +3777,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884339:G:A:rs12972970",
                 value: "19:44884339:G:A",
@@ -3771,7 +3790,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -3787,7 +3806,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "GTAA",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44883210:G:GTAA:rs142042446",
                 value: "19:44883210:G:GTAA",
@@ -3800,7 +3819,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -3816,7 +3835,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884873:G:A:rs34342646",
                 value: "19:44884873:G:A",
@@ -3829,7 +3848,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -3845,7 +3864,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884202:C:G:rs12972156",
                 value: "19:44884202:C:G",
@@ -3858,7 +3877,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -3874,7 +3893,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44917997:G:A:rs12721046",
                 value: "19:44917997:G:A",
@@ -3887,7 +3906,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -3903,13 +3922,13 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "intron variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44906745:G:A:rs769449",
                 value: "19:44906745:G:A",
                 tooltip: "Browse record for variant: 19:44906745:G:A",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             track_name_link: {
                 url: "../track/NG00041_GRCh38_NP_CONS",
                 value: "Neuritic plaques (presence vs. absence); conservat...",
@@ -3932,7 +3951,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893408:G:T:rs59007384",
                 value: "19:44893408:G:T",
@@ -3945,7 +3964,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -3974,7 +3993,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -3990,7 +4009,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44912456:G:A:rs10414043",
                 value: "19:44912456:G:A",
@@ -4003,7 +4022,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -4019,7 +4038,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44910319:C:T:rs75627662",
                 value: "19:44910319:C:T",
@@ -4032,7 +4051,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -4048,7 +4067,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44891079:T:C:rs71352238",
                 value: "19:44891079:T:C",
@@ -4061,7 +4080,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -4077,7 +4096,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44903416:G:A:rs10119",
                 value: "19:44903416:G:A",
@@ -4090,7 +4109,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -4106,7 +4125,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892587:G:A:rs34095326",
                 value: "19:44892587:G:A",
@@ -4119,7 +4138,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -4135,7 +4154,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44891712:T:G:rs184017",
                 value: "19:44891712:T:G",
@@ -4148,7 +4167,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -4164,7 +4183,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44910319:C:T:rs75627662",
                 value: "19:44910319:C:T",
@@ -4177,7 +4196,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -4206,7 +4225,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -4222,7 +4241,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892962:C:T:rs157582",
                 value: "19:44892962:C:T",
@@ -4235,7 +4254,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -4264,7 +4283,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -4280,7 +4299,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44912456:G:A:rs10414043",
                 value: "19:44912456:G:A",
@@ -4293,7 +4312,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -4309,7 +4328,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892652:C:G:rs34404554",
                 value: "19:44892652:C:G",
@@ -4322,7 +4341,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -4338,7 +4357,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44924977:G:A:rs66626994",
                 value: "19:44924977:G:A",
@@ -4351,7 +4370,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -4367,7 +4386,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892887:C:T:rs11556505",
                 value: "19:44892887:C:T",
@@ -4380,7 +4399,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -4396,7 +4415,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892362:A:G:rs2075650",
                 value: "19:44892362:A:G",
@@ -4409,7 +4428,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -4425,7 +4444,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44910319:C:T:rs75627662",
                 value: "19:44910319:C:T",
@@ -4438,7 +4457,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -4454,7 +4473,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44888997:C:T:rs6857",
                 value: "19:44888997:C:T",
@@ -4467,7 +4486,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -4483,7 +4502,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44891079:T:C:rs71352238",
                 value: "19:44891079:T:C",
@@ -4496,7 +4515,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -4512,7 +4531,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892362:A:G:rs2075650",
                 value: "19:44892362:A:G",
@@ -4525,7 +4544,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -4541,7 +4560,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44917997:G:A:rs12721046",
                 value: "19:44917997:G:A",
@@ -4554,7 +4573,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -4570,7 +4589,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919689:A:G:rs4420638",
                 value: "19:44919689:A:G",
@@ -4583,7 +4602,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -4599,7 +4618,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892887:C:T:rs11556505",
                 value: "19:44892887:C:T",
@@ -4612,7 +4631,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -4628,7 +4647,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "intron variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44906745:G:A:rs769449",
                 value: "19:44906745:G:A",
@@ -4639,7 +4658,7 @@ export const TABLE_DEFINTION: Table = {
                 value: "Neuritic plaques (presence vs. absence) (GRCh38)",
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             neuropathology: "neuritic plaques",
             relative_position: "in gene",
         },
@@ -4657,7 +4676,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44912456:G:A:rs10414043",
                 value: "19:44912456:G:A",
@@ -4670,7 +4689,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -4699,7 +4718,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -4715,7 +4734,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919589:G:A:rs56131196",
                 value: "19:44919589:G:A",
@@ -4728,7 +4747,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -4744,7 +4763,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915533:T:C:rs5117",
                 value: "19:44915533:T:C",
@@ -4757,7 +4776,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -4786,7 +4805,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -4802,7 +4821,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44918903:C:G:rs12721051",
                 value: "19:44918903:C:G",
@@ -4815,7 +4834,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -4831,7 +4850,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44888997:C:T:rs6857",
                 value: "19:44888997:C:T",
@@ -4844,7 +4863,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -4860,7 +4879,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44924977:G:A:rs66626994",
                 value: "19:44924977:G:A",
@@ -4873,7 +4892,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -4902,7 +4921,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -4931,7 +4950,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -4947,7 +4966,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44885243:A:G:rs283811",
                 value: "19:44885243:A:G",
@@ -4960,7 +4979,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -4976,7 +4995,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884873:G:A:rs34342646",
                 value: "19:44884873:G:A",
@@ -4989,7 +5008,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -5005,7 +5024,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884339:G:A:rs12972970",
                 value: "19:44884339:G:A",
@@ -5018,7 +5037,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -5034,7 +5053,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892587:G:A:rs34095326",
                 value: "19:44892587:G:A",
@@ -5047,7 +5066,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -5063,7 +5082,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893408:G:T:rs59007384",
                 value: "19:44893408:G:T",
@@ -5076,7 +5095,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -5092,7 +5111,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919689:A:G:rs4420638",
                 value: "19:44919689:A:G",
@@ -5105,7 +5124,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -5121,7 +5140,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892587:G:A:rs34095326",
                 value: "19:44892587:G:A",
@@ -5134,7 +5153,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -5150,7 +5169,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44912921:G:T:rs483082",
                 value: "19:44912921:G:T",
@@ -5163,7 +5182,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -5179,7 +5198,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884873:G:A:rs34342646",
                 value: "19:44884873:G:A",
@@ -5192,7 +5211,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -5208,7 +5227,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884202:C:G:rs12972156",
                 value: "19:44884202:C:G",
@@ -5221,7 +5240,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -5237,7 +5256,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44891712:T:G:rs184017",
                 value: "19:44891712:T:G",
@@ -5250,7 +5269,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -5266,7 +5285,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892962:C:T:rs157582",
                 value: "19:44892962:C:T",
@@ -5279,7 +5298,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -5295,7 +5314,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44917997:G:A:rs12721046",
                 value: "19:44917997:G:A",
@@ -5308,7 +5327,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -5337,7 +5356,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -5353,7 +5372,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "GTAA",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44883210:G:GTAA:rs142042446",
                 value: "19:44883210:G:GTAA",
@@ -5366,7 +5385,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: tau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -5382,7 +5401,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919689:A:G:rs4420638",
                 value: "19:44919689:A:G",
@@ -5395,7 +5414,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -5411,7 +5430,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884339:G:A:rs12972970",
                 value: "19:44884339:G:A",
@@ -5424,7 +5443,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -5440,7 +5459,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919689:A:G:rs4420638",
                 value: "19:44919689:A:G",
@@ -5453,7 +5472,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -5469,7 +5488,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919689:A:G:rs4420638",
                 value: "19:44919689:A:G",
@@ -5482,7 +5501,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -5498,7 +5517,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44898409:A:G:rs8106922",
                 value: "19:44898409:A:G",
@@ -5511,7 +5530,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -5540,7 +5559,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -5556,7 +5575,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915533:T:C:rs5117",
                 value: "19:44915533:T:C",
@@ -5569,7 +5588,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -5598,7 +5617,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -5614,7 +5633,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44899220:C:T:rs34878901",
                 value: "19:44899220:C:T",
@@ -5627,7 +5646,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -5643,7 +5662,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919689:A:G:rs4420638",
                 value: "19:44919689:A:G",
@@ -5656,7 +5675,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -5672,7 +5691,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44885243:A:G:rs283811",
                 value: "19:44885243:A:G",
@@ -5685,7 +5704,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -5701,7 +5720,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919689:A:G:rs4420638",
                 value: "19:44919689:A:G",
@@ -5714,7 +5733,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -5730,7 +5749,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44902264:G:C:rs1305062",
                 value: "19:44902264:G:C",
@@ -5743,7 +5762,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -5759,7 +5778,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44912921:G:T:rs483082",
                 value: "19:44912921:G:T",
@@ -5772,7 +5791,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -5788,7 +5807,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44913221:A:G:rs584007",
                 value: "19:44913221:A:G",
@@ -5801,7 +5820,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -5817,7 +5836,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44911194:T:C:rs439401",
                 value: "19:44911194:T:C",
@@ -5830,7 +5849,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -5846,7 +5865,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44917843:G:A:rs3925681",
                 value: "19:44917843:G:A",
@@ -5859,7 +5878,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -5888,7 +5907,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -5904,7 +5923,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919689:A:G:rs4420638",
                 value: "19:44919689:A:G",
@@ -5917,7 +5936,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -5933,7 +5952,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919689:A:G:rs4420638",
                 value: "19:44919689:A:G",
@@ -5946,7 +5965,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -5962,7 +5981,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44922203:A:G:rs157595",
                 value: "19:44922203:A:G",
@@ -5975,7 +5994,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -5991,7 +6010,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "intron variant",
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44905910:C:G:rs440446",
                 value: "19:44905910:C:G",
@@ -6002,7 +6021,7 @@ export const TABLE_DEFINTION: Table = {
                 value: "CSF: Aβ₄₂ (GRCh38)",
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             neuropathology: null,
             relative_position: "in gene",
         },
@@ -6033,7 +6052,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -6049,7 +6068,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44910319:C:T:rs75627662",
                 value: "19:44910319:C:T",
@@ -6062,7 +6081,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -6078,7 +6097,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892587:G:A:rs34095326",
                 value: "19:44892587:G:A",
@@ -6091,7 +6110,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -6107,7 +6126,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44903416:G:A:rs10119",
                 value: "19:44903416:G:A",
@@ -6120,7 +6139,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -6136,7 +6155,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915704:T:C:rs3826688",
                 value: "19:44915704:T:C",
@@ -6149,7 +6168,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -6178,7 +6197,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -6207,7 +6226,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -6223,7 +6242,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44900155:C:T:rs1160985",
                 value: "19:44900155:C:T",
@@ -6236,7 +6255,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -6265,7 +6284,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -6281,7 +6300,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44900155:C:T:rs1160985",
                 value: "19:44900155:C:T",
@@ -6294,7 +6313,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -6310,7 +6329,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901174:T:C:rs741780",
                 value: "19:44901174:T:C",
@@ -6323,7 +6342,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -6339,7 +6358,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901174:T:C:rs741780",
                 value: "19:44901174:T:C",
@@ -6352,7 +6371,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -6368,7 +6387,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44913484:C:T:rs438811",
                 value: "19:44913484:C:T",
@@ -6381,7 +6400,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -6397,7 +6416,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901715:T:C:rs1038025",
                 value: "19:44901715:T:C",
@@ -6410,7 +6429,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -6426,7 +6445,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901805:A:G:rs1038026",
                 value: "19:44901805:A:G",
@@ -6439,7 +6458,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -6455,7 +6474,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901805:A:G:rs1038026",
                 value: "19:44901805:A:G",
@@ -6468,7 +6487,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -6484,7 +6503,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44912921:G:T:rs483082",
                 value: "19:44912921:G:T",
@@ -6497,7 +6516,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -6513,7 +6532,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901434:A:G:rs405697",
                 value: "19:44901434:A:G",
@@ -6526,7 +6545,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -6555,7 +6574,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -6571,7 +6590,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901715:T:C:rs1038025",
                 value: "19:44901715:T:C",
@@ -6584,7 +6603,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -6600,7 +6619,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892362:A:G:rs2075650",
                 value: "19:44892362:A:G",
@@ -6613,7 +6632,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -6629,7 +6648,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44925202:C:T:rs4803772",
                 value: "19:44925202:C:T",
@@ -6642,7 +6661,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -6658,7 +6677,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915533:T:C:rs5117",
                 value: "19:44915533:T:C",
@@ -6671,7 +6690,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -6687,7 +6706,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44898409:A:G:rs8106922",
                 value: "19:44898409:A:G",
@@ -6700,7 +6719,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -6716,7 +6735,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44891079:T:C:rs71352238",
                 value: "19:44891079:T:C",
@@ -6729,7 +6748,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -6745,7 +6764,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44913221:A:G:rs584007",
                 value: "19:44913221:A:G",
@@ -6758,7 +6777,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -6774,7 +6793,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "CTTCG",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44914381:C:CTTCG:rs11568822",
                 value: "19:44914381:C:CTTCG",
@@ -6787,7 +6806,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -6803,7 +6822,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892887:C:T:rs11556505",
                 value: "19:44892887:C:T",
@@ -6816,7 +6835,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -6832,7 +6851,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44910319:C:T:rs75627662",
                 value: "19:44910319:C:T",
@@ -6845,7 +6864,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -6861,20 +6880,20 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "upstream gene variant",
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44905579:T:G:rs405509",
                 value: "19:44905579:T:G",
                 tooltip: "Browse record for variant: 19:44905579:T:G",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             track_name_link: {
                 url: "../track/NG00055_AB42",
                 value: "CSF: Aβ₄₂ (GRCh38)",
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -6890,7 +6909,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44922203:A:G:rs157595",
                 value: "19:44922203:A:G",
@@ -6903,7 +6922,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -6919,7 +6938,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892587:G:A:rs34095326",
                 value: "19:44892587:G:A",
@@ -6932,7 +6951,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -6948,7 +6967,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44878777:A:G:rs6859",
                 value: "19:44878777:A:G",
@@ -6961,7 +6980,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -6977,7 +6996,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44911194:T:C:rs439401",
                 value: "19:44911194:T:C",
@@ -6990,7 +7009,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -7006,7 +7025,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44899220:C:T:rs34878901",
                 value: "19:44899220:C:T",
@@ -7019,7 +7038,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -7035,7 +7054,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "CCCTT",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44914375:C:CCCTT:rs201225864",
                 value: "19:44914375:C:CCCTT",
@@ -7048,7 +7067,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -7077,7 +7096,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -7093,7 +7112,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44900155:C:T:rs1160985",
                 value: "19:44900155:C:T",
@@ -7106,7 +7125,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -7122,7 +7141,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44903416:G:A:rs10119",
                 value: "19:44903416:G:A",
@@ -7135,7 +7154,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -7164,7 +7183,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -7193,7 +7212,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -7209,7 +7228,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893408:G:T:rs59007384",
                 value: "19:44893408:G:T",
@@ -7222,7 +7241,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -7238,7 +7257,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901174:T:C:rs741780",
                 value: "19:44901174:T:C",
@@ -7251,7 +7270,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -7280,7 +7299,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -7296,7 +7315,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884873:G:A:rs34342646",
                 value: "19:44884873:G:A",
@@ -7309,7 +7328,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -7338,7 +7357,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -7354,7 +7373,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "missense variant",
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44908684:T:C:rs429358",
                 value: "19:44908684:T:C",
@@ -7365,7 +7384,7 @@ export const TABLE_DEFINTION: Table = {
                 value: "Lewy body disease (5 category ranking) (GRCh38)",
                 tooltip: "Browse track: Lewy body disease (5 category ranking) (GRCh38)",
             },
-            gene_impact: { value: "MODERATE", color: "goldenrod" },
+            gene_impact: "MODERATE",
             neuropathology: "Lewy body",
             relative_position: "in gene",
         },
@@ -7383,7 +7402,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901805:A:G:rs1038026",
                 value: "19:44901805:A:G",
@@ -7396,7 +7415,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -7412,7 +7431,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44891712:T:G:rs184017",
                 value: "19:44891712:T:G",
@@ -7425,7 +7444,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -7441,7 +7460,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901715:T:C:rs1038025",
                 value: "19:44901715:T:C",
@@ -7454,7 +7473,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -7470,7 +7489,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "upstream gene variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44904531:G:A:rs7259620",
                 value: "19:44904531:G:A",
@@ -7481,9 +7500,9 @@ export const TABLE_DEFINTION: Table = {
                 value: "Neuritic plaques (presence vs. absence); relaxed (...",
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -7499,7 +7518,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44913034:C:T:rs59325138",
                 value: "19:44913034:C:T",
@@ -7512,7 +7531,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -7528,7 +7547,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44820881:G:A:rs28399637",
                 value: "19:44820881:G:A",
@@ -7541,7 +7560,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -7557,7 +7576,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44854120:T:C:rs4803764",
                 value: "19:44854120:T:C",
@@ -7570,7 +7589,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -7586,7 +7605,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44856449:G:A:rs12462573",
                 value: "19:44856449:G:A",
@@ -7599,7 +7618,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -7615,7 +7634,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44922203:A:G:rs157595",
                 value: "19:44922203:A:G",
@@ -7628,7 +7647,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -7644,7 +7663,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892962:C:T:rs157582",
                 value: "19:44892962:C:T",
@@ -7657,7 +7676,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -7686,7 +7705,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -7702,7 +7721,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44879418:G:A:rs41290120",
                 value: "19:44879418:G:A",
@@ -7715,7 +7734,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -7731,7 +7750,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44903416:G:A:rs10119",
                 value: "19:44903416:G:A",
@@ -7744,7 +7763,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -7760,7 +7779,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44856329:C:T:rs56317818",
                 value: "19:44856329:C:T",
@@ -7773,7 +7792,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -7789,7 +7808,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "upstream gene variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44904531:G:A:rs7259620",
                 value: "19:44904531:G:A",
@@ -7800,9 +7819,9 @@ export const TABLE_DEFINTION: Table = {
                 value: "Neurofibrillary tangles (ranked by Braak stages) (...",
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -7818,7 +7837,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44913221:A:G:rs584007",
                 value: "19:44913221:A:G",
@@ -7831,7 +7850,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -7847,7 +7866,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44862190:G:A:rs146275714",
                 value: "19:44862190:G:A",
@@ -7860,7 +7879,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -7876,7 +7895,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44911194:T:C:rs439401",
                 value: "19:44911194:T:C",
@@ -7889,7 +7908,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -7905,7 +7924,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44918620:A:G:rs484195",
                 value: "19:44918620:A:G",
@@ -7918,7 +7937,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -7934,7 +7953,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915533:T:C:rs5117",
                 value: "19:44915533:T:C",
@@ -7947,7 +7966,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -7963,13 +7982,13 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "missense variant",
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44908684:T:C:rs429358",
                 value: "19:44908684:T:C",
                 tooltip: "Browse record for variant: 19:44908684:T:C",
             },
-            gene_impact: { value: "MODERATE", color: "goldenrod" },
+            gene_impact: "MODERATE",
             track_name_link: {
                 url: "../track/NG00041_GRCh38_LEWY_3",
                 value: "Lewy body disease (3 category ranking) (GRCh38)",
@@ -7992,7 +8011,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44898409:A:G:rs8106922",
                 value: "19:44898409:A:G",
@@ -8005,7 +8024,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -8021,7 +8040,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44910319:C:T:rs75627662",
                 value: "19:44910319:C:T",
@@ -8034,7 +8053,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -8050,7 +8069,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44899220:C:T:rs34878901",
                 value: "19:44899220:C:T",
@@ -8063,7 +8082,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -8092,7 +8111,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -8108,7 +8127,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915704:T:C:rs3826688",
                 value: "19:44915704:T:C",
@@ -8121,7 +8140,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -8137,7 +8156,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892073:A:G:rs2075649",
                 value: "19:44892073:A:G",
@@ -8150,7 +8169,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -8166,7 +8185,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44917843:G:A:rs3925681",
                 value: "19:44917843:G:A",
@@ -8179,7 +8198,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -8195,7 +8214,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44898409:A:G:rs8106922",
                 value: "19:44898409:A:G",
@@ -8208,7 +8227,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -8224,7 +8243,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44912921:G:T:rs483082",
                 value: "19:44912921:G:T",
@@ -8237,7 +8256,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -8253,7 +8272,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "missense variant",
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44908684:T:C:rs429358",
                 value: "19:44908684:T:C",
@@ -8264,7 +8283,7 @@ export const TABLE_DEFINTION: Table = {
                 value: "Cerebral amyloid angiopathy (presence vs. absence)...",
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
-            gene_impact: { value: "MODERATE", color: "goldenrod" },
+            gene_impact: "MODERATE",
             neuropathology: "cerebral amyloid angiopathy",
             relative_position: "in gene",
         },
@@ -8282,7 +8301,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44899220:C:T:rs34878901",
                 value: "19:44899220:C:T",
@@ -8295,7 +8314,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -8324,7 +8343,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -8340,7 +8359,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44922203:A:G:rs157595",
                 value: "19:44922203:A:G",
@@ -8353,7 +8372,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -8369,7 +8388,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44854682:A:G:rs2927468",
                 value: "19:44854682:A:G",
@@ -8382,7 +8401,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -8398,7 +8417,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "missense variant",
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44908684:T:C:rs429358",
                 value: "19:44908684:T:C",
@@ -8409,7 +8428,7 @@ export const TABLE_DEFINTION: Table = {
                 value: "Lewy body disease (presence vs. absence) (GRCh38)",
                 tooltip: "Browse track: Lewy body disease (presence vs. absence) (GRCh38)",
             },
-            gene_impact: { value: "MODERATE", color: "goldenrod" },
+            gene_impact: "MODERATE",
             neuropathology: "Lewy body",
             relative_position: "in gene",
         },
@@ -8427,7 +8446,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44879418:G:A:rs41290120",
                 value: "19:44879418:G:A",
@@ -8440,7 +8459,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -8456,7 +8475,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901434:A:G:rs405697",
                 value: "19:44901434:A:G",
@@ -8469,7 +8488,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -8498,7 +8517,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -8514,7 +8533,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44911194:T:C:rs439401",
                 value: "19:44911194:T:C",
@@ -8527,7 +8546,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -8543,7 +8562,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44825957:T:G:rs10402271",
                 value: "19:44825957:T:G",
@@ -8556,7 +8575,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -8572,7 +8591,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44913221:A:G:rs584007",
                 value: "19:44913221:A:G",
@@ -8585,7 +8604,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -8601,7 +8620,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915704:T:C:rs3826688",
                 value: "19:44915704:T:C",
@@ -8614,7 +8633,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -8630,7 +8649,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44845265:G:T:rs12162222",
                 value: "19:44845265:G:T",
@@ -8643,7 +8662,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -8672,7 +8691,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -8688,7 +8707,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44823407:C:T:rs10405693",
                 value: "19:44823407:C:T",
@@ -8701,7 +8720,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -8717,7 +8736,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44824052:C:T:rs10412413",
                 value: "19:44824052:C:T",
@@ -8730,7 +8749,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -8746,7 +8765,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44895007:C:T:rs157588",
                 value: "19:44895007:C:T",
@@ -8759,7 +8778,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -8788,7 +8807,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -8804,7 +8823,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44918620:A:G:rs484195",
                 value: "19:44918620:A:G",
@@ -8817,7 +8836,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -8833,7 +8852,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44822960:T:C:rs10406338",
                 value: "19:44822960:T:C",
@@ -8846,7 +8865,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -8862,7 +8881,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884339:G:A:rs12972970",
                 value: "19:44884339:G:A",
@@ -8875,7 +8894,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -8891,7 +8910,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44918620:A:G:rs484195",
                 value: "19:44918620:A:G",
@@ -8904,7 +8923,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -8920,7 +8939,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892073:A:G:rs2075649",
                 value: "19:44892073:A:G",
@@ -8933,7 +8952,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -8949,7 +8968,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919589:G:A:rs56131196",
                 value: "19:44919589:G:A",
@@ -8962,7 +8981,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -8978,7 +8997,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44833186:G:A:rs3021439",
                 value: "19:44833186:G:A",
@@ -8991,7 +9010,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9007,7 +9026,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44895459:A:C:rs157590",
                 value: "19:44895459:A:C",
@@ -9020,7 +9039,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9036,7 +9055,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838647:G:A:rs12459575",
                 value: "19:44838647:G:A",
@@ -9049,7 +9068,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9065,7 +9084,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44826087:T:C:rs10402524",
                 value: "19:44826087:T:C",
@@ -9078,7 +9097,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9094,7 +9113,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "upstream gene variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44904531:G:A:rs7259620",
                 value: "19:44904531:G:A",
@@ -9105,9 +9124,9 @@ export const TABLE_DEFINTION: Table = {
                 value: "Neurofibrillary tangles (ranked by Braak groups) (...",
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9123,7 +9142,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838283:A:G:rs12462274",
                 value: "19:44838283:A:G",
@@ -9136,7 +9155,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9152,7 +9171,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44917843:G:A:rs3925681",
                 value: "19:44917843:G:A",
@@ -9165,7 +9184,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -9181,7 +9200,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44913221:A:G:rs584007",
                 value: "19:44913221:A:G",
@@ -9194,7 +9213,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -9210,7 +9229,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44832778:T:C:rs7359852",
                 value: "19:44832778:T:C",
@@ -9223,7 +9242,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9239,7 +9258,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892073:A:G:rs2075649",
                 value: "19:44892073:A:G",
@@ -9252,7 +9271,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9268,7 +9287,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44911194:T:C:rs439401",
                 value: "19:44911194:T:C",
@@ -9281,7 +9300,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -9297,7 +9316,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838904:G:A:rs4803762",
                 value: "19:44838904:G:A",
@@ -9310,7 +9329,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9339,7 +9358,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -9355,7 +9374,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44888997:C:T:rs6857",
                 value: "19:44888997:C:T",
@@ -9368,7 +9387,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9397,7 +9416,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -9426,7 +9445,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9442,13 +9461,13 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "intron variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44906745:G:A:rs769449",
                 value: "19:44906745:G:A",
                 tooltip: "Browse record for variant: 19:44906745:G:A",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             track_name_link: {
                 url: "../track/NG00041_GRCh38_LEWY_5",
                 value: "Lewy body disease (5 category ranking) (GRCh38)",
@@ -9484,7 +9503,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9513,7 +9532,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9529,7 +9548,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44862190:G:A:rs146275714",
                 value: "19:44862190:G:A",
@@ -9542,7 +9561,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9558,7 +9577,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892587:G:A:rs34095326",
                 value: "19:44892587:G:A",
@@ -9571,7 +9590,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9600,7 +9619,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9616,7 +9635,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44924977:G:A:rs66626994",
                 value: "19:44924977:G:A",
@@ -9629,7 +9648,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (3 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -9645,7 +9664,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44903416:G:A:rs10119",
                 value: "19:44903416:G:A",
@@ -9658,7 +9677,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (5 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9674,7 +9693,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893408:G:T:rs59007384",
                 value: "19:44893408:G:T",
@@ -9687,7 +9706,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (5 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9716,7 +9735,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -9732,13 +9751,13 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "intron variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44906745:G:A:rs769449",
                 value: "19:44906745:G:A",
                 tooltip: "Browse record for variant: 19:44906745:G:A",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             track_name_link: {
                 url: "../track/NG00041_GRCh38_LEWY_3",
                 value: "Lewy body disease (3 category ranking) (GRCh38)",
@@ -9761,7 +9780,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44878777:A:G:rs6859",
                 value: "19:44878777:A:G",
@@ -9774,7 +9793,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9790,7 +9809,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44898409:A:G:rs8106922",
                 value: "19:44898409:A:G",
@@ -9803,7 +9822,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9819,7 +9838,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44900155:C:T:rs1160985",
                 value: "19:44900155:C:T",
@@ -9832,7 +9851,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9848,7 +9867,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44878777:A:G:rs6859",
                 value: "19:44878777:A:G",
@@ -9861,7 +9880,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9877,7 +9896,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44895459:A:C:rs157590",
                 value: "19:44895459:A:C",
@@ -9890,7 +9909,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9906,7 +9925,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44825957:T:G:rs10402271",
                 value: "19:44825957:T:G",
@@ -9919,7 +9938,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9935,7 +9954,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44895459:A:C:rs157590",
                 value: "19:44895459:A:C",
@@ -9948,7 +9967,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9977,7 +9996,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -9993,7 +10012,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892073:A:G:rs2075649",
                 value: "19:44892073:A:G",
@@ -10006,7 +10025,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -10022,7 +10041,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44824052:C:T:rs10412413",
                 value: "19:44824052:C:T",
@@ -10035,7 +10054,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -10051,7 +10070,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44900155:C:T:rs1160985",
                 value: "19:44900155:C:T",
@@ -10064,7 +10083,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -10080,7 +10099,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901174:T:C:rs741780",
                 value: "19:44901174:T:C",
@@ -10093,7 +10112,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -10109,7 +10128,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44823407:C:T:rs10405693",
                 value: "19:44823407:C:T",
@@ -10122,7 +10141,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -10138,7 +10157,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44924977:G:A:rs66626994",
                 value: "19:44924977:G:A",
@@ -10151,7 +10170,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (5 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -10167,7 +10186,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893642:T:C:rs157584",
                 value: "19:44893642:T:C",
@@ -10180,7 +10199,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -10196,7 +10215,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44912456:G:A:rs10414043",
                 value: "19:44912456:G:A",
@@ -10209,7 +10228,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -10225,7 +10244,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44909698:A:C:rs1081105",
                 value: "19:44909698:A:C",
@@ -10238,7 +10257,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -10254,7 +10273,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44854120:T:C:rs4803764",
                 value: "19:44854120:T:C",
@@ -10267,7 +10286,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -10296,7 +10315,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -10312,7 +10331,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44856449:G:A:rs12462573",
                 value: "19:44856449:G:A",
@@ -10325,7 +10344,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -10354,7 +10373,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -10370,7 +10389,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915704:T:C:rs3826688",
                 value: "19:44915704:T:C",
@@ -10383,7 +10402,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -10399,7 +10418,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44903416:G:A:rs10119",
                 value: "19:44903416:G:A",
@@ -10412,7 +10431,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -10428,7 +10447,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44878777:A:G:rs6859",
                 value: "19:44878777:A:G",
@@ -10441,7 +10460,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -10457,7 +10476,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44878777:A:G:rs6859",
                 value: "19:44878777:A:G",
@@ -10470,7 +10489,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -10486,7 +10505,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44895007:C:T:rs157588",
                 value: "19:44895007:C:T",
@@ -10499,7 +10518,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -10515,7 +10534,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "intron variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44907187:G:A:rs769450",
                 value: "19:44907187:G:A",
@@ -10526,7 +10545,7 @@ export const TABLE_DEFINTION: Table = {
                 value: "Neuritic plaques (presence vs. absence); relaxed (...",
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             neuropathology: "neuritic plaques",
             relative_position: "in gene",
         },
@@ -10544,7 +10563,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44856329:C:T:rs56317818",
                 value: "19:44856329:C:T",
@@ -10557,7 +10576,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -10586,7 +10605,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (3 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -10602,7 +10621,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901434:A:G:rs405697",
                 value: "19:44901434:A:G",
@@ -10615,7 +10634,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -10631,7 +10650,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838857:A:G:rs4803761",
                 value: "19:44838857:A:G",
@@ -10644,7 +10663,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -10660,7 +10679,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44925202:C:T:rs4803772",
                 value: "19:44925202:C:T",
@@ -10673,7 +10692,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -10689,7 +10708,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919689:A:G:rs4420638",
                 value: "19:44919689:A:G",
@@ -10702,7 +10721,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -10718,7 +10737,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44820881:G:A:rs28399637",
                 value: "19:44820881:G:A",
@@ -10731,7 +10750,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -10747,7 +10766,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44895459:A:C:rs157590",
                 value: "19:44895459:A:C",
@@ -10760,7 +10779,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -10776,7 +10795,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44918620:A:G:rs484195",
                 value: "19:44918620:A:G",
@@ -10789,7 +10808,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -10818,7 +10837,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -10847,7 +10866,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -10863,7 +10882,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919589:G:A:rs56131196",
                 value: "19:44919589:G:A",
@@ -10876,7 +10895,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (5 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -10892,7 +10911,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44912456:G:A:rs10414043",
                 value: "19:44912456:G:A",
@@ -10905,7 +10924,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (3 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -10934,7 +10953,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -10950,7 +10969,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44898409:A:G:rs8106922",
                 value: "19:44898409:A:G",
@@ -10963,7 +10982,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -10992,7 +11011,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11008,7 +11027,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44825123:C:A:rs58446550",
                 value: "19:44825123:C:A",
@@ -11021,7 +11040,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11037,7 +11056,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44891712:T:G:rs184017",
                 value: "19:44891712:T:G",
@@ -11050,7 +11069,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11066,7 +11085,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44888997:C:T:rs6857",
                 value: "19:44888997:C:T",
@@ -11079,7 +11098,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (3 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11095,7 +11114,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44903416:G:A:rs10119",
                 value: "19:44903416:G:A",
@@ -11108,7 +11127,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (presence vs. absence) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11124,7 +11143,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901174:T:C:rs741780",
                 value: "19:44901174:T:C",
@@ -11137,7 +11156,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11153,7 +11172,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44924977:G:A:rs66626994",
                 value: "19:44924977:G:A",
@@ -11166,7 +11185,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -11182,7 +11201,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919589:G:A:rs56131196",
                 value: "19:44919589:G:A",
@@ -11195,7 +11214,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (3 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -11224,7 +11243,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11240,7 +11259,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44898409:A:G:rs8106922",
                 value: "19:44898409:A:G",
@@ -11253,7 +11272,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11269,7 +11288,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901805:A:G:rs1038026",
                 value: "19:44901805:A:G",
@@ -11282,7 +11301,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11298,7 +11317,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44822960:T:C:rs10406338",
                 value: "19:44822960:T:C",
@@ -11311,7 +11330,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11327,7 +11346,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44826087:T:C:rs10402524",
                 value: "19:44826087:T:C",
@@ -11340,7 +11359,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11369,7 +11388,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (5 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11385,7 +11404,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44854120:T:C:rs4803764",
                 value: "19:44854120:T:C",
@@ -11398,7 +11417,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11414,7 +11433,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901715:T:C:rs1038025",
                 value: "19:44901715:T:C",
@@ -11427,7 +11446,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11456,7 +11475,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11472,7 +11491,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901434:A:G:rs405697",
                 value: "19:44901434:A:G",
@@ -11485,7 +11504,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11501,7 +11520,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893408:G:T:rs59007384",
                 value: "19:44893408:G:T",
@@ -11514,7 +11533,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11530,13 +11549,13 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "intron variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44906745:G:A:rs769449",
                 value: "19:44906745:G:A",
                 tooltip: "Browse record for variant: 19:44906745:G:A",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             track_name_link: {
                 url: "../track/NG00041_GRCh38_LEWY",
                 value: "Lewy body disease (presence vs. absence) (GRCh38)",
@@ -11559,7 +11578,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892962:C:T:rs157582",
                 value: "19:44892962:C:T",
@@ -11572,7 +11591,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11588,7 +11607,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44899959:C:T:rs115881343",
                 value: "19:44899959:C:T",
@@ -11601,7 +11620,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11617,7 +11636,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44900155:C:T:rs1160985",
                 value: "19:44900155:C:T",
@@ -11630,7 +11649,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11646,7 +11665,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901434:A:G:rs405697",
                 value: "19:44901434:A:G",
@@ -11659,7 +11678,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11688,7 +11707,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11704,7 +11723,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44820881:G:A:rs28399637",
                 value: "19:44820881:G:A",
@@ -11717,7 +11736,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11733,7 +11752,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44899220:C:T:rs34878901",
                 value: "19:44899220:C:T",
@@ -11746,7 +11765,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11762,7 +11781,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44895007:C:T:rs157588",
                 value: "19:44895007:C:T",
@@ -11775,7 +11794,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11804,7 +11823,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11820,7 +11839,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44856329:C:T:rs56317818",
                 value: "19:44856329:C:T",
@@ -11833,7 +11852,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11849,7 +11868,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44898611:T:C:rs118170342",
                 value: "19:44898611:T:C",
@@ -11862,7 +11881,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11878,7 +11897,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919689:A:G:rs4420638",
                 value: "19:44919689:A:G",
@@ -11891,7 +11910,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (5 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -11920,7 +11939,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -11936,7 +11955,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884339:G:A:rs12972970",
                 value: "19:44884339:G:A",
@@ -11949,7 +11968,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (5 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -11965,7 +11984,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919689:A:G:rs4420638",
                 value: "19:44919689:A:G",
@@ -11978,7 +11997,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -12007,7 +12026,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -12023,7 +12042,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44899220:C:T:rs34878901",
                 value: "19:44899220:C:T",
@@ -12036,7 +12055,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -12052,7 +12071,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901715:T:C:rs1038025",
                 value: "19:44901715:T:C",
@@ -12065,7 +12084,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -12081,7 +12100,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44856449:G:A:rs12462573",
                 value: "19:44856449:G:A",
@@ -12094,7 +12113,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -12110,7 +12129,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44899220:C:T:rs34878901",
                 value: "19:44899220:C:T",
@@ -12123,7 +12142,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -12139,7 +12158,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901805:A:G:rs1038026",
                 value: "19:44901805:A:G",
@@ -12152,7 +12171,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -12168,7 +12187,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44888997:C:T:rs6857",
                 value: "19:44888997:C:T",
@@ -12181,7 +12200,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (presence vs. absence) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -12197,7 +12216,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44845265:G:T:rs12162222",
                 value: "19:44845265:G:T",
@@ -12210,7 +12229,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -12239,7 +12258,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -12255,7 +12274,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915229:G:A:rs12691088",
                 value: "19:44915229:G:A",
@@ -12268,7 +12287,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -12284,7 +12303,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901174:T:C:rs741780",
                 value: "19:44901174:T:C",
@@ -12297,7 +12316,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -12326,7 +12345,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -12342,7 +12361,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44833186:G:A:rs3021439",
                 value: "19:44833186:G:A",
@@ -12355,7 +12374,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -12371,7 +12390,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44832778:T:C:rs7359852",
                 value: "19:44832778:T:C",
@@ -12384,7 +12403,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -12400,7 +12419,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44912456:G:A:rs10414043",
                 value: "19:44912456:G:A",
@@ -12413,7 +12432,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -12429,7 +12448,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893408:G:T:rs59007384",
                 value: "19:44893408:G:T",
@@ -12442,7 +12461,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -12458,7 +12477,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44862190:G:A:rs146275714",
                 value: "19:44862190:G:A",
@@ -12471,7 +12490,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -12487,7 +12506,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44862190:G:A:rs146275714",
                 value: "19:44862190:G:A",
@@ -12500,7 +12519,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -12516,7 +12535,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44897468:C:T:rs114536010",
                 value: "19:44897468:C:T",
@@ -12529,7 +12548,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -12545,7 +12564,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915704:T:C:rs3826688",
                 value: "19:44915704:T:C",
@@ -12558,7 +12577,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -12574,7 +12593,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915229:G:A:rs12691088",
                 value: "19:44915229:G:A",
@@ -12587,7 +12606,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -12603,7 +12622,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "intron variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44907187:G:A:rs769450",
                 value: "19:44907187:G:A",
@@ -12614,7 +12633,7 @@ export const TABLE_DEFINTION: Table = {
                 value: "Neurofibrillary tangles (ranked by Braak stages) (...",
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             neuropathology: "Braak Stages // neurofibrillary tangles",
             relative_position: "in gene",
         },
@@ -12632,7 +12651,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44922203:A:G:rs157595",
                 value: "19:44922203:A:G",
@@ -12645,7 +12664,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -12661,7 +12680,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893716:G:A:rs77301115",
                 value: "19:44893716:G:A",
@@ -12674,7 +12693,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -12690,7 +12709,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44862190:G:A:rs146275714",
                 value: "19:44862190:G:A",
@@ -12703,7 +12722,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -12719,7 +12738,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838691:A:G:rs10407439",
                 value: "19:44838691:A:G",
@@ -12732,7 +12751,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -12748,7 +12767,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44891712:T:G:rs184017",
                 value: "19:44891712:T:G",
@@ -12761,7 +12780,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (3 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -12777,7 +12796,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919589:G:A:rs56131196",
                 value: "19:44919589:G:A",
@@ -12790,7 +12809,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (presence vs. absence) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -12806,7 +12825,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838647:G:A:rs12459575",
                 value: "19:44838647:G:A",
@@ -12819,7 +12838,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -12835,7 +12854,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919689:A:G:rs4420638",
                 value: "19:44919689:A:G",
@@ -12848,7 +12867,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -12864,7 +12883,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884339:G:A:rs12972970",
                 value: "19:44884339:G:A",
@@ -12877,7 +12896,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (3 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -12893,7 +12912,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44922203:A:G:rs157595",
                 value: "19:44922203:A:G",
@@ -12906,7 +12925,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -12935,7 +12954,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -12951,7 +12970,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44895007:C:T:rs157588",
                 value: "19:44895007:C:T",
@@ -12964,7 +12983,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -12993,7 +13012,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13009,7 +13028,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44925202:C:T:rs4803772",
                 value: "19:44925202:C:T",
@@ -13022,7 +13041,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -13051,7 +13070,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (3 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13067,7 +13086,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892962:C:T:rs157582",
                 value: "19:44892962:C:T",
@@ -13080,7 +13099,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13096,7 +13115,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838283:A:G:rs12462274",
                 value: "19:44838283:A:G",
@@ -13109,7 +13128,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13125,7 +13144,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44913034:C:T:rs59325138",
                 value: "19:44913034:C:T",
@@ -13138,7 +13157,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -13167,7 +13186,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -13183,7 +13202,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44917997:G:A:rs12721046",
                 value: "19:44917997:G:A",
@@ -13196,7 +13215,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (5 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -13225,7 +13244,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13241,7 +13260,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838857:A:G:rs4803761",
                 value: "19:44838857:A:G",
@@ -13254,7 +13273,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13283,7 +13302,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13299,7 +13318,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901805:A:G:rs1038026",
                 value: "19:44901805:A:G",
@@ -13312,7 +13331,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13328,7 +13347,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893642:T:C:rs157584",
                 value: "19:44893642:T:C",
@@ -13341,7 +13360,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13357,7 +13376,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838904:G:A:rs4803762",
                 value: "19:44838904:G:A",
@@ -13370,7 +13389,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13386,7 +13405,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44895528:C:T:rs79398853",
                 value: "19:44895528:C:T",
@@ -13399,7 +13418,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13415,7 +13434,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901715:T:C:rs1038025",
                 value: "19:44901715:T:C",
@@ -13428,7 +13447,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13457,7 +13476,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (5 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13473,7 +13492,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44917997:G:A:rs12721046",
                 value: "19:44917997:G:A",
@@ -13486,7 +13505,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (3 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -13502,7 +13521,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892887:C:T:rs11556505",
                 value: "19:44892887:C:T",
@@ -13515,7 +13534,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13531,7 +13550,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44891712:T:G:rs184017",
                 value: "19:44891712:T:G",
@@ -13544,7 +13563,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (presence vs. absence) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13573,7 +13592,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13589,7 +13608,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44879418:G:A:rs41290120",
                 value: "19:44879418:G:A",
@@ -13602,7 +13621,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13618,7 +13637,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44879418:G:A:rs41290120",
                 value: "19:44879418:G:A",
@@ -13631,7 +13650,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13647,7 +13666,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44885243:A:G:rs283811",
                 value: "19:44885243:A:G",
@@ -13660,7 +13679,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13676,7 +13695,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44912921:G:T:rs483082",
                 value: "19:44912921:G:T",
@@ -13689,7 +13708,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -13718,7 +13737,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -13747,7 +13766,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (presence vs. absence) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13763,7 +13782,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44891079:T:C:rs71352238",
                 value: "19:44891079:T:C",
@@ -13776,7 +13795,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13792,7 +13811,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892962:C:T:rs157582",
                 value: "19:44892962:C:T",
@@ -13805,7 +13824,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13821,7 +13840,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884339:G:A:rs12972970",
                 value: "19:44884339:G:A",
@@ -13834,7 +13853,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13850,7 +13869,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44894695:T:C:rs116881820",
                 value: "19:44894695:T:C",
@@ -13863,7 +13882,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13879,7 +13898,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44820881:G:A:rs28399637",
                 value: "19:44820881:G:A",
@@ -13892,7 +13911,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13908,7 +13927,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892362:A:G:rs2075650",
                 value: "19:44892362:A:G",
@@ -13921,7 +13940,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13950,7 +13969,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13966,7 +13985,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44842366:G:A:rs2199575",
                 value: "19:44842366:G:A",
@@ -13979,7 +13998,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -13995,7 +14014,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44912921:G:T:rs483082",
                 value: "19:44912921:G:T",
@@ -14008,7 +14027,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -14024,7 +14043,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919689:A:G:rs4420638",
                 value: "19:44919689:A:G",
@@ -14037,7 +14056,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (presence vs. absence) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -14053,7 +14072,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44894050:C:T:rs112849259",
                 value: "19:44894050:C:T",
@@ -14066,7 +14085,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -14082,7 +14101,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893642:T:C:rs157584",
                 value: "19:44893642:T:C",
@@ -14095,7 +14114,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -14111,7 +14130,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915229:G:A:rs12691088",
                 value: "19:44915229:G:A",
@@ -14124,7 +14143,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -14140,7 +14159,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44917947:C:T:rs150966173",
                 value: "19:44917947:C:T",
@@ -14153,7 +14172,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -14169,7 +14188,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44918393:G:A:rs140480140",
                 value: "19:44918393:G:A",
@@ -14182,7 +14201,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -14198,7 +14217,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "intron variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44906745:G:A:rs769449",
                 value: "19:44906745:G:A",
@@ -14209,7 +14228,7 @@ export const TABLE_DEFINTION: Table = {
                 value: "Cerebral amyloid angiopathy (presence vs. absence)...",
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             neuropathology: "cerebral amyloid angiopathy",
             relative_position: "in gene",
         },
@@ -14227,7 +14246,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44917843:G:A:rs3925681",
                 value: "19:44917843:G:A",
@@ -14240,7 +14259,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -14256,7 +14275,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44854120:T:C:rs4803764",
                 value: "19:44854120:T:C",
@@ -14269,7 +14288,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -14285,7 +14304,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44845265:G:T:rs12162222",
                 value: "19:44845265:G:T",
@@ -14298,7 +14317,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -14327,7 +14346,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (3 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -14343,7 +14362,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44900155:C:T:rs1160985",
                 value: "19:44900155:C:T",
@@ -14356,7 +14375,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -14385,7 +14404,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -14401,7 +14420,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901174:T:C:rs741780",
                 value: "19:44901174:T:C",
@@ -14414,7 +14433,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -14430,7 +14449,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44912921:G:T:rs483082",
                 value: "19:44912921:G:T",
@@ -14443,7 +14462,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -14459,7 +14478,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44917843:G:A:rs3925681",
                 value: "19:44917843:G:A",
@@ -14472,7 +14491,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -14488,7 +14507,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44885243:A:G:rs283811",
                 value: "19:44885243:A:G",
@@ -14501,7 +14520,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (3 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -14517,7 +14536,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44917997:G:A:rs12721046",
                 value: "19:44917997:G:A",
@@ -14530,7 +14549,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (presence vs. absence) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -14546,7 +14565,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893642:T:C:rs157584",
                 value: "19:44893642:T:C",
@@ -14559,7 +14578,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -14575,7 +14594,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44878777:A:G:rs6859",
                 value: "19:44878777:A:G",
@@ -14588,7 +14607,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -14604,7 +14623,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44856329:C:T:rs56317818",
                 value: "19:44856329:C:T",
@@ -14617,7 +14636,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -14633,7 +14652,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44825957:T:G:rs10402271",
                 value: "19:44825957:T:G",
@@ -14646,7 +14665,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -14662,13 +14681,13 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "intron variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44907187:G:A:rs769450",
                 value: "19:44907187:G:A",
                 tooltip: "Browse record for variant: 19:44907187:G:A",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             track_name_link: {
                 url: "../track/NG00041_GRCh38_NFT_BGROUPS",
                 value: "Neurofibrillary tangles (ranked by Braak groups) (...",
@@ -14691,7 +14710,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44825123:C:A:rs58446550",
                 value: "19:44825123:C:A",
@@ -14704,7 +14723,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -14733,7 +14752,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -14749,7 +14768,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44911194:T:C:rs439401",
                 value: "19:44911194:T:C",
@@ -14762,7 +14781,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -14778,7 +14797,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44856449:G:A:rs12462573",
                 value: "19:44856449:G:A",
@@ -14791,7 +14810,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -14820,7 +14839,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -14836,7 +14855,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44824052:C:T:rs10412413",
                 value: "19:44824052:C:T",
@@ -14849,7 +14868,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -14865,7 +14884,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44910319:C:T:rs75627662",
                 value: "19:44910319:C:T",
@@ -14878,7 +14897,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -14894,7 +14913,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44823407:C:T:rs10405693",
                 value: "19:44823407:C:T",
@@ -14907,7 +14926,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -14923,7 +14942,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892887:C:T:rs11556505",
                 value: "19:44892887:C:T",
@@ -14936,7 +14955,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (3 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -14952,7 +14971,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901805:A:G:rs1038026",
                 value: "19:44901805:A:G",
@@ -14965,7 +14984,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -14981,7 +15000,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44898409:A:G:rs8106922",
                 value: "19:44898409:A:G",
@@ -14994,7 +15013,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15023,7 +15042,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15039,7 +15058,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901715:T:C:rs1038025",
                 value: "19:44901715:T:C",
@@ -15052,7 +15071,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15081,7 +15100,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15097,7 +15116,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44825957:T:G:rs10402271",
                 value: "19:44825957:T:G",
@@ -15110,7 +15129,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15139,7 +15158,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15155,7 +15174,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44823407:C:T:rs10405693",
                 value: "19:44823407:C:T",
@@ -15168,7 +15187,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15184,7 +15203,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901174:T:C:rs741780",
                 value: "19:44901174:T:C",
@@ -15197,7 +15216,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15213,7 +15232,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44824052:C:T:rs10412413",
                 value: "19:44824052:C:T",
@@ -15226,7 +15245,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15242,7 +15261,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44822960:T:C:rs10406338",
                 value: "19:44822960:T:C",
@@ -15255,7 +15274,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15271,7 +15290,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44885243:A:G:rs283811",
                 value: "19:44885243:A:G",
@@ -15284,7 +15303,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15300,7 +15319,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901805:A:G:rs1038026",
                 value: "19:44901805:A:G",
@@ -15313,7 +15332,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15329,7 +15348,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884873:G:A:rs34342646",
                 value: "19:44884873:G:A",
@@ -15342,7 +15361,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15371,7 +15390,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15387,7 +15406,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44913221:A:G:rs584007",
                 value: "19:44913221:A:G",
@@ -15400,7 +15419,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -15416,7 +15435,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44891079:T:C:rs71352238",
                 value: "19:44891079:T:C",
@@ -15429,7 +15448,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15445,7 +15464,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44854120:T:C:rs4803764",
                 value: "19:44854120:T:C",
@@ -15458,7 +15477,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15474,7 +15493,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44900155:C:T:rs1160985",
                 value: "19:44900155:C:T",
@@ -15487,7 +15506,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15503,7 +15522,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44842366:G:A:rs2199575",
                 value: "19:44842366:G:A",
@@ -15516,7 +15535,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15532,7 +15551,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44912456:G:A:rs10414043",
                 value: "19:44912456:G:A",
@@ -15545,7 +15564,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -15561,7 +15580,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44856329:C:T:rs56317818",
                 value: "19:44856329:C:T",
@@ -15574,7 +15593,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15590,7 +15609,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901715:T:C:rs1038025",
                 value: "19:44901715:T:C",
@@ -15603,7 +15622,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15619,7 +15638,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892362:A:G:rs2075650",
                 value: "19:44892362:A:G",
@@ -15632,7 +15651,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (3 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15648,7 +15667,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44862190:G:A:rs146275714",
                 value: "19:44862190:G:A",
@@ -15661,7 +15680,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15677,7 +15696,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44836881:G:A:rs2927482",
                 value: "19:44836881:G:A",
@@ -15690,7 +15709,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15706,7 +15725,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44825957:T:G:rs10402271",
                 value: "19:44825957:T:G",
@@ -15719,7 +15738,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15748,7 +15767,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -15764,7 +15783,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44834606:T:C:rs12976241",
                 value: "19:44834606:T:C",
@@ -15777,7 +15796,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15793,7 +15812,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44913034:C:T:rs59325138",
                 value: "19:44913034:C:T",
@@ -15806,7 +15825,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -15822,7 +15841,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44878777:A:G:rs6859",
                 value: "19:44878777:A:G",
@@ -15835,7 +15854,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15851,7 +15870,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44845265:G:T:rs12162222",
                 value: "19:44845265:G:T",
@@ -15864,7 +15883,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15880,20 +15899,20 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "upstream gene variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44904531:G:A:rs7259620",
                 value: "19:44904531:G:A",
                 tooltip: "Browse record for variant: 19:44904531:G:A",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             track_name_link: {
                 url: "../track/NG00055_GRCh38_PTAU",
                 value: "CSF: ptau (GRCh38)",
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15909,7 +15928,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892073:A:G:rs2075649",
                 value: "19:44892073:A:G",
@@ -15922,7 +15941,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15938,7 +15957,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44842366:G:A:rs2199575",
                 value: "19:44842366:G:A",
@@ -15951,7 +15970,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15967,7 +15986,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893716:G:A:rs77301115",
                 value: "19:44893716:G:A",
@@ -15980,7 +15999,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -15996,7 +16015,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44911194:T:C:rs439401",
                 value: "19:44911194:T:C",
@@ -16009,7 +16028,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -16025,7 +16044,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44822960:T:C:rs10406338",
                 value: "19:44822960:T:C",
@@ -16038,7 +16057,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16054,7 +16073,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892887:C:T:rs11556505",
                 value: "19:44892887:C:T",
@@ -16067,7 +16086,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (presence vs. absence) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16083,7 +16102,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44913221:A:G:rs584007",
                 value: "19:44913221:A:G",
@@ -16096,7 +16115,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -16112,7 +16131,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44917997:G:A:rs12721046",
                 value: "19:44917997:G:A",
@@ -16125,7 +16144,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -16141,7 +16160,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44856449:G:A:rs12462573",
                 value: "19:44856449:G:A",
@@ -16154,7 +16173,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16170,7 +16189,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44828468:C:T:rs4802238",
                 value: "19:44828468:C:T",
@@ -16183,7 +16202,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16199,7 +16218,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44824202:T:C:rs4803759",
                 value: "19:44824202:T:C",
@@ -16212,7 +16231,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16228,7 +16247,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838647:G:A:rs12459575",
                 value: "19:44838647:G:A",
@@ -16241,7 +16260,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16257,7 +16276,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44865946:G:A:rs112422902",
                 value: "19:44865946:G:A",
@@ -16270,7 +16289,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16286,7 +16305,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44833186:G:A:rs3021439",
                 value: "19:44833186:G:A",
@@ -16299,7 +16318,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16315,7 +16334,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44857967:G:A:rs440277",
                 value: "19:44857967:G:A",
@@ -16328,7 +16347,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16344,7 +16363,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44895459:A:C:rs157590",
                 value: "19:44895459:A:C",
@@ -16357,7 +16376,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16373,7 +16392,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838647:G:A:rs12459575",
                 value: "19:44838647:G:A",
@@ -16386,7 +16405,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16402,7 +16421,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44891079:T:C:rs71352238",
                 value: "19:44891079:T:C",
@@ -16415,7 +16434,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (presence vs. absence) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16431,7 +16450,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44851039:A:G:rs11666329",
                 value: "19:44851039:A:G",
@@ -16444,7 +16463,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16460,7 +16479,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838904:G:A:rs4803762",
                 value: "19:44838904:G:A",
@@ -16473,7 +16492,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16502,7 +16521,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16518,7 +16537,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892362:A:G:rs2075650",
                 value: "19:44892362:A:G",
@@ -16531,7 +16550,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (presence vs. absence) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16547,7 +16566,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44824052:C:T:rs10412413",
                 value: "19:44824052:C:T",
@@ -16560,7 +16579,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16589,7 +16608,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -16605,7 +16624,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838283:A:G:rs12462274",
                 value: "19:44838283:A:G",
@@ -16618,7 +16637,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16634,7 +16653,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44823407:C:T:rs10405693",
                 value: "19:44823407:C:T",
@@ -16647,7 +16666,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16663,7 +16682,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44832778:T:C:rs7359852",
                 value: "19:44832778:T:C",
@@ -16676,7 +16695,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16705,7 +16724,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16721,7 +16740,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44941485:A:G:rs4803773",
                 value: "19:44941485:A:G",
@@ -16734,7 +16753,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -16750,7 +16769,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892073:A:G:rs2075649",
                 value: "19:44892073:A:G",
@@ -16763,7 +16782,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16779,7 +16798,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44852884:C:T:rs2972558",
                 value: "19:44852884:C:T",
@@ -16792,7 +16811,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16808,7 +16827,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884873:G:A:rs34342646",
                 value: "19:44884873:G:A",
@@ -16821,7 +16840,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16837,7 +16856,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838904:G:A:rs4803762",
                 value: "19:44838904:G:A",
@@ -16850,7 +16869,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16866,7 +16885,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44826087:T:C:rs10402524",
                 value: "19:44826087:T:C",
@@ -16879,7 +16898,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16895,7 +16914,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44854682:A:G:rs2927468",
                 value: "19:44854682:A:G",
@@ -16908,7 +16927,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16924,7 +16943,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44826087:T:C:rs10402524",
                 value: "19:44826087:T:C",
@@ -16937,7 +16956,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16953,7 +16972,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44834480:C:T:rs11667253",
                 value: "19:44834480:C:T",
@@ -16966,7 +16985,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -16982,7 +17001,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "upstream gene variant",
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44905579:T:G:rs405509",
                 value: "19:44905579:T:G",
@@ -16993,9 +17012,9 @@ export const TABLE_DEFINTION: Table = {
                 value: "CSF: ptau (GRCh38)",
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -17011,7 +17030,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838984:A:G:rs4239533",
                 value: "19:44838984:A:G",
@@ -17024,7 +17043,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -17040,7 +17059,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44894050:C:T:rs112849259",
                 value: "19:44894050:C:T",
@@ -17053,7 +17072,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -17082,7 +17101,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -17098,7 +17117,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44909698:A:C:rs1081105",
                 value: "19:44909698:A:C",
@@ -17111,7 +17130,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -17127,7 +17146,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44833186:G:A:rs3021439",
                 value: "19:44833186:G:A",
@@ -17140,7 +17159,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -17156,7 +17175,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44894695:T:C:rs116881820",
                 value: "19:44894695:T:C",
@@ -17169,7 +17188,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -17185,7 +17204,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44822481:T:G:rs8113311",
                 value: "19:44822481:T:G",
@@ -17198,7 +17217,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -17227,7 +17246,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -17243,7 +17262,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44918620:A:G:rs484195",
                 value: "19:44918620:A:G",
@@ -17256,7 +17275,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -17285,7 +17304,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -17301,7 +17320,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44895528:C:T:rs79398853",
                 value: "19:44895528:C:T",
@@ -17314,7 +17333,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -17330,7 +17349,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44899220:C:T:rs34878901",
                 value: "19:44899220:C:T",
@@ -17343,7 +17362,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -17359,7 +17378,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915533:T:C:rs5117",
                 value: "19:44915533:T:C",
@@ -17372,7 +17391,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (5 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -17388,7 +17407,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44832778:T:C:rs7359852",
                 value: "19:44832778:T:C",
@@ -17401,7 +17420,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -17430,7 +17449,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -17459,7 +17478,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -17475,7 +17494,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44935318:C:A:rs141441332",
                 value: "19:44935318:C:A",
@@ -17488,7 +17507,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -17504,7 +17523,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44822960:T:C:rs10406338",
                 value: "19:44822960:T:C",
@@ -17517,7 +17536,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -17533,7 +17552,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44918620:A:G:rs484195",
                 value: "19:44918620:A:G",
@@ -17546,7 +17565,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -17562,7 +17581,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838857:A:G:rs4803761",
                 value: "19:44838857:A:G",
@@ -17575,7 +17594,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -17591,7 +17610,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44846145:T:C:rs3810143",
                 value: "19:44846145:T:C",
@@ -17604,7 +17623,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -17633,7 +17652,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -17649,7 +17668,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "upstream gene variant",
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44905579:T:G:rs405509",
                 value: "19:44905579:T:G",
@@ -17660,9 +17679,9 @@ export const TABLE_DEFINTION: Table = {
                 value: "Neuritic plaques (presence vs. absence); relaxed (...",
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -17678,7 +17697,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44913221:A:G:rs584007",
                 value: "19:44913221:A:G",
@@ -17691,7 +17710,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -17720,7 +17739,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -17736,7 +17755,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44865946:G:A:rs112422902",
                 value: "19:44865946:G:A",
@@ -17749,7 +17768,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -17765,7 +17784,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44845265:G:T:rs12162222",
                 value: "19:44845265:G:T",
@@ -17778,7 +17797,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -17807,7 +17826,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -17823,7 +17842,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44879804:G:T:rs3852861",
                 value: "19:44879804:G:T",
@@ -17836,7 +17855,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -17865,7 +17884,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -17881,7 +17900,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44944779:T:C:rs1132899",
                 value: "19:44944779:T:C",
@@ -17894,7 +17913,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -17910,7 +17929,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44897468:C:T:rs114536010",
                 value: "19:44897468:C:T",
@@ -17923,7 +17942,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -17939,7 +17958,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838857:A:G:rs4803761",
                 value: "19:44838857:A:G",
@@ -17952,7 +17971,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -17968,7 +17987,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44883377:C:T:rs147636938",
                 value: "19:44883377:C:T",
@@ -17981,7 +18000,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -18010,7 +18029,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -18026,7 +18045,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "upstream gene variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44904531:G:A:rs7259620",
                 value: "19:44904531:G:A",
@@ -18037,9 +18056,9 @@ export const TABLE_DEFINTION: Table = {
                 value: "Neuritic plaques (ranked by CERAD score) (GRCh38)",
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -18055,7 +18074,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44857967:G:A:rs440277",
                 value: "19:44857967:G:A",
@@ -18068,7 +18087,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -18084,7 +18103,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44899959:C:T:rs115881343",
                 value: "19:44899959:C:T",
@@ -18097,7 +18116,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -18113,7 +18132,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915229:G:A:rs12691088",
                 value: "19:44915229:G:A",
@@ -18126,7 +18145,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -18142,7 +18161,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44884873:G:A:rs34342646",
                 value: "19:44884873:G:A",
@@ -18155,7 +18174,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (presence vs. absence) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -18171,7 +18190,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915229:G:A:rs12691088",
                 value: "19:44915229:G:A",
@@ -18184,7 +18203,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -18200,7 +18219,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44879709:C:T:rs3852860",
                 value: "19:44879709:C:T",
@@ -18213,7 +18232,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -18229,7 +18248,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44913034:C:T:rs59325138",
                 value: "19:44913034:C:T",
@@ -18242,7 +18261,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -18258,7 +18277,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44902264:G:C:rs1305062",
                 value: "19:44902264:G:C",
@@ -18271,7 +18290,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -18287,7 +18306,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915704:T:C:rs3826688",
                 value: "19:44915704:T:C",
@@ -18300,7 +18319,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: tau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -18316,7 +18335,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44911194:T:C:rs439401",
                 value: "19:44911194:T:C",
@@ -18329,7 +18348,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -18345,7 +18364,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838283:A:G:rs12462274",
                 value: "19:44838283:A:G",
@@ -18358,7 +18377,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -18374,7 +18393,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915704:T:C:rs3826688",
                 value: "19:44915704:T:C",
@@ -18387,7 +18406,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -18403,7 +18422,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44844654:C:A:rs4452060",
                 value: "19:44844654:C:A",
@@ -18416,7 +18435,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -18432,7 +18451,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44820881:G:A:rs28399637",
                 value: "19:44820881:G:A",
@@ -18445,7 +18464,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -18461,13 +18480,13 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "intron variant",
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44905910:C:G:rs440446",
                 value: "19:44905910:C:G",
                 tooltip: "Browse record for variant: 19:44905910:C:G",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             track_name_link: {
                 url: "../track/NG00055_GRCh38_PTAU",
                 value: "CSF: ptau (GRCh38)",
@@ -18503,7 +18522,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -18532,7 +18551,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -18548,7 +18567,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44854682:A:G:rs2927468",
                 value: "19:44854682:A:G",
@@ -18561,7 +18580,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -18577,7 +18596,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915533:T:C:rs5117",
                 value: "19:44915533:T:C",
@@ -18590,7 +18609,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (3 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -18606,7 +18625,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "AT",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44868428:A:AT:rs34165484",
                 value: "19:44868428:A:AT",
@@ -18619,7 +18638,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -18635,7 +18654,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "upstream gene variant",
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44905579:T:G:rs405509",
                 value: "19:44905579:T:G",
@@ -18646,9 +18665,9 @@ export const TABLE_DEFINTION: Table = {
                 value: "CSF: tau (GRCh38)",
                 tooltip: "Browse track: CSF: tau (GRCh38)",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -18664,7 +18683,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44898409:A:G:rs8106922",
                 value: "19:44898409:A:G",
@@ -18677,7 +18696,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -18693,7 +18712,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838691:A:G:rs10407439",
                 value: "19:44838691:A:G",
@@ -18706,7 +18725,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -18722,7 +18741,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44833186:G:A:rs3021439",
                 value: "19:44833186:G:A",
@@ -18735,7 +18754,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -18751,7 +18770,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44925202:C:T:rs4803772",
                 value: "19:44925202:C:T",
@@ -18764,7 +18783,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -18780,7 +18799,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44832778:T:C:rs7359852",
                 value: "19:44832778:T:C",
@@ -18793,7 +18812,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -18809,7 +18828,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44917843:G:A:rs3925681",
                 value: "19:44917843:G:A",
@@ -18822,7 +18841,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -18838,7 +18857,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44895007:C:T:rs157588",
                 value: "19:44895007:C:T",
@@ -18851,7 +18870,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -18867,7 +18886,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44826087:T:C:rs10402524",
                 value: "19:44826087:T:C",
@@ -18880,7 +18899,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -18909,7 +18928,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: tau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -18938,7 +18957,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -18954,7 +18973,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "upstream gene variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44904531:G:A:rs7259620",
                 value: "19:44904531:G:A",
@@ -18965,9 +18984,9 @@ export const TABLE_DEFINTION: Table = {
                 value: "Neuritic plaques (presence vs. absence); conservat...",
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -18983,7 +19002,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44899220:C:T:rs34878901",
                 value: "19:44899220:C:T",
@@ -18996,7 +19015,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: tau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -19012,7 +19031,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915704:T:C:rs3826688",
                 value: "19:44915704:T:C",
@@ -19025,7 +19044,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -19041,7 +19060,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44834963:A:G:rs4369782",
                 value: "19:44834963:A:G",
@@ -19054,7 +19073,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -19070,7 +19089,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44910319:C:T:rs75627662",
                 value: "19:44910319:C:T",
@@ -19083,7 +19102,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -19099,7 +19118,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44879418:G:A:rs41290120",
                 value: "19:44879418:G:A",
@@ -19112,7 +19131,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -19128,7 +19147,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838691:A:G:rs10407439",
                 value: "19:44838691:A:G",
@@ -19141,7 +19160,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -19157,7 +19176,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44913221:A:G:rs584007",
                 value: "19:44913221:A:G",
@@ -19170,7 +19189,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -19199,7 +19218,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -19215,7 +19234,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44895007:C:T:rs157588",
                 value: "19:44895007:C:T",
@@ -19228,7 +19247,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -19244,7 +19263,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838647:G:A:rs12459575",
                 value: "19:44838647:G:A",
@@ -19257,7 +19276,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -19286,7 +19305,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: tau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -19302,7 +19321,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915533:T:C:rs5117",
                 value: "19:44915533:T:C",
@@ -19315,7 +19334,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (presence vs. absence) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -19331,7 +19350,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44913221:A:G:rs584007",
                 value: "19:44913221:A:G",
@@ -19344,7 +19363,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -19360,7 +19379,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44946027:T:G:rs2288911",
                 value: "19:44946027:T:G",
@@ -19373,7 +19392,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -19402,7 +19421,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -19418,7 +19437,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915229:G:A:rs12691088",
                 value: "19:44915229:G:A",
@@ -19431,7 +19450,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -19447,7 +19466,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44895459:A:C:rs157590",
                 value: "19:44895459:A:C",
@@ -19460,7 +19479,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -19476,7 +19495,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "missense variant",
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44908822:C:T:rs7412",
                 value: "19:44908822:C:T",
@@ -19487,7 +19506,7 @@ export const TABLE_DEFINTION: Table = {
                 value: "Neuritic plaques (presence vs. absence); relaxed (...",
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
-            gene_impact: { value: "MODERATE", color: "goldenrod" },
+            gene_impact: "MODERATE",
             neuropathology: "neuritic plaques",
             relative_position: "in gene",
         },
@@ -19518,7 +19537,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -19534,7 +19553,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44911194:T:C:rs439401",
                 value: "19:44911194:T:C",
@@ -19547,7 +19566,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -19563,7 +19582,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44910319:C:T:rs75627662",
                 value: "19:44910319:C:T",
@@ -19576,7 +19595,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -19592,7 +19611,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915704:T:C:rs3826688",
                 value: "19:44915704:T:C",
@@ -19605,7 +19624,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -19621,7 +19640,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838283:A:G:rs12462274",
                 value: "19:44838283:A:G",
@@ -19634,7 +19653,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -19650,7 +19669,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838904:G:A:rs4803762",
                 value: "19:44838904:G:A",
@@ -19663,7 +19682,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -19679,7 +19698,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44895459:A:C:rs157590",
                 value: "19:44895459:A:C",
@@ -19692,7 +19711,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -19708,7 +19727,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44917947:C:T:rs150966173",
                 value: "19:44917947:C:T",
@@ -19721,7 +19740,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -19737,7 +19756,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44918393:G:A:rs140480140",
                 value: "19:44918393:G:A",
@@ -19750,7 +19769,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -19766,7 +19785,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44989301:G:A:rs11669173",
                 value: "19:44989301:G:A",
@@ -19779,7 +19798,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -19808,7 +19827,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -19824,7 +19843,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892587:G:A:rs34095326",
                 value: "19:44892587:G:A",
@@ -19837,7 +19856,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (5 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -19853,7 +19872,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44952648:C:T:rs12460347",
                 value: "19:44952648:C:T",
@@ -19866,7 +19885,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -19895,7 +19914,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -19924,7 +19943,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -19940,7 +19959,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44825123:C:A:rs58446550",
                 value: "19:44825123:C:A",
@@ -19953,7 +19972,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -19969,7 +19988,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44925202:C:T:rs4803772",
                 value: "19:44925202:C:T",
@@ -19982,7 +20001,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -19998,7 +20017,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44951509:G:A:rs7247551",
                 value: "19:44951509:G:A",
@@ -20011,7 +20030,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -20027,7 +20046,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44910319:C:T:rs75627662",
                 value: "19:44910319:C:T",
@@ -20040,7 +20059,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (presence vs. absence) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -20056,7 +20075,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838857:A:G:rs4803761",
                 value: "19:44838857:A:G",
@@ -20069,7 +20088,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -20085,7 +20104,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44979627:T:C:rs7257916",
                 value: "19:44979627:T:C",
@@ -20098,7 +20117,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -20114,7 +20133,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44967087:C:T:rs35193317",
                 value: "19:44967087:C:T",
@@ -20127,7 +20146,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -20143,7 +20162,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44922203:A:G:rs157595",
                 value: "19:44922203:A:G",
@@ -20156,7 +20175,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -20185,7 +20204,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -20201,7 +20220,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44878777:A:G:rs6859",
                 value: "19:44878777:A:G",
@@ -20214,7 +20233,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -20230,7 +20249,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44895459:A:C:rs157590",
                 value: "19:44895459:A:C",
@@ -20243,7 +20262,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -20272,7 +20291,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -20288,7 +20307,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44865946:G:A:rs112422902",
                 value: "19:44865946:G:A",
@@ -20301,7 +20320,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -20317,7 +20336,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44865946:G:A:rs112422902",
                 value: "19:44865946:G:A",
@@ -20330,7 +20349,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -20346,7 +20365,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44957507:G:A:rs204905",
                 value: "19:44957507:G:A",
@@ -20359,7 +20378,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -20375,7 +20394,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919689:A:G:rs4420638",
                 value: "19:44919689:A:G",
@@ -20388,7 +20407,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -20404,7 +20423,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44825957:T:G:rs10402271",
                 value: "19:44825957:T:G",
@@ -20417,7 +20436,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -20433,7 +20452,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44911194:T:C:rs439401",
                 value: "19:44911194:T:C",
@@ -20446,7 +20465,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -20475,7 +20494,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -20491,7 +20510,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "upstream gene variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44904531:G:A:rs7259620",
                 value: "19:44904531:G:A",
@@ -20502,9 +20521,9 @@ export const TABLE_DEFINTION: Table = {
                 value: "Neuritic plaques (presence vs. absence) (GRCh38)",
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -20533,7 +20552,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -20562,7 +20581,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -20578,7 +20597,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44857967:G:A:rs440277",
                 value: "19:44857967:G:A",
@@ -20591,7 +20610,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -20620,7 +20639,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -20636,7 +20655,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44879418:G:A:rs41290120",
                 value: "19:44879418:G:A",
@@ -20649,7 +20668,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -20678,7 +20697,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (presence vs. absence) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -20694,7 +20713,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44824052:C:T:rs10412413",
                 value: "19:44824052:C:T",
@@ -20707,7 +20726,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -20723,7 +20742,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44823407:C:T:rs10405693",
                 value: "19:44823407:C:T",
@@ -20736,7 +20755,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -20752,7 +20771,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915704:T:C:rs3826688",
                 value: "19:44915704:T:C",
@@ -20765,7 +20784,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -20781,7 +20800,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44865946:G:A:rs112422902",
                 value: "19:44865946:G:A",
@@ -20794,7 +20813,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -20810,7 +20829,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44937272:G:A:rs73045691",
                 value: "19:44937272:G:A",
@@ -20823,7 +20842,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -20839,7 +20858,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44879418:G:A:rs41290120",
                 value: "19:44879418:G:A",
@@ -20852,7 +20871,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -20868,7 +20887,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44913574:T:G:rs390082",
                 value: "19:44913574:T:G",
@@ -20881,7 +20900,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -20897,7 +20916,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44912383:G:A:rs445925",
                 value: "19:44912383:G:A",
@@ -20910,7 +20929,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -20926,7 +20945,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44952648:C:T:rs12460347",
                 value: "19:44952648:C:T",
@@ -20939,7 +20958,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -20955,7 +20974,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44911142:C:A:rs72654473",
                 value: "19:44911142:C:A",
@@ -20968,7 +20987,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -20984,7 +21003,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901434:A:G:rs405697",
                 value: "19:44901434:A:G",
@@ -20997,7 +21016,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (3 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -21013,7 +21032,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44822960:T:C:rs10406338",
                 value: "19:44822960:T:C",
@@ -21026,7 +21045,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -21042,7 +21061,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44878777:A:G:rs6859",
                 value: "19:44878777:A:G",
@@ -21055,7 +21074,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -21084,7 +21103,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -21100,7 +21119,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44925202:C:T:rs4803772",
                 value: "19:44925202:C:T",
@@ -21113,7 +21132,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -21129,7 +21148,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44820881:G:A:rs28399637",
                 value: "19:44820881:G:A",
@@ -21142,7 +21161,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -21158,7 +21177,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44825123:C:A:rs58446550",
                 value: "19:44825123:C:A",
@@ -21171,7 +21190,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -21187,7 +21206,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44909698:A:C:rs1081105",
                 value: "19:44909698:A:C",
@@ -21200,7 +21219,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -21216,7 +21235,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44834606:T:C:rs12976241",
                 value: "19:44834606:T:C",
@@ -21229,7 +21248,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -21258,7 +21277,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -21274,7 +21293,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44836881:G:A:rs2927482",
                 value: "19:44836881:G:A",
@@ -21287,7 +21306,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -21303,7 +21322,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901434:A:G:rs405697",
                 value: "19:44901434:A:G",
@@ -21316,7 +21335,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (5 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -21332,7 +21351,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44834963:A:G:rs4369782",
                 value: "19:44834963:A:G",
@@ -21345,7 +21364,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -21361,7 +21380,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44836881:G:A:rs2927482",
                 value: "19:44836881:G:A",
@@ -21374,7 +21393,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -21390,7 +21409,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892073:A:G:rs2075649",
                 value: "19:44892073:A:G",
@@ -21403,7 +21422,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -21419,7 +21438,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44895459:A:C:rs157590",
                 value: "19:44895459:A:C",
@@ -21432,7 +21451,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -21448,7 +21467,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44898611:T:C:rs118170342",
                 value: "19:44898611:T:C",
@@ -21461,7 +21480,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -21477,7 +21496,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "intron variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44907187:G:A:rs769450",
                 value: "19:44907187:G:A",
@@ -21488,7 +21507,7 @@ export const TABLE_DEFINTION: Table = {
                 value: "CSF: ptau (GRCh38)",
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             neuropathology: null,
             relative_position: "in gene",
         },
@@ -21506,7 +21525,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44834606:T:C:rs12976241",
                 value: "19:44834606:T:C",
@@ -21519,7 +21538,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -21535,7 +21554,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44895007:C:T:rs157588",
                 value: "19:44895007:C:T",
@@ -21548,7 +21567,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -21564,7 +21583,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44894050:C:T:rs112849259",
                 value: "19:44894050:C:T",
@@ -21577,7 +21596,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -21606,7 +21625,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -21635,7 +21654,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -21651,7 +21670,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "upstream gene variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44904531:G:A:rs7259620",
                 value: "19:44904531:G:A",
@@ -21662,9 +21681,9 @@ export const TABLE_DEFINTION: Table = {
                 value: "Cerebral amyloid angiopathy (presence vs. absence)...",
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -21680,7 +21699,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44894695:T:C:rs116881820",
                 value: "19:44894695:T:C",
@@ -21693,7 +21712,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -21709,7 +21728,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44948185:A:G:rs7256684",
                 value: "19:44948185:A:G",
@@ -21722,7 +21741,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -21738,7 +21757,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44950621:G:A:rs10402642",
                 value: "19:44950621:G:A",
@@ -21751,7 +21770,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -21767,7 +21786,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901434:A:G:rs405697",
                 value: "19:44901434:A:G",
@@ -21780,7 +21799,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -21809,7 +21828,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -21825,7 +21844,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44952709:C:T:rs12460352",
                 value: "19:44952709:C:T",
@@ -21838,7 +21857,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -21854,7 +21873,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44895528:C:T:rs79398853",
                 value: "19:44895528:C:T",
@@ -21867,7 +21886,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -21883,7 +21902,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44842366:G:A:rs2199575",
                 value: "19:44842366:G:A",
@@ -21896,7 +21915,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -21912,7 +21931,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44963068:T:C:rs111997200",
                 value: "19:44963068:T:C",
@@ -21925,7 +21944,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -21941,7 +21960,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44858389:A:G:rs365653",
                 value: "19:44858389:A:G",
@@ -21954,7 +21973,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -21970,7 +21989,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44951502:A:G:rs7247227",
                 value: "19:44951502:A:G",
@@ -21983,7 +22002,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -22012,7 +22031,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -22041,7 +22060,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -22057,7 +22076,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44816374:G:A:rs118147862",
                 value: "19:44816374:G:A",
@@ -22070,7 +22089,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -22099,7 +22118,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -22115,7 +22134,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44962887:T:C:rs8100236",
                 value: "19:44962887:T:C",
@@ -22128,7 +22147,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -22144,7 +22163,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44962801:T:C:rs8100120",
                 value: "19:44962801:T:C",
@@ -22157,7 +22176,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -22173,7 +22192,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44854120:T:C:rs4803764",
                 value: "19:44854120:T:C",
@@ -22186,7 +22205,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -22202,7 +22221,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44824052:C:T:rs10412413",
                 value: "19:44824052:C:T",
@@ -22215,7 +22234,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -22231,7 +22250,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44825122:T:A:rs58826447",
                 value: "19:44825122:T:A",
@@ -22244,7 +22263,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -22260,7 +22279,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:45007882:C:A:rs2376868",
                 value: "19:45007882:C:A",
@@ -22273,7 +22292,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -22302,7 +22321,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -22331,7 +22350,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -22347,7 +22366,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44947151:T:C:rs9304646",
                 value: "19:44947151:T:C",
@@ -22360,7 +22379,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -22389,7 +22408,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -22405,7 +22424,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44881443:G:A:rs113743631",
                 value: "19:44881443:G:A",
@@ -22418,7 +22437,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -22434,7 +22453,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44826087:T:C:rs10402524",
                 value: "19:44826087:T:C",
@@ -22447,7 +22466,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -22463,7 +22482,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44946776:C:T:rs9304644",
                 value: "19:44946776:C:T",
@@ -22476,7 +22495,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -22492,7 +22511,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44881443:G:A:rs113743631",
                 value: "19:44881443:G:A",
@@ -22505,7 +22524,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -22521,7 +22540,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44953684:G:A:rs3760625",
                 value: "19:44953684:G:A",
@@ -22534,7 +22553,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -22563,7 +22582,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -22579,7 +22598,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44885967:G:A:rs283814",
                 value: "19:44885967:G:A",
@@ -22592,7 +22611,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -22608,7 +22627,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44828468:C:T:rs4802238",
                 value: "19:44828468:C:T",
@@ -22621,7 +22640,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -22637,7 +22656,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44950979:G:A:rs7246900",
                 value: "19:44950979:G:A",
@@ -22650,7 +22669,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -22666,7 +22685,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44956594:T:C:rs2239375",
                 value: "19:44956594:T:C",
@@ -22679,7 +22698,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -22695,7 +22714,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44941309:G:T:rs112784534",
                 value: "19:44941309:G:T",
@@ -22708,7 +22727,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -22724,7 +22743,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44860563:T:G:rs138607350",
                 value: "19:44860563:T:G",
@@ -22737,7 +22756,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (5 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -22753,7 +22772,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44953371:C:T:rs4803780",
                 value: "19:44953371:C:T",
@@ -22766,7 +22785,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -22782,7 +22801,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44897468:C:T:rs114536010",
                 value: "19:44897468:C:T",
@@ -22795,7 +22814,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -22824,7 +22843,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -22840,7 +22859,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44950399:G:A:rs10423208",
                 value: "19:44950399:G:A",
@@ -22853,7 +22872,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -22869,7 +22888,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44940247:A:G:rs59859410",
                 value: "19:44940247:A:G",
@@ -22882,7 +22901,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -22898,7 +22917,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44951429:T:C:rs7248162",
                 value: "19:44951429:T:C",
@@ -22911,7 +22930,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -22927,7 +22946,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44879804:G:T:rs3852861",
                 value: "19:44879804:G:T",
@@ -22940,7 +22959,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -22956,7 +22975,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44954889:A:C:rs3760629",
                 value: "19:44954889:A:C",
@@ -22969,7 +22988,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -22985,7 +23004,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44947615:A:G:rs4803774",
                 value: "19:44947615:A:G",
@@ -22998,7 +23017,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -23014,7 +23033,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44899959:C:T:rs115881343",
                 value: "19:44899959:C:T",
@@ -23027,7 +23046,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -23043,7 +23062,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44953923:T:C:rs3760627",
                 value: "19:44953923:T:C",
@@ -23056,7 +23075,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -23072,7 +23091,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44953968:G:A:rs3760628",
                 value: "19:44953968:G:A",
@@ -23085,7 +23104,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -23114,7 +23133,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -23130,7 +23149,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44954310:T:C:rs7245611",
                 value: "19:44954310:T:C",
@@ -23143,7 +23162,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -23159,7 +23178,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44953240:T:C:rs4803779",
                 value: "19:44953240:T:C",
@@ -23172,7 +23191,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -23188,7 +23207,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44952201:G:A:rs892101",
                 value: "19:44952201:G:A",
@@ -23201,7 +23220,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -23217,7 +23236,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44951106:G:A:rs11083752",
                 value: "19:44951106:G:A",
@@ -23230,7 +23249,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -23246,7 +23265,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44953848:A:G:rs3760626",
                 value: "19:44953848:A:G",
@@ -23259,7 +23278,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -23275,7 +23294,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44826087:T:C:rs10402524",
                 value: "19:44826087:T:C",
@@ -23288,7 +23307,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -23304,7 +23323,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893642:T:C:rs157584",
                 value: "19:44893642:T:C",
@@ -23317,7 +23336,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -23333,7 +23352,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44952989:T:C:rs4803778",
                 value: "19:44952989:T:C",
@@ -23346,7 +23365,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -23362,7 +23381,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44825110:A:T:rs58132661",
                 value: "19:44825110:A:T",
@@ -23375,7 +23394,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -23391,7 +23410,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44825123:C:A:rs58446550",
                 value: "19:44825123:C:A",
@@ -23404,7 +23423,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -23420,7 +23439,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44895007:C:T:rs157588",
                 value: "19:44895007:C:T",
@@ -23433,7 +23452,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -23449,7 +23468,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44825957:T:G:rs10402271",
                 value: "19:44825957:T:G",
@@ -23462,7 +23481,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -23491,7 +23510,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -23520,7 +23539,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -23536,13 +23555,13 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "intron variant",
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44905910:C:G:rs440446",
                 value: "19:44905910:C:G",
                 tooltip: "Browse record for variant: 19:44905910:C:G",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             track_name_link: {
                 url: "../track/NG00055_GRCh38_TAU",
                 value: "CSF: tau (GRCh38)",
@@ -23565,7 +23584,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44879709:C:T:rs3852860",
                 value: "19:44879709:C:T",
@@ -23578,7 +23597,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -23594,7 +23613,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44867581:G:A:rs12610605",
                 value: "19:44867581:G:A",
@@ -23607,7 +23626,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -23623,7 +23642,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893642:T:C:rs157584",
                 value: "19:44893642:T:C",
@@ -23636,7 +23655,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -23652,7 +23671,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44834480:C:T:rs11667253",
                 value: "19:44834480:C:T",
@@ -23665,7 +23684,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -23681,7 +23700,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838691:A:G:rs10407439",
                 value: "19:44838691:A:G",
@@ -23694,7 +23713,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -23710,7 +23729,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44945208:T:G:rs5167",
                 value: "19:44945208:T:G",
@@ -23723,7 +23742,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -23739,7 +23758,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44824202:T:C:rs4803759",
                 value: "19:44824202:T:C",
@@ -23752,7 +23771,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -23768,7 +23787,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44825123:C:A:rs58446550",
                 value: "19:44825123:C:A",
@@ -23781,7 +23800,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -23797,7 +23816,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44856329:C:T:rs56317818",
                 value: "19:44856329:C:T",
@@ -23810,7 +23829,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -23826,7 +23845,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44954036:C:T:rs66867801",
                 value: "19:44954036:C:T",
@@ -23839,7 +23858,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -23855,7 +23874,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44844654:C:A:rs4452060",
                 value: "19:44844654:C:A",
@@ -23868,7 +23887,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -23884,7 +23903,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44880859:G:A:rs406315",
                 value: "19:44880859:G:A",
@@ -23897,7 +23916,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -23913,7 +23932,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44845265:G:T:rs12162222",
                 value: "19:44845265:G:T",
@@ -23926,7 +23945,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -23942,7 +23961,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44939092:T:C:rs34041051",
                 value: "19:44939092:T:C",
@@ -23955,7 +23974,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -23971,7 +23990,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838984:A:G:rs4239533",
                 value: "19:44838984:A:G",
@@ -23984,7 +24003,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -24000,7 +24019,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901434:A:G:rs405697",
                 value: "19:44901434:A:G",
@@ -24013,7 +24032,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -24029,7 +24048,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44834480:C:T:rs11667253",
                 value: "19:44834480:C:T",
@@ -24042,7 +24061,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -24058,7 +24077,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44954049:C:T:rs7259679",
                 value: "19:44954049:C:T",
@@ -24071,7 +24090,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -24100,7 +24119,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -24116,7 +24135,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44846145:T:C:rs3810143",
                 value: "19:44846145:T:C",
@@ -24129,7 +24148,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -24145,7 +24164,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893642:T:C:rs157584",
                 value: "19:44893642:T:C",
@@ -24158,7 +24177,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -24174,7 +24193,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44854682:A:G:rs2927468",
                 value: "19:44854682:A:G",
@@ -24187,7 +24206,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -24203,7 +24222,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44954062:G:A:rs66771331",
                 value: "19:44954062:G:A",
@@ -24216,7 +24235,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -24232,7 +24251,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44895007:C:T:rs157588",
                 value: "19:44895007:C:T",
@@ -24245,7 +24264,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -24261,7 +24280,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44822481:T:G:rs8113311",
                 value: "19:44822481:T:G",
@@ -24274,7 +24293,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -24303,7 +24322,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -24332,7 +24351,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -24348,13 +24367,13 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "missense variant",
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44908822:C:T:rs7412",
                 value: "19:44908822:C:T",
                 tooltip: "Browse record for variant: 19:44908822:C:T",
             },
-            gene_impact: { value: "MODERATE", color: "goldenrod" },
+            gene_impact: "MODERATE",
             track_name_link: {
                 url: "../track/NG00055_GRCh38_PTAU",
                 value: "CSF: ptau (GRCh38)",
@@ -24377,7 +24396,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44923535:G:A:rs141622900",
                 value: "19:44923535:G:A",
@@ -24390,7 +24409,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -24406,7 +24425,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44901434:A:G:rs405697",
                 value: "19:44901434:A:G",
@@ -24419,7 +24438,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -24435,7 +24454,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44903416:G:A:rs10119",
                 value: "19:44903416:G:A",
@@ -24448,7 +24467,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "vascular brain injury",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -24464,7 +24483,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44952449:C:T:rs7251501",
                 value: "19:44952449:C:T",
@@ -24477,7 +24496,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -24493,7 +24512,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44898409:A:G:rs8106922",
                 value: "19:44898409:A:G",
@@ -24506,7 +24525,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -24522,7 +24541,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44834963:A:G:rs4369782",
                 value: "19:44834963:A:G",
@@ -24535,7 +24554,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -24551,7 +24570,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44949887:C:T:rs7257468",
                 value: "19:44949887:C:T",
@@ -24564,7 +24583,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -24580,7 +24599,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44949908:C:T:rs7257476",
                 value: "19:44949908:C:T",
@@ -24593,7 +24612,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -24609,7 +24628,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44949894:T:G:rs7258345",
                 value: "19:44949894:T:G",
@@ -24622,7 +24641,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -24638,7 +24657,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44899220:C:T:rs34878901",
                 value: "19:44899220:C:T",
@@ -24651,7 +24670,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -24667,7 +24686,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44913034:C:T:rs59325138",
                 value: "19:44913034:C:T",
@@ -24680,7 +24699,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -24696,7 +24715,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44895459:A:C:rs157590",
                 value: "19:44895459:A:C",
@@ -24709,7 +24728,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -24725,7 +24744,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44856449:G:A:rs12462573",
                 value: "19:44856449:G:A",
@@ -24738,7 +24757,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -24754,7 +24773,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44857526:CT:C:rs35763320",
                 value: "19:44857526:CT:C",
@@ -24767,7 +24786,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -24796,7 +24815,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -24812,7 +24831,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838647:G:A:rs12459575",
                 value: "19:44838647:G:A",
@@ -24825,7 +24844,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -24841,7 +24860,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44885967:G:A:rs283814",
                 value: "19:44885967:G:A",
@@ -24854,7 +24873,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -24870,7 +24889,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44954120:G:A:rs73047641",
                 value: "19:44954120:G:A",
@@ -24883,7 +24902,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -24899,7 +24918,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44890259:C:T:rs117310449",
                 value: "19:44890259:C:T",
@@ -24912,7 +24931,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -24928,7 +24947,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44952648:C:T:rs12460347",
                 value: "19:44952648:C:T",
@@ -24941,7 +24960,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -24957,7 +24976,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44865946:G:A:rs112422902",
                 value: "19:44865946:G:A",
@@ -24970,7 +24989,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -24986,7 +25005,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44842366:G:A:rs2199575",
                 value: "19:44842366:G:A",
@@ -24999,7 +25018,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -25015,7 +25034,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44941485:A:G:rs4803773",
                 value: "19:44941485:A:G",
@@ -25028,7 +25047,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -25044,7 +25063,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44924977:G:A:rs66626994",
                 value: "19:44924977:G:A",
@@ -25057,7 +25076,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -25073,7 +25092,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44952844:G:A:rs4803777",
                 value: "19:44952844:G:A",
@@ -25086,7 +25105,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -25115,7 +25134,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -25131,7 +25150,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44810458:T:C:rs2927477",
                 value: "19:44810458:T:C",
@@ -25144,7 +25163,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -25160,7 +25179,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44851039:A:G:rs11666329",
                 value: "19:44851039:A:G",
@@ -25173,7 +25192,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -25202,7 +25221,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -25218,7 +25237,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44860443:A:G:rs12978931",
                 value: "19:44860443:A:G",
@@ -25231,7 +25250,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -25247,7 +25266,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838984:A:G:rs4239533",
                 value: "19:44838984:A:G",
@@ -25260,7 +25279,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -25276,7 +25295,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838904:G:A:rs4803762",
                 value: "19:44838904:G:A",
@@ -25289,7 +25308,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -25305,7 +25324,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44823407:C:T:rs10405693",
                 value: "19:44823407:C:T",
@@ -25318,7 +25337,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -25334,7 +25353,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44951502:A:G:rs7247227",
                 value: "19:44951502:A:G",
@@ -25347,7 +25366,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -25363,7 +25382,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44937272:G:A:rs73045691",
                 value: "19:44937272:G:A",
@@ -25376,7 +25395,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -25392,7 +25411,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44937272:G:A:rs73045691",
                 value: "19:44937272:G:A",
@@ -25405,7 +25424,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -25421,7 +25440,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44902264:G:C:rs1305062",
                 value: "19:44902264:G:C",
@@ -25434,7 +25453,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -25450,7 +25469,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892073:A:G:rs2075649",
                 value: "19:44892073:A:G",
@@ -25463,7 +25482,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -25479,7 +25498,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44883777:A:C:rs283808",
                 value: "19:44883777:A:C",
@@ -25492,7 +25511,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -25508,7 +25527,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44833186:G:A:rs3021439",
                 value: "19:44833186:G:A",
@@ -25521,7 +25540,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -25537,7 +25556,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44883800:A:G:rs283809",
                 value: "19:44883800:A:G",
@@ -25550,7 +25569,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -25566,7 +25585,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893716:G:A:rs77301115",
                 value: "19:44893716:G:A",
@@ -25579,7 +25598,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -25595,7 +25614,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892587:G:A:rs34095326",
                 value: "19:44892587:G:A",
@@ -25608,7 +25627,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (3 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -25624,7 +25643,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44885967:G:A:rs283814",
                 value: "19:44885967:G:A",
@@ -25637,7 +25656,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -25653,7 +25672,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892073:A:G:rs2075649",
                 value: "19:44892073:A:G",
@@ -25666,7 +25685,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -25682,7 +25701,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44940247:A:G:rs59859410",
                 value: "19:44940247:A:G",
@@ -25695,7 +25714,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -25711,7 +25730,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44822960:T:C:rs10406338",
                 value: "19:44822960:T:C",
@@ -25724,7 +25743,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -25740,7 +25759,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44950621:G:A:rs10402642",
                 value: "19:44950621:G:A",
@@ -25753,7 +25772,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -25769,7 +25788,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44832778:T:C:rs7359852",
                 value: "19:44832778:T:C",
@@ -25782,7 +25801,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -25798,7 +25817,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44952709:C:T:rs12460352",
                 value: "19:44952709:C:T",
@@ -25811,7 +25830,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -25840,7 +25859,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -25869,7 +25888,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -25885,7 +25904,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44945208:T:G:rs5167",
                 value: "19:44945208:T:G",
@@ -25898,7 +25917,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -25914,7 +25933,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44851039:A:G:rs11666329",
                 value: "19:44851039:A:G",
@@ -25927,7 +25946,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -25956,7 +25975,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -25972,7 +25991,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44846145:T:C:rs3810143",
                 value: "19:44846145:T:C",
@@ -25985,7 +26004,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -26001,7 +26020,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44946776:C:T:rs9304644",
                 value: "19:44946776:C:T",
@@ -26014,7 +26033,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -26030,7 +26049,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44941309:G:T:rs112784534",
                 value: "19:44941309:G:T",
@@ -26043,7 +26062,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -26059,13 +26078,13 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "missense variant",
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44908822:C:T:rs7412",
                 value: "19:44908822:C:T",
                 tooltip: "Browse record for variant: 19:44908822:C:T",
             },
-            gene_impact: { value: "MODERATE", color: "goldenrod" },
+            gene_impact: "MODERATE",
             track_name_link: {
                 url: "../track/NG00041_GRCh38_NP",
                 value: "Neuritic plaques (presence vs. absence) (GRCh38)",
@@ -26101,7 +26120,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -26117,7 +26136,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44986934:A:G:rs11672748",
                 value: "19:44986934:A:G",
@@ -26130,7 +26149,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -26146,7 +26165,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44857967:G:A:rs440277",
                 value: "19:44857967:G:A",
@@ -26159,7 +26178,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -26175,7 +26194,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44898611:T:C:rs118170342",
                 value: "19:44898611:T:C",
@@ -26188,7 +26207,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -26204,7 +26223,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838283:A:G:rs12462274",
                 value: "19:44838283:A:G",
@@ -26217,7 +26236,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -26233,7 +26252,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44941309:G:T:rs112784534",
                 value: "19:44941309:G:T",
@@ -26246,7 +26265,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -26262,7 +26281,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44947151:T:C:rs9304646",
                 value: "19:44947151:T:C",
@@ -26275,7 +26294,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -26291,7 +26310,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:45009206:G:A:rs12972222",
                 value: "19:45009206:G:A",
@@ -26304,7 +26323,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -26320,7 +26339,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44952449:C:T:rs7251501",
                 value: "19:44952449:C:T",
@@ -26333,7 +26352,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -26349,7 +26368,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44923535:G:A:rs141622900",
                 value: "19:44923535:G:A",
@@ -26362,7 +26381,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -26378,7 +26397,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44822481:T:G:rs8113311",
                 value: "19:44822481:T:G",
@@ -26391,7 +26410,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -26407,7 +26426,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44940247:A:G:rs59859410",
                 value: "19:44940247:A:G",
@@ -26420,7 +26439,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -26436,7 +26455,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44894050:C:T:rs112849259",
                 value: "19:44894050:C:T",
@@ -26449,7 +26468,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -26465,13 +26484,13 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "missense variant",
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44908822:C:T:rs7412",
                 value: "19:44908822:C:T",
                 tooltip: "Browse record for variant: 19:44908822:C:T",
             },
-            gene_impact: { value: "MODERATE", color: "goldenrod" },
+            gene_impact: "MODERATE",
             track_name_link: {
                 url: "../track/NG00041_GRCh38_NP_CONS",
                 value: "Neuritic plaques (presence vs. absence); conservat...",
@@ -26494,7 +26513,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44844654:C:A:rs4452060",
                 value: "19:44844654:C:A",
@@ -26507,7 +26526,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -26523,7 +26542,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44857505:A:G:rs8112526",
                 value: "19:44857505:A:G",
@@ -26536,7 +26555,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -26552,7 +26571,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44894695:T:C:rs116881820",
                 value: "19:44894695:T:C",
@@ -26565,7 +26584,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -26581,7 +26600,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44952844:G:A:rs4803777",
                 value: "19:44952844:G:A",
@@ -26594,7 +26613,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -26623,7 +26642,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -26639,7 +26658,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44842026:A:C:rs61642202",
                 value: "19:44842026:A:C",
@@ -26652,7 +26671,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -26668,7 +26687,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44857967:G:A:rs440277",
                 value: "19:44857967:G:A",
@@ -26681,7 +26700,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -26697,7 +26716,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892587:G:A:rs34095326",
                 value: "19:44892587:G:A",
@@ -26710,7 +26729,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (presence vs. absence) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -26726,7 +26745,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44895528:C:T:rs79398853",
                 value: "19:44895528:C:T",
@@ -26739,7 +26758,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -26755,7 +26774,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44947615:A:G:rs4803774",
                 value: "19:44947615:A:G",
@@ -26768,7 +26787,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -26784,7 +26803,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44834963:A:G:rs4369782",
                 value: "19:44834963:A:G",
@@ -26797,7 +26816,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -26813,7 +26832,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838857:A:G:rs4803761",
                 value: "19:44838857:A:G",
@@ -26826,7 +26845,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -26842,7 +26861,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44939092:T:C:rs34041051",
                 value: "19:44939092:T:C",
@@ -26855,7 +26874,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -26871,7 +26890,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44953240:T:C:rs4803779",
                 value: "19:44953240:T:C",
@@ -26884,7 +26903,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -26900,7 +26919,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44819487:A:G:rs1135062",
                 value: "19:44819487:A:G",
@@ -26913,7 +26932,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -26942,7 +26961,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -26958,7 +26977,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838691:A:G:rs10407439",
                 value: "19:44838691:A:G",
@@ -26971,7 +26990,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -26987,7 +27006,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44883377:C:T:rs147636938",
                 value: "19:44883377:C:T",
@@ -27000,7 +27019,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -27016,7 +27035,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44909698:A:C:rs1081105",
                 value: "19:44909698:A:C",
@@ -27029,7 +27048,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -27045,7 +27064,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44854682:A:G:rs2927468",
                 value: "19:44854682:A:G",
@@ -27058,7 +27077,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -27074,7 +27093,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44923535:G:A:rs141622900",
                 value: "19:44923535:G:A",
@@ -27087,7 +27106,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -27103,7 +27122,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44952989:T:C:rs4803778",
                 value: "19:44952989:T:C",
@@ -27116,7 +27135,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -27132,7 +27151,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44939092:T:C:rs34041051",
                 value: "19:44939092:T:C",
@@ -27145,7 +27164,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -27161,7 +27180,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44952201:G:A:rs892101",
                 value: "19:44952201:G:A",
@@ -27174,7 +27193,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -27190,7 +27209,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44824202:T:C:rs4803759",
                 value: "19:44824202:T:C",
@@ -27203,7 +27222,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -27219,7 +27238,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44951106:G:A:rs11083752",
                 value: "19:44951106:G:A",
@@ -27232,7 +27251,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -27248,7 +27267,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44950979:G:A:rs7246900",
                 value: "19:44950979:G:A",
@@ -27261,7 +27280,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -27290,7 +27309,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -27306,7 +27325,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44953684:G:A:rs3760625",
                 value: "19:44953684:G:A",
@@ -27319,7 +27338,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -27335,7 +27354,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44862190:G:A:rs146275714",
                 value: "19:44862190:G:A",
@@ -27348,7 +27367,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -27364,7 +27383,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44944779:T:C:rs1132899",
                 value: "19:44944779:T:C",
@@ -27377,7 +27396,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -27393,7 +27412,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44879804:G:T:rs3852861",
                 value: "19:44879804:G:T",
@@ -27406,7 +27425,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -27422,7 +27441,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44950399:G:A:rs10423208",
                 value: "19:44950399:G:A",
@@ -27435,7 +27454,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -27464,7 +27483,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -27480,7 +27499,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44846145:T:C:rs3810143",
                 value: "19:44846145:T:C",
@@ -27493,7 +27512,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -27509,7 +27528,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44840322:G:A:rs55840414",
                 value: "19:44840322:G:A",
@@ -27522,7 +27541,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -27538,7 +27557,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44952648:C:T:rs12460347",
                 value: "19:44952648:C:T",
@@ -27551,7 +27570,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -27567,7 +27586,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44963068:T:C:rs111997200",
                 value: "19:44963068:T:C",
@@ -27580,7 +27599,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -27596,7 +27615,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44860135:C:T:rs12610257",
                 value: "19:44860135:C:T",
@@ -27609,7 +27628,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -27625,7 +27644,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44963078:C:T:rs204914",
                 value: "19:44963078:C:T",
@@ -27638,7 +27657,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -27654,7 +27673,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44953371:C:T:rs4803780",
                 value: "19:44953371:C:T",
@@ -27667,7 +27686,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -27683,7 +27702,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44897468:C:T:rs114536010",
                 value: "19:44897468:C:T",
@@ -27696,7 +27715,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -27712,7 +27731,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44953968:G:A:rs3760628",
                 value: "19:44953968:G:A",
@@ -27725,7 +27744,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -27741,7 +27760,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44953848:A:G:rs3760626",
                 value: "19:44953848:A:G",
@@ -27754,7 +27773,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -27770,7 +27789,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44879709:C:T:rs3852860",
                 value: "19:44879709:C:T",
@@ -27783,7 +27802,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -27799,7 +27818,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44913034:C:T:rs59325138",
                 value: "19:44913034:C:T",
@@ -27812,7 +27831,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -27828,7 +27847,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44840322:G:A:rs55840414",
                 value: "19:44840322:G:A",
@@ -27841,7 +27860,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -27857,7 +27876,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44851039:A:G:rs11666329",
                 value: "19:44851039:A:G",
@@ -27870,7 +27889,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -27886,7 +27905,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44899959:C:T:rs115881343",
                 value: "19:44899959:C:T",
@@ -27899,7 +27918,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -27915,7 +27934,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44913034:C:T:rs59325138",
                 value: "19:44913034:C:T",
@@ -27928,7 +27947,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -27944,7 +27963,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44898611:T:C:rs118170342",
                 value: "19:44898611:T:C",
@@ -27957,7 +27976,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -27986,7 +28005,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -28002,7 +28021,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893642:T:C:rs157584",
                 value: "19:44893642:T:C",
@@ -28015,7 +28034,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -28031,7 +28050,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44951429:T:C:rs7248162",
                 value: "19:44951429:T:C",
@@ -28044,7 +28063,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -28060,7 +28079,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44885967:G:A:rs283814",
                 value: "19:44885967:G:A",
@@ -28073,7 +28092,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -28102,7 +28121,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -28118,7 +28137,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44892073:A:G:rs2075649",
                 value: "19:44892073:A:G",
@@ -28131,7 +28150,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -28147,7 +28166,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44836881:G:A:rs2927482",
                 value: "19:44836881:G:A",
@@ -28160,7 +28179,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -28176,7 +28195,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44949894:T:G:rs7258345",
                 value: "19:44949894:T:G",
@@ -28189,7 +28208,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -28205,7 +28224,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44949887:C:T:rs7257468",
                 value: "19:44949887:C:T",
@@ -28218,7 +28237,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -28234,7 +28253,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44949908:C:T:rs7257476",
                 value: "19:44949908:C:T",
@@ -28247,7 +28266,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -28263,7 +28282,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44834606:T:C:rs12976241",
                 value: "19:44834606:T:C",
@@ -28276,7 +28295,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -28305,7 +28324,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -28321,7 +28340,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44980181:A:C:rs8111069",
                 value: "19:44980181:A:C",
@@ -28334,7 +28353,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -28350,7 +28369,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44860563:T:G:rs138607350",
                 value: "19:44860563:T:G",
@@ -28363,7 +28382,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (3 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -28379,7 +28398,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44918620:A:G:rs484195",
                 value: "19:44918620:A:G",
@@ -28392,7 +28411,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -28421,7 +28440,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -28437,7 +28456,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44834480:C:T:rs11667253",
                 value: "19:44834480:C:T",
@@ -28450,7 +28469,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -28466,7 +28485,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44996130:T:C:rs56784978",
                 value: "19:44996130:T:C",
@@ -28479,7 +28498,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -28495,7 +28514,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44954310:T:C:rs7245611",
                 value: "19:44954310:T:C",
@@ -28508,7 +28527,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -28524,7 +28543,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44962801:T:C:rs8100120",
                 value: "19:44962801:T:C",
@@ -28537,7 +28556,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -28553,7 +28572,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44962887:T:C:rs8100236",
                 value: "19:44962887:T:C",
@@ -28566,7 +28585,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -28582,7 +28601,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44992424:A:G:rs2075619",
                 value: "19:44992424:A:G",
@@ -28595,7 +28614,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -28611,7 +28630,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44941485:A:G:rs4803773",
                 value: "19:44941485:A:G",
@@ -28624,7 +28643,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -28640,7 +28659,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44993518:A:G:rs57204168",
                 value: "19:44993518:A:G",
@@ -28653,7 +28672,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -28669,7 +28688,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893972:G:A:rs1160983",
                 value: "19:44893972:G:A",
@@ -28682,7 +28701,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -28698,7 +28717,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44953923:T:C:rs3760627",
                 value: "19:44953923:T:C",
@@ -28711,7 +28730,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -28727,7 +28746,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44823407:C:T:rs10405693",
                 value: "19:44823407:C:T",
@@ -28740,7 +28759,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -28756,7 +28775,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44935318:C:A:rs141441332",
                 value: "19:44935318:C:A",
@@ -28769,7 +28788,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -28785,7 +28804,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915229:G:A:rs12691088",
                 value: "19:44915229:G:A",
@@ -28798,7 +28817,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -28814,7 +28833,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44834963:A:G:rs4369782",
                 value: "19:44834963:A:G",
@@ -28827,7 +28846,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -28843,7 +28862,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44987312:A:G:rs3786505",
                 value: "19:44987312:A:G",
@@ -28856,7 +28875,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -28872,7 +28891,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44857967:G:A:rs440277",
                 value: "19:44857967:G:A",
@@ -28885,7 +28904,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -28901,7 +28920,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44948185:A:G:rs7256684",
                 value: "19:44948185:A:G",
@@ -28914,7 +28933,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -28930,7 +28949,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44864245:G:C:rs73050216",
                 value: "19:44864245:G:C",
@@ -28943,7 +28962,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -28959,7 +28978,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44956594:T:C:rs2239375",
                 value: "19:44956594:T:C",
@@ -28972,7 +28991,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -28988,7 +29007,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44954889:A:C:rs3760629",
                 value: "19:44954889:A:C",
@@ -29001,7 +29020,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -29030,7 +29049,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -29046,7 +29065,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44895007:C:T:rs157588",
                 value: "19:44895007:C:T",
@@ -29059,7 +29078,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -29075,7 +29094,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44946027:T:G:rs2288911",
                 value: "19:44946027:T:G",
@@ -29088,7 +29107,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -29104,7 +29123,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44903416:G:A:rs10119",
                 value: "19:44903416:G:A",
@@ -29117,7 +29136,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "vascular brain injury",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -29133,7 +29152,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44989803:T:C:rs909134",
                 value: "19:44989803:T:C",
@@ -29146,7 +29165,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -29162,7 +29181,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44860563:T:G:rs138607350",
                 value: "19:44860563:T:G",
@@ -29175,7 +29194,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -29191,7 +29210,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44822960:T:C:rs10406338",
                 value: "19:44822960:T:C",
@@ -29204,7 +29223,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -29220,7 +29239,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44954049:C:T:rs7259679",
                 value: "19:44954049:C:T",
@@ -29233,7 +29252,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -29249,7 +29268,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44945208:T:G:rs5167",
                 value: "19:44945208:T:G",
@@ -29262,7 +29281,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -29278,7 +29297,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44879460:G:A:rs406456",
                 value: "19:44879460:G:A",
@@ -29291,7 +29310,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -29307,7 +29326,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44951509:G:A:rs7247551",
                 value: "19:44951509:G:A",
@@ -29320,7 +29339,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -29349,7 +29368,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -29378,7 +29397,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -29394,7 +29413,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44844654:C:A:rs4452060",
                 value: "19:44844654:C:A",
@@ -29407,7 +29426,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -29423,7 +29442,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44954036:C:T:rs66867801",
                 value: "19:44954036:C:T",
@@ -29436,7 +29455,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -29465,7 +29484,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -29481,7 +29500,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44879709:C:T:rs3852860",
                 value: "19:44879709:C:T",
@@ -29494,7 +29513,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -29523,7 +29542,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -29539,7 +29558,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44876259:G:A:rs412776",
                 value: "19:44876259:G:A",
@@ -29552,7 +29571,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -29568,7 +29587,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44840322:G:A:rs55840414",
                 value: "19:44840322:G:A",
@@ -29581,7 +29600,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -29597,7 +29616,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44820881:G:A:rs28399637",
                 value: "19:44820881:G:A",
@@ -29610,7 +29629,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -29626,7 +29645,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44928379:A:G:rs113345881",
                 value: "19:44928379:A:G",
@@ -29639,7 +29658,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -29655,7 +29674,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44899005:T:G:rs111784051",
                 value: "19:44899005:T:G",
@@ -29668,7 +29687,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: tau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -29684,7 +29703,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44876174:C:T:rs138914864",
                 value: "19:44876174:C:T",
@@ -29697,7 +29716,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -29713,7 +29732,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44962981:C:T:rs204913",
                 value: "19:44962981:C:T",
@@ -29726,7 +29745,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -29742,7 +29761,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44941485:A:G:rs4803773",
                 value: "19:44941485:A:G",
@@ -29755,7 +29774,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -29771,7 +29790,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44864520:C:T:rs8105340",
                 value: "19:44864520:C:T",
@@ -29784,7 +29803,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -29800,7 +29819,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44819487:A:G:rs1135062",
                 value: "19:44819487:A:G",
@@ -29813,7 +29832,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -29829,7 +29848,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44880859:G:A:rs406315",
                 value: "19:44880859:G:A",
@@ -29842,7 +29861,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -29858,7 +29877,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44986934:A:G:rs11672748",
                 value: "19:44986934:A:G",
@@ -29871,7 +29890,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -29887,7 +29906,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44879804:G:T:rs3852861",
                 value: "19:44879804:G:T",
@@ -29900,7 +29919,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -29916,7 +29935,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44824052:C:T:rs10412413",
                 value: "19:44824052:C:T",
@@ -29929,7 +29948,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -29945,7 +29964,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44885967:G:A:rs283814",
                 value: "19:44885967:G:A",
@@ -29958,7 +29977,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -29974,7 +29993,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44962950:G:A:rs204912",
                 value: "19:44962950:G:A",
@@ -29987,7 +30006,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -30003,7 +30022,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44994319:T:C:rs60461903",
                 value: "19:44994319:T:C",
@@ -30016,7 +30035,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -30032,7 +30051,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44882099:C:A:rs144261139",
                 value: "19:44882099:C:A",
@@ -30045,7 +30064,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -30061,7 +30080,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44879460:G:A:rs406456",
                 value: "19:44879460:G:A",
@@ -30074,7 +30093,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -30090,7 +30109,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44834480:C:T:rs11667253",
                 value: "19:44834480:C:T",
@@ -30103,7 +30122,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -30119,7 +30138,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44834606:T:C:rs12976241",
                 value: "19:44834606:T:C",
@@ -30132,7 +30151,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -30161,7 +30180,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -30177,7 +30196,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44877704:C:A:rs3865427",
                 value: "19:44877704:C:A",
@@ -30190,7 +30209,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -30219,7 +30238,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -30235,7 +30254,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44860563:T:G:rs138607350",
                 value: "19:44860563:T:G",
@@ -30248,7 +30267,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -30264,7 +30283,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "intron variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44907187:G:A:rs769450",
                 value: "19:44907187:G:A",
@@ -30275,7 +30294,7 @@ export const TABLE_DEFINTION: Table = {
                 value: "Neuritic plaques (presence vs. absence); conservat...",
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             neuropathology: "neuritic plaques",
             relative_position: "in gene",
         },
@@ -30306,7 +30325,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -30322,7 +30341,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44876174:C:T:rs138914864",
                 value: "19:44876174:C:T",
@@ -30335,7 +30354,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -30351,7 +30370,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915229:G:A:rs12691088",
                 value: "19:44915229:G:A",
@@ -30364,7 +30383,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (presence vs. absence) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -30380,7 +30399,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44955336:C:T:rs2238682",
                 value: "19:44955336:C:T",
@@ -30393,7 +30412,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -30409,7 +30428,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44954120:G:A:rs73047641",
                 value: "19:44954120:G:A",
@@ -30422,7 +30441,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -30438,7 +30457,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44824202:T:C:rs4803759",
                 value: "19:44824202:T:C",
@@ -30451,7 +30470,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -30467,7 +30486,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44952648:C:T:rs12460347",
                 value: "19:44952648:C:T",
@@ -30480,7 +30499,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -30496,7 +30515,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44954978:A:G:rs41334244",
                 value: "19:44954978:A:G",
@@ -30509,7 +30528,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -30525,7 +30544,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44828468:C:T:rs4802238",
                 value: "19:44828468:C:T",
@@ -30538,7 +30557,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -30554,7 +30573,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838984:A:G:rs4239533",
                 value: "19:44838984:A:G",
@@ -30567,7 +30586,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -30583,7 +30602,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893642:T:C:rs157584",
                 value: "19:44893642:T:C",
@@ -30596,7 +30615,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -30612,7 +30631,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44819487:A:G:rs1135062",
                 value: "19:44819487:A:G",
@@ -30625,7 +30644,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -30641,7 +30660,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44825122:T:A:rs58826447",
                 value: "19:44825122:T:A",
@@ -30654,7 +30673,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -30670,7 +30689,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893716:G:A:rs77301115",
                 value: "19:44893716:G:A",
@@ -30683,7 +30702,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -30699,7 +30718,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44987170:G:A:rs7257610",
                 value: "19:44987170:G:A",
@@ -30712,7 +30731,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -30728,7 +30747,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44883377:C:T:rs147636938",
                 value: "19:44883377:C:T",
@@ -30741,7 +30760,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -30757,7 +30776,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44985727:A:G:rs204470",
                 value: "19:44985727:A:G",
@@ -30770,7 +30789,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -30786,7 +30805,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44952648:C:T:rs12460347",
                 value: "19:44952648:C:T",
@@ -30799,7 +30818,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -30815,7 +30834,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44959999:C:G:rs61062133",
                 value: "19:44959999:C:G",
@@ -30828,7 +30847,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -30844,7 +30863,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44899005:T:G:rs111784051",
                 value: "19:44899005:T:G",
@@ -30857,7 +30876,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -30873,7 +30892,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44980181:A:C:rs8111069",
                 value: "19:44980181:A:C",
@@ -30886,7 +30905,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -30902,7 +30921,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44864715:G:C:rs3112439",
                 value: "19:44864715:G:C",
@@ -30915,7 +30934,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -30944,7 +30963,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -30960,7 +30979,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44825123:C:A:rs58446550",
                 value: "19:44825123:C:A",
@@ -30973,7 +30992,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -30989,7 +31008,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44954062:G:A:rs66771331",
                 value: "19:44954062:G:A",
@@ -31002,7 +31021,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -31018,7 +31037,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44822481:T:G:rs8113311",
                 value: "19:44822481:T:G",
@@ -31031,7 +31050,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -31047,7 +31066,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44983690:C:T:rs111869796",
                 value: "19:44983690:C:T",
@@ -31060,7 +31079,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -31076,7 +31095,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893716:G:A:rs77301115",
                 value: "19:44893716:G:A",
@@ -31089,7 +31108,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -31118,7 +31137,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -31134,7 +31153,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44967656:C:T:rs10775543",
                 value: "19:44967656:C:T",
@@ -31147,7 +31166,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -31176,7 +31195,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Vascular brain injury (3 category ranking) (GRCh38)",
             },
             neuropathology: "vascular brain injury",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -31192,7 +31211,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44912921:G:T:rs483082",
                 value: "19:44912921:G:T",
@@ -31205,7 +31224,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "vascular brain injury",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -31221,7 +31240,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44968485:A:G:rs16979586",
                 value: "19:44968485:A:G",
@@ -31234,7 +31253,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -31250,7 +31269,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44988687:G:A:rs204466",
                 value: "19:44988687:G:A",
@@ -31263,7 +31282,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -31279,7 +31298,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44851039:A:G:rs11666329",
                 value: "19:44851039:A:G",
@@ -31292,7 +31311,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -31308,7 +31327,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44987378:T:C:rs204468",
                 value: "19:44987378:T:C",
@@ -31321,7 +31340,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -31337,7 +31356,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44877713:G:T:rs11668861",
                 value: "19:44877713:G:T",
@@ -31350,7 +31369,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -31366,7 +31385,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44840322:G:A:rs55840414",
                 value: "19:44840322:G:A",
@@ -31379,7 +31398,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -31395,7 +31414,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44890259:C:T:rs117310449",
                 value: "19:44890259:C:T",
@@ -31408,7 +31427,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -31424,7 +31443,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44890259:C:T:rs117310449",
                 value: "19:44890259:C:T",
@@ -31437,7 +31456,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -31466,7 +31485,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -31482,7 +31501,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44987916:A:G:rs204467",
                 value: "19:44987916:A:G",
@@ -31495,7 +31514,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -31511,7 +31530,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44983473:C:T:rs112417029",
                 value: "19:44983473:C:T",
@@ -31524,7 +31543,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -31540,7 +31559,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44996130:T:C:rs56784978",
                 value: "19:44996130:T:C",
@@ -31553,7 +31572,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -31569,7 +31588,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44993518:A:G:rs57204168",
                 value: "19:44993518:A:G",
@@ -31582,7 +31601,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -31598,7 +31617,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44992424:A:G:rs2075619",
                 value: "19:44992424:A:G",
@@ -31611,7 +31630,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -31627,7 +31646,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44973165:T:C:rs204481",
                 value: "19:44973165:T:C",
@@ -31640,7 +31659,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -31656,7 +31675,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44929021:T:C:rs7259350",
                 value: "19:44929021:T:C",
@@ -31669,7 +31688,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -31685,7 +31704,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44969392:C:T:rs56834222",
                 value: "19:44969392:C:T",
@@ -31698,7 +31717,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -31714,7 +31733,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44824202:T:C:rs4803759",
                 value: "19:44824202:T:C",
@@ -31727,7 +31746,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -31743,7 +31762,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44947933:G:A:rs10420434",
                 value: "19:44947933:G:A",
@@ -31756,7 +31775,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -31772,7 +31791,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44954955:G:A:rs117316645",
                 value: "19:44954955:G:A",
@@ -31785,7 +31804,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -31814,7 +31833,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -31843,7 +31862,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -31872,7 +31891,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -31888,7 +31907,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:45000254:AT:A:rs34415122",
                 value: "19:45000254:AT:A",
@@ -31901,7 +31920,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -31917,7 +31936,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44971839:A:G:rs204483",
                 value: "19:44971839:A:G",
@@ -31930,7 +31949,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -31946,7 +31965,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44947595:A:G:rs10419086",
                 value: "19:44947595:A:G",
@@ -31959,7 +31978,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -31975,7 +31994,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44974694:T:C:rs204479",
                 value: "19:44974694:T:C",
@@ -31988,7 +32007,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -32004,7 +32023,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44841465:G:A:rs28615360",
                 value: "19:44841465:G:A",
@@ -32017,7 +32036,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -32033,7 +32052,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44982234:G:A:rs73558195",
                 value: "19:44982234:G:A",
@@ -32046,7 +32065,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -32062,7 +32081,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44842366:G:A:rs2199575",
                 value: "19:44842366:G:A",
@@ -32075,7 +32094,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -32091,7 +32110,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44997236:C:T:rs148851376",
                 value: "19:44997236:C:T",
@@ -32104,7 +32123,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -32120,7 +32139,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44825110:A:T:rs58132661",
                 value: "19:44825110:A:T",
@@ -32133,7 +32152,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -32149,7 +32168,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44911194:T:C:rs439401",
                 value: "19:44911194:T:C",
@@ -32162,7 +32181,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (3 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -32178,7 +32197,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44879804:G:T:rs3852861",
                 value: "19:44879804:G:T",
@@ -32191,7 +32210,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -32207,7 +32226,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44819487:A:G:rs1135062",
                 value: "19:44819487:A:G",
@@ -32220,7 +32239,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -32249,7 +32268,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -32265,7 +32284,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44864520:C:T:rs8105340",
                 value: "19:44864520:C:T",
@@ -32278,7 +32297,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence) (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -32294,7 +32313,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44875803:A:C:rs387976",
                 value: "19:44875803:A:C",
@@ -32307,7 +32326,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -32323,7 +32342,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44997454:C:T:rs2376866",
                 value: "19:44997454:C:T",
@@ -32336,7 +32355,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -32352,7 +32371,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44879822:T:C:rs71352237",
                 value: "19:44879822:T:C",
@@ -32365,7 +32384,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -32381,7 +32400,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44983921:C:T:rs204474",
                 value: "19:44983921:C:T",
@@ -32394,7 +32413,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -32410,7 +32429,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44952449:C:T:rs7251501",
                 value: "19:44952449:C:T",
@@ -32423,7 +32442,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -32439,7 +32458,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44987312:A:G:rs3786505",
                 value: "19:44987312:A:G",
@@ -32452,7 +32471,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -32468,7 +32487,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44857505:A:G:rs8112526",
                 value: "19:44857505:A:G",
@@ -32481,7 +32500,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -32510,7 +32529,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -32526,7 +32545,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44982369:C:T:rs77021985",
                 value: "19:44982369:C:T",
@@ -32539,7 +32558,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -32555,7 +32574,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44994319:T:C:rs60461903",
                 value: "19:44994319:T:C",
@@ -32568,7 +32587,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -32584,7 +32603,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44874887:C:T:rs34278513",
                 value: "19:44874887:C:T",
@@ -32597,7 +32616,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -32613,7 +32632,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44997236:C:T:rs148851376",
                 value: "19:44997236:C:T",
@@ -32626,7 +32645,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -32642,7 +32661,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44968485:A:G:rs16979586",
                 value: "19:44968485:A:G",
@@ -32655,7 +32674,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -32671,7 +32690,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44984163:A:C:rs16979600",
                 value: "19:44984163:A:C",
@@ -32684,7 +32703,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -32700,7 +32719,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44982891:G:A:rs57270598",
                 value: "19:44982891:G:A",
@@ -32713,7 +32732,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -32729,7 +32748,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44986692:C:T:rs34112623",
                 value: "19:44986692:C:T",
@@ -32742,7 +32761,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -32758,7 +32777,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44980862:A:G:rs204475",
                 value: "19:44980862:A:G",
@@ -32771,7 +32790,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -32787,7 +32806,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44826087:T:C:rs10402524",
                 value: "19:44826087:T:C",
@@ -32800,7 +32819,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -32816,7 +32835,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44987170:G:A:rs7257610",
                 value: "19:44987170:G:A",
@@ -32829,7 +32848,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -32845,7 +32864,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44985176:A:G:rs204472",
                 value: "19:44985176:A:G",
@@ -32858,7 +32877,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -32874,7 +32893,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44979708:A:C:rs204476",
                 value: "19:44979708:A:C",
@@ -32887,7 +32906,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -32903,7 +32922,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44899005:T:G:rs111784051",
                 value: "19:44899005:T:G",
@@ -32916,7 +32935,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -32932,7 +32951,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44897490:T:A:rs61679753",
                 value: "19:44897490:T:A",
@@ -32945,7 +32964,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: ptau (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -32961,7 +32980,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44978728:A:G:rs73558190",
                 value: "19:44978728:A:G",
@@ -32974,7 +32993,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -32990,7 +33009,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44976917:G:A:rs73558188",
                 value: "19:44976917:G:A",
@@ -33003,7 +33022,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -33019,7 +33038,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44950621:G:A:rs10402642",
                 value: "19:44950621:G:A",
@@ -33032,7 +33051,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -33048,13 +33067,13 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: "intron variant",
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44907187:G:A:rs769450",
                 value: "19:44907187:G:A",
                 tooltip: "Browse record for variant: 19:44907187:G:A",
             },
-            gene_impact: { value: "MODIFIER", color: "cornflowerblue" },
+            gene_impact: "MODIFIER",
             track_name_link: {
                 url: "../track/NG00041_GRCh38_NP_CERAD",
                 value: "Neuritic plaques (ranked by CERAD score) (GRCh38)",
@@ -33077,7 +33096,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44954955:G:A:rs117316645",
                 value: "19:44954955:G:A",
@@ -33090,7 +33109,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -33106,7 +33125,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44973247:T:G:rs73558179",
                 value: "19:44973247:T:G",
@@ -33119,7 +33138,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -33135,7 +33154,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44972681:T:C:rs16979588",
                 value: "19:44972681:T:C",
@@ -33148,7 +33167,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -33177,7 +33196,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -33193,7 +33212,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44890954:C:T:rs76692773",
                 value: "19:44890954:C:T",
@@ -33206,7 +33225,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -33222,7 +33241,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44985309:T:C:rs204471",
                 value: "19:44985309:T:C",
@@ -33235,7 +33254,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -33251,7 +33270,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44858389:A:G:rs365653",
                 value: "19:44858389:A:G",
@@ -33264,7 +33283,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -33280,7 +33299,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44911194:T:C:rs439401",
                 value: "19:44911194:T:C",
@@ -33293,7 +33312,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -33309,7 +33328,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44879709:C:T:rs3852860",
                 value: "19:44879709:C:T",
@@ -33322,7 +33341,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -33338,7 +33357,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44893408:G:T:rs59007384",
                 value: "19:44893408:G:T",
@@ -33351,7 +33370,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Vascular brain injury (3 category ranking) (GRCh38)",
             },
             neuropathology: "vascular brain injury",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -33367,7 +33386,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44846145:T:C:rs3810143",
                 value: "19:44846145:T:C",
@@ -33380,7 +33399,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -33396,7 +33415,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44922203:A:G:rs157595",
                 value: "19:44922203:A:G",
@@ -33409,7 +33428,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (3 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -33425,7 +33444,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44989053:T:C:rs204465",
                 value: "19:44989053:T:C",
@@ -33438,7 +33457,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -33454,7 +33473,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44819705:A:T:rs28399659",
                 value: "19:44819705:A:T",
@@ -33467,7 +33486,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -33483,7 +33502,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44957507:G:A:rs204905",
                 value: "19:44957507:G:A",
@@ -33496,7 +33515,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -33512,7 +33531,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44844654:C:A:rs4452060",
                 value: "19:44844654:C:A",
@@ -33525,7 +33544,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak stages) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -33541,7 +33560,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44941485:A:G:rs4803773",
                 value: "19:44941485:A:G",
@@ -33554,7 +33573,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -33570,7 +33589,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44958739:A:G:rs204907",
                 value: "19:44958739:A:G",
@@ -33583,7 +33602,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -33599,7 +33618,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44913221:A:G:rs584007",
                 value: "19:44913221:A:G",
@@ -33612,7 +33631,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -33628,7 +33647,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44989803:T:C:rs909134",
                 value: "19:44989803:T:C",
@@ -33641,7 +33660,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -33657,7 +33676,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44952648:C:T:rs12460347",
                 value: "19:44952648:C:T",
@@ -33670,7 +33689,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -33686,7 +33705,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44922203:A:G:rs157595",
                 value: "19:44922203:A:G",
@@ -33699,7 +33718,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (5 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -33715,7 +33734,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44915229:G:A:rs12691088",
                 value: "19:44915229:G:A",
@@ -33728,7 +33747,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -33744,7 +33763,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44820544:C:T:rs28399663",
                 value: "19:44820544:C:T",
@@ -33757,7 +33776,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -33773,7 +33792,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44911194:T:C:rs439401",
                 value: "19:44911194:T:C",
@@ -33786,7 +33805,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -33802,7 +33821,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44825957:T:G:rs10402271",
                 value: "19:44825957:T:G",
@@ -33815,7 +33834,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -33831,7 +33850,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44982369:C:T:rs77021985",
                 value: "19:44982369:C:T",
@@ -33844,7 +33863,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -33860,7 +33879,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44890259:C:T:rs117310449",
                 value: "19:44890259:C:T",
@@ -33873,7 +33892,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -33889,7 +33908,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44819487:A:G:rs1135062",
                 value: "19:44819487:A:G",
@@ -33902,7 +33921,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -33918,7 +33937,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44986934:A:G:rs11672748",
                 value: "19:44986934:A:G",
@@ -33931,7 +33950,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -33947,7 +33966,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44842366:G:A:rs2199575",
                 value: "19:44842366:G:A",
@@ -33960,7 +33979,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (5 category ranking) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -33976,7 +33995,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44923535:G:A:rs141622900",
                 value: "19:44923535:G:A",
@@ -33989,7 +34008,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); conservative (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -34018,7 +34037,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -34034,7 +34053,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44836881:G:A:rs2927482",
                 value: "19:44836881:G:A",
@@ -34047,7 +34066,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -34063,7 +34082,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44951502:A:G:rs7247227",
                 value: "19:44951502:A:G",
@@ -34076,7 +34095,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -34092,7 +34111,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44913221:A:G:rs584007",
                 value: "19:44913221:A:G",
@@ -34105,7 +34124,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Lewy body disease (presence vs. absence) (GRCh38)",
             },
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -34121,7 +34140,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44987916:A:G:rs204467",
                 value: "19:44987916:A:G",
@@ -34134,7 +34153,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -34150,7 +34169,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44983921:C:T:rs204474",
                 value: "19:44983921:C:T",
@@ -34163,7 +34182,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Cerebral amyloid angiopathy (presence vs. absence) (GRCh38)",
             },
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -34179,7 +34198,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:45004413:A:G:rs34800911",
                 value: "19:45004413:A:G",
@@ -34192,7 +34211,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -34208,7 +34227,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44983430:G:C:rs143668237",
                 value: "19:44983430:G:C",
@@ -34221,7 +34240,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -34237,7 +34256,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44919589:G:A:rs56131196",
                 value: "19:44919589:G:A",
@@ -34250,7 +34269,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "vascular brain injury",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -34266,7 +34285,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44951502:A:G:rs7247227",
                 value: "19:44951502:A:G",
@@ -34279,7 +34298,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -34295,7 +34314,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44965388:C:T:rs10416261",
                 value: "19:44965388:C:T",
@@ -34308,7 +34327,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -34337,7 +34356,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -34353,7 +34372,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44880859:G:A:rs406315",
                 value: "19:44880859:G:A",
@@ -34366,7 +34385,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neurofibrillary tangles (ranked by Braak groups) (GRCh38)",
             },
             neuropathology: "Braak Stages // neurofibrillary tangles",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -34382,7 +34401,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44854120:T:C:rs4803764",
                 value: "19:44854120:T:C",
@@ -34395,7 +34414,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -34411,7 +34430,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44922203:A:G:rs157595",
                 value: "19:44922203:A:G",
@@ -34424,7 +34443,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -34440,7 +34459,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44819634:C:T:rs28399658",
                 value: "19:44819634:C:T",
@@ -34453,7 +34472,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: CSF: Aβ₄₂ (GRCh38)",
             },
             neuropathology: null,
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -34469,7 +34488,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44996664:T:C:rs12459272",
                 value: "19:44996664:T:C",
@@ -34482,7 +34501,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: null,
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -34498,7 +34517,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44838691:A:G:rs10407439",
                 value: "19:44838691:A:G",
@@ -34511,7 +34530,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -34527,7 +34546,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44946027:T:G:rs2288911",
                 value: "19:44946027:T:G",
@@ -34540,7 +34559,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -34556,7 +34575,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44987378:T:C:rs204468",
                 value: "19:44987378:T:C",
@@ -34569,7 +34588,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "cerebral amyloid angiopathy",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -34585,7 +34604,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "T",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44946776:C:T:rs9304644",
                 value: "19:44946776:C:T",
@@ -34598,7 +34617,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (presence vs. absence); relaxed (GRCh38)",
             },
             neuropathology: "neuritic plaques",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
         {
             gender: null,
@@ -34614,7 +34633,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "C",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44883777:A:C:rs283808",
                 value: "19:44883777:A:C",
@@ -34627,7 +34646,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -34643,7 +34662,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "G",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44883800:A:G:rs283809",
                 value: "19:44883800:A:G",
@@ -34656,7 +34675,7 @@ export const TABLE_DEFINTION: Table = {
                 tooltip: "Browse track: Neuritic plaques (ranked by CERAD score) (GRCh38)",
             },
             neuropathology: "CERAD score // neuritic plaques",
-            relative_position: { value: "upstream", color: "red" },
+            relative_position: "upstream",
         },
         {
             gender: null,
@@ -34672,7 +34691,7 @@ export const TABLE_DEFINTION: Table = {
             gene_consequence: null,
             allele: "A",
             covariates: null,
-            is_adsp_variant: { value: true, icon: "check", color: "red" },
+            is_adsp_variant: { value: true, icon: "check" },
             variant_link: {
                 url: "../variant/19:44913221:A:G:rs584007",
                 value: "19:44913221:A:G",
@@ -34685,7 +34704,7 @@ export const TABLE_DEFINTION: Table = {
             },
             gene_impact: null,
             neuropathology: "Lewy body",
-            relative_position: { value: "downstream", color: "green" },
+            relative_position: "downstream",
         },
     ],
 };

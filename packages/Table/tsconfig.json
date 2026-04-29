@@ -28,7 +28,8 @@
         "outDir": "dist",
         "baseUrl": ".",
         "paths": {
-            "@/*": ["./*"]
+            "@/*": ["./*"],
+            "react": ["./node_modules/@types/react"] // resolves the lucide-react typing/JSX element problem
         }
     },
     "exclude": ["node_modules", "build", "dist", "scripts", "webpack", "examples", "postcss.config.js", "**/*.scss"]

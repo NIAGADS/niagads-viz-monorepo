@@ -1,0 +1,28 @@
+//@ts-nocheck
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+
+import Table from "@niagads/table";
+import { TABLE_DEFINITION as table } from "../../examples/tables/table_large_numeric_values";
+
+const meta: Meta<typeof Table> = {
+    title: "Table/Filter Table",
+    component: Table,
+    parameters: {
+        // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
+        layout: "padded",
+    },
+    // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
+    tags: ["autodocs"],
+};
+
+export default meta;
+type Story = StoryObj<typeof Table>;
+
+export const Default: Story = {
+    args: {
+        id: table.id,
+        columns: table.columns,
+        options: table.options,
+        data: table.data,
+    },
+};

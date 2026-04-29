@@ -1,13 +1,12 @@
-import { Button, ButtonGroup, TextInput, InlineIcon } from "@niagads/ui";
+import { ButtonGroup, TextInput } from "@niagads/ui";
 import React, { useCallback, useMemo } from "react";
 import { Table as ReactTable, Column as ReactTableColumn } from "@tanstack/react-table";
 import { TableExportControls, exportTable } from "./TableExportControls";
-import { ListFilterPlus } from "lucide-react";
 
-import { ColumnControls } from "./ColumnControls";
-import { TableRow } from "../TableProperties";
+import { ColumnControls } from "./Columns/ColumnControls";
+import { TableRow } from "../types";
 import { _get } from "@niagads/common";
-import styles from "../styles/controls.module.css";
+import styles from "./controls.module.css";
 
 interface ToolbarProps {
     table: ReactTable<TableRow>;

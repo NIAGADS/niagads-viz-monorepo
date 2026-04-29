@@ -5,7 +5,7 @@ import {
 } from "@niagads/charts";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
-import { TABLE_DEFINTION as largeNumericTable } from "../../examples/tables/table_large_numeric_values";
+import { TABLE_DEFINITION as largeNumericTable } from "../../examples/tables/table_large_numeric_values";
 import { useState } from "react";
 
 // Generate skewed data with right tail (values between 0 and 1)
@@ -29,13 +29,6 @@ const meta: Meta<typeof Histogram> = {
         layout: "centered",
     },
     tags: ["autodocs"],
-    decorators: [
-        (Story) => (
-            <div style={{ width: "900px", height: "500px" }}>
-                <Story />
-            </div>
-        ),
-    ],
     argTypes: {
         data: {
             control: { type: "object" },
