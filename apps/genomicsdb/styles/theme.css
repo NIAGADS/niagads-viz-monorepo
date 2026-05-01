@@ -12,7 +12,7 @@
     --font-family-display: var(--font-source-sans), var(--font-inter), -apple-system, BlinkMacSystemFont, sans-serif;
 
     /* Layout */
-    --header-height: 70px;
+    --header-height: 56px;
     --sidebar-width: 270px;
 
     /* Utility */

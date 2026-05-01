@@ -1,11 +1,11 @@
 /* ── SIDEBAR ── */
 .sidebar {
-    width: var(--sidebar-width);
+    width: var(--sidebar-w, 240px);
     flex-shrink: 0;
     background: var(--surface);
     border-right: 1px solid var(--border);
     position: fixed;
-    top: var(--header-height);
+    top: var(--topbar-h, 56px);
     left: 0;
     bottom: 0;
     overflow-y: auto;
@@ -20,6 +20,7 @@
     width: 52px;
 }
 
+/* ── RECORD HEADER ── */
 .sidebar-record {
     padding: 14px 16px 12px;
     border-bottom: 1px solid var(--border);
@@ -38,10 +39,14 @@
     flex: 1;
 }
 
+.sidebar-record-name em {
+    font-style: italic;
+}
+
 .sidebar-toggle {
+    flex-shrink: 0;
     width: 26px;
     height: 26px;
-    flex-shrink: 0;
     border: 1px solid var(--border);
     border-radius: 5px;
     background: var(--bg);
@@ -69,6 +74,8 @@
 .sidebar-nav {
     flex: 1;
     padding: 8px 0;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .nav-item {
@@ -85,7 +92,6 @@
     white-space: nowrap;
     overflow: hidden;
     user-select: none;
-    text-decoration: none;
 }
 
 .nav-item:hover {
@@ -100,34 +106,25 @@
     font-weight: 600;
 }
 
-.nav-item.active svg.nav-icon {
-    color: rgba(255, 255, 255, 0.9);
-}
-
-.nav-item.active .chevron {
-    color: rgba(255, 255, 255, 0.7);
-}
-
-.nav-item.active-parent {
-    /* color: var(--blue-dark);  */
-    font-weight: 600;
-    /* background: #eef3fb; */
-    border-left-color: var(--blue-mid);
-}
-
+/* ── NAV ICONS ── */
 .nav-item svg.nav-icon {
     width: 15px;
     height: 15px;
     flex-shrink: 0;
+    color: var(--muted);
+    transition: color 0.15s;
 }
 
-.nav-item .nav-label {
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.nav-item:hover svg.nav-icon {
+    color: var(--text);
 }
 
-.nav-item .nav-badge {
+.nav-item.active svg.nav-icon {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* ── NAV BADGES ── */
+.nav-badge {
     font-size: 10px;
     font-family: "Roboto Mono", monospace;
     background: #eef2fa;
@@ -143,17 +140,43 @@
     color: #fff;
 }
 
+.nav-item.active-parent {
+    font-weight: 600;
+    border-left-color: var(--blue);
+    color: #fff;
+    background: var(--blue);
+}
+
 .nav-item.active-parent .nav-badge {
     background: rgba(46, 91, 170, 0.12);
     color: var(--blue);
 }
 
-.nav-item .chevron {
+
+/* ── NAV LABELS & CHEVRONS ── */
+.nav-label {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chevron {
     width: 14px;
     height: 14px;
     flex-shrink: 0;
     transition: transform 0.2s;
     color: var(--muted);
+    margin-left: auto;
+}
+.nav-item.active-parent svg.nav-icon {
+    color: var(--blue-mid);
+}
+.nav-item.active-parent .chevron {
+    color: var(--blue-mid);
+}
+
+.nav-item.active .chevron {
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .nav-item.open .chevron {
@@ -167,8 +190,13 @@
 
 /* ── SUBNAV ── */
 .subnav {
+    max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease;
+}
+
+.subnav-open {
+    max-height: 300px;
 }
 
 .subnav-item {
@@ -200,35 +228,30 @@
     transition: background 0.15s;
 }
 
-.subnav-item:hover::before {
-    background: var(--blue-mid);
-}
-
-.subnav-item.active::before {
-    background: var(--blue);
-}
-
 .subnav-item:hover {
     background: var(--bg);
     color: var(--text);
 }
 
+.subnav-item:hover::before {
+    background: var(--blue-mid);
+}
+
 .subnav-item.active {
     color: var(--blue);
     border-left-color: var(--blue);
+    border-left-width: 3px;
     background: var(--blue-lt);
     font-weight: 600;
 }
 
-.subnav-item .nav-badge {
-    font-size: 10px;
-    font-family: "Roboto Mono", monospace;
-    background: #eef2fa;
-    color: var(--muted);
-    padding: 1px 6px;
-    border-radius: 10px;
-    margin-left: auto;
-    flex-shrink: 0;
+.subnav-item.active::before {
+    background: var(--blue);
+    width: 6px;
+    height: 6px;
+}
+.subnav-item.active .subnav-item-label {
+    color: var(--blue);
 }
 
 .subnav-item.active .nav-badge {
@@ -242,7 +265,14 @@
     pointer-events: none;
 }
 
-/* ── SIDEBAR COLLAPSED STATE ── */
+.subnav-item-label {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ── COLLAPSED STATE ── */
 .sidebar.collapsed .nav-label,
 .sidebar.collapsed .nav-badge,
 .sidebar.collapsed .chevron,
@@ -261,7 +291,7 @@
     background: var(--blue);
 }
 
-/* FAB — mobile only */
+/* ── FAB — mobile only ── */
 .sidebar-fab {
     display: none;
     position: fixed;
@@ -272,7 +302,6 @@
     height: 48px;
     border-radius: 50%;
     background: var(--blue-dark);
-    /* was --navy, fix this */
     color: #fff;
     border: none;
     cursor: pointer;
@@ -286,7 +315,7 @@
     background: var(--blue);
 }
 
-/* Overlay */
+/* ── OVERLAY ── */
 .sidebar-overlay {
     display: none;
     position: fixed;
@@ -295,8 +324,8 @@
     z-index: 99;
 }
 
+/* ── MOBILE ── */
 @media (max-width: 768px) {
-    /* Show FAB and overlay */
     .sidebar-fab {
         display: flex;
     }
@@ -305,32 +334,21 @@
         display: block;
     }
 
-    /* Sidebar: hidden off-screen by default */
     .sidebar {
         transform: translateX(-100%);
         transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         width: 100% !important;
-        /* override collapsed/expanded desktop widths */
         top: 0;
-        /* full height including topnav area */
     }
 
-    /* Sidebar open state */
     .sidebar.mobile-open {
         transform: translateX(0);
     }
 
-    /* Main content always full width */
-    .main-content {
-        margin-left: 0 !important;
-    }
-
-    /* Hide desktop collapse toggle */
     .sidebar-toggle {
         display: none;
     }
 
-    /* Hide sidebar record name collapse behavior */
     .sidebar-record-name {
         display: block !important;
     }
