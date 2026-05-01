@@ -15,6 +15,10 @@ export const Tabs = ({ children, onTabChange, selectedTab }: TabsProps) => {
     const [selectedId, setSelectedId] = useState<string | null>(selectedTab || children[0].props.id);
     const tabsId = useId();
 
+    useEffect(() => {
+        if (selectedTab) setSelectedId(selectedTab);
+    }, [selectedTab]);
+
     return (
         <>
             <div id={tabsId} className={styles["tab-container"]} role="tablist">
@@ -23,7 +27,10 @@ export const Tabs = ({ children, onTabChange, selectedTab }: TabsProps) => {
                         key={`button-${tab.props.id}`}
                         id={tab.props.id}
                         isActive={tab.props.id === selectedId}
-                        onClick={(id) => setSelectedId(id)}
+                         onClick={(id) => {
+                            setSelectedId(id);
+                            onTabChange?.(id);
+                        }}
                     >
                         {tab.props.children.find((child) => child.type === TabHeader)}
                     </TabButton>
