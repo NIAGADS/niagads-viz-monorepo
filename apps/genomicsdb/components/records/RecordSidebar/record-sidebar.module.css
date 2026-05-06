@@ -169,10 +169,10 @@
     margin-left: auto;
 }
 .nav-item.active-parent svg.nav-icon {
-    color: var(--blue-mid);
+    color: rgba(255, 255, 255, 0.9);
 }
 .nav-item.active-parent .chevron {
-    color: var(--blue-mid);
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .nav-item.active .chevron {

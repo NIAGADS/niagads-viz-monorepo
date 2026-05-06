@@ -3,6 +3,7 @@
 import { AnchoredPageSection } from "@/lib/types";
 import { ChevronDown, ChevronLeft, ChevronUp, Menu } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { PAGE_SECTION_ICONS } from "@/lib/types";
 import styles from "./record-sidebar.module.css";
 
 interface RecordSidebarProps {
@@ -104,6 +105,7 @@ const RecordSidebar = ({ title, sections, activeTabs, tableCounts, activeNav, on
                         const isExpanded = navExpanded[item.id];
                         const isActiveParent = hasChildren && activeNav === item.id;
                         const isActive = !hasChildren && activeNav === item.id;
+                        const Icon = PAGE_SECTION_ICONS[item.icon];
                         
                         return (
                             <div key={item.id}>
@@ -125,6 +127,7 @@ const RecordSidebar = ({ title, sections, activeTabs, tableCounts, activeNav, on
                                         }
                                     }}
                                 >
+                                    <Icon size={15} className={styles["nav-icon"]} />
                                     <span className={styles["nav-label"]}>{item.label}</span>
                                     {hasChildren &&
                                         (isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />)}
