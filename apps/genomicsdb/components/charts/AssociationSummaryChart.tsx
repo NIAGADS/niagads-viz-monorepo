@@ -36,10 +36,14 @@ const buildChartUrl = (record: BaseRecord, tableUrl: string) => {
 };
 
 const transformData = (response: APIResponse): Record<string, any>[] => {
-    return response.data.map((rawData: any) => ({
+    const transformed = response.data.map((rawData: any) => ({
         term: rawData.trait.term,
         ...rawData.num_variants,
     }));
+     
+    console.log(transformed);
+
+    return transformed
 };
 
 export default AssociationSummaryChart;
