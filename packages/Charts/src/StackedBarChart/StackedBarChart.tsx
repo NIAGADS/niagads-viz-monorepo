@@ -17,13 +17,13 @@ import {
 export interface StackedBarChartValue {
     label: string;
     value: number;
-};
+}
 
 export interface StackedBarChartDataRow {
     id: string;
     label?: string;
     values: StackedBarChartValue[];
-};
+}
 
 export interface StackedBarChartProps {
     data: StackedBarChartDataRow[];

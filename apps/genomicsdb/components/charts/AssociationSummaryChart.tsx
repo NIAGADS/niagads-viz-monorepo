@@ -40,10 +40,10 @@ const transformData = (response: APIResponse): Record<string, any>[] => {
         term: rawData.trait.term,
         ...rawData.num_variants,
     }));
-     
+
     console.log(transformed);
 
-    return transformed
+    return transformed;
 };
 
 export default AssociationSummaryChart;
