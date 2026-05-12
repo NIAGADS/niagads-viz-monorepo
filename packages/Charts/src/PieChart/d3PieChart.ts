@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 
-import { COLOR_BLIND_FRIENDLY_PALETTES, _isNA } from "@niagads/common";
+import { _isNA } from "@niagads/common";
 
 import { DisplayProps } from "../d3/types";
 
@@ -138,11 +138,11 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
         .innerRadius(radius * 0.67)
         .outerRadius(radius * 0.67);
 
-    // Color scale - using colorblind-friendly palette
+    // Color scale - using default D3 palette
     const colorScale = d3
         .scaleOrdinal<string, string>()
         .domain(data.map((d) => d.id))
-        .range(COLOR_BLIND_FRIENDLY_PALETTES.eight_color);
+        .range(d3.schemeCategory10);
 
     // Create tooltip
     const tooltip = d3
