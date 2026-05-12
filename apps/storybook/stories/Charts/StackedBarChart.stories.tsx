@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { useState } from "react";
 
 import { StackedBarChart } from "@niagads/charts";
 
@@ -16,75 +15,65 @@ export default meta;
 type Story = StoryObj<typeof StackedBarChart>;
 
 export const Default: Story = {
-    render: (args) => {
-        const [selectedId, setSelectedId] = useState<string | null>(null);
-        return (
-            <div style={{ display: "flex", flexDirection: "column", gap: "16px", alignItems: "center" }}>
-                <div style={{ fontSize: "16px", color: "blue", marginBottom: "20px" }}>
-                    {selectedId ? `Selected: ${selectedId}` : "Click a slice to select"}
-                </div>
-                <StackedBarChart {...args} onClick={setSelectedId} />
-            </div>
-        );
-    },
+    render: (args) => <StackedBarChart {...args} />,
     args: {
         legendPosition: "right",
         title: "Example Stacked Bar Chart",
-        displayOpts: { width: 300 },
+        displayOpts: { width: 500 },
         data: [
             {
-                id: "car1",
-                label: "Nissan",
+                id: "alzheimers-disease",
+                label: "Alzheimer's Disease",
                 values: [
                     {
-                        label: "value",
-                        value: 9
+                        label: "upstream",
+                        value: 2103,
                     },
                     {
-                        label: "speed",
-                        value: 5
+                        label: "in gene",
+                        value: 1166,
                     },
                     {
-                        label: "reliability",
-                        value: 4
+                        label: "downstream",
+                        value: 74,
                     },
-                ]
+                ],
             },
             {
-                id: "car2",
-                label: "Honda",
+                id: "ad-related-dementias",
+                label: "AD-Related Dementias",
                 values: [
                     {
-                        label: "value",
-                        value: 3
+                        label: "upstream",
+                        value: 226,
                     },
                     {
-                        label: "speed",
-                        value: 15
+                        label: "in gene",
+                        value: 143,
                     },
                     {
-                        label: "reliability",
-                        value: 4
+                        label: "downstream",
+                        value: 16,
                     },
-                ]
+                ],
             },
             {
-                id: "car3",
-                label: "Toyota",
+                id: "ad-adrd-biomarkers",
+                label: "AD/ADRD Biomarkers",
                 values: [
                     {
-                        label: "value",
-                        value: 7
+                        label: "upstream",
+                        value: 18,
                     },
                     {
-                        label: "speed",
-                        value: 12
+                        label: "in gene",
+                        value: 33,
                     },
                     {
-                        label: "reliability",
-                        value: 9
+                        label: "downstream",
+                        value: 16,
                     },
-                ]
+                ],
             },
         ],
     },

@@ -1,10 +1,18 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { COLOR_BLIND_FRIENDLY_PALETTES, _isNA } from "@niagads/common";
+import React, { useEffect, useMemo, useRef } from "react";
+import * as d3 from "d3";
+
+import { _isNA } from "@niagads/common";
 
 import { DisplayProps } from "../d3/types";
 import chartStyles from "../styles/Charts.module.css";
 import styles from "./StackedBarChart.module.css";
-import { destroyStackedBarChart, NA_COLOR, stackedBarChart, StackedBarChartOptions, updateStackedBarChartSelection } from "./d3StackedBarChart";
+import {
+    destroyStackedBarChart,
+    getStackedBarChartHeight,
+    NA_COLOR,
+    stackedBarChart,
+    StackedBarChartOptions,
+} from "./d3StackedBarChart";
 
 export interface StackedBarChartValue {
     label: string;
@@ -17,7 +25,7 @@ export interface StackedBarChartDataRow {
     values: StackedBarChartValue[];
 };
 
-export interface PieChartProps {
+export interface StackedBarChartProps {
     data: StackedBarChartDataRow[];
     onClick?: (key: string) => void;
     displayOpts?: DisplayProps;
@@ -26,49 +34,55 @@ export interface PieChartProps {
 }
 
 const Legend = ({ data }: { data: StackedBarChartDataRow[] }) => {
+    const legendItems = useMemo(() => {
+        const labels = new Set<string>();
+        data.forEach((row) => {
+            row.values.forEach((value) => {
+                labels.add(value.label);
+            });
+        });
+        return Array.from(labels);
+    }, [data]);
+
     const colorScale = useMemo(() => {
         const scale: Record<string, string> = {};
-        data.forEach((d, i) => {
-            scale[d.id] = COLOR_BLIND_FRIENDLY_PALETTES.eight_color[i % 8];
+        legendItems.forEach((label, i) => {
+            scale[label] = d3.schemeCategory10[i % d3.schemeCategory10.length];
         });
         return scale;
-    }, [data]);
+    }, [legendItems]);
 
     return (
         <div className={styles.legend}>
-            {data.map((item) => (
-                <div key={item.id} className={styles["legend-item"]}>
+            {legendItems.map((item) => (
+                <div key={item} className={styles["legend-item"]}>
                     <div
                         className={styles["legend-color"]}
                         style={{
-                            backgroundColor: _isNA(item.id) ? NA_COLOR : colorScale[item.id],
+                            backgroundColor: _isNA(item) ? NA_COLOR : colorScale[item],
                         }}
                     />
-                    <span className={styles["legend-label"]}>{item.label || item.id}</span>
+                    <span className={styles["legend-label"]}>{item}</span>
                 </div>
             ))}
         </div>
     );
 };
 
-const StackedBarChart = ({ data, onClick, displayOpts, title, legendPosition = "right" }: PieChartProps) => {
+const StackedBarChart = ({ data, displayOpts, title, legendPosition = "right" }: StackedBarChartProps) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const chartRef = useRef<HTMLDivElement | null>(null);
-    const [selectedLabel, setSelectedLabel] = useState<string | undefined>();
 
-    const chartWidth = displayOpts?.width || 300;
-    const chartHeight = chartWidth * (displayOpts?.aspectRatio || 1);
+    const chartWidth = displayOpts?.width || 420;
+    const chartHeight = getStackedBarChartHeight(data.length, displayOpts?.margin);
 
-    const updatedDisplayOpts = {
-        ...displayOpts,
-        width: chartWidth,
-        height: chartHeight,
-    };
-
-    const handleSelect = (label: string) => {
-        setSelectedLabel(label);
-        onClick?.(label);
-    };
+    const updatedDisplayOpts = useMemo(
+        () => ({
+            ...displayOpts,
+            width: chartWidth,
+        }),
+        [chartWidth, displayOpts]
+    );
 
     useEffect(() => {
         if (!chartRef.current) return;
@@ -77,8 +91,6 @@ const StackedBarChart = ({ data, onClick, displayOpts, title, legendPosition = "
 
         const opts: StackedBarChartOptions = {
             displayOpts: updatedDisplayOpts,
-            onClick: handleSelect,
-            selectedLabel: selectedLabel,
         };
 
         stackedBarChart(chartRef.current, data, opts);
@@ -88,26 +100,19 @@ const StackedBarChart = ({ data, onClick, displayOpts, title, legendPosition = "
                 destroyStackedBarChart(chartRef.current);
             }
         };
-    }, [data, displayOpts]);
-
-    // Update selection styling (runs when selectedId changes)
-    useEffect(() => {
-        if (chartRef.current && selectedLabel !== undefined) {
-            updateStackedBarChartSelection(chartRef.current, selectedLabel);
-        }
-    }, [selectedLabel]);
+    }, [data, updatedDisplayOpts]);
 
     return (
         <>
             {title && <div className={chartStyles["chart-title"]}>{title}</div>}
             <div
                 ref={containerRef}
-                className={`${styles["pie-chart-wrapper"]} ${styles[`pie-chart-wrapper-${legendPosition}`]}`}
+                className={`${styles["stacked-bar-chart-wrapper"]} ${styles[`stacked-bar-chart-wrapper-${legendPosition}`]}`}
             >
                 <div
                     ref={chartRef}
                     style={{ width: `${chartWidth}px`, height: `${chartHeight}px` }}
-                    className={styles["pie-container"]}
+                    className={styles["stacked-bar-container"]}
                 />
                 {legendPosition !== "none" && (
                     <div className={styles["legend-wrapper"]}>

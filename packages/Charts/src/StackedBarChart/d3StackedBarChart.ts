@@ -1,89 +1,176 @@
 import * as d3 from "d3";
 
-import { COLOR_BLIND_FRIENDLY_PALETTES, _isNA } from "@niagads/common";
-
 import { DisplayProps } from "../d3/types";
-import { StackedBarChartDataRow, StackedBarChartValue } from "./StackedBarChart";
+import { StackedBarChartDataRow } from "./StackedBarChart";
+import { _isNA } from "@niagads/common";
 
 export interface StackedBarChartOptions {
     displayOpts?: DisplayProps;
-    onClick?: (id: string) => void;
-    selectedLabel?: string;
 }
 
 export const NA_COLOR = "#a1a2a4ff";
 
 const STACKED_BAR_CHART_COLORS = {
-    arcStroke: "white",
-    arcStrokeWidth: 2,
-    arcStrokeWidthSelected: 4,
-    arcOpacity: 1,
-    arcOpacityHover: 0.8,
-    arcOpacitySelected: 1,
-    arcFillSelected: "#d97706",
-    arcFilterSelected:
-        "drop-shadow(0 0 3px rgba(217, 119, 6, 0.8)) drop-shadow(0 0 8px rgba(217, 119, 6, 0.6)) drop-shadow(0 0 12px rgba(217, 119, 6, 0.4))",
-    tooltipBackground: "white",
-    tooltipColor: "black",
-    tooltipBorder: "0 2px 8px rgba(0, 0, 0, 0.15)",
-    badgeTextLight: "white",
-    badgeTextDark: "black",
-    arcFillNA: NA_COLOR,
+    axis: "#5f6b7a",
+    label: "#2f3a45",
+    mutedLabel: "#52606d",
+    grid: "#d9e2ec",
+    segmentStroke: "#ffffff",
+    segmentHoverOpacity: 0.9,
+    totalLabel: "#1f2933",
+    tooltipBackground: "rgba(255,255,255,0.98)",
+    tooltipShadow: "0 10px 24px rgba(33, 43, 54, 0.14)",
 } as const;
 
-const STACKED_BAR_CHART_SIZES = {
-    arcStrokeWidthDefault: 2,
-    arcStrokeWidthSelectedDefault: 4,
-    tooltipPadding: "8px 12px",
-    tooltipBorderRadius: "4px",
-    tooltipFontSize: "12px",
-} as const;
+const DEFAULT_MARGIN = { top: 18, right: 56, bottom: 18, left: 136 };
+const DEFAULT_BAR_HEIGHT = 28;
+const DEFAULT_ROW_GAP = 8;
+const DEFAULT_BAR_RADIUS = 4;
 
-const DEFAULT_MARGIN = { top: 10, right: 10, bottom: 10, left: 10 };
-
-const isNA = (data: StackedBarChartValue): boolean => _isNA(data.label);
-
-interface StackedBarChartState {
-    data: StackedBarChartDataRow[];
-    opts: StackedBarChartOptions;
-    colorScale: d3.ScaleOrdinal<string, string>;
+interface FlattenedDataRow {
+    id: string;
+    label: string;
     total: number;
-    tooltip: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
+    segments: Record<string, number>;
 }
 
-export function updateStackedBarChartSelection(container: HTMLElement, selectedLabel?: string): void {
-    const svg = d3.select(container).select<SVGSVGElement>("svg");
-    const state = (svg.node() as any).__stackedBarChartState__ as StackedBarChartState | undefined;
+interface SegmentDatum {
+    key: string;
+    value: number;
+    start: number;
+    end: number;
+}
 
-    if (!state) return;
+interface VisibleSegmentDatum extends SegmentDatum {
+    isFirstVisible: boolean;
+    isLastVisible: boolean;
+}
 
-    // Update stored selection state
-    state.opts.selectedLabel = selectedLabel;
+const getSegmentKeys = (data: StackedBarChartDataRow[]): string[] => {
+    const keys = new Set<string>();
+    data.forEach((row) => {
+        row.values.forEach((value) => {
+            keys.add(value.label);
+        });
+    });
+    return Array.from(keys);
+};
 
-    svg.selectAll<SVGPathElement, d3.PieArcDatum<StackedBarChartValue>>(".arc path")
-        .style("fill", (d: d3.PieArcDatum<StackedBarChartValue>) => {
-            return d.data.label === selectedLabel
-                ? STACKED_BAR_CHART_COLORS.arcFillSelected
-                : isNA(d.data)
-                  ? STACKED_BAR_CHART_COLORS.arcFillNA
-                  : state.colorScale(d.data.label);
-        })
-        .style("stroke-width", (d: d3.PieArcDatum<StackedBarChartValue>) =>
-            d.data.label === selectedLabel
-                ? STACKED_BAR_CHART_COLORS.arcStrokeWidthSelected
-                : STACKED_BAR_CHART_COLORS.arcStrokeWidth
-        )
-        .style("filter", (d: d3.PieArcDatum<StackedBarChartValue>) =>
-            d.data.label === selectedLabel ? STACKED_BAR_CHART_COLORS.arcFilterSelected : "none"
+const flattenData = (data: StackedBarChartDataRow[], segmentKeys: string[]): FlattenedDataRow[] =>
+    data.map((row) => {
+        const segments = segmentKeys.reduce(
+            (acc, key) => {
+                acc[key] = 0;
+                return acc;
+            },
+            {} as Record<string, number>
         );
+
+        row.values.forEach((value) => {
+            segments[value.label] = value.value;
+        });
+
+        return {
+            id: row.id,
+            label: row.label || row.id,
+            total: d3.sum(row.values, (value) => value.value),
+            segments,
+        };
+    });
+
+const getSegmentData = (row: FlattenedDataRow, keys: string[]): SegmentDatum[] => {
+    let offset = 0;
+
+    return keys.map((key) => {
+        const value = row.segments[key] ?? 0;
+        const segment = {
+            key,
+            value,
+            start: offset,
+            end: offset + value,
+        };
+        offset += value;
+        return segment;
+    });
+};
+
+const getVisibleSegmentData = (row: FlattenedDataRow, keys: string[]): VisibleSegmentDatum[] => {
+    const visibleSegments = getSegmentData(row, keys).filter((segment) => segment.value > 0);
+
+    return visibleSegments.map((segment, index) => ({
+        ...segment,
+        isFirstVisible: index === 0,
+        isLastVisible: index === visibleSegments.length - 1,
+    }));
+};
+
+const getRoundedHorizontalSegmentPath = (
+    xPos: number,
+    yPos: number,
+    width: number,
+    height: number,
+    radius: number,
+    roundLeft: boolean,
+    roundRight: boolean
+): string => {
+    const safeWidth = Math.max(0, width);
+    const safeHeight = Math.max(0, height);
+    const cappedRadius = Math.min(radius, safeHeight / 2, safeWidth / 2);
+
+    if (safeWidth === 0 || safeHeight === 0) {
+        return `M${xPos},${yPos}Z`;
+    }
+
+    if (cappedRadius === 0) {
+        return [
+            `M${xPos},${yPos}`,
+            `L${xPos + safeWidth},${yPos}`,
+            `L${xPos + safeWidth},${yPos + safeHeight}`,
+            `L${xPos},${yPos + safeHeight}`,
+            "Z",
+        ].join(" ");
+    }
+
+    const leftInset = roundLeft ? cappedRadius : 0;
+    const rightInset = roundRight ? cappedRadius : 0;
+
+    return [
+        `M${xPos + leftInset},${yPos}`,
+        `L${xPos + safeWidth - rightInset},${yPos}`,
+        roundRight
+            ? `Q${xPos + safeWidth},${yPos} ${xPos + safeWidth},${yPos + cappedRadius}`
+            : `L${xPos + safeWidth},${yPos}`,
+        roundRight
+            ? `L${xPos + safeWidth},${yPos + safeHeight - cappedRadius}`
+            : `L${xPos + safeWidth},${yPos + safeHeight}`,
+        roundRight
+            ? `Q${xPos + safeWidth},${yPos + safeHeight} ${xPos + safeWidth - rightInset},${yPos + safeHeight}`
+            : "",
+        `L${xPos + leftInset},${yPos + safeHeight}`,
+        roundLeft
+            ? `Q${xPos},${yPos + safeHeight} ${xPos},${yPos + safeHeight - cappedRadius}`
+            : `L${xPos},${yPos + safeHeight}`,
+        roundLeft ? `L${xPos},${yPos + cappedRadius}` : `L${xPos},${yPos}`,
+        roundLeft ? `Q${xPos},${yPos} ${xPos + leftInset},${yPos}` : "",
+        "Z",
+    ]
+        .filter(Boolean)
+        .join(" ");
+};
+
+export function getStackedBarChartHeight(rowCount: number, margin = DEFAULT_MARGIN): number {
+    if (rowCount <= 0) {
+        return margin.top + margin.bottom;
+    }
+
+    const rowStep = DEFAULT_BAR_HEIGHT + DEFAULT_ROW_GAP;
+    const plotHeight = rowCount * rowStep - DEFAULT_ROW_GAP;
+    return margin.top + plotHeight + margin.bottom;
 }
 
 export function destroyStackedBarChart(container: HTMLElement): void {
-    const svg = d3.select(container).select<SVGSVGElement>("svg");
-    const state = (svg.node() as any)?.__pieChartState__ as StackedBarChartState | undefined;
-
-    state?.tooltip.remove();
-    svg.remove();
+    d3.select(container).select(".stacked-bar-tooltip").remove();
+    d3.select(container).select("svg").remove();
 }
 
 export function stackedBarChart(
@@ -91,124 +178,130 @@ export function stackedBarChart(
     data: StackedBarChartDataRow[],
     options: StackedBarChartOptions = {}
 ): void {
+    destroyStackedBarChart(container);
+
+    if (data.length === 0) {
+        return;
+    }
+
     const displayOpts = options.displayOpts || {};
     const margin = displayOpts.margin || DEFAULT_MARGIN;
+    const width = displayOpts.width || 420;
+    const segmentKeys = getSegmentKeys(data);
+    const flattenedData = flattenData(data, segmentKeys);
+    const maxTotal = d3.max(flattenedData, (row) => row.total) ?? 0;
+    const rowGap = DEFAULT_ROW_GAP;
+    const bandHeight = DEFAULT_BAR_HEIGHT;
+    const rowStep = bandHeight + rowGap;
+    const plotHeight = flattenedData.length * rowStep - rowGap;
+    const height = getStackedBarChartHeight(flattenedData.length, margin);
 
-    // Get dimensions from displayOpts or use defaults
-    const width = displayOpts.width || 300;
-    const aspectRatio = displayOpts.aspectRatio || 1;
-    const height = width * aspectRatio;
-
-    // Use specified dimensions
-    const svgWidth = width;
-    const svgHeight = height;
-
-    const innerWidth = svgWidth - margin.left - margin.right;
-    const innerHeight = svgHeight - margin.top - margin.bottom;
-
-    const total = d3.sum(data, (d) => d3.sum(d.values, (v) => v.value));
-
-    const flattenedData = data.reduce(
-        (prev, cur) => {
-            return [
-                ...prev,
-                {
-                    label: cur.label || cur.id,
-                    ...cur.values.reduce((prev, cur) => ({ ...prev, [cur.label]: cur.value }), {}),
-                },
-            ];
-        },
-        [] as Record<string, any>[]
-    );
-
-    console.log(flattenedData);
-
-    const stackedData = d3.stack().keys(Object.keys(flattenedData[0]).filter((x) => x !== "label"))(flattenedData);
-
-    console.log(stackedData);
-
-    const maxBarHeight = d3.max(flattenedData, d => Object.entries(d).reduce((prev, [key, val]) => key === "label" ? prev : prev + val, 0))!
-
-    // Create SVG
     const svg = d3
         .select(container)
         .append("svg")
         .attr("width", "100%")
         .attr("height", "100%")
-        .attr("viewBox", `0 0 ${svgWidth} ${svgHeight}`)
+        .attr("viewBox", `0 0 ${width} ${height}`)
         .attr("preserveAspectRatio", "xMidYMid meet");
 
-    // Create main group
-    const g = svg.append("g").attr("transform", `translate(${margin.left}, ${margin.right})`);
+    const plotWidth = width - margin.left - margin.right;
 
-    // x and y scales
-    const x = d3.scaleBand()
-        .rangeRound([margin.left, innerWidth])
-        .padding(0.2)
-        .domain(flattenedData.map((d) => d.label));
+    const root = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
-    const y = d3.scaleLinear()
-        .rangeRound([innerHeight, 0])
-        .domain([0, maxBarHeight + 2]).nice();
+    const x = d3.scaleLinear().domain([0, maxTotal]).nice().range([0, plotWidth]);
 
-    // draw axis
-    svg.append("g")
-        .attr("transform", `translate(${margin.left}, ${innerWidth})`)
-        .call(d3.axisBottom(x));
+    const y = d3
+        .scalePoint<string>()
+        .domain(flattenedData.map((row) => row.label))
+        .range([bandHeight / 2, Math.max(bandHeight / 2, (flattenedData.length - 1) * rowStep + bandHeight / 2)]);
 
-    svg.append("g")
-        .attr("transform", `translate(${margin.left}, 0)`)
-        .call(d3.axisLeft(y))
+    const colorScale = d3.scaleOrdinal<string, string>().domain(segmentKeys).range(d3.schemeCategory10);
 
-    // colors
-    const colorScale = d3
-        .scaleOrdinal<string, string>()
-        .domain(Object.keys(flattenedData[0]).filter((x) => x !== "label"))
-        .range(COLOR_BLIND_FRIENDLY_PALETTES.eight_color);
+    let tooltip = d3.select(container).select<HTMLDivElement>(".stacked-bar-tooltip");
+    if (tooltip.empty()) {
+        tooltip = d3
+            .select(container)
+            .append("div")
+            .attr("class", "stacked-bar-tooltip")
+            .style("position", "absolute")
+            .style("pointer-events", "none")
+            .style("background", STACKED_BAR_CHART_COLORS.tooltipBackground)
+            .style("border", "1px solid transparent")
+            .style("padding", "8px 10px")
+            .style("border-radius", "8px")
+            .style("font-size", "12px")
+            .style("line-height", "1.4")
+            .style("color", STACKED_BAR_CHART_COLORS.label)
+            .style("box-shadow", STACKED_BAR_CHART_COLORS.tooltipShadow)
+            .style("display", "none")
+            .style("z-index", "10");
+    }
 
-    // draw bars
-    svg.append("g")
+    const yAxis = d3.axisLeft(y).tickSize(0).tickPadding(12);
+    root.append("g")
+        .attr("class", "stacked-bar-axis")
+        .call(yAxis)
+        .call((axis) => {
+            axis.select(".domain").remove();
+            axis.selectAll(".tick text")
+                .style("fill", STACKED_BAR_CHART_COLORS.label)
+                .style("font-size", "12px")
+                .style("font-weight", "500");
+        });
+
+    const rowGroups = root
+        .append("g")
+        .attr("class", "stacked-bar-rows")
         .selectAll("g")
-        .data(stackedData)
+        .data(flattenedData)
         .enter()
         .append("g")
-        .attr("fill", (d) => colorScale(d.key))
-        .selectAll("rect")
-        .data((d) => d)
+        .attr("transform", (row) => `translate(0,${(y(row.label) ?? bandHeight / 2) - bandHeight / 2})`);
+
+    rowGroups
+        .append("g")
+        .selectAll("path")
+        .data((row) => getVisibleSegmentData(row, segmentKeys))
         .enter()
-        .append("rect")
-        .attr("x", (d) => x(`${d.data.label}`)!)
-        .attr("y", (d) => y(d[1]))
-        .attr("height", (d) => y(d[0]) - y(d[1]))
-        .attr("width", x.bandwidth());
+        .append("path")
+        .attr("d", (segment) =>
+            getRoundedHorizontalSegmentPath(
+                x(segment.start),
+                0,
+                Math.max(0, x(segment.end) - x(segment.start)),
+                bandHeight,
+                DEFAULT_BAR_RADIUS,
+                segment.isFirstVisible,
+                segment.isLastVisible
+            )
+        )
+        .attr("fill", (segment) => (_isNA(segment.key) ? NA_COLOR : colorScale(segment.key)))
+        .attr("stroke", STACKED_BAR_CHART_COLORS.segmentStroke)
+        .attr("stroke-width", 1)
+        .on("mousemove", function (event, segment) {
+            const fillColor = _isNA(segment.key) ? NA_COLOR : colorScale(segment.key);
+            const [pointerX, pointerY] = d3.pointer(event, container);
+            d3.select(this).attr("opacity", STACKED_BAR_CHART_COLORS.segmentHoverOpacity);
 
-    // Create tooltip
-    // const tooltip = d3
-    //     .select("body")
-    //     .append("div")
-    //     .attr("class", "pie-tooltip")
-    //     .style("position", "absolute")
-    //     .style("background-color", STACKED_BAR_CHART_COLORS.tooltipBackground)
-    //     .style("color", STACKED_BAR_CHART_COLORS.tooltipColor)
-    //     .style("padding", STACKED_BAR_CHART_SIZES.tooltipPadding)
-    //     .style("border-radius", STACKED_BAR_CHART_SIZES.tooltipBorderRadius)
-    //     .style("box-shadow", STACKED_BAR_CHART_COLORS.tooltipBorder)
-    //     .style("font-size", STACKED_BAR_CHART_SIZES.tooltipFontSize)
-    //     .style("pointer-events", "none")
-    //     .style("z-index", "1000")
-    //     .style("display", "none")
-    //     .style("text-align", "left")
-    //     .style("border", "2px solid transparent");
+            tooltip
+                .style("display", "block")
+                .style("border-color", fillColor)
+                .style("left", `${pointerX + 16}px`)
+                .style("top", `${pointerY - 10}px`)
+                .html(`<strong>${segment.key}</strong><br>${d3.format(",")(segment.value)}`);
+        })
+        .on("mouseleave", function () {
+            d3.select(this).attr("opacity", 1);
+            tooltip.style("display", "none");
+        });
 
-    // Store state on SVG node for later updates
-    (svg.node() as any).__pieChartState__ = {
-        data,
-        opts: options,
-        colorScale,
-        total,
-        //tooltip,
-    } as StackedBarChartState;
-
-    // Apply initial selection styling if selectedLabel is provided
-    updateStackedBarChartSelection(container, options.selectedLabel);
+    rowGroups
+        .append("text")
+        .attr("x", (row) => x(row.total) + 8)
+        .attr("y", bandHeight / 2)
+        .attr("dominant-baseline", "middle")
+        .style("fill", STACKED_BAR_CHART_COLORS.totalLabel)
+        .style("font-size", "12px")
+        .style("font-weight", "700")
+        .text((row) => d3.format(",")(row.total));
 }
