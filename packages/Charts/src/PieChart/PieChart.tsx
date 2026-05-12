@@ -1,6 +1,8 @@
-import { COLOR_BLIND_FRIENDLY_PALETTES, _isNA } from "@niagads/common";
-import { NA_COLOR, PieChartOptions, destroyPieChart, pieChart, updatePieChartSelection } from "./d3PieChart";
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import * as d3 from "d3";
+
+import { _isNA } from "@niagads/common";
+import { NA_COLOR, PieChartOptions, destroyPieChart, pieChart, updatePieChartSelection } from "./d3PieChart";
 
 import { DisplayProps } from "../d3/types";
 import chartStyles from "../styles/Charts.module.css";
@@ -24,7 +26,7 @@ const Legend = ({ data }: { data: PieChartDataRow[] }) => {
     const colorScale = useMemo(() => {
         const scale: Record<string, string> = {};
         data.forEach((d, i) => {
-            scale[d.id] = COLOR_BLIND_FRIENDLY_PALETTES.eight_color[i % 8];
+            scale[d.id] = d3.schemeCategory10[i % d3.schemeCategory10.length];
         });
         return scale;
     }, [data]);

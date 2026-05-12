@@ -1,51 +1,48 @@
-/* Pie Chart Wrapper - Base */
-.pie-chart-wrapper {
+.stacked-bar-chart-wrapper {
     box-sizing: border-box;
 }
 
-/* Pie Chart Wrapper - Layout Positions */
-.pie-chart-wrapper-bottom,
-.pie-chart-wrapper-top {
+.stacked-bar-chart-wrapper-bottom,
+.stacked-bar-chart-wrapper-top {
     display: grid;
     grid-template-columns: 1fr;
     gap: 10px;
 }
 
-.pie-chart-wrapper-bottom {
+.stacked-bar-chart-wrapper-bottom {
     grid-template-rows: 1fr auto;
 }
 
-.pie-chart-wrapper-top {
+.stacked-bar-chart-wrapper-top {
     grid-template-rows: auto 1fr;
 }
 
-.pie-chart-wrapper-left,
-.pie-chart-wrapper-right {
+.stacked-bar-chart-wrapper-left,
+.stacked-bar-chart-wrapper-right {
     display: grid;
     grid-template-rows: 1fr;
     gap: 10px;
 }
 
-.pie-chart-wrapper-left {
+.stacked-bar-chart-wrapper-left {
     grid-template-columns: auto 1fr;
 }
 
-.pie-chart-wrapper-right {
+.stacked-bar-chart-wrapper-right {
     grid-template-columns: 1fr auto;
 }
 
-.pie-chart-wrapper-none {
+.stacked-bar-chart-wrapper-none {
     display: block;
 }
 
-/* Pie Container */
-.pie-container {
+.stacked-bar-container {
+    position: relative;
     width: 100%;
     height: 100%;
     min-height: 0;
 }
 
-/* Legend Wrapper - Base */
 .legend-wrapper {
     display: flex;
     align-items: center;
@@ -55,23 +52,22 @@
     flex-shrink: 0;
 }
 
-/* Legend Wrapper - Vertical Positions */
-.pie-chart-wrapper-left .legend-wrapper,
-.pie-chart-wrapper-right .legend-wrapper {
+.stacked-bar-chart-wrapper-left .legend-wrapper,
+.stacked-bar-chart-wrapper-right .legend-wrapper {
     flex-direction: column;
     width: auto;
     padding: 0;
+    align-self: center;
 }
 
-.pie-chart-wrapper-left .legend-wrapper {
+.stacked-bar-chart-wrapper-left .legend-wrapper {
     align-items: flex-end;
 }
 
-.pie-chart-wrapper-right .legend-wrapper {
+.stacked-bar-chart-wrapper-right .legend-wrapper {
     align-items: flex-start;
 }
 
-/* Legend */
 .legend {
     display: flex;
     flex-wrap: wrap;
@@ -79,12 +75,11 @@
     width: 100%;
 }
 
-.pie-chart-wrapper-left .legend,
-.pie-chart-wrapper-right .legend {
+.stacked-bar-chart-wrapper-left .legend,
+.stacked-bar-chart-wrapper-right .legend {
     flex-direction: column;
 }
 
-/* Legend Item */
 .legend-item {
     display: flex;
     align-items: center;
