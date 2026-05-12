@@ -1,4 +1,4 @@
-import "./ColumnFilterControls.css";
+import styles from "./ColumnFilterControls.module.css";
 
 import {
     Button,
@@ -114,7 +114,8 @@ export const ColumnFilterControls = ({
         booleanFilterColumns.length + multiselectFilterColunns.length + selectFilterColunns.length > 0;
 
     return (
-        <>
+       
+        <div className={styles["filter-controls-container"]}>
             {activeFilters.length > 0 && (
                 <FilterChipBar label={"Active Column Filters:"}>
                     <Button color="default" onClick={onRemoveAll}>
@@ -132,21 +133,29 @@ export const ColumnFilterControls = ({
             )}
             <Card>
                 <CardHeader>At a Glance</CardHeader>
-                <CardBody style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
-                    {visualFilterColumns.map((column) => (
-                        <Card layout="flex" key={`visual-filter-card-${column.id}`} span={3} outline={false}>
-                            <FilterComponent key={`visual-filter-${column.id}`} column={column} />
-                        </Card>
-                    ))}
+                {/* <CardBody style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}> */}
+                <CardBody>
+                     <CardGrid>
+                        {visualFilterColumns.map((column) => (
+                            <Card layout="grid" key={`visual-filter-card-${column.id}`} span={4} outline={false}>
+                                <FilterComponent key={`visual-filter-${column.id}`} column={column} />
+                            </Card>
+                        ))}
+                     </CardGrid>
                 </CardBody>
             </Card>
 
             {hasAdditionalFilters && (
                 <>
-                    <div onClick={() => setIsExpanded(!isExpanded)}>
+                    <div  className={styles["filter-controls-toggle"]} onClick={() => setIsExpanded(!isExpanded)}>
                         <InlineIcon icon={isExpanded ? <ChevronDown /> : <ChevronRight />}>
                             <span>Additional Filters</span>
                         </InlineIcon>
+                         {activeFilters.length > 0 && (
+                            <span className={styles["filter-controls-toggle-badge"]}>
+                                {activeFilters.length} active
+                            </span>
+                        )}
                     </div>
                     {isExpanded && (
                         <CardGrid>
@@ -154,24 +163,26 @@ export const ColumnFilterControls = ({
                                 columns={booleanFilterColumns}
                                 coreRowCount={coreRowCount}
                                 filterType={"boolean"}
-                                span={2}
+                                span={4}
                             />
                             <FilterCard
                                 columns={selectFilterColunns}
                                 coreRowCount={coreRowCount}
                                 filterType={"select"}
-                                span={3}
+                                span={4}
                             />
                             <FilterCard
                                 columns={multiselectFilterColunns}
                                 coreRowCount={coreRowCount}
                                 filterType={"multiselect"}
-                                span={3}
+                                span={4}
                             />
                         </CardGrid>
                     )}
+                   
                 </>
             )}
-        </>
+        </div>
+        
     );
 };
