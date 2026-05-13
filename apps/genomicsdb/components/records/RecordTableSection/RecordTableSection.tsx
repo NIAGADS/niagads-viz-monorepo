@@ -18,17 +18,20 @@ interface RecordTableSectionProps {
     onTabChange?: (tableId: string) => void;
     // New — notifies parent when a table's record count is known
     onTableLoad?: (tableId: string, count: number) => void;
-
 }
 
-const RecordTableSection = ({ tables, recordId, recordType, selectedTab, onTabChange, onTableLoad }: RecordTableSectionProps) => {
+const RecordTableSection = ({
+    tables,
+    recordId,
+    recordType,
+    selectedTab,
+    onTabChange,
+    onTableLoad,
+}: RecordTableSectionProps) => {
     const [pagination, setPagination] = useState<TablePagination>({});
 
     return (
-        <Tabs 
-            selectedTab={selectedTab}
-            onTabChange={onTabChange}
-        >
+        <Tabs selectedTab={selectedTab} onTabChange={onTabChange}>
             {tables.map((table) => (
                 <Tab key={table.id} id={table.id}>
                     <TabHeader>

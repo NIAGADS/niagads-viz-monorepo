@@ -20,15 +20,25 @@ interface RecordAnnotationSectionProps {
     // Drives imperative open — seq ensures effect fires even for repeated same sectionId
     openRequest: { sectionId: string; seq: number } | null;
     onTableLoad?: (tableId: string, count: number) => void;
-
 }
 
-const RecordAnnotationSection = ({ id, recordType, sections, activeTabs, onTabChange, openRequest, onTableLoad }: RecordAnnotationSectionProps) => {
+const RecordAnnotationSection = ({
+    id,
+    recordType,
+    sections,
+    activeTabs,
+    onTabChange,
+    openRequest,
+    onTableLoad,
+}: RecordAnnotationSectionProps) => {
     // Moved from RecordPage — refs belong here since only CollapsibleSection uses them
     const sectionRefs = useMemo(
         () =>
             sections.reduce(
-                (prev, section) => ({ ...prev, [section.id]: createRef<HTMLDivElement>() as RefObject<HTMLDivElement> }),
+                (prev, section) => ({
+                    ...prev,
+                    [section.id]: createRef<HTMLDivElement>() as RefObject<HTMLDivElement>,
+                }),
                 {} as Record<string, RefObject<HTMLDivElement>>
             ),
         [sections]
@@ -52,14 +62,18 @@ const RecordAnnotationSection = ({ id, recordType, sections, activeTabs, onTabCh
         }
     }, [openRequest]);
 
-    const defaultSectionId = sections.find(
-        (s) => s.tables && s.tables.length > 0 && !s.underConstruction
-    )?.id;
+    const defaultSectionId = sections.find((s) => s.tables && s.tables.length > 0 && !s.underConstruction)?.id;
 
     return (
         <div id={id} className={styles["annotation-container"]}>
             {sections.map((section) => (
-                <CollapsibleSection key={section.id} ref={sectionRefs[section.id]} id={section.id} title={section.label} defaultOpen={section.id === defaultSectionId} >
+                <CollapsibleSection
+                    key={section.id}
+                    ref={sectionRefs[section.id]}
+                    id={section.id}
+                    title={section.label}
+                    defaultOpen={section.id === defaultSectionId}
+                >
                     {section.tables ? (
                         section.underConstruction ? (
                             <RecordSectionUnderConstructionAlert section={section.label} />
@@ -73,7 +87,6 @@ const RecordAnnotationSection = ({ id, recordType, sections, activeTabs, onTabCh
                                 // Bubble tab changes back up with the sectionId so RecordPage can update activeTabs
                                 onTabChange={(tableId) => onTabChange(section.id, tableId)}
                                 onTableLoad={onTableLoad}
-
                             />
                         )
                     ) : (

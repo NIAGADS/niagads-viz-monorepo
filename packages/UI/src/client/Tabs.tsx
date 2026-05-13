@@ -27,7 +27,7 @@ export const Tabs = ({ children, onTabChange, selectedTab }: TabsProps) => {
                         key={`button-${tab.props.id}`}
                         id={tab.props.id}
                         isActive={tab.props.id === selectedId}
-                         onClick={(id) => {
+                        onClick={(id) => {
                             setSelectedId(id);
                             onTabChange?.(id);
                         }}

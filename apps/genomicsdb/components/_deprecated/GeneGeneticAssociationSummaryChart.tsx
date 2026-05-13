@@ -5,10 +5,6 @@ import { AssociationTraitCategory, AssociationTraitSource, GeneticAssociationSum
 import { _fetch, fetchRecordAssociations } from "@/lib/route-handlers";
 
 import { InlineError } from "@/components/ErrorAlerts";
-<<<<<<< HEAD:apps/genomicsdb/components/records/overviews/GeneGeneticAssociationSummaryChart.tsx
-import Placeholder from "../Placeholder/placeholder";
-=======
->>>>>>> main:apps/genomicsdb/components/_deprecated/GeneGeneticAssociationSummaryChart.tsx
 import { Series } from "@niagads/charts";
 import { Skeleton } from "@niagads/ui";
 
