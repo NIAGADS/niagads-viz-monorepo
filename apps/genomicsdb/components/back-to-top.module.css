@@ -1,4 +1,4 @@
-.backToTop {
+.back-to-top {
   position: fixed;
   bottom: 24px;
   right: 24px;
@@ -30,16 +30,16 @@
   pointer-events: auto;
 }
 
-.backToTop:hover {
+.back-to-top:hover {
   background: #f5f5f5;
   color: #111111;
 }
 
-.backToTop:focus-visible {
+.back-to-top:focus-visible {
   outline: 2px solid #1D9E75;
   outline-offset: 3px;
 }
 
-.backToTop:active {
+.back-to-top:active {
   transform: translateY(1px);
 }
