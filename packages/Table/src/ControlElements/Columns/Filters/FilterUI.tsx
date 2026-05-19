@@ -175,17 +175,22 @@ const NumericFilter = ({ column }: FilterProps) => {
             column.setFilterValue(range);
         }
     };
-    const dataRange = column.getFacetedMinMaxValues();
+    const dataRange = column.getFacetedMinMaxValues(); // FIXME: if going to use overlay for this, needs to be from all values
     const title = column.columnDef.header!.toString();
     if (dataRange) {
         if (isPvalue) {
             const values: number[] = (column.getAllValues(true, naValue) as number[]).map((v) => negLog10(v));
+            const filteredValues: number[] = (column.getFilteredValues(true, naValue) as number[]).map((v) =>
+                negLog10(v)
+            );
+            console.log(`fv: ${filteredValues.length}`);
             return (
                 <ThresholdSelectHistogram
                     limit={7}
                     limitType={"max"}
                     onRangeSelect={handleRangeFilter}
                     data={values}
+                    overlayData={filteredValues}
                     numBins={50}
                     title={title}
                     max={50}
@@ -194,7 +199,7 @@ const NumericFilter = ({ column }: FilterProps) => {
             );
         } else {
             const values: number[] = column.getAllValues(true, naValue) as number[];
-
+            const overlayData: number[] = column.getFilteredValues(true, naValue) as number[];
             return (
                 <RangeSelectHistogram
                     range={{ min: dataRange[0], max: dataRange[1] }}
