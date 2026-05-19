@@ -9,13 +9,13 @@ import "./globals.css";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]/route";
 
-// Add viewport export for better mobile performance
+// Viewport (Next.js handles meta injection)
 export const viewport = {
     width: "device-width",
     initialScale: 1,
 };
 
-// Configure Google Fonts
+// Fonts
 const inter = Inter({
     subsets: ["latin"],
     display: "swap",
@@ -28,13 +28,14 @@ const robotoMono = Roboto_Mono({
     variable: "--font-roboto-mono",
 });
 
-const sourceSans = Lato({
+const lato = Lato({
     subsets: ["latin"],
     display: "swap",
     variable: "--font-source-sans",
     weight: ["300", "400", "700"],
 });
 
+// Metadata
 export const metadata: Metadata = {
     title: "NIAGADS GenomicsDB",
     description: "An interactive knowledge base for Alzheimer's disease (AD) genetics.",
@@ -47,10 +48,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     const session = await getServerSession(authOptions);
 
     return (
-        <html lang="en" className={`${inter.variable} ${robotoMono.variable} ${sourceSans.variable}`}>
-            <head>
-                <meta name="viewport" content="width=device-width, initial-scale=1" />
-            </head>
+        <html lang="en" className={`${inter.variable} ${robotoMono.variable} ${lato.variable}`}>
             <body className={inter.className}>
                 <LoadingProvider>
                     <SessionProvider session={session}>
