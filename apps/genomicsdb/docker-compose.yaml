@@ -1,0 +1,19 @@
+services:
+
+  genomicsdb-app:
+    container_name: genomicsdb-client
+    image: client-app-genomics:${RELEASE}
+    build:
+      context: .
+      dockerfile: ./genomicsdb.Dockerfile
+    ports:
+      - "${HOST_CLIENT_PORT}:3000"
+
+  valkey:
+    container_name: valkey-db
+    image: valkey/valkey
+    ports:
+      - "6369:6379"
+    volumes:
+      - ./valkey_data:/data
+    restart: always
