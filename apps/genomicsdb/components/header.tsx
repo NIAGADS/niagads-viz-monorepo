@@ -4,10 +4,12 @@ import { Menu } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import logo from "@public/genomicsdb_logo.svg";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { EnhancedSearch } from "./EnhancedSearch";
-import "./header.css";
 import { getPublicUrl } from "@/lib/utils";
+import { signIn, useSession } from "next-auth/react";
+
+import "./header.css";
 
 interface HeaderProps {
     onMenuToggle: () => void;
@@ -22,6 +24,8 @@ export function Header({ onMenuToggle, showSearch = true }: HeaderProps) {
         if (path !== "/" && pathname.startsWith(path)) return true;
         return false;
     };
+
+    const { data: session } = useSession();
 
     return (
         <header className="header">
@@ -79,6 +83,24 @@ export function Header({ onMenuToggle, showSearch = true }: HeaderProps) {
                 >
                     About
                 </Link>
+                {session ? (
+                    <div>Logged in!</div>
+                    /*
+                        Dropdown
+                        profile
+                        bookmarks
+                        logout
+                    */
+                ) : (
+                    <div
+                        onClick={() => signIn("cognito")}
+                        className={`nav-link ${isActive("/login") ? "active" : ""}`}
+                        aria-current={isActive("/login") ? "page" : undefined}
+                        style={{cursor: "pointer"}}
+                    >
+                        Log In
+                    </div>
+                )}
             </nav>
         </header>
     );
