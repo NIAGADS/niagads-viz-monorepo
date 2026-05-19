@@ -1,0 +1,26 @@
+.dropdown {
+    position: relative;
+}
+
+.dropdown-container {
+    border: 1px;
+    border-radius: 5px;
+
+    min-width: 100%;
+
+    background-color: #f9fafb; /* gray-50 */
+
+    display: flex;
+    flex-direction: column;
+
+    position: absolute;
+
+    z-index: 999;
+
+    &.left {
+    }
+    &.center {
+    }
+    &.right {
+    }
+}

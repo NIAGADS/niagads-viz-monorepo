@@ -7,9 +7,11 @@ import logo from "@public/genomicsdb_logo.svg";
 import { usePathname } from "next/navigation";
 import { EnhancedSearch } from "./EnhancedSearch";
 import { getPublicUrl } from "@/lib/utils";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { User } from "lucide-react";
 
 import "./header.css";
+import { Dropdown } from "@niagads/ui/client";
 
 interface HeaderProps {
     onMenuToggle: () => void;
@@ -26,6 +28,8 @@ export function Header({ onMenuToggle, showSearch = true }: HeaderProps) {
     };
 
     const { data: session } = useSession();
+
+    console.log(session);
 
     return (
         <header className="header">
@@ -84,13 +88,22 @@ export function Header({ onMenuToggle, showSearch = true }: HeaderProps) {
                     About
                 </Link>
                 {session ? (
-                    <div>Logged in!</div>
-                    /*
-                        Dropdown
-                        profile
-                        bookmarks
-                        logout
-                    */
+                    <Dropdown
+                        text={`${session.user?.name}`}
+                        icon={User}
+                    >
+                        <Link
+                            href={`${getPublicUrl(true)}/user/profile`}
+                        >
+                            Profile
+                        </Link>
+                        <div
+                            onClick={() => signOut()}
+                            style={{cursor: "pointer"}}
+                        >
+                            Sign Out
+                        </div>
+                    </Dropdown>
                 ) : (
                     <div
                         onClick={() => signIn("cognito")}
