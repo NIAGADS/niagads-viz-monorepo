@@ -101,6 +101,27 @@ export const OverflowHistogram: Story = {
     },
 };
 
+// Use a random subset of pvalueData for overlay demonstration
+const overlayPvalueData = pvalueData
+    .map((value) => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .slice(0, Math.floor(pvalueData.length / 2))
+    .map((item) => item.value);
+
+export const WithOverlayData: Story = {
+    render: (args) => <Histogram {...args} />,
+    args: {
+        data: pvalueData as number[],
+        overlayData: overlayPvalueData as number[],
+        numBins: 50,
+        min: 0,
+        max: 50,
+        label: "-log10p",
+        title: "P-value Histogram with Overlay Subset",
+        displayOpts: undefined,
+    } as any,
+};
+
 // RangeSelectHistogram story using pvalueData
 export const RangeSelectHistogram = {
     render: (args: any) => {
@@ -162,6 +183,31 @@ export const MaxThresholdSelectHistogram = {
     },
     args: {
         data: pvalueData as number[],
+        numBins: 50,
+        max: 50,
+        label: "-log10p",
+        displayOpts: undefined,
+        limit: 7,
+        limitType: "max",
+    },
+};
+
+export const MaxThresholdSelectHistogramWithOverlayData = {
+    render: (args: any) => {
+        const [selected, setSelected] = useState();
+
+        return (
+            <div>
+                {selected && (
+                    <div style={{ marginBottom: 12, fontSize: 16 }}>Selected range: {JSON.stringify(selected)}</div>
+                )}
+                <TSHistogram {...args} onRangeSelect={setSelected} />
+            </div>
+        );
+    },
+    args: {
+        data: pvalueData as number[],
+        overlayData: overlayPvalueData as number[],
         numBins: 50,
         max: 50,
         label: "-log10p",

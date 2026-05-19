@@ -24,6 +24,7 @@ const HISTOGRAM_COLORS = {
 
 export interface HistogramOptions {
     numBins: number;
+    overlayData?: number[];
     binDomain?: Range; // minimum bin start, maximum bin end
     xAxis?: AxisConfig;
     displayOpts?: DisplayProps;
@@ -35,11 +36,25 @@ export interface HistogramOptions {
     };
 }
 
+export function destroyHistogram(container: HTMLElement) {
+    const root = d3.select(container);
+    root.select("svg").remove();
+    root.select(".histogram-tooltip").remove();
+}
+
 interface HistogramState {
     hasOverflow: boolean;
     selectionOverlay?: {
         update: (selection: Range) => void;
     };
+}
+
+interface HistogramBin {
+    x0: number;
+    x1: number;
+    baselineCount: number;
+    overlayCount?: number;
+    isOverflow?: boolean;
 }
 
 function getRoundedTopBarPath(xPos: number, yPos: number, width: number, height: number, radius = 2): string {
@@ -72,38 +87,107 @@ function getRoundedTopBarPath(xPos: number, yPos: number, width: number, height:
     ].join(" ");
 }
 
-export function histogram(container: HTMLElement, data: number[], opts: HistogramOptions) {
-    function isSelected(d: d3.Bin<number, number>, selectedRange?: Range): boolean {
-        return !!(selectedRange && d.x0! >= selectedRange.min && d.x1! <= selectedRange.max);
+function buildBins(
+    baselineData: number[],
+    overlayData: number[] | undefined,
+    opts: HistogramOptions
+): {
+    bins: HistogramBin[];
+    binMin: number;
+    binMax: number;
+    binSize: number;
+    dataMax: number;
+    hasOverflow: boolean;
+} {
+    const dataMax = Math.ceil(d3.max(baselineData)!);
+    const binMin = opts.xAxis?.min ?? opts.binDomain?.min ?? Math.floor(d3.min(baselineData)!);
+    const binMax = opts.xAxis?.max ?? opts.binDomain?.max ?? dataMax;
+    const numBins = opts.numBins || 10;
+    const histogramGenerator = d3.bin<number, number>().domain([binMin, binMax]).thresholds(numBins);
+    const cap = opts.xAxis?.max;
+
+    const getBaseBins = (values: number[]) => {
+        if (cap == null) {
+            return histogramGenerator(values);
+        }
+
+        return histogramGenerator(values.filter((d) => d <= cap));
+    };
+
+    const baselineRawBins = getBaseBins(baselineData);
+    const binSize = baselineRawBins.length > 0 ? baselineRawBins[0].x1! - baselineRawBins[0].x0! : 1;
+    const baselineOverflowCount = cap == null ? 0 : baselineData.filter((d) => d > cap).length;
+    const overlayOverflowCount = cap == null ? 0 : (overlayData || []).filter((d) => d > cap).length;
+
+    const bins: HistogramBin[] = baselineRawBins.map((bin) => ({
+        x0: bin.x0!,
+        x1: bin.x1!,
+        baselineCount: bin.length,
+        overlayCount: overlayData ? 0 : undefined,
+    }));
+
+    if (overlayData) {
+        const overlayRawBins = getBaseBins(overlayData);
+        bins.forEach((bin, idx) => {
+            bin.overlayCount = overlayRawBins[idx]?.length || 0;
+        });
     }
 
-    function applyFill(d: d3.Bin<number, number>): string {
+    if (cap != null && baselineOverflowCount > 0) {
+        bins.push({
+            x0: cap,
+            x1: cap + binSize,
+            baselineCount: baselineOverflowCount,
+            overlayCount: overlayData ? overlayOverflowCount : undefined,
+            isOverflow: true,
+        });
+    }
+
+    return {
+        bins,
+        binMin,
+        binMax,
+        binSize,
+        dataMax,
+        hasOverflow: cap != null && baselineOverflowCount > 0,
+    };
+}
+
+export function histogram(container: HTMLElement, data: number[], opts: HistogramOptions) {
+    const showOverlayLayer = !!opts.overlayData;
+    const legendSpacing = showOverlayLayer ? 18 : 0;
+
+    function isSelected(d: HistogramBin, selectedRange?: Range): boolean {
+        return !!(selectedRange && d.x0 >= selectedRange.min && d.x1 <= selectedRange.max);
+    }
+
+    function applyFill(d: HistogramBin): string {
         const selected = isSelected(d, opts.selection?.selectedRange);
-        if (d.x0 === opts.xAxis?.max) {
+        if (d.isOverflow) {
             return selected ? HISTOGRAM_COLORS.barSelected : HISTOGRAM_COLORS.barOverflow;
         }
         return selected ? HISTOGRAM_COLORS.barSelected : HISTOGRAM_COLORS.bar;
     }
 
-    function applyStroke(d: d3.Bin<number, number>): string {
+    function applyStroke(d: HistogramBin): string {
         const selected = isSelected(d, opts.selection?.selectedRange);
 
-        if (d.x0 === opts.xAxis?.max) {
+        if (d.isOverflow) {
             return selected ? HISTOGRAM_COLORS.strokeSelected : HISTOGRAM_COLORS.strokeOverflow;
         }
         return selected ? HISTOGRAM_COLORS.strokeSelected : HISTOGRAM_COLORS.stroke;
     }
 
-    function applyStrokeWidth(d: d3.Bin<number, number>): number {
+    function applyStrokeWidth(d: HistogramBin): number {
         const selected = isSelected(d, opts.selection?.selectedRange);
         return selected ? 2 : 1;
     }
 
-    function applyHoverFill(d: d3.Bin<number, number>): string {
+    function applyHoverFill(d: HistogramBin): string {
         if (isSelected(d, opts.selection?.selectedRange)) {
             return HISTOGRAM_COLORS.barSelectedHover;
         }
-        if (d.x0 === opts.xAxis?.max) {
+        if (d.isOverflow) {
             return HISTOGRAM_COLORS.barHover;
         }
         return HISTOGRAM_COLORS.barHover;
@@ -111,57 +195,22 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
 
     function updateSelectedRange(nextSelection?: Range) {
         opts.selection!.selectedRange = nextSelection;
-        svg.selectAll<SVGPathElement, d3.Bin<number, number>>(".histogram-bar")
+        svg.selectAll<SVGPathElement, HistogramBin>(
+            showOverlayLayer ? ".histogram-bar.foreground" : ".histogram-bar.background"
+        )
             .data(bins, (_d, i) => i)
-            .attr("fill", (d: d3.Bin<number, number>) => applyFill(d))
-            .attr("stroke", (d: d3.Bin<number, number>) => applyStroke(d))
-            .attr("stroke-width", (d: d3.Bin<number, number>) => applyStrokeWidth(d));
+            .attr("fill", (d: HistogramBin) => applyFill(d))
+            .attr("stroke", (d: HistogramBin) => applyStroke(d))
+            .attr("stroke-width", (d: HistogramBin) => applyStrokeWidth(d));
     }
 
-    // Helper to get bin value (count)
-    function getBinValue(bin: d3.Bin<number, number>): number {
-        return bin.length;
+    function getBaselineBinValue(bin: HistogramBin): number {
+        return bin.baselineCount;
     }
 
-    const dataMax = Math.ceil(d3.max(data)!);
-
-    // Calculate min and max
-    let binMin = opts.xAxis?.min || opts.binDomain?.min || Math.floor(d3.min(data)!);
-    const binMax = opts.xAxis?.max || opts.binDomain?.max || dataMax;
-
-    // Set up bins
-    const numBins = opts.numBins || 10;
-    const histogramGenerator = d3.bin().domain([binMin!, binMax!]).thresholds(numBins);
-
-    let bins: d3.Bin<number, number>[] = [];
-    let binSize: number = 1;
-
+    const { bins, binMin, binMax, binSize, dataMax, hasOverflow } = buildBins(data, opts.overlayData, opts);
     const cap = opts.xAxis?.max;
-    if (cap) {
-        // Split data into normal and overflow
-        const cappedData = data.filter((d) => d <= cap);
-        const overflowData = data.filter((d) => d > cap);
-        bins = histogramGenerator(cappedData);
-        if (bins.length > 0) {
-            binSize = bins[0].x1! - bins[0].x0!;
-        }
-        if (overflowData.length > 0) {
-            // Create overflow bin matching d3.bin structure
-            const overflowBin = Object.assign(overflowData, {
-                x0: cap,
-                x1: cap + binSize,
-                length: overflowData.length,
-            });
-            bins.push(overflowBin as d3.Bin<number, number>);
-        }
-    } else {
-        bins = histogramGenerator(data);
-        if (bins.length > 0) {
-            binSize = bins[0].x1! - bins[0].x0!;
-        }
-    }
-
-    const hasOverflow = cap && bins.length > 0 && bins[bins.length - 1].x0 === cap;
+    const maxBinValue = d3.max(bins, (bin) => Math.max(bin.baselineCount, bin.overlayCount ?? 0)) || 0;
 
     // Plotting
     // Set up dimensions
@@ -171,8 +220,8 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
     const aspectRatio = opts.displayOpts?.aspectRatio || 0.5;
     const height = parent.clientHeight || width * aspectRatio;
 
-    // Remove previous SVG if exists
-    d3.select(container).select("svg").remove();
+    // Remove previous chart nodes before drawing.
+    destroyHistogram(container);
 
     const svg = d3
         .select(container)
@@ -182,19 +231,15 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
         .style("display", "block");
 
     const plotWidth = width - margin.left - margin.right;
-    const plotHeight = height - margin.top - margin.bottom;
+    const plotHeight = height - margin.top - margin.bottom - legendSpacing;
 
-    const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+    const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top + legendSpacing})`);
 
     // X scale
-    const x = d3.scaleLinear().domain([binMin!, binMax!]).range([0, plotWidth]);
+    const x = d3.scaleLinear().domain([binMin, binMax]).range([0, plotWidth]);
 
     // Y scale
-    const y = d3
-        .scaleLinear()
-        .domain([0, d3.max(bins, getBinValue)!])
-        .nice()
-        .range([plotHeight, 0]);
+    const y = d3.scaleLinear().domain([0, maxBinValue]).nice().range([plotHeight, 0]);
 
     g.append("g")
         .attr("class", "histogram-grid")
@@ -210,40 +255,77 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
             grid.selectAll(".tick line").attr("stroke", HISTOGRAM_COLORS.grid).attr("stroke-dasharray", "3 4");
         });
 
-    // Bars
-    const bar = g
-        .selectAll<SVGPathElement, d3.Bin<number, number>>(".histogram-bar")
+    const baselineLayer = g.append("g").attr("class", "histogram-layer histogram-layer-baseline");
+    const overlayLayer = g.append("g").attr("class", "histogram-layer histogram-layer-overlay");
+
+    const baselineBar = baselineLayer
+        .selectAll<SVGPathElement, HistogramBin>(".histogram-bar.background")
         .data(bins, (_d, i) => i)
         .join(
             (enter) =>
                 enter
                     .append("path")
-                    .attr("class", "histogram-bar")
-                    .attr("d", (d: d3.Bin<number, number>) =>
+                    .attr("class", "histogram-bar background")
+                    .attr("d", (d: HistogramBin) =>
                         getRoundedTopBarPath(
-                            x(d.x0!),
-                            y(getBinValue(d)),
-                            Math.max(0, x(d.x1!) - x(d.x0!) - 1),
-                            plotHeight - y(getBinValue(d))
+                            x(d.x0),
+                            y(getBaselineBinValue(d)),
+                            Math.max(0, x(d.x1) - x(d.x0) - 1),
+                            plotHeight - y(getBaselineBinValue(d))
                         )
                     )
-                    .attr("fill", (d: d3.Bin<number, number>) => applyFill(d))
-                    .attr("stroke", (d: d3.Bin<number, number>) => applyStroke(d))
-                    .attr("stroke-width", (d: d3.Bin<number, number>) => applyStrokeWidth(d))
-                    .attr("opacity", 0.92),
+                    .attr("fill", showOverlayLayer ? "#d6dde6" : (d: HistogramBin) => applyFill(d))
+                    .attr("stroke", showOverlayLayer ? "#bcc8d4" : (d: HistogramBin) => applyStroke(d))
+                    .attr("stroke-width", showOverlayLayer ? 1 : (d: HistogramBin) => applyStrokeWidth(d))
+                    .attr("opacity", showOverlayLayer ? 0.7 : 0.92),
             (update) =>
                 update
-                    .attr("d", (d: d3.Bin<number, number>) =>
+                    .attr("d", (d: HistogramBin) =>
                         getRoundedTopBarPath(
-                            x(d.x0!),
-                            y(getBinValue(d)),
-                            Math.max(0, x(d.x1!) - x(d.x0!) - 1),
-                            plotHeight - y(getBinValue(d))
+                            x(d.x0),
+                            y(getBaselineBinValue(d)),
+                            Math.max(0, x(d.x1) - x(d.x0) - 1),
+                            plotHeight - y(getBaselineBinValue(d))
                         )
                     )
-                    .attr("fill", (d: d3.Bin<number, number>) => applyFill(d))
-                    .attr("stroke", (d: d3.Bin<number, number>) => applyStroke(d))
-                    .attr("stroke-width", (d: d3.Bin<number, number>) => applyStrokeWidth(d))
+                    .attr("fill", showOverlayLayer ? "#d6dde6" : (d: HistogramBin) => applyFill(d))
+                    .attr("stroke", showOverlayLayer ? "#bcc8d4" : (d: HistogramBin) => applyStroke(d))
+                    .attr("stroke-width", showOverlayLayer ? 1 : (d: HistogramBin) => applyStrokeWidth(d))
+        );
+
+    const overlayBar = overlayLayer
+        .selectAll<SVGPathElement, HistogramBin>(".histogram-bar.foreground")
+        .data(showOverlayLayer ? bins : [], (_d, i) => i)
+        .join(
+            (enter) =>
+                enter
+                    .append("path")
+                    .attr("class", "histogram-bar foreground")
+                    .attr("d", (d: HistogramBin) =>
+                        getRoundedTopBarPath(
+                            x(d.x0),
+                            y(d.overlayCount ?? 0),
+                            Math.max(0, x(d.x1) - x(d.x0) - 1),
+                            plotHeight - y(d.overlayCount ?? 0)
+                        )
+                    )
+                    .attr("fill", (d: HistogramBin) => applyFill(d))
+                    .attr("stroke", (d: HistogramBin) => applyStroke(d))
+                    .attr("stroke-width", (d: HistogramBin) => applyStrokeWidth(d))
+                    .attr("opacity", 0.95),
+            (update) =>
+                update
+                    .attr("d", (d: HistogramBin) =>
+                        getRoundedTopBarPath(
+                            x(d.x0),
+                            y(d.overlayCount ?? 0),
+                            Math.max(0, x(d.x1) - x(d.x0) - 1),
+                            plotHeight - y(d.overlayCount ?? 0)
+                        )
+                    )
+                    .attr("fill", (d: HistogramBin) => applyFill(d))
+                    .attr("stroke", (d: HistogramBin) => applyStroke(d))
+                    .attr("stroke-width", (d: HistogramBin) => applyStrokeWidth(d))
         );
 
     // Tooltip div
@@ -266,33 +348,40 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
             .style("display", "none");
     }
 
-    bar.on("mousemove", function (event, d) {
-        d3.select(this).attr("fill", applyHoverFill(d)).attr("opacity", 1);
-        const freq = ((d.length / data.length) * 100).toFixed(1);
-        const lastRegularBinIdx = hasOverflow ? bins.length - 2 : bins.length - 1;
+    const hoverSelection = showOverlayLayer ? overlayBar : baselineBar;
+    hoverSelection
+        .on("mousemove", function (event, d) {
+            d3.select(this).attr("fill", applyHoverFill(d)).attr("opacity", 1);
+            const activeCount = showOverlayLayer ? (d.overlayCount ?? 0) : d.baselineCount;
+            const activeTotal = showOverlayLayer ? opts.overlayData!.length : data.length;
+            const freq = activeTotal > 0 ? ((activeCount / activeTotal) * 100).toFixed(1) : "0.0";
+            const lastRegularBinIdx = hasOverflow ? bins.length - 2 : bins.length - 1;
 
-        let binLabel: string;
-        if (hasOverflow && d.x0! === cap) {
-            binLabel = `> ${cap.toFixed(1)}`;
-        } else if (d === bins[lastRegularBinIdx]) {
-            binLabel = `[${d.x0?.toFixed(1)}, ${d.x1?.toFixed(1)}]`;
-        } else {
-            binLabel = `[${d.x0?.toFixed(1)}, ${d.x1?.toFixed(1)})`;
-        }
+            let binLabel: string;
+            if (hasOverflow && d.x0 === cap) {
+                binLabel = `> ${cap.toFixed(1)}`;
+            } else if (d === bins[lastRegularBinIdx]) {
+                binLabel = `[${d.x0.toFixed(1)}, ${d.x1.toFixed(1)}]`;
+            } else {
+                binLabel = `[${d.x0.toFixed(1)}, ${d.x1.toFixed(1)})`;
+            }
 
-        tooltip
-            .style("display", "block")
-            .html(
-                `<strong>Count</strong>: ${d.length}<br>` +
-                    `<strong>Percent</strong>: ${freq}%<br>` +
-                    `<strong>Range</strong>: ${binLabel}`
-            )
-            .style("left", event.offsetX + 20 + "px")
-            .style("top", event.offsetY - 10 + "px");
-    }).on("mouseleave", function (_event, d) {
-        d3.select(this).attr("fill", applyFill(d)).attr("opacity", 0.92);
-        tooltip.style("display", "none");
-    });
+            const countHtml = showOverlayLayer
+                ? `<strong>Count</strong>: ${d.overlayCount ?? 0}<br>`
+                : `<strong>Count</strong>: ${d.baselineCount}<br>`;
+
+            tooltip
+                .style("display", "block")
+                .html(countHtml + `<strong>Percent</strong>: ${freq}%<br>` + `<strong>Range</strong>: ${binLabel}`)
+                .style("left", event.offsetX + 20 + "px")
+                .style("top", event.offsetY - 10 + "px");
+        })
+        .on("mouseleave", function (_event, d) {
+            d3.select(this)
+                .attr("fill", applyFill(d))
+                .attr("opacity", showOverlayLayer ? 0.95 : 0.92);
+            tooltip.style("display", "none");
+        });
 
     // X Axis
     g.append("g")
@@ -316,6 +405,34 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
         .style("fill", HISTOGRAM_COLORS.label)
         .text(opts.xAxis?.label || "");
 
+    if (showOverlayLayer) {
+        const legend = svg
+            .append("g")
+            .attr("class", "histogram-legend")
+            .attr("transform", `translate(${margin.left},8)`);
+
+        [
+            { label: "All Records", fill: "#d6dde6", stroke: "#bcc8d4" },
+            { label: "Displayed Records", fill: HISTOGRAM_COLORS.bar, stroke: HISTOGRAM_COLORS.stroke },
+        ].forEach((item, idx) => {
+            const legendItem = legend.append("g").attr("transform", `translate(${idx * 92},0)`);
+            legendItem
+                .append("rect")
+                .attr("width", 12)
+                .attr("height", 12)
+                .attr("rx", 2)
+                .attr("fill", item.fill)
+                .attr("stroke", item.stroke);
+            legendItem
+                .append("text")
+                .attr("x", 18)
+                .attr("y", 10)
+                .style("font-size", "11px")
+                .style("fill", HISTOGRAM_COLORS.label)
+                .text(item.label);
+        });
+    }
+
     let selectionOverlay: HistogramState["selectionOverlay"];
     if (opts.selection) {
         const selectionRange = opts.selection.selectedRange;
@@ -325,8 +442,8 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
                 xScale: x,
                 plotHeight,
                 domain: {
-                    min: binMin!,
-                    max: hasOverflow ? cap + binSize : binMax!,
+                    min: binMin,
+                    max: hasOverflow ? cap! + binSize : binMax,
                 },
                 selection: selectionRange,
                 mode: opts.selection.mode,
@@ -334,7 +451,7 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
                 thresholdHandle: opts.selection.thresholdHandle,
                 onChange: (nextSelection) => {
                     const dataAccurateSelection =
-                        hasOverflow && nextSelection.max >= cap
+                        hasOverflow && cap != null && nextSelection.max >= cap
                             ? { min: nextSelection.min, max: dataMax }
                             : nextSelection;
                     updateSelectedRange(nextSelection);
