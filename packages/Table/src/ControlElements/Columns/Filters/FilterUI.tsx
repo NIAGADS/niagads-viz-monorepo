@@ -163,54 +163,89 @@ const BooleanFilter = ({ column, values }: Omit<TextFilterProps, "otherValues">)
     );
 };
 
+const MemoThresholdSelectHistogram = React.memo(ThresholdSelectHistogram);
+const MemoRangeSelectHistogram = React.memo(RangeSelectHistogram);
+
 const NumericFilter = ({ column }: FilterProps) => {
     const naValue = column.columnDef.meta?.naValue || DEFAULT_NA_VALUE;
     const isPvalue: boolean = column.columnDef.meta!.type === "pvalue";
-    const handleRangeFilter = (range: Range) => {
-        if (isPvalue) {
-            const threshold = Math.pow(10, -range.min);
-            column.setFilterValue(threshold);
-        } else {
-            // TODO / FIXME: create a filterFn that takes a range
-            column.setFilterValue(range);
+
+    const referenceData = useMemo(() => {
+        // filter out nulls
+        const values = isPvalue
+            ? (column.getAllValues(true, naValue) as number[]).map((v) => negLog10(v))
+            : (column.getAllValues(true, naValue) as number[]);
+
+        const rd = {
+            values: values,
+            range:
+                values.length > 0
+                    ? {
+                          min: Math.min(...values),
+                          max: Math.max(...values),
+                      }
+                    : undefined,
+        };
+        return rd;
+    }, [column.id]);
+
+    const initialSelection: any = useMemo(() => {
+        const filterValue = column.getFilterValue();
+        if (filterValue === undefined) {
+            return isPvalue ? referenceData.range!.min : referenceData.range;
         }
-    };
-    const dataRange = column.getFacetedMinMaxValues(); // FIXME: if going to use overlay for this, needs to be from all values
+        return filterValue;
+    }, [column.id]);
+
+    const handleRangeFilter = useCallback(
+        (range: Range) => {
+            if (isPvalue) {
+                const threshold = range.min; //Math.pow(10, -range.min);
+                column.setFilterValue(threshold);
+            } else {
+                // TODO / FIXME: create a filterFn that takes a range
+                column.setFilterValue(range);
+            }
+        },
+        [column.id]
+    );
+
     const title = column.columnDef.header!.toString();
-    if (dataRange) {
+
+    const displayOpts = { width: 250 };
+
+    if (referenceData.range) {
+        const filteredValues: number[] = isPvalue
+            ? (column.getFilteredValues(true, naValue) as number[]).map((v) => negLog10(v))
+            : (column.getFilteredValues(true, naValue) as number[]);
+
         if (isPvalue) {
-            const values: number[] = (column.getAllValues(true, naValue) as number[]).map((v) => negLog10(v));
-            const filteredValues: number[] = (column.getFilteredValues(true, naValue) as number[]).map((v) =>
-                negLog10(v)
-            );
-            console.log(`fv: ${filteredValues.length}`);
             return (
-                <ThresholdSelectHistogram
-                    limit={7}
+                <MemoThresholdSelectHistogram
+                    limit={initialSelection as number}
                     limitType={"max"}
                     onRangeSelect={handleRangeFilter}
-                    data={values}
+                    data={referenceData.values}
                     overlayData={filteredValues}
                     numBins={50}
                     title={title}
                     max={50}
-                    displayOpts={{ width: 250 }}
-                />
-            );
-        } else {
-            const values: number[] = column.getAllValues(true, naValue) as number[];
-            const overlayData: number[] = column.getFilteredValues(true, naValue) as number[];
-            return (
-                <RangeSelectHistogram
-                    range={{ min: dataRange[0], max: dataRange[1] }}
-                    onRangeSelect={handleRangeFilter}
-                    data={values}
-                    numBins={50}
-                    title={title}
-                    displayOpts={{ width: 250 }}
+                    displayOpts={displayOpts}
                 />
             );
         }
+
+        return (
+            <MemoRangeSelectHistogram
+                range={initialSelection}
+                onRangeSelect={handleRangeFilter}
+                data={referenceData.values}
+                numBins={50}
+                title={title}
+                overlayData={filteredValues}
+                displayOpts={displayOpts}
+            />
+        );
     }
     return <NoValidValuesMessage columnName={column.columnDef.header!.toString()} />;
 };
