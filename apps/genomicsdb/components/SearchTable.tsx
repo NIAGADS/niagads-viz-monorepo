@@ -2,7 +2,7 @@
 
 import { SearchResult } from "@/lib/types";
 import { prefixClientRoute } from "@/lib/utils";
-import Table, { GenericColumn } from "@niagads/table";
+import Table, { TableColumn }from "@niagads/table";
 
 interface SearchTableProps {
     searchResults: SearchResult[];
@@ -25,20 +25,21 @@ export const SearchTable = ({ searchResults }: SearchTableProps) => {
     );
 };
 
-const tableColumns: GenericColumn[] = [
+const tableColumns: TableColumn[] = [
     {
         id: "display",
         header: "Record ID",
         type: "link",
         required: true,
+        disableColumnFilter: true,
     },
     {
         id: "type",
         header: "Record Type",
-        canFilter: true,
     },
     {
         id: "description",
         header: "Description",
+        disableColumnFilter: true,
     },
 ];

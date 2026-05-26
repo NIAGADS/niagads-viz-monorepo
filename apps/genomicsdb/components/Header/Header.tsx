@@ -5,20 +5,20 @@ import Link from "next/link";
 import Image from "next/image";
 import logo from "@public/genomicsdb_logo.svg";
 import { usePathname } from "next/navigation";
-import { EnhancedSearch } from "./EnhancedSearch";
+import { EnhancedSearch } from "../EnhancedSearch";
 import { getPublicUrl } from "@/lib/utils";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { User } from "lucide-react";
+import { ActionMenu } from "@niagads/ui/client";
 
 import "./header.css";
-import { Dropdown } from "@niagads/ui/client";
 
 interface HeaderProps {
     onMenuToggle: () => void;
     showSearch?: boolean;
 }
 
-export function Header({ onMenuToggle, showSearch = true }: HeaderProps) {
+export const Header = ({ onMenuToggle, showSearch = true }: HeaderProps) => {
     const pathname = usePathname();
 
     const isActive = (path: string) => {
@@ -48,7 +48,6 @@ export function Header({ onMenuToggle, showSearch = true }: HeaderProps) {
                     </div>
                 )}
             </div>
-
             <button
                 className="mobile-menu-button"
                 onClick={onMenuToggle}
@@ -57,7 +56,6 @@ export function Header({ onMenuToggle, showSearch = true }: HeaderProps) {
             >
                 <Menu size={24} />
             </button>
-
             <nav className="main-nav" role="navigation" aria-label="Main navigation">
                 <Link
                     href={`${getPublicUrl(true)}/browse-datasets`}
@@ -88,8 +86,8 @@ export function Header({ onMenuToggle, showSearch = true }: HeaderProps) {
                     About
                 </Link>
                 {session ? (
-                    <Dropdown
-                        text={`${session.user?.name}`}
+                    <ActionMenu
+                        label={`${session.user?.name}`}
                         icon={User}
                     >
                         <Link
@@ -103,7 +101,7 @@ export function Header({ onMenuToggle, showSearch = true }: HeaderProps) {
                         >
                             Sign Out
                         </div>
-                    </Dropdown>
+                    </ActionMenu>
                 ) : (
                     <div
                         onClick={() => signIn("cognito")}

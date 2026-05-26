@@ -72,14 +72,14 @@ export default [
         external: [/\.css$/u], // HACK: Fix for this problem https://github.com/Swatinem/rollup-plugin-dts/issues/165]
     },
     {
-        input: ["./dist/dts/client/index.d.ts"],
-        output: [{ file: "./dist/client/index.d.ts", format: "es" }],
-        plugins: [dts(), del({ hook: "buildEnd", targets: "./dist/dts" })],
+        input: ["./dist/dts/hooks/index.d.ts"],
+        output: [{ file: "./dist/hooks/index.d.ts", format: "es" }],
+        plugins: [dts()],
         external: [/\.css$/u], // HACK: Fix for this problem https://github.com/Swatinem/rollup-plugin-dts/issues/165]
     },
     {
-        input: ["./dist/dts/hooks/index.d.ts"],
-        output: [{ file: "./dist/hooks/index.d.ts", format: "es" }],
+        input: ["./dist/dts/client/index.d.ts"],
+        output: [{ file: "./dist/client/index.d.ts", format: "es" }],
         plugins: [dts(), del({ hook: "buildEnd", targets: "./dist/dts" })],
         external: [/\.css$/u], // HACK: Fix for this problem https://github.com/Swatinem/rollup-plugin-dts/issues/165]
     },

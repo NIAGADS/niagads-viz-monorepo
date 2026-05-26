@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import type React from "react";
 import { Inter, Lato, Roboto_Mono } from "next/font/google";
-import { MainLayout } from "@/components/main-layout";
+import { MainLayout } from "@/components/MainLayout";
 import { LoadingProvider } from "@/components/providers/LoadingProvider";
 import { SessionProvider } from "@/components/providers/SessionProvider";
-
-import "./globals.css";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]/route";
+
+import "./globals.css";
 
 // Viewport (Next.js handles meta injection)
 export const viewport = {
