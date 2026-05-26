@@ -9,7 +9,7 @@ import typescript from "@rollup/plugin-typescript";
 
 export default [
     {
-        input: ["./src/index.ts", "./src/layouts/index.ts", "./src/client/index.ts"],
+        input: ["./src/index.ts", "./src/layouts/index.ts", "./src/client/index.ts", "./src/hooks/index.ts"],
         output: [
             {
                 format: "esm",
@@ -74,6 +74,12 @@ export default [
     {
         input: ["./dist/dts/client/index.d.ts"],
         output: [{ file: "./dist/client/index.d.ts", format: "es" }],
+        plugins: [dts(), del({ hook: "buildEnd", targets: "./dist/dts" })],
+        external: [/\.css$/u], // HACK: Fix for this problem https://github.com/Swatinem/rollup-plugin-dts/issues/165]
+    },
+    {
+        input: ["./dist/dts/hooks/index.d.ts"],
+        output: [{ file: "./dist/hooks/index.d.ts", format: "es" }],
         plugins: [dts(), del({ hook: "buildEnd", targets: "./dist/dts" })],
         external: [/\.css$/u], // HACK: Fix for this problem https://github.com/Swatinem/rollup-plugin-dts/issues/165]
     },
