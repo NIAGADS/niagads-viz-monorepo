@@ -92,22 +92,22 @@ export const ColumnFilterControls = ({
                         return 1;
                     return 0;
                 }),
-        [filterableColumns]
+        []
     );
 
     const booleanFilterColumns = useMemo(
         () => filterableColumns.filter((column) => column.columnDef.meta?.filterType === "boolean"),
-        [filterableColumns]
+        []
     );
 
     const multiselectFilterColunns = useMemo(
         () => filterableColumns.filter((column) => column.columnDef.meta?.filterType === "multiselect"),
-        [filterableColumns]
+        []
     );
 
     const selectFilterColunns = useMemo(
         () => filterableColumns.filter((column) => column.columnDef.meta?.filterType === "select"),
-        [filterableColumns]
+        []
     );
 
     const hasAdditionalFilters =

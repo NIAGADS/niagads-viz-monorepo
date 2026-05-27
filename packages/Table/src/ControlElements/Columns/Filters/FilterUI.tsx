@@ -189,13 +189,10 @@ const NumericFilter = ({ column }: FilterProps) => {
         return rd;
     }, [column.id]);
 
-    const initialSelection: any = useMemo(() => {
-        const filterValue = column.getFilterValue();
-        if (filterValue === undefined) {
-            return isPvalue ? referenceData.range!.min : referenceData.range;
-        }
-        return filterValue;
-    }, [column.id]);
+    let filterValue: any = column.getFilterValue();
+    if (filterValue === undefined) {
+        filterValue = isPvalue ? referenceData.range!.min : referenceData.range;
+    }
 
     const handleRangeFilter = useCallback(
         (range: Range) => {
@@ -221,8 +218,8 @@ const NumericFilter = ({ column }: FilterProps) => {
 
         if (isPvalue) {
             return (
-                <MemoThresholdSelectHistogram
-                    limit={initialSelection as number}
+                <ThresholdSelectHistogram
+                    limit={filterValue as number}
                     limitType={"max"}
                     onRangeSelect={handleRangeFilter}
                     data={referenceData.values}
@@ -237,7 +234,7 @@ const NumericFilter = ({ column }: FilterProps) => {
 
         return (
             <MemoRangeSelectHistogram
-                range={initialSelection}
+                range={filterValue}
                 onRangeSelect={handleRangeFilter}
                 data={referenceData.values}
                 numBins={50}
