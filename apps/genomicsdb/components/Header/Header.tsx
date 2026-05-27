@@ -27,10 +27,6 @@ export const Header = ({ onMenuToggle, showSearch = true }: HeaderProps) => {
         return false;
     };
 
-    const { data: session } = useSession();
-
-    console.log(session);
-
     return (
         <header className="header">
             <div className="logo-container">
@@ -85,34 +81,33 @@ export const Header = ({ onMenuToggle, showSearch = true }: HeaderProps) => {
                 >
                     About
                 </Link>
-                {session ? (
-                    <ActionMenu
-                        label={`${session.user?.name}`}
-                        icon={User}
-                    >
-                        <Link
-                            href={`${getPublicUrl(true)}/user/profile`}
-                        >
-                            Profile
-                        </Link>
-                        <div
-                            onClick={() => signOut()}
-                            style={{cursor: "pointer"}}
-                        >
-                            Sign Out
-                        </div>
-                    </ActionMenu>
-                ) : (
-                    <div
-                        onClick={() => signIn("cognito")}
-                        className={`nav-link ${isActive("/login") ? "active" : ""}`}
-                        aria-current={isActive("/login") ? "page" : undefined}
-                        style={{cursor: "pointer"}}
-                    >
-                        Log In
-                    </div>
-                )}
+                <UserMenu />
             </nav>
         </header>
     );
-}
+};
+
+const UserMenu = () => {
+    const { data: session } = useSession();
+
+    console.log(session);
+
+    return session ? (
+        <ActionMenu label={`${session.user?.name}`} icon={User}>
+            <div className="user-menu">
+                <Link className="user-menu-item" href={`${getPublicUrl(true)}/user/profile`}>Profile</Link>
+                <div className="user-menu-item" onClick={() => signOut()}>
+                    Sign Out
+                </div>
+            </div>
+        </ActionMenu>
+    ) : (
+        <div
+            onClick={() => signIn("cognito")}
+            className={`nav-link`}
+            style={{ cursor: "pointer" }}
+        >
+            Log In
+        </div>
+    );
+};
