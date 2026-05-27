@@ -263,16 +263,19 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
 
     // Y scale
     const y = useLog10YAxis
-        ? d3.scaleLog().domain([1, Math.max(1, maxBinValue)]).nice().range([plotHeight, 0])
+        ? d3
+              .scaleLog()
+              .domain([1, Math.max(1, maxBinValue)])
+              .nice()
+              .range([plotHeight, 0])
         : d3.scaleLinear().domain([0, maxBinValue]).nice().range([plotHeight, 0]);
 
-    const yTicks = useLog10YAxis
-        ? y
-              .ticks()
-              .filter((tick) => Number.isInteger(Math.log10(tick)))
-        : [];
+    const yTicks = useLog10YAxis ? y.ticks().filter((tick) => Number.isInteger(Math.log10(tick))) : [];
 
-    const gridAxis = d3.axisLeft(y).tickSize(-plotWidth).tickFormat(() => "");
+    const gridAxis = d3
+        .axisLeft(y)
+        .tickSize(-plotWidth)
+        .tickFormat(() => "");
     if (useLog10YAxis) {
         gridAxis.ticks(yTicks.length).tickValues(yTicks);
     } else {
