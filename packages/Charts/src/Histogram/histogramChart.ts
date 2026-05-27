@@ -27,6 +27,7 @@ export interface HistogramOptions {
     binDomain?: Range; // minimum bin start, maximum bin end
     xAxis?: AxisConfig;
     displayOpts?: DisplayProps;
+    yAxisScale?: "linear" | "log10";
     selection?: {
         mode: SelectionMode;
         selectedRange?: Range; // [min, max] for highlighting bins
@@ -155,6 +156,7 @@ function buildBins(
 export function histogram(container: HTMLElement, data: number[], opts: HistogramOptions, overlayData?: number[]) {
     const showOverlayLayer = !!overlayData;
     const legendSpacing = showOverlayLayer ? 18 : 0;
+    const useLog10YAxis = opts.yAxisScale === "log10";
 
     function isSelected(d: HistogramBin, selectedRange?: Range): boolean {
         return !!(selectedRange && d.x0 >= selectedRange.min && d.x1 <= selectedRange.max);
@@ -207,6 +209,28 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
         return bin.baselineCount;
     }
 
+    function getYPosition(
+        value: number,
+        scale: d3.ScaleLinear<number, number, never> | d3.ScaleLogarithmic<number, number, never>,
+        plotHeight: number
+    ): number {
+        if (useLog10YAxis && value <= 0) {
+            return plotHeight;
+        }
+        return scale(value);
+    }
+
+    function getBarHeight(
+        value: number,
+        scale: d3.ScaleLinear<number, number, never> | d3.ScaleLogarithmic<number, number, never>,
+        plotHeight: number
+    ): number {
+        if (useLog10YAxis && value <= 0) {
+            return 0;
+        }
+        return Math.max(0, plotHeight - scale(value));
+    }
+
     const { bins, binMin, binMax, binSize, dataMax, hasOverflow } = buildBins(data, overlayData, opts);
     const cap = opts.xAxis?.max;
     const maxBinValue = d3.max(bins, (bin) => Math.max(bin.baselineCount, bin.overlayCount ?? 0)) || 0;
@@ -238,21 +262,46 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
     const x = d3.scaleLinear().domain([binMin, binMax]).range([0, plotWidth]);
 
     // Y scale
-    const y = d3.scaleLinear().domain([0, maxBinValue]).nice().range([plotHeight, 0]);
+    const y = useLog10YAxis
+        ? d3.scaleLog().domain([1, Math.max(1, maxBinValue)]).nice().range([plotHeight, 0])
+        : d3.scaleLinear().domain([0, maxBinValue]).nice().range([plotHeight, 0]);
+
+    const yTicks = useLog10YAxis
+        ? y
+              .ticks()
+              .filter((tick) => Number.isInteger(Math.log10(tick)))
+        : [];
+
+    const gridAxis = d3.axisLeft(y).tickSize(-plotWidth).tickFormat(() => "");
+    if (useLog10YAxis) {
+        gridAxis.ticks(yTicks.length).tickValues(yTicks);
+    } else {
+        gridAxis.ticks(4);
+    }
 
     g.append("g")
         .attr("class", "histogram-grid")
-        .call(
-            d3
-                .axisLeft(y)
-                .ticks(4)
-                .tickSize(-plotWidth)
-                .tickFormat(() => "")
-        )
+        .call(gridAxis)
         .call((grid) => {
             grid.select(".domain").remove();
             grid.selectAll(".tick line").attr("stroke", HISTOGRAM_COLORS.grid).attr("stroke-dasharray", "3 4");
         });
+
+    if (useLog10YAxis) {
+        g.append("g")
+            .attr("class", "histogram-y-axis")
+            .call(
+                d3
+                    .axisLeft(y)
+                    .tickValues(yTicks)
+                    .tickFormat((value) => d3.format("~g")(value as number))
+            )
+            .call((axis) => {
+                axis.select(".domain").attr("stroke", HISTOGRAM_COLORS.axis).attr("stroke-width", 1);
+                axis.selectAll(".tick line").attr("stroke", HISTOGRAM_COLORS.axis);
+                axis.selectAll(".tick text").style("font-size", "12px").style("fill", HISTOGRAM_COLORS.axis);
+            });
+    }
 
     const baselineLayer = g.append("g").attr("class", "histogram-layer histogram-layer-baseline");
     const overlayLayer = g.append("g").attr("class", "histogram-layer histogram-layer-overlay");
@@ -268,9 +317,9 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
                     .attr("d", (d: HistogramBin) =>
                         getRoundedTopBarPath(
                             x(d.x0),
-                            y(getBaselineBinValue(d)),
+                            getYPosition(getBaselineBinValue(d), y, plotHeight),
                             Math.max(0, x(d.x1) - x(d.x0) - 1),
-                            plotHeight - y(getBaselineBinValue(d))
+                            getBarHeight(getBaselineBinValue(d), y, plotHeight)
                         )
                     )
                     .attr("fill", showOverlayLayer ? "#d6dde6" : (d: HistogramBin) => applyFill(d))
@@ -282,9 +331,9 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
                     .attr("d", (d: HistogramBin) =>
                         getRoundedTopBarPath(
                             x(d.x0),
-                            y(getBaselineBinValue(d)),
+                            getYPosition(getBaselineBinValue(d), y, plotHeight),
                             Math.max(0, x(d.x1) - x(d.x0) - 1),
-                            plotHeight - y(getBaselineBinValue(d))
+                            getBarHeight(getBaselineBinValue(d), y, plotHeight)
                         )
                     )
                     .attr("fill", showOverlayLayer ? "#d6dde6" : (d: HistogramBin) => applyFill(d))
@@ -303,9 +352,9 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
                     .attr("d", (d: HistogramBin) =>
                         getRoundedTopBarPath(
                             x(d.x0),
-                            y(d.overlayCount ?? 0),
+                            getYPosition(d.overlayCount ?? 0, y, plotHeight),
                             Math.max(0, x(d.x1) - x(d.x0) - 1),
-                            plotHeight - y(d.overlayCount ?? 0)
+                            getBarHeight(d.overlayCount ?? 0, y, plotHeight)
                         )
                     )
                     .attr("fill", (d: HistogramBin) => applyFill(d))
@@ -317,9 +366,9 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
                     .attr("d", (d: HistogramBin) =>
                         getRoundedTopBarPath(
                             x(d.x0),
-                            y(d.overlayCount ?? 0),
+                            getYPosition(d.overlayCount ?? 0, y, plotHeight),
                             Math.max(0, x(d.x1) - x(d.x0) - 1),
-                            plotHeight - y(d.overlayCount ?? 0)
+                            getBarHeight(d.overlayCount ?? 0, y, plotHeight)
                         )
                     )
                     .attr("fill", (d: HistogramBin) => applyFill(d))
@@ -403,34 +452,6 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
         .style("font-weight", "600")
         .style("fill", HISTOGRAM_COLORS.label)
         .text(opts.xAxis?.label || "");
-
-    if (showOverlayLayer) {
-        const legend = svg
-            .append("g")
-            .attr("class", "histogram-legend")
-            .attr("transform", `translate(${margin.left},8)`);
-
-        [
-            { label: "All Records", fill: "#d6dde6", stroke: "#bcc8d4" },
-            { label: "Displayed Records", fill: HISTOGRAM_COLORS.bar, stroke: HISTOGRAM_COLORS.stroke },
-        ].forEach((item, idx) => {
-            const legendItem = legend.append("g").attr("transform", `translate(${idx * 92},0)`);
-            legendItem
-                .append("rect")
-                .attr("width", 12)
-                .attr("height", 12)
-                .attr("rx", 2)
-                .attr("fill", item.fill)
-                .attr("stroke", item.stroke);
-            legendItem
-                .append("text")
-                .attr("x", 18)
-                .attr("y", 10)
-                .style("font-size", "11px")
-                .style("fill", HISTOGRAM_COLORS.label)
-                .text(item.label);
-        });
-    }
 
     let selectionOverlay: HistogramState["selectionOverlay"];
     if (opts.selection) {

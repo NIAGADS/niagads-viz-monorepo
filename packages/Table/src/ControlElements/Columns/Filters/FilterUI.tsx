@@ -228,6 +228,7 @@ const NumericFilter = ({ column }: FilterProps) => {
                     title={title}
                     max={50}
                     displayOpts={displayOpts}
+                    yAxisScale="log10"
                 />
             );
         }

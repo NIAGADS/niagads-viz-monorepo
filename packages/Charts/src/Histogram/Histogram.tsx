@@ -6,12 +6,15 @@ import { Range } from "@niagads/common";
 import chartStyles from "../styles/Charts.module.css";
 import styles from "./Histogram.module.css";
 
+type HistogramYAxisScale = "linear" | "log10";
+
 interface HistogramProps extends AxisConfig {
     data: number[];
     overlayData?: number[];
     numBins: number;
     title?: string;
     displayOpts?: DisplayProps;
+    yAxisScale?: HistogramYAxisScale;
 }
 
 function useHistogramRender(
@@ -35,7 +38,7 @@ function useHistogramRender(
     }, [containerRef, data, opts]);
 }
 
-const Histogram = ({ data, overlayData, title, numBins, max, label, displayOpts }: HistogramProps) => {
+const Histogram = ({ data, overlayData, title, numBins, max, label, displayOpts, yAxisScale }: HistogramProps) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
 
     const chartWidth = displayOpts?.width || 400;
@@ -53,11 +56,11 @@ const Histogram = ({ data, overlayData, title, numBins, max, label, displayOpts 
     const opts = useMemo<HistogramOptions>(
         () => ({
             numBins: numBins,
-
+            yAxisScale,
             xAxis: { max: max, label: label },
             displayOpts: updatedDisplayOpts,
         }),
-        [numBins, max, label, updatedDisplayOpts]
+        [numBins, max, label, updatedDisplayOpts, yAxisScale]
     );
 
     useHistogramRender(containerRef, data, overlayData, opts);
@@ -88,6 +91,7 @@ export const RangeSelectHistogram = ({
     max,
     label,
     displayOpts,
+    yAxisScale,
     range,
     title,
     onRangeSelect,
@@ -112,6 +116,7 @@ export const RangeSelectHistogram = ({
     const opts = useMemo<HistogramOptions>(
         () => ({
             numBins: numBins,
+            yAxisScale,
             binDomain: { min: dataMin, max: dataMax },
             xAxis: { max: max, label: label },
             displayOpts: updatedDisplayOpts,
@@ -121,7 +126,7 @@ export const RangeSelectHistogram = ({
                 onChange: onRangeSelect,
             },
         }),
-        [numBins, dataMin, dataMax, max, label, updatedDisplayOpts, range, onRangeSelect]
+        [numBins, dataMin, dataMax, max, label, updatedDisplayOpts, range, onRangeSelect, yAxisScale]
     );
 
     useHistogramRender(containerRef, data, overlayData, opts);
@@ -152,6 +157,7 @@ export const ThresholdSelectHistogram = ({
     max,
     label,
     displayOpts,
+    yAxisScale,
     limit,
     limitType,
     title,
@@ -182,6 +188,7 @@ export const ThresholdSelectHistogram = ({
     const opts = useMemo<HistogramOptions>(
         () => ({
             numBins: numBins,
+            yAxisScale,
             binDomain: { min: dataMin, max: dataMax },
             xAxis: { max: max, label: label },
             displayOpts: updatedDisplayOpts,
@@ -192,7 +199,7 @@ export const ThresholdSelectHistogram = ({
                 onChange: onRangeSelect,
             },
         }),
-        [numBins, dataMin, dataMax, max, label, updatedDisplayOpts, initialRange, limitType, onRangeSelect]
+        [numBins, dataMin, dataMax, max, label, updatedDisplayOpts, initialRange, limitType, onRangeSelect, yAxisScale]
     );
 
     useHistogramRender(containerRef, data, overlayData, opts);

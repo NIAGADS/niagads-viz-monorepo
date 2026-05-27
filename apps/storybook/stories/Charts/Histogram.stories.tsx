@@ -118,7 +118,7 @@ export const WithOverlayData: Story = {
         max: 50,
         label: "-log10p",
         title: "P-value Histogram with Overlay Subset",
-        displayOpts: undefined,
+        displayOpts: { undefined },
     } as any,
 };
 
@@ -214,5 +214,6 @@ export const MaxThresholdSelectHistogramWithOverlayData = {
         displayOpts: undefined,
         limit: 7,
         limitType: "max",
+        yAxisScale: "log10",
     },
 };
