@@ -163,9 +163,6 @@ const BooleanFilter = ({ column, values }: Omit<TextFilterProps, "otherValues">)
     );
 };
 
-const MemoThresholdSelectHistogram = React.memo(ThresholdSelectHistogram);
-const MemoRangeSelectHistogram = React.memo(RangeSelectHistogram);
-
 const NumericFilter = ({ column }: FilterProps) => {
     const naValue = column.columnDef.meta?.naValue || DEFAULT_NA_VALUE;
     const isPvalue: boolean = column.columnDef.meta!.type === "pvalue";
@@ -234,7 +231,7 @@ const NumericFilter = ({ column }: FilterProps) => {
         }
 
         return (
-            <MemoRangeSelectHistogram
+            <RangeSelectHistogram
                 range={filterValue}
                 onRangeSelect={handleRangeFilter}
                 data={referenceData.values}
