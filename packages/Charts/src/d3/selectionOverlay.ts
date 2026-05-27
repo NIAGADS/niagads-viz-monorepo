@@ -22,7 +22,7 @@ export interface SelectionOverlayInstance {
 }
 
 const OVERLAY_COLORS = {
-    bandFill: "rgba(217, 119, 6, 0.12)",
+    bandFill: "rgba(217, 119, 6, 0.05)",
     bandStroke: "#d97706",
     handleFill: "#ffffff",
     handleStroke: "#a65b00",

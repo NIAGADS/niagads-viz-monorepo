@@ -14,13 +14,18 @@ interface HistogramProps extends AxisConfig {
     displayOpts?: DisplayProps;
 }
 
-function useHistogramRender(containerRef: React.RefObject<HTMLDivElement | null>, data: number[], opts: HistogramOptions) {
+function useHistogramRender(
+    containerRef: React.RefObject<HTMLDivElement | null>,
+    data: number[],
+    overlayData: undefined | number[],
+    opts: HistogramOptions
+) {
     useLayoutEffect(() => {
         if (!containerRef.current) {
             return;
         }
 
-        histogram(containerRef.current, data, opts);
+        histogram(containerRef.current, data, opts, overlayData);
 
         return () => {
             if (containerRef.current) {
@@ -48,14 +53,14 @@ const Histogram = ({ data, overlayData, title, numBins, max, label, displayOpts 
     const opts = useMemo<HistogramOptions>(
         () => ({
             numBins: numBins,
-            overlayData,
+
             xAxis: { max: max, label: label },
             displayOpts: updatedDisplayOpts,
         }),
-        [numBins, overlayData, max, label, updatedDisplayOpts]
+        [numBins, max, label, updatedDisplayOpts]
     );
 
-    useHistogramRender(containerRef, data, opts);
+    useHistogramRender(containerRef, data, overlayData, opts);
 
     return (
         <>
@@ -107,7 +112,6 @@ export const RangeSelectHistogram = ({
     const opts = useMemo<HistogramOptions>(
         () => ({
             numBins: numBins,
-            overlayData,
             binDomain: { min: dataMin, max: dataMax },
             xAxis: { max: max, label: label },
             displayOpts: updatedDisplayOpts,
@@ -117,10 +121,10 @@ export const RangeSelectHistogram = ({
                 onChange: onRangeSelect,
             },
         }),
-        [numBins, overlayData, dataMin, dataMax, max, label, updatedDisplayOpts, range, onRangeSelect]
+        [numBins, dataMin, dataMax, max, label, updatedDisplayOpts, range, onRangeSelect]
     );
 
-    useHistogramRender(containerRef, data, opts);
+    useHistogramRender(containerRef, data, overlayData, opts);
 
     return (
         <>
@@ -178,7 +182,6 @@ export const ThresholdSelectHistogram = ({
     const opts = useMemo<HistogramOptions>(
         () => ({
             numBins: numBins,
-            overlayData,
             binDomain: { min: dataMin, max: dataMax },
             xAxis: { max: max, label: label },
             displayOpts: updatedDisplayOpts,
@@ -189,10 +192,10 @@ export const ThresholdSelectHistogram = ({
                 onChange: onRangeSelect,
             },
         }),
-        [numBins, overlayData, dataMin, dataMax, max, label, updatedDisplayOpts, initialRange, limitType, onRangeSelect]
+        [numBins, dataMin, dataMax, max, label, updatedDisplayOpts, initialRange, limitType, onRangeSelect]
     );
 
-    useHistogramRender(containerRef, data, opts);
+    useHistogramRender(containerRef, data, overlayData, opts);
 
     return (
         <>

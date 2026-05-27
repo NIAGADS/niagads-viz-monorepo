@@ -24,7 +24,6 @@ const HISTOGRAM_COLORS = {
 
 export interface HistogramOptions {
     numBins: number;
-    overlayData?: number[];
     binDomain?: Range; // minimum bin start, maximum bin end
     xAxis?: AxisConfig;
     displayOpts?: DisplayProps;
@@ -153,8 +152,8 @@ function buildBins(
     };
 }
 
-export function histogram(container: HTMLElement, data: number[], opts: HistogramOptions) {
-    const showOverlayLayer = !!opts.overlayData;
+export function histogram(container: HTMLElement, data: number[], opts: HistogramOptions, overlayData?: number[]) {
+    const showOverlayLayer = !!overlayData;
     const legendSpacing = showOverlayLayer ? 18 : 0;
 
     function isSelected(d: HistogramBin, selectedRange?: Range): boolean {
@@ -208,7 +207,7 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
         return bin.baselineCount;
     }
 
-    const { bins, binMin, binMax, binSize, dataMax, hasOverflow } = buildBins(data, opts.overlayData, opts);
+    const { bins, binMin, binMax, binSize, dataMax, hasOverflow } = buildBins(data, overlayData, opts);
     const cap = opts.xAxis?.max;
     const maxBinValue = d3.max(bins, (bin) => Math.max(bin.baselineCount, bin.overlayCount ?? 0)) || 0;
 
@@ -353,7 +352,7 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
         .on("mousemove", function (event, d) {
             d3.select(this).attr("fill", applyHoverFill(d)).attr("opacity", 1);
             const activeCount = showOverlayLayer ? (d.overlayCount ?? 0) : d.baselineCount;
-            const activeTotal = showOverlayLayer ? opts.overlayData!.length : data.length;
+            const activeTotal = showOverlayLayer ? overlayData!.length : data.length;
             const freq = activeTotal > 0 ? ((activeCount / activeTotal) * 100).toFixed(1) : "0.0";
             const lastRegularBinIdx = hasOverflow ? bins.length - 2 : bins.length - 1;
 
