@@ -39,6 +39,9 @@ const __resolveTextFilterValue = (value: string | undefined, otherValues: string
 };
 
 const PieChartFilter = ({ column, values, otherValues }: TextFilterProps) => {
+    // TODO: need to get allvalues and calcuated sorted unique values -> this passed as data unless
+    // table is filtered in which case they get passed as reference data.
+    // TODO: -> determine if table is filtered from column? might need another table instance accessor function
     const chartData: PieChartDataRow[] = useMemo(
         () =>
             Object.entries(values).map(([key, count]) => ({
