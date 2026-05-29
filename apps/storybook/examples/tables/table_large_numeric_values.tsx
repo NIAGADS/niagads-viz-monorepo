@@ -1,6 +1,7 @@
-import "../../examples/tables/custom_table_cell_styles.css";
+// import "../../examples/tables/custom_table_cell_styles.css";
+import  "./custom_table_cell_styles.css";
 
-import { getPvalueStyle, getRelativePositionClassName } from "./styling_functions";
+import { getPvalueStyle, getRelativePositionClassName, getImpactClassName } from "./styling_functions";
 
 import { TableConfig as Table } from "@niagads/table";
 
@@ -36,6 +37,7 @@ export const TABLE_DEFINITION: Table = {
             header: "Variant",
             required: true,
             disableColumnFilter: true,
+            styling: { getClassName: () => "mono-value" },
         },
         {
             id: "pvalue",
@@ -54,7 +56,7 @@ export const TABLE_DEFINITION: Table = {
             description:
                 "variant identified from ADSP whole-genome sequencing efforts that has passed the ADSP QC protocol; <em>NOT</em> an indicator of AD-risk",
             type: "boolean",
-            styling: { getStyle: (value: any) => ({ color: "red" }) },
+            styling: { getClassName: () => "is_adsp_variant" },
         },
         { id: "ref_snp_id", header: "RefSNP ID", disableColumnFilter: true },
         {
@@ -62,6 +64,7 @@ export const TABLE_DEFINITION: Table = {
             header: "Impact",
             description:
                 "Most severe impact predicted for this variant on the gene, using the ADSP Annotation Pipeline",
+            styling: { getClassName: getImpactClassName },
         },
 
         {
@@ -69,6 +72,8 @@ export const TABLE_DEFINITION: Table = {
             header: "Consequence",
             description:
                 "Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline",
+            styling: { getClassName: getImpactClassName },
+                
         },
         { id: "population", filterOpts: { filterType: "multiselect" } },
         { id: "diagnosis", disableColumnFilter: true },

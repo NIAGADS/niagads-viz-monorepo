@@ -1,106 +1,108 @@
 /* RenderingTestTable.css */
-.badge-purple {
+
+/* ── TEXT COLOR UTILITIES ── */
+/* 
+.red-text    { color: red; }
+.blue-text   { color: blue; }
+.green-text  { color: green; }
+.orange-txt  { color: orange; } 
+*/
+
+.red-text    { color: #dc2626; }
+.blue-text   { color: #3d5a80; }
+.green-text  { color: #059669; }
+.orange-txt  { color: #d97706; }
+
+.mono-value {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+}
+
+
+/* ── STANDALONE BADGES ── */
+/* shared base */
+.badge-purple,
+.pvalue-badge {
     display: inline-block;
     padding: 0.25em 0.75em;
-    background: #ede7f6; /* light purple */
-    color: #4b006e; /* deep purple for contrast */
+}
+.mono-value {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+}
+/* individual */
+.badge-purple {
+    /* background: #ede7f6;
+    color: #4b006e; */
+    background: #ddeaf8;
+    color: #293241;
     border-radius: 1em;
     font-weight: 600;
     font-size: 0.95em;
-    transition:
-        background 0.2s,
-        color 0.2s;
+    transition: background 0.2s, color 0.2s;
     cursor: default;
 }
 .badge-purple:hover {
-    background: #d1b3ff; /* slightly darker on hover */
+    /* background: #d1b3ff;
+    color: #fff; */
+    background: #4a7fc1;
     color: #fff;
 }
 
-.red-text {
-    color: red;
+.pvalue-badge {
+    /* background: #cccccc; */
+    background: #dde3ef;
+    border-radius: 0.8em;
+    font-family: var(--font-mono);
 }
 
-.blue-text {
-    color: blue;
-}
 
-.green-text {
-    color: green;
-}
-.orange-txt {
-    color: orange;
-}
+/* ── UIBADGE OVERRIDES ── */
+/* applied via UIBadge component; these override base .badge styles */
 
-.approval-badge {
-    color: white;
-    background: green;
-}
+/* .approval-badge  { color: white; background: green; }
+.failure-badge   { color: red; bordercolor: red; background: #ffe5e5; }
+.upstream        { background: green; }
+.downstream      { background: red; }
+.is_adsp_variant { color: red; background: white; } 
+*/
 
-.failure-badge {
-    color: red;
-    bordercolor: red;
-    background: #ffe5e5;
-}
+.approval-badge  { color: #fff; background: #059669; }
+.failure-badge   { color: #dc2626; border-color: #dc2626; background: #fee2e2; }
+.upstream        { background: #3d5a80; }
+.downstream      { background: #b45309; }
+.is_adsp_variant { color: #dc2626; background: #fff; }
 
+
+/* ── IMPACT / CONSEQUENCE ── */
+/* TODO: define styles */
+.modifier { }
+.high     { }
+.low      { }
+/* .moderate { background: cornflowerblue; }
+.moderate { background: goldenrod; } */
+.moderate { background: #4a7fc1; }
+.moderate { background: #d97706; }
+
+
+/* ── LINK BUTTON ── */
 .link-button {
     display: inline-block;
-    padding: 0.5em 1em;
-    background: #007bff;
+    /* padding: 0.5em 1em; */
+    padding: 0.5rem 1rem;
+    /* background: #007bff;
     color: white;
-    border: 1px solid #0056b3;
+    border: 1px solid #0056b3; */
+    background: #3d5a80;
+    color: #fff;
+    border: 1px solid #293241;
     border-radius: 0.25em;
     text-decoration: none;
     font-weight: 500;
     cursor: pointer;
-    transition:
-        background 0.2s,
-        border-color 0.2s;
+    transition: background 0.2s, border-color 0.2s;
 }
-
-.link-button:hover {
-    background: #0056b3;
-    border-color: #003d82;
-}
-
-.link-button:active {
-    background: #003d82;
-    border-color: #002752;
-}
-
-.pvalue-badge {
-    background: #cccccc;
-    padding: 0.25em 0.75em;
-    border-radius: 0.8em;
-    display: inline-block;
-}
-
-.modifier {
-}
-
-.high {
-}
-
-.low {
-}
-
-.moderate {
-    background: cornflowerblue;
-}
-
-.moderate {
-    background: goldenrod;
-}
-
-.upstream {
-    background: green;
-}
-
-.downstream {
-    background: red;
-}
-
-.is_adsp_variant {
-    color: red;
-    background: white;
-}
+/* .link-button:hover  { background: #0056b3; border-color: #003d82; }
+.link-button:active { background: #003d82; border-color: #002752; } */
+.link-button:hover  { background: #293241; border-color: #1e2a3a; }
+.link-button:active { background: #1e2a3a; border-color: #1e2a3a; }

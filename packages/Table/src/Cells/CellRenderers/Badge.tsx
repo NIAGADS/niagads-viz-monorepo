@@ -71,7 +71,7 @@ export const BooleanBadge = <T,>({ props }: TextRenderer<T>) => {
         iconOnly: _hasOwnProperty("icon", props),
     };
 
-    const hasCustomStyling = _hasOwnProperty("classNames", props) || _hasOwnProperty("style", props);
+    const hasCustomStyling = _hasOwnProperty("className", props) || _hasOwnProperty("style", props);
     if (value === false && !hasCustomStyling) {
         return renderNullValue(value);
     }
