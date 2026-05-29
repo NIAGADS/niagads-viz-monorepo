@@ -12,6 +12,7 @@ export interface PieChartDataPoint {
 
 export interface PieChartOptions {
     displayOpts?: DisplayProps;
+    referenceData?: PieChartDataPoint[];
     onClick?: (id: string) => void;
     selectedId?: string;
 }
@@ -25,6 +26,7 @@ const PIE_CHART_COLORS = {
     arcOpacity: 1,
     arcOpacityHover: 0.8,
     arcOpacitySelected: 1,
+    referenceArcOpacity: 0.55,
     arcFillSelected: "#d97706",
     arcFilterSelected:
         "drop-shadow(0 0 3px rgba(217, 119, 6, 0.8)) drop-shadow(0 0 8px rgba(217, 119, 6, 0.6)) drop-shadow(0 0 12px rgba(217, 119, 6, 0.4))",
@@ -55,6 +57,19 @@ interface PieChartState {
     total: number;
     tooltip: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
 }
+
+const getCombinedData = (data: PieChartDataPoint[], referenceData?: PieChartDataPoint[]): PieChartDataPoint[] => {
+    const combinedData = new Map<string, PieChartDataPoint>();
+
+    referenceData?.forEach((d) => combinedData.set(d.id, d));
+    data.forEach((d) => {
+        if (!combinedData.has(d.id)) {
+            combinedData.set(d.id, d);
+        }
+    });
+
+    return Array.from(combinedData.values());
+};
 
 export function updatePieChartSelection(container: HTMLElement, selectedId?: string): void {
     const svg = d3.select(container).select<SVGSVGElement>("svg");
@@ -110,6 +125,7 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
 
     // Radius is limited by the smaller dimension
     const radius = Math.min(innerWidth, innerHeight) / 2;
+    const hasReferenceData = !!options.referenceData?.length;
 
     // Create SVG
     const svg = d3
@@ -131,17 +147,17 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
     const arc = d3
         .arc<d3.PieArcDatum<PieChartDataPoint>>()
         .innerRadius(0)
-        .outerRadius(radius - 10);
+        .outerRadius(hasReferenceData ? radius * 0.66 : radius - 10);
 
-    const arcLabel = d3
+    const referenceArc = d3
         .arc<d3.PieArcDatum<PieChartDataPoint>>()
-        .innerRadius(radius * 0.67)
-        .outerRadius(radius * 0.67);
+        .innerRadius(radius * 0.7)
+        .outerRadius(radius - 10);
 
     // Color scale - using default D3 palette
     const colorScale = d3
         .scaleOrdinal<string, string>()
-        .domain(data.map((d) => d.id))
+        .domain(getCombinedData(data, options.referenceData).map((d) => d.id))
         .range(d3.schemeCategory10);
 
     // Create tooltip
@@ -161,6 +177,29 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
         .style("display", "none")
         .style("text-align", "left")
         .style("border", "2px solid transparent");
+
+    if (hasReferenceData && options.referenceData) {
+        const referenceArcs = g
+            .selectAll(".reference-arc")
+            .data(pie(options.referenceData))
+            .enter()
+            .append("g")
+            .attr("class", "reference-arc");
+
+        referenceArcs
+            .append("path")
+            .attr("d", referenceArc as any)
+            .attr("fill", (d) => {
+                if (isNA(d.data)) {
+                    return PIE_CHART_COLORS.arcFillNA;
+                }
+                return colorScale(d.data.id);
+            })
+            .style("stroke", PIE_CHART_COLORS.arcStroke)
+            .style("stroke-width", PIE_CHART_COLORS.arcStrokeWidth)
+            .style("opacity", PIE_CHART_COLORS.referenceArcOpacity)
+            .style("pointer-events", "none");
+    }
 
     // Create pie arcs
     const arcs = g

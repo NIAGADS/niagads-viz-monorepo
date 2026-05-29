@@ -16,24 +16,40 @@ export interface PieChartDataRow {
 
 export interface PieChartProps {
     data: PieChartDataRow[];
+    referenceData?: PieChartDataRow[];
     onClick?: (key: string) => void;
     displayOpts?: DisplayProps;
     legendPosition?: "right" | "bottom" | "none";
     title?: string;
 }
 
-const Legend = ({ data }: { data: PieChartDataRow[] }) => {
+const getCombinedData = (data: PieChartDataRow[], referenceData?: PieChartDataRow[]): PieChartDataRow[] => {
+    const combinedData = new Map<string, PieChartDataRow>();
+
+    referenceData?.forEach((d) => combinedData.set(d.id, d));
+    data.forEach((d) => {
+        if (!combinedData.has(d.id)) {
+            combinedData.set(d.id, d);
+        }
+    });
+
+    return Array.from(combinedData.values());
+};
+
+const Legend = ({ data, referenceData }: { data: PieChartDataRow[]; referenceData?: PieChartDataRow[] }) => {
+    const legendData = useMemo(() => getCombinedData(data, referenceData), [data, referenceData]);
+
     const colorScale = useMemo(() => {
         const scale: Record<string, string> = {};
-        data.forEach((d, i) => {
+        legendData.forEach((d, i) => {
             scale[d.id] = d3.schemeCategory10[i % d3.schemeCategory10.length];
         });
         return scale;
-    }, [data]);
+    }, [legendData]);
 
     return (
         <div className={styles.legend}>
-            {data.map((item) => (
+            {legendData.map((item) => (
                 <div key={item.id} className={styles["legend-item"]}>
                     <div
                         className={styles["legend-color"]}
@@ -48,7 +64,7 @@ const Legend = ({ data }: { data: PieChartDataRow[] }) => {
     );
 };
 
-const PieChart = ({ data, onClick, displayOpts, title, legendPosition = "right" }: PieChartProps) => {
+const PieChart = ({ data, referenceData, onClick, displayOpts, title, legendPosition = "right" }: PieChartProps) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const chartRef = useRef<HTMLDivElement | null>(null);
     const [selectedId, setSelectedId] = useState<string | undefined>();
@@ -74,6 +90,7 @@ const PieChart = ({ data, onClick, displayOpts, title, legendPosition = "right" 
 
         const opts: PieChartOptions = {
             displayOpts: updatedDisplayOpts,
+            referenceData,
             onClick: handleSelect,
             selectedId,
         };
@@ -84,7 +101,7 @@ const PieChart = ({ data, onClick, displayOpts, title, legendPosition = "right" 
                 destroyPieChart(chartRef.current);
             }
         };
-    }, [data, displayOpts]);
+    }, [data, referenceData, displayOpts]);
 
     // Update selection styling (runs when selectedId changes)
     useEffect(() => {
@@ -107,7 +124,7 @@ const PieChart = ({ data, onClick, displayOpts, title, legendPosition = "right" 
                 />
                 {legendPosition !== "none" && (
                     <div className={styles["legend-wrapper"]}>
-                        <Legend data={data} />
+                        <Legend data={data} referenceData={referenceData} />
                     </div>
                 )}
             </div>
