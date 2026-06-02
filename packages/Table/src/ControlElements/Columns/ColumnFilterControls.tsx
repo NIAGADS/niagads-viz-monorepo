@@ -30,11 +30,10 @@ interface ColumnFilterControlsProps {
 interface FilterCardProps extends StylingProps {
     columns: Column<any, unknown>[];
     coreRowCount: number;
-    span: CardSpan;
     filterType: ColumnFilterType;
 }
 
-const FilterCard = ({ columns, coreRowCount, span, filterType, className, style }: FilterCardProps) => {
+const FilterCard = ({ columns, coreRowCount, filterType, className, style }: FilterCardProps) => {
     const [redundantFilters, setRedundantFilters] = useState<string[]>([]);
 
     // filter out any columns that have the same value for every row in the table
@@ -60,12 +59,10 @@ const FilterCard = ({ columns, coreRowCount, span, filterType, className, style 
     const hasFilters = renderedFilters.length > 0;
 
     return hasFilters ? (
-        <Card className={className} style={style} span={span}>
+        <div className={className} style={style}>
             {renderedFilters}
-        </Card>
-    ) : (
-        <></>
-    );
+        </div>
+    ) : null;
 };
 
 export const ColumnFilterControls = ({
@@ -75,7 +72,7 @@ export const ColumnFilterControls = ({
     onRemoveAll,
     onRemoveFilter,
 }: ColumnFilterControlsProps) => {
-    const [isExpanded, setIsExpanded] = useState(false);
+    // const [isExpanded, setIsExpanded] = useState(false);
 
     const visualFilterColumns = useMemo(
         () =>
@@ -114,13 +111,16 @@ export const ColumnFilterControls = ({
         booleanFilterColumns.length + multiselectFilterColunns.length + selectFilterColunns.length > 0;
 
     return (
-       
         <div className={styles["filter-controls-container"]}>
             {activeFilters.length > 0 && (
-                <FilterChipBar label={"Active Column Filters:"}>
-                    <Button color="default" onClick={onRemoveAll}>
-                        <InlineIcon icon={<TrashIcon size={18} />}>Remove all</InlineIcon>
-                    </Button>
+                <FilterChipBar
+                    label={`Active Filters (${activeFilters.length})`}
+                    actions={
+                        <Button color="default" onClick={onRemoveAll}>
+                            <InlineIcon icon={<TrashIcon size={16} />}>Clear all</InlineIcon>
+                        </Button>
+                    }
+                >
                     {activeFilters.map((filter) => (
                         <FilterChip
                             key={`filter-chip-${filter.id}`}
@@ -131,58 +131,49 @@ export const ColumnFilterControls = ({
                     ))}
                 </FilterChipBar>
             )}
-            <Card>
-                <CardHeader>At a Glance</CardHeader>
-                {/* <CardBody style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}> */}
-                <CardBody>
-                     <CardGrid>
-                        {visualFilterColumns.map((column) => (
-                            <Card layout="grid" key={`visual-filter-card-${column.id}`} span={4} outline={false}>
-                                <FilterComponent key={`visual-filter-${column.id}`} column={column} />
-                            </Card>
-                        ))}
-                     </CardGrid>
-                </CardBody>
-            </Card>
+
+            <section className={styles["glance-section"]}>
+                <header className={styles["glance-header"]}>
+                    <span>At a Glance</span>
+                </header>
+
+                <div className={styles["visual-filter-grid"]}>
+                    {visualFilterColumns.map((column) => (
+                        <div className={styles["visual-filter-panel"]} key={`visual-filter-panel-${column.id}`}>
+                            <FilterComponent key={`visual-filter-${column.id}`} column={column} />
+                        </div>
+                    ))}
+                </div>
+            </section>
 
             {hasAdditionalFilters && (
                 <>
-                    <div  className={styles["filter-controls-toggle"]} onClick={() => setIsExpanded(!isExpanded)}>
-                        <InlineIcon icon={isExpanded ? <ChevronDown /> : <ChevronRight />}>
-                            <span>Additional Filters</span>
-                        </InlineIcon>
-                         {activeFilters.length > 0 && (
-                            <span className={styles["filter-controls-toggle-badge"]}>
-                                {activeFilters.length} active
-                            </span>
-                        )}
+                    <div className={styles["additional-filters-header"]}>
+                        <span>Additional Filters</span>
                     </div>
-                    {isExpanded && (
-                        <CardGrid>
-                            <FilterCard
-                                columns={booleanFilterColumns}
-                                coreRowCount={coreRowCount}
-                                filterType={"boolean"}
-                                span={4}
-                            />
-                            <FilterCard
-                                columns={selectFilterColunns}
-                                coreRowCount={coreRowCount}
-                                filterType={"select"}
-                                span={4}
-                            />
-                            <FilterCard
-                                columns={multiselectFilterColunns}
-                                coreRowCount={coreRowCount}
-                                filterType={"multiselect"}
-                                span={4}
-                            />
-                        </CardGrid>
-                    )}
-                   
+
+                    <div className={styles["additional-filter-grid"]}>
+                        <FilterCard
+                            className={styles["additional-filter-panel"]}
+                            columns={booleanFilterColumns}
+                            coreRowCount={coreRowCount}
+                            filterType={"boolean"}
+                        />
+                        <FilterCard
+                            className={styles["additional-filter-panel"]}
+                            columns={selectFilterColunns}
+                            coreRowCount={coreRowCount}
+                            filterType={"select"}
+                        />
+                        <FilterCard
+                            className={styles["additional-filter-panel"]}
+                            columns={multiselectFilterColunns}
+                            coreRowCount={coreRowCount}
+                            filterType={"multiselect"}
+                        />
+                    </div>
                 </>
             )}
         </div>
-        
     );
 };

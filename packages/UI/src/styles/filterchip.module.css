@@ -1,72 +1,116 @@
 .chip {
     display: inline-flex;
     align-items: center;
+    gap: 6px;
+    max-width: 280px;
+    min-height: 26px;
     background-color: var(--surface);
-    border-radius: 16px;
-    padding: 0.5rem;
-    font-size: 0.95em;
-    margin: 2px;
+    border-radius: 90px;
+    padding: 3px 7px;
+    font-size: 0.75rem;
+    margin: 0;
     border: 1px solid var(--border);
     box-shadow: var(--shadow-sm);
     transition:
         background 0.2s,
         border 0.2s;
     color: var(--text-primary);
+    white-space: nowrap;
 }
+
 .selected {
     background: var(--primary-blue);
     color: var(--text-inverse);
     border-color: var(--primary-blue);
 }
+
 .disabled {
     opacity: 0.5;
     pointer-events: none;
 }
+
 .label {
-    margin-left: 6px;
+    margin-left: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+
 .value {
-    margin-left: 6px;
-    padding: 3px;
-
-    font-size: xx-small;
-
-    border-style: solid;
-    border-radius: 10px;
-    border-width: thin;
-    border-color: var(--secondary-blue);
-
+    margin-left: 0;
+    padding: 3px 7px;
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: "Roboto Mono", monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1;
+    border-radius: 999px;
+    border: 1px solid var(--secondary-blue);
     background: var(--secondary-blue);
-
     color: var(--text-inverse);
 }
+
 .removeBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
     background: none;
     border: none;
     color: inherit;
-    font-size: 1.1em;
+    font-size: 1rem;
     cursor: pointer;
-    padding: 0 2px;
+    padding: 0;
     line-height: 1;
     border-radius: 50%;
     transition: background 0.2s;
 }
+
 .removeBtn:hover {
     background: var(--secondary-blue);
     color: #fff;
 }
+
 .chipBar {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
     align-items: center;
-    margin: 0.5rem 0;
+    gap: 10px;
+    flex-wrap: nowrap;
+    margin: 0;
+    padding: 10px 18px;
+    background: var(--gray-50, #f8fafc);
+    border-bottom: 1px solid var(--border, #dce4ef);
 }
+
 .chipBarLabel {
-    font-weight: 500;
-    margin-right: 0.75rem;
-    color: var(--text-primary, #111827);
-    font-size: 1em;
+    flex: 0 0 auto;
+    font-weight: 700;
+    margin-right: 0;
+    color: var(--text-secondary, #374a60);
+    font-size: 0.75rem;
+    /* text-transform: uppercase; */
+    letter-spacing: 0.04em;
     display: inline-flex;
     align-items: center;
+    white-space: nowrap;
+}
+
+.chipBarItems {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-x: auto;
+    padding: 2px 0;
+}
+
+.chipBarActions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 auto;
+    margin-left: auto;
 }

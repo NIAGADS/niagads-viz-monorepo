@@ -22,7 +22,9 @@ export const FilterChip = ({
 }: FilterChipProps) => {
     return (
         <span
-            className={`${styles.chip} ${selected ? styles.selected : ""} ${disabled ? styles.disabled : ""} ${className}`}
+            className={[styles.chip, selected && styles.selected, disabled && styles.disabled, className]
+                .filter(Boolean)
+                .join(" ")}
             style={style}
         >
             {onRemove && !disabled && (
@@ -45,13 +47,17 @@ export const FilterChip = ({
 export interface FilterChipBarProps extends StylingProps {
     children: ReactNode;
     label?: string;
+    actions?: ReactNode;
 }
 
-export const FilterChipBar = ({ label, children, className = "", style = {} }: FilterChipBarProps) => {
+export const FilterChipBar = ({ label, children, actions, className = "", style = {} }: FilterChipBarProps) => {
     return (
-        <div className={`${styles.chipBar || ""} ${className}`} style={style}>
+        <div className={[styles.chipBar, className].filter(Boolean).join(" ")} style={style}>
             {label && <span className={styles.chipBarLabel}>{label}</span>}
-            {children}
+
+            <div className={styles.chipBarItems}>{children}</div>
+
+            {actions && <div className={styles.chipBarActions}>{actions}</div>}
         </div>
     );
 };
