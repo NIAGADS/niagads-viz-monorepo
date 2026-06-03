@@ -2,17 +2,12 @@ import styles from "./ColumnFilterControls.module.css";
 
 import {
     Button,
-    Card,
-    CardBody,
-    CardGrid,
-    CardHeader,
-    CardSpan,
     FilterChip,
     FilterChipBar,
     InlineIcon,
     StylingProps,
 } from "@niagads/ui";
-import { ChevronDown, ChevronRight, TrashIcon } from "lucide-react";
+import { TrashIcon } from "lucide-react";
 import { Column, ColumnFilter, ColumnFiltersState } from "@tanstack/react-table";
 import React, { useEffect, useMemo, useState } from "react";
 
@@ -27,16 +22,16 @@ interface ColumnFilterControlsProps {
     onRemoveFilter: (filter: ColumnFilter) => void;
 }
 
-interface FilterCardProps extends StylingProps {
+interface FilterGroupProps extends StylingProps {
+    title: string;
     columns: Column<any, unknown>[];
     coreRowCount: number;
     filterType: ColumnFilterType;
 }
 
-const FilterCard = ({ columns, coreRowCount, filterType, className, style }: FilterCardProps) => {
+const FilterGroup = ({ title, columns, coreRowCount, filterType, className, style }: FilterGroupProps) => {
     const [redundantFilters, setRedundantFilters] = useState<string[]>([]);
 
-    // filter out any columns that have the same value for every row in the table
     useEffect(() => {
         const redundantColumnIds = columns
             .filter((column) => {
@@ -53,15 +48,16 @@ const FilterCard = ({ columns, coreRowCount, filterType, className, style }: Fil
             columns
                 .filter((column) => !redundantFilters.includes(column.id))
                 .map((column) => <FilterComponent key={`${filterType}-filter-${column.id}`} column={column} />),
-        [redundantFilters]
+        [columns, filterType, redundantFilters]
     );
 
     const hasFilters = renderedFilters.length > 0;
 
     return hasFilters ? (
-        <div className={className} style={style}>
-            {renderedFilters}
-        </div>
+        <section className={className} style={style}>
+            <header className={styles["additional-filter-panel-header"]}>{title}</header>
+            <div className={styles["additional-filter-panel-body"]}>{renderedFilters}</div>
+        </section>
     ) : null;
 };
 
@@ -72,8 +68,6 @@ export const ColumnFilterControls = ({
     onRemoveAll,
     onRemoveFilter,
 }: ColumnFilterControlsProps) => {
-    // const [isExpanded, setIsExpanded] = useState(false);
-
     const visualFilterColumns = useMemo(
         () =>
             filterableColumns
@@ -82,33 +76,71 @@ export const ColumnFilterControls = ({
                         column.columnDef.meta?.filterType === "histogram" || column.columnDef.meta?.filterType === "pie"
                 )
                 .sort((a, b) => {
-                    // histogram comes first
-                    if (a.columnDef.meta?.filterType === "histogram" && b.columnDef.meta?.filterType === "pie")
+                    if (a.columnDef.meta?.filterType === "histogram" && b.columnDef.meta?.filterType === "pie") {
                         return -1;
-                    if (a.columnDef.meta?.filterType === "pie" && b.columnDef.meta?.filterType === "histogram")
+                    }
+
+                    if (a.columnDef.meta?.filterType === "pie" && b.columnDef.meta?.filterType === "histogram") {
                         return 1;
+                    }
+
                     return 0;
                 }),
         [filterableColumns]
     );
 
-    const booleanFilterColumns = useMemo(
-        () => filterableColumns.filter((column) => column.columnDef.meta?.filterType === "boolean"),
+    const additionalFilterColumns = useMemo(
+        () =>
+            filterableColumns.filter(
+                (column) =>
+                    column.columnDef.meta?.filterType === "boolean" ||
+                    column.columnDef.meta?.filterType === "select" ||
+                    column.columnDef.meta?.filterType === "multiselect"
+            ),
         [filterableColumns]
     );
 
-    const multiselectFilterColunns = useMemo(
-        () => filterableColumns.filter((column) => column.columnDef.meta?.filterType === "multiselect"),
-        [filterableColumns]
+    const variantFlagColumns = useMemo(
+        () => additionalFilterColumns.filter((column) => column.columnDef.meta?.filterType === "boolean"),
+        [additionalFilterColumns]
     );
 
-    const selectFilterColunns = useMemo(
-        () => filterableColumns.filter((column) => column.columnDef.meta?.filterType === "select"),
-        [filterableColumns]
+    const functionalAnnotationColumns = useMemo(
+        () =>
+            additionalFilterColumns.filter((column) => {
+                const header = column.columnDef.header?.toString().toLowerCase();
+
+                return header === "impact" || header === "consequence";
+            }),
+        [additionalFilterColumns]
     );
 
-    const hasAdditionalFilters =
-        booleanFilterColumns.length + multiselectFilterColunns.length + selectFilterColunns.length > 0;
+    const sampleContextColumns = useMemo(
+        () =>
+            additionalFilterColumns.filter((column) => {
+                const header = column.columnDef.header?.toString().toLowerCase();
+
+                return header === "population" || header === "tissue" || header === "biomarker";
+            }),
+        [additionalFilterColumns]
+    );
+
+    const groupedColumnIds = useMemo(
+        () =>
+            new Set([
+                ...variantFlagColumns.map((column) => column.id),
+                ...functionalAnnotationColumns.map((column) => column.id),
+                ...sampleContextColumns.map((column) => column.id),
+            ]),
+        [functionalAnnotationColumns, sampleContextColumns, variantFlagColumns]
+    );
+
+    const otherAdditionalColumns = useMemo(
+        () => additionalFilterColumns.filter((column) => !groupedColumnIds.has(column.id)),
+        [additionalFilterColumns, groupedColumnIds]
+    );
+
+    const hasAdditionalFilters = additionalFilterColumns.length > 0;
 
     return (
         <div className={styles["filter-controls-container"]}>
@@ -153,24 +185,39 @@ export const ColumnFilterControls = ({
                     </div>
 
                     <div className={styles["additional-filter-grid"]}>
-                        <FilterCard
+                        <FilterGroup
+                            title="Variant Flags"
                             className={styles["additional-filter-panel"]}
-                            columns={booleanFilterColumns}
+                            columns={variantFlagColumns}
                             coreRowCount={coreRowCount}
-                            filterType={"boolean"}
+                            filterType="boolean"
                         />
-                        <FilterCard
+
+                        <FilterGroup
+                            title="Functional Annotation"
                             className={styles["additional-filter-panel"]}
-                            columns={selectFilterColunns}
+                            columns={functionalAnnotationColumns}
                             coreRowCount={coreRowCount}
-                            filterType={"select"}
+                            filterType="select"
                         />
-                        <FilterCard
+
+                        <FilterGroup
+                            title="Sample / Study Context"
                             className={styles["additional-filter-panel"]}
-                            columns={multiselectFilterColunns}
+                            columns={sampleContextColumns}
                             coreRowCount={coreRowCount}
-                            filterType={"multiselect"}
+                            filterType="select"
                         />
+
+                        {otherAdditionalColumns.length > 0 && (
+                            <FilterGroup
+                                title="Other"
+                                className={styles["additional-filter-panel"]}
+                                columns={otherAdditionalColumns}
+                                coreRowCount={coreRowCount}
+                                filterType="select"
+                            />
+                        )}
                     </div>
                 </>
             )}
