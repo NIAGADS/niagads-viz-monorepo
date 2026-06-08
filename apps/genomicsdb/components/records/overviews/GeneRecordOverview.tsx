@@ -9,7 +9,8 @@ import { GWAS_ASSOC_SECTION } from "@/data/sections";
 import { GeneRecord } from "@/lib/types";
 import { RecordLink } from "../../Link";
 import { genomicLocationToSpan } from "@/lib/utils";
-// import styles from "../styles/record.module.css";
+
+import styles from "./overview.module.css";
 
 const GeneRecordOverview = ({ record }: { record: GeneRecord }) => {
     // Format location string: chr:start-end:strand / cytogenic_location
