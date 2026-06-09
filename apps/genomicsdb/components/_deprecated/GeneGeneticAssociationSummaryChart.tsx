@@ -5,7 +5,7 @@ import { AssociationTraitCategory, AssociationTraitSource, GeneticAssociationSum
 import { _fetch, fetchRecordAssociations } from "@/lib/route-handlers";
 
 import { InlineError } from "@/components/ErrorAlerts";
-import { Series } from "@niagads/charts";
+//import { Series } from "@niagads/charts";
 import { Skeleton } from "@niagads/ui";
 
 type RelativePosition = "in gene" | "upstream" | "downstream";
@@ -55,17 +55,17 @@ const build_chart_data = (summary: GeneticAssociationSummary) => {
     return Object.values(totals);
 };
 
-const build_chart_series = (summary: GeneticAssociationSummary): Series => {
-    const series = {};
-    Object.entries(summary).map(([source, traits]) => {
-        return traits.forEach((item: { trait_category: string; num_variants: Record<string, number> }) => {
-            const seriesKey: string = data_key(source, item.trait_category);
-            Object.assign(series, { [seriesKey]: item.trait_category });
-        });
-    });
+// const build_chart_series = (summary: GeneticAssociationSummary): Series => {
+//     const series = {};
+//     Object.entries(summary).map(([source, traits]) => {
+//         return traits.forEach((item: { trait_category: string; num_variants: Record<string, number> }) => {
+//             const seriesKey: string = data_key(source, item.trait_category);
+//             Object.assign(series, { [seriesKey]: item.trait_category });
+//         });
+//     });
 
-    return series as Series;
-};
+//     return series as Series;
+// };
 
 export async function GeneAssociationSummaryChart({ recordId }: AssociationSummaryChartProps) {
     async function fetchSummary(traitCategory: AssociationTraitCategory, source: AssociationTraitSource) {
@@ -101,7 +101,7 @@ export async function GeneAssociationSummaryChart({ recordId }: AssociationSumma
     }
 
     const data: SummaryData[] = build_chart_data(summary);
-    const series: Series = build_chart_series(summary);
+    // const series: Series = build_chart_series(summary);
     return (
         <div>
             <Skeleton type={"default"} />
