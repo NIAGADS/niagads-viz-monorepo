@@ -5,7 +5,7 @@ import { MainLayout } from "@/components/MainLayout";
 import { LoadingProvider } from "@/components/providers/LoadingProvider";
 import { SessionProvider } from "@/components/providers/SessionProvider";
 import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]/route";
+import { authOptions } from "./api/auth/[...nextauth]/authConfig";
 
 import "./globals.css";
 
