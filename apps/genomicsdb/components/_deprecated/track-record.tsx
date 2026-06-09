@@ -1,13 +1,13 @@
 "use client";
 
 import { ExternalLink, Eye, Download, Share2, FileText } from "lucide-react";
-import type { TrackRecord as TrackRecordType } from "./types";
 import Placeholder from "./placeholder";
+
 import "./record.css";
 import "./placeholder.css";
 
 interface TrackRecordProps {
-    record: TrackRecordType;
+    record: any;
     activeSection: string;
 }
 
@@ -17,11 +17,11 @@ export function TrackRecord({ record, activeSection }: TrackRecordProps) {
         if (!record.subject_phenotypes?.study_diagnosis) return null;
 
         const totalCases = record.subject_phenotypes.study_diagnosis.reduce(
-            (sum, study) => sum + (study.num_cases || 0),
+            (sum: any, study: any) => sum + (study.num_cases || 0),
             0
         );
         const totalControls = record.subject_phenotypes.study_diagnosis.reduce(
-            (sum, study) => sum + (study.num_controls || 0),
+            (sum: any, study: any) => sum + (study.num_controls || 0),
             0
         );
 
@@ -206,7 +206,7 @@ export function TrackRecord({ record, activeSection }: TrackRecordProps) {
                                 <div className="mt-4">
                                     <h4>Covariates</h4>
                                     <div className="covariate-list">
-                                        {record.experimental_design.covariates.map((covariate, index) => (
+                                        {record.experimental_design.covariates.map((covariate: any, index: any) => (
                                             <span key={index} className="covariate-badge">
                                                 {covariate}
                                             </span>
@@ -220,7 +220,7 @@ export function TrackRecord({ record, activeSection }: TrackRecordProps) {
                             <div className="card">
                                 <h3>Publications</h3>
                                 <div className="publication-list">
-                                    {record.provenance.pubmed_id.map((pmid, index) => (
+                                    {record.provenance.pubmed_id.map((pmid: any, index: any) => (
                                         <div key={index} className="publication-item">
                                             <a
                                                 href={`https://pubmed.ncbi.nlm.nih.gov/${pmid.replace("PMID:", "")}`}
@@ -249,7 +249,7 @@ export function TrackRecord({ record, activeSection }: TrackRecordProps) {
                                     <div className="phenotype-section">
                                         <h4>Disease</h4>
                                         <div className="phenotype-list">
-                                            {record.subject_phenotypes.disease.map((disease, index) => (
+                                            {record.subject_phenotypes.disease.map((disease: any, index: any) => (
                                                 <span key={index} className="phenotype-badge">
                                                     {disease}
                                                 </span>
@@ -262,7 +262,7 @@ export function TrackRecord({ record, activeSection }: TrackRecordProps) {
                                     <div className="phenotype-section">
                                         <h4>Ethnicity</h4>
                                         <div className="phenotype-list">
-                                            {record.subject_phenotypes.ethnicity.map((ethnicity, index) => (
+                                            {record.subject_phenotypes.ethnicity.map((ethnicity: any, index: any) => (
                                                 <span key={index} className="phenotype-badge">
                                                     {ethnicity}
                                                 </span>
@@ -286,7 +286,7 @@ export function TrackRecord({ record, activeSection }: TrackRecordProps) {
                                                 </thead>
                                                 <tbody>
                                                     {record.subject_phenotypes.study_diagnosis.map(
-                                                        (diagnosis, index) => (
+                                                        (diagnosis: any, index: any) => (
                                                             <tr key={index}>
                                                                 <td>{diagnosis.phenotype?.term || "All"}</td>
                                                                 <td>{diagnosis.num_cases?.toLocaleString() || "—"}</td>
@@ -318,11 +318,13 @@ export function TrackRecord({ record, activeSection }: TrackRecordProps) {
                                         <div className="biosample-item">
                                             <span className="info-label">Tissue:</span>
                                             <div className="biosample-values">
-                                                {record.biosample_characteristics.tissue.map((tissue, index) => (
-                                                    <span key={index} className="biosample-badge">
-                                                        {tissue}
-                                                    </span>
-                                                ))}
+                                                {record.biosample_characteristics.tissue.map(
+                                                    (tissue: any, index: any) => (
+                                                        <span key={index} className="biosample-badge">
+                                                            {tissue}
+                                                        </span>
+                                                    )
+                                                )}
                                             </div>
                                         </div>
                                     )}
@@ -330,11 +332,13 @@ export function TrackRecord({ record, activeSection }: TrackRecordProps) {
                                         <div className="biosample-item">
                                             <span className="info-label">Biomarker:</span>
                                             <div className="biosample-values">
-                                                {record.biosample_characteristics.biomarker.map((biomarker, index) => (
-                                                    <span key={index} className="biosample-badge">
-                                                        {biomarker}
-                                                    </span>
-                                                ))}
+                                                {record.biosample_characteristics.biomarker.map(
+                                                    (biomarker: any, index: any) => (
+                                                        <span key={index} className="biosample-badge">
+                                                            {biomarker}
+                                                        </span>
+                                                    )
+                                                )}
                                             </div>
                                         </div>
                                     )}
@@ -346,7 +350,7 @@ export function TrackRecord({ record, activeSection }: TrackRecordProps) {
                             <div className="card">
                                 <h3>Cohorts</h3>
                                 <div className="cohort-list">
-                                    {record.cohorts.map((cohort, index) => (
+                                    {record.cohorts.map((cohort: any, index: any) => (
                                         <span key={index} className="cohort-badge">
                                             {cohort}
                                         </span>

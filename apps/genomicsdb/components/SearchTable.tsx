@@ -2,7 +2,7 @@
 
 import { SearchResult } from "@/lib/types";
 import { prefixClientRoute } from "@/lib/utils";
-import Table, { TableColumn }from "@niagads/table";
+import Table, { TableColumn } from "@niagads/table";
 
 interface SearchTableProps {
     searchResults: SearchResult[];
@@ -36,6 +36,7 @@ const tableColumns: TableColumn[] = [
     {
         id: "type",
         header: "Record Type",
+        filterOpts: { filterType: "multiselect" },
     },
     {
         id: "description",
