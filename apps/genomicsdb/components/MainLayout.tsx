@@ -45,4 +45,4 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
             />
         </div>
     );
-}
+};

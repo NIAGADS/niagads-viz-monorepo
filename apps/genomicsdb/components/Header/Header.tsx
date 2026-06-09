@@ -95,18 +95,16 @@ const UserMenu = () => {
     return session ? (
         <ActionMenu label={`${session.user?.name}`} icon={User}>
             <div className="user-menu">
-                <Link className="user-menu-item" href={`${getPublicUrl(true)}/user/profile`}>Profile</Link>
+                <Link className="user-menu-item" href={`${getPublicUrl(true)}/user/profile`}>
+                    Profile
+                </Link>
                 <div className="user-menu-item" onClick={() => signOut()}>
                     Sign Out
                 </div>
             </div>
         </ActionMenu>
     ) : (
-        <div
-            onClick={() => signIn("cognito")}
-            className={`nav-link`}
-            style={{ cursor: "pointer" }}
-        >
+        <div onClick={() => signIn("cognito")} className={`nav-link`} style={{ cursor: "pointer" }}>
             Log In
         </div>
     );
