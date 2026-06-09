@@ -318,11 +318,13 @@ export function TrackRecord({ record, activeSection }: TrackRecordProps) {
                                         <div className="biosample-item">
                                             <span className="info-label">Tissue:</span>
                                             <div className="biosample-values">
-                                                {record.biosample_characteristics.tissue.map((tissue: any, index: any) => (
-                                                    <span key={index} className="biosample-badge">
-                                                        {tissue}
-                                                    </span>
-                                                ))}
+                                                {record.biosample_characteristics.tissue.map(
+                                                    (tissue: any, index: any) => (
+                                                        <span key={index} className="biosample-badge">
+                                                            {tissue}
+                                                        </span>
+                                                    )
+                                                )}
                                             </div>
                                         </div>
                                     )}
@@ -330,11 +332,13 @@ export function TrackRecord({ record, activeSection }: TrackRecordProps) {
                                         <div className="biosample-item">
                                             <span className="info-label">Biomarker:</span>
                                             <div className="biosample-values">
-                                                {record.biosample_characteristics.biomarker.map((biomarker: any, index: any) => (
-                                                    <span key={index} className="biosample-badge">
-                                                        {biomarker}
-                                                    </span>
-                                                ))}
+                                                {record.biosample_characteristics.biomarker.map(
+                                                    (biomarker: any, index: any) => (
+                                                        <span key={index} className="biosample-badge">
+                                                            {biomarker}
+                                                        </span>
+                                                    )
+                                                )}
                                             </div>
                                         </div>
                                     )}

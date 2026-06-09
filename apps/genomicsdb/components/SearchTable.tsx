@@ -35,7 +35,7 @@ const tableColumns: TableColumn[] = [
     {
         id: "type",
         header: "Record Type",
-        filterOpts: { filterType: "multiselect"},
+        filterOpts: { filterType: "multiselect" },
     },
     {
         id: "description",
