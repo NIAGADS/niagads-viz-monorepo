@@ -1,0 +1,26 @@
+/* ── LAYOUT ── */
+.record-shell {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ── CONTENT ── */
+.record-content {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    min-width: 0;
+    transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+.record-content.sidebar-collapsed {
+    margin-left: 52px;
+}
+
+@media (max-width: 768px) {
+    /* Main content always full width */
+    .record-content {
+        margin-left: 0 !important;
+    }
+}

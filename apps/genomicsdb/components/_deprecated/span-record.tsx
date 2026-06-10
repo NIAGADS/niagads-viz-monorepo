@@ -4,10 +4,9 @@ import "./record.css";
 import "./placeholder.css";
 
 import Placeholder from "./placeholder";
-import type { SpanRecord as SpanRecordType } from "./types";
 
 interface SpanRecordProps {
-    record: SpanRecordType;
+    record: any;
     activeSection: string;
 }
 

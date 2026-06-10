@@ -3,8 +3,8 @@ import { ExternalLink, Minus } from "lucide-react";
 import React, { ReactNode } from "react";
 
 import { InlineIcon } from "@niagads/ui";
-import badgeStyles from "../styles/record-type.module.css";
-import styles from "../styles/record.module.css";
+import badgeStyles from "./record-type.module.css";
+import styles from "./overview.module.css";
 
 export interface RecordOverviewProps {
     record: EntityRecord;

@@ -1,17 +1,16 @@
 import { Alert, Button, InlineIcon } from "@niagads/ui";
-
 import { CloudCog } from "lucide-react";
-
 import { APIPagination } from "@niagads/common";
 import { TooltipClient } from "@niagads/ui/client";
-import styles from "./styles/pagination-message.module.css";
+
+import styles from "./pagination-message.module.css";
 
 interface PaginationMessageProps {
     pagination: APIPagination;
     endpoint: string;
 }
 
-const PaginationMessage = ({ pagination, endpoint }: PaginationMessageProps) => {
+export const PaginationMessage = ({ pagination, endpoint }: PaginationMessageProps) => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
     const fullUrl = apiUrl + endpoint;
 
@@ -52,5 +51,3 @@ const PaginationMessage = ({ pagination, endpoint }: PaginationMessageProps) => 
         </Alert>
     );
 };
-
-export default PaginationMessage;
