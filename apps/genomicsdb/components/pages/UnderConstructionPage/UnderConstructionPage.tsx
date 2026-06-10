@@ -1,9 +1,10 @@
 "use client";
 
-import { Alert } from "@niagads/ui";
 import React from "react";
-import { RecordLink } from "./Link";
-import styles from "./styles/UnderConstruction.module.css";
+import { Alert } from "@niagads/ui";
+import { RecordLink } from "@/components/Link";
+
+import styles from "./under-construction.module.css";
 
 export const UnderConstructionPage = ({ source }: { source: string }) => (
     <div className={styles.container}>

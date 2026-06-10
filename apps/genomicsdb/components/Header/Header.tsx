@@ -4,17 +4,21 @@ import { Menu } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import logo from "@public/genomicsdb_logo.svg";
-import { usePathname, useRouter } from "next/navigation";
-import { EnhancedSearch } from "./EnhancedSearch";
-import "./header.css";
+import { usePathname } from "next/navigation";
+import { EnhancedSearch } from "../EnhancedSearch";
 import { getPublicUrl } from "@/lib/utils";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { User } from "lucide-react";
+import { ActionMenu } from "@niagads/ui/client";
+
+import "./header.css";
 
 interface HeaderProps {
     onMenuToggle: () => void;
     showSearch?: boolean;
 }
 
-export function Header({ onMenuToggle, showSearch = true }: HeaderProps) {
+export const Header = ({ onMenuToggle, showSearch = true }: HeaderProps) => {
     const pathname = usePathname();
 
     const isActive = (path: string) => {
@@ -40,7 +44,6 @@ export function Header({ onMenuToggle, showSearch = true }: HeaderProps) {
                     </div>
                 )}
             </div>
-
             <button
                 className="mobile-menu-button"
                 onClick={onMenuToggle}
@@ -49,7 +52,6 @@ export function Header({ onMenuToggle, showSearch = true }: HeaderProps) {
             >
                 <Menu size={24} />
             </button>
-
             <nav className="main-nav" role="navigation" aria-label="Main navigation">
                 <Link
                     href={`${getPublicUrl(true)}/browse-datasets`}
@@ -79,7 +81,31 @@ export function Header({ onMenuToggle, showSearch = true }: HeaderProps) {
                 >
                     About
                 </Link>
+                <UserMenu />
             </nav>
         </header>
     );
-}
+};
+
+const UserMenu = () => {
+    const { data: session } = useSession();
+
+    console.log(session);
+
+    return session ? (
+        <ActionMenu label={`${session.user?.name}`} icon={User}>
+            <div className="user-menu">
+                <Link className="user-menu-item" href={`${getPublicUrl(true)}/user/profile`}>
+                    Profile
+                </Link>
+                <div className="user-menu-item" onClick={() => signOut()}>
+                    Sign Out
+                </div>
+            </div>
+        </ActionMenu>
+    ) : (
+        <div onClick={() => signIn("cognito")} className={`nav-link`} style={{ cursor: "pointer" }}>
+            Log In
+        </div>
+    );
+};

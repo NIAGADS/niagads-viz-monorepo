@@ -3,9 +3,10 @@
 import { X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { EnhancedSearch } from "./EnhancedSearch";
+import { EnhancedSearch } from "../EnhancedSearch";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+
 import "./mobile-menu.css";
 
 interface MobileMenuProps {
@@ -16,13 +17,13 @@ interface MobileMenuProps {
     searchSuggestions?: string[];
 }
 
-export function MobileMenu({
+export const MobileMenu = ({
     isOpen,
     onClose,
     showSearch = false,
     searchPlaceholder = "Search genes, variants, regions...",
     searchSuggestions = [],
-}: MobileMenuProps) {
+}: MobileMenuProps) => {
     const pathname = usePathname();
     const router = useRouter();
 
@@ -118,4 +119,4 @@ export function MobileMenu({
             </div>
         </>
     );
-}
+};

@@ -31,6 +31,7 @@ const tableColumns: TableColumn[] = [
         header: "Record ID",
         type: "link",
         required: true,
+        disableColumnFilter: true,
     },
     {
         id: "type",
@@ -40,5 +41,6 @@ const tableColumns: TableColumn[] = [
     {
         id: "description",
         header: "Description",
+        disableColumnFilter: true,
     },
 ];
