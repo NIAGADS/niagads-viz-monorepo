@@ -182,48 +182,80 @@ const BooleanFilter = ({ column, values }: Omit<TextFilterProps, "otherValues">)
 
 const NumericFilter = ({ column }: FilterProps) => {
     const naValue = column.columnDef.meta?.naValue || DEFAULT_NA_VALUE;
-    const isPvalue = column.columnDef.meta!.type === "pvalue";
+    const isPvalue: boolean = column.columnDef.meta!.type === "pvalue";
 
-    const handleRangeFilter = (range: Range) => {
-        if (isPvalue) {
-            const threshold = Math.pow(10, -range.min);
-            column.setFilterValue(threshold);
-        } else {
-            column.setFilterValue(range);
-        }
-    };
+    const referenceData = useMemo(() => {
+        // filter out nulls
+        const values = isPvalue
+            ? (column.getAllValues(true, naValue) as number[]).map((v) => negLog10(v))
+            : (column.getAllValues(true, naValue) as number[]);
 
-    const dataRange = column.getFacetedMinMaxValues();
+        const rd = {
+            values: values,
+            range:
+                values.length > 0
+                    ? {
+                          min: Math.min(...values),
+                          max: Math.max(...values),
+                      }
+                    : undefined,
+        };
+        return rd;
+    }, [column.id]);
+
+    let filterValue: any = column.getFilterValue();
+    if (filterValue === undefined) {
+        filterValue = isPvalue ? referenceData.range!.min : referenceData.range;
+    }
+
+    const handleRangeFilter = useCallback(
+        (range: Range) => {
+            if (isPvalue) {
+                const threshold = range.min; //Math.pow(10, -range.min);
+                column.setFilterValue(threshold);
+            } else {
+                // TODO / FIXME: create a filterFn that takes a range
+                column.setFilterValue(range);
+            }
+        },
+        [column.id]
+    );
+
     const title = column.columnDef.header!.toString();
 
-    if (dataRange) {
-        if (isPvalue) {
-            const values = (column.getAllValues(true, naValue) as number[]).map((v) => negLog10(v));
+    const displayOpts = { width: 250 };
 
+    if (referenceData.range) {
+        const filteredValues: number[] = isPvalue
+            ? (column.getFilteredValues(true, naValue) as number[]).map((v) => negLog10(v))
+            : (column.getFilteredValues(true, naValue) as number[]);
+
+        if (isPvalue) {
             return (
                 <ThresholdSelectHistogram
-                    limit={7}
-                    limitType="max"
+                    limit={filterValue as number}
+                    limitType={"max"}
                     onRangeSelect={handleRangeFilter}
-                    data={values}
+                    data={referenceData.values}
+                    overlayData={filteredValues}
                     numBins={50}
                     title={title}
                     max={50}
-                    displayOpts={{ width: 250 }}
+                    displayOpts={displayOpts}
+                    yAxisScale="log10"
                 />
             );
         }
 
-        const values = column.getAllValues(true, naValue) as number[];
-
         return (
             <RangeSelectHistogram
-                range={{ min: dataRange[0], max: dataRange[1] }}
+                range={filterValue}
                 onRangeSelect={handleRangeFilter}
-                data={values}
+                data={referenceData.values}
                 numBins={50}
                 title={title}
-                displayOpts={{ width: 250 }}
+                overlayData={filteredValues}
+                displayOpts={displayOpts}
             />
         );
     }

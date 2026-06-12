@@ -22,7 +22,7 @@ export interface SelectionOverlayInstance {
 }
 
 const OVERLAY_COLORS = {
-    bandFill: "rgba(217, 119, 6, 0.12)",
+    bandFill: "rgba(217, 119, 6, 0.05)",
     bandStroke: "#d97706",
     handleFill: "#ffffff",
     handleStroke: "#a65b00",
@@ -42,11 +42,8 @@ function snap(value: number, domainMin: number, step?: number): number {
 }
 
 function normalizeRange(selection: Range, domain: Range): Range {
-    console.log(`selection - ${selection.min} - ${selection.max}`);
-    console.log(`domain - ${domain.min} - ${domain.max}`);
     const min = clamp(selection.min, domain.min, domain.max);
     const max = clamp(selection.max, domain.min, domain.max);
-    console.log(`normalized - ${min} - ${max}`);
 
     return { min: Math.min(min, max), max: Math.max(min, max) };
 }

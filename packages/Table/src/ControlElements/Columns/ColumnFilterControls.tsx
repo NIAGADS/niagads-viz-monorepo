@@ -80,7 +80,22 @@ export const ColumnFilterControls = ({
 
                     return 0;
                 }),
-        [filterableColumns]
+        []
+    );
+
+    const booleanFilterColumns = useMemo(
+        () => filterableColumns.filter((column) => column.columnDef.meta?.filterType === "boolean"),
+        []
+    );
+
+    const multiselectFilterColunns = useMemo(
+        () => filterableColumns.filter((column) => column.columnDef.meta?.filterType === "multiselect"),
+        []
+    );
+
+    const selectFilterColunns = useMemo(
+        () => filterableColumns.filter((column) => column.columnDef.meta?.filterType === "select"),
+        []
     );
 
     const additionalFilterColumns = useMemo(
