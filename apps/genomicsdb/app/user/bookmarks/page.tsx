@@ -1,16 +1,21 @@
-import { Card, CardBody, CardHeader } from "@niagads/ui";
+import { addBookmark } from "@/app/api/bookmarks/route";
+import { getPublicUrl } from "@/lib/utils";
+import { Button, Card, CardBody, CardHeader } from "@niagads/ui";
+import { BookmarkAdder } from "./BookmarkAdder";
 
 const UserBookmarksPage = async () => {
-    const bookmarks = await fetch("http://localhost:3000/api/bookmarks");
-    console.log(bookmarks)
+    const bookmarks = await fetch(`${getPublicUrl()}/api/bookmarks`);
 
-    return <div>
-        <Card>
-            <CardHeader>Bookmarks</CardHeader>
-            <CardBody>
-            </CardBody>
-        </Card>
-    </div>;
+    return (
+        <div>
+            <Card>
+                <CardHeader>Bookmarks</CardHeader>
+                <CardBody>
+                    <BookmarkAdder />
+                </CardBody>
+            </Card>
+        </div>
+    );
 };
 
 export default UserBookmarksPage;
