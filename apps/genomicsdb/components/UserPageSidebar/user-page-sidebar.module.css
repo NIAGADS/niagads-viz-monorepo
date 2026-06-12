@@ -1,0 +1,21 @@
+
+.sidebar {
+    width: 180px;
+
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+
+    position: fixed;
+    top: var(--topbar-h, 56px);
+    left: 0;
+    bottom: 0;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    z-index: 100;
+
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
