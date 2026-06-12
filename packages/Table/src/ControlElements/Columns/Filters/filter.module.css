@@ -1,45 +1,124 @@
-.filter-checkbox-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
-    padding: 1rem;
-    min-width: 400px;
+.filter-field-label {
+    font-size: 0.75rem;
+    /* font-weight: 700; */
+    /* color: var(--muted, #6b7a95); */
+    /* text-transform: uppercase; */
+    letter-spacing: 0.05em;
+    line-height: 1.2;
 }
 
-.filter-checkbox-item {
+/* ── PILL MULTISELECT FILTERS ── */
+
+.filter-pill-container {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    flex-direction: column;
+    gap: 0.625rem;
 }
 
-.filter-checkbox-label {
-    font-size: 0.875rem;
-    flex: 1;
+.filter-pill-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    min-width: 0;
 }
+
+.filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 30px;
+    max-width: 100%;
+    padding: 5px 8px;
+    border: 1px solid var(--border, #d0dbe8);
+    border-radius: 999px;
+    background: var(--surface, #fff);
+    color: var(--text-primary, #1a2636);
+    font: inherit;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(30, 42, 58, 0.04);
+    transition:
+        background 0.12s ease,
+        border-color 0.12s ease,
+        color 0.12s ease,
+        box-shadow 0.12s ease;
+}
+
+.filter-pill:hover {
+    border-color: var(--secondary-blue, #5f8db8);
+    background: #f8fbff;
+}
+
+.filter-pill-selected {
+    border-color: var(--secondary-blue, #5f8db8);
+    background: var(--secondary-blue, #5f8db8);
+    color: var(--text-inverse, #fff);
+    box-shadow: 0 2px 6px rgba(60, 100, 140, 0.22);
+}
+
+.filter-pill-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1em;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.filter-pill-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.filter-pill-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 18px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: rgba(95, 141, 184, 0.15);
+    color: var(--secondary-blue, #5f8db8);
+    font-size: 0.65rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.filter-pill-selected .filter-pill-count {
+    background: rgba(255, 255, 255, 0.22);
+    color: #fff;
+}
+
+/* ── BOOLEAN FILTERS ── */
 
 .filter-boolean-container {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-}
-
-.filter-boolean-label {
-    font-size: 0.875rem;
-    font-weight: 500;
+    gap: 0.625rem;
 }
 
 .filter-boolean-item {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
     gap: 0.5rem;
-    justify-content: space-between;
+    min-height: 28px;
 }
 
 .filter-boolean-value {
-    font-size: 0.875rem;
-    flex: 1;
+    min-width: 0;
+    font-size: 0.75rem;
+    color: var(--text-primary, #1a2636);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .filter-boolean-count {
-    font-size: 0.875rem;
+    font-size: 0.65rem;
+    font-weight: 700;
 }
