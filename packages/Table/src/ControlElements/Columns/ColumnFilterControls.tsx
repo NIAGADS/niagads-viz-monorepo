@@ -109,6 +109,9 @@ export const ColumnFilterControls = ({
         [filterableColumns]
     );
 
+    // FIXME: after aggregating additional columns build these dynamically from column filter groups
+    // with order based on order pulled from table options
+
     const variantFlagColumns = useMemo(
         () => additionalFilterColumns.filter((column) => column.columnDef.meta?.filterType === "boolean"),
         [additionalFilterColumns]
