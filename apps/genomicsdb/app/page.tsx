@@ -2,9 +2,13 @@
 
 import { BarChart3, Database, Search } from "lucide-react";
 import { Button, Card, FeatureCard } from "@niagads/ui";
+import { EnhancedSearch } from "@/components/EnhancedSearch";
 
 import styles from "@/components/styles/HomePage.module.css";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import diagram from "@public/main-diagram.svg";
+
 
 // import { EnhancedSearch } from "../EnhancedSearch";
 
@@ -38,35 +42,45 @@ export default function Home() {
     return (
         <div>
             {/* Hero Section */}
-            <section className={styles["heroSection"]}>
-                <div className="max-text-width">
-                    <h1 className={styles["heroTitle"]}>
-                        The NIAGADS <br />
-                        Alzheimer's Genomics Database
-                    </h1>
-                    <p className={styles["heroSubtitle"]}>
-                        is an interactive knowledgebase for Alzheimer's disease (AD) genetics. It provides a platform
-                        for data sharing, discovery, and analysis to help advance the understanding of the complex
-                        genetic underpinnings of AD neurodegeneration and accelerate the progress of research on AD and
-                        AD related dementias (ADRD).
-                    </p>
+            <section className={styles["hero-section"]}>
+                <div className={styles["hero-grid"]}>
+                    <div className={styles["hero-grid-item"]}>
+                        <h1 className={styles["hero-title"]}>
+                            Explore the genetics of Alzheimer's disease
+                        </h1>
+                          {/* <h1 className={styles["hero-title"]}>
+                            The NIAGADS <br />
+                            Alzheimer's Genomics Database
+                        </h1> */}
+                        {/* <p className={styles["hero-subtitle"]}>
+                            is an interactive knowledgebase for Alzheimer's disease (AD) genetics. It provides a platform
+                            for data sharing, discovery, and analysis to help advance the understanding of the complex
+                            genetic underpinnings of AD neurodegeneration and accelerate the progress of research on AD and
+                            AD related dementias (ADRD).
+                        </p> */}
+                        <p className={styles["hero-subtitle"]}>NIAGADS GenomicsDB is a comprehensive resource of GWAS summary statistics and related data to help the research community discover and interpret genetic risk for AD.</p>
 
-                    <div className={styles["heroSearch"]}>
-                        {/*<EnhancedSearch
-                            placeholder="Search genes, variants, or genomic regions (e.g., APOE, rs429358)"
-                            autoRoute={true}
-                        />*/}
+                        <div className={styles["hero-search"]}>
+                            <EnhancedSearch
+                                placeholder="Search genes, variants, or genomic regions (e.g., APOE, rs429358)"
+                                autoRoute={true}
+                            />
+                            <div className={styles["chip-row"]}>
+                                <span className={styles["cl"]}>Try:</span>
+                                <span className={styles["chip"]}>APOE</span>
+                                <span className={styles["chip"]} >TREM2</span>
+                                <span className={styles["chip"]} >rs429358</span>
+                                <span className={styles["chip"]} >chr19:45…</span>
+                                <span className={styles["chip"]}>CSF biomarkers</span>
+                            </div>
+                        </div>
                     </div>
-
-                    <div className={styles["heroButtons"]}>
-                        <Button color="primary" onClick={() => router.push("/browse-datasets")} className="bg-primary">
-                            <Search size={20} />
-                            Start Exploring
-                        </Button>
-                        <Button onClick={() => router.push("/browse-datasets")}>
-                            <Database size={20} />
-                            Browse Datasets
-                        </Button>
+                    <div className={styles["hero-grid-item"]}>
+                             <div className={styles["hero-graphic"]}>
+                                <figure>
+                                    <Image width={1000} height={500} src={diagram} alt="Niagads GenomicsDB diagram" />
+                                </figure>
+                             </div>
                     </div>
                 </div>
             </section>
@@ -82,7 +96,7 @@ export default function Home() {
                         </p>
                     </div>
 
-                    <div className={styles["featureGrid"]}>
+                    <div className={styles["feature-grid"]}>
                         {features.map((feature, index) => (
                             <FeatureCard
                                 key={`feature-${index}`}
@@ -97,12 +111,12 @@ export default function Home() {
             </section>
 
             {/* Stats Section */}
-            <section className={styles["statsSection"]}>
+            <section className={styles["stats-section"]}>
                 <div className="max-text-width">
                     <h2 className="text-2xl font-bold text-primary mb-15">
                         Explore AD/ADRD Genetic Evidence for AD/ADRD
                     </h2>
-                    <div className={styles["sectionDescription"]}>
+                    <div className={styles["section-description"]}>
                         For each dataset we provide a detailed interactive report summarizing the top risk-associated
                         variants. These variants are are annotated using the ADSP Annotation Pipeline (Butkiewicz et al.
                         Bioinformatics 2018 / PMID:{" "}
@@ -112,8 +126,8 @@ export default function Home() {
                         ) and mapped against sequence features and functional genomics data tracks to help researchers
                         explore the potential impact of risk-associated variants in a broader genomics context.
                     </div>
-                    <div className={styles["mainStatNumber"]}>1.3B Annotated Variants</div>
-                    <div className={styles["statsGrid"]}>
+                    <div className={styles["main-stat-number"]}>1.3B Annotated Variants</div>
+                    <div className={styles["stats-grid"]}>
                         {stats.map((stat, index) => (
                             <div key={index} className={styles["statItem"]}>
                                 <div className={styles["statNumber"]}>{stat.number}</div>
@@ -135,24 +149,24 @@ export default function Home() {
                     </div>
 
                     {/*FIXME: what type of Cards would these be?*/}
-                    <div className={styles["featureGrid"]}>
+                    <div className={styles["feature-grid"]}>
                         <Card span={4} onClick={() => router.push("/record/gene/APOE")}>
-                            <div className={styles["featureTitle"]}>Explore APOE</div>
-                            <p className={styles["featureDescription"]}>
+                            <div className={styles["feature-title"]}>Explore APOE</div>
+                            <p className={styles["feature-description"]}>
                                 Investigate the most well-known Alzheimer's risk gene and its variants
                             </p>
                         </Card>
 
                         <Card span={4} onClick={() => router.push("/search?q=Alzheimer's disease")}>
-                            <div className={styles["featureTitle"]}>AD GWAS Data</div>
-                            <p className={styles["featureDescription"]}>
+                            <div className={styles["feature-title"]}>AD GWAS Data</div>
+                            <p className={styles["feature-description"]}>
                                 Browse genome-wide association studies for Alzheimer's disease
                             </p>
                         </Card>
 
                         <Card span={4} hover={true} onClick={() => router.push("/record/variant/chr19:44908684")}>
-                            <div className={styles["featureTitle"]}>Chromosome 19</div>
-                            <p className={styles["featureDescription"]}>
+                            <div className={styles["feature-title"]}>Chromosome 19</div>
+                            <p className={styles["feature-description"]}>
                                 Explore variants on chromosome 19, enriched for AD associations
                             </p>
                         </Card>
