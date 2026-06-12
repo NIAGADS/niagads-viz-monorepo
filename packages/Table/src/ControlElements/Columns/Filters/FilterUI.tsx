@@ -209,7 +209,7 @@ const NumericFilter = ({ column }: FilterProps) => {
                     numBins={50}
                     title={title}
                     max={50}
-                    displayOpts={{ width: 250 }}
+                    displayOpts={{ width: 400 }}
                 />
             );
         }
@@ -223,7 +223,7 @@ const NumericFilter = ({ column }: FilterProps) => {
                 data={values}
                 numBins={50}
                 title={title}
-                displayOpts={{ width: 250 }}
+                displayOpts={{ width: 400 }}
             />
         );
     }
