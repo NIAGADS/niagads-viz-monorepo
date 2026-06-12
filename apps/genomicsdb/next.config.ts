@@ -2,13 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
     reactStrictMode: true,
-
-    eslint: {
-        ignoreDuringBuilds: true,
-    },
-    typescript: {
-        ignoreBuildErrors: true,
-    },
     allowedDevOrigins: [
         "localhost:3000", // Default Next.js dev server
         "127.0.0.1:3000", // Localhost with IP

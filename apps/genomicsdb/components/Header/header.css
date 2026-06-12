@@ -28,7 +28,7 @@
     top: 0;
     left: 0;
     right: 0;
-    z-index: 50;
+    z-index: 101;
 }
 .logo-container {
     display: flex;
@@ -136,4 +136,28 @@
     .main-nav {
         display: none;
     }
+}
+
+.user-menu {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.user-menu-item {
+    display: block;
+
+    width: 100%;
+    padding: 2px;
+
+    border-radius: var(--border-radius);
+    border: 1px;
+
+    cursor: pointer;
+
+    color: var(--text-primary);
+}
+
+.user-menu-item:hover {
+    background-color: var(--gray-50);
+    text-decoration: none;
 }
