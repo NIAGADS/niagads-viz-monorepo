@@ -1,12 +1,6 @@
 import styles from "./ColumnFilterControls.module.css";
 
-import {
-    Button,
-    FilterChip,
-    FilterChipBar,
-    InlineIcon,
-    StylingProps,
-} from "@niagads/ui";
+import { Button, FilterChip, FilterChipBar, InlineIcon, StylingProps } from "@niagads/ui";
 import { TrashIcon } from "lucide-react";
 import { Column, ColumnFilter, ColumnFiltersState } from "@tanstack/react-table";
 import React, { useEffect, useMemo, useState } from "react";

@@ -46,7 +46,6 @@ const RecordPage = ({ recordId, recordType: recordTypeProp, recordData }: Record
 
     const [tableCounts, setTableCounts] = useState<Record<string, number>>({});
 
-
     // Drives imperative open requests sent down to RecordAnnotationSection.
     // Using a { sectionId, seq } shape instead of just sectionId so that clicking the same
     // section twice in a row still triggers the useEffect (seq always increments).
@@ -83,7 +82,6 @@ const RecordPage = ({ recordId, recordType: recordTypeProp, recordData }: Record
         // RecordAnnotationSection handles the actual DOM check — we avoid doing it here
         // because CollapsibleSection uses CSS modules so class names aren't predictable.
         setOpenRequest((prev) => ({ sectionId: parentId, seq: (prev?.seq ?? 0) + 1 }));
-
 
         // Scroll after a short delay to let the section open before measuring position
         setTimeout(() => {
@@ -130,10 +128,7 @@ const RecordPage = ({ recordId, recordType: recordTypeProp, recordData }: Record
                             setActiveNav(sectionId);
                         }}
                         openRequest={openRequest}
-                        onTableLoad={(tableId, count) =>
-                            setTableCounts((prev) => ({ ...prev, [tableId]: count }))
-                        }
-
+                        onTableLoad={(tableId, count) => setTableCounts((prev) => ({ ...prev, [tableId]: count }))}
                     />
                 </div>
             </div>

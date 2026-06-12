@@ -17,22 +17,25 @@ interface RecordSidebarProps {
     onSectionSelect: (sectionId: string) => void;
 }
 
-const RecordSidebar = ({ title, sections, activeTabs, tableCounts, activeNav, onActiveNavChange,onToggleCollapse, onSectionSelect }: RecordSidebarProps) => {
+const RecordSidebar = ({
+    title,
+    sections,
+    activeTabs,
+    tableCounts,
+    activeNav,
+    onActiveNavChange,
+    onToggleCollapse,
+    onSectionSelect,
+}: RecordSidebarProps) => {
     const [mobileOpen, setMobileOpen] = useState(false);
-    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);   
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     // First section with tables starts expanded
     const [navExpanded, setNavExpanded] = useState<Record<string, boolean>>(() => {
-        const defaultId = sections.find(
-            (s) => s.tables && s.tables.length > 0 && !s.underConstruction
-        )?.id;
-        return sections.reduce(
-            (prev, s) => ({ ...prev, [s.id]: s.id === defaultId }),
-            {} as Record<string, boolean>
-        );
+        const defaultId = sections.find((s) => s.tables && s.tables.length > 0 && !s.underConstruction)?.id;
+        return sections.reduce((prev, s) => ({ ...prev, [s.id]: s.id === defaultId }), {} as Record<string, boolean>);
     });
 
-    const toggleNavExpand = (id: string) =>
-        setNavExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
+    const toggleNavExpand = (id: string) => setNavExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
 
     // Scroll-based active tracking
     const observerRef = useRef<IntersectionObserver | null>(null);
@@ -66,12 +69,7 @@ const RecordSidebar = ({ title, sections, activeTabs, tableCounts, activeNav, on
 
     return (
         <>
-            {mobileOpen && (
-                <div
-                    className={styles["sidebar-overlay"]}
-                    onClick={() => setMobileOpen(false)}
-                />
-            )}
+            {mobileOpen && <div className={styles["sidebar-overlay"]} onClick={() => setMobileOpen(false)} />}
 
             <button
                 className={styles["sidebar-fab"]}
@@ -106,7 +104,7 @@ const RecordSidebar = ({ title, sections, activeTabs, tableCounts, activeNav, on
                         const isActiveParent = hasChildren && activeNav === item.id;
                         const isActive = !hasChildren && activeNav === item.id;
                         const Icon = PAGE_SECTION_ICONS[item.icon];
-                        
+
                         return (
                             <div key={item.id}>
                                 <div
@@ -129,17 +127,14 @@ const RecordSidebar = ({ title, sections, activeTabs, tableCounts, activeNav, on
                                 >
                                     <Icon size={15} className={styles["nav-icon"]} />
                                     <span className={styles["nav-label"]}>{item.label}</span>
-                                    {hasChildren &&
-                                        (isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />)}
+                                    {hasChildren && (isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />)}
                                 </div>
 
                                 {hasChildren && (
                                     <div
                                         className={[
                                             styles["subnav"],
-                                            isExpanded && !sidebarCollapsed
-                                                ? styles["subnav-open"]
-                                                : "",
+                                            isExpanded && !sidebarCollapsed ? styles["subnav-open"] : "",
                                         ]
                                             .filter(Boolean)
                                             .join(" ")}
@@ -149,7 +144,9 @@ const RecordSidebar = ({ title, sections, activeTabs, tableCounts, activeNav, on
                                                 key={child.id}
                                                 className={[
                                                     styles["subnav-item"],
-                                                activeNav === item.id && activeTabs[item.id] === child.id ? styles["active"] : "",
+                                                    activeNav === item.id && activeTabs[item.id] === child.id
+                                                        ? styles["active"]
+                                                        : "",
                                                 ]
                                                     .filter(Boolean)
                                                     .join(" ")}
@@ -159,9 +156,7 @@ const RecordSidebar = ({ title, sections, activeTabs, tableCounts, activeNav, on
                                                     setMobileOpen(false);
                                                 }}
                                             >
-                                                <span className={styles["subnav-item-label"]}>
-                                                    {child.label}
-                                                </span>
+                                                <span className={styles["subnav-item-label"]}>{child.label}</span>
                                                 <span className={styles["nav-badge"]}>
                                                     {tableCounts[child.id] !== undefined
                                                         ? tableCounts[child.id].toLocaleString()

@@ -22,12 +22,7 @@ export const FilterChip = ({
 }: FilterChipProps) => {
     return (
         <span
-            className={[
-                styles["chip"],
-                selected && styles["selected"],
-                disabled && styles["disabled"],
-                className,
-            ]
+            className={[styles["chip"], selected && styles["selected"], disabled && styles["disabled"], className]
                 .filter(Boolean)
                 .join(" ")}
             style={style}

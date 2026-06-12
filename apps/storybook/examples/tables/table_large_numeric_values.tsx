@@ -1,5 +1,5 @@
 // import "../../examples/tables/custom_table_cell_styles.css";
-import  "./custom_table_cell_styles.css";
+import "./custom_table_cell_styles.css";
 
 import { getPvalueStyle, getRelativePositionClassName, getImpactClassName } from "./styling_functions";
 
@@ -73,7 +73,6 @@ export const TABLE_DEFINITION: Table = {
             description:
                 "Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline",
             styling: { getClassName: getImpactClassName },
-                
         },
         { id: "population", filterOpts: { filterType: "multiselect" } },
         { id: "diagnosis", disableColumnFilter: true },

@@ -117,16 +117,14 @@
     margin-left: auto;
 }
 .chip-bar-actions button {
-     padding: 6px 14px;
-     font-size: 0.75rem;
-     border-radius: 6px;
-
+    padding: 6px 14px;
+    font-size: 0.75rem;
+    border-radius: 6px;
 }
 /* ── RESPONSIVE ── */
 @media (max-width: 720px) {
-   /* .chip-bar {
+    /* .chip-bar {
         display: block;
        
     } */
-    
 }
