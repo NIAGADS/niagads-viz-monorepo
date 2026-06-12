@@ -7,7 +7,7 @@ import { resolveProcessor } from "./processors";
 interface routeParams {
     entity: string;
     id: string;
-    type: TableType;
+    type: string;
 }
 
 export async function GET(request: NextRequest, { params }: { params: Promise<routeParams> }) {
@@ -22,7 +22,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<ro
         return Response.json(rawTable);
     }
 
-    const processor = resolveProcessor(type);
+    const processor = resolveProcessor(type as TableType);
 
     return Response.json(processor(rawTable));
 }

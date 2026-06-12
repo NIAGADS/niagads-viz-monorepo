@@ -1,12 +1,8 @@
-import { BaseRecord, RegionRecord } from "@/lib/types";
+import { RegionRecord } from "@/lib/types";
 import { Card, CardBody, CardHeader, HelpIconWrapper } from "@niagads/ui";
 
-import { ExternalUrls } from "@/data/reference";
-import { RecordActionToolbar } from "../RecordActionToolbar";
-import RecordSectionUnderConstructionAlert from "../RecordSectionUnderConstructionAlert";
-import { genomicLocationToSpan } from "@/lib/utils";
 import { renderRecordTitle } from "./RecordOverview";
-import styles from "../styles/record.module.css";
+import styles from "./overview.module.css";
 
 const MAX_SPAN_FOR_SMALL_VARIANTS = 50000;
 
@@ -54,7 +50,6 @@ const RegionRecordOverview = async ({ record }: { record: RegionRecord }) => {
                             </HelpIconWrapper>
                         </div>
                     </div>
-                    <RecordActionToolbar id="region-actions" record={record} />
                 </CardBody>
             </Card>
 

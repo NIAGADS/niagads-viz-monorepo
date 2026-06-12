@@ -1,6 +1,4 @@
-/* TODO: review what is actualy used */
-
-/* Layout Components */
+/* App shell */
 .app-container {
     display: flex;
     flex-direction: column;
@@ -8,27 +6,22 @@
     background-color: var(--background);
 }
 
-/* Main Content Styles */
+/* Area below fixed header */
+.content-container {
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+    padding-top: var(--header-height);
+}
+
+/* Main page outlet */
 .main-content {
-    flex: 1;
-    padding: 0;
-    overflow-y: auto;
+    flex: 1 1 auto;
+    min-width: 0;
     background-color: var(--background);
 }
 
-.main-content.with-sidebar {
-    max-width: calc(100vw - var(--sidebar-width));
-}
-
-.main-content.without-sidebar {
-    max-width: 100vw;
-}
-
-.content-container {
-    display: flex;
-    flex: 1;
-}
-
+/* Optional utility wrapper for centered pages */
 .max-text-width {
     width: 100%;
     max-width: 1200px;
@@ -36,22 +29,38 @@
     padding: 1.5rem;
 }
 
+/* Generic content helpers */
+.content {
+    width: 100%;
+    min-width: 0;
+}
+
+.content-section {
+    margin-top: 0;
+}
+
 .content-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 2rem;
     gap: 1rem;
+    margin-bottom: 2rem;
 }
 
 .content-title {
     font-size: 2rem;
     font-weight: 700;
-    color: var(--text-primary);
     line-height: 1.2;
+    color: var(--text-primary);
 }
 
 .content-subtitle {
-    color: var(--text-secondary);
     margin-top: 0.5rem;
+    color: var(--text-secondary);
+}
+
+/* Page-level helpers */
+.page-container,
+.page-container-capped {
+    min-height: calc(100vh - var(--header-height));
 }

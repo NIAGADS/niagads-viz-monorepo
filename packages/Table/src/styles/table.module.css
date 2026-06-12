@@ -3,9 +3,7 @@
 .table-outer-container {
     width: 100%;
     overflow-x: auto;
-    font-family:
-        var(--font-inter), "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva,
-        Verdana, sans-serif;
+    font-family: var(--font-inter), sans-serif;
 }
 
 .table-container {
@@ -48,7 +46,7 @@
 }
 
 .table-td {
-    /*font-family: "Noto Sans", sans-serif;*/
+    font-family: var(--font-mono), monospace;
     font-size: 0.75rem;
     /* border-style: solid;
     border-width: 0 1px 1px 0;

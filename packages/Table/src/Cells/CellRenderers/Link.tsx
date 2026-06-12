@@ -7,7 +7,8 @@ import styles from "./cell.module.css";
 
 const _renderLink = (displayText: string, url: string, props: any) => {
     const target: LinkTarget = _get("target", props, "_blank");
-    const className = _get("className", props, styles.cellLink);
+    const customClassName = _get("className", props);
+    const className = [styles["link"], customClassName].filter(Boolean).join(" ");
     const style = _get("style", props);
     return (
         <a className={className} style={style} href={url} target={target}>

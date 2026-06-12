@@ -1,11 +1,10 @@
 import { APIPagination, _isEmpty } from "@niagads/common";
 import { APITableResponse, ProcessedTableResponse, TableSection } from "@/lib/types";
-import { Alert, Card, LoadingSpinner } from "@niagads/ui";
-import { ThresholdSelectHistogram as Histogram, PieChart, PieChartDataRow } from "@niagads/charts";
+import { Alert, LoadingSpinner } from "@niagads/ui";
 import Table, { TableOptions } from "@niagads/table";
 import { useEffect, useMemo, useState } from "react";
+import { PaginationMessage } from "./PaginationMessage/PaginationMessage";
 
-import PaginationMessage from "../PaginationMessage";
 import useSWR from "swr";
 
 export interface RecordTableProps {

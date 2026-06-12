@@ -14,9 +14,9 @@ import { ExternalUrls } from "@/data/reference";
 import { PredictedConsequenceSummary } from "@/lib/types";
 import React from "react";
 import { RecordLink } from "@/components/Link";
-import conseqStyles from "../styles/consequence.module.css";
+import conseqStyles from "../Consequence/consequence.module.css";
 import { mapConsequenceToClass } from "@/lib/utils";
-import styles from "../styles/most-severe-consequence-card.module.css";
+import styles from "./most-severe-consequence-card.module.css";
 
 export const MostSevereConsequenceCard = ({ conseq }: { conseq: PredictedConsequenceSummary }) => {
     const {

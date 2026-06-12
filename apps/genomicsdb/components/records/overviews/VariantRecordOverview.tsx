@@ -3,15 +3,14 @@ import { RecordOverview, renderRecordTitle } from "./RecordOverview";
 
 import { BadgeCheck } from "lucide-react";
 import { ExternalUrls } from "@/data/reference";
-import { MostSevereConsequenceCard } from "./MostSevereConsequenceCard";
-import { RecordActionToolbar } from "../RecordActionToolbar";
+import { MostSevereConsequenceCard } from "../MostSevereConsecuenceCard/MostSevereConsequenceCard";
 import { RecordLink } from "@/components/Link";
 import RecordSectionUnderConstructionAlert from "../RecordSectionUnderConstructionAlert";
 // import VariantAssociationSummaryChart from "./VariantGeneticAssociationSummaryChart";
 import { VariantRecord } from "@/lib/types";
 import { genomicLocationToSpan } from "@/lib/utils";
-import styles from "../styles/record.module.css";
-import variantStyles from "../styles/variant-record.module.css";
+import styles from "./overview.module.css";
+import variantStyles from "./variant-record.module.css";
 
 const VariantRecordOverview = ({ record }: { record: VariantRecord }) => {
     console.log(record);
@@ -57,7 +56,6 @@ const VariantRecordOverview = ({ record }: { record: VariantRecord }) => {
                             </div>
                         </div>
                     </div>
-                    <RecordActionToolbar id="variant-actions" record={record} />
                 </CardBody>
             </Card>
 
