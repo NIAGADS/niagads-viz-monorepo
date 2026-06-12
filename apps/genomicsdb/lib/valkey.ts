@@ -24,6 +24,38 @@ function withNamespace(namespace: string, key: string): string {
     return `${namespace}:${key}`;
 }
 
+// check if cache key exists
+export async function cacheKeyExists(namespace: string, key: string): Promise<boolean> {
+    return (await client.exists(withNamespace(namespace, key))) === 1;
+}
+
+// get all keys that contain a matching substring
+export const getKeys = async (match: string) => {
+    const stream = client.scanStream({
+        match: `*${match}*`
+    })
+
+    return new Promise((res, rej) => {
+        const keys: string[] = [];
+        stream.on("data", (chunk) => {
+            chunk.foreach((key: string) => {
+                if (!keys.includes(key)) {
+                    keys.push(key); 
+                }
+            })
+
+        })
+        stream.on(("end"), () => {
+            res(keys);
+        })
+    }).then((keys) =>{
+        return keys as string[];
+    }).catch(error =>{
+        console.log(`ERROR: could not get valkey keys that contain: ${match} --- `, error);
+        return [] as string[];
+    })
+}
+
 export async function getCache(namespace: string, key: string): Promise<string | null> {
     const exists: boolean = await cacheKeyExists(namespace, key);
     if (exists) {
@@ -33,13 +65,23 @@ export async function getCache(namespace: string, key: string): Promise<string |
     return null;
 }
 
-export async function setCache(namespace: string, key: string, value: any, ttl: TTLKey = DEFAULT_TTL): Promise<void> {
-    await client.set(withNamespace(namespace, key), JSON.stringify(value), "EX", TTL[ttl]);
+export async function getAllCache(namespace: string, key: string): Promise<string[]> {
+    const results: string[] = [];
+
+    const matchingKeys = await getKeys("");
+
+    if (matchingKeys) {
+        matchingKeys.forEach(async key => {
+            const value = await client.get(withNamespace(namespace, key));
+            results.push(JSON.parse(value!));
+        })
+    }
+
+    return results;
 }
 
-// check if cache key exists
-export async function cacheKeyExists(namespace: string, key: string): Promise<boolean> {
-    return (await client.exists(withNamespace(namespace, key))) === 1;
+export async function setCache(namespace: string, key: string, value: any, ttl: TTLKey = DEFAULT_TTL): Promise<void> {
+    await client.set(withNamespace(namespace, key), JSON.stringify(value), "EX", TTL[ttl]);
 }
 
 // extend ttl
