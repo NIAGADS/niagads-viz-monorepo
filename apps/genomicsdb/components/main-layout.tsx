@@ -6,7 +6,6 @@ import { Footer } from "@niagads/ui";
 import { MobileMenu } from "@/components/mobile-menu";
 import { BackToTop } from "./BackToTop";
 
-
 interface MainLayoutProps {
     children: ReactNode;
 }
@@ -45,7 +44,7 @@ export function MainLayout({ children }: MainLayoutProps) {
                     { display: "Terms", url: "#" },
                 ]}
             />
-             <BackToTop />
+            <BackToTop />
         </div>
     );
 }
