@@ -8,6 +8,14 @@ import styles from "@/components/styles/HomePage.module.css";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import diagram from "@public/main-diagram.svg";
+import KnownADGenesSection from "@/components/HomePage/KnownADGenesSection";
+import QueryExploreSection from "@/components/HomePage/QueryExploreSection";
+import DataAtAGlance from "@/components/HomePage/DataAtAGlance";
+import ExploreBySection from "@/components/HomePage/ExploreBySection";
+import GenomicsDBNumbers from "@/components/HomePage/GenomicsDBNumbers";
+import GeneticEvidenceSummary from "@/components/HomePage/GeneticEvidenceSummary";
+import ResearchStartersSection from "@/components/HomePage/ResearchStartersSection";
+
 
 
 // import { EnhancedSearch } from "../EnhancedSearch";
@@ -60,12 +68,12 @@ export default function Home() {
                         </p> */}
                         <p className={styles["hero-subtitle"]}>NIAGADS GenomicsDB is a comprehensive resource of GWAS summary statistics and related data to help the research community discover and interpret genetic risk for AD.</p>
 
-                        <div className={styles["hero-search"]}>
+                        {/* <div className={styles["hero-search"]}>
                             <EnhancedSearch
                                 placeholder="Search genes, variants, or genomic regions (e.g., APOE, rs429358)"
                                 autoRoute={true}
                             />
-                            <div className={styles["chip-row"]}>
+                            <div className={styles["chips"]}>
                                 <span className={styles["cl"]}>Try:</span>
                                 <span className={styles["chip"]}>APOE</span>
                                 <span className={styles["chip"]} >TREM2</span>
@@ -73,7 +81,7 @@ export default function Home() {
                                 <span className={styles["chip"]} >chr19:45…</span>
                                 <span className={styles["chip"]}>CSF biomarkers</span>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                     <div className={styles["hero-grid-item"]}>
                              <div className={styles["hero-graphic"]}>
@@ -86,9 +94,34 @@ export default function Home() {
             </section>
 
             {/* Features Section */}
-            <section style={{ padding: "4rem 2rem" }}>
-                <div className="max-text-width">
-                    <div className="text-center mb-15">
+            <section className={styles["front-section"]}>
+                <div className={styles["home-grid"]}>
+                    <Card span={7}>
+                        <QueryExploreSection />
+                    </Card>
+                     <Card span={5}>
+                        <DataAtAGlance />
+                    </Card>
+                    <Card span={6}>
+                        <KnownADGenesSection />
+                    </Card>
+                     <Card span={6}>
+                        <GeneticEvidenceSummary />
+                    </Card>
+                   
+                     {/* <Card span={6}>
+                        <ExploreBySection />
+                    </Card> */}
+                      <Card span={12}>
+                        <ResearchStartersSection />
+                    </Card>
+                     {/* <Card span={6}>
+                        <GenomicsDBNumbers />
+                    </Card> */}
+                </div>    
+            </section>
+            <section className={styles["front-section"]}>
+                <div className="text-center mb-15">
                         <h2 className="text-3xl font-bold text-primary mb-1">Powerful Research Tools</h2>
                         <p className="text-lg text-secondary max-width-600">
                             Discover insights in Alzheimer's disease genomics with our comprehensive suite of analysis
@@ -107,11 +140,10 @@ export default function Home() {
                             ></FeatureCard>
                         ))}
                     </div>
-                </div>
             </section>
 
             {/* Stats Section */}
-            <section className={styles["stats-section"]}>
+            {/* <section className={styles["stats-section"]}>
                 <div className="max-text-width">
                     <h2 className="text-2xl font-bold text-primary mb-15">
                         Explore AD/ADRD Genetic Evidence for AD/ADRD
@@ -136,10 +168,10 @@ export default function Home() {
                         ))}
                     </div>
                 </div>
-            </section>
+            </section> */}
 
             {/* Quick Start Section */}
-            <section style={{ padding: "4rem 2rem" }}>
+            {/* <section style={{ padding: "4rem 2rem" }}>
                 <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
                     <div className="text-center mb-15">
                         <h2 className="text-3xl font-bold text-primary mb-1">Get Started</h2>
@@ -148,7 +180,6 @@ export default function Home() {
                         </p>
                     </div>
 
-                    {/*FIXME: what type of Cards would these be?*/}
                     <div className={styles["feature-grid"]}>
                         <Card span={4} onClick={() => router.push("/record/gene/APOE")}>
                             <div className={styles["feature-title"]}>Explore APOE</div>
@@ -172,7 +203,7 @@ export default function Home() {
                         </Card>
                     </div>
                 </div>
-            </section>
+            </section> */}
         </div>
     );
 }

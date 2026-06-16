@@ -1,0 +1,75 @@
+/* ExploreBySection.module.css */
+
+.explore-by {
+    height: 100%;
+}
+
+.header {
+    margin-bottom: 1.5rem;
+}
+
+.kicker {
+    margin: 0 0 0.5rem;
+    color: var(--yellow, #ffc665);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.header h2 {
+    margin: 0;
+    font-size: 1.75rem;
+    letter-spacing: -0.03em;
+}
+
+.explore-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.explore-item {
+    min-height: 120px;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+
+    padding: 1.25rem;
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.02);
+
+    color: inherit;
+    text-decoration: none;
+    transition: all var(--transition-fast);
+}
+
+.explore-item:hover {
+    border-color: var(--yellow, #ffc665);
+    background: rgba(255, 198, 101, 0.06);
+}
+
+.explore-item h3 {
+    margin: 0 0 0.5rem;
+    color: var(--text-primary);
+    font-size: 1.25rem;
+}
+
+.explore-item p {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.explore-item span {
+    color: var(--yellow, #ffc665);
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+@media (max-width: 640px) {
+    .explore-list {
+        grid-template-columns: 1fr;
+    }
+}
