@@ -1,16 +1,16 @@
 "use client";
 
 import React, { useState, useEffect, type ReactNode } from "react";
-import { Header } from "@/components/header";
+import { Header } from "./Header/Header";
 import { Footer } from "@niagads/ui";
-import { MobileMenu } from "@/components/mobile-menu";
 import { BackToTop } from "./BackToTop";
+import { MobileMenu } from "./MobileMenu/MobileMenu";
 
 interface MainLayoutProps {
     children: ReactNode;
 }
 
-export function MainLayout({ children }: MainLayoutProps) {
+export const MainLayout = ({ children }: MainLayoutProps) => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     // Prevent body scroll when mobile menu is open
@@ -47,4 +47,4 @@ export function MainLayout({ children }: MainLayoutProps) {
             <BackToTop />
         </div>
     );
-}
+};

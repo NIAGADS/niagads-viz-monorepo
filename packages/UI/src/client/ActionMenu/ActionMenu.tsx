@@ -1,9 +1,11 @@
-import { Button, ButtonColorVariants } from "../Button";
 import React, { ReactNode, useEffect, useId, useRef, useState } from "react";
 
-import { InlineIcon } from "../InlineIcon";
-import { StylingProps } from "../types";
-import styles from "../styles/actionmenu.module.css";
+import { Button, ButtonColorVariants } from "@/src/Button";
+import { InlineIcon } from "@/src/InlineIcon";
+import { StylingProps } from "@/src/types";
+
+import styles from "./action-menu.module.css";
+import { useClickAway } from "@/src/hooks/useClickAway";
 
 interface ActionMenuProps extends StylingProps {
     label: string;
@@ -26,15 +28,7 @@ export const ActionMenu = ({
     const buttonId = useId();
     const Icon = icon;
 
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (ref.current && !ref.current.contains(event.target as Node)) {
-                setOpen(false);
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
+    useClickAway(ref, () => setOpen(false));
 
     return (
         <div className={`${styles.actionMenu} ${className}`} style={style} ref={ref} {...rest}>

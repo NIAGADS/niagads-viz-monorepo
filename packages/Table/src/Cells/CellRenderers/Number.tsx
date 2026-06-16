@@ -23,13 +23,17 @@ export const Float = <T,>({ props }: TextRenderer<T>) => {
         return renderNullValue(_get("naValue", props, DEFAULT_NA_VALUE));
     }
 
+    // mono font is default for all numeric cells;
+    // column-level getStyle spreads after and can override
+    const style = { fontFamily: "var(--font-mono)", ...(_get("style", props) || {}) };
+
     const cellType = _get("type", props);
-    if (cellType == "integer") {
-        return <Text props={Object.assign(props as any, { value: value })} />;
+    if (cellType === "integer") {
+        return <Text props={Object.assign(props as any, { value, style })} />;
     }
 
     const precision = _get("precision", props, null);
     value = formatFloat(value, precision);
 
-    return <Text props={Object.assign(props as any, { value: value })} />;
+    return <Text props={Object.assign(props as any, { value, style })} />;
 };
