@@ -14,46 +14,8 @@ interface ColumnFilterControlsProps {
     coreRowCount: number;
     onRemoveAll: () => void;
     onRemoveFilter: (filter: ColumnFilter) => void;
+    filterGroupOrder?: string[];
 }
-
-interface FilterGroupProps extends StylingProps {
-    title: string;
-    columns: Column<any, unknown>[];
-    coreRowCount: number;
-    filterType: ColumnFilterType;
-}
-
-const FilterGroup = ({ title, columns, coreRowCount, filterType, className, style }: FilterGroupProps) => {
-    const [redundantFilters, setRedundantFilters] = useState<string[]>([]);
-
-    useEffect(() => {
-        const redundantColumnIds = columns
-            .filter((column) => {
-                const allValues = column.getAllValues();
-                return new Set(allValues).size === 1;
-            })
-            .map((column) => column.id);
-
-        setRedundantFilters(redundantColumnIds);
-    }, [columns]);
-
-    const renderedFilters = useMemo(
-        () =>
-            columns
-                .filter((column) => !redundantFilters.includes(column.id))
-                .map((column) => <FilterComponent key={`${filterType}-filter-${column.id}`} column={column} />),
-        [columns, filterType, redundantFilters]
-    );
-
-    const hasFilters = renderedFilters.length > 0;
-
-    return hasFilters ? (
-        <section className={className} style={style}>
-            <header className={styles["additional-filter-panel-header"]}>{title}</header>
-            <div className={styles["additional-filter-panel-body"]}>{renderedFilters}</div>
-        </section>
-    ) : null;
-};
 
 export const ColumnFilterControls = ({
     filterableColumns,
@@ -61,6 +23,7 @@ export const ColumnFilterControls = ({
     coreRowCount,
     onRemoveAll,
     onRemoveFilter,
+    filterGroupOrder,
 }: ColumnFilterControlsProps) => {
     const visualFilterColumns = useMemo(
         () =>
@@ -88,12 +51,12 @@ export const ColumnFilterControls = ({
         []
     );
 
-    const multiselectFilterColunns = useMemo(
+    const multiselectFilterColumns = useMemo(
         () => filterableColumns.filter((column) => column.columnDef.meta?.filterType === "multiselect"),
         []
     );
 
-    const selectFilterColunns = useMemo(
+    const selectFilterColumns = useMemo(
         () => filterableColumns.filter((column) => column.columnDef.meta?.filterType === "select"),
         []
     );
@@ -109,47 +72,21 @@ export const ColumnFilterControls = ({
         [filterableColumns]
     );
 
-    // FIXME: after aggregating additional columns build these dynamically from column filter groups
-    // with order based on order pulled from table options
-
-    const variantFlagColumns = useMemo(
-        () => additionalFilterColumns.filter((column) => column.columnDef.meta?.filterType === "boolean"),
-        [additionalFilterColumns]
-    );
-
-    const functionalAnnotationColumns = useMemo(
+    const columnFilterGroups = useMemo(
         () =>
-            additionalFilterColumns.filter((column) => {
-                const header = column.columnDef.header?.toString().toLowerCase();
+            additionalFilterColumns.reduce(
+                (groups, column) => {
+                    const groupName = column.columnDef.meta?.filterGroup || "other";
+                    const updated = groups[groupName] ? [...groups[groupName], column] : [column];
 
-                return header === "impact" || header === "consequence";
-            }),
+                    return {
+                        ...groups,
+                        [groupName]: updated,
+                    };
+                },
+                {} as Record<string, Column<any, unknown>[]>
+            ),
         [additionalFilterColumns]
-    );
-
-    const sampleContextColumns = useMemo(
-        () =>
-            additionalFilterColumns.filter((column) => {
-                const header = column.columnDef.header?.toString().toLowerCase();
-
-                return header === "population" || header === "tissue" || header === "biomarker";
-            }),
-        [additionalFilterColumns]
-    );
-
-    const groupedColumnIds = useMemo(
-        () =>
-            new Set([
-                ...variantFlagColumns.map((column) => column.id),
-                ...functionalAnnotationColumns.map((column) => column.id),
-                ...sampleContextColumns.map((column) => column.id),
-            ]),
-        [functionalAnnotationColumns, sampleContextColumns, variantFlagColumns]
-    );
-
-    const otherAdditionalColumns = useMemo(
-        () => additionalFilterColumns.filter((column) => !groupedColumnIds.has(column.id)),
-        [additionalFilterColumns, groupedColumnIds]
     );
 
     const hasAdditionalFilters = additionalFilterColumns.length > 0;
@@ -197,42 +134,65 @@ export const ColumnFilterControls = ({
                     </div>
 
                     <div className={styles["additional-filter-grid"]}>
-                        <FilterGroup
-                            title="Variant Flags"
-                            className={styles["additional-filter-panel"]}
-                            columns={variantFlagColumns}
-                            coreRowCount={coreRowCount}
-                            filterType="boolean"
-                        />
-
-                        <FilterGroup
-                            title="Functional Annotation"
-                            className={styles["additional-filter-panel"]}
-                            columns={functionalAnnotationColumns}
-                            coreRowCount={coreRowCount}
-                            filterType="select"
-                        />
-
-                        <FilterGroup
-                            title="Sample / Study Context"
-                            className={styles["additional-filter-panel"]}
-                            columns={sampleContextColumns}
-                            coreRowCount={coreRowCount}
-                            filterType="select"
-                        />
-
-                        {otherAdditionalColumns.length > 0 && (
-                            <FilterGroup
-                                title="Other"
-                                className={styles["additional-filter-panel"]}
-                                columns={otherAdditionalColumns}
-                                coreRowCount={coreRowCount}
-                                filterType="select"
-                            />
-                        )}
+                        {filterGroupOrder
+                            ? filterGroupOrder.map((groupName) => (
+                                  <FilterGroup
+                                      key={groupName}
+                                      title={groupName}
+                                      className={styles["additional-filter-panel"]}
+                                      columns={columnFilterGroups[groupName]}
+                                  />
+                              ))
+                            : Object.keys(columnFilterGroups).map((groupName) => (
+                                  <FilterGroup
+                                      key={groupName}
+                                      title={groupName}
+                                      className={styles["additional-filter-panel"]}
+                                      columns={columnFilterGroups[groupName]}
+                                  />
+                              ))}
                     </div>
                 </>
             )}
         </div>
     );
+};
+
+interface FilterGroupProps extends StylingProps {
+    title: string;
+    columns: Column<any, unknown>[];
+}
+
+const FilterGroup = ({ title, columns, className, style }: FilterGroupProps) => {
+    const [redundantFilters, setRedundantFilters] = useState<string[]>([]);
+
+    useEffect(() => {
+        const redundantColumnIds = columns
+            .filter((column) => {
+                const allValues = column.getAllValues();
+                return new Set(allValues).size === 1;
+            })
+            .map((column) => column.id);
+
+        setRedundantFilters(redundantColumnIds);
+    }, [columns]);
+
+    const renderedFilters = useMemo(
+        () =>
+            columns
+                .filter((column) => !redundantFilters.includes(column.id))
+                .map((column) => (
+                    <FilterComponent key={`${column.columnDef.meta?.filterType}-filter-${column.id}`} column={column} />
+                )),
+        [columns, redundantFilters]
+    );
+
+    const hasFilters = renderedFilters.length > 0;
+
+    return hasFilters ? (
+        <section className={className} style={style}>
+            <header className={styles["additional-filter-panel-header"]}>{title}</header>
+            <div className={styles["additional-filter-panel-body"]}>{renderedFilters}</div>
+        </section>
+    ) : null;
 };

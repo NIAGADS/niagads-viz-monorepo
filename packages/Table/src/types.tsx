@@ -36,7 +36,7 @@ export interface TableOptions {
     rowSelectOpts?: RowSelectOptions; // optional: enables row selection and related state change options
     defaultColumns?: string[]; // optional: any column ids not listed will be hidden by default
     onTableLoad?: any;
-    // TODO: order of the filter groups, ordered array
+    filterGroupOrder?: string[]; // optional: order of the filter groups, ordered array
 }
 
 export type TableRow = Record<string, TableCell | TableCell[]>;
@@ -48,7 +48,7 @@ export interface ColumnFilteringOpts {
     filterType?: ColumnFilterType; // defaults based on data type in column
     filterFn?: FilterFnOption<TableRow>; // defaults based on data type in  column
     // valueTransformFn?: (value: BasicType) => BasicType; // for transforming value for filter display
-    // TODO: filterGroup?: str
+    filterGroup?: string;
 }
 
 export interface ColumnStylingOpts {
@@ -85,6 +85,7 @@ declare module "@tanstack/react-table" {
     interface ColumnMeta<TData extends RowData, TValue> {
         type: CellType;
         filterType?: ColumnFilterType;
+        filterGroup?: string;
         naValue?: string;
         trueValue?: BasicType;
         description?: string;
