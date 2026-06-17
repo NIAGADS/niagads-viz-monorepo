@@ -91,6 +91,7 @@ declare module "@tanstack/react-table" {
     // This "merges" your custom functions into the existing Column interface
     interface Column<TData extends RowData, TValue> {
         getAllValues: (filterNulls?: boolean, naValue?: string) => TValue[];
+        getFilteredValues: (filterNulls?: boolean, naValue?: string) => TValue[];
     }
 
     interface SortingFns {

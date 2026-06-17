@@ -199,10 +199,18 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
 
         _features: [
             {
-                // when column is initialized, create this function
+                // when column is initialized, create helper functions
                 createColumn: (column, table) => {
                     column.getAllValues = (filterNulls: boolean = false, naValue: string = DEFAULT_NA_VALUE) => {
                         let values = table.getCoreRowModel().flatRows.map((row) => row.getValue(column.id));
+                        if (filterNulls) {
+                            values = values.filter((v) => v != null && v !== naValue);
+                        }
+                        return values;
+                    };
+
+                    column.getFilteredValues = (filterNulls: boolean = false, naValue: string = DEFAULT_NA_VALUE) => {
+                        let values = table.getFilteredRowModel().flatRows.map((row) => row.getValue(column.id));
                         if (filterNulls) {
                             values = values.filter((v) => v != null && v !== naValue);
                         }

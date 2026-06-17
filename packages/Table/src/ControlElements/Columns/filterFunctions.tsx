@@ -12,12 +12,12 @@ export const globalFuzzyFilter: FilterFn<any> = (row, columnId, filterValue: str
 
 export const neglog10Filter: FilterFn<any> = (row, columnId, filterValue) => {
     const rowValue = row.getValue(columnId) as number;
-    const targetValue: Range | undefined = filterValue as Range;
+    const targetValue: number | undefined = filterValue;
 
     // If filter is empty, don't filter anything out
     if (targetValue === undefined) return true;
 
-    return negLog10(rowValue) >= targetValue.min;
+    return negLog10(rowValue) >= targetValue;
 };
 
 // for handling multi-selects, accounting for list text fields
