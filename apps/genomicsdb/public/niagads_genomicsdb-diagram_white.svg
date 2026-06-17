@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 787.4 294">
-  <!-- Generator: Adobe Illustrator 30.5.1, SVG Export Plug-In . SVG Version: 2.1.4 Build 3)  -->
   <defs>
     <style>
       .st0 {
@@ -122,7 +120,7 @@
       }
 
       .st27, .st28 {
-        font-family: Arial-BoldMT, Arial;
+        font-family: Inter, Arial;
         font-weight: 700;
       }
 
@@ -190,7 +188,7 @@
       }
 
       .st29 {
-        font-family: ArialMT, Arial;
+        font-family: Inter, Arial;
         font-size: 12.1px;
       }
 
