@@ -10,7 +10,7 @@
 
 .kicker {
     margin: 0 0 0.5rem;
-    color: var(--yellow, #ffc665);
+    color: var(--yellow);
     font-size: 0.75rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;

@@ -8,7 +8,7 @@
 
 .kicker {
     margin: 0 0 0.5rem;
-    color: var(--yellow, #ffc665);
+    color: var(--yellow);
     font-size: 0.75rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -40,11 +40,15 @@
     cursor: pointer;
     white-space: nowrap;
 }
-
 .tab-active {
+    color: var(--yellow);
+    border-bottom: 3px solid var(--yellow);
+}
+
+/* .tab-active {
     color: var(--yellow, #ffc665);
     border-bottom: 2px solid var(--yellow, #ffc665);
-}
+} */
 
 .search-area {
     margin-bottom: 1.5rem;
@@ -85,9 +89,8 @@
     cursor: pointer;
     transition: all var(--transition-fast);
 }
-
 .search-chip:hover {
-    border-color: var(--yellow, #ffc665);
+    border-color: var(--yellow);
     color: var(--text-primary);
-    background: rgba(255, 198, 101, 0.08);
+    background: rgba(255, 198, 101, 0.14);
 }

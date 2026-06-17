@@ -10,7 +10,7 @@
 
 .kicker {
     margin: 0 0 0.5rem;
-    color: var(--yellow, #ffc665);
+    color: var(--yellow);
     font-size: 0.75rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -43,7 +43,7 @@
     padding: 1.5rem;
     border-radius: var(--border-radius-lg);
     border: 1px solid rgba(255, 198, 101, 0.35);
-    background: rgba(255, 198, 101, 0.08);
+    background: rgba(255, 198, 101, 0.1);
 }
 
 .main-stat strong {

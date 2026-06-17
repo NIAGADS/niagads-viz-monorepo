@@ -1,0 +1,86 @@
+/* Hero Section */
+.hero-section {
+    /* background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%); */
+    padding: 4rem 2rem;
+    /* border-bottom: 1px solid var(--border); */
+    /* background: radial-gradient(circle at 78% 8%, rgba(61, 90, 128, .30), transparent 28%),
+        radial-gradient(circle at 15% 32%, rgba(155, 108, 255, .11), transparent 30%),
+        linear-gradient(180deg, var(--dark-blue) 0%, var(--dark-blue) 42%, var(--dark-blue) 100%); */
+    /* background:  linear-gradient(180deg, var(--dark-blue) 0%, var(--dark-blue) 42%, var(--dark-blue) 100%); */
+    background: radial-gradient(circle, rgba(42, 50, 62, 0.95) 0%,var(--dark-blue) 87%)
+    /* background-color: #fff; */
+
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 4rem;
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    max-width: 500px;
+    color: var(--text-primary);
+    color: #fff;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    /* color: var(--text-secondary); */
+    color: #fff;
+    margin-bottom: 2rem;
+    max-width: 500px;
+}
+.hero-graphic {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+    height: auto;
+}
+.hero-search {
+    max-width: 800px;
+    margin-bottom: 2rem;
+}
+.hero-search .ui-autocomplete-container {
+    max-width: 800px;
+}
+
+.hero-search .search-input {
+    padding: 1rem 1rem 1rem 3rem;
+    font-size: 1rem;
+    border-radius: var(--border-radius-lg);
+}
+
+.hero-search .search-icon {
+    left: 1rem;
+    width: 20px;
+    height: 20px;
+}
+
+.chips {
+    margin-top: 0.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    color: var(--muted);
+}
+.chip {
+    padding: 7px 15px;
+    border-radius: 999px;
+    border: 1px solid rgba(184, 208, 239, .2);
+    background: rgba(255, 255, 255, .04);
+    color: var(--blue);
+    font-size: 0.825rem;
+}
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}

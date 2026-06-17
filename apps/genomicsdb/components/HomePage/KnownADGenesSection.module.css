@@ -13,7 +13,7 @@
 
 .kicker {
     margin: 0 0 0.5rem;
-    color: var(--yellow, #ffc665);
+    color: var(--yellow);
     font-size: 0.75rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -62,6 +62,10 @@
     border-bottom: 1px solid var(--border);
 }
 
+.row:hover {
+    background: rgba(97, 142, 181, 0.06);
+}
+
 .row-head {
     padding-top: 0;
     color: var(--text-secondary);
@@ -72,7 +76,7 @@
 }
 
 .gene {
-    color: var(--yellow, #ffc665);
+    color: var(--warning-amber);
     font-size: 1.125rem;
     font-weight: 800;
     text-decoration: none;
@@ -107,8 +111,8 @@
 }
 
 .dot-active {
-    background: var(--yellow, #ffc665);
-    box-shadow: 0 0 0.75rem rgba(255, 198, 101, 0.35);
+    background: var(--yellow);
+    box-shadow: 0 0 0 3px rgba(255, 198, 101, 0.18);
 }
 
 .type-dot {

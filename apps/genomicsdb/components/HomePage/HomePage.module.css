@@ -1,0 +1,107 @@
+.front-section {
+    padding: 4rem 2rem;
+    background: linear-gradient(180deg, #f8fafc 0%, #f2f4f8 100%);
+}
+/* Feature Grid */
+
+.home-grid, .feature-grid  {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+/* Stats Section */
+.stats-section {
+    background-color: var(--gray-50);
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+.main-stat-number {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--blue);
+    margin: 1.5rem 1rem 0.5rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.stat-item {
+    padding: 1rem;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-blue);
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .hero-grid {
+        grid-template-columns: 1fr;
+    }
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-section {
+        padding: 2rem 1rem;
+    }
+}
+
+.card-accent-blue {
+    background:
+        radial-gradient(circle at top right, rgba(97, 142, 181, 0.12), transparent 40%),
+        var(--surface);
+}
+
+.card-accent-yellow {
+    background:
+        radial-gradient(circle at top right, rgba(255, 198, 101, 0.2), transparent 40%),
+        var(--surface);    
+}
+
+.card-accent-teal {
+    background:
+        radial-gradient(circle at top right, rgba(13, 148, 136, 0.2), transparent 40%),
+        var(--surface);
+}
+
+.card-accent-purple {
+    background:
+        radial-gradient(circle at top right, rgba(139, 108, 255, 0.2), transparent 40%),
+        var(--surface);
+}
+
+.home-grid :global(.card) {
+    border-color: #cbd8e8;
+}
+
+.home-grid :global(.card:hover) {
+    border-color: var(--secondary-blue);
+}

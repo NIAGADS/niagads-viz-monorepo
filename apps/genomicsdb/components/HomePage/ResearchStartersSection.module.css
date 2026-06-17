@@ -43,7 +43,6 @@
 
     border: 1px solid var(--border);
     border-radius: var(--border-radius-lg);
-
     color: inherit;
     text-decoration: none;
 
@@ -52,13 +51,14 @@
 
 .starter-item:hover {
     border-color: var(--yellow);
-    background: var(--hover-bg);
+    background: rgba(255, 198, 101, 0.25);
     text-decoration: none;
+
 }
 
 .starter-item h3 {
     margin: 0 0 0.75rem;
-    color: var(--text-primary);
+    color: var(--text-secondary);
     font-size: 1.25rem;
 }
 
