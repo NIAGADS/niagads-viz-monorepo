@@ -279,16 +279,14 @@ const Filter = ({ column }: FilterProps) => {
     }
 
     const { sortedValueHash: sortedUniqueValues, otherValueList: otherValues } = useMemo(() => {
-        if (naCount > 0) {
-            uniqueValues.delete(naValue);
-        }
+        const validEntries = [...uniqueValues.entries()].filter(([value]) => value !== naValue);
 
         let sortedValueHash: Record<string, number> = {};
         let otherValueList: string[] = [];
 
-        if (uniqueValues.size > MAX_FILTER_CATEGORIES) {
+       if (validEntries.length > MAX_FILTER_CATEGORIES) {
             const topEntryHash: Record<string, number> = {};
-            const sortedEntries = [...uniqueValues.entries()].sort((a, b) => b[1] - a[1]);
+            const sortedEntries = validEntries.sort((a, b) => b[1] - a[1]);
             const topEntries = sortedEntries.slice(0, MAX_FILTER_CATEGORIES - 1);
 
             const { otherValueList: otherVals, otherCount } = sortedEntries.slice(MAX_FILTER_CATEGORIES - 1).reduce(
@@ -317,7 +315,8 @@ const Filter = ({ column }: FilterProps) => {
 
             sortedValueHash.Other = otherCount;
         } else {
-            sortedValueHash = Object.keys(Object.fromEntries(uniqueValues))
+            sortedValueHash = validEntries
+                .map(([value]) => value)
                 .sort()
                 .reduce(
                     (acc, key) => {
