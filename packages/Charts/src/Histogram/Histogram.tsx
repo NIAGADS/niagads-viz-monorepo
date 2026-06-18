@@ -35,7 +35,7 @@ function useHistogramRender(
                 destroyHistogram(containerRef.current);
             }
         };
-    }, [containerRef, data, opts]);
+    }, [data, overlayData, opts]);
 }
 
 const Histogram = ({ data, overlayData, title, numBins, max, label, displayOpts, yAxisScale }: HistogramProps) => {
