@@ -88,8 +88,7 @@ function useResolvedHistogramLayout(displayOpts: DisplayProps | undefined, defau
         };
     }, [requestedWidth]);
 
-    const chartWidth =
-        typeof requestedWidth === "number" ? requestedWidth : measuredWidth || DEFAULT_HISTOGRAM_WIDTH;
+    const chartWidth = typeof requestedWidth === "number" ? requestedWidth : measuredWidth || DEFAULT_HISTOGRAM_WIDTH;
 
     const chartHeight = displayOpts?.height ?? chartWidth * (displayOpts?.aspectRatio ?? defaultAspectRatio);
 

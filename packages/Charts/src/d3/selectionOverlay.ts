@@ -171,16 +171,28 @@ export function createSelectionOverlay(opts: SelectionOverlayOptions): Selection
     }
 
     handles.call(
-        d3.drag<SVGGElement, number>()
+        d3
+            .drag<SVGGElement, number>()
             .on("drag", function (event, _d) {
                 const pointerX = clamp(event.x, 0, opts.xScale.range()[1]);
                 const atRightEdge = pointerX >= opts.xScale.range()[1];
                 const rawValue = atRightEdge ? opts.domain.max : opts.xScale.invert(pointerX);
-                const snappedValue = clamp(snap(rawValue, opts.domain.min, opts.step), opts.domain.min, opts.domain.max);
+                const snappedValue = clamp(
+                    snap(rawValue, opts.domain.min, opts.step),
+                    opts.domain.min,
+                    opts.domain.max
+                );
 
                 const handleIndex = handles.nodes().indexOf(this);
                 const nextSelection = normalizeRange(
-                    getSelectionFromHandle(snappedValue, selection, opts.domain, opts.mode, thresholdHandle, handleIndex),
+                    getSelectionFromHandle(
+                        snappedValue,
+                        selection,
+                        opts.domain,
+                        opts.mode,
+                        thresholdHandle,
+                        handleIndex
+                    ),
                     opts.domain
                 );
 
