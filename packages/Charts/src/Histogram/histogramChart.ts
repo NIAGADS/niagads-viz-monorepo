@@ -238,10 +238,10 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
     // Plotting
     // Set up dimensions
     const margin = opts.displayOpts?.margin || { top: 20, right: 24, bottom: 52, left: 44 };
-    const parent = container.parentElement || container;
-    const width = parent.clientWidth || 600;
-    const aspectRatio = opts.displayOpts?.aspectRatio || 0.5;
-    const height = parent.clientHeight || width * aspectRatio;
+    const requestedWidth = opts.displayOpts?.width;
+    const aspectRatio = opts.displayOpts?.aspectRatio ?? 0.5;
+    const width = typeof requestedWidth === "number" ? requestedWidth : container.clientWidth || 600;
+    const height = opts.displayOpts?.height ?? (container.clientHeight || width * aspectRatio);
 
     // Remove previous chart nodes before drawing.
     destroyHistogram(container);

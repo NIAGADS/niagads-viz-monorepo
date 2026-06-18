@@ -223,7 +223,7 @@ const NumericFilter = ({ column }: FilterProps) => {
 
     const title = column.columnDef.header!.toString();
 
-    const displayOpts = { width: 400 };
+    const displayOpts = { width: "100%", aspectRatio: 0.5 };
 
     if (referenceData.range) {
         const filteredValues: number[] = isPvalue
