@@ -156,8 +156,11 @@ export function createSelectionOverlay(opts: SelectionOverlayOptions): Selection
             return handle;
         });
 
+    let pendingSelection = selection;
+
     function updateVisuals(nextSelection: Range) {
         selection = normalizeRange(nextSelection, opts.domain);
+        pendingSelection = selection;
 
         const { x, width } = getBandBounds(selection, opts.xScale);
         band.attr("x", x).attr("width", width);
@@ -166,8 +169,6 @@ export function createSelectionOverlay(opts: SelectionOverlayOptions): Selection
             .data(getHandleValues(selection, opts.mode, thresholdHandle))
             .attr("transform", (d) => `translate(${opts.xScale(d)},0)`);
     }
-
-    let pendingSelection = selection;
 
     handles.call(
         d3.drag<SVGGElement, number>()
@@ -183,7 +184,6 @@ export function createSelectionOverlay(opts: SelectionOverlayOptions): Selection
                     opts.domain
                 );
 
-                pendingSelection = nextSelection;
                 updateVisuals(nextSelection);
             })
             .on("end", function () {

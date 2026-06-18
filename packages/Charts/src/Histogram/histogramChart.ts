@@ -158,44 +158,52 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
     const legendSpacing = showOverlayLayer ? 18 : 0;
     const useLog10YAxis = opts.yAxisScale === "log10";
 
-    function isSelected(d: HistogramBin, selectedRange?: Range): boolean {
-        return !!(selectedRange && d.x0 >= selectedRange.min && d.x1 <= selectedRange.max);
+    let selectedRange = opts.selection?.selectedRange;
+
+    function isSelected(d: HistogramBin, range?: Range): boolean {
+        return !!(range && d.x0 >= range.min && d.x1 <= range.max);
     }
 
     function applyFill(d: HistogramBin): string {
-        const selected = isSelected(d, opts.selection?.selectedRange);
+        const selected = isSelected(d, selectedRange);
+
         if (d.isOverflow) {
             return selected ? HISTOGRAM_COLORS.barSelected : HISTOGRAM_COLORS.barOverflow;
         }
+
         return selected ? HISTOGRAM_COLORS.barSelected : HISTOGRAM_COLORS.bar;
     }
 
     function applyStroke(d: HistogramBin): string {
-        const selected = isSelected(d, opts.selection?.selectedRange);
+        const selected = isSelected(d, selectedRange);
 
         if (d.isOverflow) {
             return selected ? HISTOGRAM_COLORS.strokeSelected : HISTOGRAM_COLORS.strokeOverflow;
         }
+
         return selected ? HISTOGRAM_COLORS.strokeSelected : HISTOGRAM_COLORS.stroke;
     }
 
     function applyStrokeWidth(d: HistogramBin): number {
-        const selected = isSelected(d, opts.selection?.selectedRange);
+        const selected = isSelected(d, selectedRange);
         return selected ? 2 : 1;
     }
 
     function applyHoverFill(d: HistogramBin): string {
-        if (isSelected(d, opts.selection?.selectedRange)) {
+        if (isSelected(d, selectedRange)) {
             return HISTOGRAM_COLORS.barSelectedHover;
         }
+
         if (d.isOverflow) {
-            return HISTOGRAM_COLORS.barHover;
+            return HISTOGRAM_COLORS.barOverflow;
         }
+
         return HISTOGRAM_COLORS.barHover;
     }
 
     function updateSelectedRange(nextSelection?: Range) {
-        opts.selection!.selectedRange = nextSelection;
+        selectedRange = nextSelection;
+
         svg.selectAll<SVGPathElement, HistogramBin>(
             showOverlayLayer ? ".histogram-bar.foreground" : ".histogram-bar.background"
         )
@@ -217,6 +225,7 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
         if (useLog10YAxis && value <= 0) {
             return plotHeight;
         }
+
         return scale(value);
     }
 
@@ -228,6 +237,7 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
         if (useLog10YAxis && value <= 0) {
             return 0;
         }
+
         return Math.max(0, plotHeight - scale(value));
     }
 
@@ -253,8 +263,8 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
         .attr("height", height)
         .style("display", "block");
 
-    const plotWidth = width - margin.left - margin.right;
-    const plotHeight = height - margin.top - margin.bottom - legendSpacing;
+    const plotWidth = Math.max(1, width - margin.left - margin.right);
+    const plotHeight = Math.max(1, height - margin.top - margin.bottom - legendSpacing);
 
     const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top + legendSpacing})`);
 
@@ -276,6 +286,7 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
         .axisLeft(y)
         .tickSize(-plotWidth)
         .tickFormat(() => "");
+
     if (useLog10YAxis) {
         gridAxis.ticks(yTicks.length).tickValues(yTicks);
     } else {
@@ -381,6 +392,7 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
 
     // Tooltip div
     let tooltip = d3.select(container).select<HTMLDivElement>(".histogram-tooltip");
+
     if (tooltip.empty()) {
         tooltip = d3
             .select(container)
@@ -400,15 +412,18 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
     }
 
     const hoverSelection = showOverlayLayer ? overlayBar : baselineBar;
+
     hoverSelection
         .on("mousemove", function (event, d) {
             d3.select(this).attr("fill", applyHoverFill(d)).attr("opacity", 1);
+
             const activeCount = showOverlayLayer ? (d.overlayCount ?? 0) : d.baselineCount;
             const activeTotal = showOverlayLayer ? overlayData!.length : data.length;
             const freq = activeTotal > 0 ? ((activeCount / activeTotal) * 100).toFixed(1) : "0.0";
             const lastRegularBinIdx = hasOverflow ? bins.length - 2 : bins.length - 1;
 
             let binLabel: string;
+
             if (hasOverflow && d.x0 === cap) {
                 binLabel = `> ${cap.toFixed(1)}`;
             } else if (d === bins[lastRegularBinIdx]) {
@@ -431,6 +446,7 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
             d3.select(this)
                 .attr("fill", applyFill(d))
                 .attr("opacity", showOverlayLayer ? 0.95 : 0.92);
+
             tooltip.style("display", "none");
         });
 
@@ -446,7 +462,6 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
         });
 
     // X Label
-
     svg.append("text")
         .attr("x", width / 2)
         .attr("y", height - 12)
@@ -457,8 +472,10 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
         .text(opts.xAxis?.label || "");
 
     let selectionOverlay: HistogramState["selectionOverlay"];
+
     if (opts.selection) {
         const selectionRange = opts.selection.selectedRange;
+
         if (selectionRange) {
             selectionOverlay = createSelectionOverlay({
                 root: g,
@@ -477,6 +494,7 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
                         hasOverflow && cap != null && nextSelection.max >= cap
                             ? { min: nextSelection.min, max: dataMax }
                             : nextSelection;
+
                     updateSelectedRange(nextSelection);
                     opts.selection?.onChange?.(dataAccurateSelection);
                 },
@@ -488,6 +506,7 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
 
     // Store state on SVG node for later updates
     (svg.node() as any).__histogramState__ = {
+        hasOverflow,
         selectionOverlay,
     } as HistogramState;
 

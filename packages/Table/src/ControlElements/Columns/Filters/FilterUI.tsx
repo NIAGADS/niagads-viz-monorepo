@@ -16,7 +16,6 @@ interface FilterProps {
 }
 
 interface TextFilterProps extends FilterProps {
-    column: Column<any, unknown>;
     values: Record<string, number>;
     otherValues: string[];
 }
@@ -24,6 +23,11 @@ interface TextFilterProps extends FilterProps {
 interface MultiSelectPillFilterProps extends TextFilterProps {
     showLabel?: boolean;
 }
+
+const HISTOGRAM_DISPLAY_OPTS = {
+    width: "100%",
+    aspectRatio: 0.6,
+} as const;
 
 const NoValidValuesMessage = ({ columnName }: { columnName: string }) => (
     <Alert variant="info" message={columnName}>
@@ -116,7 +120,7 @@ const MultiSelectPillFilter = ({ column, values, otherValues, showLabel = true }
     const filterValues = (column.getFilterValue() as string[]) || [];
     const filterValuesIncludeOther = filterValues.some((item) => otherValues.includes(item));
 
-    let selectedValues = filterValues.filter((item) => !otherValues.includes(item)) || [];
+    const selectedValues = filterValues.filter((item) => !otherValues.includes(item));
 
     if (filterValuesIncludeOther) {
         selectedValues.push("Other");
@@ -182,16 +186,16 @@ const BooleanFilter = ({ column, values }: Omit<TextFilterProps, "otherValues">)
 
 const NumericFilter = ({ column }: FilterProps) => {
     const naValue = column.columnDef.meta?.naValue || DEFAULT_NA_VALUE;
-    const isPvalue: boolean = column.columnDef.meta!.type === "pvalue";
+    const isPvalue = column.columnDef.meta!.type === "pvalue";
+    const title = column.columnDef.header!.toString();
 
     const referenceData = useMemo(() => {
-        // filter out nulls
         const values = isPvalue
             ? (column.getAllValues(true, naValue) as number[]).map((v) => negLog10(v))
             : (column.getAllValues(true, naValue) as number[]);
 
-        const rd = {
-            values: values,
+        return {
+            values,
             range:
                 values.length > 0
                     ? {
@@ -200,67 +204,63 @@ const NumericFilter = ({ column }: FilterProps) => {
                       }
                     : undefined,
         };
-        return rd;
-    }, [column.id]);
+    }, [column, isPvalue, naValue]);
 
-    let filterValue: any = column.getFilterValue();
+    if (!referenceData.range) {
+        return <NoValidValuesMessage columnName={title} />;
+    }
+
+    let filterValue: Range | number | undefined = column.getFilterValue() as Range | number | undefined;
+
     if (filterValue === undefined) {
-        filterValue = isPvalue ? referenceData.range!.min : referenceData.range;
+        filterValue = isPvalue ? referenceData.range.min : referenceData.range;
     }
 
     const handleRangeFilter = useCallback(
         (range: Range) => {
             if (isPvalue) {
-                const threshold = range.min; //Math.pow(10, -range.min);
+                const threshold = range.min;
                 column.setFilterValue(threshold);
             } else {
                 // TODO / FIXME: create a filterFn that takes a range
                 column.setFilterValue(range);
             }
         },
-        [column.id]
+        [column, isPvalue]
     );
 
-    const title = column.columnDef.header!.toString();
+    const filteredValues: number[] = isPvalue
+        ? (column.getFilteredValues(true, naValue) as number[]).map((v) => negLog10(v))
+        : (column.getFilteredValues(true, naValue) as number[]);
 
-    const displayOpts = { width: "100%", aspectRatio: 0.6 };
-
-    if (referenceData.range) {
-        const filteredValues: number[] = isPvalue
-            ? (column.getFilteredValues(true, naValue) as number[]).map((v) => negLog10(v))
-            : (column.getFilteredValues(true, naValue) as number[]);
-
-        if (isPvalue) {
-            return (
-                <ThresholdSelectHistogram
-                    limit={filterValue as number}
-                    limitType={"max"}
-                    onRangeSelect={handleRangeFilter}
-                    data={referenceData.values}
-                    overlayData={filteredValues}
-                    numBins={50}
-                    title={title}
-                    max={50}
-                    displayOpts={displayOpts}
-                    yAxisScale="log10"
-                />
-            );
-        }
-
+    if (isPvalue) {
         return (
-            <RangeSelectHistogram
-                range={filterValue}
+            <ThresholdSelectHistogram
+                limit={filterValue as number}
+                limitType="max"
                 onRangeSelect={handleRangeFilter}
                 data={referenceData.values}
+                overlayData={filteredValues}
                 numBins={50}
                 title={title}
-                overlayData={filteredValues}
-                displayOpts={displayOpts}
+                max={50}
+                displayOpts={HISTOGRAM_DISPLAY_OPTS}
+                yAxisScale="log10"
             />
         );
     }
 
-    return <NoValidValuesMessage columnName={column.columnDef.header!.toString()} />;
+    return (
+        <RangeSelectHistogram
+            range={filterValue as Range}
+            onRangeSelect={handleRangeFilter}
+            data={referenceData.values}
+            numBins={50}
+            title={title}
+            overlayData={filteredValues}
+            displayOpts={HISTOGRAM_DISPLAY_OPTS}
+        />
+    );
 };
 
 const Filter = ({ column }: FilterProps) => {
@@ -271,6 +271,7 @@ const Filter = ({ column }: FilterProps) => {
     }
 
     const uniqueValues: Map<string, number> = column.getFacetedUniqueValues();
+    const uniqueValueEntries = Array.from(uniqueValues.entries());
     const naValue = meta.naValue || DEFAULT_NA_VALUE;
     const naCount = uniqueValues.get(naValue) || 0;
 
@@ -279,14 +280,14 @@ const Filter = ({ column }: FilterProps) => {
     }
 
     const { sortedValueHash: sortedUniqueValues, otherValueList: otherValues } = useMemo(() => {
-        const validEntries = [...uniqueValues.entries()].filter(([value]) => value !== naValue);
+        const validEntries = uniqueValueEntries.filter(([value]) => value !== naValue);
 
         let sortedValueHash: Record<string, number> = {};
         let otherValueList: string[] = [];
 
-       if (validEntries.length > MAX_FILTER_CATEGORIES) {
+        if (validEntries.length > MAX_FILTER_CATEGORIES) {
             const topEntryHash: Record<string, number> = {};
-            const sortedEntries = validEntries.sort((a, b) => b[1] - a[1]);
+            const sortedEntries = [...validEntries].sort((a, b) => b[1] - a[1]);
             const topEntries = sortedEntries.slice(0, MAX_FILTER_CATEGORIES - 1);
 
             const { otherValueList: otherVals, otherCount } = sortedEntries.slice(MAX_FILTER_CATEGORIES - 1).reduce(
@@ -332,7 +333,7 @@ const Filter = ({ column }: FilterProps) => {
         }
 
         return { sortedValueHash, otherValueList };
-    }, [Array.from(uniqueValues.entries())]);
+    }, [uniqueValueEntries, naValue, naCount, uniqueValues]);
 
     if (meta.type === "boolean") {
         return <BooleanFilter column={column} values={sortedUniqueValues} />;
