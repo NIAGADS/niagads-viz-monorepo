@@ -35,7 +35,9 @@ export const TABLE_DEFINITION: Table = {
             type: "boolean",
             // format: { nullValue: false },
             disableGlobalFilter: true,
-            canFilter: true,
+            filterOpts: {
+                filterGroup: "Variant Flags"
+            }
         },
         {
             id: "ref_snp_id",
@@ -46,7 +48,9 @@ export const TABLE_DEFINITION: Table = {
             header: "Impact",
             description:
                 "Most severe impact predicted for this variant on the gene, using the ADSP Annotation Pipeline",
-            canFilter: true,
+            filterOpts: {
+                filterGroup: "Functional Annotation"
+            }
         },
 
         {
@@ -54,9 +58,11 @@ export const TABLE_DEFINITION: Table = {
             header: "Consequence",
             description:
                 "Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline",
-            canFilter: true,
+            filterOpts: {
+                filterGroup: "Functional Annotation"
+            }
         },
-        { id: "population", canFilter: true, filterType: "external" },
+        { id: "population" },
         { id: "diagnosis" },
         { id: "neuropathology", required: true },
         { id: "tissue" },
