@@ -27,9 +27,6 @@ const PIE_CHART_COLORS = {
     arcOpacityHover: 0.8,
     arcOpacitySelected: 1,
     referenceArcOpacity: 0.55,
-    arcFillSelected: "#d97706",
-    arcFilterSelected:
-        "drop-shadow(0 0 3px rgba(217, 119, 6, 0.8)) drop-shadow(0 0 8px rgba(217, 119, 6, 0.6)) drop-shadow(0 0 12px rgba(217, 119, 6, 0.4))",
     tooltipBackground: "white",
     tooltipColor: "black",
     tooltipBorder: "0 2px 8px rgba(0, 0, 0, 0.15)",
@@ -49,6 +46,37 @@ const PIE_CHART_SIZES = {
 const DEFAULT_MARGIN = { top: 10, right: 10, bottom: 10, left: 10 };
 
 const isNA = (data: PieChartDataPoint): boolean => (data.label && _isNA(data.label)) || _isNA(data.id);
+
+const getSliceColor = (data: PieChartDataPoint, colorScale: d3.ScaleOrdinal<string, string>): string =>
+    isNA(data) ? PIE_CHART_COLORS.arcFillNA : colorScale(data.id);
+
+const hexToRgb = (color: string): { r: number; g: number; b: number } | null => {
+    const normalized = color.trim();
+    const hexMatch = normalized.match(/^#([\da-f]{3}|[\da-f]{6})$/i);
+
+    if (!hexMatch) return null;
+
+    const hex = hexMatch[1];
+    const expandedHex = hex.length === 3 ? hex.split("").map((char) => char + char).join("") : hex;
+    const value = Number.parseInt(expandedHex, 16);
+
+    return {
+        r: (value >> 16) & 255,
+        g: (value >> 8) & 255,
+        b: value & 255,
+    };
+};
+
+const getSelectionFilter = (color: string): string => {
+    const rgb = hexToRgb(color);
+    if (!rgb) return "none";
+
+    return [
+        `drop-shadow(0 0 3px rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.8))`,
+        `drop-shadow(0 0 8px rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.6))`,
+        `drop-shadow(0 0 12px rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.4))`,
+    ].join(" ");
+};
 
 interface PieChartState {
     data: PieChartDataPoint[];
@@ -80,22 +108,13 @@ export function updatePieChartSelection(container: HTMLElement, selectedId?: str
     // Update stored selection state
     state.opts.selectedId = selectedId;
 
-    // Use same NA logic as in initial render
-    const isNA = (data: PieChartDataPoint): boolean => (data.label && _isNA(data.label)) || _isNA(data.id);
-
     svg.selectAll<SVGPathElement, d3.PieArcDatum<PieChartDataPoint>>(".arc path")
-        .style("fill", (d: d3.PieArcDatum<PieChartDataPoint>) => {
-            return d.data.id === selectedId
-                ? PIE_CHART_COLORS.arcFillSelected
-                : isNA(d.data)
-                  ? PIE_CHART_COLORS.arcFillNA
-                  : state.colorScale(d.data.id);
-        })
+        .style("fill", (d: d3.PieArcDatum<PieChartDataPoint>) => getSliceColor(d.data, state.colorScale))
         .style("stroke-width", (d: d3.PieArcDatum<PieChartDataPoint>) =>
             d.data.id === selectedId ? PIE_CHART_COLORS.arcStrokeWidthSelected : PIE_CHART_COLORS.arcStrokeWidth
         )
         .style("filter", (d: d3.PieArcDatum<PieChartDataPoint>) =>
-            d.data.id === selectedId ? PIE_CHART_COLORS.arcFilterSelected : "none"
+            d.data.id === selectedId ? getSelectionFilter(getSliceColor(d.data, state.colorScale)) : "none"
         );
 }
 
@@ -189,12 +208,7 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
         referenceArcs
             .append("path")
             .attr("d", referenceArc as any)
-            .attr("fill", (d) => {
-                if (isNA(d.data)) {
-                    return PIE_CHART_COLORS.arcFillNA;
-                }
-                return colorScale(d.data.id);
-            })
+            .attr("fill", (d) => getSliceColor(d.data, colorScale))
             .style("stroke", PIE_CHART_COLORS.arcStroke)
             .style("stroke-width", PIE_CHART_COLORS.arcStrokeWidth)
             .style("opacity", PIE_CHART_COLORS.referenceArcOpacity)
@@ -212,12 +226,7 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
     // Add paths
     arcs.append("path")
         .attr("d", arc as any)
-        .attr("fill", (d) => {
-            if (isNA(d.data)) {
-                return PIE_CHART_COLORS.arcFillNA;
-            }
-            return colorScale(d.data.id);
-        })
+        .attr("fill", (d) => getSliceColor(d.data, colorScale))
         .style("stroke", PIE_CHART_COLORS.arcStroke)
         .style("stroke-width", PIE_CHART_COLORS.arcStrokeWidth)
         .on("click", (event, d) => {
