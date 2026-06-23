@@ -3,6 +3,7 @@
 import React, { useState, useEffect, type ReactNode } from "react";
 import { Header } from "./Header/Header";
 import { Footer } from "@niagads/ui";
+import { BackToTop } from "./BackToTop";
 import { MobileMenu } from "./MobileMenu/MobileMenu";
 
 interface MainLayoutProps {
@@ -43,6 +44,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
                     { display: "Terms", url: "#" },
                 ]}
             />
+            <BackToTop />
         </div>
     );
 };
