@@ -1,6 +1,6 @@
 // import { BrowseDatasetsPage } from "@/components/pages/browse-datasets-page";
 
-import { UnderConstructionPage } from "@/components/UnderConstructionPage";
+import { UnderConstructionPage } from "@/components/pages/UnderConstructionPage/UnderConstructionPage";
 
 export default function BrowseDatasets() {
     return (
