@@ -36,6 +36,7 @@ export interface TableOptions {
     rowSelectOpts?: RowSelectOptions; // optional: enables row selection and related state change options
     defaultColumns?: string[]; // optional: any column ids not listed will be hidden by default
     onTableLoad?: any;
+    // TODO: order of the filter groups, ordered array
 }
 
 export type TableRow = Record<string, TableCell | TableCell[]>;
@@ -47,6 +48,7 @@ export interface ColumnFilteringOpts {
     filterType?: ColumnFilterType; // defaults based on data type in column
     filterFn?: FilterFnOption<TableRow>; // defaults based on data type in  column
     // valueTransformFn?: (value: BasicType) => BasicType; // for transforming value for filter display
+    // TODO: filterGroup?: str
 }
 
 export interface ColumnStylingOpts {
