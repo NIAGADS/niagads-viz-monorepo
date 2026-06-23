@@ -15,9 +15,15 @@ interface FilterProps {
     column: Column<any, unknown>;
 }
 
+
+interface ColumnValues {
+    total: number;
+    filtered: number;
+}
+
 interface TextFilterProps extends FilterProps {
     column: Column<any, unknown>;
-    values: Record<string, number>;
+    values: Record<string, ColumnValues>;
     otherValues: string[];
 }
 
@@ -48,7 +54,7 @@ const PieChartFilter = ({ column, values, otherValues }: TextFilterProps) => {
         () =>
             Object.entries(values).map(([key, count]) => ({
                 id: key,
-                value: count,
+                value: count.filtered,
             })),
         [values]
     );
@@ -68,7 +74,12 @@ const RichSelectFilter = ({ column, values, otherValues }: TextFilterProps) => {
     const opts = useMemo(() => {
         return Object.entries(values).reduce(
             (acc, [value, count]) => {
-                acc[value] = <Badge style={{ fontSize: "0.75rem" }}>{count}</Badge>;
+                acc[value] = (
+                    <div>
+                        <Badge style={{ fontSize: "0.75rem" }}>{count.filtered}</Badge>
+                        <Badge style={{ fontSize: "0.75rem" }}>{count.total}</Badge>
+                    </div>
+                );
                 return acc;
             },
             {} as Record<string, ReactNode>
@@ -105,7 +116,7 @@ const MultiSelectPillFilter = ({ column, values, otherValues, showLabel = true }
     const opts = useMemo(() => {
         return Object.entries(values).reduce(
             (acc, [value, count]) => {
-                acc[value] = count;
+                acc[value] = count.filtered;
                 return acc;
             },
             {} as Record<string, number>
@@ -161,7 +172,8 @@ const BooleanFilter = ({ column, values }: Omit<TextFilterProps, "otherValues">)
     const trueValue = meta.trueValue ? meta.trueValue.toString() : "true";
     const label = column.columnDef.header!.toString();
     const filterValue = column.getFilterValue();
-    const trueCount = values[trueValue] || 0;
+    const trueCount = values[trueValue]?.filtered || 0;
+    const totalCount = values[trueValue]?.total || 0;
 
     return (
         <div className={styles["filter-boolean-container"]}>
@@ -174,7 +186,10 @@ const BooleanFilter = ({ column, values }: Omit<TextFilterProps, "otherValues">)
                     }}
                 />
                 <span className={styles["filter-boolean-value"]}>{label}</span>
-                <Badge className={styles["filter-boolean-count"]}>{trueCount}</Badge>
+                <div>
+                    <Badge className={styles["filter-boolean-count"]}>{trueCount}</Badge>
+                    <Badge className={styles["filter-boolean-count"]}>{totalCount}</Badge>
+                </div>
             </div>
         </div>
     );
@@ -283,11 +298,11 @@ const Filter = ({ column }: FilterProps) => {
             uniqueValues.delete(naValue);
         }
 
-        let sortedValueHash: Record<string, number> = {};
+        let sortedValueHash: Record<string, ColumnValues> = {};
         let otherValueList: string[] = [];
 
         if (uniqueValues.size > MAX_FILTER_CATEGORIES) {
-            const topEntryHash: Record<string, number> = {};
+            const topEntryHash: Record<string, ColumnValues> = {};
             const sortedEntries = [...uniqueValues.entries()].sort((a, b) => b[1] - a[1]);
             const topEntries = sortedEntries.slice(0, MAX_FILTER_CATEGORIES - 1);
 
@@ -301,8 +316,13 @@ const Filter = ({ column }: FilterProps) => {
 
             otherValueList = otherVals;
 
+            console.log(column.getAllValues())
             topEntries.forEach(([value, count]) => {
-                topEntryHash[value] = count;
+                console.log(value)
+                topEntryHash[value] = {
+                    total: column.getAllValues().filter(x => x === value).length,
+                    filtered: count
+                };
             });
 
             sortedValueHash = Object.keys(topEntryHash)
@@ -312,24 +332,33 @@ const Filter = ({ column }: FilterProps) => {
                         acc[key] = topEntryHash[key];
                         return acc;
                     },
-                    {} as Record<string, number>
+                    {} as Record<string, ColumnValues>
                 );
 
-            sortedValueHash.Other = otherCount;
+            sortedValueHash.Other = {
+                total: otherValueList.length,
+                filtered: otherCount
+            };
         } else {
             sortedValueHash = Object.keys(Object.fromEntries(uniqueValues))
                 .sort()
                 .reduce(
                     (acc, key) => {
-                        acc[key] = uniqueValues.get(key)!;
+                        acc[key] = {
+                            total: column.getAllValues().filter(x => x === key).length,
+                            filtered: uniqueValues.get(key)!
+                        };
                         return acc;
                     },
-                    {} as Record<string, number>
+                    {} as Record<string, ColumnValues>
                 );
         }
 
         if (naCount > 0) {
-            sortedValueHash[naValue] = naCount;
+            sortedValueHash[naValue] = {
+                total: column.getAllValues().filter(x => x === naValue).length,
+                filtered: naCount
+            };
         }
 
         return { sortedValueHash, otherValueList };
