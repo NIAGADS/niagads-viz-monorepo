@@ -216,6 +216,25 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
                         }
                         return values;
                     };
+
+                    column.getAllFacetedUniqueValues = (
+                        filterNulls: boolean = false,
+                        naValue: string = DEFAULT_NA_VALUE
+                    ) => {
+                        const facetedUniqueValues = new Map<any, number>();
+                        const rows = table.getCoreRowModel().flatRows;
+
+                        for (let i = 0; i < rows.length; i++) {
+                            const value = rows[i].getValue(column.id);
+                            if (filterNulls && (value == null || value === naValue)) {
+                                continue;
+                            }
+                            const count = facetedUniqueValues.get(value) ?? 0;
+                            facetedUniqueValues.set(value, count + 1);
+                        }
+
+                        return facetedUniqueValues;
+                    };
                 },
             },
         ],

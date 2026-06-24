@@ -5,6 +5,7 @@ import React, { ReactNode, useCallback, useMemo } from "react";
 
 import { Column } from "@tanstack/react-table";
 import { DEFAULT_NA_VALUE } from "../../../types";
+import { Key } from "lucide-react";
 import { RichSelect } from "@niagads/ui/client";
 import styles from "./filter.module.css";
 
@@ -44,9 +45,16 @@ const __resolveTextFilterValue = (value: string | undefined, otherValues: string
 };
 
 const PieChartFilter = ({ column, values, otherValues }: TextFilterProps) => {
-    // TODO: need to get allvalues and calcuated sorted unique values -> this passed as data unless
-    // table is filtered in which case they get passed as reference data.
-    // TODO: -> determine if table is filtered from column? might need another table instance accessor function
+    const referenceChartData: PieChartDataRow[] = useMemo(() => {
+        const naValue = column.columnDef.meta?.naValue || DEFAULT_NA_VALUE;
+        const uniqueValues: Map<string, number> = column.getAllFacetedUniqueValues(true, naValue);
+        const naCount = uniqueValues.get(naValue) || 0;
+        return Object.entries(sortFacetedValues(naCount, naValue, uniqueValues).facets).map(([key, count]) => ({
+            id: key,
+            value: count,
+        }));
+    }, [column.id]);
+
     const chartData: PieChartDataRow[] = useMemo(
         () =>
             Object.entries(values).map(([key, count]) => ({
@@ -59,6 +67,7 @@ const PieChartFilter = ({ column, values, otherValues }: TextFilterProps) => {
     return (
         <PieChart
             title={column.columnDef.header!.toString()}
+            referenceData={referenceChartData}
             data={chartData}
             legendPosition="right"
             onClick={(v: string) => column.setFilterValue(__resolveTextFilterValue(v, otherValues))}
@@ -266,6 +275,91 @@ const NumericFilter = ({ column }: FilterProps) => {
     return <NoValidValuesMessage columnName={column.columnDef.header!.toString()} />;
 };
 
+/**
+ * Sorts and organizes unique values for filter display, handling overflow by grouping into "Other"
+ *
+ * @param {number} naCount - Count of N/A values
+ * @param {string} naValue - The N/A value representation
+ * @param {Map<string, number>} uniqueValues - Map of unique values and their counts
+ * @returns {Object} Object with sorted faceted values and list of values grouped as "other"
+ */
+const sortFacetedValues = (
+    naCount: number,
+    naValue: string,
+    uniqueValues: Map<string, number>
+): { facets: Record<string, number>; other: string[] } => {
+    if (naCount > 0) {
+        uniqueValues.delete(naValue);
+    }
+
+    let facets: Record<string, number> = {};
+    let otherValues: string[] = [];
+
+    if (uniqueValues.size > MAX_FILTER_CATEGORIES) {
+        const topEntryHash: Record<string, number> = {};
+        const sortedEntries = [...uniqueValues.entries()].sort((a, b) => b[1] - a[1]);
+        const topEntries = sortedEntries.slice(0, MAX_FILTER_CATEGORIES - 1);
+
+        const otherEntries = sortedEntries.slice(MAX_FILTER_CATEGORIES - 1).reduce(
+            (acc, [value, count]) => ({
+                values: [...acc.values, value],
+                count: acc.count + count,
+            }),
+            { values: [] as string[], count: 0 }
+        );
+
+        topEntries.forEach(([value, count]) => {
+            topEntryHash[value] = count;
+        });
+
+        facets = Object.keys(topEntryHash)
+            .sort()
+            .reduce(
+                (acc, key) => {
+                    acc[key] = topEntryHash[key];
+                    return acc;
+                },
+                {} as Record<string, number>
+            );
+
+        facets.Other = otherEntries.count;
+        otherValues = otherEntries.values;
+    } else {
+        facets = Object.keys(Object.fromEntries(uniqueValues))
+            .sort()
+            .reduce(
+                (acc, key) => {
+                    acc[key] = uniqueValues.get(key)!;
+                    return acc;
+                },
+                {} as Record<string, number>
+            );
+    }
+
+    if (naCount > 0) {
+        facets[naValue] = naCount;
+    }
+
+    return { facets: facets, other: otherValues };
+};
+
+/**
+ * Renders an appropriate filter UI component based on the column's data type and metadata.
+ *
+ * For categorical columns with too many unique values (> MAX_FILTER_CATEGORIES):
+ * - Keeps the top  categories sorted alphabetically by count (descending)
+ * - Groups remaining categories under an "Other" option
+ * - The otherValues array tracks which actual values are grouped under "Other"
+ * - This allows the filter to correctly expand "Other" back to its constituent values
+ *
+ * Special handling for N/A values:
+ * - N/A values are tracked separately and always displayed
+ * - If only N/A values remain after filtering, shows a message prompting adjustment of other filters
+ *
+ * @param {FilterProps} props - The component props
+ * @param {Column} props.column - The TanStack React Table column instance containing:
+ * @returns {ReactNode} A filter UI component appropriate for the column type
+ */
 const Filter = ({ column }: FilterProps) => {
     const meta = column.columnDef.meta!;
 
@@ -281,76 +375,25 @@ const Filter = ({ column }: FilterProps) => {
         return <NoValidValuesMessage columnName={column.columnDef.header!.toString()} />;
     }
 
-    const { sortedValueHash: sortedUniqueValues, otherValueList: otherValues } = useMemo(() => {
-        if (naCount > 0) {
-            uniqueValues.delete(naValue);
-        }
-
-        let sortedValueHash: Record<string, number> = {};
-        let otherValueList: string[] = [];
-
-        if (uniqueValues.size > MAX_FILTER_CATEGORIES) {
-            const topEntryHash: Record<string, number> = {};
-            const sortedEntries = [...uniqueValues.entries()].sort((a, b) => b[1] - a[1]);
-            const topEntries = sortedEntries.slice(0, MAX_FILTER_CATEGORIES - 1);
-
-            const { otherValueList: otherVals, otherCount } = sortedEntries.slice(MAX_FILTER_CATEGORIES - 1).reduce(
-                (acc, [value, count]) => ({
-                    otherValueList: [...acc.otherValueList, value],
-                    otherCount: acc.otherCount + count,
-                }),
-                { otherValueList: [] as string[], otherCount: 0 }
-            );
-
-            otherValueList = otherVals;
-
-            topEntries.forEach(([value, count]) => {
-                topEntryHash[value] = count;
-            });
-
-            sortedValueHash = Object.keys(topEntryHash)
-                .sort()
-                .reduce(
-                    (acc, key) => {
-                        acc[key] = topEntryHash[key];
-                        return acc;
-                    },
-                    {} as Record<string, number>
-                );
-
-            sortedValueHash.Other = otherCount;
-        } else {
-            sortedValueHash = Object.keys(Object.fromEntries(uniqueValues))
-                .sort()
-                .reduce(
-                    (acc, key) => {
-                        acc[key] = uniqueValues.get(key)!;
-                        return acc;
-                    },
-                    {} as Record<string, number>
-                );
-        }
-
-        if (naCount > 0) {
-            sortedValueHash[naValue] = naCount;
-        }
-
-        return { sortedValueHash, otherValueList };
+    const facetedValues = useMemo(() => {
+        return sortFacetedValues(naCount, naValue, uniqueValues);
     }, [Array.from(uniqueValues.entries())]);
 
     if (meta.type === "boolean") {
-        return <BooleanFilter column={column} values={sortedUniqueValues} />;
+        return <BooleanFilter column={column} values={facetedValues.facets} />;
     }
 
     if (meta.filterType === "pie") {
-        return <PieChartFilter column={column} values={sortedUniqueValues} otherValues={otherValues} />;
+        return <PieChartFilter column={column} values={facetedValues.facets} otherValues={facetedValues.other} />;
     }
 
     if (meta.filterType === "multiselect") {
-        return <MultiSelectPillFilter column={column} values={sortedUniqueValues} otherValues={otherValues} />;
+        return (
+            <MultiSelectPillFilter column={column} values={facetedValues.facets} otherValues={facetedValues.other} />
+        );
     }
 
-    return <RichSelectFilter column={column} values={sortedUniqueValues} otherValues={otherValues} />;
+    return <RichSelectFilter column={column} values={facetedValues.facets} otherValues={facetedValues.other} />;
 };
 
 export default Filter;

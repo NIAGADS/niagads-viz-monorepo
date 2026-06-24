@@ -94,6 +94,7 @@ declare module "@tanstack/react-table" {
     interface Column<TData extends RowData, TValue> {
         getAllValues: (filterNulls?: boolean, naValue?: string) => TValue[];
         getFilteredValues: (filterNulls?: boolean, naValue?: string) => TValue[];
+        getAllFacetedUniqueValues: (filterNulls?: boolean, naValue?: string) => Map<any, number>; // returns "unfiltered" faceted unique values
     }
 
     interface SortingFns {
