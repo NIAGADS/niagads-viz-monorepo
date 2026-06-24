@@ -91,10 +91,12 @@ declare module "@tanstack/react-table" {
     }
 
     // This "merges" your custom functions into the existing Column interface
+    // custom/wrapper functions for accessing table instance row models not directly accessible through
+    // a column object
     interface Column<TData extends RowData, TValue> {
-        getAllValues: (filterNulls?: boolean, naValue?: string) => TValue[];
-        getFilteredValues: (filterNulls?: boolean, naValue?: string) => TValue[];
-        getAllFacetedUniqueValues: (filterNulls?: boolean, naValue?: string) => Map<any, number>; // returns "unfiltered" faceted unique values
+        getAllValues: (filterNulls?: boolean, naValue?: string) => TValue[]; // returns pre-filtered values
+        getFilteredValues: (filterNulls?: boolean, naValue?: string) => TValue[]; // returns filtered values
+        getAllUniqueValues: () => Map<any, number>; // returns pre-filtered unique value : count mapping
     }
 
     interface SortingFns {
