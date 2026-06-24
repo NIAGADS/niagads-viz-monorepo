@@ -39,6 +39,8 @@ const PIE_CHART_COLORS = {
 const PIE_CHART_SIZES = {
     arcStrokeWidthDefault: 2,
     arcStrokeWidthSelectedDefault: 4,
+    arcTranslateOffset: 12,
+    arcTransitionDurationMs: 150,
     tooltipPadding: "8px 12px",
     tooltipBorderRadius: "4px",
     tooltipFontSize: "12px",
@@ -79,6 +81,16 @@ const getSelectionFilter = (color: string): string => {
     ].join(" ");
 };
 
+const getSelectionTransform = (arc: d3.PieArcDatum<PieChartDataPoint>, isSelected: boolean): string => {
+    if (!isSelected) return "translate(0,0)";
+
+    const angle = (arc.startAngle + arc.endAngle) / 2 - Math.PI / 2;
+    const offsetX = Math.cos(angle) * PIE_CHART_SIZES.arcTranslateOffset;
+    const offsetY = Math.sin(angle) * PIE_CHART_SIZES.arcTranslateOffset;
+
+    return `translate(${offsetX},${offsetY})`;
+};
+
 interface PieChartState {
     data: PieChartDataPoint[];
     opts: PieChartOptions;
@@ -109,7 +121,14 @@ export function updatePieChartSelection(container: HTMLElement, selectedId?: str
     // Update stored selection state
     state.opts.selectedId = selectedId;
 
+    const transition = svg.transition().duration(PIE_CHART_SIZES.arcTransitionDurationMs);
+
+    svg.selectAll<SVGGElement, d3.PieArcDatum<PieChartDataPoint>>(".arc")
+        .transition(transition)
+        .attr("transform", (d: d3.PieArcDatum<PieChartDataPoint>) => getSelectionTransform(d, d.data.id === selectedId));
+
     svg.selectAll<SVGPathElement, d3.PieArcDatum<PieChartDataPoint>>(".arc path")
+        .transition(transition)
         .style("fill", (d: d3.PieArcDatum<PieChartDataPoint>) => getSliceColor(d.data, state.colorScale))
         .style("stroke-width", (d: d3.PieArcDatum<PieChartDataPoint>) =>
             d.data.id === selectedId ? PIE_CHART_COLORS.arcStrokeWidthSelected : PIE_CHART_COLORS.arcStrokeWidth
