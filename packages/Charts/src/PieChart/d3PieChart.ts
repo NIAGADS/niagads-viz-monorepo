@@ -144,11 +144,11 @@ export function updatePieChartSelection(container: HTMLElement, selectedId?: str
     const transition = svg.transition().duration(PIE_CHART_SIZES.arcTransitionDurationMs);
 
     svg.selectAll<SVGGElement, d3.PieArcDatum<PieChartDataPoint>>(".arc")
-        .transition(transition)
+        .transition(transition as any)
         .attr("transform", (d: d3.PieArcDatum<PieChartDataPoint>) => getSelectionTransform(d, d.data.id === selectedId));
 
     svg.selectAll<SVGPathElement, d3.PieArcDatum<PieChartDataPoint>>(".arc path")
-        .transition(transition)
+        .transition(transition as any)
         .style("fill", (d: d3.PieArcDatum<PieChartDataPoint>) => getSliceColor(d.data, state.colorScale))
         .style("stroke-width", (d: d3.PieArcDatum<PieChartDataPoint>) =>
             d.data.id === selectedId ? PIE_CHART_COLORS.arcStrokeWidthSelected : PIE_CHART_COLORS.arcStrokeWidth
