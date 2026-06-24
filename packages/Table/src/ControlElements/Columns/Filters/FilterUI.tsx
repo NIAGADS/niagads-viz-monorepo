@@ -130,8 +130,6 @@ const PieChartFilter = ({ column, referenceValues, filteredValues }: TextFilterP
             }));
     }, [column.id, filteredValues.counts]);
 
-    console.log(filteredChartData)
-
     return (
         <PieChart
             title={column.columnDef.header!.toString()}
