@@ -99,6 +99,26 @@ interface PieChartState {
     tooltip: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
 }
 
+const showTooltip = (
+    tooltip: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>,
+    event: MouseEvent,
+    data: PieChartDataPoint,
+    total: number,
+    sliceColor: string
+): void => {
+    const percentage = total > 0 ? ((data.value / total) * 100).toFixed(1) : "0.0";
+
+    tooltip
+        .style("left", event.pageX + 10 + "px")
+        .style("top", event.pageY + 10 + "px")
+        .style("display", "block")
+        .style("border-color", sliceColor)
+        .html("");
+
+    tooltip.append("div").style("margin-bottom", "8px").html(`<strong>${data.label || data.id}</strong>: ${percentage}%`);
+    tooltip.append("div").html(`${data.value} records`);
+};
+
 const getCombinedData = (data: PieChartDataPoint[], referenceData?: PieChartDataPoint[]): PieChartDataPoint[] => {
     const combinedData = new Map<string, PieChartDataPoint>();
 
@@ -165,6 +185,7 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
     // Radius is limited by the smaller dimension
     const radius = Math.min(innerWidth, innerHeight) / 2;
     const hasReferenceData = !!options.referenceData?.length;
+    const referenceTotal = d3.sum(options.referenceData || [], (d) => d.value);
 
     // Create SVG
     const svg = d3
@@ -235,7 +256,18 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
             .style("stroke", PIE_CHART_COLORS.arcStroke)
             .style("stroke-width", PIE_CHART_COLORS.arcStrokeWidth)
             .style("opacity", PIE_CHART_COLORS.referenceArcOpacity)
-            .style("pointer-events", "none");
+            .on("mouseenter", (event: MouseEvent, d: d3.PieArcDatum<PieChartDataPoint>) => {
+                const path = d3.select(event.currentTarget as SVGPathElement);
+                path.style("opacity", PIE_CHART_COLORS.arcOpacityHover.toString());
+
+                const sliceColor = isNA(d.data) ? PIE_CHART_COLORS.arcFillNA : colorScale(d.data.id);
+                showTooltip(tooltip, event, d.data, referenceTotal, sliceColor);
+            })
+            .on("mouseleave", (event: MouseEvent) => {
+                const path = d3.select(event.currentTarget as SVGPathElement);
+                path.style("opacity", PIE_CHART_COLORS.referenceArcOpacity.toString());
+                tooltip.style("display", "none");
+            });
     }
 
     // Create pie arcs
@@ -260,22 +292,8 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
             const path = d3.select(event.currentTarget as SVGPathElement);
             path.style("opacity", PIE_CHART_COLORS.arcOpacityHover.toString());
 
-            const percentage = ((d.data.value / total) * 100).toFixed(1);
-            // Use same color logic for tooltip border
             const sliceColor = isNA(d.data) ? PIE_CHART_COLORS.arcFillNA : colorScale(d.data.id);
-
-            tooltip
-                .style("left", event.pageX + 10 + "px")
-                .style("top", event.pageY + 10 + "px")
-                .style("display", "block")
-                .style("border-color", sliceColor)
-                .html("");
-
-            tooltip
-                .append("div")
-                .style("margin-bottom", "8px")
-                .html(`<strong>${d.data.label || d.data.id}</strong>: ${percentage}%`);
-            tooltip.append("div").html(`${d.data.value} records`);
+            showTooltip(tooltip, event, d.data, total, sliceColor);
         })
         .on("mouseleave", (event: MouseEvent) => {
             const path = d3.select(event.currentTarget as SVGPathElement);
