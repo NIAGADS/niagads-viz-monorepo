@@ -96,7 +96,7 @@ declare module "@tanstack/react-table" {
     interface Column<TData extends RowData, TValue> {
         getAllValues: (filterNulls?: boolean, naValue?: string) => TValue[]; // returns pre-filtered values
         getFilteredValues: (filterNulls?: boolean, naValue?: string) => TValue[]; // returns filtered values
-        getAllUniqueValues: () => Map<any, number>; // returns pre-filtered unique value : count mapping
+        getUniqueValues: () => Map<any, number>; // returns pre-filtered unique value : count mapping
     }
 
     interface SortingFns {

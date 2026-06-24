@@ -5,12 +5,16 @@ import React, { ReactNode, useCallback, useMemo } from "react";
 
 import { Column } from "@tanstack/react-table";
 import { DEFAULT_NA_VALUE } from "../../../types";
-import { Key } from "lucide-react";
 import { RichSelect } from "@niagads/ui/client";
 import styles from "./filter.module.css";
 
 export const NUMERIC_CELL_TYPES = ["float", "integer", "pvalue", "percentage_cell"];
 const MAX_FILTER_CATEGORIES = 7;
+
+interface RowValueSummary {
+    counts: Record<string, number>; // value: count mapping
+    otherValues: string[]; // list of any values consolidated into "Other"
+}
 
 interface FilterProps {
     column: Column<any, unknown>;
@@ -18,8 +22,8 @@ interface FilterProps {
 
 interface TextFilterProps extends FilterProps {
     column: Column<any, unknown>;
-    values: Record<string, number>;
-    otherValues: string[];
+    referenceValues: RowValueSummary;
+    filteredValues: RowValueSummary;
 }
 
 interface MultiSelectPillFilterProps extends TextFilterProps {
@@ -28,7 +32,7 @@ interface MultiSelectPillFilterProps extends TextFilterProps {
 
 const NoValidValuesMessage = ({ columnName }: { columnName: string }) => (
     <Alert variant="info" message={columnName}>
-        <p>Only N/A values remain. Adjust other filters to see valid options for this column.</p>
+        <p>Cannot filter on this column: all values are N/A.</p>
     </Alert>
 );
 
@@ -44,60 +48,118 @@ const __resolveTextFilterValue = (value: string | undefined, otherValues: string
     return [value];
 };
 
-const PieChartFilter = ({ column, values, otherValues }: TextFilterProps) => {
-    const referenceChartData: PieChartDataRow[] = useMemo(() => {
-        const naValue = column.columnDef.meta?.naValue || DEFAULT_NA_VALUE;
-        const uniqueValues: Map<string, number> = column.getAllFacetedUniqueValues(true, naValue);
-        const naCount = uniqueValues.get(naValue) || 0;
-        return Object.entries(sortFacetedValues(naCount, naValue, uniqueValues).facets).map(([key, count]) => ({
-            id: key,
-            value: count,
-        }));
-    }, [column.id]);
+/**
+ * Sorts and organizes unique values for filter display, handling overflow by grouping into "Other"
+ *
+ * @param {string} naValue - The N/A value representation
+ * @param {Map<string, number>} valueCounts - Map of unique values and their counts
+ * @returns {RowValueSummary} Object with sorted value/count map and list of values grouped as "other"
+ */
+const _organizeValueCounts = (valueCounts: Map<string, number>, naValue: string): RowValueSummary => {
+    let filteredValueCounts: Record<string, number> = {};
+    let otherValues: string[] = [];
 
-    const chartData: PieChartDataRow[] = useMemo(
+    // consolidate values if there are too many into "Other"
+    if (valueCounts.size > MAX_FILTER_CATEGORIES) {
+        const sortedEntries = [...valueCounts.entries()]
+            .filter(([value]) => value !== naValue)
+            .sort((a, b) => b[1] - a[1]);
+
+        const topEntries = sortedEntries.slice(0, MAX_FILTER_CATEGORIES - 1);
+        const otherEntries = sortedEntries.slice(MAX_FILTER_CATEGORIES - 1).reduce(
+            (acc, [value, count]) => ({
+                values: [...acc.values, value],
+                count: acc.count + count,
+            }),
+            { values: [] as string[], count: 0 }
+        );
+
+        filteredValueCounts = Object.fromEntries(topEntries.sort(([a], [b]) => a.localeCompare(b)));
+
+        filteredValueCounts.Other = otherEntries.count;
+        otherValues = otherEntries.values;
+    } else {
+        // count
+        filteredValueCounts = Object.keys(Object.fromEntries(valueCounts))
+            .filter((key) => key !== naValue)
+            .sort()
+            .reduce(
+                (acc, key) => {
+                    acc[key] = valueCounts.get(key)!;
+                    return acc;
+                },
+                {} as Record<string, number>
+            );
+    }
+
+    // add NAs back in if relevant
+    const naCount = valueCounts.get(naValue) || 0;
+    if (naCount > 0) {
+        filteredValueCounts[naValue] = naCount;
+    }
+
+    return { counts: filteredValueCounts, otherValues: otherValues };
+};
+
+const PieChartFilter = ({ column, referenceValues, filteredValues }: TextFilterProps) => {
+    const referenceChartData: PieChartDataRow[] = useMemo(
         () =>
-            Object.entries(values).map(([key, count]) => ({
+            Object.entries(referenceValues.counts).map(([key, count]) => ({
                 id: key,
                 value: count,
             })),
-        [values]
+        [column.id]
+    );
+
+    const filteredChartData: PieChartDataRow[] = useMemo(
+        () =>
+            Object.entries(filteredValues.counts).map(([key, count]) => ({
+                id: key,
+                value: count,
+            })),
+        [filteredValues.counts]
     );
 
     return (
         <PieChart
             title={column.columnDef.header!.toString()}
+            data={filteredChartData}
             referenceData={referenceChartData}
-            data={chartData}
             legendPosition="right"
-            onClick={(v: string) => column.setFilterValue(__resolveTextFilterValue(v, otherValues))}
+            onClick={(v: string) => column.setFilterValue(__resolveTextFilterValue(v, referenceValues.otherValues))}
             displayOpts={{ width: 200 }}
         />
     );
 };
 
-const RichSelectFilter = ({ column, values, otherValues }: TextFilterProps) => {
+const RichSelectFilter = ({ column, referenceValues, filteredValues }: TextFilterProps) => {
     const opts = useMemo(() => {
-        return Object.entries(values).reduce(
+        return Object.entries(filteredValues.counts).reduce(
             (acc, [value, count]) => {
                 acc[value] = <Badge style={{ fontSize: "0.75rem" }}>{count}</Badge>;
                 return acc;
             },
             {} as Record<string, ReactNode>
         );
-    }, [values]);
+    }, [filteredValues]);
 
     return (
         <RichSelect
             label={column.columnDef.header!.toString()}
             placeholder="Select ..."
             options={opts}
-            onChange={(v) => column.setFilterValue(__resolveTextFilterValue(v, otherValues))}
+            onChange={(v) => column.setFilterValue(__resolveTextFilterValue(v, referenceValues.otherValues))}
         />
     );
 };
 
-const MultiSelectPillFilter = ({ column, values, otherValues, showLabel = true }: MultiSelectPillFilterProps) => {
+const MultiSelectPillFilter = ({
+    column,
+    referenceValues,
+    filteredValues,
+    showLabel = true,
+}: MultiSelectPillFilterProps) => {
+    const otherValues = useMemo(() => referenceValues.otherValues, [column.id]);
     const resolveFilterValue = useCallback(
         (newFilterValues: string[]) => {
             if (newFilterValues.length > 0) {
@@ -111,25 +173,25 @@ const MultiSelectPillFilter = ({ column, values, otherValues, showLabel = true }
 
             return undefined;
         },
-        [otherValues]
+        [column.id]
     );
 
     const opts = useMemo(() => {
-        return Object.entries(values).reduce(
+        return Object.entries(filteredValues.counts).reduce(
             (acc, [value, count]) => {
                 acc[value] = count;
                 return acc;
             },
             {} as Record<string, number>
         );
-    }, [values]);
+    }, [filteredValues]);
 
+    // determine which options are currently "selected/checked"
     const optionKeys = Object.keys(opts);
     const filterValues = (column.getFilterValue() as string[]) || [];
     const filterValuesIncludeOther = filterValues.some((item) => otherValues.includes(item));
 
     let selectedValues = filterValues.filter((item) => !otherValues.includes(item)) || [];
-
     if (filterValuesIncludeOther) {
         selectedValues.push("Other");
     }
@@ -168,12 +230,12 @@ const MultiSelectPillFilter = ({ column, values, otherValues, showLabel = true }
     );
 };
 
-const BooleanFilter = ({ column, values }: Omit<TextFilterProps, "otherValues">) => {
+const BooleanFilter = ({ column, referenceValues, filteredValues }: Omit<TextFilterProps, "otherValues">) => {
     const meta = column.columnDef.meta!;
     const trueValue = meta.trueValue ? meta.trueValue.toString() : "true";
     const label = column.columnDef.header!.toString();
     const filterValue = column.getFilterValue();
-    const trueCount = values[trueValue] || 0;
+    const trueCount = filteredValues.counts[trueValue] || 0;
 
     return (
         <div className={styles["filter-boolean-container"]}>
@@ -276,74 +338,6 @@ const NumericFilter = ({ column }: FilterProps) => {
 };
 
 /**
- * Sorts and organizes unique values for filter display, handling overflow by grouping into "Other"
- *
- * @param {number} naCount - Count of N/A values
- * @param {string} naValue - The N/A value representation
- * @param {Map<string, number>} uniqueValues - Map of unique values and their counts
- * @returns {Object} Object with sorted faceted values and list of values grouped as "other"
- */
-const sortFacetedValues = (
-    naCount: number,
-    naValue: string,
-    uniqueValues: Map<string, number>
-): { facets: Record<string, number>; other: string[] } => {
-    if (naCount > 0) {
-        uniqueValues.delete(naValue);
-    }
-
-    let facets: Record<string, number> = {};
-    let otherValues: string[] = [];
-
-    if (uniqueValues.size > MAX_FILTER_CATEGORIES) {
-        const topEntryHash: Record<string, number> = {};
-        const sortedEntries = [...uniqueValues.entries()].sort((a, b) => b[1] - a[1]);
-        const topEntries = sortedEntries.slice(0, MAX_FILTER_CATEGORIES - 1);
-
-        const otherEntries = sortedEntries.slice(MAX_FILTER_CATEGORIES - 1).reduce(
-            (acc, [value, count]) => ({
-                values: [...acc.values, value],
-                count: acc.count + count,
-            }),
-            { values: [] as string[], count: 0 }
-        );
-
-        topEntries.forEach(([value, count]) => {
-            topEntryHash[value] = count;
-        });
-
-        facets = Object.keys(topEntryHash)
-            .sort()
-            .reduce(
-                (acc, key) => {
-                    acc[key] = topEntryHash[key];
-                    return acc;
-                },
-                {} as Record<string, number>
-            );
-
-        facets.Other = otherEntries.count;
-        otherValues = otherEntries.values;
-    } else {
-        facets = Object.keys(Object.fromEntries(uniqueValues))
-            .sort()
-            .reduce(
-                (acc, key) => {
-                    acc[key] = uniqueValues.get(key)!;
-                    return acc;
-                },
-                {} as Record<string, number>
-            );
-    }
-
-    if (naCount > 0) {
-        facets[naValue] = naCount;
-    }
-
-    return { facets: facets, other: otherValues };
-};
-
-/**
  * Renders an appropriate filter UI component based on the column's data type and metadata.
  *
  * For categorical columns with too many unique values (> MAX_FILTER_CATEGORIES):
@@ -354,7 +348,7 @@ const sortFacetedValues = (
  *
  * Special handling for N/A values:
  * - N/A values are tracked separately and always displayed
- * - If only N/A values remain after filtering, shows a message prompting adjustment of other filters
+ * - If only N/A values exist before filtering, shows a message prompting adjustment of other filters
  *
  * @param {FilterProps} props - The component props
  * @param {Column} props.column - The TanStack React Table column instance containing:
@@ -362,38 +356,47 @@ const sortFacetedValues = (
  */
 const Filter = ({ column }: FilterProps) => {
     const meta = column.columnDef.meta!;
+    const naValue = meta.naValue || DEFAULT_NA_VALUE;
 
     if (NUMERIC_CELL_TYPES.includes(meta.type)) {
         return <NumericFilter column={column} />;
     }
 
-    const uniqueValues: Map<string, number> = column.getFacetedUniqueValues();
-    const naValue = meta.naValue || DEFAULT_NA_VALUE;
-    const naCount = uniqueValues.get(naValue) || 0;
+    // get "reference" unique values -> all possible values in pre-filtered data
+    const valueCounts: Map<string, number> = useMemo(() => column.getUniqueValues(), [column.id]);
+    const naCount = valueCounts.get(naValue) || 0;
 
-    if (naCount && uniqueValues.size === 1) {
+    // return No Valid Values if every value in the unfiltered column is NA
+    if (naCount && valueCounts.size === 1) {
         return <NoValidValuesMessage columnName={column.columnDef.header!.toString()} />;
     }
 
-    const facetedValues = useMemo(() => {
-        return sortFacetedValues(naCount, naValue, uniqueValues);
-    }, [Array.from(uniqueValues.entries())]);
+    // otherwise, sort and consolidate the value map
+    const referenceValues = useMemo(() => {
+        return _organizeValueCounts(valueCounts, naValue);
+    }, [column.id]);
+
+    // get faceted values and do the same
+    const filteredValueCount = column.getFacetedUniqueValues();
+    const filteredValues = useMemo(() => {
+        return _organizeValueCounts(filteredValueCount, naValue);
+    }, [Array.from(filteredValueCount.entries())]);
 
     if (meta.type === "boolean") {
-        return <BooleanFilter column={column} values={facetedValues.facets} />;
+        return <BooleanFilter column={column} referenceValues={referenceValues} filteredValues={filteredValues} />;
     }
 
     if (meta.filterType === "pie") {
-        return <PieChartFilter column={column} values={facetedValues.facets} otherValues={facetedValues.other} />;
+        return <PieChartFilter column={column} referenceValues={referenceValues} filteredValues={filteredValues} />;
     }
 
     if (meta.filterType === "multiselect") {
         return (
-            <MultiSelectPillFilter column={column} values={facetedValues.facets} otherValues={facetedValues.other} />
+            <MultiSelectPillFilter column={column} referenceValues={referenceValues} filteredValues={filteredValues} />
         );
     }
 
-    return <RichSelectFilter column={column} values={facetedValues.facets} otherValues={facetedValues.other} />;
+    return <RichSelectFilter column={column} referenceValues={referenceValues} filteredValues={filteredValues} />;
 };
 
 export default Filter;

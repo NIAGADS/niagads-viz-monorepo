@@ -237,7 +237,7 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
                         return values;
                     };
 
-                    column.getAllUniqueValues = () => {
+                    column.getUniqueValues = () => {
                         const values = column.getAllValues(false);
                         const uniqueValues = new Map<any, number>();
 
