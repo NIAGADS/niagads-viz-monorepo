@@ -111,14 +111,26 @@ const PieChartFilter = ({ column, referenceValues, filteredValues }: TextFilterP
         [column.id]
     );
 
-    const filteredChartData: PieChartDataRow[] = useMemo(
-        () =>
-            Object.entries(filteredValues.counts).map(([key, count]) => ({
+    // need to build same object for filtered data (inner pie), but
+    // ensure that the order of the fields is the same
+    const filteredChartData: PieChartDataRow[] = useMemo(() => {
+        const referenceOrder = Object.keys(referenceValues.counts);
+        return Object.entries(filteredValues.counts)
+            .sort(([keyA], [keyB]) => {
+                const indexA = referenceOrder.indexOf(keyA);
+                const indexB = referenceOrder.indexOf(keyB);
+                if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+                if (indexA !== -1) return -1;
+                if (indexB !== -1) return 1;
+                return 0;
+            })
+            .map(([key, count]) => ({
                 id: key,
                 value: count,
-            })),
-        [filteredValues.counts]
-    );
+            }));
+    }, [column.id, filteredValues.counts]);
+
+    console.log(filteredChartData)
 
     return (
         <PieChart
@@ -128,6 +140,7 @@ const PieChartFilter = ({ column, referenceValues, filteredValues }: TextFilterP
             legendPosition="right"
             onClick={(v: string) => column.setFilterValue(__resolveTextFilterValue(v, referenceValues.otherValues))}
             displayOpts={{ width: 200 }}
+            preserveSliceOrder={true}
         />
     );
 };
