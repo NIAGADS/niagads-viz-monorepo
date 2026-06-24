@@ -439,23 +439,21 @@ export function histogram(container: HTMLElement, data: number[], opts: Histogra
                 ? `<strong>Count</strong>: ${d.overlayCount ?? 0}<br>`
                 : `<strong>Count</strong>: ${d.baselineCount}<br>`;
 
-            tooltip
-                .style("display", "block")
-                .html(countHtml + `<strong>Percent</strong>: ${freq}%`);
-                const tooltipNode = tooltip.node();
-                const tooltipWidth = tooltipNode?.offsetWidth ?? 0;
-                const tooltipHeight = tooltipNode?.offsetHeight ?? 0;
-                const containerWidth = container.clientWidth;
-                const containerHeight = container.clientHeight;
+            tooltip.style("display", "block").html(countHtml + `<strong>Percent</strong>: ${freq}%`);
+            const tooltipNode = tooltip.node();
+            const tooltipWidth = tooltipNode?.offsetWidth ?? 0;
+            const tooltipHeight = tooltipNode?.offsetHeight ?? 0;
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
 
-                const left =
-                    event.offsetX + tooltipWidth + 20 > containerWidth
-                        ? event.offsetX - tooltipWidth - 20
-                        : event.offsetX + 20;
+            const left =
+                event.offsetX + tooltipWidth + 20 > containerWidth
+                    ? event.offsetX - tooltipWidth - 20
+                    : event.offsetX + 20;
 
-                const top = Math.max(8, Math.min(event.offsetY - 10, containerHeight - tooltipHeight - 8));
+            const top = Math.max(8, Math.min(event.offsetY - 10, containerHeight - tooltipHeight - 8));
 
-                tooltip.style("left", `${Math.max(8, left)}px`).style("top", `${top}px`);
+            tooltip.style("left", `${Math.max(8, left)}px`).style("top", `${top}px`);
         })
         .on("mouseleave", function (_event, d) {
             d3.select(this)
