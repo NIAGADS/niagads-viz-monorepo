@@ -20,6 +20,7 @@ export interface PieChartProps {
     onClick?: (key: string) => void;
     displayOpts?: DisplayProps;
     legendPosition?: "right" | "bottom" | "none";
+    preserveSliceOrder?: boolean;
     title?: string;
 }
 
@@ -64,7 +65,15 @@ const Legend = ({ data, referenceData }: { data: PieChartDataRow[]; referenceDat
     );
 };
 
-const PieChart = ({ data, referenceData, onClick, displayOpts, title, legendPosition = "right" }: PieChartProps) => {
+const PieChart = ({
+    data,
+    referenceData,
+    onClick,
+    displayOpts,
+    title,
+    legendPosition = "right",
+    preserveSliceOrder = false,
+}: PieChartProps) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const chartRef = useRef<HTMLDivElement | null>(null);
     const [selectedId, setSelectedId] = useState<string | undefined>();
@@ -92,6 +101,7 @@ const PieChart = ({ data, referenceData, onClick, displayOpts, title, legendPosi
             displayOpts: updatedDisplayOpts,
             referenceData,
             onClick: handleSelect,
+            preserveSliceOrder,
             selectedId,
         };
         pieChart(chartRef.current, data, opts);
@@ -101,7 +111,7 @@ const PieChart = ({ data, referenceData, onClick, displayOpts, title, legendPosi
                 destroyPieChart(chartRef.current);
             }
         };
-    }, [data, referenceData, displayOpts]);
+    }, [data, referenceData, displayOpts, preserveSliceOrder]);
 
     // Update selection styling (runs when selectedId changes)
     useEffect(() => {

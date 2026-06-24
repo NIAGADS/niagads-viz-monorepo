@@ -14,6 +14,7 @@ export interface PieChartOptions {
     displayOpts?: DisplayProps;
     referenceData?: PieChartDataPoint[];
     onClick?: (id: string) => void;
+    preserveSliceOrder?: boolean;
     selectedId?: string;
 }
 
@@ -161,6 +162,9 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
     // Create pie generator
     const total = d3.sum(data, (d) => d.value);
     const pie = d3.pie<PieChartDataPoint>().value((d) => d.value);
+    if (options.preserveSliceOrder) {
+        pie.sort(null);
+    }
 
     // Create arc generator
     const arc = d3
