@@ -62,7 +62,13 @@ const hexToRgb = (color: string): { r: number; g: number; b: number } | null => 
     if (!hexMatch) return null;
 
     const hex = hexMatch[1];
-    const expandedHex = hex.length === 3 ? hex.split("").map((char) => char + char).join("") : hex;
+    const expandedHex =
+        hex.length === 3
+            ? hex
+                  .split("")
+                  .map((char) => char + char)
+                  .join("")
+            : hex;
     const value = Number.parseInt(expandedHex, 16);
 
     return {
@@ -127,7 +133,10 @@ const showTooltip = (
         .style("border-color", sliceColor)
         .html("");
 
-    tooltip.append("div").style("margin-bottom", "8px").html(`<strong>${data.label || data.id}</strong>: ${percentage}%`);
+    tooltip
+        .append("div")
+        .style("margin-bottom", "8px")
+        .html(`<strong>${data.label || data.id}</strong>: ${percentage}%`);
     tooltip.append("div").html(`${data.value} records`);
 };
 
@@ -157,7 +166,9 @@ export function updatePieChartSelection(container: HTMLElement, selectedId?: str
 
     svg.selectAll<SVGGElement, d3.PieArcDatum<PieChartDataPoint>>(".arc")
         .transition(transition as any)
-        .attr("transform", (d: d3.PieArcDatum<PieChartDataPoint>) => getSelectionTransform(d, d.data.id === selectedId));
+        .attr("transform", (d: d3.PieArcDatum<PieChartDataPoint>) =>
+            getSelectionTransform(d, d.data.id === selectedId)
+        );
 
     svg.selectAll<SVGPathElement, d3.PieArcDatum<PieChartDataPoint>>(".arc path")
         .transition(transition as any)
