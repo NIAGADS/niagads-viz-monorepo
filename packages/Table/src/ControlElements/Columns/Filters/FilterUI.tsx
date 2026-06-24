@@ -61,6 +61,7 @@ const _organizeValueCounts = (valueCounts: Map<string, number>, naValue: string)
 
     // consolidate values if there are too many into "Other"
     if (valueCounts.size > MAX_FILTER_CATEGORIES) {
+        // sort by most frequent to least frequent values; filtering for n/as
         const sortedEntries = [...valueCounts.entries()]
             .filter(([value]) => value !== naValue)
             .sort((a, b) => b[1] - a[1]);
@@ -74,22 +75,16 @@ const _organizeValueCounts = (valueCounts: Map<string, number>, naValue: string)
             { values: [] as string[], count: 0 }
         );
 
-        filteredValueCounts = Object.fromEntries(topEntries.sort(([a], [b]) => a.localeCompare(b)));
+        filteredValueCounts = Object.fromEntries(topEntries);
 
         filteredValueCounts.Other = otherEntries.count;
         otherValues = otherEntries.values;
     } else {
-        // count
-        filteredValueCounts = Object.keys(Object.fromEntries(valueCounts))
-            .filter((key) => key !== naValue)
-            .sort()
-            .reduce(
-                (acc, key) => {
-                    acc[key] = valueCounts.get(key)!;
-                    return acc;
-                },
-                {} as Record<string, number>
-            );
+        const sortedEntries = [...valueCounts.entries()]
+            .filter(([value]) => value !== naValue)
+            .sort((a, b) => b[1] - a[1]);
+
+        filteredValueCounts = Object.fromEntries(sortedEntries);
     }
 
     // add NAs back in if relevant
