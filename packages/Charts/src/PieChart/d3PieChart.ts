@@ -39,8 +39,10 @@ const PIE_CHART_COLORS = {
 const PIE_CHART_SIZES = {
     arcStrokeWidthDefault: 2,
     arcStrokeWidthSelectedDefault: 4,
+    arcStrokeWidthSmallSlice: 1,
     arcTranslateOffset: 12,
     arcTransitionDurationMs: 150,
+    smallSliceThreshold: 0.03,
     tooltipPadding: "8px 12px",
     tooltipBorderRadius: "4px",
     tooltipFontSize: "12px",
@@ -79,6 +81,16 @@ const getSelectionFilter = (color: string): string => {
         `drop-shadow(0 0 8px rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.6))`,
         `drop-shadow(0 0 12px rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.4))`,
     ].join(" ");
+};
+
+const getArcStrokeWidth = (value: number, total: number, isSelected = false): number => {
+    const isSmallSlice = total > 0 && value / total < PIE_CHART_SIZES.smallSliceThreshold;
+
+    if (isSelected) {
+        return isSmallSlice ? PIE_CHART_COLORS.arcStrokeWidth : PIE_CHART_COLORS.arcStrokeWidthSelected;
+    }
+
+    return isSmallSlice ? PIE_CHART_SIZES.arcStrokeWidthSmallSlice : PIE_CHART_COLORS.arcStrokeWidth;
 };
 
 const getSelectionTransform = (arc: d3.PieArcDatum<PieChartDataPoint>, isSelected: boolean): string => {
@@ -151,7 +163,7 @@ export function updatePieChartSelection(container: HTMLElement, selectedId?: str
         .transition(transition as any)
         .style("fill", (d: d3.PieArcDatum<PieChartDataPoint>) => getSliceColor(d.data, state.colorScale))
         .style("stroke-width", (d: d3.PieArcDatum<PieChartDataPoint>) =>
-            d.data.id === selectedId ? PIE_CHART_COLORS.arcStrokeWidthSelected : PIE_CHART_COLORS.arcStrokeWidth
+            getArcStrokeWidth(d.data.value, state.total, d.data.id === selectedId)
         )
         .style("filter", (d: d3.PieArcDatum<PieChartDataPoint>) =>
             d.data.id === selectedId ? getSelectionFilter(getSliceColor(d.data, state.colorScale)) : "none"
@@ -254,7 +266,7 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
             .attr("d", referenceArc as any)
             .attr("fill", (d) => getSliceColor(d.data, colorScale))
             .style("stroke", PIE_CHART_COLORS.arcStroke)
-            .style("stroke-width", PIE_CHART_COLORS.arcStrokeWidth)
+            .style("stroke-width", (d) => getArcStrokeWidth(d.data.value, referenceTotal))
             .style("opacity", PIE_CHART_COLORS.referenceArcOpacity)
             .on("mouseenter", (event: MouseEvent, d: d3.PieArcDatum<PieChartDataPoint>) => {
                 const path = d3.select(event.currentTarget as SVGPathElement);
@@ -283,7 +295,7 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
         .attr("d", arc as any)
         .attr("fill", (d) => getSliceColor(d.data, colorScale))
         .style("stroke", PIE_CHART_COLORS.arcStroke)
-        .style("stroke-width", PIE_CHART_COLORS.arcStrokeWidth)
+        .style("stroke-width", (d) => getArcStrokeWidth(d.data.value, total, d.data.id === options.selectedId))
         .on("click", (event, d) => {
             const newSelectedId = d.data.id === options.selectedId ? undefined : d.data.id;
             options.onClick && options.onClick(newSelectedId || "");
