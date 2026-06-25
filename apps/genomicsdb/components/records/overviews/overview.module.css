@@ -138,6 +138,13 @@
         font-size: 1.25rem;
     }
 }
+.gene-info-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+}
 
 .card-title {
     font-size: 13px;
@@ -204,6 +211,75 @@
     padding: 2px 8px;
     border-radius: 4px;
 }
+.known-ad-gene-badge {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+    min-width: 118px;
+    padding: 6px 11px 4px;
+    border-radius: 12px;
+    border: 1px solid #d6e2f2;
+    background: #f8fbff;
+    color: var(--blue-dark);
+    line-height: 1;
+}
+
+.known-ad-gene-badge-top {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--blue-dark);
+    white-space: nowrap;
+}
+
+.known-ad-gene-confidence {
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #fff7ed;
+    color: #b45309;
+    font-family: "Roboto Mono", monospace;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.known-ad-gene-badge-source-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.known-ad-gene-source {
+    font-size: 10.5px;
+    font-weight: 650;
+    color: var(--muted);
+}
+
+.known-ad-gene-source-link {
+    color: var(--muted);
+    text-decoration: none;
+}
+
+.known-ad-gene-source-link:hover {
+    color: var(--blue);
+    text-decoration: underline;
+}
+
+.known-ad-gene-tier-1 .known-ad-gene-confidence {
+    background: #fff7ed;
+    color: #b45309;
+}
+
+.known-ad-gene-tier-2 .known-ad-gene-confidence {
+    background: #fefce8;
+    color: #a16207;
+}
+
+.known-ad-gene-tier-3 .known-ad-gene-confidence {
+    background: #eef5ff;
+    color: var(--blue);
+}
+
 .summary-text-card {
     font-size: 13px;
     line-height: 1.6;
