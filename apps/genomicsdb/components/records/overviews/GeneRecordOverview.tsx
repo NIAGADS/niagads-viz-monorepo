@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardBody, CardHeader } from "@niagads/ui";
-import { RecordOverview, renderRecordTitle } from "./RecordOverview";
+import { RecordOverview, renderExternalIdentifierLink, renderRecordTitle } from "./RecordOverview";
 
 import AssociationSummaryChart from "../../charts/AssociationSummaryChart";
 import { ExternalUrls } from "@/data/reference";
@@ -19,40 +19,85 @@ const GeneRecordOverview = ({ record }: { record: GeneRecord }) => {
 
     // Format synonyms as comma-space delimited string
     const synonyms = !record.synonyms || record.synonyms.length === 0 ? null : record.synonyms.join(", ");
+    
+    // AI Generated summary of genetic associations for this gene, if available
+    // const annotationSummary = record.annotation_summary ?? null;
+    const annotationSummary =
+    "annotation_summary" in record && typeof record.annotation_summary === "string"
+        ? record.annotation_summary
+        : null;
 
     return (
         <RecordOverview>
             {/* Gene Information Card - 1/3 width */}
-            <Card span={4}>
+            <Card span={5}>
                 <CardHeader>
-                    {renderRecordTitle(record.symbol, record.id, ExternalUrls.ENSEMBL_GENE_URL, record.record_type)}
+                   <div>
+                        <div className={styles["card-title"]}>Gene Information</div>
+                        <div className={styles["card-subtitle"]}>
+                            {renderRecordTitle(record.symbol, record.record_type)}
+                            {record.name ? ` — ${record.name}` : ""}
+                        </div>
+                    </div>
                 </CardHeader>
                 <CardBody>
-                    <div>{record.name && <div className={styles.description}>{record.name}</div>}</div>
-                    <div className={styles.infoContent}>
-                        <div className={styles.details}>
-                            {synonyms && (
-                                <div className={styles.attribute}>
-                                    <span className={styles.infoLabel}>Also known as:</span> {synonyms}
-                                </div>
-                            )}
-                            <div className={styles.attribute}>
-                                <span className={styles.infoLabel}>Gene Type:</span> {record.type}
+                    <div className={styles["gene-info-rows"]}>
+                        <div className={styles["gene-info-row"]}>
+                            <span className={styles["gene-info-label"]}>Ensembl ID</span>
+                            <span className={`${styles["gene-info-value"]} ${styles.mono}`}>
+                                {renderExternalIdentifierLink(record.id, ExternalUrls.ENSEMBL_GENE_URL, record.record_type)}
+                            </span>
+                        </div>
+
+                        {synonyms && (
+                            <div className={styles["gene-info-row"]}>
+                                <span className={styles["gene-info-label"]}>Also known as</span>
+                                <span className={styles["gene-info-value"]}>{synonyms}</span>
                             </div>
-                            <div className={styles.attribute}>
-                                <span className={styles.infoLabel}>Location:</span>{" "}
-                                <RecordLink recordType={"region"} recordId={region}>
+                        )}
+
+                        <div className={styles["gene-info-row"]}>
+                            <span className={styles["gene-info-label"]}>Gene Type</span>
+                            <span className={styles["gene-info-value"]}>
+                                <span className={styles.tag}>{record.type}</span>
+                            </span>
+                        </div>
+
+                        <div className={styles["gene-info-row"]}>
+                            <span className={styles["gene-info-label"]}>Location</span>
+                            <span className={`${styles["gene-info-value"]} ${styles.mono}`}>
+                                <RecordLink recordType="region" recordId={region}>
                                     {location}
                                 </RecordLink>
-                                <span>{` / ${record.cytogenic_location}`}</span>
-                            </div>
+                            </span>
+                            <span className={styles["gene-info-muted"]}>{record.cytogenic_location}</span>
                         </div>
                     </div>
                 </CardBody>
             </Card>
 
-            {/* Chart placeholders - 2/3 width */}
-            <Card span={6}>
+            <Card span={7}>
+                <CardHeader>
+                    <div>
+                        <div className={styles["card-title"]}>Annotation Summary</div>
+                        <div className={styles["card-subtitle"]}>Generated from curated gene annotations and association evidence</div>
+                    </div>
+                </CardHeader>
+
+                <CardBody>
+                    <div className={styles["summary-text-card"]}>
+                        {annotationSummary ? (
+                            <p>{annotationSummary}</p>
+                        ) : (
+                            <p className={styles["summary-placeholder"]}>
+                                Summary will appear here once AI-generated annotation text is available for this record.
+                            </p>
+                        )}
+                    </div>
+                </CardBody>
+            </Card>
+
+            <Card span={12}>
                 <CardHeader>Genetic Associations</CardHeader>
                 <CardBody>
                     <div className="flex" style={{ height: "100%" }}>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import type { ReactNode } from "react";
 import { EntityRecord, RecordType } from "@/lib/types";
 import { RECORD_PAGE_SECTIONS } from "@/data/sections";
 import RecordAnnotationSection from "../RecordAnnotationSection/RecordAnnotationSection";
@@ -13,19 +14,19 @@ interface RecordPageProps {
     recordId: string;
     recordType: RecordType;
     recordData: EntityRecord;
+    overview?: ReactNode;
 }
 
-const RecordPage = ({ recordId, recordType: recordTypeProp, recordData }: RecordPageProps) => {
+const RecordPage = ({ recordId, recordType: recordTypeProp, recordData, overview }: RecordPageProps) => {
     // Override recordType if the variant is structural — the prop alone can't distinguish this,
     // since structural variants share the "variant" record_type but need their own sections/logic
-    const recordType: RecordType =
-        recordData.record_type === "variant" && recordData.is_structural_variant === true
-            ? "structural_variant"
-            : recordTypeProp;
+    
+    const recordType = recordTypeProp;
 
     // Sections are now derived from the corrected recordType, so structural variants
     // get their own section config rather than falling back to generic variant sections
     const sections = RECORD_PAGE_SECTIONS[recordType];
+    const annotationSections = sections.filter((section) => section.id !== "overview");
 
     // The first section that has real tables and isn't under construction opens by default.
     // Used to seed activeTabs and openRequest on mount so the page feels ready on load.
@@ -118,8 +119,9 @@ const RecordPage = ({ recordId, recordType: recordTypeProp, recordData }: Record
                         subtitle={recordData.record_type === "gene" ? (recordData.name ?? undefined) : undefined}
                         id={recordId}
                     />
+                    {overview}
                     <RecordAnnotationSection
-                        sections={sections}
+                        sections={annotationSections}
                         id={recordId}
                         recordType={recordType}
                         activeTabs={activeTabs}
