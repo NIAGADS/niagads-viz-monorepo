@@ -2,12 +2,12 @@ import React, { useMemo } from "react";
 
 import StackedBarChart, { StackedBarChartDataRow, StackedBarChartProps } from "./StackedBarChart";
 
-export interface GeneticAssociationCountRow {
+interface GeneticAssociationCountRow {
     trait_category: string;
     num_variants: Record<string, number>;
 }
 
-export interface GeneticAssociationStackedBarChartProps extends Omit<StackedBarChartProps, "data"> {
+interface GeneticAssociationStackedBarChartProps extends Omit<StackedBarChartProps, "data"> {
     data: { data: GeneticAssociationCountRow[] } | GeneticAssociationCountRow[];
 }
 
