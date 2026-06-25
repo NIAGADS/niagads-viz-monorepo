@@ -1,12 +1,11 @@
-import styles from "./ColumnFilterControls.module.css";
-
 import { Button, FilterChip, FilterChipBar, InlineIcon, StylingProps } from "@niagads/ui";
-import { TrashIcon } from "lucide-react";
 import { Column, ColumnFilter, ColumnFiltersState } from "@tanstack/react-table";
 import React, { useEffect, useMemo, useState } from "react";
 
 import { ColumnFilterType } from "../../types";
 import FilterComponent from "./Filters/FilterUI";
+import { TrashIcon } from "lucide-react";
+import styles from "./ColumnFilterControls.module.css";
 
 interface ColumnFilterControlsProps {
     filterableColumns: Column<any, unknown>[];
@@ -165,14 +164,22 @@ export const ColumnFilterControls = ({
                         </Button>
                     }
                 >
-                    {activeFilters.map((filter) => (
-                        <FilterChip
-                            key={`filter-chip-${filter.id}`}
-                            label={filterableColumns.find((x) => x.id === filter.id)?.columnDef.header as string}
-                            value={`${filter.value}`}
-                            onRemove={() => onRemoveFilter(filter)}
-                        />
-                    ))}
+                    {activeFilters.map((filter) => {
+                        const column = filterableColumns.find((x) => x.id === filter.id);
+                        const valueStr = `${filter.value}`;
+                        const displayValue =
+                            column?.columnDef.meta?.filterType !== "multiselect" && valueStr.includes(",")
+                                ? "Other"
+                                : valueStr;
+                        return (
+                            <FilterChip
+                                key={`filter-chip-${filter.id}`}
+                                label={column?.columnDef.header as string}
+                                value={displayValue}
+                                onRemove={() => onRemoveFilter(filter)}
+                            />
+                        );
+                    })}
                 </FilterChipBar>
             )}
 

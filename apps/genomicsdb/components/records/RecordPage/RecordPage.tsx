@@ -9,6 +9,8 @@ import RecordSidebar from "../RecordSidebar/RecordSidebar";
 import RecordToolbar from "../RecordToolbar/RecordToolbar";
 
 import styles from "./record-page.module.css";
+import GeneRecordOverview from "../overviews/GeneRecordOverview";
+import AssociationSummaryChart from "@/components/charts/AssociationSummaryChart";
 
 interface RecordPageProps {
     recordId: string;

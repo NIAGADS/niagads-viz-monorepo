@@ -1,17 +1,15 @@
-import { APIResponse, getUrlParam } from "@niagads/common";
-
-import { BarChart } from "@niagads/charts";
-import { BaseRecord } from "@/lib/types";
+import { GeneticAssociationStackedBarChart } from "@niagads/charts";
+import { RecordType } from "@/lib/types";
 import { LoadingSpinner } from "@niagads/ui";
 import useSWR from "swr";
 
 interface AssociationSummaryChartProps {
-    record: BaseRecord;
-    endpoint: string;
+    recordId: string;
+    recordType: RecordType;
 }
 
-const AssociationSummaryChart = ({ record, endpoint }: AssociationSummaryChartProps) => {
-    const { data, error, isLoading } = useSWR(buildChartUrl(record, endpoint), (url: string) =>
+const AssociationSummaryChart = ({ recordId, recordType }: AssociationSummaryChartProps) => {
+    const { data, error, isLoading } = useSWR(buildChartUrl(recordId, recordType), (url: string) =>
         fetch(url).then((res) => res.json())
     );
 
@@ -21,29 +19,17 @@ const AssociationSummaryChart = ({ record, endpoint }: AssociationSummaryChartPr
         <div>Error loading chart</div>
     ) : (
         <div className="flex" style={{ height: "100%", width: "100%" }}>
-            <BarChart id={"test"} data={transformData(data)} keys={["upstream", "downstream", "in gene"]} />
+            <GeneticAssociationStackedBarChart
+                data={data}
+                displayOpts={{ width: 900, margin: { top: 18, right: 72, bottom: 18, left: 180 } }}
+            />
         </div>
     );
 };
 
-const buildChartUrl = (record: BaseRecord, tableUrl: string) => {
-    const base_url = `/api-proxy/record/${record.record_type}/${record.id}/associations`;
-
-    const trait = getUrlParam(tableUrl, "trait")!;
-    const source = getUrlParam(tableUrl, "source")!;
-
-    return `${base_url}?content=counts&trait=${trait}&source=${source}`;
-};
-
-const transformData = (response: APIResponse): Record<string, any>[] => {
-    const transformed = response.data.map((rawData: any) => ({
-        term: rawData.trait.term,
-        ...rawData.num_variants,
-    }));
-
-    console.log(transformed);
-
-    return transformed;
+const buildChartUrl = (recordId: string, recordType: RecordType) => {
+    const base_url = `/api-proxy/record/${recordType}/${recordId}/associations`;
+    return `${base_url}?content=counts&source=GWAS`;
 };
 
 export default AssociationSummaryChart;
