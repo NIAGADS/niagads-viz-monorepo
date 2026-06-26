@@ -6,7 +6,6 @@ import { RecordOverview, renderExternalIdentifierLink, renderRecordTitle } from 
 
 import AssociationSummaryChart from "../../charts/AssociationSummaryChart";
 import { ExternalUrls } from "@/data/reference";
-import { GWAS_ASSOC_SECTION } from "@/data/sections";
 import { GeneRecord } from "@/lib/types";
 import { RecordLink } from "../../Link";
 import { genomicLocationToSpan } from "@/lib/utils";
@@ -106,69 +105,6 @@ const GeneRecordOverview = ({ record }: { record: GeneRecord }) => {
                                 {record.name ? ` — ${record.name}` : ""}
                             </div>      
                         </div>
-                       {primaryAdEvidence && (
-                            <div
-                                className={[
-                                    styles["known-ad-gene-badge"],
-                                    primaryAdEvidence.confidence
-                                        ? styles[
-                                            `known-ad-gene-${primaryAdEvidence.confidence
-                                                .toLowerCase()
-                                                .replace(/\s+/g, "-")}`
-                                        ]
-                                        : "",
-                                ]
-                                    .filter(Boolean)
-                                    .join(" ")}
-                                title={[
-                                    adDiseaseAssociation?.disease_name ?? "Known AD Gene",
-                                    primaryAdEvidence.data_source,
-                                    primaryAdEvidence.confidence,
-                                    primaryAdEvidence.evidence_type,
-                                ]
-                                    .filter(Boolean)
-                                    .join(" · ")}
-                                aria-label={[
-                                    "Known AD Gene",
-                                    primaryAdEvidence.data_source,
-                                    primaryAdEvidence.confidence,
-                                    primaryAdEvidence.evidence_type,
-                                ]
-                                    .filter(Boolean)
-                                    .join(" · ")}
-                            >
-                                <div className={styles["known-ad-gene-badge-top"]}>Known AD Gene</div>
-
-                                {primaryAdEvidence.confidence && (
-                                    <div className={styles["known-ad-gene-confidence"]}>
-                                        {primaryAdEvidence.confidence}
-                                    </div>
-                                )}
-
-                                <div className={styles["known-ad-gene-badge-source-row"]}>
-                                    {primaryAdEvidenceUrl ? (
-                                        <a
-                                            className={styles["known-ad-gene-source-link"]}
-                                            href={primaryAdEvidenceUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            title={`View source: ${primaryAdEvidence.data_source}`}
-                                            aria-label={`View source: ${primaryAdEvidence.data_source}`}
-                                        >
-                                            <InlineIcon icon={<ExternalLink size={11} />} iconPosition="end">
-                                                <span className={styles["known-ad-gene-source"]}>
-                                                    {primaryAdEvidence.data_source}
-                                                </span>
-                                            </InlineIcon>
-                                        </a>
-                                    ) : (
-                                        <span className={styles["known-ad-gene-source"]}>
-                                            {primaryAdEvidence.data_source}
-                                        </span>
-                                    )}
-                                </div>
-                            </div>
-                        )}
                     </div>         
                 </CardHeader>
                 <CardBody>
@@ -203,6 +139,46 @@ const GeneRecordOverview = ({ record }: { record: GeneRecord }) => {
                             </span>
                             <span className={styles["gene-info-muted"]}>{record.cytogenic_location}</span>
                         </div>
+
+                        {primaryAdEvidence && (
+                        <div className={styles["gene-info-row"]}>
+                            <span className={styles["gene-info-label"]}>Known AD Gene</span>
+
+                            <div className={styles["known-ad-gene-inline"]}>
+                                {primaryAdEvidence.confidence && (
+                                    <span className={styles["known-ad-gene-confidence"]}>
+                                        {primaryAdEvidence.confidence}
+                                    </span>
+                                )}
+
+                               {primaryAdEvidence.evidence_type && (
+                                    <span className={styles["known-ad-gene-evidence-text"]}>
+                                        {primaryAdEvidence.evidence_type}
+                                    </span>
+                                )}
+                                {primaryAdEvidenceUrl ? (
+                                    <a
+                                        className={styles["known-ad-gene-source-link"]}
+                                        href={primaryAdEvidenceUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        title={`View source: ${primaryAdEvidence.data_source}`}
+                                        aria-label={`View source: ${primaryAdEvidence.data_source}`}
+                                    >
+                                        <InlineIcon icon={<ExternalLink size={12} />} iconPosition="end">
+                                            <span className={styles["known-ad-gene-source"]}>
+                                                {primaryAdEvidence.data_source}
+                                            </span>
+                                        </InlineIcon>
+                                    </a>
+                                ) : (
+                                    <span className={styles["known-ad-gene-source"]}>
+                                        {primaryAdEvidence.data_source}
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                    )}
                     </div>
                 </CardBody>
             </Card>
@@ -227,21 +203,24 @@ const GeneRecordOverview = ({ record }: { record: GeneRecord }) => {
                     </div>
                 </CardBody>
             </Card>
-
-            <Card span={12}>
-                <CardHeader>Genetic Associations</CardHeader>
+              <Card span={8}>
+                <CardHeader>
+                    <div>
+                        <div className={styles["card-title"]}>Genetic Associations Summary</div>
+                        <div className={styles["card-subtitle"]}>Upstream · In-gene · Downstream</div>
+                    </div>
+                </CardHeader>
                 <CardBody>
-                    <div className="flex" style={{ height: "100%" }}>
-                        {GWAS_ASSOC_SECTION.tables!.map((tableDef) => (
-                            <AssociationSummaryChart
-                                key={tableDef.id}
-                                recordId={record.id}
-                                recordType={record.record_type}
-                            />
-                        ))}
+                    <div className={styles["association-summary-chart-container"]}>
+                        <AssociationSummaryChart
+                            recordId={record.id}
+                            recordType={record.record_type}
+                        />
                     </div>
                 </CardBody>
             </Card>
+
+          
         </RecordOverview>
     );
 };

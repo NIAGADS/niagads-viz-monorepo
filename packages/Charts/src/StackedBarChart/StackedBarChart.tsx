@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import * as d3 from "d3";
 
 import { _isNA } from "@niagads/common";
@@ -72,9 +72,28 @@ const Legend = ({ data }: { data: StackedBarChartDataRow[] }) => {
 const StackedBarChart = ({ data, displayOpts, title, legendPosition = "right" }: StackedBarChartProps) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const chartRef = useRef<HTMLDivElement | null>(null);
+    const [containerWidth, setContainerWidth] = useState<number>(displayOpts?.width ?? 420);
 
-    const chartWidth = displayOpts?.width || 420;
     const chartHeight = getStackedBarChartHeight(data.length, displayOpts?.margin);
+
+    useEffect(() => {
+        if (!containerRef.current || displayOpts?.width) return;
+
+        const observer = new ResizeObserver((entries) => {
+            const width = entries[0]?.contentRect.width ?? 0;
+
+            if (width > 0) {
+                setContainerWidth(Math.max(width, 420));
+            }
+        });
+
+        observer.observe(containerRef.current);
+
+        return () => observer.disconnect();
+    }, [displayOpts?.width]);
+
+    const legendWidth = legendPosition === "right" ? 140 : 0;
+    const chartWidth = displayOpts?.width ?? Math.max(containerWidth - legendWidth - 10, 420);
 
     const updatedDisplayOpts = useMemo(
         () => ({
@@ -89,11 +108,9 @@ const StackedBarChart = ({ data, displayOpts, title, legendPosition = "right" }:
 
         destroyStackedBarChart(chartRef.current);
 
-        const opts: StackedBarChartOptions = {
+        stackedBarChart(chartRef.current, data, {
             displayOpts: updatedDisplayOpts,
-        };
-
-        stackedBarChart(chartRef.current, data, opts);
+        });
 
         return () => {
             if (chartRef.current) {
