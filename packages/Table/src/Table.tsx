@@ -121,6 +121,7 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
                     meta: {
                         type: col.type,
                         filterType: col.filterOpts?.filterType || __resolveFilterType(col.type),
+                        filterGroup: col.filterOpts?.filterGroup || "",
                         description: col.description,
                         naValue: col.valueDisplayOpts?.naValue || DEFAULT_NA_VALUE,
                         trueValue: col.valueDisplayOpts?.trueValue || "true",
@@ -202,7 +203,17 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
                 // when column is initialized, create helper functions
                 createColumn: (column, table) => {
                     column.getAllValues = (filterNulls: boolean = false, naValue: string = DEFAULT_NA_VALUE) => {
-                        let values = table.getCoreRowModel().flatRows.map((row) => row.getValue(column.id));
+                        let values: any[] = [];
+                        table.getCoreRowModel().flatRows.forEach((row) => {
+                            const value = row.getValue(column.id);
+                            if (typeof value === "string") {
+                                // check for string lists
+                                const splitValues: string[] = value.includes("//") ? value.split(" // ") : [value];
+                                values.push(...splitValues);
+                            } else {
+                                values.push(value);
+                            }
+                        });
                         if (filterNulls) {
                             values = values.filter((v) => v != null && v !== naValue);
                         }
@@ -210,11 +221,33 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
                     };
 
                     column.getFilteredValues = (filterNulls: boolean = false, naValue: string = DEFAULT_NA_VALUE) => {
-                        let values = table.getFilteredRowModel().flatRows.map((row) => row.getValue(column.id));
+                        let values: any[] = [];
+                        table.getFilteredRowModel().flatRows.forEach((row) => {
+                            const value = row.getValue(column.id);
+                            if (typeof value === "string") {
+                                // check for string lists
+                                const splitValues: string[] = value.includes("//") ? value.split(" // ") : [value];
+                                values.push(...splitValues);
+                            } else {
+                                values.push(value);
+                            }
+                        });
                         if (filterNulls) {
                             values = values.filter((v) => v != null && v !== naValue);
                         }
                         return values;
+                    };
+
+                    column.getUniqueValues = () => {
+                        const values = column.getAllValues(false);
+                        const uniqueValues = new Map<any, number>();
+
+                        values.forEach((value) => {
+                            const count = uniqueValues.get(value) ?? 0;
+                            uniqueValues.set(value, count + 1);
+                        });
+
+                        return uniqueValues;
                     };
                 },
             },
@@ -268,6 +301,7 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
                     onRemoveFilter={(filter) => {
                         setColumnFilters((prev) => prev.filter((f) => f !== filter));
                     }}
+                    filterGroupOrder={options?.filterGroupOrder}
                 />
             )}
             <div className={styles["table-controls-container"]}>
