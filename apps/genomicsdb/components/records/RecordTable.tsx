@@ -15,10 +15,6 @@ export interface RecordTableProps {
 }
 
 const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTableProps) => {
-    const [externalFilters, setExternalFilters] = useState<any[]>([]);
-
-    // useEffect(() => console.log(externalFilters), [externalFilters]);
-
     const { data, error, isLoading } = useSWR<ProcessedTableResponse>(
         `/api/table/${recordType}/${recordId}/${tableDef.endpoint}`,
         (url: string) => fetch(url).then((res) => res.json())
@@ -54,21 +50,19 @@ const RecordTable = ({ tableDef, recordType, recordId, onTableLoad }: RecordTabl
         <Alert variant="info" message="This table contains no data" />
     ) : (
         <div>
-            {data?.pagination.total_num_pages ||
-                (0 > 1 && (
-                    <PaginationMessage
-                        pagination={(data as APITableResponse).pagination}
-                        endpoint={`/record/${recordType}/${recordId}${tableDef.endpoint}`}
-                    />
-                ))}
-            {tableDef.tableType === "associations" && (
-                <Table
-                    id={tableDef.id}
-                    columns={data?.table.columns || []}
-                    data={data?.table.data || []}
-                    options={options}
+            {(data?.pagination?.total_num_pages ?? 0) > 1 && (
+                <PaginationMessage
+                    pagination={(data as APITableResponse).pagination}
+                    endpoint={`/record/${recordType}/${recordId}${tableDef.endpoint}`}
                 />
             )}
+
+            <Table
+                id={tableDef.id}
+                columns={data?.table.columns || []}
+                data={data?.table.data || []}
+                options={options}
+            />
         </div>
     );
 };
