@@ -121,6 +121,7 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
                     meta: {
                         type: col.type,
                         filterType: col.filterOpts?.filterType || __resolveFilterType(col.type),
+                        filterGroup: col.filterOpts?.filterGroup || "",
                         description: col.description,
                         naValue: col.valueDisplayOpts?.naValue || DEFAULT_NA_VALUE,
                         trueValue: col.valueDisplayOpts?.trueValue || "true",
@@ -300,6 +301,7 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
                     onRemoveFilter={(filter) => {
                         setColumnFilters((prev) => prev.filter((f) => f !== filter));
                     }}
+                    filterGroupOrder={options?.filterGroupOrder}
                 />
             )}
             <div className={styles["table-controls-container"]}>

@@ -1,12 +1,10 @@
-import styles from "./ColumnFilterControls.module.css";
-
 import { Button, FilterChip, FilterChipBar, InlineIcon, StylingProps } from "@niagads/ui";
-import { TrashIcon } from "lucide-react";
 import { Column, ColumnFilter, ColumnFiltersState } from "@tanstack/react-table";
 import React, { useEffect, useMemo, useState } from "react";
-
-import { ColumnFilterType } from "../../types";
 import FilterComponent from "./Filters/FilterUI";
+import { TrashIcon } from "lucide-react";
+
+import styles from "./ColumnFilterControls.module.css";
 
 interface ColumnFilterControlsProps {
     filterableColumns: Column<any, unknown>[];
@@ -14,66 +12,8 @@ interface ColumnFilterControlsProps {
     coreRowCount: number;
     onRemoveAll: () => void;
     onRemoveFilter: (filter: ColumnFilter) => void;
+    filterGroupOrder?: string[];
 }
-
-interface FilterGroupProps extends StylingProps {
-    title: string;
-    columns: Column<any, unknown>[];
-    coreRowCount: number;
-    filterType: ColumnFilterType;
-}
-
-interface SectionToggleButtonProps {
-    isExpanded: boolean;
-    expandedLabel: string;
-    collapsedLabel: string;
-    onClick: () => void;
-}
-
-const SectionToggleButton = ({ isExpanded, expandedLabel, collapsedLabel, onClick }: SectionToggleButtonProps) => (
-    <button
-        type="button"
-        className={styles["section-toggle-button"]}
-        onClick={onClick}
-        aria-expanded={isExpanded}
-        aria-label={isExpanded ? expandedLabel : collapsedLabel}
-    >
-        <span className={styles["section-toggle-icon"]}>{isExpanded ? "−" : "+"}</span>
-        <span>{isExpanded ? "Collapse" : "Expand"}</span>
-    </button>
-);
-
-const FilterGroup = ({ title, columns, coreRowCount, filterType, className, style }: FilterGroupProps) => {
-    const [redundantFilters, setRedundantFilters] = useState<string[]>([]);
-
-    useEffect(() => {
-        const redundantColumnIds = columns
-            .filter((column) => {
-                const allValues = column.getAllValues();
-                return new Set(allValues).size === 1;
-            })
-            .map((column) => column.id);
-
-        setRedundantFilters(redundantColumnIds);
-    }, [columns]);
-
-    const renderedFilters = useMemo(
-        () =>
-            columns
-                .filter((column) => !redundantFilters.includes(column.id))
-                .map((column) => <FilterComponent key={`${filterType}-filter-${column.id}`} column={column} />),
-        [columns, filterType, redundantFilters]
-    );
-
-    const hasFilters = renderedFilters.length > 0;
-
-    return hasFilters ? (
-        <section className={className} style={style}>
-            <header className={styles["additional-filter-panel-header"]}>{title}</header>
-            <div className={styles["additional-filter-panel-body"]}>{renderedFilters}</div>
-        </section>
-    ) : null;
-};
 
 export const ColumnFilterControls = ({
     filterableColumns,
@@ -81,6 +21,7 @@ export const ColumnFilterControls = ({
     coreRowCount,
     onRemoveAll,
     onRemoveFilter,
+    filterGroupOrder,
 }: ColumnFilterControlsProps) => {
     const [showAtAGlanceFilters, setShowAtAGlanceFilters] = useState(true);
     const [showAdditionalFilters, setShowAdditionalFilters] = useState(false);
@@ -106,27 +47,36 @@ export const ColumnFilterControls = ({
         [filterableColumns]
     );
 
-    const booleanFilterColumns = useMemo(
-        () => filterableColumns.filter((column) => column.columnDef.meta?.filterType === "boolean"),
+    const additionalFilterColumns = useMemo(
+        () =>
+            filterableColumns.filter(
+                (column) =>
+                    column.columnDef.meta?.filterType === "boolean" ||
+                    column.columnDef.meta?.filterType === "select" ||
+                    column.columnDef.meta?.filterType === "multiselect"
+            ),
         [filterableColumns]
     );
 
-    const multiselectFilterColumns = useMemo(
-        () => filterableColumns.filter((column) => column.columnDef.meta?.filterType === "multiselect"),
-        [filterableColumns]
-    );
+    const columnFilterGroups = useMemo(
+        () =>
+            additionalFilterColumns.reduce(
+                (groups, column) => {
+                    const groupName = column.columnDef.meta?.filterGroup || "other";
+                    const updated = groups[groupName] ? [...groups[groupName], column] : [column];
 
-    // FIXME: after aggregating additional columns build these dynamically from column filter groups
-    // with order based on order pulled from table options
-
-    const selectFilterColumns = useMemo(
-        () => filterableColumns.filter((column) => column.columnDef.meta?.filterType === "select"),
-        [filterableColumns]
+                    return {
+                        ...groups,
+                        [groupName]: updated,
+                    };
+                },
+                {} as Record<string, Column<any, unknown>[]>
+            ),
+        [additionalFilterColumns]
     );
 
     const hasVisualFilters = visualFilterColumns.length > 0;
-    const hasAdditionalFilters =
-        booleanFilterColumns.length + multiselectFilterColumns.length + selectFilterColumns.length > 0;
+    const hasAdditionalFilters = additionalFilterColumns.length > 0;
 
     return (
         <div className={styles["filter-controls-container"]}>
@@ -194,33 +144,86 @@ export const ColumnFilterControls = ({
 
                     {showAdditionalFilters && (
                         <div className={styles["additional-filter-grid"]}>
-                            <FilterGroup
-                                title="Boolean"
-                                className={styles["additional-filter-panel"]}
-                                columns={booleanFilterColumns}
-                                coreRowCount={coreRowCount}
-                                filterType="boolean"
-                            />
-
-                            <FilterGroup
-                                title="Select"
-                                className={styles["additional-filter-panel"]}
-                                columns={selectFilterColumns}
-                                coreRowCount={coreRowCount}
-                                filterType="select"
-                            />
-
-                            <FilterGroup
-                                title="Multiselect"
-                                className={styles["additional-filter-panel"]}
-                                columns={multiselectFilterColumns}
-                                coreRowCount={coreRowCount}
-                                filterType="multiselect"
-                            />
+                            {filterGroupOrder
+                                ? filterGroupOrder.map((groupName) => (
+                                      <FilterGroup
+                                          key={groupName}
+                                          title={groupName}
+                                          className={styles["additional-filter-panel"]}
+                                          columns={columnFilterGroups[groupName]}
+                                      />
+                                  ))
+                                : Object.keys(columnFilterGroups).map((groupName) => (
+                                      <FilterGroup
+                                          key={groupName}
+                                          title={groupName}
+                                          className={styles["additional-filter-panel"]}
+                                          columns={columnFilterGroups[groupName]}
+                                      />
+                                  ))}
                         </div>
                     )}
                 </section>
             )}
         </div>
     );
+};
+
+interface SectionToggleButtonProps {
+    isExpanded: boolean;
+    expandedLabel: string;
+    collapsedLabel: string;
+    onClick: () => void;
+}
+
+const SectionToggleButton = ({ isExpanded, expandedLabel, collapsedLabel, onClick }: SectionToggleButtonProps) => (
+    <button
+        type="button"
+        className={styles["section-toggle-button"]}
+        onClick={onClick}
+        aria-expanded={isExpanded}
+        aria-label={isExpanded ? expandedLabel : collapsedLabel}
+    >
+        <span className={styles["section-toggle-icon"]}>{isExpanded ? "−" : "+"}</span>
+        <span>{isExpanded ? "Collapse" : "Expand"}</span>
+    </button>
+);
+
+interface FilterGroupProps extends StylingProps {
+    title: string;
+    columns: Column<any, unknown>[];
+}
+
+const FilterGroup = ({ title, columns, className, style }: FilterGroupProps) => {
+    const [redundantFilters, setRedundantFilters] = useState<string[]>([]);
+
+    useEffect(() => {
+        const redundantColumnIds = columns
+            .filter((column) => {
+                const allValues = column.getAllValues();
+                return new Set(allValues).size === 1;
+            })
+            .map((column) => column.id);
+
+        setRedundantFilters(redundantColumnIds);
+    }, [columns]);
+
+    const renderedFilters = useMemo(
+        () =>
+            columns
+                .filter((column) => !redundantFilters.includes(column.id))
+                .map((column) => (
+                    <FilterComponent key={`${column.columnDef.meta?.filterType}-filter-${column.id}`} column={column} />
+                )),
+        [columns, redundantFilters]
+    );
+
+    const hasFilters = renderedFilters.length > 0;
+
+    return hasFilters ? (
+        <section className={className} style={style}>
+            <header className={styles["additional-filter-panel-header"]}>{title}</header>
+            <div className={styles["additional-filter-panel-body"]}>{renderedFilters}</div>
+        </section>
+    ) : null;
 };
