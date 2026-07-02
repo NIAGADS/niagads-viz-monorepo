@@ -14,9 +14,7 @@ export const RecordOverview = ({ children }: { children: ReactNode }) => {
     return (
         <div id="overview" className={styles["record-overview"]}>
             <div className={styles["section-heading"]}>Overview</div>
-            <CardGrid className={[styles["card-grid"], styles["overview-grid"]].join(" ")}>
-                {children}
-            </CardGrid>
+            <CardGrid className={[styles["card-grid"], styles["overview-grid"]].join(" ")}>{children}</CardGrid>
         </div>
     );
 };
@@ -30,11 +28,7 @@ const EXTERNAL_RESOURCE_LABELS: Partial<Record<RecordType, string>> = {
 };
 
 export const renderRecordTitle = (displayId: string, recordType: RecordType) => {
-    return (
-        <span className={`${badgeStyles.recordTypeBadge} ${badgeStyles[recordType]}`}>
-            {displayId}
-        </span>
-    );
+    return <span className={`${badgeStyles.recordTypeBadge} ${badgeStyles[recordType]}`}>{displayId}</span>;
 };
 
 export const renderExternalIdentifierLink = (

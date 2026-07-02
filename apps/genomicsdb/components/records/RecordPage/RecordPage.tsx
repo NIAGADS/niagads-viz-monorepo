@@ -22,7 +22,7 @@ interface RecordPageProps {
 const RecordPage = ({ recordId, recordType: recordTypeProp, recordData, overview }: RecordPageProps) => {
     // Override recordType if the variant is structural — the prop alone can't distinguish this,
     // since structural variants share the "variant" record_type but need their own sections/logic
-    
+
     const recordType = recordTypeProp;
 
     // Sections are now derived from the corrected recordType, so structural variants

@@ -15,12 +15,14 @@ const EntityPage = async ({ params }: RecordPageProps) => {
             : recordType;
     const OverviewComponent = await getOverview(resolvedRecordType);
 
-    return <RecordPage 
-                recordId={id} 
-                recordType={recordType} 
-                recordData={recordData} 
-                overview={<OverviewComponent key={`${resolvedRecordType}-${id}-overview`} record={recordData} />}
-            />;
+    return (
+        <RecordPage
+            recordId={id}
+            recordType={recordType}
+            recordData={recordData}
+            overview={<OverviewComponent key={`${resolvedRecordType}-${id}-overview`} record={recordData} />}
+        />
+    );
 };
 
 export default EntityPage;

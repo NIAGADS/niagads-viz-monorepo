@@ -13,13 +13,12 @@
     padding-bottom: 10px;
     border-bottom: 2px solid var(--border);
 }
-.overview-grid, 
+.overview-grid,
 .card-grid {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     gap: 1rem;
 }
-
 
 .description {
     color: var(--text-secondary, #4b5563);
@@ -56,7 +55,6 @@
     font-weight: 600;
     color: var(--text-primary, #374151);
 }
-
 
 .title {
     /*font-size: 1.75rem !important;

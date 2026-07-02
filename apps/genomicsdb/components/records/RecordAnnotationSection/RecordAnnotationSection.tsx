@@ -73,7 +73,6 @@ const RecordAnnotationSection = ({
                     id={section.id}
                     title={section.label}
                     defaultOpen={section.id === defaultSectionId}
-                    
                 >
                     {section.tables ? (
                         section.underConstruction ? (
