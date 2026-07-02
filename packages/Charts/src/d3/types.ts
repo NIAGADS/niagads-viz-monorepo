@@ -4,8 +4,11 @@ export interface AxisConfig {
     label?: string;
 }
 
+export type ChartWidth = number | string;
+
 export interface DisplayProps {
-    aspectRatio?: number; // height = width * aspectRatio
+    aspectRatio?: number; // used when height is not provided
+    height?: number; // chart height in pixels
     margin?: { top: number; right: number; bottom: number; left: number };
-    width?: number; // chart width in pixels
+    width?: ChartWidth; // chart width in pixels or CSS width string, e.g. "100%"
 }
