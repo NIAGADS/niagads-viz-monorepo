@@ -12,7 +12,9 @@ export interface PieChartDataPoint {
 
 export interface PieChartOptions {
     displayOpts?: DisplayProps;
+    referenceData?: PieChartDataPoint[];
     onClick?: (id: string) => void;
+    preserveSliceOrder?: boolean;
     selectedId?: string;
 }
 
@@ -25,9 +27,7 @@ const PIE_CHART_COLORS = {
     arcOpacity: 1,
     arcOpacityHover: 0.8,
     arcOpacitySelected: 1,
-    arcFillSelected: "#d97706",
-    arcFilterSelected:
-        "drop-shadow(0 0 3px rgba(217, 119, 6, 0.8)) drop-shadow(0 0 8px rgba(217, 119, 6, 0.6)) drop-shadow(0 0 12px rgba(217, 119, 6, 0.4))",
+    referenceArcOpacity: 0.55,
     tooltipBackground: "white",
     tooltipColor: "black",
     tooltipBorder: "0 2px 8px rgba(0, 0, 0, 0.15)",
@@ -39,6 +39,10 @@ const PIE_CHART_COLORS = {
 const PIE_CHART_SIZES = {
     arcStrokeWidthDefault: 2,
     arcStrokeWidthSelectedDefault: 4,
+    arcStrokeWidthSmallSlice: 1,
+    arcTranslateOffset: 12,
+    arcTransitionDurationMs: 150,
+    smallSliceThreshold: 0.03,
     tooltipPadding: "8px 12px",
     tooltipBorderRadius: "4px",
     tooltipFontSize: "12px",
@@ -48,6 +52,63 @@ const DEFAULT_MARGIN = { top: 10, right: 10, bottom: 10, left: 10 };
 
 const isNA = (data: PieChartDataPoint): boolean => (data.label && _isNA(data.label)) || _isNA(data.id);
 
+const getSliceColor = (data: PieChartDataPoint, colorScale: d3.ScaleOrdinal<string, string>): string =>
+    isNA(data) ? PIE_CHART_COLORS.arcFillNA : colorScale(data.id);
+
+const hexToRgb = (color: string): { r: number; g: number; b: number } | null => {
+    const normalized = color.trim();
+    const hexMatch = normalized.match(/^#([\da-f]{3}|[\da-f]{6})$/i);
+
+    if (!hexMatch) return null;
+
+    const hex = hexMatch[1];
+    const expandedHex =
+        hex.length === 3
+            ? hex
+                  .split("")
+                  .map((char) => char + char)
+                  .join("")
+            : hex;
+    const value = Number.parseInt(expandedHex, 16);
+
+    return {
+        r: (value >> 16) & 255,
+        g: (value >> 8) & 255,
+        b: value & 255,
+    };
+};
+
+const getSelectionFilter = (color: string): string => {
+    const rgb = hexToRgb(color);
+    if (!rgb) return "none";
+
+    return [
+        `drop-shadow(0 0 3px rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.8))`,
+        `drop-shadow(0 0 8px rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.6))`,
+        `drop-shadow(0 0 12px rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.4))`,
+    ].join(" ");
+};
+
+const getArcStrokeWidth = (value: number, total: number, isSelected = false): number => {
+    const isSmallSlice = total > 0 && value / total < PIE_CHART_SIZES.smallSliceThreshold;
+
+    if (isSelected) {
+        return isSmallSlice ? PIE_CHART_COLORS.arcStrokeWidth : PIE_CHART_COLORS.arcStrokeWidthSelected;
+    }
+
+    return isSmallSlice ? PIE_CHART_SIZES.arcStrokeWidthSmallSlice : PIE_CHART_COLORS.arcStrokeWidth;
+};
+
+const getSelectionTransform = (arc: d3.PieArcDatum<PieChartDataPoint>, isSelected: boolean): string => {
+    if (!isSelected) return "translate(0,0)";
+
+    const angle = (arc.startAngle + arc.endAngle) / 2 - Math.PI / 2;
+    const offsetX = Math.cos(angle) * PIE_CHART_SIZES.arcTranslateOffset;
+    const offsetY = Math.sin(angle) * PIE_CHART_SIZES.arcTranslateOffset;
+
+    return `translate(${offsetX},${offsetY})`;
+};
+
 interface PieChartState {
     data: PieChartDataPoint[];
     opts: PieChartOptions;
@@ -55,6 +116,42 @@ interface PieChartState {
     total: number;
     tooltip: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
 }
+
+const showTooltip = (
+    tooltip: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>,
+    event: MouseEvent,
+    data: PieChartDataPoint,
+    total: number,
+    sliceColor: string
+): void => {
+    const percentage = total > 0 ? ((data.value / total) * 100).toFixed(1) : "0.0";
+
+    tooltip
+        .style("left", event.pageX + 10 + "px")
+        .style("top", event.pageY + 10 + "px")
+        .style("display", "block")
+        .style("border-color", sliceColor)
+        .html("");
+
+    tooltip
+        .append("div")
+        .style("margin-bottom", "8px")
+        .html(`<strong>${data.label || data.id}</strong>: ${percentage}%`);
+    tooltip.append("div").html(`${data.value} records`);
+};
+
+const getCombinedData = (data: PieChartDataPoint[], referenceData?: PieChartDataPoint[]): PieChartDataPoint[] => {
+    const combinedData = new Map<string, PieChartDataPoint>();
+
+    referenceData?.forEach((d) => combinedData.set(d.id, d));
+    data.forEach((d) => {
+        if (!combinedData.has(d.id)) {
+            combinedData.set(d.id, d);
+        }
+    });
+
+    return Array.from(combinedData.values());
+};
 
 export function updatePieChartSelection(container: HTMLElement, selectedId?: string): void {
     const svg = d3.select(container).select<SVGSVGElement>("svg");
@@ -65,22 +162,22 @@ export function updatePieChartSelection(container: HTMLElement, selectedId?: str
     // Update stored selection state
     state.opts.selectedId = selectedId;
 
-    // Use same NA logic as in initial render
-    const isNA = (data: PieChartDataPoint): boolean => (data.label && _isNA(data.label)) || _isNA(data.id);
+    const transition = svg.transition().duration(PIE_CHART_SIZES.arcTransitionDurationMs);
+
+    svg.selectAll<SVGGElement, d3.PieArcDatum<PieChartDataPoint>>(".arc")
+        .transition(transition as any)
+        .attr("transform", (d: d3.PieArcDatum<PieChartDataPoint>) =>
+            getSelectionTransform(d, d.data.id === selectedId)
+        );
 
     svg.selectAll<SVGPathElement, d3.PieArcDatum<PieChartDataPoint>>(".arc path")
-        .style("fill", (d: d3.PieArcDatum<PieChartDataPoint>) => {
-            return d.data.id === selectedId
-                ? PIE_CHART_COLORS.arcFillSelected
-                : isNA(d.data)
-                  ? PIE_CHART_COLORS.arcFillNA
-                  : state.colorScale(d.data.id);
-        })
+        .transition(transition as any)
+        .style("fill", (d: d3.PieArcDatum<PieChartDataPoint>) => getSliceColor(d.data, state.colorScale))
         .style("stroke-width", (d: d3.PieArcDatum<PieChartDataPoint>) =>
-            d.data.id === selectedId ? PIE_CHART_COLORS.arcStrokeWidthSelected : PIE_CHART_COLORS.arcStrokeWidth
+            getArcStrokeWidth(d.data.value, state.total, d.data.id === selectedId)
         )
         .style("filter", (d: d3.PieArcDatum<PieChartDataPoint>) =>
-            d.data.id === selectedId ? PIE_CHART_COLORS.arcFilterSelected : "none"
+            d.data.id === selectedId ? getSelectionFilter(getSliceColor(d.data, state.colorScale)) : "none"
         );
 }
 
@@ -110,6 +207,8 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
 
     // Radius is limited by the smaller dimension
     const radius = Math.min(innerWidth, innerHeight) / 2;
+    const hasReferenceData = !!options.referenceData?.length;
+    const referenceTotal = d3.sum(options.referenceData || [], (d) => d.value);
 
     // Create SVG
     const svg = d3
@@ -126,22 +225,25 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
     // Create pie generator
     const total = d3.sum(data, (d) => d.value);
     const pie = d3.pie<PieChartDataPoint>().value((d) => d.value);
+    if (options.preserveSliceOrder) {
+        pie.sort(null);
+    }
 
     // Create arc generator
     const arc = d3
         .arc<d3.PieArcDatum<PieChartDataPoint>>()
         .innerRadius(0)
-        .outerRadius(radius - 10);
+        .outerRadius(hasReferenceData ? radius * 0.66 : radius - 10);
 
-    const arcLabel = d3
+    const referenceArc = d3
         .arc<d3.PieArcDatum<PieChartDataPoint>>()
-        .innerRadius(radius * 0.67)
-        .outerRadius(radius * 0.67);
+        .innerRadius(radius * 0.7)
+        .outerRadius(radius - 10);
 
     // Color scale - using default D3 palette
     const colorScale = d3
         .scaleOrdinal<string, string>()
-        .domain(data.map((d) => d.id))
+        .domain(getCombinedData(data, options.referenceData).map((d) => d.id))
         .range(d3.schemeCategory10);
 
     // Create tooltip
@@ -162,6 +264,35 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
         .style("text-align", "left")
         .style("border", "2px solid transparent");
 
+    if (hasReferenceData && options.referenceData) {
+        const referenceArcs = g
+            .selectAll(".reference-arc")
+            .data(pie(options.referenceData))
+            .enter()
+            .append("g")
+            .attr("class", "reference-arc");
+
+        referenceArcs
+            .append("path")
+            .attr("d", referenceArc as any)
+            .attr("fill", (d) => getSliceColor(d.data, colorScale))
+            .style("stroke", PIE_CHART_COLORS.arcStroke)
+            .style("stroke-width", (d) => getArcStrokeWidth(d.data.value, referenceTotal))
+            .style("opacity", PIE_CHART_COLORS.referenceArcOpacity)
+            .on("mouseenter", (event: MouseEvent, d: d3.PieArcDatum<PieChartDataPoint>) => {
+                const path = d3.select(event.currentTarget as SVGPathElement);
+                path.style("opacity", PIE_CHART_COLORS.arcOpacityHover.toString());
+
+                const sliceColor = isNA(d.data) ? PIE_CHART_COLORS.arcFillNA : colorScale(d.data.id);
+                showTooltip(tooltip, event, d.data, referenceTotal, sliceColor);
+            })
+            .on("mouseleave", (event: MouseEvent) => {
+                const path = d3.select(event.currentTarget as SVGPathElement);
+                path.style("opacity", PIE_CHART_COLORS.referenceArcOpacity.toString());
+                tooltip.style("display", "none");
+            });
+    }
+
     // Create pie arcs
     const arcs = g
         .selectAll(".arc")
@@ -173,14 +304,9 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
     // Add paths
     arcs.append("path")
         .attr("d", arc as any)
-        .attr("fill", (d) => {
-            if (isNA(d.data)) {
-                return PIE_CHART_COLORS.arcFillNA;
-            }
-            return colorScale(d.data.id);
-        })
+        .attr("fill", (d) => getSliceColor(d.data, colorScale))
         .style("stroke", PIE_CHART_COLORS.arcStroke)
-        .style("stroke-width", PIE_CHART_COLORS.arcStrokeWidth)
+        .style("stroke-width", (d) => getArcStrokeWidth(d.data.value, total, d.data.id === options.selectedId))
         .on("click", (event, d) => {
             const newSelectedId = d.data.id === options.selectedId ? undefined : d.data.id;
             options.onClick && options.onClick(newSelectedId || "");
@@ -189,22 +315,8 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
             const path = d3.select(event.currentTarget as SVGPathElement);
             path.style("opacity", PIE_CHART_COLORS.arcOpacityHover.toString());
 
-            const percentage = ((d.data.value / total) * 100).toFixed(1);
-            // Use same color logic for tooltip border
             const sliceColor = isNA(d.data) ? PIE_CHART_COLORS.arcFillNA : colorScale(d.data.id);
-
-            tooltip
-                .style("left", event.pageX + 10 + "px")
-                .style("top", event.pageY + 10 + "px")
-                .style("display", "block")
-                .style("border-color", sliceColor)
-                .html("");
-
-            tooltip
-                .append("div")
-                .style("margin-bottom", "8px")
-                .html(`<strong>${d.data.label || d.data.id}</strong>: ${percentage}%`);
-            tooltip.append("div").html(`${d.data.value} records`);
+            showTooltip(tooltip, event, d.data, total, sliceColor);
         })
         .on("mouseleave", (event: MouseEvent) => {
             const path = d3.select(event.currentTarget as SVGPathElement);
