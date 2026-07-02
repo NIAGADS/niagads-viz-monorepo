@@ -146,21 +146,21 @@ export const ColumnFilterControls = ({
                         <div className={styles["additional-filter-grid"]}>
                             {filterGroupOrder
                                 ? filterGroupOrder.map((groupName) => (
-                                    <FilterGroup
-                                        key={groupName}
-                                        title={groupName}
-                                        className={styles["additional-filter-panel"]}
-                                        columns={columnFilterGroups[groupName]}
-                                    />
-                                ))
+                                      <FilterGroup
+                                          key={groupName}
+                                          title={groupName}
+                                          className={styles["additional-filter-panel"]}
+                                          columns={columnFilterGroups[groupName]}
+                                      />
+                                  ))
                                 : Object.keys(columnFilterGroups).map((groupName) => (
-                                    <FilterGroup
-                                        key={groupName}
-                                        title={groupName}
-                                        className={styles["additional-filter-panel"]}
-                                        columns={columnFilterGroups[groupName]}
-                                    />
-                                ))}
+                                      <FilterGroup
+                                          key={groupName}
+                                          title={groupName}
+                                          className={styles["additional-filter-panel"]}
+                                          columns={columnFilterGroups[groupName]}
+                                      />
+                                  ))}
                         </div>
                     )}
                 </section>
@@ -212,7 +212,9 @@ const FilterGroup = ({ title, columns, className, style }: FilterGroupProps) => 
         () =>
             columns
                 .filter((column) => !redundantFilters.includes(column.id))
-                .map((column) => <FilterComponent key={`${column.columnDef.meta?.filterType}-filter-${column.id}`} column={column} />),
+                .map((column) => (
+                    <FilterComponent key={`${column.columnDef.meta?.filterType}-filter-${column.id}`} column={column} />
+                )),
         [columns, redundantFilters]
     );
 
