@@ -57,6 +57,9 @@ export const TABLE_DEFINITION: Table = {
                 "variant identified from ADSP whole-genome sequencing efforts that has passed the ADSP QC protocol; <em>NOT</em> an indicator of AD-risk",
             type: "boolean",
             styling: { getClassName: () => "is_adsp_variant" },
+            filterOpts: {
+                filterGroup: "Variant Flags",
+            },
         },
         { id: "ref_snp_id", header: "RefSNP ID", disableColumnFilter: true },
         {
@@ -65,20 +68,41 @@ export const TABLE_DEFINITION: Table = {
             description:
                 "Most severe impact predicted for this variant on the gene, using the ADSP Annotation Pipeline",
             styling: { getClassName: getImpactClassName },
+            filterOpts: {
+                filterGroup: "Functional Annotation",
+            },
         },
-
         {
             id: "gene_consequence",
             header: "Consequence",
             description:
                 "Most severe consequence predicted for this variant on the gene, using the ADSP Annotation Pipeline",
             styling: { getClassName: getImpactClassName },
+            filterOpts: {
+                filterGroup: "Functional Annotation",
+            },
         },
-        { id: "population", filterOpts: { filterType: "multiselect" } },
+        {
+            id: "population",
+            filterOpts: {
+                filterType: "multiselect",
+                filterGroup: "Sample / Study Context",
+            },
+        },
         { id: "diagnosis", disableColumnFilter: true },
         { id: "neuropathology", required: true, filterOpts: { filterType: "pie" } },
-        { id: "tissue" },
-        { id: "biomarker" },
+        {
+            id: "tissue",
+            filterOpts: {
+                filterGroup: "Sample / Study Context",
+            },
+        },
+        {
+            id: "biomarker",
+            filterOpts: {
+                filterGroup: "Sample / Study Context",
+            },
+        },
         { id: "gender" },
         { id: "genotype" },
         { id: "covariates" },

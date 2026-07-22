@@ -1,10 +1,9 @@
 import { Button, FilterChip, FilterChipBar, InlineIcon, StylingProps } from "@niagads/ui";
 import { Column, ColumnFilter, ColumnFiltersState } from "@tanstack/react-table";
 import React, { useEffect, useMemo, useState } from "react";
-
-import { ColumnFilterType } from "../../types";
 import FilterComponent from "./Filters/FilterUI";
 import { TrashIcon } from "lucide-react";
+
 import styles from "./ColumnFilterControls.module.css";
 
 interface ColumnFilterControlsProps {
@@ -13,46 +12,8 @@ interface ColumnFilterControlsProps {
     coreRowCount: number;
     onRemoveAll: () => void;
     onRemoveFilter: (filter: ColumnFilter) => void;
+    filterGroupOrder?: string[];
 }
-
-interface FilterGroupProps extends StylingProps {
-    title: string;
-    columns: Column<any, unknown>[];
-    coreRowCount: number;
-    filterType: ColumnFilterType;
-}
-
-const FilterGroup = ({ title, columns, coreRowCount, filterType, className, style }: FilterGroupProps) => {
-    const [redundantFilters, setRedundantFilters] = useState<string[]>([]);
-
-    useEffect(() => {
-        const redundantColumnIds = columns
-            .filter((column) => {
-                const allValues = column.getAllValues();
-                return new Set(allValues).size === 1;
-            })
-            .map((column) => column.id);
-
-        setRedundantFilters(redundantColumnIds);
-    }, [columns]);
-
-    const renderedFilters = useMemo(
-        () =>
-            columns
-                .filter((column) => !redundantFilters.includes(column.id))
-                .map((column) => <FilterComponent key={`${filterType}-filter-${column.id}`} column={column} />),
-        [columns, filterType, redundantFilters]
-    );
-
-    const hasFilters = renderedFilters.length > 0;
-
-    return hasFilters ? (
-        <section className={className} style={style}>
-            <header className={styles["additional-filter-panel-header"]}>{title}</header>
-            <div className={styles["additional-filter-panel-body"]}>{renderedFilters}</div>
-        </section>
-    ) : null;
-};
 
 export const ColumnFilterControls = ({
     filterableColumns,
@@ -60,7 +21,11 @@ export const ColumnFilterControls = ({
     coreRowCount,
     onRemoveAll,
     onRemoveFilter,
+    filterGroupOrder,
 }: ColumnFilterControlsProps) => {
+    const [showAtAGlanceFilters, setShowAtAGlanceFilters] = useState(true);
+    const [showAdditionalFilters, setShowAdditionalFilters] = useState(false);
+
     const visualFilterColumns = useMemo(
         () =>
             filterableColumns
@@ -79,22 +44,7 @@ export const ColumnFilterControls = ({
 
                     return 0;
                 }),
-        []
-    );
-
-    const booleanFilterColumns = useMemo(
-        () => filterableColumns.filter((column) => column.columnDef.meta?.filterType === "boolean"),
-        []
-    );
-
-    const multiselectFilterColunns = useMemo(
-        () => filterableColumns.filter((column) => column.columnDef.meta?.filterType === "multiselect"),
-        []
-    );
-
-    const selectFilterColunns = useMemo(
-        () => filterableColumns.filter((column) => column.columnDef.meta?.filterType === "select"),
-        []
+        [filterableColumns]
     );
 
     const additionalFilterColumns = useMemo(
@@ -108,138 +58,172 @@ export const ColumnFilterControls = ({
         [filterableColumns]
     );
 
-    // FIXME: after aggregating additional columns build these dynamically from column filter groups
-    // with order based on order pulled from table options
+    const columnFilterGroups = useMemo(
+        () =>
+            additionalFilterColumns.reduce(
+                (groups, column) => {
+                    const groupName = column.columnDef.meta?.filterGroup || "other";
+                    const updated = groups[groupName] ? [...groups[groupName], column] : [column];
 
-    const variantFlagColumns = useMemo(
-        () => additionalFilterColumns.filter((column) => column.columnDef.meta?.filterType === "boolean"),
+                    return {
+                        ...groups,
+                        [groupName]: updated,
+                    };
+                },
+                {} as Record<string, Column<any, unknown>[]>
+            ),
         [additionalFilterColumns]
     );
 
-    const functionalAnnotationColumns = useMemo(
-        () =>
-            additionalFilterColumns.filter((column) => {
-                const header = column.columnDef.header?.toString().toLowerCase();
-
-                return header === "impact" || header === "consequence";
-            }),
-        [additionalFilterColumns]
-    );
-
-    const sampleContextColumns = useMemo(
-        () =>
-            additionalFilterColumns.filter((column) => {
-                const header = column.columnDef.header?.toString().toLowerCase();
-
-                return header === "population" || header === "tissue" || header === "biomarker";
-            }),
-        [additionalFilterColumns]
-    );
-
-    const groupedColumnIds = useMemo(
-        () =>
-            new Set([
-                ...variantFlagColumns.map((column) => column.id),
-                ...functionalAnnotationColumns.map((column) => column.id),
-                ...sampleContextColumns.map((column) => column.id),
-            ]),
-        [functionalAnnotationColumns, sampleContextColumns, variantFlagColumns]
-    );
-
-    const otherAdditionalColumns = useMemo(
-        () => additionalFilterColumns.filter((column) => !groupedColumnIds.has(column.id)),
-        [additionalFilterColumns, groupedColumnIds]
-    );
-
+    const hasVisualFilters = visualFilterColumns.length > 0;
     const hasAdditionalFilters = additionalFilterColumns.length > 0;
 
     return (
         <div className={styles["filter-controls-container"]}>
-            {activeFilters.length > 0 && (
-                <FilterChipBar
-                    label={`Active Filters (${activeFilters.length})`}
-                    actions={
+            <FilterChipBar
+                label={`Active Filters (${activeFilters.length})`}
+                actions={
+                    activeFilters.length > 0 ? (
                         <Button color="default" onClick={onRemoveAll}>
                             <InlineIcon icon={<TrashIcon size={16} />}>Clear all</InlineIcon>
                         </Button>
-                    }
-                >
-                    {activeFilters.map((filter) => {
-                        const column = filterableColumns.find((x) => x.id === filter.id);
-                        const valueStr = `${filter.value}`;
-                        const displayValue =
-                            column?.columnDef.meta?.filterType !== "multiselect" && valueStr.includes(",")
-                                ? "Other"
-                                : valueStr;
-                        return (
-                            <FilterChip
-                                key={`filter-chip-${filter.id}`}
-                                label={column?.columnDef.header as string}
-                                value={displayValue}
-                                onRemove={() => onRemoveFilter(filter)}
-                            />
-                        );
-                    })}
-                </FilterChipBar>
+                    ) : undefined
+                }
+            >
+                {activeFilters.length > 0 ? (
+                    activeFilters.map((filter) => (
+                        <FilterChip
+                            key={`filter-chip-${filter.id}`}
+                            label={filterableColumns.find((x) => x.id === filter.id)?.columnDef.header as string}
+                            value={`${filter.value}`}
+                            onRemove={() => onRemoveFilter(filter)}
+                        />
+                    ))
+                ) : (
+                    <FilterChip label="None" disabled />
+                )}
+            </FilterChipBar>
+
+            {hasVisualFilters && (
+                <section className={styles["glance-section"]}>
+                    <header className={styles["section-header"]}>
+                        <span>At a Glance</span>
+
+                        <SectionToggleButton
+                            isExpanded={showAtAGlanceFilters}
+                            expandedLabel="Collapse At a Glance filters"
+                            collapsedLabel="Expand At a Glance filters"
+                            onClick={() => setShowAtAGlanceFilters((value) => !value)}
+                        />
+                    </header>
+
+                    {showAtAGlanceFilters && (
+                        <div className={styles["visual-filter-grid"]}>
+                            {visualFilterColumns.map((column) => (
+                                <div className={styles["visual-filter-panel"]} key={`visual-filter-panel-${column.id}`}>
+                                    <FilterComponent key={`visual-filter-${column.id}`} column={column} />
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </section>
             )}
 
-            <section className={styles["glance-section"]}>
-                <header className={styles["glance-header"]}>
-                    <span>At a Glance</span>
-                </header>
-
-                <div className={styles["visual-filter-grid"]}>
-                    {visualFilterColumns.map((column) => (
-                        <div className={styles["visual-filter-panel"]} key={`visual-filter-panel-${column.id}`}>
-                            <FilterComponent key={`visual-filter-${column.id}`} column={column} />
-                        </div>
-                    ))}
-                </div>
-            </section>
-
             {hasAdditionalFilters && (
-                <>
-                    <div className={styles["additional-filters-header"]}>
+                <section className={styles["additional-filters-section"]}>
+                    <header className={styles["section-header"]}>
                         <span>Additional Filters</span>
-                    </div>
 
-                    <div className={styles["additional-filter-grid"]}>
-                        <FilterGroup
-                            title="Variant Flags"
-                            className={styles["additional-filter-panel"]}
-                            columns={variantFlagColumns}
-                            coreRowCount={coreRowCount}
-                            filterType="boolean"
+                        <SectionToggleButton
+                            isExpanded={showAdditionalFilters}
+                            expandedLabel="Collapse additional filters"
+                            collapsedLabel="Expand additional filters"
+                            onClick={() => setShowAdditionalFilters((value) => !value)}
                         />
+                    </header>
 
-                        <FilterGroup
-                            title="Functional Annotation"
-                            className={styles["additional-filter-panel"]}
-                            columns={functionalAnnotationColumns}
-                            coreRowCount={coreRowCount}
-                            filterType="select"
-                        />
-
-                        <FilterGroup
-                            title="Sample / Study Context"
-                            className={styles["additional-filter-panel"]}
-                            columns={sampleContextColumns}
-                            coreRowCount={coreRowCount}
-                            filterType="select"
-                        />
-
-                        {otherAdditionalColumns.length > 0 && (
-                            <FilterGroup
-                                title="Other"
-                                className={styles["additional-filter-panel"]}
-                                columns={otherAdditionalColumns}
-                                coreRowCount={coreRowCount}
-                                filterType="select"
-                            />
-                        )}
-                    </div>
-                </>
+                    {showAdditionalFilters && (
+                        <div className={styles["additional-filter-grid"]}>
+                            {filterGroupOrder
+                                ? filterGroupOrder.map((groupName) => (
+                                      <FilterGroup
+                                          key={groupName}
+                                          title={groupName}
+                                          className={styles["additional-filter-panel"]}
+                                          columns={columnFilterGroups[groupName]}
+                                      />
+                                  ))
+                                : Object.keys(columnFilterGroups).map((groupName) => (
+                                      <FilterGroup
+                                          key={groupName}
+                                          title={groupName}
+                                          className={styles["additional-filter-panel"]}
+                                          columns={columnFilterGroups[groupName]}
+                                      />
+                                  ))}
+                        </div>
+                    )}
+                </section>
             )}
         </div>
     );
+};
+
+interface SectionToggleButtonProps {
+    isExpanded: boolean;
+    expandedLabel: string;
+    collapsedLabel: string;
+    onClick: () => void;
+}
+
+const SectionToggleButton = ({ isExpanded, expandedLabel, collapsedLabel, onClick }: SectionToggleButtonProps) => (
+    <button
+        type="button"
+        className={styles["section-toggle-button"]}
+        onClick={onClick}
+        aria-expanded={isExpanded}
+        aria-label={isExpanded ? expandedLabel : collapsedLabel}
+    >
+        <span className={styles["section-toggle-icon"]}>{isExpanded ? "−" : "+"}</span>
+        <span>{isExpanded ? "Collapse" : "Expand"}</span>
+    </button>
+);
+
+interface FilterGroupProps extends StylingProps {
+    title: string;
+    columns: Column<any, unknown>[];
+}
+
+const FilterGroup = ({ title, columns, className, style }: FilterGroupProps) => {
+    const [redundantFilters, setRedundantFilters] = useState<string[]>([]);
+
+    useEffect(() => {
+        const redundantColumnIds = columns
+            .filter((column) => {
+                const allValues = column.getAllValues();
+                return new Set(allValues).size === 1;
+            })
+            .map((column) => column.id);
+
+        setRedundantFilters(redundantColumnIds);
+    }, [columns]);
+
+    const renderedFilters = useMemo(
+        () =>
+            columns
+                .filter((column) => !redundantFilters.includes(column.id))
+                .map((column) => (
+                    <FilterComponent key={`${column.columnDef.meta?.filterType}-filter-${column.id}`} column={column} />
+                )),
+        [columns, redundantFilters]
+    );
+
+    const hasFilters = renderedFilters.length > 0;
+
+    return hasFilters ? (
+        <section className={className} style={style}>
+            <header className={styles["additional-filter-panel-header"]}>{title}</header>
+            <div className={styles["additional-filter-panel-body"]}>{renderedFilters}</div>
+        </section>
+    ) : null;
 };

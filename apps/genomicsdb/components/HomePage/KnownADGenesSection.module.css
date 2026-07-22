@@ -1,0 +1,170 @@
+/* KnownADGenesSection.module.css */
+
+.known-ad-genes {
+    height: 100%;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 1.75rem;
+}
+
+.kicker {
+    margin: 0 0 0.5rem;
+    color: var(--yellow);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.header h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.75rem;
+    letter-spacing: -0.03em;
+}
+
+.header p {
+    margin: 0;
+    /* color: var(--text-secondary); */
+    line-height: 1.55;
+}
+
+.header a {
+    color: var(--primary-blue);
+    text-decoration: none;
+}
+
+.header a:hover {
+    text-decoration: underline;
+}
+
+.view-all {
+    flex: 0 0 auto;
+    align-self: flex-start;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.table {
+    display: grid;
+}
+
+.row-head,
+.row {
+    display: grid;
+    grid-template-columns: 1.2fr 1.4fr 1fr;
+    gap: 1.5rem;
+    align-items: center;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.row:hover {
+    background: rgba(97, 142, 181, 0.06);
+}
+
+.row-head {
+    padding-top: 0;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+}
+
+.gene {
+    color: var(--warning-amber);
+    font-size: 1.125rem;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.gene:hover {
+    text-decoration: underline;
+}
+
+.row p {
+    margin: 0.25rem 0 0;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.dots,
+.types,
+.legend {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.dot,
+.dot-active {
+    width: 0.625rem;
+    height: 0.625rem;
+    border-radius: 999px;
+    background: rgba(141, 177, 220, 0.28);
+}
+
+.dot-active {
+    background: var(--yellow);
+    box-shadow: 0 0 0 3px rgba(255, 198, 101, 0.18);
+}
+
+.type-dot {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 999px;
+    display: inline-block;
+}
+
+.gwas {
+    background: #8b6cff;
+}
+
+.eqtl {
+    background: #5b9dff;
+}
+
+.pqtl {
+    background: #63d2c6;
+}
+
+.protein {
+    background: var(--yellow, #ffc665);
+}
+
+.pathway {
+    background: #9fb0c9;
+}
+
+.legend {
+    margin-top: 1.25rem;
+    color: var(--text-secondary);
+    font-size: 0.8125rem;
+}
+
+.legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+@media (max-width: 850px) {
+    .header {
+        flex-direction: column;
+    }
+
+    .row-head {
+        display: none;
+    }
+
+    .row {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+}

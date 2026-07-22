@@ -1,0 +1,95 @@
+/* GeneticEvidenceSummary.module.css */
+
+.genetic-evidence-summary {
+    height: 100%;
+}
+
+.header {
+    margin-bottom: 1rem;
+}
+
+.kicker {
+    margin: 0 0 0.5rem;
+    color: var(--yellow);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.header h2 {
+    margin: 0;
+    font-size: 1.75rem;
+    letter-spacing: -0.03em;
+}
+
+.description {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.65;
+}
+
+.description a {
+    color: var(--primary-blue);
+    text-decoration: none;
+}
+
+.description a:hover {
+    text-decoration: underline;
+}
+
+.main-stat {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    border-radius: var(--border-radius-lg);
+    border: 1px solid rgba(255, 198, 101, 0.35);
+    background: rgba(255, 198, 101, 0.1);
+}
+
+.main-stat strong {
+    display: block;
+    color: var(--yellow, #ffc665);
+    font-size: clamp(2.75rem, 5vw, 4.25rem);
+    line-height: 1;
+    letter-spacing: -0.05em;
+}
+
+.main-stat span {
+    display: block;
+    margin-top: 0.5rem;
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.stat-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.stat-item {
+    padding: 1.25rem;
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.stat-item strong {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--text-primary);
+    font-size: 2rem;
+    line-height: 1.1;
+}
+
+.stat-item span {
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+@media (max-width: 800px) {
+    .stat-list {
+        grid-template-columns: 1fr;
+    }
+}
