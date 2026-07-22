@@ -4,7 +4,8 @@
 }
 /* Feature Grid */
 
-.home-grid, .feature-grid  {
+.home-grid,
+.feature-grid {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     gap: 1rem;
@@ -75,27 +76,19 @@
 }
 
 .card-accent-blue {
-    background:
-        radial-gradient(circle at top right, rgba(97, 142, 181, 0.12), transparent 40%),
-        var(--surface);
+    background: radial-gradient(circle at top right, rgba(97, 142, 181, 0.12), transparent 40%), var(--surface);
 }
 
 .card-accent-yellow {
-    background:
-        radial-gradient(circle at top right, rgba(255, 198, 101, 0.2), transparent 40%),
-        var(--surface);    
+    background: radial-gradient(circle at top right, rgba(255, 198, 101, 0.2), transparent 40%), var(--surface);
 }
 
 .card-accent-teal {
-    background:
-        radial-gradient(circle at top right, rgba(13, 148, 136, 0.2), transparent 40%),
-        var(--surface);
+    background: radial-gradient(circle at top right, rgba(13, 148, 136, 0.2), transparent 40%), var(--surface);
 }
 
 .card-accent-purple {
-    background:
-        radial-gradient(circle at top right, rgba(139, 108, 255, 0.2), transparent 40%),
-        var(--surface);
+    background: radial-gradient(circle at top right, rgba(139, 108, 255, 0.2), transparent 40%), var(--surface);
 }
 
 .home-grid :global(.card) {

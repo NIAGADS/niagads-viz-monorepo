@@ -35,11 +35,7 @@ export default function ExploreBySection() {
 
             <div className={styles["explore-list"]}>
                 {items.map((item) => (
-                    <Link
-                        key={item.title}
-                        href={item.href}
-                        className={styles["explore-item"]}
-                    >
+                    <Link key={item.title} href={item.href} className={styles["explore-item"]}>
                         <div>
                             <h3>{item.title}</h3>
                             <p>{item.description}</p>

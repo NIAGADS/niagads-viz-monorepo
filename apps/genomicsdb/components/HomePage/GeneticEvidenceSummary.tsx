@@ -26,15 +26,12 @@ export default function GeneticEvidenceSummary() {
             </div>
 
             <p className={styles.description}>
-                For each dataset, GenomicsDB provides a detailed interactive
-                report summarizing the top risk-associated variants. These
-                variants are annotated using the{" "}
-                <strong>ADSP Annotation Pipeline</strong>{" "}
+                For each dataset, GenomicsDB provides a detailed interactive report summarizing the top risk-associated
+                variants. These variants are annotated using the <strong>ADSP Annotation Pipeline</strong>{" "}
                 <Link href="https://pubmed.ncbi.nlm.nih.gov/29590295/" target="_blank">
                     PMID: 29590295
                 </Link>{" "}
-                and mapped against sequence features and functional genomics
-                data tracks.
+                and mapped against sequence features and functional genomics data tracks.
             </p>
 
             <div className={styles["main-stat"]}>

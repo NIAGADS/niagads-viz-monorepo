@@ -26,10 +26,7 @@ export default function DataAtAGlance() {
 
             <div className={styles["glance-list"]}>
                 {items.map((item) => (
-                    <div
-                        key={item.label}
-                        className={styles["glance-item"]}
-                    >
+                    <div key={item.label} className={styles["glance-item"]}>
                         <strong>{item.value}</strong>
                         <span>{item.label}</span>
                     </div>

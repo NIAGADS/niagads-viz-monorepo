@@ -41,10 +41,7 @@ export default function Home() {
             <section className={styles["front-section"]}>
                 <div className={styles["home-grid"]}>
                     <Card span={6} className={styles["card-accent-yellow"]}>
-                        <QueryExploreSection 
-                            activeTab={activeTab} 
-                            onTabChange={setActiveTab} 
-                        />
+                        <QueryExploreSection activeTab={activeTab} onTabChange={setActiveTab} />
                     </Card>
 
                     <Card span={6} className={styles["card-accent-blue"]}>

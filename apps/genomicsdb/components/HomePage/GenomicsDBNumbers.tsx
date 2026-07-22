@@ -37,10 +37,7 @@ export default function GenomicsDBNumbers() {
 
             <div className={styles["metrics-grid"]}>
                 {metrics.map((metric) => (
-                    <div
-                        key={metric.label}
-                        className={styles["metric-item"]}
-                    >
+                    <div key={metric.label} className={styles["metric-item"]}>
                         <strong>{metric.value}</strong>
                         <span>{metric.label}</span>
                     </div>

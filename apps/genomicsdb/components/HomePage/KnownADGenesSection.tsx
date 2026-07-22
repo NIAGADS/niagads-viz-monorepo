@@ -57,10 +57,7 @@ export default function KnownADGenesSection() {
 
                         <div className={styles.dots} aria-label={`${gene.evidence} evidence points`}>
                             {Array.from({ length: 10 }).map((_, i) => (
-                                <span
-                                    key={i}
-                                    className={i < gene.evidence ? styles["dot-active"] : styles.dot}
-                                />
+                                <span key={i} className={i < gene.evidence ? styles["dot-active"] : styles.dot} />
                             ))}
                         </div>
 

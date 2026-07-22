@@ -47,10 +47,7 @@ const tabs: {
     },
 ];
 
-export default function QueryExploreSection({
-    activeTab,
-    onTabChange,
-}: QueryExploreSectionProps) {
+export default function QueryExploreSection({ activeTab, onTabChange }: QueryExploreSectionProps) {
     const currentTab = tabs.find((tab) => tab.id === activeTab) ?? tabs[0];
 
     return (

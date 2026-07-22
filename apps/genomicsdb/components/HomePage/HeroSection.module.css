@@ -7,9 +7,8 @@
         radial-gradient(circle at 15% 32%, rgba(155, 108, 255, .11), transparent 30%),
         linear-gradient(180deg, var(--dark-blue) 0%, var(--dark-blue) 42%, var(--dark-blue) 100%); */
     /* background:  linear-gradient(180deg, var(--dark-blue) 0%, var(--dark-blue) 42%, var(--dark-blue) 100%); */
-    background: radial-gradient(circle, rgba(42, 50, 62, 0.95) 0%,var(--dark-blue) 87%)
+    background: radial-gradient(circle, rgba(42, 50, 62, 0.95) 0%, var(--dark-blue) 87%);
     /* background-color: #fff; */
-
 }
 
 .hero-grid {
@@ -73,8 +72,8 @@
 .chip {
     padding: 7px 15px;
     border-radius: 999px;
-    border: 1px solid rgba(184, 208, 239, .2);
-    background: rgba(255, 255, 255, .04);
+    border: 1px solid rgba(184, 208, 239, 0.2);
+    background: rgba(255, 255, 255, 0.04);
     color: var(--blue);
     font-size: 0.825rem;
 }
