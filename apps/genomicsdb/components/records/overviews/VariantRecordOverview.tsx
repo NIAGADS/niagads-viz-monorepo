@@ -21,7 +21,7 @@ const VariantRecordOverview = ({ record }: { record: VariantRecord }) => {
             {/* Variant Information Card - 1/3 width */}
             <Card span={4}>
                 <CardHeader>
-                    {renderRecordTitle(record.id, record.ref_snp_id, ExternalUrls.DBSNP_URL, record.record_type)}
+                    {renderRecordTitle(record.id, record.record_type)}
                 </CardHeader>
                 <CardBody>
                     {/*<div>
