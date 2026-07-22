@@ -1,11 +1,12 @@
 import { Color, colorscale } from "@niagads/common";
 
 export const getRelativePositionClassName = (value: any) => {
-    if (value === "in_gene") {
-        return null;
-    } else {
-        return value;
-    }
+    // if (value === "in_gene") {
+    //     return null;
+    // } else {
+    //     return value;
+    // }
+    return value;
 };
 
 export const getPvalueStyle = (pvalue: number) => {
@@ -35,4 +36,8 @@ export const getPvalueStyle = (pvalue: number) => {
     const bgColor: Color = scale(neglog10p);
 
     return { backgroundColor: bgColor };
+};
+
+export const getImpactClassName = (value: any) => {
+    return value?.toLowerCase() ?? null;
 };

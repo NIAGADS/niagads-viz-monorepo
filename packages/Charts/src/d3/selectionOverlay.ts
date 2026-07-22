@@ -22,7 +22,7 @@ export interface SelectionOverlayInstance {
 }
 
 const OVERLAY_COLORS = {
-    bandFill: "rgba(217, 119, 6, 0.12)",
+    bandFill: "rgba(217, 119, 6, 0.05)",
     bandStroke: "#d97706",
     handleFill: "#ffffff",
     handleStroke: "#a65b00",
@@ -42,11 +42,8 @@ function snap(value: number, domainMin: number, step?: number): number {
 }
 
 function normalizeRange(selection: Range, domain: Range): Range {
-    console.log(`selection - ${selection.min} - ${selection.max}`);
-    console.log(`domain - ${domain.min} - ${domain.max}`);
     const min = clamp(selection.min, domain.min, domain.max);
     const max = clamp(selection.max, domain.min, domain.max);
-    console.log(`normalized - ${min} - ${max}`);
 
     return { min: Math.min(min, max), max: Math.max(min, max) };
 }
@@ -159,8 +156,11 @@ export function createSelectionOverlay(opts: SelectionOverlayOptions): Selection
             return handle;
         });
 
+    let pendingSelection = selection;
+
     function updateVisuals(nextSelection: Range) {
         selection = normalizeRange(nextSelection, opts.domain);
+        pendingSelection = selection;
 
         const { x, width } = getBandBounds(selection, opts.xScale);
         band.attr("x", x).attr("width", width);
@@ -171,21 +171,36 @@ export function createSelectionOverlay(opts: SelectionOverlayOptions): Selection
     }
 
     handles.call(
-        d3.drag<SVGGElement, number>().on("drag", function (event, _d) {
-            const pointerX = clamp(event.x, 0, opts.xScale.range()[1]);
-            const atRightEdge = pointerX >= opts.xScale.range()[1];
-            const rawValue = atRightEdge ? opts.domain.max : opts.xScale.invert(pointerX);
-            const snappedValue = clamp(snap(rawValue, opts.domain.min, opts.step), opts.domain.min, opts.domain.max);
+        d3
+            .drag<SVGGElement, number>()
+            .on("drag", function (event, _d) {
+                const pointerX = clamp(event.x, 0, opts.xScale.range()[1]);
+                const atRightEdge = pointerX >= opts.xScale.range()[1];
+                const rawValue = atRightEdge ? opts.domain.max : opts.xScale.invert(pointerX);
+                const snappedValue = clamp(
+                    snap(rawValue, opts.domain.min, opts.step),
+                    opts.domain.min,
+                    opts.domain.max
+                );
 
-            const handleIndex = handles.nodes().indexOf(this);
-            const nextSelection = normalizeRange(
-                getSelectionFromHandle(snappedValue, selection, opts.domain, opts.mode, thresholdHandle, handleIndex),
-                opts.domain
-            );
+                const handleIndex = handles.nodes().indexOf(this);
+                const nextSelection = normalizeRange(
+                    getSelectionFromHandle(
+                        snappedValue,
+                        selection,
+                        opts.domain,
+                        opts.mode,
+                        thresholdHandle,
+                        handleIndex
+                    ),
+                    opts.domain
+                );
 
-            updateVisuals(nextSelection);
-            opts.onChange?.(nextSelection);
-        })
+                updateVisuals(nextSelection);
+            })
+            .on("end", function () {
+                opts.onChange?.(pendingSelection);
+            })
     );
 
     updateVisuals(selection);

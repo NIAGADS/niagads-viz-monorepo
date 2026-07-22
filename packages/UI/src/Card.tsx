@@ -14,13 +14,13 @@ interface CardHeaderProps extends StylingProps {
 }
 
 export const CardBody = ({ children, style, className }: CardBodyProps) => (
-    <div style={style} className={`${className} ${styles["card-body"]}`}>
+    <div style={style} className={[styles["card-header"], className].filter(Boolean).join(" ")}>
         {children}
     </div>
 );
 
 export const CardHeader = ({ children, style, className }: CardHeaderProps) => (
-    <div style={style} className={`${className} ${styles["card-header"]}`}>
+    <div style={style} className={[styles["card-header"], className].filter(Boolean).join(" ")}>
         {children}
     </div>
 );
