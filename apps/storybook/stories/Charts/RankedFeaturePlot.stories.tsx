@@ -310,11 +310,6 @@ const data =
                 { label: "Rank", description: "Rows are ordered from highest to lowest score." },
                 { label: "Highlight", description: "The active row is emphasized on hover or keyboard focus." },
             ],
-            interactions: [
-                "Hover or focus a ranked row to inspect its rank and additional details.",
-                "Use View record in the persistent tooltip to open the feature record.",
-                "Click outside the tooltip, move focus away, or press Escape to close it.",
-            ],
         },
         ariaLabel: "Ranked lollipop plot of genes by negative log10 minimum p-value.",
         displayOpts: {

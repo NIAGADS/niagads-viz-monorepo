@@ -21,7 +21,7 @@ class ADSPFunGenXQTLTranslator {
         return source.map((datum) => ({
             feature_id: datum.targetGene,
             score: datum.mlog10,
-            details: [
+            tooltipInfo: [
                 { label: "Associations", value: datum.n },
                 { label: "xQTL type", value: datum.xQTLtype },
                 { label: "Context", value: datum.context_long },

@@ -17,7 +17,7 @@ export interface RegionalManhattanPlotDataPoint {
     colorCategory: string;
     symbolCategory: string;
     feature_id?: string;
-    details?: DataPointInfo[];
+    tooltipInfo?: DataPointInfo[];
 }
 
 export interface RegionalManhattanPlotLegend {
@@ -60,6 +60,11 @@ const getAllLabel = (label: string): string => {
     const noun = label.split(/\s+/).at(-1)?.toLowerCase() ?? label.toLowerCase();
     return `All ${noun.endsWith("s") ? noun : `${noun}s`}`;
 };
+
+const DEFAULT_RULES = [
+    "Summary cards describe only points visible after filters and zoom are applied.",
+    "The overview retains the full data range while the main plot is zoomed.",
+];
 
 const RegionalManhattanPlot = ({
     data,
@@ -111,6 +116,23 @@ const RegionalManhattanPlot = ({
     const width = displayOpts?.width ?? 930;
     const numericWidth = typeof width === "number" ? width : 930;
     const height = displayOpts?.height ?? numericWidth * (displayOpts?.aspectRatio ?? 610 / 930);
+    const defaultInteractions = [
+        "Hover or focus a point to inspect its values.",
+        "Drag the overview brush to zoom the genomic interval.",
+        ...(gene ? ["The initial view shows the supplied gene with its configured flank on each side."] : []),
+        "Use the selectors to filter context and xQTL type.",
+        "Raise the minimum score to filter points and zoom the y-axis.",
+        gene
+            ? "Use Reset to restore all filters and the initial gene-focused interval."
+            : "Use Reset to restore all filters and the full genomic interval.",
+    ];
+    const visualizationInfoContent = visualizationInfo
+        ? {
+              ...visualizationInfo,
+              interactions: visualizationInfo.interactions ?? defaultInteractions,
+              rules: visualizationInfo.rules ?? DEFAULT_RULES,
+          }
+        : undefined;
 
     useEffect(() => {
         setViewDomain(initialViewDomain);
@@ -174,7 +196,7 @@ const RegionalManhattanPlot = ({
             <div className={styles["regional-manhattan-plot-header"]}>
                 {title && <div className={chartStyles["chart-title"]}>{title}</div>}
                 <div className={styles["regional-manhattan-plot-actions"]}>
-                    {visualizationInfo && <VisualizationInfo content={visualizationInfo} />}
+                    {visualizationInfoContent && <VisualizationInfo content={visualizationInfoContent} />}
                     <VisualizationExport targetRef={chartRef} filename={title ?? "regional-manhattan-plot"} />
                 </div>
             </div>

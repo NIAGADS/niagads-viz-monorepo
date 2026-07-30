@@ -81,18 +81,6 @@ const { data, colorLabels, symbolLabels } =
                     description: "The bar shows the gene span and its arrow indicates strand direction.",
                 },
             ],
-            interactions: [
-                "Hover or focus a point to inspect its values.",
-                "Drag the overview brush to zoom the genomic interval.",
-                "The initial view shows the supplied gene with its configured flank on each side.",
-                "Use the selectors to filter context and xQTL type.",
-                "Raise the minimum score to filter points and zoom the y-axis.",
-                "Use Reset to restore all filters and the initial gene-focused interval.",
-            ],
-            rules: [
-                "Summary cards describe only points visible after filters and zoom are applied.",
-                "The overview retains the full data range while the main plot is zoomed.",
-            ],
         },
         ariaLabel:
             "Interactive regional Manhattan plot for BIN1 on chromosome 2. Association strength is shown on the vertical axis, context by color, and xQTL type by shape.",

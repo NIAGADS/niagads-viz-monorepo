@@ -48,7 +48,7 @@ const getTooltipLines = (
     { value: xLabel },
     { value: datum.y },
     ...(datum.feature_id ? [{ label: "Feature", value: datum.feature_id }] : []),
-    ...(datum.details?.map((detail) => ({ label: detail.label, value: String(detail.value) })) ?? []),
+    ...(datum.tooltipInfo?.map((info) => ({ label: info.label, value: String(info.value) })) ?? []),
     { label: legendLabel, value: d3.format(".2f")(datum.value) },
 ];
 

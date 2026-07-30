@@ -50,7 +50,7 @@ const getTooltipLines = (
     { label: scoreLabel, value: datum.score.toFixed(2) },
     { label: colorLabel, value: datum.colorCategory },
     { label: symbolLabel, value: datum.symbolCategory },
-    ...(datum.details ?? []),
+    ...(datum.tooltipInfo ?? []),
 ];
 
 export function destroyRegionalManhattanPlot(container: HTMLElement): void {

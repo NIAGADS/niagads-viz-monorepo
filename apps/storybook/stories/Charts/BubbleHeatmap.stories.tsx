@@ -457,19 +457,11 @@ const { data, xLabels, yLabels } =
             sizeDescription: "statistical significance, −log10(FDR)",
         },
         visualizationInfo: {
-            description: "This bubble heatmap compares association evidence across biological contexts and xQTL types.",
+            description: "This figure compares association evidence across biological contexts and xQTL types.",
             encodings: [
                 { label: "Position", description: "Columns show biological contexts and rows show xQTL types." },
                 { label: "Color", description: "Color shows the direction and magnitude of the Z-score." },
                 { label: "Size", description: "Circle size shows statistical significance using −log10(FDR)." },
-            ],
-            interactions: [
-                "Hover or focus a circle to inspect the association details.",
-                "Use the optional label control to display feature identifiers inside circles.",
-            ],
-            rules: [
-                "Blank grid intersections indicate that no association is present for that combination.",
-                "Color and size scales are calculated from the supplied data.",
             ],
         },
         ariaLabel:
@@ -505,14 +497,12 @@ const { data, xLabels, yLabels } =
             sizeDescription: "statistical significance, −log10(FDR)",
         },
         visualizationInfo: {
-            description:
-                "This bubble heatmap compares a variant's target-gene associations across biological contexts.",
+            description: "This figure compares a variant's target-gene associations across biological contexts.",
             encodings: [
                 { label: "Position", description: "Columns show biological contexts and rows show target genes." },
                 { label: "Color", description: "Color shows the direction and magnitude of the Z-score." },
                 { label: "Size", description: "Circle size shows statistical significance using −log10(FDR)." },
             ],
-            interactions: ["Hover or focus a circle to inspect the association details."],
         },
         ariaLabel:
             "Bubble matrix of variant xQTL associations by biological context and target gene. Color represents Z-score and circle size represents statistical significance.",

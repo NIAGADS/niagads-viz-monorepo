@@ -46,7 +46,7 @@ class ADSPFunGenXQTLTranslator {
             value: datum.Z,
             size: datum.logFDR,
             feature_id: datum.rsID,
-            details: [
+            tooltipInfo: [
                 { label: "FDR", value: this.formatScientific(this.getFdr(datum)) },
                 { label: "−log10(FDR)", value: datum.logFDR.toFixed(1) },
             ],
@@ -69,7 +69,10 @@ class ADSPFunGenXQTLTranslator {
                 return {
                     ...dataPoint,
                     y: datum.targetGene,
-                    details: [{ label: "xQTL type", value: datum.xQTLtype }, ...(dataPoint.details ?? [])],
+                    tooltipInfo: [
+                        { label: "xQTL type", value: datum.xQTLtype },
+                        ...(dataPoint.tooltipInfo ?? []),
+                    ],
                 };
             }),
             xLabels: this.getContextLabels(source),

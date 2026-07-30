@@ -41,7 +41,7 @@ class ADSPFunGenXQTLTranslator {
             colorCategory: datum.context_long,
             symbolCategory: datum.xQTLtype,
             feature_id: datum.rsID,
-            details: [
+            tooltipInfo: [
                 { label: "FDR", value: this.formatScientific(this.getFdr(datum)) },
                 { label: "Z-score", value: datum.Z.toFixed(2) },
                 { label: "Study", value: datum.study },

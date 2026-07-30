@@ -18,7 +18,7 @@ export interface BubbleHeatmapDataPoint {
     value: number;
     size: number;
     feature_id?: string;
-    details?: DataPointInfo[];
+    tooltipInfo?: DataPointInfo[];
 }
 
 export interface BubbleHeatmapLegend {
@@ -39,6 +39,12 @@ export interface BubbleHeatmapProps {
     showLabels?: boolean;
 }
 
+const DEFAULT_INTERACTIONS = ["Hover or focus a circle to inspect the association details."];
+const DEFAULT_RULES = [
+    "Blank grid intersections indicate that no association is present.",
+    "Color and size scales are calculated from the supplied data.",
+];
+
 const BubbleHeatmap = ({
     data,
     xLabels,
@@ -54,6 +60,13 @@ const BubbleHeatmap = ({
     const width = displayOpts?.width ?? 920;
     const numericWidth = typeof width === "number" ? width : 920;
     const height = displayOpts?.height ?? numericWidth * (displayOpts?.aspectRatio ?? 510 / 920);
+    const visualizationInfoContent = visualizationInfo
+        ? {
+              ...visualizationInfo,
+              interactions: visualizationInfo.interactions ?? DEFAULT_INTERACTIONS,
+              rules: visualizationInfo.rules ?? DEFAULT_RULES,
+          }
+        : undefined;
 
     useEffect(() => {
         if (!chartRef.current) return;
@@ -77,7 +90,7 @@ const BubbleHeatmap = ({
             <div className={styles["bubble-heatmap-header"]}>
                 {title && <div className={chartStyles["chart-title"]}>{title}</div>}
                 <div className={styles["bubble-heatmap-actions"]}>
-                    {visualizationInfo && <VisualizationInfo content={visualizationInfo} />}
+                    {visualizationInfoContent && <VisualizationInfo content={visualizationInfoContent} />}
                     <VisualizationExport targetRef={chartRef} filename={title ?? "bubble-heatmap"} />
                 </div>
             </div>

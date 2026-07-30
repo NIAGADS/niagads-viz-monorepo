@@ -14,7 +14,7 @@ import {
 export interface RankedFeaturePlotDataPoint {
     feature_id: string;
     score: number;
-    details?: DataPointInfo[];
+    tooltipInfo?: DataPointInfo[];
 }
 
 export interface RankedFeaturePlotProps {
@@ -42,6 +42,17 @@ const RankedFeaturePlot = ({
     const width = displayOpts?.width ?? 900;
     const numericWidth = typeof width === "number" ? width : 900;
     const height = displayOpts?.height ?? getRankedFeaturePlotHeight(data.length, displayOpts?.margin);
+    const defaultInteractions = [
+        "Hover or focus a ranked row to inspect its rank and additional details.",
+        ...(recordUrlTemplate ? ["Use View record in the persistent tooltip to open the feature record."] : []),
+        "Click outside the tooltip, move focus away, or press Escape to close it.",
+    ];
+    const visualizationInfoContent = visualizationInfo
+        ? {
+              ...visualizationInfo,
+              interactions: visualizationInfo.interactions ?? defaultInteractions,
+          }
+        : undefined;
 
     useEffect(() => {
         if (!chartRef.current) return;
@@ -64,7 +75,7 @@ const RankedFeaturePlot = ({
             <div className={styles["ranked-feature-plot-header"]}>
                 {title && <div className={chartStyles["chart-title"]}>{title}</div>}
                 <div className={styles["ranked-feature-plot-actions"]}>
-                    {visualizationInfo && <VisualizationInfo content={visualizationInfo} />}
+                    {visualizationInfoContent && <VisualizationInfo content={visualizationInfoContent} />}
                     <VisualizationExport targetRef={chartRef} filename={title ?? "ranked-feature-plot"} />
                 </div>
             </div>
