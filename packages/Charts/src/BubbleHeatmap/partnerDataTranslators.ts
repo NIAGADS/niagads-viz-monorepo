@@ -14,25 +14,30 @@ export interface ADSPFunGenVariantXQTLRecord extends ADSPFunGenXQTLRecord {
     targetGene: string;
 }
 
-const formatScientific = (value: number): string => value.toExponential(2).replace("e-0", "e-").replace("e+0", "e+");
-
-const getFdr = (datum: ADSPFunGenXQTLRecord): number => (datum.FDR > 0 ? datum.FDR : 10 ** -datum.logFDR);
-
-const getContextLabels = (source: readonly ADSPFunGenXQTLRecord[]) =>
-    Array.from(
-        new Map(
-            source.map((datum) => [
-                datum.context,
-                {
-                    value: datum.context,
-                    secondaryLabel: datum.context_long.replace(/\s*\([^)]*\)\s*$/, ""),
-                },
-            ])
-        ).values()
-    );
-
 class ADSPFunGenXQTLTranslator {
     constructor(private resultType: "gene" | "variant") {}
+
+    private formatScientific(value: number): string {
+        return value.toExponential(2).replace("e-0", "e-").replace("e+0", "e+");
+    }
+
+    private getFdr(datum: ADSPFunGenXQTLRecord): number {
+        return datum.FDR > 0 ? datum.FDR : 10 ** -datum.logFDR;
+    }
+
+    private getContextLabels(source: readonly ADSPFunGenXQTLRecord[]) {
+        return Array.from(
+            new Map(
+                source.map((datum) => [
+                    datum.context,
+                    {
+                        value: datum.context,
+                        secondaryLabel: datum.context_long.replace(/\s*\([^)]*\)\s*$/, ""),
+                    },
+                ])
+            ).values()
+        );
+    }
 
     private translateGene(source: readonly ADSPFunGenXQTLRecord[]) {
         const data: BubbleHeatmapDataPoint[] = source.map((datum) => ({
@@ -42,12 +47,12 @@ class ADSPFunGenXQTLTranslator {
             size: datum.logFDR,
             feature_id: datum.rsID,
             details: [
-                { label: "FDR", value: formatScientific(getFdr(datum)) },
+                { label: "FDR", value: this.formatScientific(this.getFdr(datum)) },
                 { label: "−log10(FDR)", value: datum.logFDR.toFixed(1) },
             ],
         }));
 
-        const xLabels = getContextLabels(source);
+        const xLabels = this.getContextLabels(source);
         const yLabels = Array.from(new Set(source.map((datum) => datum.xQTLtype)));
 
         return { data, xLabels, yLabels };

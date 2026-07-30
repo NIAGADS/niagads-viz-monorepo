@@ -22,6 +22,10 @@ import RegionalManhattanPlot, {
     RegionalManhattanPlotLegend,
     RegionalManhattanPlotProps,
 } from "./RegionalManhattanPlot/RegionalManhattanPlot";
+import {
+    ADSPFunGenRegionalXQTLRecord,
+    RegionalManhattanPlotTranslators,
+} from "./RegionalManhattanPlot/partnerDataTranslators";
 import RankedFeaturePlot, {
     RankedFeaturePlotDataPoint,
     RankedFeaturePlotProps,
@@ -45,6 +49,7 @@ export {
     ThresholdSelectHistogram,
     PieChart,
     RegionalManhattanPlot,
+    RegionalManhattanPlotTranslators,
     RankedFeaturePlot,
     RankedFeaturePlotTranslators,
     StackedBarChart,
@@ -65,6 +70,7 @@ export type {
     RegionalManhattanPlotDataPoint,
     RegionalManhattanPlotLegend,
     RegionalManhattanPlotProps,
+    ADSPFunGenRegionalXQTLRecord,
     RankedFeaturePlotDataPoint,
     RankedFeaturePlotProps,
     ADSPFunGenRankedGeneXQTLRecord,
