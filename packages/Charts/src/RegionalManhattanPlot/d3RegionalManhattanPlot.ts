@@ -1,7 +1,11 @@
 import * as d3 from "d3";
 
 import { AxisConfig, DisplayProps } from "../d3/types";
-import { RegionalManhattanPlotDataPoint, RegionalManhattanPlotLegend } from "./RegionalManhattanPlot";
+import {
+    RegionalManhattanPlotDataPoint,
+    RegionalManhattanPlotGene,
+    RegionalManhattanPlotLegend,
+} from "./RegionalManhattanPlot";
 
 export interface RegionalManhattanPlotSummary {
     visibleCount: number;
@@ -17,6 +21,7 @@ export interface RegionalManhattanPlotOptions {
     xAxis?: AxisConfig;
     yAxis?: AxisConfig;
     legend?: RegionalManhattanPlotLegend;
+    gene?: RegionalManhattanPlotGene;
     displayOpts?: DisplayProps;
     ariaLabel?: string;
     selectedColor: string;
@@ -32,7 +37,7 @@ const DEFAULT_WIDTH = 930;
 const DEFAULT_HEIGHT = 610;
 const DEFAULT_MARGIN = { top: 32, right: 170, bottom: 115, left: 72 };
 const OVERVIEW_HEIGHT = 55;
-const OVERVIEW_GAP = 62;
+const OVERVIEW_GAP = 105;
 
 const getTooltipLines = (
     datum: RegionalManhattanPlotDataPoint,
@@ -183,7 +188,7 @@ export function regionalManhattanPlot(
         .append("text")
         .attr("class", "regional-manhattan-plot-axis-title")
         .attr("x", plotWidth / 2)
-        .attr("y", plotHeight + 48)
+        .attr("y", plotHeight + 80)
         .attr("text-anchor", "middle")
         .text(options.xAxis?.label ?? "Position (Mb)");
     chart
@@ -196,6 +201,16 @@ export function regionalManhattanPlot(
         .text(options.yAxis?.label ?? "Score");
 
     const pointsLayer = chart.append("g");
+    const geneTrack = chart
+        .append("g")
+        .attr("class", "regional-manhattan-plot-gene-track")
+        .style("display", options.gene ? null : "none");
+    const geneBar = geneTrack.append("line").attr("class", "regional-manhattan-plot-gene-bar");
+    const geneArrow = geneTrack.append("path").attr("class", "regional-manhattan-plot-gene-arrow");
+    const geneLabel = geneTrack
+        .append("text")
+        .attr("class", "regional-manhattan-plot-gene-label")
+        .attr("text-anchor", "middle");
 
     overview
         .append("rect")
@@ -239,6 +254,35 @@ export function regionalManhattanPlot(
                 .ticks(6)
                 .tickFormat((tick) => `${Number(tick).toFixed(1)} Mb`)
         );
+
+        if (options.gene) {
+            const geneStart = Math.min(options.gene.start, options.gene.end) / 1_000_000;
+            const geneEnd = Math.max(options.gene.start, options.gene.end) / 1_000_000;
+            const [viewStart, viewEnd] = x.domain();
+            const visibleStart = Math.max(geneStart, viewStart);
+            const visibleEnd = Math.min(geneEnd, viewEnd);
+            const isVisible = visibleStart <= visibleEnd;
+            const barY = plotHeight + 34;
+            const startX = x(visibleStart);
+            const endX = x(visibleEnd);
+            const arrowAtStart = options.gene.strand === "-" && geneStart >= viewStart && geneStart <= viewEnd;
+            const arrowAtEnd = options.gene.strand === "+" && geneEnd >= viewStart && geneEnd <= viewEnd;
+
+            geneTrack.style("display", isVisible ? null : "none");
+            geneBar.attr("x1", startX).attr("x2", endX).attr("y1", barY).attr("y2", barY);
+            geneArrow.attr(
+                "d",
+                arrowAtStart
+                    ? `M${startX},${barY} L${startX + 9},${barY - 5} L${startX + 9},${barY + 5} Z`
+                    : arrowAtEnd
+                      ? `M${endX},${barY} L${endX - 9},${barY - 5} L${endX - 9},${barY + 5} Z`
+                      : ""
+            );
+            geneLabel
+                .attr("x", (startX + endX) / 2)
+                .attr("y", barY + 19)
+                .text(options.gene.gene_symbol);
+        }
 
         const visible = visibleData();
         pointsLayer

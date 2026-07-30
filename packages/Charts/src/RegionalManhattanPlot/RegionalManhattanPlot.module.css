@@ -107,6 +107,22 @@
     font-size: 11px;
 }
 
+.regional-manhattan-plot-container :global(.regional-manhattan-plot-gene-bar) {
+    stroke: #475569;
+    stroke-width: 3;
+    stroke-linecap: round;
+}
+
+.regional-manhattan-plot-container :global(.regional-manhattan-plot-gene-arrow) {
+    fill: #475569;
+}
+
+.regional-manhattan-plot-container :global(.regional-manhattan-plot-gene-label) {
+    fill: #334155;
+    font-size: 11px;
+    font-weight: 600;
+}
+
 .regional-manhattan-plot-container :global(.regional-manhattan-plot-point:focus) {
     stroke: var(--viz-text, #1f2937);
     stroke-width: 2;

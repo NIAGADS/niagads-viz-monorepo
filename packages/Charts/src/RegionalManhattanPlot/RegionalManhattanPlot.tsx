@@ -1,14 +1,14 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-
 import { AxisConfig, DataPointInfo, DisplayProps } from "../d3/types";
-import VisualizationInfo, { VisualizationInfoContent } from "../d3/VisualizationInfo";
-import chartStyles from "../styles/Charts.module.css";
-import styles from "./RegionalManhattanPlot.module.css";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
+    RegionalManhattanPlotSummary,
     destroyRegionalManhattanPlot,
     regionalManhattanPlot,
-    RegionalManhattanPlotSummary,
 } from "./d3RegionalManhattanPlot";
+import VisualizationInfo, { VisualizationInfoContent } from "../d3/VisualizationInfo";
+
+import chartStyles from "../styles/Charts.module.css";
+import styles from "./RegionalManhattanPlot.module.css";
 
 export interface RegionalManhattanPlotDataPoint {
     position: number;
@@ -24,8 +24,18 @@ export interface RegionalManhattanPlotLegend {
     symbolLabel?: string;
 }
 
+export interface RegionalManhattanPlotGene {
+    gene_symbol: string;
+    chr: string;
+    start: number;
+    end: number;
+    strand: "+" | "-";
+}
+
 export interface RegionalManhattanPlotProps {
     data: RegionalManhattanPlotDataPoint[];
+    gene?: RegionalManhattanPlotGene;
+    geneFlankBp?: number;
     colorLabels?: string[];
     symbolLabels?: string[];
     threshold?: number;
@@ -48,6 +58,8 @@ const getAllLabel = (label: string): string => {
 
 const RegionalManhattanPlot = ({
     data,
+    gene,
+    geneFlankBp = 500_000,
     colorLabels,
     symbolLabels,
     threshold,
@@ -75,11 +87,19 @@ const RegionalManhattanPlot = ({
         const max = xAxis?.max ?? Math.max(...positions);
         return [Number.isFinite(min) ? min : 0, Number.isFinite(max) ? max : 1] as [number, number];
     }, [data, xAxis?.min, xAxis?.max]);
+    const initialViewDomain = useMemo(() => {
+        if (!gene) return dataExtent;
+
+        const min = (Math.min(gene.start, gene.end) - geneFlankBp) / 1_000_000;
+        const max = (Math.max(gene.start, gene.end) + geneFlankBp) / 1_000_000;
+        const domain = [Math.max(dataExtent[0], min), Math.min(dataExtent[1], max)] as [number, number];
+        return domain[0] < domain[1] ? domain : dataExtent;
+    }, [dataExtent, gene, geneFlankBp]);
     const maxScore = useMemo(() => Math.ceil(Math.max(0, ...data.map((datum) => datum.score))), [data]);
     const [selectedColor, setSelectedColor] = useState("all");
     const [selectedSymbol, setSelectedSymbol] = useState("all");
     const [minimumScore, setMinimumScore] = useState(0);
-    const [viewDomain, setViewDomain] = useState<[number, number]>(dataExtent);
+    const [viewDomain, setViewDomain] = useState<[number, number]>(initialViewDomain);
     const [summary, setSummary] = useState<RegionalManhattanPlotSummary>({
         visibleCount: data.length,
     });
@@ -88,8 +108,8 @@ const RegionalManhattanPlot = ({
     const height = displayOpts?.height ?? numericWidth * (displayOpts?.aspectRatio ?? 610 / 930);
 
     useEffect(() => {
-        setViewDomain(dataExtent);
-    }, [dataExtent]);
+        setViewDomain(initialViewDomain);
+    }, [initialViewDomain]);
 
     useEffect(() => {
         if (!chartRef.current) return;
@@ -102,6 +122,7 @@ const RegionalManhattanPlot = ({
             xAxis,
             yAxis,
             legend,
+            gene,
             displayOpts: { ...displayOpts, height },
             ariaLabel,
             selectedColor,
@@ -125,6 +146,7 @@ const RegionalManhattanPlot = ({
         xAxis,
         yAxis,
         legend,
+        gene,
         displayOpts,
         height,
         ariaLabel,
@@ -139,7 +161,7 @@ const RegionalManhattanPlot = ({
         setSelectedColor("all");
         setSelectedSymbol("all");
         setMinimumScore(0);
-        setViewDomain(dataExtent);
+        setViewDomain(initialViewDomain);
     };
 
     return (

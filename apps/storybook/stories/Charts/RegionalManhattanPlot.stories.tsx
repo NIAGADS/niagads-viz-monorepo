@@ -38,6 +38,13 @@ const { data, colorLabels, symbolLabels } =
     },
     args: {
         data,
+        gene: {
+            gene_symbol: "BIN1",
+            chr: "chr2",
+            start: 127048027,
+            end: 127107288,
+            strand: "-",
+        },
         colorLabels,
         symbolLabels,
         threshold: -Math.log10(0.05),
@@ -67,13 +74,18 @@ const { data, colorLabels, symbolLabels } =
                 { label: "Color", description: "Color identifies the biological context." },
                 { label: "Shape", description: "Symbol shape identifies the xQTL type." },
                 { label: "Size", description: "Points with scores above 30 are slightly larger." },
+                {
+                    label: "Gene track",
+                    description: "The bar shows the gene span and its arrow indicates strand direction.",
+                },
             ],
             interactions: [
                 "Hover or focus a point to inspect its values.",
                 "Drag the overview brush to zoom the genomic interval.",
+                "The initial view shows the supplied gene with a 100 kb flank on each side.",
                 "Use the selectors to filter context and xQTL type.",
                 "Raise the minimum score to filter points and zoom the y-axis.",
-                "Use Reset to restore all filters and the full genomic interval.",
+                "Use Reset to restore all filters and the initial gene-focused interval.",
             ],
             rules: [
                 "Summary cards describe only points visible after filters and zoom are applied.",
