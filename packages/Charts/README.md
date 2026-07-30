@@ -8,6 +8,10 @@
 npm install @niagads/charts
 ```
 
+## Live Examples
+
+To view live examples of all chart components, please visit our Storybook application: <https://niagads.github.io/niagads-viz-monorepo/>
+
 ## BubbleHeatmap
 
 `BubbleHeatmap` is a two-value matrix visualization. Circle color represents `value`, circle size represents `size`, and the `x` and `y` fields locate a point in the matrix.
