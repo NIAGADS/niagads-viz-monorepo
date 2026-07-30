@@ -5,11 +5,7 @@ import VisualizationExport from "../d3/VisualizationExport";
 import VisualizationInfo, { VisualizationInfoContent } from "../d3/VisualizationInfo";
 import chartStyles from "../styles/Charts.module.css";
 import styles from "./RankedFeaturePlot.module.css";
-import {
-    destroyRankedFeaturePlot,
-    getRankedFeaturePlotHeight,
-    rankedFeaturePlot,
-} from "./d3RankedFeaturePlot";
+import { destroyRankedFeaturePlot, getRankedFeaturePlotHeight, rankedFeaturePlot } from "./d3RankedFeaturePlot";
 
 export interface RankedFeaturePlotDataPoint {
     feature_id: string;

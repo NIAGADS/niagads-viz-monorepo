@@ -28,10 +28,7 @@ export function getRankedFeaturePlotHeight(rowCount: number, margin = DEFAULT_MA
     return margin.top + rowCount * DEFAULT_ROW_HEIGHT + margin.bottom;
 }
 
-const getTooltipLines = (datum: RankedFeature) => [
-    { label: "Rank", value: datum.rank },
-    ...(datum.tooltipInfo ?? []),
-];
+const getTooltipLines = (datum: RankedFeature) => [{ label: "Rank", value: datum.rank }, ...(datum.tooltipInfo ?? [])];
 
 export function destroyRankedFeaturePlot(container: HTMLElement): void {
     const chartContainer = container as RankedFeaturePlotContainer;

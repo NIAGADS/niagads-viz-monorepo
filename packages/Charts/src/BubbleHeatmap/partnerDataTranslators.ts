@@ -69,10 +69,7 @@ class ADSPFunGenXQTLTranslator {
                 return {
                     ...dataPoint,
                     y: datum.targetGene,
-                    tooltipInfo: [
-                        { label: "xQTL type", value: datum.xQTLtype },
-                        ...(dataPoint.tooltipInfo ?? []),
-                    ],
+                    tooltipInfo: [{ label: "xQTL type", value: datum.xQTLtype }, ...(dataPoint.tooltipInfo ?? [])],
                 };
             }),
             xLabels: this.getContextLabels(source),

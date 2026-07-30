@@ -63,10 +63,7 @@ const inlinePresentationStyles = (source: SVGSVGElement, clone: SVGSVGElement): 
  * The export clones the first SVG inside `targetRef` and inlines its computed
  * presentation styles so the downloaded file does not depend on application CSS.
  */
-const VisualizationExport = ({
-    targetRef,
-    filename = "visualization.svg",
-}: VisualizationExportProps) => {
+const VisualizationExport = ({ targetRef, filename = "visualization.svg" }: VisualizationExportProps) => {
     const exportSvg = (): void => {
         const source = targetRef.current?.querySelector<SVGSVGElement>("svg");
         if (!source) return;
