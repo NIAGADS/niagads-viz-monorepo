@@ -1,4 +1,4 @@
-import React, { useId, useState } from "react";
+import React, { useEffect, useId, useRef, useState } from "react";
 
 import styles from "./VisualizationInfo.module.css";
 
@@ -38,9 +38,33 @@ export interface VisualizationInfoProps {
 const VisualizationInfo = ({ content }: VisualizationInfoProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const panelId = useId();
+    const infoRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        if (!isOpen) return;
+
+        const closeOutside = (event: PointerEvent | FocusEvent): void => {
+            if (event.target instanceof Node && !infoRef.current?.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+        const closeOnEscape = (event: KeyboardEvent): void => {
+            if (event.key === "Escape") setIsOpen(false);
+        };
+
+        document.addEventListener("pointerdown", closeOutside);
+        document.addEventListener("focusin", closeOutside);
+        document.addEventListener("keydown", closeOnEscape);
+
+        return () => {
+            document.removeEventListener("pointerdown", closeOutside);
+            document.removeEventListener("focusin", closeOutside);
+            document.removeEventListener("keydown", closeOnEscape);
+        };
+    }, [isOpen]);
 
     return (
-        <div className={styles["visualization-info"]}>
+        <div ref={infoRef} className={styles["visualization-info"]}>
             <button
                 type="button"
                 className={styles["visualization-info-button"]}
