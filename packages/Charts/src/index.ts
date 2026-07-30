@@ -22,6 +22,14 @@ import RegionalManhattanPlot, {
     RegionalManhattanPlotLegend,
     RegionalManhattanPlotProps,
 } from "./RegionalManhattanPlot/RegionalManhattanPlot";
+import RankedFeaturePlot, {
+    RankedFeaturePlotDataPoint,
+    RankedFeaturePlotProps,
+} from "./RankedFeaturePlot/RankedFeaturePlot";
+import {
+    ADSPFunGenRankedGeneXQTLRecord,
+    RankedFeaturePlotTranslators,
+} from "./RankedFeaturePlot/partnerDataTranslators";
 import GeneticAssociationStackedBarChart from "./StackedBarChart/GeneticAssociationStackedBarChart";
 import StackedBarChart, { StackedBarChartDataRow } from "./StackedBarChart/StackedBarChart";
 
@@ -37,6 +45,8 @@ export {
     ThresholdSelectHistogram,
     PieChart,
     RegionalManhattanPlot,
+    RankedFeaturePlot,
+    RankedFeaturePlotTranslators,
     StackedBarChart,
     GeneticAssociationStackedBarChart,
 };
@@ -55,5 +65,8 @@ export type {
     RegionalManhattanPlotDataPoint,
     RegionalManhattanPlotLegend,
     RegionalManhattanPlotProps,
+    RankedFeaturePlotDataPoint,
+    RankedFeaturePlotProps,
+    ADSPFunGenRankedGeneXQTLRecord,
     StackedBarChartDataRow,
 };
