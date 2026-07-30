@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 
 import { AxisConfig, DataPointInfo, DisplayProps } from "../d3/types";
+import VisualizationExport from "../d3/VisualizationExport";
 import VisualizationInfo, { VisualizationInfoContent } from "../d3/VisualizationInfo";
 import chartStyles from "../styles/Charts.module.css";
 import styles from "./RankedFeaturePlot.module.css";
@@ -60,12 +61,13 @@ const RankedFeaturePlot = ({
 
     return (
         <div className={styles["ranked-feature-plot-wrapper"]}>
-            {(title || visualizationInfo) && (
-                <div className={styles["ranked-feature-plot-header"]}>
-                    {title && <div className={chartStyles["chart-title"]}>{title}</div>}
+            <div className={styles["ranked-feature-plot-header"]}>
+                {title && <div className={chartStyles["chart-title"]}>{title}</div>}
+                <div className={styles["ranked-feature-plot-actions"]}>
                     {visualizationInfo && <VisualizationInfo content={visualizationInfo} />}
+                    <VisualizationExport targetRef={chartRef} filename={title ?? "ranked-feature-plot"} />
                 </div>
-            )}
+            </div>
             <div
                 ref={chartRef}
                 className={styles["ranked-feature-plot-container"]}

@@ -4,8 +4,11 @@ import { RegionalManhattanPlot, RegionalManhattanPlotTranslators } from "@niagad
 
 import xqtlAtlasBin1ManhattanPlot from "../../examples/manhattan-plots/xqtl_atlas_bin1_manhattan_plot.json";
 
-const { data: translatedData, colorLabels, symbolLabels } =
-    new RegionalManhattanPlotTranslators.ADSPFunGenXQTL("gene").translate(xqtlAtlasBin1ManhattanPlot);
+const {
+    data: translatedData,
+    colorLabels,
+    symbolLabels,
+} = new RegionalManhattanPlotTranslators.ADSPFunGenXQTL("gene").translate(xqtlAtlasBin1ManhattanPlot);
 const data = {
     ...translatedData,
     gene: {
@@ -53,13 +56,9 @@ const { data, colorLabels, symbolLabels } =
         threshold: -Math.log10(0.05),
         thresholdLabel: "FDR = 0.05",
         xAxis: {
-            min: 123.5,
-            max: 131,
-            label: "Position on chromosome 2 (Mb)",
+            label: "Position on chromosome (Mb)",
         },
         yAxis: {
-            min: 0,
-            max: 98,
             label: "−log10(FDR)",
         },
         legend: {

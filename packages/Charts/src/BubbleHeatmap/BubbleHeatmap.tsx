@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 
 import { DataPointInfo, DisplayProps } from "../d3/types";
+import VisualizationExport from "../d3/VisualizationExport";
 import VisualizationInfo, { VisualizationInfoContent } from "../d3/VisualizationInfo";
 import chartStyles from "../styles/Charts.module.css";
 import styles from "./BubbleHeatmap.module.css";
@@ -73,12 +74,13 @@ const BubbleHeatmap = ({
 
     return (
         <div className={styles["bubble-heatmap-wrapper"]}>
-            {(title || visualizationInfo) && (
-                <div className={styles["bubble-heatmap-header"]}>
-                    {title && <div className={chartStyles["chart-title"]}>{title}</div>}
+            <div className={styles["bubble-heatmap-header"]}>
+                {title && <div className={chartStyles["chart-title"]}>{title}</div>}
+                <div className={styles["bubble-heatmap-actions"]}>
                     {visualizationInfo && <VisualizationInfo content={visualizationInfo} />}
+                    <VisualizationExport targetRef={chartRef} filename={title ?? "bubble-heatmap"} />
                 </div>
-            )}
+            </div>
             <div
                 ref={chartRef}
                 className={styles["bubble-heatmap-container"]}

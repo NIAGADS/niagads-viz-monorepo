@@ -11,6 +11,13 @@
     margin-bottom: 12px;
 }
 
+.regional-manhattan-plot-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+}
+
 .regional-manhattan-plot-controls {
     display: grid;
     grid-template-columns: minmax(180px, 1fr) minmax(180px, 1fr) minmax(210px, 1fr) auto;
@@ -98,12 +105,12 @@
 }
 
 .regional-manhattan-plot-container :global(.regional-manhattan-plot-threshold) {
-    stroke: var(--viz-text, #1f2937);
+    stroke: #dc2626;
     stroke-dasharray: 5 5;
 }
 
 .regional-manhattan-plot-container :global(.regional-manhattan-plot-threshold-label) {
-    fill: var(--viz-muted, #687384);
+    fill: #dc2626;
     font-size: 11px;
 }
 

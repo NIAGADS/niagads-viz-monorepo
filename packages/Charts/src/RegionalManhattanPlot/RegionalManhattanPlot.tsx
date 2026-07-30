@@ -1,14 +1,15 @@
-import { AxisConfig, DataPointInfo, DisplayProps } from "../d3/types";
 import React, { useEffect, useMemo, useRef, useState } from "react";
+
+import { AxisConfig, DataPointInfo, DisplayProps } from "../d3/types";
+import VisualizationExport from "../d3/VisualizationExport";
+import VisualizationInfo, { VisualizationInfoContent } from "../d3/VisualizationInfo";
+import chartStyles from "../styles/Charts.module.css";
+import styles from "./RegionalManhattanPlot.module.css";
 import {
     RegionalManhattanPlotSummary,
     destroyRegionalManhattanPlot,
     regionalManhattanPlot,
 } from "./d3RegionalManhattanPlot";
-import VisualizationInfo, { VisualizationInfoContent } from "../d3/VisualizationInfo";
-
-import chartStyles from "../styles/Charts.module.css";
-import styles from "./RegionalManhattanPlot.module.css";
 
 export interface RegionalManhattanPlotDataPoint {
     position: number;
@@ -170,12 +171,13 @@ const RegionalManhattanPlot = ({
 
     return (
         <div className={styles["regional-manhattan-plot-wrapper"]}>
-            {(title || visualizationInfo) && (
-                <div className={styles["regional-manhattan-plot-header"]}>
-                    {title && <div className={chartStyles["chart-title"]}>{title}</div>}
+            <div className={styles["regional-manhattan-plot-header"]}>
+                {title && <div className={chartStyles["chart-title"]}>{title}</div>}
+                <div className={styles["regional-manhattan-plot-actions"]}>
                     {visualizationInfo && <VisualizationInfo content={visualizationInfo} />}
+                    <VisualizationExport targetRef={chartRef} filename={title ?? "regional-manhattan-plot"} />
                 </div>
-            )}
+            </div>
             <div className={styles["regional-manhattan-plot-controls"]}>
                 <label>
                     <span>{legend?.colorLabel ?? "Color"}</span>

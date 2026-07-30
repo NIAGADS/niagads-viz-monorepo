@@ -36,11 +36,11 @@ class ADSPFunGenXQTLTranslator {
                     },
                 ])
             ).values()
-        );
+        ).sort((left, right) => left.secondaryLabel.localeCompare(right.secondaryLabel));
     }
 
-    private translateGene(source: readonly ADSPFunGenXQTLRecord[]) {
-        const data: BubbleHeatmapDataPoint[] = source.map((datum) => ({
+    private translateDataPoint(datum: ADSPFunGenXQTLRecord): BubbleHeatmapDataPoint {
+        return {
             x: datum.context,
             y: datum.xQTLtype,
             value: datum.Z,
@@ -50,7 +50,11 @@ class ADSPFunGenXQTLTranslator {
                 { label: "FDR", value: this.formatScientific(this.getFdr(datum)) },
                 { label: "−log10(FDR)", value: datum.logFDR.toFixed(1) },
             ],
-        }));
+        };
+    }
+
+    private translateGene(source: readonly ADSPFunGenXQTLRecord[]) {
+        const data = source.map((datum) => this.translateDataPoint(datum));
 
         const xLabels = this.getContextLabels(source);
         const yLabels = Array.from(new Set(source.map((datum) => datum.xQTLtype)));
@@ -59,15 +63,16 @@ class ADSPFunGenXQTLTranslator {
     }
 
     private translateVariant(source: readonly ADSPFunGenVariantXQTLRecord[]) {
-        const translated = this.translateGene(source);
-
         return {
-            ...translated,
-            data: translated.data.map((datum, index) => ({
-                ...datum,
-                y: source[index].targetGene,
-                details: [{ label: "xQTL type", value: source[index].xQTLtype }, ...(datum.details ?? [])],
-            })),
+            data: source.map((datum) => {
+                const dataPoint = this.translateDataPoint(datum);
+                return {
+                    ...dataPoint,
+                    y: datum.targetGene,
+                    details: [{ label: "xQTL type", value: datum.xQTLtype }, ...(dataPoint.details ?? [])],
+                };
+            }),
+            xLabels: this.getContextLabels(source),
             yLabels: Array.from(new Set(source.map((datum) => datum.targetGene))),
         };
     }
