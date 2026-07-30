@@ -2,7 +2,146 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { BubbleHeatmap, BubbleHeatmapTranslators } from "@niagads/charts";
 
-const xqtl_atlas_data = [
+const xqtl_atlas_variant_result_example = [
+    {
+        targetGene: "AC012508.1",
+        xQTLtype: "mQTL",
+        context: "DLPFC",
+        study: "ROSMAP",
+        FDR: 8.805e-6,
+        Z: 5.265,
+        variantId: "chr2:127135234:C:T",
+        cisOrTad: "cis",
+        distance: 109567,
+        rsID: "rs6733839",
+        target: "chr2:127025666-127025668:cg12632573",
+        context_long: "Dorsolateral prefrontal cortex (DLPFC)",
+        logFDR: 5.0553,
+        z_dir: "▲",
+        label: "mQTL\nq=8.805e-06\n▲ z=5.2650",
+    },
+    {
+        targetGene: "AC012508.3",
+        xQTLtype: "eQTL",
+        context: "AC",
+        study: "ROSMAP",
+        FDR: 0.0001,
+        Z: 5.0526,
+        variantId: "chr2:127135234:C:T",
+        cisOrTad: "cis",
+        distance: 110368,
+        rsID: "rs6733839",
+        target: "ENSG00000286971",
+        context_long: "Anterior caudate (AC)",
+        logFDR: 4.2584,
+        z_dir: "▲",
+        label: "eQTL\nq=5.516e-05\n▲ z=5.0526",
+    },
+    {
+        targetGene: "AC110926.1",
+        xQTLtype: "mQTL",
+        context: "PC",
+        study: "Knight-ADRC",
+        FDR: 5.828e-14,
+        Z: 8.4619,
+        variantId: "chr2:127135234:C:T",
+        cisOrTad: "cis",
+        distance: 6494,
+        rsID: "rs6733839",
+        target: "chr2:127128739-127128741:cg14317533",
+        context_long: "Parietal cortex (PC)",
+        logFDR: 13.2345,
+        z_dir: "▲",
+        label: "mQTL\nq=5.828e-14\n▲ z=8.4619",
+    },
+    {
+        targetGene: "BIN1",
+        xQTLtype: "eQTL",
+        context: "AC",
+        study: "ROSMAP",
+        FDR: 0,
+        Z: 5.5504,
+        variantId: "chr2:127135234:C:T",
+        cisOrTad: "cis",
+        distance: 27946,
+        rsID: "rs6733839",
+        target: "ENSG00000136717",
+        context_long: "Anterior caudate (AC)",
+        logFDR: 4.9252,
+        z_dir: "▲",
+        label: "eQTL\nq=1.188e-05\n▲ z=5.5504",
+    },
+    {
+        targetGene: "BIN1",
+        xQTLtype: "mQTL",
+        context: "DLPFC",
+        study: "ROSMAP",
+        FDR: 3.452e-14,
+        Z: -8.4004,
+        variantId: "chr2:127135234:C:T",
+        cisOrTad: "cis",
+        distance: 53271,
+        rsID: "rs6733839",
+        target: "chr2:127081962-127081964:cg27405400",
+        context_long: "Dorsolateral prefrontal cortex (DLPFC)",
+        logFDR: 13.4619,
+        z_dir: "▼",
+        label: "mQTL\nq=3.452e-14\n▼ z=-8.4004",
+    },
+    {
+        targetGene: "BIN1",
+        xQTLtype: "mQTL",
+        context: "PC",
+        study: "Knight-ADRC",
+        FDR: 7.708e-14,
+        Z: -8.3194,
+        variantId: "chr2:127135234:C:T",
+        cisOrTad: "cis",
+        distance: 13307,
+        rsID: "rs6733839",
+        target: "chr2:127121926-127121928:cg07843092",
+        context_long: "Parietal cortex (PC)",
+        logFDR: 13.1131,
+        z_dir: "▼",
+        label: "mQTL\nq=7.708e-14\n▼ z=-8.3194",
+    },
+    {
+        targetGene: "BIN1",
+        xQTLtype: "mQTL",
+        context: "PHG",
+        study: "MSBB",
+        FDR: 1.2e-9,
+        Z: -7.3196,
+        variantId: "chr2:127135234:C:T",
+        cisOrTad: "cis",
+        distance: 13307,
+        rsID: "rs6733839",
+        target: "chr2:127121926-127121928:cg07843092",
+        context_long: "Parahippocampal gyrus (PHG)",
+        logFDR: 8.9208,
+        z_dir: "▼",
+        label: "mQTL\nq=1.200e-09\n▼ z=-7.3196",
+    },
+    {
+        targetGene: "BIN1",
+        xQTLtype: "snuc-eQTL",
+        context: "mic",
+        study: "ROSMAP_CUIMC1_2_MIT",
+        FDR: 1.762e-23,
+        Z: 11.5034,
+        variantId: "chr2:127135234:C:T",
+        cisOrTad: "cis",
+        distance: 27946,
+        rsID: "rs6733839",
+        target: "ENSG00000136717",
+        context_long: "Microglia (mic)",
+        logFDR: 22.754,
+        z_dir: "▲",
+        label: "snuc-eQTL\nq=1.762e-23\n▲ z=11.5034",
+    },
+];
+
+const xqtl_atlas_gene_result_example = [
     {
         rsID: "rs13389409",
         chr: "rs13389409",
@@ -273,7 +412,13 @@ const {
     data: bubbleHeatmapData,
     xLabels,
     yLabels,
-} = new BubbleHeatmapTranslators.ADSPFunGenXQTL().translate(xqtl_atlas_data);
+} = new BubbleHeatmapTranslators.ADSPFunGenXQTL("gene").translate(xqtl_atlas_gene_result_example);
+
+const {
+    data: variantBubbleHeatmapData,
+    xLabels: variantXLabels,
+    yLabels: variantYLabels,
+} = new BubbleHeatmapTranslators.ADSPFunGenXQTL("variant").translate(xqtl_atlas_variant_result_example);
 
 const meta = {
     title: "Charts/BubbleHeatmap",
@@ -287,16 +432,16 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof BubbleHeatmap>;
 
-export const QTLAssociations: Story = {
+export const GeneQTLAssociations: Story = {
     parameters: {
         docs: {
             description: {
                 story: `
-This example uses \`BubbleHeatmapTranslators.ADSPFunGenXQTL\` to convert ADSP FunGen xQTL records into BubbleHeatmap data and axis labels.
+This example uses \`BubbleHeatmapTranslators.ADSPFunGenXQTL("gene")\` to convert ADSP FunGen gene xQTL chart JSON into BubbleHeatmap data and axis labels.
 
 \`\`\`ts
 const { data, xLabels, yLabels } =
-    new BubbleHeatmapTranslators.ADSPFunGenXQTL().translate(xqtlData);
+    new BubbleHeatmapTranslators.ADSPFunGenXQTL("gene").translate(xqtlData);
 \`\`\`
                 `,
             },
@@ -311,8 +456,66 @@ const { data, xLabels, yLabels } =
             colorDescription: "direction and magnitude of Z-score",
             sizeDescription: "statistical significance, −log10(FDR)",
         },
+        visualizationInfo: {
+            description: "This bubble heatmap compares association evidence across biological contexts and xQTL types.",
+            encodings: [
+                { label: "Position", description: "Columns show biological contexts and rows show xQTL types." },
+                { label: "Color", description: "Color shows the direction and magnitude of the Z-score." },
+                { label: "Size", description: "Circle size shows statistical significance using −log10(FDR)." },
+            ],
+            interactions: [
+                "Hover or focus a circle to inspect the association details.",
+                "Use the optional label control to display feature identifiers inside circles.",
+            ],
+            rules: [
+                "Blank grid intersections indicate that no association is present for that combination.",
+                "Color and size scales are calculated from the supplied data.",
+            ],
+        },
         ariaLabel:
             "Bubble matrix of BIN1 xQTL associations by biological context. Color represents Z-score and circle size represents statistical significance.",
+        showLabels: false,
+        displayOpts: { width: 920, height: 510 },
+    },
+};
+
+export const VariantQTLAssociations: Story = {
+    parameters: {
+        docs: {
+            description: {
+                story: `
+
+This example uses \`BubbleHeatmapTranslators.ADSPFunGenXQTL("variant")\` to convert ADSP FunGen variant xQTL chart JSON into BubbleHeatmap data and axis labels.
+
+\`\`\`ts
+const { data, xLabels, yLabels } =
+    new BubbleHeatmapTranslators.ADSPFunGenXQTL("variant").translate(xqtlData);
+\`\`\`
+                `,
+            },
+        },
+    },
+    args: {
+        data: variantBubbleHeatmapData,
+        xLabels: variantXLabels,
+        yLabels: variantYLabels,
+        legend: {
+            label: "Z-score",
+            colorDescription: "direction and magnitude of Z-score",
+            sizeDescription: "statistical significance, −log10(FDR)",
+        },
+        visualizationInfo: {
+            description:
+                "This bubble heatmap compares a variant's target-gene associations across biological contexts.",
+            encodings: [
+                { label: "Position", description: "Columns show biological contexts and rows show target genes." },
+                { label: "Color", description: "Color shows the direction and magnitude of the Z-score." },
+                { label: "Size", description: "Circle size shows statistical significance using −log10(FDR)." },
+            ],
+            interactions: ["Hover or focus a circle to inspect the association details."],
+        },
+        ariaLabel:
+            "Bubble matrix of variant xQTL associations by biological context and target gene. Color represents Z-score and circle size represents statistical significance.",
         showLabels: false,
         displayOpts: { width: 920, height: 510 },
     },

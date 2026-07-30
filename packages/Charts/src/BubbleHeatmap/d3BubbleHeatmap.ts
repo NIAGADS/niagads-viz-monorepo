@@ -1,11 +1,7 @@
 import * as d3 from "d3";
 
 import { DisplayProps } from "../d3/types";
-import {
-    BubbleHeatmapAxisLabel,
-    BubbleHeatmapDataPoint,
-    BubbleHeatmapLegend,
-} from "./BubbleHeatmap";
+import { BubbleHeatmapAxisLabel, BubbleHeatmapDataPoint, BubbleHeatmapLegend } from "./BubbleHeatmap";
 
 export interface BubbleHeatmapOptions {
     xLabels?: Array<string | BubbleHeatmapAxisLabel>;
@@ -19,14 +15,11 @@ export interface BubbleHeatmapOptions {
 const DEFAULT_WIDTH = 920;
 const DEFAULT_HEIGHT = 510;
 const DEFAULT_MARGIN = { top: 36, right: 120, bottom: 105, left: 125 };
-const DEFAULT_ARIA_LABEL =
-    "Bubble matrix. Color represents the cell value and circle size represents magnitude.";
+const DEFAULT_ARIA_LABEL = "Bubble matrix. Color represents the cell value and circle size represents magnitude.";
 
 const unique = (values: string[]): string[] => Array.from(new Set(values));
 
-const normalizeAxisLabels = (
-    labels: Array<string | BubbleHeatmapAxisLabel>
-): BubbleHeatmapAxisLabel[] =>
+const normalizeAxisLabels = (labels: Array<string | BubbleHeatmapAxisLabel>): BubbleHeatmapAxisLabel[] =>
     labels.map((label) => (typeof label === "string" ? { value: label } : label));
 
 const wrapLabel = (label: string): string[] => {
@@ -70,8 +63,7 @@ export function bubbleHeatmap(
 ): void {
     destroyBubbleHeatmap(container);
 
-    const width =
-        typeof options.displayOpts?.width === "number" ? options.displayOpts.width : DEFAULT_WIDTH;
+    const width = typeof options.displayOpts?.width === "number" ? options.displayOpts.width : DEFAULT_WIDTH;
     const height =
         options.displayOpts?.height ??
         (options.displayOpts?.aspectRatio ? width * options.displayOpts.aspectRatio : DEFAULT_HEIGHT);
@@ -82,9 +74,7 @@ export function bubbleHeatmap(
     const yLabels = normalizeAxisLabels(options.yLabels ?? unique(data.map((datum) => datum.y)));
     const xValues = xLabels.map((label) => label.value);
     const yValues = yLabels.map((label) => label.value);
-    const xDisplayLabels = new Map(
-        xLabels.map((label) => [label.value, label.secondaryLabel ?? label.value])
-    );
+    const xDisplayLabels = new Map(xLabels.map((label) => [label.value, label.secondaryLabel ?? label.value]));
     const legendLabel = options.legend?.label ?? "Value";
     const maxAbsoluteValue = d3.max(data, (datum) => Math.abs(datum.value)) || 1;
     const sizeExtent = d3.extent(data, (datum) => datum.size);
@@ -153,8 +143,7 @@ export function bubbleHeatmap(
         positionTooltip(event);
     };
 
-    plot
-        .selectAll("line.bubble-heatmap-grid-vertical")
+    plot.selectAll("line.bubble-heatmap-grid-vertical")
         .data(xValues)
         .join("line")
         .attr("class", "bubble-heatmap-grid-line")
@@ -163,8 +152,7 @@ export function bubbleHeatmap(
         .attr("y1", 0)
         .attr("y2", innerHeight);
 
-    plot
-        .selectAll("line.bubble-heatmap-grid-horizontal")
+    plot.selectAll("line.bubble-heatmap-grid-horizontal")
         .data(yValues)
         .join("line")
         .attr("class", "bubble-heatmap-grid-line")
@@ -180,8 +168,7 @@ export function bubbleHeatmap(
         .attr("class", "bubble-heatmap-mark")
         .attr(
             "transform",
-            (datum) =>
-                `translate(${(x(datum.x) ?? 0) + x.bandwidth() / 2},${(y(datum.y) ?? 0) + y.bandwidth() / 2})`
+            (datum) => `translate(${(x(datum.x) ?? 0) + x.bandwidth() / 2},${(y(datum.y) ?? 0) + y.bandwidth() / 2})`
         );
 
     marks
@@ -208,8 +195,7 @@ export function bubbleHeatmap(
         .style("display", options.showLabels ? "block" : "none")
         .text((datum) => datum.feature_id ?? "");
 
-    plot
-        .selectAll("text.bubble-heatmap-y-label")
+    plot.selectAll("text.bubble-heatmap-y-label")
         .data(yValues)
         .join("text")
         .attr("class", "bubble-heatmap-axis-label")
@@ -223,10 +209,7 @@ export function bubbleHeatmap(
         .selectAll("g.bubble-heatmap-x-label")
         .data(xLabels)
         .join("g")
-        .attr(
-            "transform",
-            (label) => `translate(${(x(label.value) ?? 0) + x.bandwidth() / 2},${innerHeight + 20})`
-        );
+        .attr("transform", (label) => `translate(${(x(label.value) ?? 0) + x.bandwidth() / 2},${innerHeight + 20})`);
 
     xLabelGroups
         .append("text")
@@ -270,15 +253,13 @@ export function bubbleHeatmap(
             .attr("stop-color", color(-maxAbsoluteValue + position * maxAbsoluteValue * 2));
     });
 
-    plot
-        .append("text")
+    plot.append("text")
         .attr("class", "bubble-heatmap-axis-label")
         .attr("x", legendX - 8)
         .attr("y", legendY - 24)
         .text(legendLabel);
 
-    plot
-        .append("rect")
+    plot.append("rect")
         .attr("x", legendX)
         .attr("y", legendY)
         .attr("width", legendWidth)
@@ -291,8 +272,7 @@ export function bubbleHeatmap(
         .domain([maxAbsoluteValue, -maxAbsoluteValue])
         .range([legendY, legendY + legendHeight]);
 
-    plot
-        .append("g")
+    plot.append("g")
         .attr("class", "bubble-heatmap-legend-axis")
         .attr("transform", `translate(${legendX + legendWidth},0)`)
         .call(d3.axisRight(legendScale).ticks(5).tickSize(5))
@@ -311,9 +291,7 @@ export function bubbleHeatmap(
         }
 
         if (options.legend.sizeDescription) {
-            const sizeLegend = encodingLegend
-                .append("text")
-                .attr("x", innerWidth * 0.45);
+            const sizeLegend = encodingLegend.append("text").attr("x", innerWidth * 0.45);
             sizeLegend.append("tspan").attr("class", "bubble-heatmap-encoding-key").text("Size: ");
             sizeLegend.append("tspan").text(options.legend.sizeDescription);
         }

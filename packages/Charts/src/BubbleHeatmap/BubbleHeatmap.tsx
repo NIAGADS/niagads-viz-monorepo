@@ -69,16 +69,7 @@ const BubbleHeatmap = ({
         return () => {
             if (chartRef.current) destroyBubbleHeatmap(chartRef.current);
         };
-    }, [
-        data,
-        xLabels,
-        yLabels,
-        displayOpts,
-        height,
-        legend,
-        ariaLabel,
-        showLabels,
-    ]);
+    }, [data, xLabels, yLabels, displayOpts, height, legend, ariaLabel, showLabels]);
 
     return (
         <div className={styles["bubble-heatmap-wrapper"]}>
