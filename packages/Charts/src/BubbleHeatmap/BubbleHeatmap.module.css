@@ -3,6 +3,14 @@
     max-width: 100%;
 }
 
+.bubble-heatmap-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
 .bubble-heatmap-container {
     position: relative;
     max-width: 100%;

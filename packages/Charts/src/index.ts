@@ -6,6 +6,7 @@ import BubbleHeatmap, {
     BubbleHeatmapProps,
 } from "./BubbleHeatmap/BubbleHeatmap";
 import {
+    ADSPFunGenVariantXQTLRecord,
     ADSPFunGenXQTLRecord,
     BubbleHeatmapTranslators,
 } from "./BubbleHeatmap/partnerDataTranslators";
@@ -44,6 +45,7 @@ export type {
     BubbleHeatmapDataPoint,
     BubbleHeatmapLegend,
     BubbleHeatmapProps,
+    ADSPFunGenVariantXQTLRecord,
     ADSPFunGenXQTLRecord,
     DataPointInfo,
     VisualizationEncoding,

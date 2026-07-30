@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 
 import { DataPointInfo, DisplayProps } from "../d3/types";
+import VisualizationInfo, { VisualizationInfoContent } from "../d3/VisualizationInfo";
 import chartStyles from "../styles/Charts.module.css";
 import styles from "./BubbleHeatmap.module.css";
 import { bubbleHeatmap, destroyBubbleHeatmap } from "./d3BubbleHeatmap";
@@ -31,6 +32,7 @@ export interface BubbleHeatmapProps {
     yLabels?: Array<string | BubbleHeatmapAxisLabel>;
     displayOpts?: DisplayProps;
     title?: string;
+    visualizationInfo?: VisualizationInfoContent;
     legend?: BubbleHeatmapLegend;
     ariaLabel?: string;
     showLabels?: boolean;
@@ -42,6 +44,7 @@ const BubbleHeatmap = ({
     yLabels,
     displayOpts,
     title,
+    visualizationInfo,
     legend,
     ariaLabel,
     showLabels = false,
@@ -79,7 +82,12 @@ const BubbleHeatmap = ({
 
     return (
         <div className={styles["bubble-heatmap-wrapper"]}>
-            {title && <div className={chartStyles["chart-title"]}>{title}</div>}
+            {(title || visualizationInfo) && (
+                <div className={styles["bubble-heatmap-header"]}>
+                    {title && <div className={chartStyles["chart-title"]}>{title}</div>}
+                    {visualizationInfo && <VisualizationInfo content={visualizationInfo} />}
+                </div>
+            )}
             <div
                 ref={chartRef}
                 className={styles["bubble-heatmap-container"]}
