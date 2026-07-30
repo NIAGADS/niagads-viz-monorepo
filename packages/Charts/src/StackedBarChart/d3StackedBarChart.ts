@@ -204,7 +204,7 @@ export function stackedBarChart(
         .attr("viewBox", `0 0 ${width} ${height}`)
         .attr("preserveAspectRatio", "xMidYMid meet");
 
-    const plotWidth = width - margin.left - margin.right;
+    const plotWidth = (width as number) - margin.left - margin.right;
 
     const root = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
