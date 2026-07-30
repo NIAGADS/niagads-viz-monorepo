@@ -18,6 +18,7 @@ import VisualizationInfo, {
 } from "./d3/VisualizationInfo";
 import PieChart, { PieChartDataRow } from "./PieChart/PieChart";
 import RegionalManhattanPlot, {
+    RegionalManhattanPlotData,
     RegionalManhattanPlotDataPoint,
     RegionalManhattanPlotGene,
     RegionalManhattanPlotLegend,
@@ -69,6 +70,7 @@ export type {
     VisualizationInfoProps,
     PieChartDataRow,
     RegionalManhattanPlotDataPoint,
+    RegionalManhattanPlotData,
     RegionalManhattanPlotGene,
     RegionalManhattanPlotLegend,
     RegionalManhattanPlotProps,

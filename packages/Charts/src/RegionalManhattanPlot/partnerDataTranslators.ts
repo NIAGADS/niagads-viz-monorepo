@@ -54,11 +54,13 @@ class ADSPFunGenXQTLTranslator {
         const colorLabels = Array.from(new Set(source.map((datum) => datum.context_long)));
         const symbolLabels = Array.from(new Set(source.map((datum) => datum.xQTLtype)));
 
-        return { data, colorLabels, symbolLabels };
+        return { data: { points: data }, colorLabels, symbolLabels };
     }
 
     translate(source: readonly ADSPFunGenRegionalXQTLRecord[]) {
-        return this.resultType === "gene" ? this.translateGene(source) : { data: [], colorLabels: [], symbolLabels: [] };
+        return this.resultType === "gene"
+            ? this.translateGene(source)
+            : { data: { points: [] }, colorLabels: [], symbolLabels: [] };
     }
 }
 

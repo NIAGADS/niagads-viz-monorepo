@@ -4,9 +4,19 @@ import { RegionalManhattanPlot, RegionalManhattanPlotTranslators } from "@niagad
 
 import xqtlAtlasBin1ManhattanPlot from "../../examples/manhattan-plots/xqtl_atlas_bin1_manhattan_plot.json";
 
-const { data, colorLabels, symbolLabels } = new RegionalManhattanPlotTranslators.ADSPFunGenXQTL("gene").translate(
-    xqtlAtlasBin1ManhattanPlot
-);
+const { data: translatedData, colorLabels, symbolLabels } =
+    new RegionalManhattanPlotTranslators.ADSPFunGenXQTL("gene").translate(xqtlAtlasBin1ManhattanPlot);
+const data = {
+    ...translatedData,
+    gene: {
+        gene_symbol: "BIN1",
+        chr: "chr2",
+        start: 127048027,
+        end: 127107288,
+        strand: "-" as const,
+        flankBp: 500_000,
+    },
+};
 
 const meta = {
     title: "Charts/RegionalManhattanPlot",
@@ -38,13 +48,6 @@ const { data, colorLabels, symbolLabels } =
     },
     args: {
         data,
-        gene: {
-            gene_symbol: "BIN1",
-            chr: "chr2",
-            start: 127048027,
-            end: 127107288,
-            strand: "-",
-        },
         colorLabels,
         symbolLabels,
         threshold: -Math.log10(0.05),
@@ -82,7 +85,7 @@ const { data, colorLabels, symbolLabels } =
             interactions: [
                 "Hover or focus a point to inspect its values.",
                 "Drag the overview brush to zoom the genomic interval.",
-                "The initial view shows the supplied gene with a 100 kb flank on each side.",
+                "The initial view shows the supplied gene with its configured flank on each side.",
                 "Use the selectors to filter context and xQTL type.",
                 "Raise the minimum score to filter points and zoom the y-axis.",
                 "Use Reset to restore all filters and the initial gene-focused interval.",
