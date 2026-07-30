@@ -8,7 +8,7 @@
 npm install @niagads/charts
 ```
 
-The three components documented below include an **Export SVG** control. Supplying `visualizationInfo` also displays the shared **About this visualization** control.
+Chart components include an **Export SVG** control. Supplying `visualizationInfo` also displays the shared **About this visualization** control.
 
 ## BubbleHeatmap
 
@@ -84,38 +84,6 @@ const translated =
 ```
 
 The adapter orders contexts alphabetically by their displayed long names. Variant target-gene rows preserve their first-occurrence order.
-
-### About this visualization
-
-Pass structured explanatory content to explain the graphic. Essential encodings will still be present in the chart legend.
-
-```tsx
-<BubbleHeatmap
-    data={data}
-    xLabels={xLabels}
-    yLabels={yLabels}
-    visualizationInfo={{
-        description:
-            "This figure compares association evidence across biological contexts and xQTL types.",
-        encodings: [
-            {
-                label: "Position",
-                description: "Columns show biological contexts and rows show xQTL types.",
-            },
-            {
-                label: "Color",
-                description: "Color shows the direction and magnitude of the Z-score.",
-            },
-            {
-                label: "Size",
-                description: "Circle size shows statistical significance using −log10(FDR).",
-            },
-        ],
-    }}
-/>;
-```
-
-Each chart supplies its standard `interactions` and, where defined, `rules` when those fields are omitted. Pass either field to replace that chart's defaults.
 
 ## RegionalManhattanPlot
 
@@ -265,7 +233,11 @@ const data =
 
 The adapter maps `targetGene` to `feature_id`, maps `mlog10` to `score`, and adds relevant xQTL metadata to the tooltip.
 
-## Shared display options
+## Shared chart features
+
+The following options are available for all chart components.
+
+### Display options
 
 Each component accepts `displayOpts` for dimensions and margins. Numeric widths are rendered in pixels; components also accept CSS width strings.
 
@@ -277,4 +249,49 @@ displayOpts={{
 }}
 ```
 
-Supply an `ariaLabel` that identifies the visualization and explains its essential encodings. The SVG export filename uses the chart `title` when supplied and otherwise uses a chart-specific default.
+### About this visualization
+
+All chart components accept `visualizationInfo`. Supplying it displays the shared **About this visualization** control. The panel closes when the user clicks or moves focus outside it, or presses Escape.
+
+The `visualizationInfo` prop implements `VisualizationInfoContent`:
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `description` | `string` | Yes | Brief explanation of what the visualization shows. |
+| `encodings` | `Array<{ label: string; description: string }>` | No | Named visual encodings and explanations of what each represents. These supplement rather than replace visible chart legends. |
+| `interactions` | `string[]` | No | Instructions for using the visualization. When omitted, the chart uses its standard interactions where defined. Providing an array replaces those defaults. |
+| `rules` | `string[]` | No | Filtering, aggregation, or data-handling rules needed to interpret the visualization. When omitted, the chart uses its standard rules where defined. Providing an array replaces those defaults. |
+
+Provide a chart-specific description and its essential encodings:
+
+```tsx
+<BubbleHeatmap
+    data={data}
+    xLabels={xLabels}
+    yLabels={yLabels}
+    visualizationInfo={{
+        description:
+            "This figure compares association evidence across biological contexts and xQTL types.",
+        encodings: [
+            {
+                label: "Position",
+                description: "Columns show biological contexts and rows show xQTL types.",
+            },
+            {
+                label: "Color",
+                description: "Color shows the direction and magnitude of the Z-score.",
+            },
+            {
+                label: "Size",
+                description: "Circle size shows statistical significance using −log10(FDR).",
+            },
+        ],
+    }}
+/>;
+```
+
+Each chart supplies its standard `interactions` and, where defined, `rules` when those fields are omitted. Pass either field to replace that chart's defaults. Essential encodings should remain visible in the chart or legend rather than relying only on the information panel.
+
+### Accessibility and SVG export
+
+Supply an `ariaLabel` that identifies the visualization and explains its essential encodings. Each component includes an **Export SVG** control. The export filename uses the chart `title` when supplied and otherwise uses a chart-specific default.
