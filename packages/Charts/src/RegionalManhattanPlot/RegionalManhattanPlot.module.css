@@ -1,0 +1,200 @@
+.regional-manhattan-plot-wrapper {
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+.regional-manhattan-plot-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.regional-manhattan-plot-controls {
+    display: grid;
+    grid-template-columns: minmax(180px, 1fr) minmax(180px, 1fr) minmax(210px, 1fr) auto;
+    align-items: end;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.regional-manhattan-plot-controls label {
+    display: grid;
+    gap: 4px;
+    color: var(--viz-text, #1f2937);
+    font-size: 12px;
+}
+
+.regional-manhattan-plot-controls select,
+.regional-manhattan-plot-controls button {
+    min-height: 40px;
+    padding: 7px 12px;
+    border: 1px solid var(--viz-border, #c9ced6);
+    border-radius: 14px;
+    background: #ffffff;
+    color: var(--viz-text, #1f2937);
+    font-size: 14px;
+}
+
+.regional-manhattan-plot-controls select {
+    width: 100%;
+}
+
+.regional-manhattan-plot-controls button {
+    min-width: 72px;
+    cursor: pointer;
+}
+
+.regional-manhattan-plot-threshold-control {
+    min-width: 220px;
+}
+
+.regional-manhattan-plot-threshold-control input {
+    width: 100%;
+    accent-color: var(--viz-series-3, #43b45b);
+}
+
+.regional-manhattan-plot-container {
+    position: relative;
+    max-width: 100%;
+    min-width: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #ffffff;
+}
+
+.regional-manhattan-plot-container :global(.regional-manhattan-plot-grid line) {
+    stroke: var(--viz-border, #d9dde3);
+}
+
+.regional-manhattan-plot-container :global(.regional-manhattan-plot-grid text),
+.regional-manhattan-plot-container :global(.regional-manhattan-plot-grid .domain) {
+    display: none;
+}
+
+.regional-manhattan-plot-container :global(.regional-manhattan-plot-axis text),
+.regional-manhattan-plot-container :global(.regional-manhattan-plot-legend-label) {
+    fill: var(--viz-muted, #687384);
+    font-size: 11px;
+}
+
+.regional-manhattan-plot-container :global(.regional-manhattan-plot-axis path),
+.regional-manhattan-plot-container :global(.regional-manhattan-plot-axis line) {
+    stroke: var(--viz-border, #c9ced6);
+}
+
+.regional-manhattan-plot-container :global(.regional-manhattan-plot-axis-title),
+.regional-manhattan-plot-container :global(.regional-manhattan-plot-legend-title) {
+    fill: var(--viz-text, #1f2937);
+}
+
+.regional-manhattan-plot-container :global(.regional-manhattan-plot-axis-title) {
+    font-size: 13px;
+}
+
+.regional-manhattan-plot-container :global(.regional-manhattan-plot-legend-title) {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.regional-manhattan-plot-container :global(.regional-manhattan-plot-threshold) {
+    stroke: var(--viz-text, #1f2937);
+    stroke-dasharray: 5 5;
+}
+
+.regional-manhattan-plot-container :global(.regional-manhattan-plot-threshold-label) {
+    fill: var(--viz-muted, #687384);
+    font-size: 11px;
+}
+
+.regional-manhattan-plot-container :global(.regional-manhattan-plot-point:focus) {
+    stroke: var(--viz-text, #1f2937);
+    stroke-width: 2;
+    outline: none;
+}
+
+.regional-manhattan-plot-container :global(.regional-manhattan-plot-overview-background) {
+    fill: var(--viz-chip-card, #f3f4f6);
+}
+
+.regional-manhattan-plot-container :global(.regional-manhattan-plot-brush .selection) {
+    fill: var(--viz-accent, #4e79a7);
+    fill-opacity: 0.16;
+    stroke: var(--viz-accent, #4e79a7);
+}
+
+.regional-manhattan-plot-container :global(.regional-manhattan-plot-legend-symbol) {
+    fill: var(--viz-text, #1f2937);
+    stroke: var(--viz-text, #1f2937);
+    stroke-width: 1.5;
+}
+
+.regional-manhattan-plot-container :global(.regional-manhattan-plot-tooltip) {
+    position: absolute;
+    z-index: 10;
+    width: max-content;
+    max-width: 275px;
+    padding: 10px 12px;
+    border: 1px solid var(--viz-border, #c9ced6);
+    border-radius: 6px;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+    color: var(--viz-text, #1f2937);
+    font-size: 12px;
+    line-height: 1.4;
+    pointer-events: none;
+}
+
+.regional-manhattan-plot-container :global(.regional-manhattan-plot-tooltip-title) {
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.regional-manhattan-plot-container :global(.regional-manhattan-plot-tooltip-row) {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+.regional-manhattan-plot-container :global(.regional-manhattan-plot-tooltip-key) {
+    color: var(--viz-muted, #687384);
+}
+
+.regional-manhattan-plot-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+    color: var(--viz-text, #1f2937);
+    font-size: 12px;
+}
+
+.regional-manhattan-plot-summary > div {
+    display: grid;
+    gap: 3px;
+    min-height: 68px;
+    padding: 14px 12px;
+    border-radius: 16px;
+    background: var(--viz-chip-card, #f3f3f3);
+}
+
+.regional-manhattan-plot-summary span {
+    color: var(--viz-muted, #687384);
+}
+
+.regional-manhattan-plot-summary strong {
+    color: var(--viz-text, #111111);
+    font-size: 20px;
+    font-weight: 500;
+}
+
+@media (max-width: 720px) {
+    .regional-manhattan-plot-controls {
+        grid-template-columns: 1fr;
+    }
+
+    .regional-manhattan-plot-summary {
+        grid-template-columns: 1fr;
+    }
+}

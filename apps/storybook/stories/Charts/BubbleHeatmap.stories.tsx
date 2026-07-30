@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { BubbleHeatmap, BubbleHeatmapTranslators } from "@niagads/charts";
 
-const xqtl_portal_data = [
+const xqtl_atlas_data = [
     {
         rsID: "rs13389409",
         chr: "rs13389409",
@@ -269,8 +269,11 @@ const xqtl_portal_data = [
     },
 ];
 
-const { data: bubbleHeatmapData, xLabels, yLabels } =
-    new BubbleHeatmapTranslators.ADSPFunGenXQTL().translate(xqtl_portal_data);
+const {
+    data: bubbleHeatmapData,
+    xLabels,
+    yLabels,
+} = new BubbleHeatmapTranslators.ADSPFunGenXQTL().translate(xqtl_atlas_data);
 
 const meta = {
     title: "Charts/BubbleHeatmap",
