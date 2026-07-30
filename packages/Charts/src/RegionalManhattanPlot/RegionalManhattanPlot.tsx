@@ -174,7 +174,9 @@ const RegionalManhattanPlot = ({
                     </select>
                 </label>
                 <label className={styles["regional-manhattan-plot-threshold-control"]}>
-                    <span>Minimum {yAxis?.label ?? "score"}: {minimumScore}</span>
+                    <span>
+                        Minimum {yAxis?.label ?? "score"}: {minimumScore}
+                    </span>
                     <input
                         type="range"
                         min={0}
@@ -184,7 +186,9 @@ const RegionalManhattanPlot = ({
                         onChange={(event) => setMinimumScore(Number(event.target.value))}
                     />
                 </label>
-                <button type="button" onClick={reset}>Reset</button>
+                <button type="button" onClick={reset}>
+                    Reset
+                </button>
             </div>
             <div className={styles["regional-manhattan-plot-summary"]} aria-live="polite">
                 <div>

@@ -1,10 +1,7 @@
 import * as d3 from "d3";
 
 import { AxisConfig, DisplayProps } from "../d3/types";
-import {
-    RegionalManhattanPlotDataPoint,
-    RegionalManhattanPlotLegend,
-} from "./RegionalManhattanPlot";
+import { RegionalManhattanPlotDataPoint, RegionalManhattanPlotLegend } from "./RegionalManhattanPlot";
 
 export interface RegionalManhattanPlotSummary {
     visibleCount: number;
@@ -62,17 +59,13 @@ export function regionalManhattanPlot(
 ): void {
     destroyRegionalManhattanPlot(container);
 
-    const width =
-        typeof options.displayOpts?.width === "number" ? options.displayOpts.width : DEFAULT_WIDTH;
+    const width = typeof options.displayOpts?.width === "number" ? options.displayOpts.width : DEFAULT_WIDTH;
     const height =
         options.displayOpts?.height ??
         (options.displayOpts?.aspectRatio ? width * options.displayOpts.aspectRatio : DEFAULT_HEIGHT);
     const margin = options.displayOpts?.margin ?? DEFAULT_MARGIN;
     const plotWidth = Math.max(0, width - margin.left - margin.right);
-    const plotHeight = Math.max(
-        0,
-        height - margin.top - margin.bottom - OVERVIEW_HEIGHT - OVERVIEW_GAP
-    );
+    const plotHeight = Math.max(0, height - margin.top - margin.bottom - OVERVIEW_HEIGHT - OVERVIEW_GAP);
     const maxScore = d3.max(data, (datum) => datum.score) ?? 1;
     const yMaximum = options.yAxis?.max ?? Math.max(1, maxScore);
     const fullYDomain: [number, number] = [options.yAxis?.min ?? 0, yMaximum];
@@ -89,10 +82,7 @@ export function regionalManhattanPlot(
         .domain(options.colorLabels)
         .range(d3.quantize(d3.interpolateRainbow, Math.max(1, options.colorLabels.length)));
     const symbols = new Map(
-        options.symbolLabels.map((label, index) => [
-            label,
-            d3.symbolsStroke[index % d3.symbolsStroke.length],
-        ] as const)
+        options.symbolLabels.map((label, index) => [label, d3.symbolsStroke[index % d3.symbolsStroke.length]] as const)
     );
     const colorLabel = options.legend?.colorLabel ?? "Color";
     const symbolLabel = options.legend?.symbolLabel ?? "Symbol";
@@ -114,10 +104,7 @@ export function regionalManhattanPlot(
     const chart = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
     const overview = svg
         .append("g")
-        .attr(
-            "transform",
-            `translate(${margin.left},${margin.top + plotHeight + OVERVIEW_GAP})`
-        );
+        .attr("transform", `translate(${margin.left},${margin.top + plotHeight + OVERVIEW_GAP})`);
     const tooltip = d3
         .select(container)
         .append("div")
@@ -139,26 +126,16 @@ export function regionalManhattanPlot(
             .style("top", `${targetBounds.top - containerBounds.top}px`);
     };
 
-    const showTooltip = (
-        event: PointerEvent | FocusEvent,
-        datum: RegionalManhattanPlotDataPoint
-    ): void => {
+    const showTooltip = (event: PointerEvent | FocusEvent, datum: RegionalManhattanPlotDataPoint): void => {
         tooltip.html("");
         if (datum.feature_id) {
-            tooltip
-                .append("div")
-                .attr("class", "regional-manhattan-plot-tooltip-title")
-                .text(datum.feature_id);
+            tooltip.append("div").attr("class", "regional-manhattan-plot-tooltip-title").text(datum.feature_id);
         }
         getTooltipLines(datum, scoreLabel, colorLabel, symbolLabel)
             .filter((line) => line.label !== "Feature")
             .forEach((line) => {
-                const row = tooltip
-                    .append("div")
-                    .attr("class", "regional-manhattan-plot-tooltip-row");
-                row.append("span")
-                    .attr("class", "regional-manhattan-plot-tooltip-key")
-                    .text(line.label);
+                const row = tooltip.append("div").attr("class", "regional-manhattan-plot-tooltip-row");
+                row.append("span").attr("class", "regional-manhattan-plot-tooltip-key").text(line.label);
                 row.append("span").text(String(line.value));
             });
         tooltip.style("display", "block");
@@ -168,7 +145,13 @@ export function regionalManhattanPlot(
     chart
         .append("g")
         .attr("class", "regional-manhattan-plot-grid")
-        .call(d3.axisLeft(y).ticks(5).tickSize(-plotWidth).tickFormat(() => ""))
+        .call(
+            d3
+                .axisLeft(y)
+                .ticks(5)
+                .tickSize(-plotWidth)
+                .tickFormat(() => "")
+        )
         .call((group) => group.select(".domain").remove());
 
     const thresholdLine = chart
@@ -182,28 +165,19 @@ export function regionalManhattanPlot(
         .attr("x", plotWidth - 4)
         .attr("text-anchor", "end");
 
-    if (
-        options.threshold === undefined ||
-        options.threshold < yDomain[0] ||
-        options.threshold > yDomain[1]
-    ) {
+    if (options.threshold === undefined || options.threshold < yDomain[0] || options.threshold > yDomain[1]) {
         thresholdLine.style("display", "none");
         thresholdText.style("display", "none");
     } else {
         thresholdLine.attr("y1", y(options.threshold)).attr("y2", y(options.threshold));
-        thresholdText
-            .attr("y", y(options.threshold) - 7)
-            .text(options.thresholdLabel ?? String(options.threshold));
+        thresholdText.attr("y", y(options.threshold) - 7).text(options.thresholdLabel ?? String(options.threshold));
     }
 
     const xAxis = chart
         .append("g")
         .attr("class", "regional-manhattan-plot-axis")
         .attr("transform", `translate(0,${plotHeight})`);
-    chart
-        .append("g")
-        .attr("class", "regional-manhattan-plot-axis")
-        .call(d3.axisLeft(y).ticks(5));
+    chart.append("g").attr("class", "regional-manhattan-plot-axis").call(d3.axisLeft(y).ticks(5));
 
     chart
         .append("text")
@@ -241,15 +215,18 @@ export function regionalManhattanPlot(
         .append("g")
         .attr("class", "regional-manhattan-plot-axis")
         .attr("transform", `translate(0,${OVERVIEW_HEIGHT})`)
-        .call(d3.axisBottom(xOverview).ticks(6).tickFormat((tick) => `${tick} Mb`));
+        .call(
+            d3
+                .axisBottom(xOverview)
+                .ticks(6)
+                .tickFormat((tick) => `${tick} Mb`)
+        );
 
     const visibleData = () =>
         data.filter(
             (datum) =>
-                (options.selectedColor === "all" ||
-                    datum.colorCategory === options.selectedColor) &&
-                (options.selectedSymbol === "all" ||
-                    datum.symbolCategory === options.selectedSymbol) &&
+                (options.selectedColor === "all" || datum.colorCategory === options.selectedColor) &&
+                (options.selectedSymbol === "all" || datum.symbolCategory === options.selectedSymbol) &&
                 datum.score >= options.minimumScore &&
                 datum.position >= x.domain()[0] &&
                 datum.position <= x.domain()[1]
@@ -268,15 +245,10 @@ export function regionalManhattanPlot(
             .selectAll<SVGPathElement, RegionalManhattanPlotDataPoint>("path")
             .data(
                 visible,
-                (datum) =>
-                    `${datum.feature_id ?? ""}-${datum.colorCategory}-${datum.symbolCategory}-${datum.position}`
+                (datum) => `${datum.feature_id ?? ""}-${datum.colorCategory}-${datum.symbolCategory}-${datum.position}`
             )
             .join(
-                (enter) =>
-                    enter
-                        .append("path")
-                        .attr("class", "regional-manhattan-plot-point")
-                        .attr("tabindex", 0),
+                (enter) => enter.append("path").attr("class", "regional-manhattan-plot-point").attr("tabindex", 0),
                 (update) => update,
                 (exit) => exit.remove()
             )
@@ -324,9 +296,7 @@ export function regionalManhattanPlot(
         })
         .on("end", (event) => {
             if (!event.selection || !event.sourceEvent) return;
-            options.onViewDomainChange(
-                (event.selection as [number, number]).map(xOverview.invert) as [number, number]
-            );
+            options.onViewDomainChange((event.selection as [number, number]).map(xOverview.invert) as [number, number]);
         });
 
     overview
@@ -335,12 +305,7 @@ export function regionalManhattanPlot(
         .call(brush)
         .call(brush.move, options.viewDomain.map(xOverview));
 
-    const legend = svg
-        .append("g")
-        .attr(
-            "transform",
-            `translate(${margin.left + plotWidth + 28},${margin.top + 8})`
-        );
+    const legend = svg.append("g").attr("transform", `translate(${margin.left + plotWidth + 28},${margin.top + 8})`);
     legend
         .append("text")
         .attr("class", "regional-manhattan-plot-legend-title")
@@ -350,15 +315,14 @@ export function regionalManhattanPlot(
         row.append("path")
             .attr(
                 "d",
-                d3.symbol().type(symbols.get(label) ?? d3.symbolX).size(24)()
+                d3
+                    .symbol()
+                    .type(symbols.get(label) ?? d3.symbolX)
+                    .size(24)()
             )
             .attr("class", "regional-manhattan-plot-legend-symbol")
             .style("fill", "none");
-        row.append("text")
-            .attr("class", "regional-manhattan-plot-legend-label")
-            .attr("x", 16)
-            .attr("y", 4)
-            .text(label);
+        row.append("text").attr("class", "regional-manhattan-plot-legend-label").attr("x", 16).attr("y", 4).text(label);
     });
     const colorLegendY = 48 + options.symbolLabels.length * 24;
     legend
@@ -367,9 +331,7 @@ export function regionalManhattanPlot(
         .attr("y", colorLegendY)
         .text(options.legend?.colorLabel ?? "Color");
     options.colorLabels.forEach((label, index) => {
-        const row = legend
-            .append("g")
-            .attr("transform", `translate(0,${colorLegendY + 22 + index * 23})`);
+        const row = legend.append("g").attr("transform", `translate(0,${colorLegendY + 22 + index * 23})`);
         row.append("circle").attr("r", 4).attr("fill", color(label));
         row.append("text")
             .attr("class", "regional-manhattan-plot-legend-label")

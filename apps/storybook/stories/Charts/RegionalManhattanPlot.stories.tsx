@@ -51,20 +51,12 @@ const idealizedData: RegionalManhattanPlotDataPoint[] = [];
 const locusCenter = 127.08;
 
 for (let index = 0; index < 245; index += 1) {
-    idealizedData.push(
-        makePoint(
-            uniform(123.8, 130.8),
-            Math.max(1.2, Math.min(7, 1.5 + Math.abs(normal(0, 1.2)))),
-        )
-    );
+    idealizedData.push(makePoint(uniform(123.8, 130.8), Math.max(1.2, Math.min(7, 1.5 + Math.abs(normal(0, 1.2))))));
 }
 
 for (let index = 0; index < 170; index += 1) {
     const distance = normal(0, 0.045);
-    const score = Math.min(
-        94,
-        6 + 82 * Math.exp(-Math.abs(distance) * 26) * uniform(0.45, 1.05)
-    );
+    const score = Math.min(94, 6 + 82 * Math.exp(-Math.abs(distance) * 26) * uniform(0.45, 1.05));
     idealizedData.push(makePoint(locusCenter + distance, score));
 }
 
@@ -93,7 +85,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof RegionalManhattanPlot>;
 
-export const BIN1Region: Story = {
+export const QTLAssociationsInBIN1Region: Story = {
     args: {
         data: idealizedData,
         colorLabels: contexts,
@@ -115,11 +107,13 @@ export const BIN1Region: Story = {
             symbolLabel: "xQTL type",
         },
         visualizationInfo: {
-            description:
-                "This regional Manhattan plot shows association strength across a genomic interval.",
+            description: "This regional Manhattan plot shows association strength across a genomic interval.",
             encodings: [
                 { label: "Position", description: "Horizontal location is genomic position in megabases." },
-                { label: "Height", description: "Vertical position is −log10(FDR); higher points are stronger associations." },
+                {
+                    label: "Height",
+                    description: "Vertical position is −log10(FDR); higher points are stronger associations.",
+                },
                 { label: "Color", description: "Color identifies the biological context." },
                 { label: "Shape", description: "Symbol shape identifies the xQTL type." },
                 { label: "Size", description: "Points with scores above 30 are slightly larger." },
