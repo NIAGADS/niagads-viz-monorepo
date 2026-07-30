@@ -8,8 +8,6 @@
 npm install @niagads/charts
 ```
 
-Chart components include an **Export SVG** control. Supplying `visualizationInfo` also displays the shared **About this visualization** control.
-
 ## BubbleHeatmap
 
 `BubbleHeatmap` is a two-value matrix visualization. Circle color represents `value`, circle size represents `size`, and the `x` and `y` fields locate a point in the matrix.
@@ -47,11 +45,13 @@ const data = [
 />;
 ```
 
-`xLabels` and `yLabels` are optional. When omitted, the component derives them from the supplied data. Use `{ value, secondaryLabel }` when an axis category has a longer display label.
+`xLabels` and `yLabels` are optional. When omitted, the component derives them from the supplied data. Use `{ value, secondaryLabel }` to define x-axis labels with subtitles.
 
-### ADSP FunGen xQTL Atlas data adapter
+### BubbleHeatmap Translators (Data Adapters)
 
-This partner-specific adapter accepts the gene and variant result schemas produced by the **ADSP FunGen xQTL Atlas**. It is not a generic xQTL adapter. It returns BubbleHeatmap data and both sets of axis labels.
+#### BubbleHeatmapTranslators.ADSPFunGenXQTL`
+
+This partner-specific adapter accepts the gene and variant heatmap R outputs produced by the **ADSP FunGen xQTL Atlas**. It is not a generic xQTL adapter. It returns BubbleHeatmap data and both sets of axis labels.
 
 ```tsx
 import {
@@ -135,9 +135,11 @@ const data = {
 
 The chart provides context and symbol filters, a minimum-score control, summary values, gene-focused reset behavior, and a brushable overview for genomic zoom.
 
-### ADSP FunGen xQTL Atlas data adapter
+### Regional Manhattan Plot Translators (Data Adapters)
 
-This adapter accepts the regional result schema produced by the **ADSP FunGen xQTL Atlas**; it is not a generic regional xQTL adapter. It converts base-pair positions to megabases, maps `logFDR` to the chart score, maps context to color, and maps xQTL type to symbol.
+#### RegionalManhattanPlotTranslators.ADSPFunGenXQTL`
+
+This adapter accepts the R-generated Manhattan plot data produced by the **ADSP FunGen xQTL Atlas**; it is not a generic data adapter. It converts base-pair positions to megabases, maps `logFDR` to the chart score, maps context to color, and maps xQTL type to symbol.
 
 ```tsx
 import {
@@ -206,9 +208,11 @@ const data = [
 
 When `recordUrlTemplate` is supplied, `<feature_id>` is replaced with the URL-encoded feature identifier and the tooltip includes an external record link.
 
-### ADSP FunGen xQTL Atlas data adapter
+### Ranked Feature Plot Translators (Data Adapters)
 
-This adapter accepts the regional ranked-gene result schema produced by the **ADSP FunGen xQTL Atlas**. It is not a generic ranked-gene or xQTL adapter.
+#### RankedFeaturePlotTranslators.ADSPFunGenXQTL`
+
+This adapter accepts and translates the regional ranked-feature results produced by the **ADSP FunGen xQTL Atlas**.
 
 ```tsx
 import {
@@ -227,11 +231,11 @@ const data =
         max: 115,
         label: "−log10(minimum p-value)",
     }}
-    recordUrlTemplate="https://xqtl.niagads.org/gene/<feature_id>"
+    recordUrlTemplate="gene/<feature_id>"
 />;
 ```
 
-The adapter maps `targetGene` to `feature_id`, maps `mlog10` to `score`, and adds relevant xQTL metadata to the tooltip.
+The gene adapter maps `targetGene` to `feature_id`, maps `mlog10` to `score`, and adds relevant xQTL metadata to the tooltip.
 
 ## Shared chart features
 
