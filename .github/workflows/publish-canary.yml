@@ -1,0 +1,41 @@
+# Builds all packages and publishes canary versions to npm
+
+name: Canary Release
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out PR head
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Create synthetic PR commit
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          SYNTHETIC_SHA=$(
+            git commit-tree HEAD^{tree} \
+              -p "$BASE_SHA" \
+              -m "Temporary canary commit for PR #${{ github.event.pull_request.number }}"
+          )
+
+          git checkout --detach "$SYNTHETIC_SHA"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Publish canary
+        run: npx lerna publish --canary --yes --dist-tag canary
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
