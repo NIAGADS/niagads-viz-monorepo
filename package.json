@@ -32,7 +32,7 @@
     ],
     "devDependencies": {
         "concurrently": "^9.1.2",
-        "lerna": "^8.1.9",
+        "lerna": "^10.0.0",
         "prettier": "^3.5.3"
     },
     "engines": {
