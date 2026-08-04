@@ -44,7 +44,7 @@ jobs:
           )
           git checkout --detach "$SYNTHETIC_SHA"
       - name: Install dependencies
-        run: npm ci --allow-git=root
+        run: npm ci
       - name: Build packages 
         run: npm run build
       - name: Publish canary
