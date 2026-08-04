@@ -14,7 +14,7 @@ interface CardHeaderProps extends StylingProps {
 }
 
 export const CardBody = ({ children, style, className }: CardBodyProps) => (
-    <div style={style} className={[styles["card-header"], className].filter(Boolean).join(" ")}>
+    <div style={style} className={[styles["card-body"], className].filter(Boolean).join(" ")}>
         {children}
     </div>
 );
