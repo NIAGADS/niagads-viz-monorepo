@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardBody } from "@niagads/ui";
+import { Card } from "@niagads/ui";
 
 import styles from "@/components/HomePage/HomePage.module.css";
 
@@ -37,22 +37,19 @@ export default function Home() {
     return (
         <div>
             <HeroSection />
+
             <section className={styles["front-section"]}>
                 <div className={styles["home-grid"]}>
                     <Card span={6} className={styles["card-accent-yellow"]}>
-                        <CardBody>
-                            <QueryExploreSection activeTab={activeTab} onTabChange={setActiveTab} />
-                        </CardBody>
+                        <QueryExploreSection activeTab={activeTab} onTabChange={setActiveTab} />
                     </Card>
+
                     <Card span={6} className={styles["card-accent-blue"]}>
-                        <CardBody>
-                            <ExploreContextPanel activeTab={activeTab} />
-                        </CardBody>
+                        <ExploreContextPanel activeTab={activeTab} />
                     </Card>
+
                     <Card span={12} className={styles["card-accent-yellow"]}>
-                        <CardBody>
-                            <ResearchStartersSection />
-                        </CardBody>
+                        <ResearchStartersSection />
                     </Card>
                 </div>
             </section>
