@@ -202,7 +202,7 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
     const svgWidth = width;
     const svgHeight = height;
 
-    const innerWidth = svgWidth - margin.left - margin.right;
+    const innerWidth = (svgWidth as number) - margin.left - margin.right;
     const innerHeight = svgHeight - margin.top - margin.bottom;
 
     // Radius is limited by the smaller dimension
