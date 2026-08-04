@@ -72,7 +72,7 @@ const Legend = ({ data }: { data: StackedBarChartDataRow[] }) => {
 const StackedBarChart = ({ data, displayOpts, title, legendPosition = "right" }: StackedBarChartProps) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const chartRef = useRef<HTMLDivElement | null>(null);
-    const [containerWidth, setContainerWidth] = useState<number>(displayOpts?.width ?? 420);
+    const [containerWidth, setContainerWidth] = useState<number>((displayOpts?.width as number) ?? 420);
 
     const chartHeight = getStackedBarChartHeight(data.length, displayOpts?.margin);
 
