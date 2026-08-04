@@ -220,7 +220,7 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
         .attr("preserveAspectRatio", "xMidYMid meet");
 
     // Create main group
-    const g = svg.append("g").attr("transform", `translate(${svgWidth / 2},${svgHeight / 2})`);
+    const g = svg.append("g").attr("transform", `translate(${(svgWidth as number) / 2},${svgHeight / 2})`);
 
     // Create pie generator
     const total = d3.sum(data, (d) => d.value);
