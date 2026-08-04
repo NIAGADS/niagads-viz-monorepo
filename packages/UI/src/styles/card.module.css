@@ -3,8 +3,8 @@
 .card {
     background-color: var(--surface);
 
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
+    /* padding: 1.5rem; */
+    /* margin-bottom: 1.5rem; */
 
     transition: all var(--transition-fast);
     font-family:
@@ -54,14 +54,18 @@ a.card {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 1rem;
+    /* margin-bottom: 1rem; */
     gap: 1rem;
     font-size: 1.125rem;
     font-weight: 600;
+    padding: 0.875rem 1rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    min-height: 67px;
 }
 
 .card-body {
     height: 100%;
+    padding: 1rem;
 }
 
 .feature-title {

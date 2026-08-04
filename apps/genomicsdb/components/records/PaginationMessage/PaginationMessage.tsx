@@ -12,7 +12,7 @@ interface PaginationMessageProps {
 
 export const PaginationMessage = ({ pagination, endpoint }: PaginationMessageProps) => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
-    const fullUrl = apiUrl + endpoint;
+    const fullUrl = `${apiUrl}/genomics${endpoint}&page=1`;
 
     const handleCopy = () => {
         navigator.clipboard.writeText(fullUrl);
@@ -44,7 +44,7 @@ export const PaginationMessage = ({ pagination, endpoint }: PaginationMessagePro
                         <a href={`${process.env.NEXT_PUBLIC_API_URL}/docs`} target="_blank">
                             API documentation
                         </a>{" "}
-                        for more information.
+                        for more information on how to access paged results
                     </span>
                 </div>
             </div>
