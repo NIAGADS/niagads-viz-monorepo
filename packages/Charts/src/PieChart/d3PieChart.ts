@@ -196,7 +196,7 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
     // Get dimensions from displayOpts or use defaults
     const width = displayOpts.width || 300;
     const aspectRatio = displayOpts.aspectRatio || 1;
-    const height = width * aspectRatio;
+    const height = (width as number) * aspectRatio;
 
     // Use specified dimensions
     const svgWidth = width;

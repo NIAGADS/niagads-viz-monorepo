@@ -24,7 +24,6 @@ type AlertVariants = keyof typeof ICONS;
 
 export const Alert = ({ variant = "info", message, children, className, style = {} }: Alert) => {
     const classes = [styles.alert, styles[variant === "construction" ? "warning" : variant]].filter(Boolean).join(" ");
-
     const Icon = ICONS[variant] || Info;
 
     return (
