@@ -26,6 +26,10 @@ jobs:
       - name: Create synthetic PR commit
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          GIT_AUTHOR_NAME: github-actions[bot]
+          GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+          GIT_COMMITTER_NAME: github-actions[bot]
+          GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
         run: |
           SYNTHETIC_SHA=$(
             git commit-tree HEAD^{tree} \
