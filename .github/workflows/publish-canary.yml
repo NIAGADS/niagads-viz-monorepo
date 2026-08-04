@@ -45,4 +45,6 @@ jobs:
       - name: Build packages 
         run: npm run build
       - name: Publish canary
+        env:
+          NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
         run: npx lerna publish --canary --yes --dist-tag canary
