@@ -18,9 +18,12 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-node@v4
+      - name: setup node
+        uses: actions/setup-node@v6
         with:
           node-version: 24
+      - name: update to latest npm for oidc support
+        run: npm install -g npm@latest
       - name: Check out PR head
         uses: actions/checkout@v6
         with:
