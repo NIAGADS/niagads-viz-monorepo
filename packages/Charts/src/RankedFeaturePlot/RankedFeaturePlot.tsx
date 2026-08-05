@@ -75,6 +75,7 @@ const RankedFeaturePlot = ({
                     <VisualizationExport targetRef={chartRef} filename={title ?? "ranked-feature-plot"} />
                 </div>
             </div>
+
             <div
                 ref={chartRef}
                 className={styles["ranked-feature-plot-container"]}
