@@ -1,0 +1,19 @@
+.visualization-export-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border: 1px solid var(--viz-border, #c9ced6);
+    border-radius: 999px;
+    background: #ffffff;
+    color: var(--viz-muted, #687384);
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.visualization-export-button:hover,
+.visualization-export-button:focus-visible {
+    border-color: var(--viz-accent, #4e79a7);
+    color: var(--viz-text, #1f2937);
+}
