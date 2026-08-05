@@ -13,11 +13,12 @@ See indivdual application READMEs for deployment instructions.
 
 ### Node
 
-- Node >24, <25
+- Node >24.15, <25
+- npm 12.0.2
 
 The project is configured to work with [nvm](https://github.com/nvm-sh/nvm).  Once nvm is installed, run `nvm use` in the project root. If the required version of `Node` is not installed, it will give prompt you install the required version.  If it is installed, nvm, will switch to the expected Node version.
 
-> NOTE: `npm` is set to `engine-strict=true` and will raise an `Unsupported Engine` error if the Node version does not match the engine defined in the root `package.json`.
+> NOTE: `npm` is set to `engine-strict=true` and will raise an `Unsupported Engine` error if the Node or NPM version does not match the engine defined in the root `package.json`.
 
 ## Packages
 
