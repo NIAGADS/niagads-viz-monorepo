@@ -13,10 +13,10 @@ type ConceptId =
     | "qtls"
     | "regulatory"
     | "tissues"
-    | "publications"
-    | "phenotypes"
-    | "datasets"
-    | "programmatic";
+    | "curatedEvidence"
+    | "harmonizedPhenotypes"
+    | "downloads"
+    | "cloudAccess";
 
 type ResourceId = "dss" | "genomicsdb" | "xqtl" | "filer" | "api" | "advp" | "phc";
 type ActiveTarget = { type: "resource"; id: ResourceId } | { type: "concept"; id: ConceptId } | null;
@@ -30,11 +30,11 @@ const CONCEPTS: Array<{ id: ConceptId; label: string; x: number; y: number }> = 
     { id: "effects", label: "Variant effects", x: 782, y: 216 },
     { id: "qtls", label: "Molecular QTLs", x: 380, y: 236 },
     { id: "regulatory", label: "Regulatory elements", x: 528, y: 260 },
-    { id: "tissues", label: "Tissues / cells", x: 676, y: 272 },
-    { id: "publications", label: "Publications", x: 820, y: 116 },
-    { id: "phenotypes", label: "Phenotypes", x: 914, y: 176 },
-    { id: "datasets", label: "Datasets / files", x: 986, y: 238 },
-    { id: "programmatic", label: "Programmatic access", x: 1078, y: 184 },
+    { id: "tissues", label: "Tissues / cells", x: 902, y: 76 },
+    { id: "harmonizedPhenotypes", label: "Harmonized phenotypes", x: 1078, y: 76 },
+    { id: "curatedEvidence", label: "Curated evidence", x: 884, y: 228 },
+    { id: "downloads", label: "Downloads", x: 1010, y: 228 },
+    { id: "cloudAccess", label: "Programmatic / cloud access", x: 1130, y: 228 },
 ];
 
 const RESOURCES: Array<{
@@ -44,13 +44,13 @@ const RESOURCES: Array<{
     type: "niagads" | "partner";
     concepts: ConceptId[];
 }> = [
-    { id: "dss", badge: "DSS", name: "DSS Portal", type: "niagads", concepts: ["datasets"] },
+    { id: "dss", badge: "DSS", name: "DSS Portal", type: "niagads", concepts: ["downloads"] },
     {
         id: "genomicsdb",
         badge: "GDB",
         name: "GenomicsDB",
         type: "niagads",
-        concepts: ["genes", "variants", "loci", "gwas", "ld", "effects", "datasets"],
+        concepts: ["genes", "variants", "loci", "gwas", "ld", "effects", "downloads"],
     },
     {
         id: "xqtl",
@@ -64,17 +64,17 @@ const RESOURCES: Array<{
         badge: "FLR",
         name: "FILER",
         type: "niagads",
-        concepts: ["regulatory", "loci", "tissues", "datasets"],
+        concepts: ["regulatory", "loci", "tissues", "downloads"],
     },
-    { id: "api", badge: "API", name: "Open Access API", type: "niagads", concepts: ["programmatic"] },
+    { id: "api", badge: "API", name: "Open Access API", type: "niagads", concepts: ["cloudAccess"] },
     {
         id: "advp",
         badge: "ADVP",
         name: "ADVP",
         type: "partner",
-        concepts: ["gwas", "genes", "variants", "loci", "publications"],
+        concepts: ["gwas", "genes", "variants", "loci", "curatedEvidence"],
     },
-    { id: "phc", badge: "PHC", name: "PHC", type: "partner", concepts: ["phenotypes"] },
+    { id: "phc", badge: "PHC", name: "PHC", type: "partner", concepts: ["harmonizedPhenotypes"] },
 ];
 
 const RESOURCE_X: Record<ResourceId, number> = {
@@ -94,7 +94,6 @@ const GENE_BLOCKS: Array<[number, number, number, string]> = [
     [358, 172, 88, "region"],
     [468, 172, 54, "CLU"],
     [760, 172, 44, "TREM2"],
-    [944, 172, 78, "file set"],
 ];
 
 const conceptById = Object.fromEntries(CONCEPTS.map((concept) => [concept.id, concept])) as Record<
@@ -199,8 +198,9 @@ export default function MainSitePlayground() {
                 >
                     <title id="ecosystem-title">NIAGADS resource ecosystem concept landscape</title>
                     <desc id="ecosystem-desc">
-                        Resources connect to genomic, molecular, evidence, phenotype, dataset, and programmatic access
-                        concepts. Hover or focus a resource or concept to highlight relevant connections.
+                        Resources connect to a core genomic landscape plus peripheral context, evidence, download, and
+                        programmatic access zones. Hover or focus a resource or concept to highlight relevant
+                        connections.
                     </desc>
 
                     <defs>
@@ -223,6 +223,17 @@ export default function MainSitePlayground() {
                         </pattern>
                     </defs>
 
+                    <g className={styles.peripheralFrame} aria-hidden="true">
+                        <path className={styles.contextZone} d="M820 62 H1164 M820 132 H1164" />
+                        <text className={styles.zoneLabel} x="824" y="55">
+                            Context
+                        </text>
+                        <path className={styles.accessZone} d="M812 210 H1164 M812 286 H1164" />
+                        <text className={styles.zoneLabel} x="816" y="203">
+                            Evidence &amp; Access
+                        </text>
+                    </g>
+
                     <g className={styles.contextLayer}>
                         <path
                             className={styles.softContour}
@@ -233,7 +244,7 @@ export default function MainSitePlayground() {
                             d="M118 265 C274 216 410 254 556 242 S785 204 910 249 1082 286 1176 244"
                         />
                         <line className={styles.resourceRail} x1="76" x2="1164" y1="32" y2="32" />
-                        <line className={styles.genomeRail} x1="92" x2="1134" y1="172" y2="172" />
+                        <line className={styles.genomeRail} x1="92" x2="812" y1="172" y2="172" />
                         {GENE_BLOCKS.map(([x, y, width, label]) => (
                             <g key={`${x}-${label}`}>
                                 <rect className={styles.geneBlock} x={x} y={y - 12} width={width} height="24" rx="4" />
@@ -420,10 +431,10 @@ export default function MainSitePlayground() {
                         onMouseEnter={() => setActive({ type: "concept", id: "tissues" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        {[628, 656, 684, 712].map((x) => (
+                        {[866, 894, 922, 950].map((x) => (
                             <path
                                 className={styles.cell}
-                                d={`M ${x} 272 c 10 -20 31 -13 32 5 c 1 17 -19 27 -32 15 c -9 -7 -7 -13 0 -20 Z`}
+                                d={`M ${x} 86 c 9 -18 29 -12 30 4 c 1 16 -18 25 -30 14 c -8 -7 -6 -12 0 -18 Z`}
                                 key={x}
                             />
                         ))}
@@ -431,73 +442,74 @@ export default function MainSitePlayground() {
                     </g>
 
                     <g
-                        className={classForConcept("publications")}
+                        className={classForConcept("curatedEvidence")}
                         tabIndex={0}
                         role="button"
-                        aria-label="Publications"
+                        aria-label="Curated evidence"
                         onBlur={() => setActive(null)}
-                        onFocus={() => setActive({ type: "concept", id: "publications" })}
-                        onMouseEnter={() => setActive({ type: "concept", id: "publications" })}
+                        onFocus={() => setActive({ type: "concept", id: "curatedEvidence" })}
+                        onMouseEnter={() => setActive({ type: "concept", id: "curatedEvidence" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <path className={styles.paper} d="M792 82 h54 l20 20 v70 h-74 Z" />
-                        <path className={styles.paperFold} d="M846 82 v20 h20" />
-                        <path className={styles.paperLine} d="M806 122 h42 M806 140 h34" />
-                        <ConceptLabel conceptId="publications" />
+                        <path className={styles.evidenceMark} d="M842 236 h66 M852 222 h48 M866 250 h32" />
+                        <circle className={styles.evidenceDot} cx="842" cy="236" r="5" />
+                        <circle className={styles.evidenceDot} cx="852" cy="222" r="4.5" />
+                        <circle className={styles.evidenceDot} cx="866" cy="250" r="3.8" />
+                        <ConceptLabel conceptId="curatedEvidence" />
                     </g>
 
                     <g
-                        className={classForConcept("phenotypes")}
+                        className={classForConcept("harmonizedPhenotypes")}
                         tabIndex={0}
                         role="button"
-                        aria-label="Phenotypes"
+                        aria-label="Harmonized phenotypes"
                         onBlur={() => setActive(null)}
-                        onFocus={() => setActive({ type: "concept", id: "phenotypes" })}
-                        onMouseEnter={() => setActive({ type: "concept", id: "phenotypes" })}
+                        onFocus={() => setActive({ type: "concept", id: "harmonizedPhenotypes" })}
+                        onMouseEnter={() => setActive({ type: "concept", id: "harmonizedPhenotypes" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <path className={styles.phenotypeForm} d="M890 132 h70 v86 h-70 Z" />
-                        <path className={styles.check} d="M906 166 l12 12 l28 -32" />
-                        <path className={styles.paperLine} d="M906 194 h38" />
-                        <ConceptLabel conceptId="phenotypes" />
+                        <path className={styles.phenotypeForm} d="M1042 72 h74 v44 h-74 Z" />
+                        <path className={styles.check} d="M1056 96 l11 11 l28 -31" />
+                        <path className={styles.paperLine} d="M1080 106 h24" />
+                        <ConceptLabel conceptId="harmonizedPhenotypes" />
                     </g>
 
                     <g
-                        className={classForConcept("datasets")}
+                        className={classForConcept("downloads")}
                         tabIndex={0}
                         role="button"
-                        aria-label="Datasets and files"
+                        aria-label="Downloads"
                         onBlur={() => setActive(null)}
-                        onFocus={() => setActive({ type: "concept", id: "datasets" })}
-                        onMouseEnter={() => setActive({ type: "concept", id: "datasets" })}
+                        onFocus={() => setActive({ type: "concept", id: "downloads" })}
+                        onMouseEnter={() => setActive({ type: "concept", id: "downloads" })}
                         onMouseLeave={() => setActive(null)}
                     >
                         {[0, 1, 2].map((layer) => (
                             <path
                                 className={styles.datasetLayer}
-                                d={`M 938 ${224 + layer * 16} l 56 -25 l 56 25 l -56 25 Z`}
+                                d={`M 968 ${228 + layer * 10} l 42 -17 l 42 17 l -42 17 Z`}
                                 key={layer}
                             />
                         ))}
-                        <ConceptLabel conceptId="datasets" />
+                        <ConceptLabel conceptId="downloads" />
                     </g>
 
                     <g
-                        className={classForConcept("programmatic")}
+                        className={classForConcept("cloudAccess")}
                         tabIndex={0}
                         role="button"
-                        aria-label="Programmatic access"
+                        aria-label="Programmatic and cloud access"
                         onBlur={() => setActive(null)}
-                        onFocus={() => setActive({ type: "concept", id: "programmatic" })}
-                        onMouseEnter={() => setActive({ type: "concept", id: "programmatic" })}
+                        onFocus={() => setActive({ type: "concept", id: "cloudAccess" })}
+                        onMouseEnter={() => setActive({ type: "concept", id: "cloudAccess" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <path className={styles.apiGate} d="M1044 145 h82 v76 h-82 Z" />
+                        <path className={styles.apiGate} d="M1100 224 h62 v44 h-62 Z" />
                         <path
                             className={styles.codeMark}
-                            d="M1066 170 l-14 13 l14 13 M1104 170 l14 13 l-14 13 M1089 166 l-14 34"
+                            d="M1115 238 l-11 8 l11 8 M1147 238 l11 8 l-11 8 M1134 234 l-11 28"
                         />
-                        <ConceptLabel conceptId="programmatic" />
+                        <ConceptLabel conceptId="cloudAccess" />
                     </g>
                 </svg>
             </section>
