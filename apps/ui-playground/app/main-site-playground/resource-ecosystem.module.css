@@ -1,0 +1,351 @@
+.shell {
+    min-height: 100vh;
+    margin: 0;
+    display: grid;
+    place-items: start center;
+    padding: clamp(16px, 2.5vw, 32px);
+    background:
+        linear-gradient(180deg, rgba(247, 250, 248, 0.98), rgba(238, 244, 242, 0.96)),
+        radial-gradient(circle at 18% 8%, rgba(148, 171, 184, 0.16), transparent 28%),
+        radial-gradient(circle at 86% 24%, rgba(130, 153, 124, 0.14), transparent 24%);
+    color: #152a2f;
+}
+
+.ecosystem {
+    width: min(1240px, 100%);
+    min-width: 760px;
+    isolation: isolate;
+}
+
+.resourceRow {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 10px;
+    align-items: stretch;
+    margin: 0 0 2px;
+}
+
+.resource {
+    --resource-color: #236e76;
+    min-height: 54px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 10px;
+    border: 1px solid rgba(29, 80, 88, 0.28);
+    border-radius: 8px;
+    color: #15373e;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 8px 24px rgba(32, 56, 62, 0.07);
+    transition:
+        border-color 160ms ease,
+        box-shadow 160ms ease,
+        opacity 160ms ease,
+        transform 160ms ease;
+}
+
+.resource:hover,
+.resource:focus-visible,
+.resource.active {
+    border-color: color-mix(in srgb, var(--resource-color), #ffffff 18%);
+    box-shadow: 0 12px 30px rgba(35, 110, 118, 0.16);
+    outline: none;
+    transform: translateY(-1px);
+}
+
+.resource.partner {
+    --resource-color: #7a5c7f;
+    border-style: dashed;
+    background: rgba(255, 255, 255, 0.55);
+}
+
+.resource.recede {
+    opacity: 0.38;
+}
+
+.badge {
+    width: 42px;
+    height: 34px;
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--resource-color), #ffffff 82%);
+    border: 1px solid color-mix(in srgb, var(--resource-color), #ffffff 52%);
+    color: var(--resource-color);
+    font:
+        700 11px/1.1 ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    letter-spacing: 0;
+}
+
+.name {
+    min-width: 0;
+    font:
+        650 clamp(11px, 1vw, 14px) / 1.16 ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+
+.landscape {
+    width: 100%;
+    height: clamp(260px, 34vw, 330px);
+    display: block;
+    overflow: visible;
+}
+
+.contextLayer,
+.linkLayer,
+.conceptMark {
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+.softContour {
+    fill: none;
+    stroke: #b8c8c8;
+    stroke-width: 1.2;
+    stroke-dasharray: 2 9;
+    opacity: 0.7;
+}
+
+.resourceRail {
+    stroke: #d5dedc;
+    stroke-width: 2;
+}
+
+.genomeRail {
+    stroke: url("#railGradient");
+    stroke-width: 13;
+    stroke-linecap: round;
+    opacity: 0.9;
+}
+
+.geneBlock {
+    fill: rgba(255, 255, 255, 0.88);
+    stroke: rgba(32, 87, 91, 0.42);
+    stroke-width: 1;
+}
+
+.microLabel {
+    fill: #3f6165;
+    font:
+        700 9px/1 ui-sans-serif,
+        system-ui,
+        sans-serif;
+    letter-spacing: 0;
+    pointer-events: none;
+}
+
+.link {
+    fill: none;
+    stroke: #27727a;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    opacity: 0.23;
+    transition:
+        opacity 160ms ease,
+        stroke-width 160ms ease;
+}
+
+.partnerLink {
+    stroke: #755a83;
+    stroke-dasharray: 4 5;
+}
+
+.link.active {
+    opacity: 0.95;
+    stroke-width: 3;
+}
+
+.link.recede {
+    opacity: 0.05;
+}
+
+.conceptMark {
+    cursor: default;
+    outline: none;
+    transition:
+        opacity 160ms ease,
+        transform 160ms ease;
+}
+
+.conceptMark:focus-visible .conceptLabel,
+.conceptMark:hover .conceptLabel,
+.conceptMark.active .conceptLabel {
+    fill: #0f2f35;
+    font-weight: 760;
+}
+
+.conceptMark.active {
+    opacity: 1;
+    transform: scale(1.025);
+}
+
+.conceptMark.recede {
+    opacity: 0.24;
+}
+
+.conceptLabel {
+    fill: #405e62;
+    font:
+        650 12px/1.15 ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    letter-spacing: 0;
+    paint-order: stroke;
+    stroke: rgba(248, 251, 249, 0.92);
+    stroke-width: 5;
+    stroke-linejoin: round;
+    pointer-events: none;
+    transition:
+        fill 160ms ease,
+        font-weight 160ms ease;
+}
+
+.associationBaseline,
+.paperLine {
+    fill: none;
+    stroke: #66848a;
+    stroke-width: 2;
+    stroke-linecap: round;
+}
+
+.peak {
+    fill: rgba(73, 130, 139, 0.22);
+    stroke: #236e76;
+    stroke-width: 1.5;
+}
+
+.dnaHelix,
+.qtlBridge,
+.regulatoryArc,
+.effectRibbon {
+    fill: none;
+    stroke: #236e76;
+    stroke-width: 2.3;
+    stroke-linecap: round;
+}
+
+.dnaHelix {
+    stroke: #315e73;
+}
+
+.rung {
+    stroke: #88a6a8;
+    stroke-width: 1.4;
+    stroke-linecap: round;
+}
+
+.variant {
+    fill: #e1ece7;
+    stroke: #236e76;
+    stroke-width: 1.7;
+}
+
+.regionBrace {
+    fill: none;
+    stroke: #476f70;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.ldDiamond {
+    fill: url("#ldPattern");
+    stroke: #315e73;
+    stroke-width: 1.6;
+}
+
+.ldTile {
+    fill: #236e76;
+    opacity: 0.18;
+}
+
+.effectDot,
+.qtlNode {
+    fill: #f7fbf9;
+    stroke: #236e76;
+    stroke-width: 2;
+}
+
+.qtlBridge {
+    stroke: #5c7a89;
+}
+
+.regulatoryArc {
+    stroke: #3f7771;
+}
+
+.enhancer {
+    fill: #dfe9de;
+    stroke: #426d63;
+    stroke-width: 1.5;
+}
+
+.cell {
+    fill: rgba(221, 234, 227, 0.86);
+    stroke: #526f65;
+    stroke-width: 1.5;
+}
+
+.paper,
+.phenotypeForm,
+.apiGate {
+    fill: rgba(255, 255, 255, 0.72);
+    stroke: #755a83;
+    stroke-width: 1.8;
+}
+
+.paperFold,
+.check,
+.codeMark {
+    fill: none;
+    stroke: #755a83;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.datasetLayer {
+    fill: rgba(225, 235, 229, 0.76);
+    stroke: #4f766f;
+    stroke-width: 1.7;
+}
+
+@media (max-width: 860px) {
+    .shell {
+        place-items: start;
+        overflow-x: auto;
+    }
+
+    .ecosystem {
+        width: 760px;
+    }
+
+    .resourceRow {
+        gap: 6px;
+    }
+
+    .resource {
+        padding: 7px 7px;
+        gap: 6px;
+    }
+
+    .badge {
+        width: 34px;
+        height: 30px;
+        font-size: 9px;
+    }
+}
