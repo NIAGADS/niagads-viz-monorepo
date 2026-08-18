@@ -10,6 +10,7 @@
         "genomicsdb-debug": "concurrently \"npm run watch\" \"npx lerna run genomicsdb-debug\"",
         "genomicsdb-prod": "npx lerna run genomicsdb-prod",
         "genomicsdb-build": "npx lerna run genomicsdb-build",
+        "niagads-main": "concurrently \"npm run watch\" \"npx lerna run niagads-main\"",
         "ui-playground": "concurrently \"npm run watch\" \"npx lerna run ui-playground\"",
         "lint": "npx prettier . --write",
         "clean-dist": "find ./packages -name 'dist' -type d -prune -exec rm -rf '{}' +",
@@ -28,6 +29,7 @@
         "apps/storybook",
         "apps/genomicsdb",
         "apps/igvbrowser",
+        "apps/niagads-main",
         "apps/ui-playground"
     ],
     "devDependencies": {
