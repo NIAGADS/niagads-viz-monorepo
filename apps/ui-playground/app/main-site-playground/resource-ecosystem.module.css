@@ -150,7 +150,7 @@
     stroke: #27727a;
     stroke-width: 1.7;
     stroke-linecap: round;
-    opacity: 0.23;
+    opacity: 0;
     transition:
         opacity 160ms ease,
         stroke-width 160ms ease;
@@ -162,12 +162,12 @@
 }
 
 .link.active {
-    opacity: 0.95;
+    opacity: 0.9;
     stroke-width: 3;
 }
 
 .link.recede {
-    opacity: 0.05;
+    opacity: 0;
 }
 
 .conceptMark {
