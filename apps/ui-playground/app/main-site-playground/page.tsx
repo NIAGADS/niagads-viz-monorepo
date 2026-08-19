@@ -27,7 +27,7 @@ const CONCEPTS: Array<{ id: ConceptId; label: string; x: number; y: number }> = 
     { id: "gwas", label: "Genetic associations", x: 390, y: 90 },
     { id: "ld", label: "LD", x: 390, y: 210 },
     { id: "qtls", label: "Molecular QTLs", x: 920, y: 210 },
-    { id: "regulatory", label: "Regulatory elements", x: 700, y: 210 },
+    { id: "regulatory", label: "Regulatory elements", x: 650, y: 150 },
     { id: "biosamples", label: "Biosamples", x: 154, y: 298 },
     { id: "harmonizedPhenotypes", label: "Harmonized phenotypes", x: 336, y: 298 },
     { id: "curatedEvidence", label: "Curated evidence", x: 646, y: 298 },
@@ -88,7 +88,7 @@ const RESOURCE_X: Record<ResourceId, number> = {
 const GENE_EXONS: Array<[number, number]> = [
     [118, 46],
     [218, 58],
-    [628, 34],
+    [628, 80],
     [748, 48],
     [982, 26],
     [1080, 52],
@@ -219,6 +219,21 @@ export default function MainSitePlayground() {
                         programmatic access zones. Hover or focus a resource or concept to highlight relevant
                         connections.
                     </desc>
+
+                    <defs>
+                        <pattern id="regulatoryEnhancerPattern" width="6" height="6" patternUnits="userSpaceOnUse">
+                            <rect width="6" height="6" fill="var(--gray-100)" />
+                            <path d="M-1 1 L1 -1 M0 6 L6 0 M5 7 L7 5" stroke="var(--gray-500)" strokeWidth="1" />
+                        </pattern>
+                        <pattern id="regulatoryPromoterPattern" width="5" height="5" patternUnits="userSpaceOnUse">
+                            <rect width="5" height="5" fill="var(--gray-100)" />
+                            <path d="M2.5 0 V5" stroke="var(--gray-500)" strokeWidth="1" />
+                        </pattern>
+                        <pattern id="regulatorySilencerPattern" width="6" height="6" patternUnits="userSpaceOnUse">
+                            <rect width="6" height="6" fill="var(--gray-100)" />
+                            <path d="M-1 5 L1 7 M0 0 L6 6 M5 -1 L7 1" stroke="var(--gray-500)" strokeWidth="1" />
+                        </pattern>
+                    </defs>
 
                     <g className={styles.peripheralFrame} aria-hidden="true">
                         <path className={styles.utilityRule} d="M76 278 H1164" />
@@ -404,11 +419,26 @@ export default function MainSitePlayground() {
                         onMouseEnter={() => setActive({ type: "concept", id: "regulatory" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <path className={styles.regulatoryArc} d="M612 218 C636 174 692 174 716 218" />
-                        <path className={styles.regulatoryArc} d="M704 218 C730 166 794 170 820 218" />
-                        <rect className={styles.enhancer} x="646" y="206" width="44" height="10" rx="5" />
-                        <rect className={styles.enhancer} x="754" y="206" width="38" height="10" rx="5" />
-                        <ConceptLabel conceptId="regulatory" />
+                        <rect className={styles.regulatoryHitArea} x="524" y="104" width="250" height="94" rx="6" />
+                        <path className={styles.regulatoryLoop} d="M556 142 C566 110 608 110 618 140" />
+                        <rect className={styles.regulatoryEnhancer} x="540" y="142" width="32" height="16" rx="2" />
+                        <rect className={styles.regulatoryPromoter} x="610" y="140" width="16" height="20" rx="2" />
+                        <rect className={styles.regulatorySilencer} x="730" y="143" width="28" height="14" rx="2" />
+                        <text className={styles.regulatoryMicroLabel} x="556" y="136" textAnchor="middle">
+                            Enhancer
+                        </text>
+                        <text className={styles.regulatoryMicroLabel} x="618" y="174" textAnchor="middle">
+                            Promoter
+                        </text>
+                        <text className={styles.regulatoryMicroLabel} x="668" y="136" textAnchor="middle">
+                            Gene
+                        </text>
+                        <text className={styles.regulatoryMicroLabel} x="744" y="136" textAnchor="middle">
+                            Silencer
+                        </text>
+                        <text className={styles.conceptLabel} x="650" y="194" textAnchor="middle">
+                            Regulatory elements
+                        </text>
                     </g>
 
                     <g

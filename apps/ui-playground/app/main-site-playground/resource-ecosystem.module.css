@@ -320,8 +320,7 @@
     fill: var(--accent-teal);
 }
 
-.qtlBridge,
-.regulatoryArc {
+.qtlBridge {
     fill: none;
     stroke: var(--secondary-blue);
     stroke-width: 2.3;
@@ -371,14 +370,48 @@
     stroke: var(--secondary-blue);
 }
 
-.regulatoryArc {
-    stroke: var(--accent-teal);
+.regulatoryHitArea {
+    fill: transparent;
+    stroke: transparent;
 }
 
-.enhancer {
-    fill: color-mix(in srgb, var(--accent-teal), var(--white) 82%);
-    stroke: var(--accent-teal);
+.regulatoryLoop {
+    fill: none;
+    stroke: var(--gray-500);
     stroke-width: 1.5;
+    stroke-linecap: round;
+}
+
+.regulatoryEnhancer,
+.regulatoryPromoter,
+.regulatorySilencer {
+    stroke: var(--gray-500);
+    stroke-width: 1.2;
+}
+
+.regulatoryEnhancer {
+    fill: url("#regulatoryEnhancerPattern");
+}
+
+.regulatoryPromoter {
+    fill: url("#regulatoryPromoterPattern");
+}
+
+.regulatorySilencer {
+    fill: url("#regulatorySilencerPattern");
+}
+
+.regulatoryMicroLabel {
+    fill: var(--text-secondary);
+    font:
+        700 8px/1 ui-sans-serif,
+        system-ui,
+        sans-serif;
+    paint-order: stroke;
+    stroke: var(--gray-50);
+    stroke-width: 3;
+    stroke-linejoin: round;
+    pointer-events: none;
 }
 
 .cell {
