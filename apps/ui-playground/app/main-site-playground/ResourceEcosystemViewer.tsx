@@ -366,6 +366,7 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                         onMouseEnter={() => setActive({ type: "concept", id: "gwas" })}
                         onMouseLeave={() => setActive(null)}
                     >
+                        <rect fill="none" pointerEvents="all" x="330" y="42" width="120" height="90" rx="6" />
                         <path className={styles.associationBaseline} d="M341 128 H439" />
                         <path className={styles.associationThreshold} d="M341 96 H439" />
                         {ASSOCIATION_POINT_Y.map((y, index) => (
