@@ -55,7 +55,7 @@ const RESOURCES: Array<{
         badge: "xQTL",
         name: "xQTL Browser",
         type: "niagads",
-        concepts: ["qtls", "genes", "loci", "biosamples"],
+        concepts: ["qtls", "variants", "genes", "loci", "biosamples"],
     },
     {
         id: "filer",
@@ -93,6 +93,12 @@ const GENE_EXONS: Array<[number, number]> = [
     [982, 26],
     [1080, 52],
 ];
+
+// Deterministic schematic Manhattan profile; these are not measured association values.
+const ASSOCIATION_POINT_Y = [
+    118, 114, 122, 110, 116, 104, 120, 112, 98, 88, 76, 92, 108, 119, 114, 102, 97, 84, 68, 90, 105, 118,
+    111, 95, 80, 99, 116, 121, 109,
+] as const;
 
 // Schematic values provide the familiar LD heatmap structure without implying measured data.
 const LD_VALUES = [
@@ -258,21 +264,24 @@ export default function MainSitePlayground() {
                         className={classForConcept("gwas")}
                         tabIndex={0}
                         role="button"
-                        aria-label="Genetic associations"
+                        aria-label="Genetic associations, shown as a schematic Manhattan plot"
                         onBlur={() => setActive(null)}
                         onFocus={() => setActive({ type: "concept", id: "gwas" })}
                         onMouseEnter={() => setActive({ type: "concept", id: "gwas" })}
                         onMouseLeave={() => setActive(null)}
                     >
                         <path className={styles.associationBaseline} d="M341 128 H439" />
-                        {[348, 362, 376, 390, 404, 418, 432].map((x, index) => (
-                            <path
-                                className={styles.peak}
-                                d={`M ${x - 8} 128 L ${x} ${[110, 92, 106, 72, 112, 96, 84][index]} L ${x + 8} 128`}
-                                key={x}
+                        <path className={styles.associationThreshold} d="M341 96 H439" />
+                        {ASSOCIATION_POINT_Y.map((y, index) => (
+                            <circle
+                                className={`${styles.associationPoint} ${y < 96 ? styles.associationPointSignificant : ""}`}
+                                cx={341 + index * 3.5}
+                                cy={y}
+                                r={y < 96 ? 2.2 : 1.7}
+                                key={index}
                             />
                         ))}
-                        <text className={styles.conceptLabel} x="390" y="62" textAnchor="middle">
+                        <text className={styles.conceptLabel} x="390" y="56" textAnchor="middle">
                             Genetic associations
                         </text>
                     </g>

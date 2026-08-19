@@ -308,10 +308,19 @@
     stroke-linecap: round;
 }
 
-.peak {
-    fill: rgba(73, 130, 139, 0.22);
-    stroke: #236e76;
-    stroke-width: 1.5;
+.associationThreshold {
+    fill: none;
+    stroke: rgba(70, 105, 110, 0.45);
+    stroke-width: 1;
+    stroke-dasharray: 3 4;
+}
+
+.associationPoint {
+    fill: #8aa5a4;
+}
+
+.associationPointSignificant {
+    fill: #236e76;
 }
 
 .qtlBridge,
