@@ -12,7 +12,7 @@ type ConceptId =
     | "effects"
     | "qtls"
     | "regulatory"
-    | "tissues"
+    | "biosamples"
     | "curatedEvidence"
     | "harmonizedPhenotypes"
     | "downloads"
@@ -22,19 +22,19 @@ type ResourceId = "dss" | "genomicsdb" | "xqtl" | "filer" | "api" | "advp" | "ph
 type ActiveTarget = { type: "resource"; id: ResourceId } | { type: "concept"; id: ConceptId } | null;
 
 const CONCEPTS: Array<{ id: ConceptId; label: string; x: number; y: number }> = [
-    { id: "genes", label: "Genes", x: 180, y: 172 },
-    { id: "variants", label: "Variants", x: 300, y: 166 },
-    { id: "loci", label: "Genomic regions", x: 425, y: 164 },
-    { id: "gwas", label: "Genetic associations", x: 560, y: 125 },
-    { id: "ld", label: "LD", x: 683, y: 168 },
-    { id: "effects", label: "Variant effects", x: 782, y: 216 },
-    { id: "qtls", label: "Molecular QTLs", x: 380, y: 236 },
-    { id: "regulatory", label: "Regulatory elements", x: 528, y: 260 },
-    { id: "tissues", label: "Tissues / cells", x: 902, y: 76 },
-    { id: "harmonizedPhenotypes", label: "Harmonized phenotypes", x: 1078, y: 76 },
-    { id: "curatedEvidence", label: "Curated evidence", x: 884, y: 228 },
-    { id: "downloads", label: "Downloads", x: 1010, y: 228 },
-    { id: "cloudAccess", label: "Programmatic / cloud access", x: 1130, y: 228 },
+    { id: "genes", label: "Genes", x: 220, y: 150 },
+    { id: "variants", label: "Variants", x: 390, y: 148 },
+    { id: "loci", label: "Genomic regions", x: 540, y: 146 },
+    { id: "gwas", label: "Genetic associations", x: 710, y: 104 },
+    { id: "ld", label: "LD", x: 880, y: 150 },
+    { id: "effects", label: "Variant effects", x: 1050, y: 188 },
+    { id: "qtls", label: "Molecular QTLs", x: 470, y: 210 },
+    { id: "regulatory", label: "Regulatory elements", x: 700, y: 210 },
+    { id: "biosamples", label: "Biosamples", x: 154, y: 298 },
+    { id: "harmonizedPhenotypes", label: "Harmonized phenotypes", x: 336, y: 298 },
+    { id: "curatedEvidence", label: "Curated evidence", x: 646, y: 298 },
+    { id: "downloads", label: "Downloads", x: 824, y: 298 },
+    { id: "cloudAccess", label: "API / cloud access", x: 960, y: 298 },
 ];
 
 const RESOURCES: Array<{
@@ -57,14 +57,14 @@ const RESOURCES: Array<{
         badge: "xQTL",
         name: "xQTL Browser",
         type: "niagads",
-        concepts: ["qtls", "genes", "loci", "tissues"],
+        concepts: ["qtls", "genes", "loci", "biosamples"],
     },
     {
         id: "filer",
         badge: "FLR",
         name: "FILER",
         type: "niagads",
-        concepts: ["regulatory", "loci", "tissues", "downloads"],
+        concepts: ["regulatory", "loci", "biosamples", "downloads"],
     },
     { id: "api", badge: "API", name: "Open Access API", type: "niagads", concepts: ["cloudAccess"] },
     {
@@ -88,12 +88,12 @@ const RESOURCE_X: Record<ResourceId, number> = {
 };
 
 const GENE_BLOCKS: Array<[number, number, number, string]> = [
-    [122, 172, 38, "APP"],
-    [175, 172, 52, "APOE"],
-    [246, 172, 44, "BIN1"],
-    [358, 172, 88, "region"],
-    [468, 172, 54, "CLU"],
-    [760, 172, 44, "TREM2"],
+    [118, 150, 42, "APP"],
+    [200, 150, 56, "APOE"],
+    [308, 150, 48, "BIN1"],
+    [478, 150, 116, "region"],
+    [638, 150, 58, "CLU"],
+    [1072, 150, 56, "TREM2"],
 ];
 
 const conceptById = Object.fromEntries(CONCEPTS.map((concept) => [concept.id, concept])) as Record<
@@ -192,7 +192,7 @@ export default function MainSitePlayground() {
 
                 <svg
                     className={styles.landscape}
-                    viewBox="0 0 1240 330"
+                    viewBox="0 0 1240 340"
                     role="img"
                     aria-labelledby="ecosystem-title ecosystem-desc"
                 >
@@ -224,12 +224,12 @@ export default function MainSitePlayground() {
                     </defs>
 
                     <g className={styles.peripheralFrame} aria-hidden="true">
-                        <path className={styles.contextZone} d="M820 62 H1164 M820 132 H1164" />
-                        <text className={styles.zoneLabel} x="824" y="55">
+                        <path className={styles.utilityRule} d="M76 278 H1164" />
+                        <text className={styles.zoneLabel} x="76" y="306">
                             Context
                         </text>
-                        <path className={styles.accessZone} d="M812 210 H1164 M812 286 H1164" />
-                        <text className={styles.zoneLabel} x="816" y="203">
+                        <path className={styles.utilityDivider} d="M520 288 V316" />
+                        <text className={styles.zoneLabel} x="542" y="306">
                             Evidence &amp; Access
                         </text>
                     </g>
@@ -244,7 +244,7 @@ export default function MainSitePlayground() {
                             d="M118 265 C274 216 410 254 556 242 S785 204 910 249 1082 286 1176 244"
                         />
                         <line className={styles.resourceRail} x1="76" x2="1164" y1="32" y2="32" />
-                        <line className={styles.genomeRail} x1="92" x2="812" y1="172" y2="172" />
+                        <line className={styles.genomeRail} x1="92" x2="1160" y1="150" y2="150" />
                         {GENE_BLOCKS.map(([x, y, width, label]) => (
                             <g key={`${x}-${label}`}>
                                 <rect className={styles.geneBlock} x={x} y={y - 12} width={width} height="24" rx="4" />
@@ -282,11 +282,11 @@ export default function MainSitePlayground() {
                         onMouseEnter={() => setActive({ type: "concept", id: "gwas" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <path className={styles.associationBaseline} d="M478 145 H642" />
-                        {[502, 526, 552, 575, 598, 623].map((x, index) => (
+                        <path className={styles.associationBaseline} d="M614 128 H806" />
+                        {[638, 666, 696, 724, 754, 784].map((x, index) => (
                             <path
                                 className={styles.peak}
-                                d={`M ${x - 16} 145 L ${x} ${[122, 94, 116, 78, 130, 108][index]} L ${x + 16} 145`}
+                                d={`M ${x - 18} 128 L ${x} ${[104, 76, 98, 58, 112, 88][index]} L ${x + 18} 128`}
                                 key={x}
                             />
                         ))}
@@ -303,10 +303,10 @@ export default function MainSitePlayground() {
                         onMouseEnter={() => setActive({ type: "concept", id: "genes" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <path className={styles.dnaHelix} d="M118 147 C150 122 183 222 216 197 S280 122 314 147" />
-                        <path className={styles.dnaHelix} d="M118 197 C150 222 183 122 216 147 S280 222 314 197" />
-                        {[132, 164, 196, 228, 260, 292].map((x) => (
-                            <line className={styles.rung} x1={x} x2={x + 18} y1="156" y2="188" key={x} />
+                        <path className={styles.dnaHelix} d="M112 126 C154 104 194 196 236 174 S320 104 364 126" />
+                        <path className={styles.dnaHelix} d="M112 174 C154 196 194 104 236 126 S320 196 364 174" />
+                        {[132, 172, 212, 252, 292, 332].map((x) => (
+                            <line className={styles.rung} x1={x} x2={x + 22} y1="135" y2="165" key={x} />
                         ))}
                         <ConceptLabel conceptId="genes" />
                     </g>
@@ -321,10 +321,10 @@ export default function MainSitePlayground() {
                         onMouseEnter={() => setActive({ type: "concept", id: "variants" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        {[270, 294, 320, 342].map((x, index) => (
+                        {[340, 372, 406, 438].map((x, index) => (
                             <path
                                 className={styles.variant}
-                                d={`M ${x} ${[152, 184, 158, 176][index]} l 8 8 l -8 8 l -8 -8 Z`}
+                                d={`M ${x} ${[134, 164, 140, 158][index]} l 9 9 l -9 9 l -9 -9 Z`}
                                 key={x}
                             />
                         ))}
@@ -341,7 +341,7 @@ export default function MainSitePlayground() {
                         onMouseEnter={() => setActive({ type: "concept", id: "loci" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <path className={styles.regionBrace} d="M360 150 v-18 h136 v18 M360 194 v18 h136 v-18" />
+                        <path className={styles.regionBrace} d="M466 132 v-18 h150 v18 M466 168 v18 h150 v-18" />
                         <ConceptLabel conceptId="loci" />
                     </g>
 
@@ -355,16 +355,16 @@ export default function MainSitePlayground() {
                         onMouseEnter={() => setActive({ type: "concept", id: "ld" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <path className={styles.ldDiamond} d="M638 168 L683 123 L728 168 L683 213 Z" />
+                        <path className={styles.ldDiamond} d="M830 150 L880 100 L930 150 L880 200 Z" />
                         {[0, 1, 2, 3].map((row) =>
                             [0, 1, 2, 3].map((col) => (
                                 <rect
                                     className={styles.ldTile}
-                                    x={665 + (col - row) * 11}
-                                    y={128 + (col + row) * 11}
+                                    x={862 + (col - row) * 12}
+                                    y={106 + (col + row) * 12}
                                     width="15"
                                     height="15"
-                                    transform="rotate(45 672.5 135.5)"
+                                    transform="rotate(45 869.5 113.5)"
                                     key={`${row}-${col}`}
                                 />
                             ))
@@ -382,9 +382,9 @@ export default function MainSitePlayground() {
                         onMouseEnter={() => setActive({ type: "concept", id: "effects" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <path className={styles.effectRibbon} d="M726 204 C758 185 779 184 814 206 S862 232 884 203" />
-                        <circle className={styles.effectDot} cx="774" cy="206" r="8" />
-                        <circle className={styles.effectDot} cx="842" cy="222" r="6" />
+                        <path className={styles.effectRibbon} d="M962 184 C996 164 1028 164 1062 186 S1124 214 1152 182" />
+                        <circle className={styles.effectDot} cx="1018" cy="186" r="8" />
+                        <circle className={styles.effectDot} cx="1100" cy="202" r="6" />
                         <ConceptLabel conceptId="effects" />
                     </g>
 
@@ -398,9 +398,9 @@ export default function MainSitePlayground() {
                         onMouseEnter={() => setActive({ type: "concept", id: "qtls" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <path className={styles.qtlBridge} d="M304 222 C335 198 373 274 414 238 S472 208 496 232" />
-                        <circle className={styles.qtlNode} cx="326" cy="218" r="7" />
-                        <circle className={styles.qtlNode} cx="424" cy="235" r="7" />
+                        <path className={styles.qtlBridge} d="M350 204 C390 178 432 246 478 214 S552 184 590 212" />
+                        <circle className={styles.qtlNode} cx="380" cy="199" r="7" />
+                        <circle className={styles.qtlNode} cx="490" cy="210" r="7" />
                         <ConceptLabel conceptId="qtls" />
                     </g>
 
@@ -414,31 +414,27 @@ export default function MainSitePlayground() {
                         onMouseEnter={() => setActive({ type: "concept", id: "regulatory" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <path className={styles.regulatoryArc} d="M462 266 C482 220 536 220 556 266" />
-                        <path className={styles.regulatoryArc} d="M544 266 C568 208 626 214 650 266" />
-                        <rect className={styles.enhancer} x="486" y="254" width="42" height="10" rx="5" />
-                        <rect className={styles.enhancer} x="588" y="254" width="34" height="10" rx="5" />
+                        <path className={styles.regulatoryArc} d="M612 218 C636 174 692 174 716 218" />
+                        <path className={styles.regulatoryArc} d="M704 218 C730 166 794 170 820 218" />
+                        <rect className={styles.enhancer} x="646" y="206" width="44" height="10" rx="5" />
+                        <rect className={styles.enhancer} x="754" y="206" width="38" height="10" rx="5" />
                         <ConceptLabel conceptId="regulatory" />
                     </g>
 
                     <g
-                        className={classForConcept("tissues")}
+                        className={classForConcept("biosamples")}
                         tabIndex={0}
                         role="button"
-                        aria-label="Tissues and cell types"
+                        aria-label="Biosamples"
                         onBlur={() => setActive(null)}
-                        onFocus={() => setActive({ type: "concept", id: "tissues" })}
-                        onMouseEnter={() => setActive({ type: "concept", id: "tissues" })}
+                        onFocus={() => setActive({ type: "concept", id: "biosamples" })}
+                        onMouseEnter={() => setActive({ type: "concept", id: "biosamples" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        {[866, 894, 922, 950].map((x) => (
-                            <path
-                                className={styles.cell}
-                                d={`M ${x} 86 c 9 -18 29 -12 30 4 c 1 16 -18 25 -30 14 c -8 -7 -6 -12 0 -18 Z`}
-                                key={x}
-                            />
-                        ))}
-                        <ConceptLabel conceptId="tissues" />
+                        <rect className={styles.utilityHitArea} x="134" y="284" width="138" height="38" rx="6" />
+                        <path className={styles.biosampleTube} d="M142 288 h12 M145 288 v15 a5 5 0 0 0 10 0 v-15" />
+                        <path className={styles.biosampleFill} d="M146 299 h8 v4 a4 4 0 0 1 -8 0 Z" />
+                        <UtilityLabel conceptId="biosamples" x={166} y={306} />
                     </g>
 
                     <g
@@ -451,11 +447,10 @@ export default function MainSitePlayground() {
                         onMouseEnter={() => setActive({ type: "concept", id: "curatedEvidence" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <path className={styles.evidenceMark} d="M842 236 h66 M852 222 h48 M866 250 h32" />
-                        <circle className={styles.evidenceDot} cx="842" cy="236" r="5" />
-                        <circle className={styles.evidenceDot} cx="852" cy="222" r="4.5" />
-                        <circle className={styles.evidenceDot} cx="866" cy="250" r="3.8" />
-                        <ConceptLabel conceptId="curatedEvidence" />
+                        <rect className={styles.utilityHitArea} x="626" y="284" width="158" height="38" rx="6" />
+                        <path className={styles.utilityIcon} d="M634 287 h16 l7 7 v18 h-23 Z M650 287 v7 h7" />
+                        <path className={styles.utilityAccent} d="m639 302 l4 4 l8 -9" />
+                        <UtilityLabel conceptId="curatedEvidence" x={666} y={306} />
                     </g>
 
                     <g
@@ -468,10 +463,10 @@ export default function MainSitePlayground() {
                         onMouseEnter={() => setActive({ type: "concept", id: "harmonizedPhenotypes" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <path className={styles.phenotypeForm} d="M1042 72 h74 v44 h-74 Z" />
-                        <path className={styles.check} d="M1056 96 l11 11 l28 -31" />
-                        <path className={styles.paperLine} d="M1080 106 h24" />
-                        <ConceptLabel conceptId="harmonizedPhenotypes" />
+                        <rect className={styles.utilityHitArea} x="316" y="284" width="190" height="38" rx="6" />
+                        <path className={styles.utilityIcon} d="M324 289 h22 v22 h-22 Z M330 286 h10 v6 h-10 Z" />
+                        <path className={styles.utilityAccent} d="m329 301 l4 4 l8 -9" />
+                        <UtilityLabel conceptId="harmonizedPhenotypes" x={356} y={306} />
                     </g>
 
                     <g
@@ -484,14 +479,9 @@ export default function MainSitePlayground() {
                         onMouseEnter={() => setActive({ type: "concept", id: "downloads" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        {[0, 1, 2].map((layer) => (
-                            <path
-                                className={styles.datasetLayer}
-                                d={`M 968 ${228 + layer * 10} l 42 -17 l 42 17 l -42 17 Z`}
-                                key={layer}
-                            />
-                        ))}
-                        <ConceptLabel conceptId="downloads" />
+                        <rect className={styles.utilityHitArea} x="804" y="284" width="120" height="38" rx="6" />
+                        <path className={styles.utilityIcon} d="M824 286 v15 M818 296 l6 6 l6 -6 M815 308 v4 h18 v-4" />
+                        <UtilityLabel conceptId="downloads" x={844} y={306} />
                     </g>
 
                     <g
@@ -504,12 +494,13 @@ export default function MainSitePlayground() {
                         onMouseEnter={() => setActive({ type: "concept", id: "cloudAccess" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <path className={styles.apiGate} d="M1100 224 h62 v44 h-62 Z" />
+                        <rect className={styles.utilityHitArea} x="940" y="284" width="178" height="38" rx="6" />
                         <path
-                            className={styles.codeMark}
-                            d="M1115 238 l-11 8 l11 8 M1147 238 l11 8 l-11 8 M1134 234 l-11 28"
+                            className={styles.utilityIcon}
+                            d="M950 308 h30 a7 7 0 0 0 1 -14 a11 11 0 0 0 -21 -3 a8 8 0 0 0 -10 17 Z"
                         />
-                        <ConceptLabel conceptId="cloudAccess" />
+                        <path className={styles.utilityAccent} d="M960 297 l-4 4 l4 4 M970 297 l4 4 l-4 4" />
+                        <UtilityLabel conceptId="cloudAccess" x={990} y={306} />
                     </g>
                 </svg>
             </section>
@@ -523,6 +514,14 @@ function ConceptLabel({ conceptId }: { conceptId: ConceptId }) {
     return (
         <text className={styles.conceptLabel} x={concept.x} y={concept.y + 44} textAnchor="middle">
             {concept.label}
+        </text>
+    );
+}
+
+function UtilityLabel({ conceptId, x, y }: { conceptId: ConceptId; x: number; y: number }) {
+    return (
+        <text className={styles.utilityLabel} x={x} y={y} textAnchor="start">
+            {conceptById[conceptId].label}
         </text>
     );
 }

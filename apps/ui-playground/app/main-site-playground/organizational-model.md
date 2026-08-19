@@ -21,7 +21,7 @@ These concepts belong in the central biological/genomic landscape:
 
 These concepts provide biological or clinical context and should not be drawn as genomic features:
 
-- Tissues / cells
+- Biosamples
 - Harmonized phenotypes
 
 ## Peripheral Evidence & Access Zone
