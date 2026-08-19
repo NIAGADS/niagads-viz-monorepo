@@ -17,7 +17,7 @@
 .resourceGroupLabels {
     min-height: 22px;
     display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
+    grid-template-columns: repeat(var(--resource-count), minmax(0, 1fr));
     gap: 10px;
     align-items: end;
     margin-bottom: 10px;
@@ -34,17 +34,9 @@
     text-transform: uppercase;
 }
 
-.niagadsLabel {
-    grid-column: 1 / 6;
-}
-
-.partnerGroupLabel {
-    grid-column: 6 / 8;
-}
-
 .resourceRow {
     display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
+    grid-template-columns: repeat(var(--resource-count), minmax(0, 1fr));
     gap: 10px;
     align-items: stretch;
     margin: 0 0 2px;
@@ -78,6 +70,10 @@
     box-shadow: var(--shadow-md);
     outline: none;
     transform: translateY(-1px);
+}
+
+.resource.knowledgebase {
+    --resource-color: var(--primary-blue);
 }
 
 .resource.partner {
@@ -285,6 +281,10 @@
     transition:
         opacity 160ms ease,
         stroke-width 160ms ease;
+}
+
+.knowledgebaseLink {
+    stroke: var(--primary-blue);
 }
 
 .accessLink {

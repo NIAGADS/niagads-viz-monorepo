@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type CSSProperties } from "react";
 
 import styles from "./resource-ecosystem.module.css";
+import { RESOURCE_GROUPS as RESOURCE_GROUP_VALUES, RESOURCES as RESOURCE_VALUES } from "./resources";
 
 type ConceptId =
     | "genes"
@@ -17,7 +18,9 @@ type ConceptId =
     | "downloads"
     | "cloudAccess";
 
-type ResourceId = "dss" | "genomicsdb" | "xqtl" | "filer" | "api" | "advp" | "phc";
+type ResourceId = string;
+type ResourceGroup = { id: string; label: string };
+type Resource = { id: ResourceId; badge: string; name: string; url?: string; groupId: string };
 type ActiveTarget = { type: "resource"; id: ResourceId } | { type: "concept"; id: ConceptId } | null;
 
 const CONCEPTS: Array<{ id: ConceptId; label: string; x: number; y: number }> = [
@@ -34,73 +37,27 @@ const CONCEPTS: Array<{ id: ConceptId; label: string; x: number; y: number }> = 
     { id: "cloudAccess", label: "API / cloud access", x: 1017, y: 300 },
 ];
 
-const RESOURCES: Array<{
-    id: ResourceId;
-    badge: string;
-    name: string;
-    url?: string;
-    group: "knowledgebase" | "access" | "partner";
-    concepts: ConceptId[];
-}> = [
-    {
-        id: "genomicsdb",
-        badge: "GDB",
-        name: "GenomicsDB",
-        url: "https://www.niagads.org/genomics",
-        group: "knowledgebase",
-        concepts: ["genes", "variants", "gwas", "ld", "cloudAccess", "curatedEvidence"],
-    },
-    {
-        id: "xqtl",
-        badge: "xQTL",
-        name: "xQTL Browser",
-        url: "https://xqtl.niagads.org",
-        group: "knowledgebase",
-        concepts: ["qtls", "variants", "genes", "biosamples"],
-    },
-    {
-        id: "filer",
-        badge: "FLR",
-        name: "FILER",
-        group: "knowledgebase",
-        concepts: ["regulatory", "biosamples", "downloads", "cloudAccess"],
-    },
-    {
-        id: "dss",
-        badge: "DSS",
-        name: "DSS Portal",
-        url: "https://dss.niagads.org/datasets/",
-        group: "access",
-        concepts: ["downloads"],
-    },
-    {
-        id: "api",
-        badge: "API",
-        name: "Open Access API",
-        url: "https://api.niagads.org",
-        group: "access",
-        concepts: ["cloudAccess"],
-    },
-    {
-        id: "advp",
-        badge: "ADVP",
-        name: "ADVP",
-        url: "https://advp.niagads.org",
-        group: "partner",
-        concepts: ["gwas", "genes", "variants", "curatedEvidence"],
-    },
-    { id: "phc", badge: "PHC", name: "PHC", group: "partner", concepts: ["harmonizedPhenotypes"] },
-];
+const RESOURCES: Resource[] = RESOURCE_VALUES;
+const RESOURCE_GROUPS: ResourceGroup[] = RESOURCE_GROUP_VALUES as ResourceGroup[];
 
-const RESOURCE_X: Record<ResourceId, number> = {
-    genomicsdb: 116,
-    xqtl: 300,
-    filer: 495,
-    dss: 660,
-    api: 828,
-    advp: 1000,
-    phc: 1134,
+const RESOURCE_CONCEPTS: Record<ResourceId, ConceptId[]> = {
+    genomicsdb: ["genes", "variants", "gwas", "ld", "cloudAccess", "curatedEvidence"],
+    xqtl: ["qtls", "variants", "genes", "biosamples"],
+    filer: ["regulatory", "biosamples", "downloads", "cloudAccess"],
+    dss: ["downloads"],
+    api: ["cloudAccess"],
+    advp: ["gwas", "genes", "variants", "curatedEvidence"],
+    phc: ["harmonizedPhenotypes"],
 };
+
+const LANDSCAPE_WIDTH = 1240;
+const RESOURCE_COLUMN_GAP = 10;
+
+function getResourceCenterX(index: number, resourceCount: number) {
+    const columnWidth = (LANDSCAPE_WIDTH - RESOURCE_COLUMN_GAP * (resourceCount - 1)) / resourceCount;
+
+    return columnWidth / 2 + index * (columnWidth + RESOURCE_COLUMN_GAP);
+}
 
 const GENE_EXONS: Array<[number, number]> = [
     [118, 46],
@@ -136,17 +93,40 @@ const conceptById = Object.fromEntries(CONCEPTS.map((concept) => [concept.id, co
 >;
 const resourceById = Object.fromEntries(RESOURCES.map((resource) => [resource.id, resource])) as Record<
     ResourceId,
-    (typeof RESOURCES)[number]
+    Resource
 >;
+const resourceGroupById = Object.fromEntries(RESOURCE_GROUPS.map((group) => [group.id, group])) as Record<
+    string,
+    ResourceGroup
+>;
+
+const resourceGroupLabels = RESOURCES.reduce<Array<{ label: string; start: number; span: number }>>(
+    (labels, resource, index) => {
+        const label = resourceGroupById[resource.groupId].label;
+        const previous = labels.at(-1);
+
+        if (previous?.label === label) {
+            previous.span += 1;
+        } else {
+            labels.push({ label, start: index + 1, span: 1 });
+        }
+
+        return labels;
+    },
+    []
+);
 
 export default function MainSitePlayground() {
     const [active, setActive] = useState<ActiveTarget>(null);
+    const resourceGridStyle = { "--resource-count": RESOURCES.length } as CSSProperties;
 
     const conceptToResources = useMemo(() => {
         return Object.fromEntries(
             CONCEPTS.map((concept) => [
                 concept.id,
-                RESOURCES.filter((resource) => resource.concepts.includes(concept.id)).map((resource) => resource.id),
+                RESOURCES.filter((resource) => RESOURCE_CONCEPTS[resource.id]?.includes(concept.id)).map(
+                    (resource) => resource.id
+                ),
             ])
         ) as Record<ConceptId, ResourceId[]>;
     }, []);
@@ -157,7 +137,7 @@ export default function MainSitePlayground() {
         }
 
         if (active.type === "resource") {
-            return new Set(resourceById[active.id].concepts);
+            return new Set(RESOURCE_CONCEPTS[active.id] ?? []);
         }
 
         return new Set<ConceptId>([active.id]);
@@ -184,41 +164,52 @@ export default function MainSitePlayground() {
             .filter(Boolean)
             .join(" ");
 
-    const classForResource = (id: ResourceId) =>
-        [
+    const classForResource = (id: ResourceId, index: number) => {
+        const resource = resourceById[id];
+        const startsGroup = index > 0 && RESOURCES[index - 1].groupId !== resource.groupId;
+
+        return [
             styles.resource,
-            resourceById[id].group === "knowledgebase" ? styles.knowledgebase : "",
-            resourceById[id].group === "access" ? styles.access : "",
-            resourceById[id].group === "partner" ? styles.partner : "",
-            id === "dss" || id === "advp" ? styles.groupStart : "",
+            styles[resource.groupId],
+            startsGroup ? styles.groupStart : "",
             active && !activeResources.has(id) ? styles.recede : "",
             activeResources.has(id) ? styles.active : "",
         ]
             .filter(Boolean)
             .join(" ");
+    };
 
-    const pathClass = (resourceId: ResourceId, conceptId: ConceptId) =>
-        [
+    const pathClass = (resourceId: ResourceId, conceptId: ConceptId) => {
+        const groupId = resourceById[resourceId].groupId;
+
+        return [
             styles.link,
-            resourceById[resourceId].group === "access" ? styles.accessLink : "",
-            resourceById[resourceId].group === "partner" ? styles.partnerLink : "",
+            styles[`${groupId}Link`],
             active && !(activeResources.has(resourceId) && activeConcepts.has(conceptId)) ? styles.recede : "",
             activeResources.has(resourceId) && activeConcepts.has(conceptId) ? styles.active : "",
         ]
             .filter(Boolean)
             .join(" ");
+    };
 
     return (
         <main className={styles.shell}>
             <section className={styles.ecosystem} aria-label="NIAGADS homepage resource visualization prototype">
-                <div className={styles.resourceGroupLabels} aria-hidden="true">
-                    <span className={`${styles.groupLabel} ${styles.niagadsLabel}`}>NIAGADS Open Access</span>
-                    <span className={`${styles.groupLabel} ${styles.partnerGroupLabel}`}>Partners</span>
+                <div className={styles.resourceGroupLabels} aria-hidden="true" style={resourceGridStyle}>
+                    {resourceGroupLabels.map((groupLabel) => (
+                        <span
+                            className={styles.groupLabel}
+                            key={`${groupLabel.label}-${groupLabel.start}`}
+                            style={{ gridColumn: `${groupLabel.start} / span ${groupLabel.span}` }}
+                        >
+                            {groupLabel.label}
+                        </span>
+                    ))}
                 </div>
-                <div className={styles.resourceRow} aria-label="Resources">
-                    {RESOURCES.map((resource) => (
+                <div className={styles.resourceRow} aria-label="Resources" style={resourceGridStyle}>
+                    {RESOURCES.map((resource, resourceIndex) => (
                         <a
-                            className={classForResource(resource.id)}
+                            className={classForResource(resource.id, resourceIndex)}
                             href={resource.url ?? `#${resource.id}`}
                             key={resource.id}
                             rel={resource.url ? "noopener noreferrer" : undefined}
@@ -286,10 +277,10 @@ export default function MainSitePlayground() {
                     </g>
 
                     <g className={styles.linkLayer} aria-hidden="true">
-                        {RESOURCES.flatMap((resource) =>
-                            resource.concepts.map((conceptId) => {
+                        {RESOURCES.flatMap((resource, resourceIndex) =>
+                            (RESOURCE_CONCEPTS[resource.id] ?? []).map((conceptId) => {
                                 const concept = conceptById[conceptId];
-                                const start = RESOURCE_X[resource.id];
+                                const start = getResourceCenterX(resourceIndex, RESOURCES.length);
                                 const bend = Math.max(62, concept.y - 58);
                                 return (
                                     <path
