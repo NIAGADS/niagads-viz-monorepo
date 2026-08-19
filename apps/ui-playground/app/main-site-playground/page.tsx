@@ -37,47 +37,47 @@ const RESOURCES: Array<{
     id: ResourceId;
     badge: string;
     name: string;
-    type: "niagads" | "partner";
+    group: "knowledgebase" | "access" | "partner";
     concepts: ConceptId[];
 }> = [
-    { id: "dss", badge: "DSS", name: "DSS Portal", type: "niagads", concepts: ["downloads"] },
     {
         id: "genomicsdb",
         badge: "GDB",
         name: "GenomicsDB",
-        type: "niagads",
+        group: "knowledgebase",
         concepts: ["genes", "variants", "gwas", "ld", "downloads"],
     },
     {
         id: "xqtl",
         badge: "xQTL",
         name: "xQTL Browser",
-        type: "niagads",
+        group: "knowledgebase",
         concepts: ["qtls", "variants", "genes", "biosamples"],
     },
     {
         id: "filer",
         badge: "FLR",
         name: "FILER",
-        type: "niagads",
+        group: "knowledgebase",
         concepts: ["regulatory", "biosamples", "downloads"],
     },
-    { id: "api", badge: "API", name: "Open Access API", type: "niagads", concepts: ["cloudAccess"] },
+    { id: "dss", badge: "DSS", name: "DSS Portal", group: "access", concepts: ["downloads"] },
+    { id: "api", badge: "API", name: "Open Access API", group: "access", concepts: ["cloudAccess"] },
     {
         id: "advp",
         badge: "ADVP",
         name: "ADVP",
-        type: "partner",
+        group: "partner",
         concepts: ["gwas", "genes", "variants", "curatedEvidence"],
     },
-    { id: "phc", badge: "PHC", name: "PHC", type: "partner", concepts: ["harmonizedPhenotypes"] },
+    { id: "phc", badge: "PHC", name: "PHC", group: "partner", concepts: ["harmonizedPhenotypes"] },
 ];
 
 const RESOURCE_X: Record<ResourceId, number> = {
-    dss: 116,
-    genomicsdb: 300,
-    xqtl: 495,
-    filer: 660,
+    genomicsdb: 116,
+    xqtl: 300,
+    filer: 495,
+    dss: 660,
     api: 828,
     advp: 1000,
     phc: 1134,
@@ -168,7 +168,10 @@ export default function MainSitePlayground() {
     const classForResource = (id: ResourceId) =>
         [
             styles.resource,
-            resourceById[id].type === "partner" ? styles.partner : "",
+            resourceById[id].group === "knowledgebase" ? styles.knowledgebase : "",
+            resourceById[id].group === "access" ? styles.access : "",
+            resourceById[id].group === "partner" ? styles.partner : "",
+            id === "dss" || id === "advp" ? styles.groupStart : "",
             active && !activeResources.has(id) ? styles.recede : "",
             activeResources.has(id) ? styles.active : "",
         ]
@@ -178,7 +181,8 @@ export default function MainSitePlayground() {
     const pathClass = (resourceId: ResourceId, conceptId: ConceptId) =>
         [
             styles.link,
-            resourceById[resourceId].type === "partner" ? styles.partnerLink : "",
+            resourceById[resourceId].group === "access" ? styles.accessLink : "",
+            resourceById[resourceId].group === "partner" ? styles.partnerLink : "",
             active && !(activeResources.has(resourceId) && activeConcepts.has(conceptId)) ? styles.recede : "",
             activeResources.has(resourceId) && activeConcepts.has(conceptId) ? styles.active : "",
         ]
@@ -188,6 +192,10 @@ export default function MainSitePlayground() {
     return (
         <main className={styles.shell}>
             <section className={styles.ecosystem} aria-label="NIAGADS homepage resource visualization prototype">
+                <div className={styles.resourceGroupLabels} aria-hidden="true">
+                    <span className={`${styles.groupLabel} ${styles.niagadsLabel}`}>NIAGADS Open Access</span>
+                    <span className={`${styles.groupLabel} ${styles.partnerGroupLabel}`}>Partners</span>
+                </div>
                 <div className={styles.resourceRow} aria-label="Resources">
                     {RESOURCES.map((resource) => (
                         <a

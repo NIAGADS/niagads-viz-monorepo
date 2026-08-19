@@ -47,7 +47,11 @@ These concepts describe evidence, delivery, or access affordances and should not
 
 ## Visual Structure
 
-- Resources remain horizontally aligned across the top.
+- Resources remain horizontally aligned across the top in this order: knowledgebases, access layers, then Partners.
+- **NIAGADS Open Access** spans all five NIAGADS resources.
+- GenomicsDB, xQTL Browser, and FILER are the primary knowledgebases.
+- DSS Portal and Open Access API form a quieter access-layer subgroup, separated by whitespace rather than another heading.
+- ADVP and PHC are grouped under **Partners**.
 - The central genomic landscape stays visually dominant but compact.
 - The peripheral zones should be lightweight groupings, not large dashboard panels.
 - Context and Evidence & Access are visually segregated from the genomic layer and from each other.

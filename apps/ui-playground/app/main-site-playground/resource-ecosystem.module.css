@@ -14,6 +14,34 @@
     isolation: isolate;
 }
 
+.resourceGroupLabels {
+    min-height: 22px;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 10px;
+    align-items: end;
+    margin-bottom: 10px;
+}
+
+.groupLabel {
+    color: var(--text-secondary);
+    font:
+        700 11px/1.1 ui-sans-serif,
+        system-ui,
+        sans-serif;
+    letter-spacing: 0.045em;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.niagadsLabel {
+    grid-column: 1 / 6;
+}
+
+.partnerGroupLabel {
+    grid-column: 6 / 8;
+}
+
 .resourceRow {
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
@@ -26,10 +54,11 @@
     --resource-color: var(--primary-blue);
     min-height: 48px;
     display: flex;
+    position: relative;
     align-items: center;
     gap: 9px;
     padding: 7px 9px;
-    border: 1px solid var(--border);
+    border: 1px solid color-mix(in srgb, var(--resource-color), var(--white) 58%);
     border-radius: var(--border-radius);
     color: var(--text-primary);
     text-decoration: none;
@@ -52,9 +81,25 @@
 }
 
 .resource.partner {
+    --resource-color: var(--warning-amber);
+}
+
+.resource.access {
     --resource-color: var(--accent-teal);
-    border-style: dashed;
-    background: var(--surface);
+}
+
+.resource.groupStart {
+    margin-left: 10px;
+}
+
+.resource.groupStart::before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    bottom: 5px;
+    left: -6px;
+    width: 1px;
+    background: var(--gray-300);
 }
 
 .resource.recede {
@@ -68,9 +113,9 @@
     display: grid;
     place-items: center;
     border-radius: 6px;
-    background: color-mix(in srgb, var(--resource-color), var(--white) 88%);
-    border: 1px solid color-mix(in srgb, var(--resource-color), var(--white) 60%);
-    color: var(--resource-color);
+    background: var(--resource-color);
+    border: 1px solid var(--resource-color);
+    color: var(--white);
     font:
         700 11px/1.1 ui-sans-serif,
         system-ui,
@@ -79,6 +124,12 @@
         "Segoe UI",
         sans-serif;
     letter-spacing: 0;
+}
+
+.resource.partner .badge {
+    background: var(--yellow);
+    border-color: var(--warning-amber);
+    color: var(--gray-900);
 }
 
 .name {
@@ -230,7 +281,7 @@
 
 .link {
     fill: none;
-    stroke: var(--secondary-blue);
+    stroke: var(--primary-blue);
     stroke-width: 1.7;
     stroke-linecap: round;
     opacity: 0;
@@ -239,9 +290,12 @@
         stroke-width 160ms ease;
 }
 
-.partnerLink {
+.accessLink {
     stroke: var(--accent-teal);
-    stroke-dasharray: 4 5;
+}
+
+.partnerLink {
+    stroke: var(--warning-amber);
 }
 
 .link.active {
@@ -457,6 +511,10 @@
     }
 
     .resourceRow {
+        gap: 6px;
+    }
+
+    .resourceGroupLabels {
         gap: 6px;
     }
 
