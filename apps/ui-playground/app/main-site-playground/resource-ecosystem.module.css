@@ -338,14 +338,6 @@
     stroke: transparent;
 }
 
-.regionBrace {
-    fill: none;
-    stroke: var(--gray-600);
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
 .ldTopRule,
 .ldTick {
     fill: none;

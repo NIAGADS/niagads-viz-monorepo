@@ -6,7 +6,6 @@ import styles from "./resource-ecosystem.module.css";
 type ConceptId =
     | "genes"
     | "variants"
-    | "loci"
     | "gwas"
     | "ld"
     | "qtls"
@@ -23,7 +22,6 @@ type ActiveTarget = { type: "resource"; id: ResourceId } | { type: "concept"; id
 const CONCEPTS: Array<{ id: ConceptId; label: string; x: number; y: number }> = [
     { id: "genes", label: "Genes", x: 220, y: 150 },
     { id: "variants", label: "Variants", x: 390, y: 150 },
-    { id: "loci", label: "Genomic regions", x: 1110, y: 146 },
     { id: "gwas", label: "Genetic associations", x: 390, y: 90 },
     { id: "ld", label: "LD", x: 390, y: 210 },
     { id: "qtls", label: "Molecular QTLs", x: 920, y: 210 },
@@ -48,21 +46,21 @@ const RESOURCES: Array<{
         badge: "GDB",
         name: "GenomicsDB",
         type: "niagads",
-        concepts: ["genes", "variants", "loci", "gwas", "ld", "downloads"],
+        concepts: ["genes", "variants", "gwas", "ld", "downloads"],
     },
     {
         id: "xqtl",
         badge: "xQTL",
         name: "xQTL Browser",
         type: "niagads",
-        concepts: ["qtls", "variants", "genes", "loci", "biosamples"],
+        concepts: ["qtls", "variants", "genes", "biosamples"],
     },
     {
         id: "filer",
         badge: "FLR",
         name: "FILER",
         type: "niagads",
-        concepts: ["regulatory", "loci", "biosamples", "downloads"],
+        concepts: ["regulatory", "biosamples", "downloads"],
     },
     { id: "api", badge: "API", name: "Open Access API", type: "niagads", concepts: ["cloudAccess"] },
     {
@@ -70,7 +68,7 @@ const RESOURCES: Array<{
         badge: "ADVP",
         name: "ADVP",
         type: "partner",
-        concepts: ["gwas", "genes", "variants", "loci", "curatedEvidence"],
+        concepts: ["gwas", "genes", "variants", "curatedEvidence"],
     },
     { id: "phc", badge: "PHC", name: "PHC", type: "partner", concepts: ["harmonizedPhenotypes"] },
 ];
@@ -336,22 +334,6 @@ export default function MainSitePlayground() {
                         ))}
                         <text className={styles.conceptLabel} x="390" y="176" textAnchor="middle">
                             Variants
-                        </text>
-                    </g>
-
-                    <g
-                        className={classForConcept("loci")}
-                        tabIndex={0}
-                        role="button"
-                        aria-label="Genomic regions"
-                        onBlur={() => setActive(null)}
-                        onFocus={() => setActive({ type: "concept", id: "loci" })}
-                        onMouseEnter={() => setActive({ type: "concept", id: "loci" })}
-                        onMouseLeave={() => setActive(null)}
-                    >
-                        <path className={styles.regionBrace} d="M1040 132 v-18 h140 v18 M1040 168 v18 h140 v-18" />
-                        <text className={styles.conceptLabel} x="1110" y="106" textAnchor="middle">
-                            Genomic regions
                         </text>
                     </g>
 
