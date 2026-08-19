@@ -38,6 +38,7 @@ const RESOURCES: Array<{
     id: ResourceId;
     badge: string;
     name: string;
+    url?: string;
     group: "knowledgebase" | "access" | "partner";
     concepts: ConceptId[];
 }> = [
@@ -45,6 +46,7 @@ const RESOURCES: Array<{
         id: "genomicsdb",
         badge: "GDB",
         name: "GenomicsDB",
+        url: "https://www.niagads.org/genomics",
         group: "knowledgebase",
         concepts: ["genes", "variants", "gwas", "ld", "cloudAccess", "curatedEvidence"],
     },
@@ -52,6 +54,7 @@ const RESOURCES: Array<{
         id: "xqtl",
         badge: "xQTL",
         name: "xQTL Browser",
+        url: "https://xqtl.niagads.org",
         group: "knowledgebase",
         concepts: ["qtls", "variants", "genes", "biosamples"],
     },
@@ -62,12 +65,27 @@ const RESOURCES: Array<{
         group: "knowledgebase",
         concepts: ["regulatory", "biosamples", "downloads", "cloudAccess"],
     },
-    { id: "dss", badge: "DSS", name: "DSS Portal", group: "access", concepts: ["downloads"] },
-    { id: "api", badge: "API", name: "Open Access API", group: "access", concepts: ["cloudAccess"] },
+    {
+        id: "dss",
+        badge: "DSS",
+        name: "DSS Portal",
+        url: "https://dss.niagads.org/datasets/",
+        group: "access",
+        concepts: ["downloads"],
+    },
+    {
+        id: "api",
+        badge: "API",
+        name: "Open Access API",
+        url: "https://api.niagads.org",
+        group: "access",
+        concepts: ["cloudAccess"],
+    },
     {
         id: "advp",
         badge: "ADVP",
         name: "ADVP",
+        url: "https://advp.niagads.org",
         group: "partner",
         concepts: ["gwas", "genes", "variants", "curatedEvidence"],
     },
@@ -201,8 +219,10 @@ export default function MainSitePlayground() {
                     {RESOURCES.map((resource) => (
                         <a
                             className={classForResource(resource.id)}
-                            href={`#${resource.id}`}
+                            href={resource.url ?? `#${resource.id}`}
                             key={resource.id}
+                            rel={resource.url ? "noopener noreferrer" : undefined}
+                            target={resource.url ? "_blank" : undefined}
                             onBlur={() => setActive(null)}
                             onFocus={() => setActive({ type: "resource", id: resource.id })}
                             onMouseEnter={() => setActive({ type: "resource", id: resource.id })}
