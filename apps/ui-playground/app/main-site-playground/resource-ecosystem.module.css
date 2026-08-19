@@ -349,15 +349,18 @@
     stroke-linejoin: round;
 }
 
-.ldDiamond {
-    fill: url("#ldPattern");
-    stroke: #315e73;
-    stroke-width: 1.6;
+.ldTopRule,
+.ldTick {
+    fill: none;
+    stroke: #56757a;
+    stroke-width: 1.4;
+    stroke-linecap: round;
 }
 
-.ldTile {
-    fill: #236e76;
-    opacity: 0.18;
+.ldCell {
+    stroke: rgba(248, 251, 249, 0.94);
+    stroke-width: 1.25;
+    stroke-linejoin: round;
 }
 
 .effectDot,

@@ -26,7 +26,7 @@ const CONCEPTS: Array<{ id: ConceptId; label: string; x: number; y: number }> = 
     { id: "variants", label: "Variants", x: 390, y: 148 },
     { id: "loci", label: "Genomic regions", x: 540, y: 146 },
     { id: "gwas", label: "Genetic associations", x: 710, y: 104 },
-    { id: "ld", label: "LD", x: 880, y: 150 },
+    { id: "ld", label: "LD", x: 880, y: 180 },
     { id: "effects", label: "Variant effects", x: 1050, y: 188 },
     { id: "qtls", label: "Molecular QTLs", x: 470, y: 210 },
     { id: "regulatory", label: "Regulatory elements", x: 700, y: 210 },
@@ -95,6 +95,19 @@ const GENE_BLOCKS: Array<[number, number, number, string]> = [
     [638, 150, 58, "CLU"],
     [1072, 150, 56, "TREM2"],
 ];
+
+// Schematic values provide the familiar LD heatmap structure without implying measured data.
+const LD_VALUES = [
+    [3, 2, 1, 3, 2, 0, 2],
+    [3, 1, 2, 0, 2, 3],
+    [3, 2, 1, 1, 3],
+    [2, 3, 2, 0],
+    [1, 2, 3],
+    [2, 1],
+    [3],
+] as const;
+
+const LD_COLORS = ["#edf2f0", "#b9cac6", "#668985", "#173f49"] as const;
 
 const conceptById = Object.fromEntries(CONCEPTS.map((concept) => [concept.id, concept])) as Record<
     ConceptId,
@@ -216,11 +229,6 @@ export default function MainSitePlayground() {
                             <stop offset="0.45" stopColor="#28756C" />
                             <stop offset="1" stopColor="#675D8D" />
                         </linearGradient>
-                        <pattern id="ldPattern" width="18" height="18" patternUnits="userSpaceOnUse">
-                            <rect width="18" height="18" fill="#eef4f2" />
-                            <rect width="9" height="9" fill="#6a9589" opacity="0.62" />
-                            <rect x="9" y="9" width="9" height="9" fill="#355f67" opacity="0.42" />
-                        </pattern>
                     </defs>
 
                     <g className={styles.peripheralFrame} aria-hidden="true">
@@ -349,27 +357,38 @@ export default function MainSitePlayground() {
                         className={classForConcept("ld")}
                         tabIndex={0}
                         role="button"
-                        aria-label="Linkage disequilibrium"
+                        aria-label="Linkage disequilibrium, shown as a schematic triangular pairwise matrix"
                         onBlur={() => setActive(null)}
                         onFocus={() => setActive({ type: "concept", id: "ld" })}
                         onMouseEnter={() => setActive({ type: "concept", id: "ld" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <path className={styles.ldDiamond} d="M830 150 L880 100 L930 150 L880 200 Z" />
-                        {[0, 1, 2, 3].map((row) =>
-                            [0, 1, 2, 3].map((col) => (
-                                <rect
-                                    className={styles.ldTile}
-                                    x={862 + (col - row) * 12}
-                                    y={106 + (col + row) * 12}
-                                    width="15"
-                                    height="15"
-                                    transform="rotate(45 869.5 113.5)"
-                                    key={`${row}-${col}`}
-                                />
-                            ))
+                        <path className={styles.ldTopRule} d="M817 150 H943" />
+                        {LD_VALUES[0].map((_, index) => (
+                            <path
+                                className={styles.ldTick}
+                                d={`M ${826 + index * 18} 140 V150`}
+                                key={`tick-${index}`}
+                            />
+                        ))}
+                        {LD_VALUES.map((row, rowIndex) =>
+                            row.map((value, columnIndex) => {
+                                const cx = 826 + rowIndex * 9 + columnIndex * 18;
+                                const cy = 159 + rowIndex * 9;
+
+                                return (
+                                    <path
+                                        className={styles.ldCell}
+                                        d={`M ${cx} ${cy - 9} L ${cx + 9} ${cy} L ${cx} ${cy + 9} L ${cx - 9} ${cy} Z`}
+                                        fill={LD_COLORS[value]}
+                                        key={`${rowIndex}-${columnIndex}`}
+                                    />
+                                );
+                            })
                         )}
-                        <ConceptLabel conceptId="ld" />
+                        <text className={styles.conceptLabel} x="880" y="238" textAnchor="middle">
+                            LD
+                        </text>
                     </g>
 
                     <g
