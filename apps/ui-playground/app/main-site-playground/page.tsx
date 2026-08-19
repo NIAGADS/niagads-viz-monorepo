@@ -24,9 +24,9 @@ const CONCEPTS: Array<{ id: ConceptId; label: string; x: number; y: number }> = 
     { id: "genes", label: "Genes", x: 220, y: 150 },
     { id: "variants", label: "Variants", x: 390, y: 150 },
     { id: "loci", label: "Genomic regions", x: 1110, y: 146 },
-    { id: "gwas", label: "Genetic associations", x: 710, y: 104 },
-    { id: "ld", label: "LD", x: 880, y: 180 },
-    { id: "qtls", label: "Molecular QTLs", x: 470, y: 210 },
+    { id: "gwas", label: "Genetic associations", x: 390, y: 90 },
+    { id: "ld", label: "LD", x: 390, y: 210 },
+    { id: "qtls", label: "Molecular QTLs", x: 920, y: 210 },
     { id: "regulatory", label: "Regulatory elements", x: 700, y: 210 },
     { id: "biosamples", label: "Biosamples", x: 154, y: 298 },
     { id: "harmonizedPhenotypes", label: "Harmonized phenotypes", x: 336, y: 298 },
@@ -264,15 +264,17 @@ export default function MainSitePlayground() {
                         onMouseEnter={() => setActive({ type: "concept", id: "gwas" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <path className={styles.associationBaseline} d="M614 128 H806" />
-                        {[638, 666, 696, 724, 754, 784].map((x, index) => (
+                        <path className={styles.associationBaseline} d="M341 128 H439" />
+                        {[348, 362, 376, 390, 404, 418, 432].map((x, index) => (
                             <path
                                 className={styles.peak}
-                                d={`M ${x - 18} 128 L ${x} ${[104, 76, 98, 58, 112, 88][index]} L ${x + 18} 128`}
+                                d={`M ${x - 8} 128 L ${x} ${[110, 92, 106, 72, 112, 96, 84][index]} L ${x + 8} 128`}
                                 key={x}
                             />
                         ))}
-                        <ConceptLabel conceptId="gwas" />
+                        <text className={styles.conceptLabel} x="390" y="62" textAnchor="middle">
+                            Genetic associations
+                        </text>
                     </g>
 
                     <g
@@ -305,7 +307,7 @@ export default function MainSitePlayground() {
                         onMouseLeave={() => setActive(null)}
                     >
                         <rect className={styles.variantHitArea} x="332" y="134" width="116" height="48" rx="5" />
-                        {[348, 376, 404, 432].map((x) => (
+                        {[348, 362, 376, 390, 404, 418, 432].map((x) => (
                             <path className={styles.variant} d={`M ${x} 145 l 5 5 l -5 5 l -5 -5 Z`} key={x} />
                         ))}
                         <text className={styles.conceptLabel} x="390" y="176" textAnchor="middle">
@@ -339,30 +341,30 @@ export default function MainSitePlayground() {
                         onMouseEnter={() => setActive({ type: "concept", id: "ld" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <path className={styles.ldTopRule} d="M817 150 H943" />
+                        <path className={styles.ldTopRule} d="M341 190 H439" />
                         {LD_VALUES[0].map((_, index) => (
                             <path
                                 className={styles.ldTick}
-                                d={`M ${826 + index * 18} 140 V150`}
+                                d={`M ${348 + index * 14} 182 V190`}
                                 key={`tick-${index}`}
                             />
                         ))}
                         {LD_VALUES.map((row, rowIndex) =>
                             row.map((value, columnIndex) => {
-                                const cx = 826 + rowIndex * 9 + columnIndex * 18;
-                                const cy = 159 + rowIndex * 9;
+                                const cx = 348 + rowIndex * 7 + columnIndex * 14;
+                                const cy = 197 + rowIndex * 7;
 
                                 return (
                                     <path
                                         className={styles.ldCell}
-                                        d={`M ${cx} ${cy - 9} L ${cx + 9} ${cy} L ${cx} ${cy + 9} L ${cx - 9} ${cy} Z`}
+                                        d={`M ${cx} ${cy - 7} L ${cx + 7} ${cy} L ${cx} ${cy + 7} L ${cx - 7} ${cy} Z`}
                                         fill={LD_COLORS[value]}
                                         key={`${rowIndex}-${columnIndex}`}
                                     />
                                 );
                             })
                         )}
-                        <text className={styles.conceptLabel} x="880" y="238" textAnchor="middle">
+                        <text className={styles.conceptLabel} x="390" y="264" textAnchor="middle">
                             LD
                         </text>
                     </g>
@@ -377,9 +379,9 @@ export default function MainSitePlayground() {
                         onMouseEnter={() => setActive({ type: "concept", id: "qtls" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <path className={styles.qtlBridge} d="M350 204 C390 178 432 246 478 214 S552 184 590 212" />
-                        <circle className={styles.qtlNode} cx="380" cy="199" r="7" />
-                        <circle className={styles.qtlNode} cx="490" cy="210" r="7" />
+                        <path className={styles.qtlBridge} d="M820 204 C856 178 894 246 936 214 S986 184 1020 212" />
+                        <circle className={styles.qtlNode} cx="850" cy="199" r="7" />
+                        <circle className={styles.qtlNode} cx="946" cy="210" r="7" />
                         <ConceptLabel conceptId="qtls" />
                     </g>
 
