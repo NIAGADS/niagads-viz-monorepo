@@ -38,5 +38,14 @@
     "engines": {
         "node": ">=24.15.0 <25.0.0",
         "npm": "12.0.2"
+    },
+    "allowScripts": {
+        "es5-ext@0.10.64": true,
+        "esbuild@0.27.4": true,
+        "nx@23.1.1": true,
+        "sharp": true,
+        "unrs-resolver@1.11.1": true,
+        "github:NIAGADS/igv.js#53e6169d6fb8fcaeecd8ce369e622a79824f5ef7": true,
+        "github:NIAGADS/export-from-json#122dec96e063279cc65c2ef0c94ed92cc796f452": true
     }
 }
