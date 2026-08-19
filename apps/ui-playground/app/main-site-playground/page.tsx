@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+
 import styles from "./resource-ecosystem.module.css";
 
 type ConceptId =
@@ -26,11 +27,11 @@ const CONCEPTS: Array<{ id: ConceptId; label: string; x: number; y: number }> = 
     { id: "ld", label: "LD", x: 390, y: 210 },
     { id: "qtls", label: "Molecular QTLs", x: 890, y: 168 },
     { id: "regulatory", label: "Regulatory elements", x: 650, y: 150 },
-    { id: "biosamples", label: "Biosamples", x: 154, y: 298 },
-    { id: "harmonizedPhenotypes", label: "Harmonized phenotypes", x: 336, y: 298 },
-    { id: "curatedEvidence", label: "Curated evidence", x: 646, y: 298 },
-    { id: "downloads", label: "Downloads", x: 824, y: 298 },
-    { id: "cloudAccess", label: "API / cloud access", x: 960, y: 298 },
+    { id: "biosamples", label: "Biosamples", x: 150, y: 300 },
+    { id: "harmonizedPhenotypes", label: "Harmonized phenotypes", x: 307, y: 300 },
+    { id: "curatedEvidence", label: "Curated evidence", x: 662, y: 300 },
+    { id: "downloads", label: "Downloads", x: 852, y: 300 },
+    { id: "cloudAccess", label: "API / cloud access", x: 1017, y: 300 },
 ];
 
 const RESOURCES: Array<{
@@ -45,7 +46,7 @@ const RESOURCES: Array<{
         badge: "GDB",
         name: "GenomicsDB",
         group: "knowledgebase",
-        concepts: ["genes", "variants", "gwas", "ld", "downloads"],
+        concepts: ["genes", "variants", "gwas", "ld", "cloudAccess", "curatedEvidence"],
     },
     {
         id: "xqtl",
@@ -59,7 +60,7 @@ const RESOURCES: Array<{
         badge: "FLR",
         name: "FILER",
         group: "knowledgebase",
-        concepts: ["regulatory", "biosamples", "downloads"],
+        concepts: ["regulatory", "biosamples", "downloads", "cloudAccess"],
     },
     { id: "dss", badge: "DSS", name: "DSS Portal", group: "access", concepts: ["downloads"] },
     { id: "api", badge: "API", name: "Open Access API", group: "access", concepts: ["cloudAccess"] },
@@ -94,8 +95,8 @@ const GENE_EXONS: Array<[number, number]> = [
 
 // Deterministic schematic Manhattan profile; these are not measured association values.
 const ASSOCIATION_POINT_Y = [
-    118, 114, 122, 110, 116, 104, 120, 112, 98, 88, 76, 92, 108, 119, 114, 102, 97, 84, 68, 90, 105, 118,
-    111, 95, 80, 99, 116, 121, 109,
+    118, 114, 122, 110, 116, 104, 120, 112, 98, 88, 76, 92, 108, 119, 114, 102, 97, 84, 68, 90, 105, 118, 111, 95, 80,
+    99, 116, 121, 109,
 ] as const;
 
 // Schematic values provide the familiar LD heatmap structure without implying measured data.
@@ -243,11 +244,11 @@ export default function MainSitePlayground() {
 
                     <g className={styles.peripheralFrame} aria-hidden="true">
                         <path className={styles.utilityRule} d="M76 278 H1164" />
-                        <text className={styles.zoneLabel} x="76" y="306">
+                        <text className={styles.zoneLabel} x="76" y="305">
                             Context
                         </text>
-                        <path className={styles.utilityDivider} d="M520 288 V316" />
-                        <text className={styles.zoneLabel} x="542" y="306">
+                        <path className={styles.utilityDivider} d="M506 286 V316" />
+                        <text className={styles.zoneLabel} x="526" y="305">
                             Evidence &amp; Access
                         </text>
                     </g>
@@ -446,10 +447,9 @@ export default function MainSitePlayground() {
                         onMouseEnter={() => setActive({ type: "concept", id: "biosamples" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <rect className={styles.utilityHitArea} x="134" y="284" width="138" height="38" rx="6" />
-                        <path className={styles.biosampleTube} d="M142 288 h12 M145 288 v15 a5 5 0 0 0 10 0 v-15" />
-                        <path className={styles.biosampleFill} d="M146 299 h8 v4 a4 4 0 0 1 -8 0 Z" />
-                        <UtilityLabel conceptId="biosamples" x={166} y={306} />
+                        <rect className={styles.utilityHitArea} x="130" y="282" width="142" height="40" rx="6" />
+                        <UtilityGlyph kind="biosample" x={138} y={288} />
+                        <UtilityLabel conceptId="biosamples" x={170} y={305} />
                     </g>
 
                     <g
@@ -462,10 +462,9 @@ export default function MainSitePlayground() {
                         onMouseEnter={() => setActive({ type: "concept", id: "curatedEvidence" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <rect className={styles.utilityHitArea} x="626" y="284" width="158" height="38" rx="6" />
-                        <path className={styles.utilityIcon} d="M634 287 h16 l7 7 v18 h-23 Z M650 287 v7 h7" />
-                        <path className={styles.utilityAccent} d="m639 302 l4 4 l8 -9" />
-                        <UtilityLabel conceptId="curatedEvidence" x={666} y={306} />
+                        <rect className={styles.utilityHitArea} x="642" y="282" width="166" height="40" rx="6" />
+                        <UtilityGlyph kind="evidence" x={650} y={288} />
+                        <UtilityLabel conceptId="curatedEvidence" x={682} y={305} />
                     </g>
 
                     <g
@@ -478,10 +477,9 @@ export default function MainSitePlayground() {
                         onMouseEnter={() => setActive({ type: "concept", id: "harmonizedPhenotypes" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <rect className={styles.utilityHitArea} x="316" y="284" width="190" height="38" rx="6" />
-                        <path className={styles.utilityIcon} d="M324 289 h22 v22 h-22 Z M330 286 h10 v6 h-10 Z" />
-                        <path className={styles.utilityAccent} d="m329 301 l4 4 l8 -9" />
-                        <UtilityLabel conceptId="harmonizedPhenotypes" x={356} y={306} />
+                        <rect className={styles.utilityHitArea} x="287" y="282" width="208" height="40" rx="6" />
+                        <UtilityGlyph kind="phenotype" x={295} y={288} />
+                        <UtilityLabel conceptId="harmonizedPhenotypes" x={327} y={305} />
                     </g>
 
                     <g
@@ -494,9 +492,9 @@ export default function MainSitePlayground() {
                         onMouseEnter={() => setActive({ type: "concept", id: "downloads" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <rect className={styles.utilityHitArea} x="804" y="284" width="120" height="38" rx="6" />
-                        <path className={styles.utilityIcon} d="M824 286 v15 M818 296 l6 6 l6 -6 M815 308 v4 h18 v-4" />
-                        <UtilityLabel conceptId="downloads" x={844} y={306} />
+                        <rect className={styles.utilityHitArea} x="832" y="282" width="136" height="40" rx="6" />
+                        <UtilityGlyph kind="download" x={840} y={288} />
+                        <UtilityLabel conceptId="downloads" x={872} y={305} />
                     </g>
 
                     <g
@@ -509,13 +507,9 @@ export default function MainSitePlayground() {
                         onMouseEnter={() => setActive({ type: "concept", id: "cloudAccess" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <rect className={styles.utilityHitArea} x="940" y="284" width="178" height="38" rx="6" />
-                        <path
-                            className={styles.utilityIcon}
-                            d="M950 308 h30 a7 7 0 0 0 1 -14 a11 11 0 0 0 -21 -3 a8 8 0 0 0 -10 17 Z"
-                        />
-                        <path className={styles.utilityAccent} d="M960 297 l-4 4 l4 4 M970 297 l4 4 l-4 4" />
-                        <UtilityLabel conceptId="cloudAccess" x={990} y={306} />
+                        <rect className={styles.utilityHitArea} x="997" y="282" width="174" height="40" rx="6" />
+                        <UtilityGlyph kind="cloud" x={1005} y={288} />
+                        <UtilityLabel conceptId="cloudAccess" x={1037} y={305} />
                     </g>
                 </svg>
             </section>
@@ -538,5 +532,49 @@ function UtilityLabel({ conceptId, x, y }: { conceptId: ConceptId; x: number; y:
         <text className={styles.utilityLabel} x={x} y={y} textAnchor="start">
             {conceptById[conceptId].label}
         </text>
+    );
+}
+
+function UtilityGlyph({
+    kind,
+    x,
+    y,
+}: {
+    kind: "biosample" | "phenotype" | "evidence" | "download" | "cloud";
+    x: number;
+    y: number;
+}) {
+    const glyph = {
+        biosample: (
+            <>
+                <path d="M8 2 h8 M9 2 v12 a3 3 0 0 0 6 0 V2 M9 11 h6" />
+            </>
+        ),
+        phenotype: (
+            <>
+                <rect x="4" y="4" width="16" height="18" rx="2" />
+                <path d="M9 4 V2 h6 v2 M8 13 l3 3 l6 -7" />
+            </>
+        ),
+        evidence: (
+            <>
+                <path d="M5 2 h9 l5 5 v6 M14 2 v5 h5 M5 2 v20 h10" />
+                <circle cx="14" cy="15" r="4" />
+                <path d="m17 18 l4 4" />
+            </>
+        ),
+        download: <path d="M12 2 v13 M7 10 l5 5 l5 -5 M4 20 v2 h16 v-2" />,
+        cloud: (
+            <>
+                <path d="M6 19 h12 a4 4 0 0 0 0 -8 a6 6 0 0 0 -11.4 -1.8 A5 5 0 0 0 6 19 Z" />
+                <path d="m10 11 l-2 2 l2 2 M14 11 l2 2 l-2 2" />
+            </>
+        ),
+    }[kind];
+
+    return (
+        <g className={styles.utilityGlyph} transform={`translate(${x} ${y})`} aria-hidden="true">
+            {glyph}
+        </g>
     );
 }

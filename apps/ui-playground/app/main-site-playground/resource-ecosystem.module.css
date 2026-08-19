@@ -212,26 +212,16 @@
     stroke: transparent;
 }
 
-.utilityIcon,
-.biosampleTube {
-    fill: var(--surface);
-    stroke: var(--text-secondary);
-    stroke-width: 1.8;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-.utilityAccent {
+.utilityGlyph {
     fill: none;
-    stroke: var(--secondary-blue);
-    stroke-width: 2;
+    stroke: var(--primary-blue);
+    stroke-width: 1.7;
     stroke-linecap: round;
     stroke-linejoin: round;
-}
-
-.biosampleFill {
-    fill: color-mix(in srgb, var(--accent-teal), var(--white) 70%);
-    stroke: none;
+    pointer-events: none;
+    transition:
+        stroke 160ms ease,
+        stroke-width 160ms ease;
 }
 
 .utilityLabel {
@@ -255,6 +245,13 @@
 .conceptMark.active .utilityLabel {
     fill: var(--text-primary);
     font-weight: 760;
+}
+
+.conceptMark:focus-visible .utilityGlyph,
+.conceptMark:hover .utilityGlyph,
+.conceptMark.active .utilityGlyph {
+    stroke: var(--accent-teal);
+    stroke-width: 2;
 }
 
 .genomeRail {
