@@ -13,7 +13,7 @@ export type ConceptType =
     | "regulatory"
     | "biosamples"
     | "curatedEvidence"
-    | "harmonizedPhenotypes"
+    | "phenotypes"
     | "openAccess"
     | "restrictedAccess"
     | "downloads"
@@ -61,13 +61,13 @@ const CONCEPTS: Concept[] = [
     { id: "ld", label: "LD", x: 390, y: 210 },
     { id: "qtls", label: "Molecular QTLs", x: 890, y: 168 },
     { id: "regulatory", label: "Regulatory elements", x: 650, y: 150 },
-    { id: "biosamples", label: "Biosamples", x: 150, y: 300 },
-    { id: "curatedEvidence", label: "Curated evidence", x: 338, y: 300 },
-    { id: "harmonizedPhenotypes", label: "Harmonized phenotypes", x: 510, y: 300 },
+    { id: "biosamples", label: "Biosamples", x: 201, y: 300 },
+    { id: "curatedEvidence", label: "Curated evidence", x: 365, y: 300 },
+    { id: "phenotypes", label: "Phenotypes", x: 538, y: 300 },
     { id: "openAccess", label: "Open", x: 760, y: 300 },
-    { id: "restrictedAccess", label: "Restricted", x: 856, y: 300 },
-    { id: "downloads", label: "Downloads", x: 966, y: 300 },
-    { id: "cloudAccess", label: "API / Cloud", x: 1102, y: 300 },
+    { id: "restrictedAccess", label: "Restricted", x: 865, y: 300 },
+    { id: "downloads", label: "Downloads", x: 982, y: 300 },
+    { id: "cloudAccess", label: "API / Cloud", x: 1124, y: 300 },
 ];
 
 const LANDSCAPE_WIDTH = 1240;
@@ -540,24 +540,24 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                         onMouseEnter={() => setActive({ type: "concept", id: "curatedEvidence" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <rect className={styles.utilityHitArea} x="274" y="282" width="128" height="40" rx="6" />
-                        <UtilityGlyph kind="evidence" x={282} y={288} />
-                        <UtilityLabel conceptId="curatedEvidence" x={314} y={305} />
+                        <rect className={styles.utilityHitArea} x="290" y="282" width="150" height="40" rx="6" />
+                        <UtilityGlyph kind="evidence" x={298} y={288} />
+                        <UtilityLabel conceptId="curatedEvidence" x={330} y={305} />
                     </g>
 
                     <g
-                        className={classForConcept("harmonizedPhenotypes")}
+                        className={classForConcept("phenotypes")}
                         tabIndex={0}
                         role="button"
                         aria-label="Harmonized phenotypes"
                         onBlur={() => setActive(null)}
-                        onFocus={() => setActive({ type: "concept", id: "harmonizedPhenotypes" })}
-                        onMouseEnter={() => setActive({ type: "concept", id: "harmonizedPhenotypes" })}
+                        onFocus={() => setActive({ type: "concept", id: "phenotypes" })}
+                        onMouseEnter={() => setActive({ type: "concept", id: "phenotypes" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <rect className={styles.utilityHitArea} x="404" y="282" width="214" height="40" rx="6" />
-                        <UtilityGlyph kind="phenotype" x={412} y={288} />
-                        <UtilityLabel conceptId="harmonizedPhenotypes" x={444} y={305} />
+                        <rect className={styles.utilityHitArea} x="458" y="282" width="160" height="40" rx="6" />
+                        <UtilityGlyph kind="phenotype" x={466} y={288} />
+                        <UtilityLabel conceptId="phenotypes" x={498} y={305} />
                     </g>
 
                     <g
@@ -585,9 +585,9 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                         onMouseEnter={() => setActive({ type: "concept", id: "restrictedAccess" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <rect className={styles.utilityHitArea} x="802" y="282" width="110" height="40" rx="6" />
-                        <UtilityGlyph kind="closedLock" x={810} y={288} />
-                        <UtilityLabel conceptId="restrictedAccess" x={842} y={305} />
+                        <rect className={styles.utilityHitArea} x="810" y="282" width="110" height="40" rx="6" />
+                        <UtilityGlyph kind="closedLock" x={818} y={288} />
+                        <UtilityLabel conceptId="restrictedAccess" x={850} y={305} />
                     </g>
 
                     <g
@@ -600,9 +600,9 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                         onMouseEnter={() => setActive({ type: "concept", id: "downloads" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <rect className={styles.utilityHitArea} x="914" y="282" width="104" height="40" rx="6" />
-                        <UtilityGlyph kind="download" x={922} y={288} />
-                        <UtilityLabel conceptId="downloads" x={954} y={305} />
+                        <rect className={styles.utilityHitArea} x="930" y="282" width="104" height="40" rx="6" />
+                        <UtilityGlyph kind="download" x={938} y={288} />
+                        <UtilityLabel conceptId="downloads" x={970} y={305} />
                     </g>
 
                     <g
@@ -615,9 +615,9 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                         onMouseEnter={() => setActive({ type: "concept", id: "cloudAccess" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <rect className={styles.utilityHitArea} x="1020" y="282" width="185" height="40" rx="6" />
-                        <UtilityGlyph kind="cloud" x={1028} y={288} />
-                        <UtilityLabel conceptId="cloudAccess" x={1060} y={305} />
+                        <rect className={styles.utilityHitArea} x="1044" y="282" width="161" height="40" rx="6" />
+                        <UtilityGlyph kind="cloud" x={1052} y={288} />
+                        <UtilityLabel conceptId="cloudAccess" x={1084} y={305} />
                     </g>
                 </svg>
             </section>

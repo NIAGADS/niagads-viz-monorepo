@@ -11,7 +11,7 @@ export const RESOURCES = [
         name: "GenomicsDB",
         url: "https://www.niagads.org/genomics",
         groupId: "knowledgebase",
-        concepts: ["genes", "variants", "gwas", "ld", "cloudAccess", "curatedEvidence", "openAccess"],
+        concepts: ["genes", "variants", "gwas", "ld", "cloudAccess", "curatedEvidence", "openAccess", "phenotypes"],
     },
     {
         id: "xqtl",
@@ -50,13 +50,13 @@ export const RESOURCES = [
         name: "ADVP",
         url: "https://advp.niagads.org",
         groupId: "partner",
-        concepts: ["gwas", "genes", "variants", "curatedEvidence", "openAccess"],
+        concepts: ["gwas", "genes", "variants", "curatedEvidence", "openAccess", "phenotypes"],
     },
     {
         id: "phc",
         badge: "PHC",
         name: "PHC",
         groupId: "partner",
-        concepts: ["harmonizedPhenotypes", "restrictedAccess"],
+        concepts: ["phenotypes", "restrictedAccess"],
     },
 ];
