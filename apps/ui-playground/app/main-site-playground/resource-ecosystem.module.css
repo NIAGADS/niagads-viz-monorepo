@@ -322,9 +322,11 @@
 
 .qtlBridge {
     fill: none;
-    stroke: var(--secondary-blue);
-    stroke-width: 2.3;
+    stroke: var(--gray-500);
+    stroke-width: 1.6;
+    stroke-dasharray: 4 4;
     stroke-linecap: round;
+    opacity: 0.85;
 }
 
 .variant {
@@ -352,14 +354,9 @@
     stroke-linejoin: round;
 }
 
-.qtlNode {
-    fill: var(--surface);
-    stroke: var(--primary-blue);
-    stroke-width: 2;
-}
-
-.qtlBridge {
-    stroke: var(--secondary-blue);
+.qtlHitArea {
+    fill: transparent;
+    stroke: transparent;
 }
 
 .regulatoryHitArea {

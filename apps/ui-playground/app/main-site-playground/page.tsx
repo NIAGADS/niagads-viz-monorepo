@@ -24,7 +24,7 @@ const CONCEPTS: Array<{ id: ConceptId; label: string; x: number; y: number }> = 
     { id: "variants", label: "Variants", x: 390, y: 150 },
     { id: "gwas", label: "Genetic associations", x: 390, y: 90 },
     { id: "ld", label: "LD", x: 390, y: 210 },
-    { id: "qtls", label: "Molecular QTLs", x: 920, y: 210 },
+    { id: "qtls", label: "Molecular QTLs", x: 890, y: 168 },
     { id: "regulatory", label: "Regulatory elements", x: 650, y: 150 },
     { id: "biosamples", label: "Biosamples", x: 154, y: 298 },
     { id: "harmonizedPhenotypes", label: "Harmonized phenotypes", x: 336, y: 298 },
@@ -379,16 +379,21 @@ export default function MainSitePlayground() {
                         className={classForConcept("qtls")}
                         tabIndex={0}
                         role="button"
-                        aria-label="Molecular QTLs"
+                        aria-label="Molecular QTLs, shown as multiple relationships from a variant to genomic targets"
                         onBlur={() => setActive(null)}
                         onFocus={() => setActive({ type: "concept", id: "qtls" })}
                         onMouseEnter={() => setActive({ type: "concept", id: "qtls" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <path className={styles.qtlBridge} d="M820 204 C856 178 894 246 936 214 S986 184 1020 212" />
-                        <circle className={styles.qtlNode} cx="850" cy="199" r="7" />
-                        <circle className={styles.qtlNode} cx="946" cy="210" r="7" />
-                        <ConceptLabel conceptId="qtls" />
+                        <rect className={styles.qtlHitArea} x="764" y="108" width="310" height="146" rx="6" />
+                        <path className={styles.qtlBridge} d="M890 150 C878 122 852 122 840 150" />
+                        <path className={styles.qtlBridge} d="M890 150 C865 205 812 205 780 158" />
+                        <path className={styles.qtlBridge} d="M890 150 C915 196 970 196 995 158" />
+                        <path className={styles.qtlBridge} d="M890 150 C930 222 1020 222 1060 150" />
+                        <path className={styles.variant} d="M890 144 l6 6 l-6 6 l-6 -6 Z" />
+                        <text className={styles.conceptLabel} x="920" y="246" textAnchor="middle">
+                            Molecular QTLs
+                        </text>
                     </g>
 
                     <g
