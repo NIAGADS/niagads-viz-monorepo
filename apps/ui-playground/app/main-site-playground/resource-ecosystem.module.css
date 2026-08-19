@@ -315,8 +315,7 @@
 }
 
 .qtlBridge,
-.regulatoryArc,
-.effectRibbon {
+.regulatoryArc {
     fill: none;
     stroke: #236e76;
     stroke-width: 2.3;
@@ -326,7 +325,12 @@
 .variant {
     fill: #e1ece7;
     stroke: #236e76;
-    stroke-width: 1.7;
+    stroke-width: 1.5;
+}
+
+.variantHitArea {
+    fill: transparent;
+    stroke: transparent;
 }
 
 .regionBrace {
@@ -351,7 +355,6 @@
     stroke-linejoin: round;
 }
 
-.effectDot,
 .qtlNode {
     fill: #f7fbf9;
     stroke: #236e76;

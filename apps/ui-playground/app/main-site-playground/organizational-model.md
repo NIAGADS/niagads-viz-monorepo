@@ -13,7 +13,6 @@ These concepts belong in the central biological/genomic landscape:
 - Genomic regions
 - Genetic associations
 - Linkage disequilibrium
-- Variant effects
 - Molecular QTLs
 - Regulatory elements
 

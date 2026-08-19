@@ -9,7 +9,6 @@ type ConceptId =
     | "loci"
     | "gwas"
     | "ld"
-    | "effects"
     | "qtls"
     | "regulatory"
     | "biosamples"
@@ -23,11 +22,10 @@ type ActiveTarget = { type: "resource"; id: ResourceId } | { type: "concept"; id
 
 const CONCEPTS: Array<{ id: ConceptId; label: string; x: number; y: number }> = [
     { id: "genes", label: "Genes", x: 220, y: 150 },
-    { id: "variants", label: "Variants", x: 390, y: 148 },
-    { id: "loci", label: "Genomic regions", x: 540, y: 146 },
+    { id: "variants", label: "Variants", x: 390, y: 150 },
+    { id: "loci", label: "Genomic regions", x: 1110, y: 146 },
     { id: "gwas", label: "Genetic associations", x: 710, y: 104 },
     { id: "ld", label: "LD", x: 880, y: 180 },
-    { id: "effects", label: "Variant effects", x: 1050, y: 188 },
     { id: "qtls", label: "Molecular QTLs", x: 470, y: 210 },
     { id: "regulatory", label: "Regulatory elements", x: 700, y: 210 },
     { id: "biosamples", label: "Biosamples", x: 154, y: 298 },
@@ -50,7 +48,7 @@ const RESOURCES: Array<{
         badge: "GDB",
         name: "GenomicsDB",
         type: "niagads",
-        concepts: ["genes", "variants", "loci", "gwas", "ld", "effects", "downloads"],
+        concepts: ["genes", "variants", "loci", "gwas", "ld", "downloads"],
     },
     {
         id: "xqtl",
@@ -306,14 +304,13 @@ export default function MainSitePlayground() {
                         onMouseEnter={() => setActive({ type: "concept", id: "variants" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        {[340, 372, 406, 438].map((x, index) => (
-                            <path
-                                className={styles.variant}
-                                d={`M ${x} ${[134, 164, 140, 158][index]} l 9 9 l -9 9 l -9 -9 Z`}
-                                key={x}
-                            />
+                        <rect className={styles.variantHitArea} x="332" y="134" width="116" height="48" rx="5" />
+                        {[348, 376, 404, 432].map((x) => (
+                            <path className={styles.variant} d={`M ${x} 145 l 5 5 l -5 5 l -5 -5 Z`} key={x} />
                         ))}
-                        <ConceptLabel conceptId="variants" />
+                        <text className={styles.conceptLabel} x="390" y="176" textAnchor="middle">
+                            Variants
+                        </text>
                     </g>
 
                     <g
@@ -326,8 +323,10 @@ export default function MainSitePlayground() {
                         onMouseEnter={() => setActive({ type: "concept", id: "loci" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <path className={styles.regionBrace} d="M466 132 v-18 h150 v18 M466 168 v18 h150 v-18" />
-                        <ConceptLabel conceptId="loci" />
+                        <path className={styles.regionBrace} d="M1040 132 v-18 h140 v18 M1040 168 v18 h140 v-18" />
+                        <text className={styles.conceptLabel} x="1110" y="106" textAnchor="middle">
+                            Genomic regions
+                        </text>
                     </g>
 
                     <g
@@ -366,22 +365,6 @@ export default function MainSitePlayground() {
                         <text className={styles.conceptLabel} x="880" y="238" textAnchor="middle">
                             LD
                         </text>
-                    </g>
-
-                    <g
-                        className={classForConcept("effects")}
-                        tabIndex={0}
-                        role="button"
-                        aria-label="Variant effects"
-                        onBlur={() => setActive(null)}
-                        onFocus={() => setActive({ type: "concept", id: "effects" })}
-                        onMouseEnter={() => setActive({ type: "concept", id: "effects" })}
-                        onMouseLeave={() => setActive(null)}
-                    >
-                        <path className={styles.effectRibbon} d="M962 184 C996 164 1028 164 1062 186 S1124 214 1152 182" />
-                        <circle className={styles.effectDot} cx="1018" cy="186" r="8" />
-                        <circle className={styles.effectDot} cx="1100" cy="202" r="6" />
-                        <ConceptLabel conceptId="effects" />
                     </g>
 
                     <g
