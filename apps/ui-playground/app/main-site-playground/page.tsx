@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
 import styles from "./resource-ecosystem.module.css";
 import { RESOURCE_GROUPS as RESOURCE_GROUP_VALUES, RESOURCES as RESOURCE_VALUES } from "./resources";
@@ -19,8 +19,15 @@ type ConceptId =
     | "cloudAccess";
 
 type ResourceId = string;
-type ResourceGroup = { id: string; label: string };
-type Resource = { id: ResourceId; badge: string; name: string; url?: string; groupId: string };
+type ResourceGroup = { id: string; label: string; color: string };
+type Resource = {
+    id: ResourceId;
+    badge: string;
+    name: string;
+    url?: string;
+    groupId: string;
+    concepts: ConceptId[];
+};
 type ActiveTarget = { type: "resource"; id: ResourceId } | { type: "concept"; id: ConceptId } | null;
 
 const CONCEPTS: Array<{ id: ConceptId; label: string; x: number; y: number }> = [
@@ -37,26 +44,13 @@ const CONCEPTS: Array<{ id: ConceptId; label: string; x: number; y: number }> = 
     { id: "cloudAccess", label: "API / cloud access", x: 1017, y: 300 },
 ];
 
-const RESOURCES: Resource[] = RESOURCE_VALUES;
+const RESOURCES = RESOURCE_VALUES as Resource[];
 const RESOURCE_GROUPS: ResourceGroup[] = RESOURCE_GROUP_VALUES as ResourceGroup[];
 
-const RESOURCE_CONCEPTS: Record<ResourceId, ConceptId[]> = {
-    genomicsdb: ["genes", "variants", "gwas", "ld", "cloudAccess", "curatedEvidence"],
-    xqtl: ["qtls", "variants", "genes", "biosamples"],
-    filer: ["regulatory", "biosamples", "downloads", "cloudAccess"],
-    dss: ["downloads"],
-    api: ["cloudAccess"],
-    advp: ["gwas", "genes", "variants", "curatedEvidence"],
-    phc: ["harmonizedPhenotypes"],
-};
-
 const LANDSCAPE_WIDTH = 1240;
-const RESOURCE_COLUMN_GAP = 10;
 
-function getResourceCenterX(index: number, resourceCount: number) {
-    const columnWidth = (LANDSCAPE_WIDTH - RESOURCE_COLUMN_GAP * (resourceCount - 1)) / resourceCount;
-
-    return columnWidth / 2 + index * (columnWidth + RESOURCE_COLUMN_GAP);
+function getFallbackResourceCenterX(index: number, resourceCount: number) {
+    return ((index + 0.5) / resourceCount) * LANDSCAPE_WIDTH;
 }
 
 const GENE_EXONS: Array<[number, number]> = [
@@ -118,15 +112,55 @@ const resourceGroupLabels = RESOURCES.reduce<Array<{ label: string; start: numbe
 
 export default function MainSitePlayground() {
     const [active, setActive] = useState<ActiveTarget>(null);
+    const [resourceCenterX, setResourceCenterX] = useState<Record<ResourceId, number>>({});
+    const resourceRowRef = useRef<HTMLDivElement>(null);
     const resourceGridStyle = { "--resource-count": RESOURCES.length } as CSSProperties;
+
+    useEffect(() => {
+        const resourceRow = resourceRowRef.current;
+
+        if (!resourceRow) {
+            return;
+        }
+
+        const measureResourceCenters = () => {
+            const rowBounds = resourceRow.getBoundingClientRect();
+
+            if (rowBounds.width === 0) {
+                return;
+            }
+
+            const centers: Record<ResourceId, number> = {};
+
+            resourceRow.querySelectorAll<HTMLElement>("[data-resource-id]").forEach((resourceElement) => {
+                const resourceId = resourceElement.dataset.resourceId;
+
+                if (resourceId) {
+                    const resourceBounds = resourceElement.getBoundingClientRect();
+                    const centerInRow = resourceBounds.left + resourceBounds.width / 2 - rowBounds.left;
+                    centers[resourceId] = (centerInRow / rowBounds.width) * LANDSCAPE_WIDTH;
+                }
+            });
+
+            setResourceCenterX(centers);
+        };
+
+        measureResourceCenters();
+
+        const resizeObserver = new ResizeObserver(measureResourceCenters);
+        resizeObserver.observe(resourceRow);
+        resourceRow.querySelectorAll<HTMLElement>("[data-resource-id]").forEach((resourceElement) => {
+            resizeObserver.observe(resourceElement);
+        });
+
+        return () => resizeObserver.disconnect();
+    }, []);
 
     const conceptToResources = useMemo(() => {
         return Object.fromEntries(
             CONCEPTS.map((concept) => [
                 concept.id,
-                RESOURCES.filter((resource) => RESOURCE_CONCEPTS[resource.id]?.includes(concept.id)).map(
-                    (resource) => resource.id
-                ),
+                RESOURCES.filter((resource) => resource.concepts.includes(concept.id)).map((resource) => resource.id),
             ])
         ) as Record<ConceptId, ResourceId[]>;
     }, []);
@@ -137,7 +171,7 @@ export default function MainSitePlayground() {
         }
 
         if (active.type === "resource") {
-            return new Set(RESOURCE_CONCEPTS[active.id] ?? []);
+            return new Set(resourceById[active.id].concepts);
         }
 
         return new Set<ConceptId>([active.id]);
@@ -170,7 +204,6 @@ export default function MainSitePlayground() {
 
         return [
             styles.resource,
-            styles[resource.groupId],
             startsGroup ? styles.groupStart : "",
             active && !activeResources.has(id) ? styles.recede : "",
             activeResources.has(id) ? styles.active : "",
@@ -179,18 +212,14 @@ export default function MainSitePlayground() {
             .join(" ");
     };
 
-    const pathClass = (resourceId: ResourceId, conceptId: ConceptId) => {
-        const groupId = resourceById[resourceId].groupId;
-
-        return [
+    const pathClass = (resourceId: ResourceId, conceptId: ConceptId) =>
+        [
             styles.link,
-            styles[`${groupId}Link`],
             active && !(activeResources.has(resourceId) && activeConcepts.has(conceptId)) ? styles.recede : "",
             activeResources.has(resourceId) && activeConcepts.has(conceptId) ? styles.active : "",
         ]
             .filter(Boolean)
             .join(" ");
-    };
 
     return (
         <main className={styles.shell}>
@@ -206,13 +235,24 @@ export default function MainSitePlayground() {
                         </span>
                     ))}
                 </div>
-                <div className={styles.resourceRow} aria-label="Resources" style={resourceGridStyle}>
+                <div
+                    className={styles.resourceRow}
+                    aria-label="Resources"
+                    ref={resourceRowRef}
+                    style={resourceGridStyle}
+                >
                     {RESOURCES.map((resource, resourceIndex) => (
                         <a
                             className={classForResource(resource.id, resourceIndex)}
+                            data-resource-id={resource.id}
                             href={resource.url ?? `#${resource.id}`}
                             key={resource.id}
                             rel={resource.url ? "noopener noreferrer" : undefined}
+                            style={
+                                {
+                                    "--resource-color": resourceGroupById[resource.groupId].color,
+                                } as CSSProperties
+                            }
                             target={resource.url ? "_blank" : undefined}
                             onBlur={() => setActive(null)}
                             onFocus={() => setActive({ type: "resource", id: resource.id })}
@@ -278,15 +318,18 @@ export default function MainSitePlayground() {
 
                     <g className={styles.linkLayer} aria-hidden="true">
                         {RESOURCES.flatMap((resource, resourceIndex) =>
-                            (RESOURCE_CONCEPTS[resource.id] ?? []).map((conceptId) => {
+                            resource.concepts.map((conceptId) => {
                                 const concept = conceptById[conceptId];
-                                const start = getResourceCenterX(resourceIndex, RESOURCES.length);
+                                const start =
+                                    resourceCenterX[resource.id] ??
+                                    getFallbackResourceCenterX(resourceIndex, RESOURCES.length);
                                 const bend = Math.max(62, concept.y - 58);
                                 return (
                                     <path
                                         className={pathClass(resource.id, conceptId)}
                                         d={`M ${start} 42 C ${start} ${bend}, ${concept.x} ${bend}, ${concept.x} ${concept.y - 18}`}
                                         key={`${resource.id}-${conceptId}`}
+                                        style={{ stroke: resourceGroupById[resource.groupId].color }}
                                     />
                                 );
                             })
