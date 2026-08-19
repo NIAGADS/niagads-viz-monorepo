@@ -210,26 +210,25 @@
 }
 
 .genomeRail {
-    stroke: url("#railGradient");
-    stroke-width: 13;
+    stroke: #315e73;
+    stroke-width: 1.6;
+}
+
+.geneTrackHit {
+    stroke: transparent;
+    stroke-width: 24;
+}
+
+.geneExon {
+    fill: #315e73;
+}
+
+.geneDirection {
+    fill: none;
+    stroke: #315e73;
+    stroke-width: 1.6;
     stroke-linecap: round;
-    opacity: 0.9;
-}
-
-.geneBlock {
-    fill: rgba(255, 255, 255, 0.88);
-    stroke: rgba(32, 87, 91, 0.42);
-    stroke-width: 1;
-}
-
-.microLabel {
-    fill: #3f6165;
-    font:
-        700 9px/1 ui-sans-serif,
-        system-ui,
-        sans-serif;
-    letter-spacing: 0;
-    pointer-events: none;
+    stroke-linejoin: round;
 }
 
 .link {
@@ -315,23 +314,12 @@
     stroke-width: 1.5;
 }
 
-.dnaHelix,
 .qtlBridge,
 .regulatoryArc,
 .effectRibbon {
     fill: none;
     stroke: #236e76;
     stroke-width: 2.3;
-    stroke-linecap: round;
-}
-
-.dnaHelix {
-    stroke: #315e73;
-}
-
-.rung {
-    stroke: #88a6a8;
-    stroke-width: 1.4;
     stroke-linecap: round;
 }
 

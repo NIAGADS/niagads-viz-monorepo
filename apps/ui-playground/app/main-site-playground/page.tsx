@@ -87,13 +87,13 @@ const RESOURCE_X: Record<ResourceId, number> = {
     phc: 1134,
 };
 
-const GENE_BLOCKS: Array<[number, number, number, string]> = [
-    [118, 150, 42, "APP"],
-    [200, 150, 56, "APOE"],
-    [308, 150, 48, "BIN1"],
-    [478, 150, 116, "region"],
-    [638, 150, 58, "CLU"],
-    [1072, 150, 56, "TREM2"],
+const GENE_EXONS: Array<[number, number]> = [
+    [118, 46],
+    [218, 58],
+    [628, 34],
+    [748, 48],
+    [982, 26],
+    [1080, 52],
 ];
 
 // Schematic values provide the familiar LD heatmap structure without implying measured data.
@@ -216,21 +216,6 @@ export default function MainSitePlayground() {
                         connections.
                     </desc>
 
-                    <defs>
-                        <linearGradient
-                            id="railGradient"
-                            x1="88"
-                            x2="1128"
-                            y1="0"
-                            y2="0"
-                            gradientUnits="userSpaceOnUse"
-                        >
-                            <stop stopColor="#496B83" />
-                            <stop offset="0.45" stopColor="#28756C" />
-                            <stop offset="1" stopColor="#675D8D" />
-                        </linearGradient>
-                    </defs>
-
                     <g className={styles.peripheralFrame} aria-hidden="true">
                         <path className={styles.utilityRule} d="M76 278 H1164" />
                         <text className={styles.zoneLabel} x="76" y="306">
@@ -252,15 +237,6 @@ export default function MainSitePlayground() {
                             d="M118 265 C274 216 410 254 556 242 S785 204 910 249 1082 286 1176 244"
                         />
                         <line className={styles.resourceRail} x1="76" x2="1164" y1="32" y2="32" />
-                        <line className={styles.genomeRail} x1="92" x2="1160" y1="150" y2="150" />
-                        {GENE_BLOCKS.map(([x, y, width, label]) => (
-                            <g key={`${x}-${label}`}>
-                                <rect className={styles.geneBlock} x={x} y={y - 12} width={width} height="24" rx="4" />
-                                <text className={styles.microLabel} x={x + width / 2} y={y + 4} textAnchor="middle">
-                                    {label}
-                                </text>
-                            </g>
-                        ))}
                     </g>
 
                     <g className={styles.linkLayer} aria-hidden="true">
@@ -311,11 +287,12 @@ export default function MainSitePlayground() {
                         onMouseEnter={() => setActive({ type: "concept", id: "genes" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <path className={styles.dnaHelix} d="M112 126 C154 104 194 196 236 174 S320 104 364 126" />
-                        <path className={styles.dnaHelix} d="M112 174 C154 196 194 104 236 126 S320 196 364 174" />
-                        {[132, 172, 212, 252, 292, 332].map((x) => (
-                            <line className={styles.rung} x1={x} x2={x + 22} y1="135" y2="165" key={x} />
+                        <line className={styles.geneTrackHit} x1="92" x2="1160" y1="150" y2="150" />
+                        <line className={styles.genomeRail} x1="92" x2="1160" y1="150" y2="150" />
+                        {GENE_EXONS.map(([x, width]) => (
+                            <rect className={styles.geneExon} x={x} y="142" width={width} height="16" key={x} />
                         ))}
+                        <path className={styles.geneDirection} d="M126 142 V132 H146 M141 128 L146 132 L141 136" />
                         <ConceptLabel conceptId="genes" />
                     </g>
 
