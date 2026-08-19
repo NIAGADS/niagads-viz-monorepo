@@ -1,7 +1,7 @@
 export const RESOURCE_GROUPS = [
-    { id: "knowledgebase", label: "NIAGADS Open Access", color: "var(--primary-blue)" },
-    { id: "access", label: "NIAGADS Open Access", color: "var(--accent-teal)" },
-    { id: "partner", label: "Partners", color: "var(--warning-amber)" },
+    { id: "knowledgebase", label: "NIAGADS Resources", color: "var(--primary-blue)" },
+    { id: "access", label: "NIAGADS Resources", color: "var(--accent-teal)" },
+    { id: "partner", label: "Partner Resources", color: "var(--warning-amber)" },
 ];
 
 export const RESOURCES = [
@@ -11,7 +11,7 @@ export const RESOURCES = [
         name: "GenomicsDB",
         url: "https://www.niagads.org/genomics",
         groupId: "knowledgebase",
-        concepts: ["genes", "variants", "gwas", "ld", "cloudAccess", "curatedEvidence"],
+        concepts: ["genes", "variants", "gwas", "ld", "cloudAccess", "curatedEvidence", "openAccess"],
     },
     {
         id: "xqtl",
@@ -19,22 +19,22 @@ export const RESOURCES = [
         name: "xQTL Browser",
         url: "https://xqtl.niagads.org",
         groupId: "knowledgebase",
-        concepts: ["qtls", "variants", "genes", "biosamples"],
+        concepts: ["qtls", "variants", "genes", "biosamples", "openAccess"],
     },
     {
         id: "filer",
         badge: "FLR",
         name: "FILER",
         groupId: "knowledgebase",
-        concepts: ["regulatory", "biosamples", "downloads", "cloudAccess"],
+        concepts: ["regulatory", "biosamples", "downloads", "cloudAccess", "openAccess"],
     },
     {
         id: "dss",
         badge: "DSS",
-        name: "DSS Portal",
+        name: "DSS",
         url: "https://dss.niagads.org/datasets/",
         groupId: "access",
-        concepts: ["downloads"],
+        concepts: ["downloads", "openAccess", "restrictedAccess"],
     },
     {
         id: "api",
@@ -42,7 +42,7 @@ export const RESOURCES = [
         name: "Open Access API",
         url: "https://api.niagads.org",
         groupId: "access",
-        concepts: ["cloudAccess"],
+        concepts: ["cloudAccess", "openAccess"],
     },
     {
         id: "advp",
@@ -50,13 +50,13 @@ export const RESOURCES = [
         name: "ADVP",
         url: "https://advp.niagads.org",
         groupId: "partner",
-        concepts: ["gwas", "genes", "variants", "curatedEvidence"],
+        concepts: ["gwas", "genes", "variants", "curatedEvidence", "openAccess"],
     },
     {
         id: "phc",
         badge: "PHC",
         name: "PHC",
         groupId: "partner",
-        concepts: ["harmonizedPhenotypes"],
+        concepts: ["harmonizedPhenotypes", "restrictedAccess"],
     },
 ];

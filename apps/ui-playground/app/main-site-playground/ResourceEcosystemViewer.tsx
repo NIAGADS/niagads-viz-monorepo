@@ -14,6 +14,8 @@ export type ConceptType =
     | "biosamples"
     | "curatedEvidence"
     | "harmonizedPhenotypes"
+    | "openAccess"
+    | "restrictedAccess"
     | "downloads"
     | "cloudAccess";
 
@@ -60,10 +62,12 @@ const CONCEPTS: Concept[] = [
     { id: "qtls", label: "Molecular QTLs", x: 890, y: 168 },
     { id: "regulatory", label: "Regulatory elements", x: 650, y: 150 },
     { id: "biosamples", label: "Biosamples", x: 150, y: 300 },
-    { id: "harmonizedPhenotypes", label: "Harmonized phenotypes", x: 307, y: 300 },
-    { id: "curatedEvidence", label: "Curated evidence", x: 662, y: 300 },
-    { id: "downloads", label: "Downloads", x: 852, y: 300 },
-    { id: "cloudAccess", label: "API / cloud access", x: 1017, y: 300 },
+    { id: "curatedEvidence", label: "Curated evidence", x: 338, y: 300 },
+    { id: "harmonizedPhenotypes", label: "Harmonized phenotypes", x: 510, y: 300 },
+    { id: "openAccess", label: "Open", x: 760, y: 300 },
+    { id: "restrictedAccess", label: "Restricted", x: 856, y: 300 },
+    { id: "downloads", label: "Downloads", x: 966, y: 300 },
+    { id: "cloudAccess", label: "API / Cloud", x: 1102, y: 300 },
 ];
 
 const LANDSCAPE_WIDTH = 1240;
@@ -114,8 +118,7 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
         [resources]
     );
     const resourceGroupById = useMemo(
-        () =>
-            Object.fromEntries(resourceGroups.map((group) => [group.id, group])) as Record<string, ResourceGroup>,
+        () => Object.fromEntries(resourceGroups.map((group) => [group.id, group])) as Record<string, ResourceGroup>,
         [resourceGroups]
     );
     const resourceGroupLabels = useMemo(
@@ -318,9 +321,9 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                         <text className={styles.zoneLabel} x="76" y="305">
                             Context
                         </text>
-                        <path className={styles.utilityDivider} d="M506 286 V316" />
-                        <text className={styles.zoneLabel} x="526" y="305">
-                            Evidence &amp; Access
+                        <path className={styles.utilityDivider} d="M630 286 V316" />
+                        <text className={styles.zoneLabel} x="650" y="305">
+                            Access
                         </text>
                     </g>
 
@@ -537,9 +540,9 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                         onMouseEnter={() => setActive({ type: "concept", id: "curatedEvidence" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <rect className={styles.utilityHitArea} x="642" y="282" width="166" height="40" rx="6" />
-                        <UtilityGlyph kind="evidence" x={650} y={288} />
-                        <UtilityLabel conceptId="curatedEvidence" x={682} y={305} />
+                        <rect className={styles.utilityHitArea} x="274" y="282" width="128" height="40" rx="6" />
+                        <UtilityGlyph kind="evidence" x={282} y={288} />
+                        <UtilityLabel conceptId="curatedEvidence" x={314} y={305} />
                     </g>
 
                     <g
@@ -552,9 +555,39 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                         onMouseEnter={() => setActive({ type: "concept", id: "harmonizedPhenotypes" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <rect className={styles.utilityHitArea} x="287" y="282" width="208" height="40" rx="6" />
-                        <UtilityGlyph kind="phenotype" x={295} y={288} />
-                        <UtilityLabel conceptId="harmonizedPhenotypes" x={327} y={305} />
+                        <rect className={styles.utilityHitArea} x="404" y="282" width="214" height="40" rx="6" />
+                        <UtilityGlyph kind="phenotype" x={412} y={288} />
+                        <UtilityLabel conceptId="harmonizedPhenotypes" x={444} y={305} />
+                    </g>
+
+                    <g
+                        className={classForConcept("openAccess")}
+                        tabIndex={0}
+                        role="button"
+                        aria-label="Open access"
+                        onBlur={() => setActive(null)}
+                        onFocus={() => setActive({ type: "concept", id: "openAccess" })}
+                        onMouseEnter={() => setActive({ type: "concept", id: "openAccess" })}
+                        onMouseLeave={() => setActive(null)}
+                    >
+                        <rect className={styles.utilityHitArea} x="720" y="282" width="80" height="40" rx="6" />
+                        <UtilityGlyph kind="openLock" x={728} y={288} />
+                        <UtilityLabel conceptId="openAccess" x={760} y={305} />
+                    </g>
+
+                    <g
+                        className={classForConcept("restrictedAccess")}
+                        tabIndex={0}
+                        role="button"
+                        aria-label="Restricted access"
+                        onBlur={() => setActive(null)}
+                        onFocus={() => setActive({ type: "concept", id: "restrictedAccess" })}
+                        onMouseEnter={() => setActive({ type: "concept", id: "restrictedAccess" })}
+                        onMouseLeave={() => setActive(null)}
+                    >
+                        <rect className={styles.utilityHitArea} x="802" y="282" width="110" height="40" rx="6" />
+                        <UtilityGlyph kind="closedLock" x={810} y={288} />
+                        <UtilityLabel conceptId="restrictedAccess" x={842} y={305} />
                     </g>
 
                     <g
@@ -567,9 +600,9 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                         onMouseEnter={() => setActive({ type: "concept", id: "downloads" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <rect className={styles.utilityHitArea} x="832" y="282" width="136" height="40" rx="6" />
-                        <UtilityGlyph kind="download" x={840} y={288} />
-                        <UtilityLabel conceptId="downloads" x={872} y={305} />
+                        <rect className={styles.utilityHitArea} x="914" y="282" width="104" height="40" rx="6" />
+                        <UtilityGlyph kind="download" x={922} y={288} />
+                        <UtilityLabel conceptId="downloads" x={954} y={305} />
                     </g>
 
                     <g
@@ -582,9 +615,9 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                         onMouseEnter={() => setActive({ type: "concept", id: "cloudAccess" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <rect className={styles.utilityHitArea} x="997" y="282" width="174" height="40" rx="6" />
-                        <UtilityGlyph kind="cloud" x={1005} y={288} />
-                        <UtilityLabel conceptId="cloudAccess" x={1037} y={305} />
+                        <rect className={styles.utilityHitArea} x="1020" y="282" width="185" height="40" rx="6" />
+                        <UtilityGlyph kind="cloud" x={1028} y={288} />
+                        <UtilityLabel conceptId="cloudAccess" x={1060} y={305} />
                     </g>
                 </svg>
             </section>
@@ -615,7 +648,7 @@ function UtilityGlyph({
     x,
     y,
 }: {
-    kind: "biosample" | "phenotype" | "evidence" | "download" | "cloud";
+    kind: "biosample" | "phenotype" | "evidence" | "download" | "cloud" | "openLock" | "closedLock";
     x: number;
     y: number;
 }) {
@@ -643,6 +676,22 @@ function UtilityGlyph({
             <>
                 <path d="M6 19 h12 a4 4 0 0 0 0 -8 a6 6 0 0 0 -11.4 -1.8 A5 5 0 0 0 6 19 Z" />
                 <path d="m10 11 l-2 2 l2 2 M14 11 l2 2 l-2 2" />
+            </>
+        ),
+        openLock: (
+            <>
+                <rect x="5" y="10" width="14" height="12" rx="2" />
+                <path d="M9 10 V7 a4 4 0 0 1 7.5 -2" />
+                <circle cx="12" cy="15" r="1" />
+                <path d="M12 16 v2" />
+            </>
+        ),
+        closedLock: (
+            <>
+                <rect x="5" y="10" width="14" height="12" rx="2" />
+                <path d="M8 10 V7 a4 4 0 0 1 8 0 v3" />
+                <circle cx="12" cy="15" r="1" />
+                <path d="M12 16 v2" />
             </>
         ),
     }[kind];
