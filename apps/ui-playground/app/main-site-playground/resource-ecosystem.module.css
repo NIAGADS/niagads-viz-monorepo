@@ -4,11 +4,8 @@
     display: grid;
     place-items: start center;
     padding: clamp(12px, 2vw, 24px);
-    background:
-        linear-gradient(180deg, rgba(247, 250, 248, 0.98), rgba(238, 244, 242, 0.96)),
-        radial-gradient(circle at 18% 8%, rgba(148, 171, 184, 0.16), transparent 28%),
-        radial-gradient(circle at 86% 24%, rgba(130, 153, 124, 0.14), transparent 24%);
-    color: #152a2f;
+    background: var(--gray-50);
+    color: var(--text-primary);
 }
 
 .ecosystem {
@@ -26,18 +23,18 @@
 }
 
 .resource {
-    --resource-color: #236e76;
+    --resource-color: var(--primary-blue);
     min-height: 48px;
     display: flex;
     align-items: center;
     gap: 9px;
     padding: 7px 9px;
-    border: 1px solid rgba(29, 80, 88, 0.28);
-    border-radius: 8px;
-    color: #15373e;
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    color: var(--text-primary);
     text-decoration: none;
-    background: rgba(255, 255, 255, 0.72);
-    box-shadow: 0 8px 24px rgba(32, 56, 62, 0.07);
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
     transition:
         border-color 160ms ease,
         box-shadow 160ms ease,
@@ -48,16 +45,16 @@
 .resource:hover,
 .resource:focus-visible,
 .resource.active {
-    border-color: color-mix(in srgb, var(--resource-color), #ffffff 18%);
-    box-shadow: 0 12px 30px rgba(35, 110, 118, 0.16);
+    border-color: var(--resource-color);
+    box-shadow: var(--shadow-md);
     outline: none;
     transform: translateY(-1px);
 }
 
 .resource.partner {
-    --resource-color: #7a5c7f;
+    --resource-color: var(--accent-teal);
     border-style: dashed;
-    background: rgba(255, 255, 255, 0.55);
+    background: var(--surface);
 }
 
 .resource.recede {
@@ -71,8 +68,8 @@
     display: grid;
     place-items: center;
     border-radius: 6px;
-    background: color-mix(in srgb, var(--resource-color), #ffffff 82%);
-    border: 1px solid color-mix(in srgb, var(--resource-color), #ffffff 52%);
+    background: color-mix(in srgb, var(--resource-color), var(--white) 88%);
+    border: 1px solid color-mix(in srgb, var(--resource-color), var(--white) 60%);
     color: var(--resource-color);
     font:
         700 11px/1.1 ui-sans-serif,
@@ -111,14 +108,14 @@
 
 .softContour {
     fill: none;
-    stroke: #b8c8c8;
+    stroke: var(--gray-300);
     stroke-width: 1.2;
     stroke-dasharray: 2 9;
     opacity: 0.7;
 }
 
 .resourceRail {
-    stroke: #d5dedc;
+    stroke: var(--gray-300);
     stroke-width: 2;
 }
 
@@ -128,7 +125,7 @@
 
 .contextZone {
     fill: none;
-    stroke: rgba(59, 111, 102, 0.28);
+    stroke: var(--gray-300);
     stroke-width: 1.3;
     stroke-linecap: round;
     stroke-dasharray: 1 8;
@@ -137,20 +134,20 @@
 .utilityRule,
 .utilityDivider {
     fill: none;
-    stroke: rgba(69, 104, 106, 0.25);
+    stroke: var(--gray-300);
     stroke-width: 1;
 }
 
 .accessZone {
     fill: none;
-    stroke: rgba(117, 90, 131, 0.26);
+    stroke: var(--gray-300);
     stroke-width: 1.3;
     stroke-linecap: round;
     stroke-dasharray: 1 8;
 }
 
 .zoneLabel {
-    fill: #6a7a7d;
+    fill: var(--text-muted);
     font:
         720 9px/1 ui-sans-serif,
         system-ui,
@@ -166,8 +163,8 @@
 
 .utilityIcon,
 .biosampleTube {
-    fill: rgba(255, 255, 255, 0.72);
-    stroke: #557278;
+    fill: var(--surface);
+    stroke: var(--text-secondary);
     stroke-width: 1.8;
     stroke-linecap: round;
     stroke-linejoin: round;
@@ -175,19 +172,19 @@
 
 .utilityAccent {
     fill: none;
-    stroke: #755a83;
+    stroke: var(--secondary-blue);
     stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
 }
 
 .biosampleFill {
-    fill: #b8d2ca;
+    fill: color-mix(in srgb, var(--accent-teal), var(--white) 70%);
     stroke: none;
 }
 
 .utilityLabel {
-    fill: #405e62;
+    fill: var(--text-secondary);
     font:
         650 11px/1.1 ui-sans-serif,
         system-ui,
@@ -196,7 +193,7 @@
         "Segoe UI",
         sans-serif;
     paint-order: stroke;
-    stroke: rgba(248, 251, 249, 0.94);
+    stroke: var(--gray-50);
     stroke-width: 4;
     stroke-linejoin: round;
     pointer-events: none;
@@ -205,12 +202,12 @@
 .conceptMark:focus-visible .utilityLabel,
 .conceptMark:hover .utilityLabel,
 .conceptMark.active .utilityLabel {
-    fill: #0f2f35;
+    fill: var(--text-primary);
     font-weight: 760;
 }
 
 .genomeRail {
-    stroke: #315e73;
+    stroke: var(--primary-blue);
     stroke-width: 1.6;
 }
 
@@ -220,12 +217,12 @@
 }
 
 .geneExon {
-    fill: #315e73;
+    fill: var(--primary-blue);
 }
 
 .geneDirection {
     fill: none;
-    stroke: #315e73;
+    stroke: var(--primary-blue);
     stroke-width: 1.6;
     stroke-linecap: round;
     stroke-linejoin: round;
@@ -233,7 +230,7 @@
 
 .link {
     fill: none;
-    stroke: #27727a;
+    stroke: var(--secondary-blue);
     stroke-width: 1.7;
     stroke-linecap: round;
     opacity: 0;
@@ -243,7 +240,7 @@
 }
 
 .partnerLink {
-    stroke: #755a83;
+    stroke: var(--accent-teal);
     stroke-dasharray: 4 5;
 }
 
@@ -267,7 +264,7 @@
 .conceptMark:focus-visible .conceptLabel,
 .conceptMark:hover .conceptLabel,
 .conceptMark.active .conceptLabel {
-    fill: #0f2f35;
+    fill: var(--text-primary);
     font-weight: 760;
 }
 
@@ -281,7 +278,7 @@
 }
 
 .conceptLabel {
-    fill: #405e62;
+    fill: var(--text-secondary);
     font:
         650 12px/1.15 ui-sans-serif,
         system-ui,
@@ -291,7 +288,7 @@
         sans-serif;
     letter-spacing: 0;
     paint-order: stroke;
-    stroke: rgba(248, 251, 249, 0.92);
+    stroke: var(--gray-50);
     stroke-width: 5;
     stroke-linejoin: round;
     pointer-events: none;
@@ -303,37 +300,37 @@
 .associationBaseline,
 .paperLine {
     fill: none;
-    stroke: #66848a;
+    stroke: var(--gray-500);
     stroke-width: 2;
     stroke-linecap: round;
 }
 
 .associationThreshold {
     fill: none;
-    stroke: rgba(70, 105, 110, 0.45);
+    stroke: var(--gray-400);
     stroke-width: 1;
     stroke-dasharray: 3 4;
 }
 
 .associationPoint {
-    fill: #8aa5a4;
+    fill: var(--gray-400);
 }
 
 .associationPointSignificant {
-    fill: #236e76;
+    fill: var(--accent-teal);
 }
 
 .qtlBridge,
 .regulatoryArc {
     fill: none;
-    stroke: #236e76;
+    stroke: var(--secondary-blue);
     stroke-width: 2.3;
     stroke-linecap: round;
 }
 
 .variant {
-    fill: #e1ece7;
-    stroke: #236e76;
+    fill: var(--gray-50);
+    stroke: var(--accent-teal);
     stroke-width: 1.5;
 }
 
@@ -344,7 +341,7 @@
 
 .regionBrace {
     fill: none;
-    stroke: #476f70;
+    stroke: var(--gray-600);
     stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
@@ -353,48 +350,48 @@
 .ldTopRule,
 .ldTick {
     fill: none;
-    stroke: #56757a;
+    stroke: var(--gray-500);
     stroke-width: 1.4;
     stroke-linecap: round;
 }
 
 .ldCell {
-    stroke: rgba(248, 251, 249, 0.94);
+    stroke: var(--white);
     stroke-width: 1.25;
     stroke-linejoin: round;
 }
 
 .qtlNode {
-    fill: #f7fbf9;
-    stroke: #236e76;
+    fill: var(--surface);
+    stroke: var(--primary-blue);
     stroke-width: 2;
 }
 
 .qtlBridge {
-    stroke: #5c7a89;
+    stroke: var(--secondary-blue);
 }
 
 .regulatoryArc {
-    stroke: #3f7771;
+    stroke: var(--accent-teal);
 }
 
 .enhancer {
-    fill: #dfe9de;
-    stroke: #426d63;
+    fill: color-mix(in srgb, var(--accent-teal), var(--white) 82%);
+    stroke: var(--accent-teal);
     stroke-width: 1.5;
 }
 
 .cell {
-    fill: rgba(221, 234, 227, 0.86);
-    stroke: #526f65;
+    fill: color-mix(in srgb, var(--accent-teal), var(--white) 82%);
+    stroke: var(--accent-teal);
     stroke-width: 1.5;
 }
 
 .paper,
 .phenotypeForm,
 .apiGate {
-    fill: rgba(255, 255, 255, 0.72);
-    stroke: #755a83;
+    fill: var(--surface);
+    stroke: var(--primary-blue);
     stroke-width: 1.8;
 }
 
@@ -402,7 +399,7 @@
 .check,
 .codeMark {
     fill: none;
-    stroke: #755a83;
+    stroke: var(--primary-blue);
     stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
@@ -410,20 +407,20 @@
 
 .evidenceMark {
     fill: none;
-    stroke: #755a83;
+    stroke: var(--primary-blue);
     stroke-width: 2;
     stroke-linecap: round;
 }
 
 .evidenceDot {
-    fill: #f7fbf9;
-    stroke: #755a83;
+    fill: var(--surface);
+    stroke: var(--primary-blue);
     stroke-width: 1.8;
 }
 
 .datasetLayer {
-    fill: rgba(225, 235, 229, 0.76);
-    stroke: #4f766f;
+    fill: var(--gray-100);
+    stroke: var(--secondary-blue);
     stroke-width: 1.7;
 }
 

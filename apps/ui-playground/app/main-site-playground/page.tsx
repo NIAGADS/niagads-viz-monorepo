@@ -111,7 +111,7 @@ const LD_VALUES = [
     [3],
 ] as const;
 
-const LD_COLORS = ["#edf2f0", "#b9cac6", "#668985", "#173f49"] as const;
+const LD_COLORS = ["var(--gray-100)", "var(--gray-300)", "var(--secondary-blue)", "var(--primary-blue)"] as const;
 
 const conceptById = Object.fromEntries(CONCEPTS.map((concept) => [concept.id, concept])) as Record<
     ConceptId,
