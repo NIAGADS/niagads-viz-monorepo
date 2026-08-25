@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
 import styles from "./resource-ecosystem.module.css";
+import { RESOURCE_ECOSYSTEM_OVERVIEW } from "./resources";
 
 export type ConceptType =
     | "genes"
@@ -36,6 +37,7 @@ export interface Resource {
     id: string;
     badge: string;
     name: string;
+    description: string;
     url?: string;
     groupId: string;
     concepts: ConceptType[];
@@ -108,10 +110,13 @@ const conceptById = Object.fromEntries(CONCEPTS.map((concept) => [concept.id, co
     ConceptType,
     (typeof CONCEPTS)[number]
 >;
+
 export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceEcosystemViewerProps) {
     const [active, setActive] = useState<ActiveTarget>(null);
+    const [detailResourceId, setDetailResourceId] = useState<string | null>(null);
     const [resourceCenterX, setResourceCenterX] = useState<Record<string, number>>({});
     const resourceRowRef = useRef<HTMLDivElement>(null);
+    const detailHideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const resourceGridStyle = { "--resource-count": resources.length } as CSSProperties;
     const resourceById = useMemo(
         () => Object.fromEntries(resources.map((resource) => [resource.id, resource])) as Record<string, Resource>,
@@ -212,6 +217,30 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
         return new Set<string>(conceptToResources[active.id]);
     }, [active, conceptToResources]);
 
+    const clearDetailHideTimer = () => {
+        if (detailHideTimerRef.current) {
+            clearTimeout(detailHideTimerRef.current);
+            detailHideTimerRef.current = null;
+        }
+    };
+
+    const showResourceDetail = (resourceId: string) => {
+        clearDetailHideTimer();
+        setDetailResourceId(resourceId);
+        setActive({ type: "resource", id: resourceId });
+    };
+
+    const hideResourceDetail = (resourceId: string) => {
+        clearDetailHideTimer();
+        detailHideTimerRef.current = setTimeout(() => {
+            setDetailResourceId(null);
+            setActive((current) => (current?.type === "resource" && current.id === resourceId ? null : current));
+            detailHideTimerRef.current = null;
+        }, 120);
+    };
+
+    const detailResource = detailResourceId ? resourceById[detailResourceId] : undefined;
+
     const classForConcept = (id: ConceptType) =>
         [
             styles.conceptMark,
@@ -277,15 +306,61 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                                 } as CSSProperties
                             }
                             target={resource.url ? "_blank" : undefined}
-                            onBlur={() => setActive(null)}
-                            onFocus={() => setActive({ type: "resource", id: resource.id })}
-                            onMouseEnter={() => setActive({ type: "resource", id: resource.id })}
-                            onMouseLeave={() => setActive(null)}
+                            onBlur={() => hideResourceDetail(resource.id)}
+                            onFocus={() => showResourceDetail(resource.id)}
+                            onMouseEnter={() => showResourceDetail(resource.id)}
+                            onMouseLeave={() => hideResourceDetail(resource.id)}
+                            onPointerDown={() => showResourceDetail(resource.id)}
                         >
                             <span className={styles.badge}>{resource.badge}</span>
                             <span className={styles.name}>{resource.name}</span>
                         </a>
                     ))}
+                </div>
+
+                <div className={styles.resourceDetailSlot}>
+                    <aside
+                        aria-label={`${detailResource?.name ?? "NIAGADS resource ecosystem"} description`}
+                        className={`${styles.resourceDetail} ${detailResource ? "" : styles.defaultDetail}`}
+                        onFocus={clearDetailHideTimer}
+                        onMouseEnter={clearDetailHideTimer}
+                        onMouseLeave={detailResource ? () => hideResourceDetail(detailResource.id) : undefined}
+                        onPointerDown={clearDetailHideTimer}
+                    >
+                        <div className={styles.resourceDetailHeader}>
+                            {detailResource ? (
+                                <span
+                                    className={styles.detailBadge}
+                                    style={
+                                        {
+                                            "--resource-color": resourceGroupById[detailResource.groupId].color,
+                                        } as CSSProperties
+                                    }
+                                >
+                                    {detailResource.badge}
+                                </span>
+                            ) : null}
+                            <h2>{detailResource?.name ?? RESOURCE_ECOSYSTEM_OVERVIEW.title}</h2>
+                        </div>
+                        <p>
+                            {detailResource?.description ?? RESOURCE_ECOSYSTEM_OVERVIEW.description}
+                            {!detailResource ? (
+                                <strong className={styles.detailInstruction}>
+                                    {RESOURCE_ECOSYSTEM_OVERVIEW.instruction}
+                                </strong>
+                            ) : null}
+                        </p>
+                        {detailResource?.url ? (
+                            <a
+                                className={styles.resourceDetailAction}
+                                href={detailResource.url}
+                                rel="noopener noreferrer"
+                                target="_blank"
+                            >
+                                Explore resource <span aria-hidden="true">→</span>
+                            </a>
+                        ) : null}
+                    </aside>
                 </div>
 
                 <svg
