@@ -468,33 +468,58 @@
     stroke-width: 1.7;
 }
 
-@media (max-width: 860px) {
+@media (max-width: 640px) {
     .shell {
-        place-items: start;
-        overflow-x: auto;
+        display: block;
+        min-height: auto;
+        padding: 12px;
+        overflow-x: hidden;
     }
 
     .ecosystem {
-        width: 760px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .landscape,
+    .resourceGroupLabels {
+        display: none;
     }
 
     .resourceRow {
-        --group-divider-offset: -8.5px;
-        gap: 6px;
-    }
-
-    .resourceGroupLabels {
-        gap: 6px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin: 0;
     }
 
     .resource {
-        padding: 7px 7px;
-        gap: 6px;
+        min-height: 48px;
+        min-width: 0;
+        padding: 7px;
+        gap: 7px;
+    }
+
+    .resource.groupStart {
+        margin-left: 0;
+    }
+
+    .resource.groupStart::before {
+        display: none;
     }
 
     .badge {
         width: 34px;
         height: 30px;
         font-size: 9px;
+    }
+
+    .name {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 360px) {
+    .resourceRow {
+        grid-template-columns: 1fr;
     }
 }
