@@ -367,6 +367,7 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                         onBlur={() => setActive(null)}
                         onFocus={() => setActive({ type: "concept", id: "gwas" })}
                         onMouseEnter={() => setActive({ type: "concept", id: "gwas" })}
+                        onPointerDown={() => setActive({ type: "concept", id: "gwas" })}
                         onMouseLeave={() => setActive(null)}
                     >
                         <rect fill="none" pointerEvents="all" x="330" y="42" width="120" height="90" rx="6" />
@@ -394,6 +395,7 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                         onBlur={() => setActive(null)}
                         onFocus={() => setActive({ type: "concept", id: "genes" })}
                         onMouseEnter={() => setActive({ type: "concept", id: "genes" })}
+                        onPointerDown={() => setActive({ type: "concept", id: "genes" })}
                         onMouseLeave={() => setActive(null)}
                     >
                         <line className={styles.geneTrackHit} x1="92" x2="1160" y1="150" y2="150" />
@@ -413,6 +415,7 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                         onBlur={() => setActive(null)}
                         onFocus={() => setActive({ type: "concept", id: "variants" })}
                         onMouseEnter={() => setActive({ type: "concept", id: "variants" })}
+                        onPointerDown={() => setActive({ type: "concept", id: "variants" })}
                         onMouseLeave={() => setActive(null)}
                     >
                         <rect className={styles.variantHitArea} x="332" y="134" width="116" height="48" rx="5" />
@@ -432,6 +435,7 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                         onBlur={() => setActive(null)}
                         onFocus={() => setActive({ type: "concept", id: "ld" })}
                         onMouseEnter={() => setActive({ type: "concept", id: "ld" })}
+                        onPointerDown={() => setActive({ type: "concept", id: "ld" })}
                         onMouseLeave={() => setActive(null)}
                     >
                         <path className={styles.ldTopRule} d="M341 190 H439" />
@@ -470,6 +474,7 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                         onBlur={() => setActive(null)}
                         onFocus={() => setActive({ type: "concept", id: "qtls" })}
                         onMouseEnter={() => setActive({ type: "concept", id: "qtls" })}
+                        onPointerDown={() => setActive({ type: "concept", id: "qtls" })}
                         onMouseLeave={() => setActive(null)}
                     >
                         <rect className={styles.qtlHitArea} x="764" y="108" width="310" height="146" rx="6" />
@@ -491,6 +496,7 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                         onBlur={() => setActive(null)}
                         onFocus={() => setActive({ type: "concept", id: "regulatory" })}
                         onMouseEnter={() => setActive({ type: "concept", id: "regulatory" })}
+                        onPointerDown={() => setActive({ type: "concept", id: "regulatory" })}
                         onMouseLeave={() => setActive(null)}
                     >
                         <rect className={styles.regulatoryHitArea} x="524" y="104" width="250" height="94" rx="6" />
@@ -523,6 +529,7 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                         onBlur={() => setActive(null)}
                         onFocus={() => setActive({ type: "concept", id: "biosamples" })}
                         onMouseEnter={() => setActive({ type: "concept", id: "biosamples" })}
+                        onPointerDown={() => setActive({ type: "concept", id: "biosamples" })}
                         onMouseLeave={() => setActive(null)}
                     >
                         <rect className={styles.utilityHitArea} x="130" y="282" width="142" height="40" rx="6" />
@@ -538,6 +545,7 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                         onBlur={() => setActive(null)}
                         onFocus={() => setActive({ type: "concept", id: "curatedEvidence" })}
                         onMouseEnter={() => setActive({ type: "concept", id: "curatedEvidence" })}
+                        onPointerDown={() => setActive({ type: "concept", id: "curatedEvidence" })}
                         onMouseLeave={() => setActive(null)}
                     >
                         <rect className={styles.utilityHitArea} x="290" y="282" width="150" height="40" rx="6" />
@@ -553,6 +561,7 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                         onBlur={() => setActive(null)}
                         onFocus={() => setActive({ type: "concept", id: "phenotypes" })}
                         onMouseEnter={() => setActive({ type: "concept", id: "phenotypes" })}
+                        onPointerDown={() => setActive({ type: "concept", id: "phenotypes" })}
                         onMouseLeave={() => setActive(null)}
                     >
                         <rect className={styles.utilityHitArea} x="458" y="282" width="160" height="40" rx="6" />
@@ -568,6 +577,7 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                         onBlur={() => setActive(null)}
                         onFocus={() => setActive({ type: "concept", id: "openAccess" })}
                         onMouseEnter={() => setActive({ type: "concept", id: "openAccess" })}
+                        onPointerDown={() => setActive({ type: "concept", id: "openAccess" })}
                         onMouseLeave={() => setActive(null)}
                     >
                         <rect className={styles.utilityHitArea} x="720" y="282" width="80" height="40" rx="6" />
@@ -583,6 +593,7 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                         onBlur={() => setActive(null)}
                         onFocus={() => setActive({ type: "concept", id: "restrictedAccess" })}
                         onMouseEnter={() => setActive({ type: "concept", id: "restrictedAccess" })}
+                        onPointerDown={() => setActive({ type: "concept", id: "restrictedAccess" })}
                         onMouseLeave={() => setActive(null)}
                     >
                         <rect className={styles.utilityHitArea} x="810" y="282" width="110" height="40" rx="6" />
@@ -598,6 +609,7 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                         onBlur={() => setActive(null)}
                         onFocus={() => setActive({ type: "concept", id: "downloads" })}
                         onMouseEnter={() => setActive({ type: "concept", id: "downloads" })}
+                        onPointerDown={() => setActive({ type: "concept", id: "downloads" })}
                         onMouseLeave={() => setActive(null)}
                     >
                         <rect className={styles.utilityHitArea} x="930" y="282" width="104" height="40" rx="6" />
@@ -613,6 +625,7 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                         onBlur={() => setActive(null)}
                         onFocus={() => setActive({ type: "concept", id: "cloudAccess" })}
                         onMouseEnter={() => setActive({ type: "concept", id: "cloudAccess" })}
+                        onPointerDown={() => setActive({ type: "concept", id: "cloudAccess" })}
                         onMouseLeave={() => setActive(null)}
                     >
                         <rect className={styles.utilityHitArea} x="1044" y="282" width="161" height="40" rx="6" />
