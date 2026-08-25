@@ -324,6 +324,13 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                         onMouseEnter={clearDetailHideTimer}
                         onMouseLeave={detailResource ? () => hideResourceDetail(detailResource.id) : undefined}
                         onPointerDown={clearDetailHideTimer}
+                        style={
+                            {
+                                "--resource-color": detailResource
+                                    ? resourceGroupById[detailResource.groupId].color
+                                    : "var(--primary-blue)",
+                            } as CSSProperties
+                        }
                     >
                         <div className={styles.resourceDetailHeader}>
                             <h2>{detailResource?.name ?? RESOURCE_ECOSYSTEM_OVERVIEW.title}</h2>
