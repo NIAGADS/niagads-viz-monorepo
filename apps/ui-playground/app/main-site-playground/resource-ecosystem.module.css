@@ -15,31 +15,41 @@
 }
 
 .resourceDetailSlot {
-    height: 140px;
+    height: 132px;
     margin-top: 10px;
 }
 
 .resourceDetail {
-    box-sizing: border-box;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) max-content;
-    grid-template-rows: auto 1fr;
-    column-gap: 24px;
-    row-gap: 6px;
     height: 100%;
-    padding: 12px 24px 24px;
-    border: 2px solid color-mix(in srgb, var(--resource-color), var(--gray-300) 48%);
-    border-radius: var(--border-radius);
+    border: 2px solid color-mix(in srgb, var(--resource-color), var(--gray-300) 48%) !important;
+    background: color-mix(in srgb, var(--resource-color), var(--white) 92%) !important;
+}
+
+.defaultDetail {
+    border: 1px solid var(--border) !important;
+    background: transparent !important;
+}
+
+.defaultDetail h2,
+.defaultDetail p,
+.defaultDetail .detailInstruction {
     color: var(--text-primary);
-    background: color-mix(in srgb, var(--resource-color), var(--white) 92%);
-    box-shadow: 0 4px 12px color-mix(in srgb, var(--resource-color), transparent 84%);
 }
 
 .resourceDetailHeader {
     display: flex;
     align-items: center;
-    min-height: 24px;
     grid-column: 1 / -1;
+}
+
+.resourceDetailBody {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) max-content;
+    align-items: start;
+    column-gap: 24px;
+    row-gap: 6px;
+    height: auto !important;
+    padding: 14px 24px 20px !important;
 }
 
 .resourceDetail h2 {
@@ -584,7 +594,15 @@
         display: block;
         height: auto;
         width: auto;
-        padding: 18px 18px 22px;
+    }
+
+    .resourceDetailHeader {
+        margin-bottom: 12px;
+    }
+
+    .resourceDetailBody {
+        display: block;
+        padding: 0 18px 18px !important;
     }
 
     .resourceDetailHeader {

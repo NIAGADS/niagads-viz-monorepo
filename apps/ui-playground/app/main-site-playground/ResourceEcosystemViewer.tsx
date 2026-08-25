@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
+import { Card, CardBody } from "@niagads/ui";
+
 import styles from "./resource-ecosystem.module.css";
 import { RESOURCE_ECOSYSTEM_OVERVIEW } from "./resources";
 
@@ -317,7 +319,7 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                 </div>
 
                 <div className={styles.resourceDetailSlot}>
-                    <aside
+                    <Card
                         aria-label={`${detailResource?.name ?? "NIAGADS resource ecosystem"} description`}
                         className={`${styles.resourceDetail} ${detailResource ? "" : styles.defaultDetail}`}
                         onFocus={clearDetailHideTimer}
@@ -332,28 +334,30 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                             } as CSSProperties
                         }
                     >
-                        <div className={styles.resourceDetailHeader}>
-                            <h2>{detailResource?.name ?? RESOURCE_ECOSYSTEM_OVERVIEW.title}</h2>
-                        </div>
-                        <p>
-                            {detailResource?.description ?? RESOURCE_ECOSYSTEM_OVERVIEW.description}
-                            {!detailResource ? (
-                                <strong className={styles.detailInstruction}>
-                                    {RESOURCE_ECOSYSTEM_OVERVIEW.instruction}
-                                </strong>
+                        <CardBody className={styles.resourceDetailBody}>
+                            <div className={styles.resourceDetailHeader}>
+                                <h2>{detailResource?.name ?? RESOURCE_ECOSYSTEM_OVERVIEW.title}</h2>
+                            </div>
+                            <p>
+                                {detailResource?.description ?? RESOURCE_ECOSYSTEM_OVERVIEW.description}
+                                {!detailResource ? (
+                                    <strong className={styles.detailInstruction}>
+                                        {RESOURCE_ECOSYSTEM_OVERVIEW.instruction}
+                                    </strong>
+                                ) : null}
+                            </p>
+                            {detailResource?.url ? (
+                                <a
+                                    className={styles.resourceDetailAction}
+                                    href={detailResource.url}
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                >
+                                    Explore resource <span aria-hidden="true">→</span>
+                                </a>
                             ) : null}
-                        </p>
-                        {detailResource?.url ? (
-                            <a
-                                className={styles.resourceDetailAction}
-                                href={detailResource.url}
-                                rel="noopener noreferrer"
-                                target="_blank"
-                            >
-                                Explore resource <span aria-hidden="true">→</span>
-                            </a>
-                        ) : null}
-                    </aside>
+                        </CardBody>
+                    </Card>
                 </div>
 
                 <svg
