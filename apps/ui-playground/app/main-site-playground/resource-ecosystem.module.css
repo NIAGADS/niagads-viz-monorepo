@@ -602,7 +602,7 @@
 
     .resourceDetailBody {
         display: block;
-        padding: 0 18px 18px !important;
+        padding: 16px 18px 18px !important;
     }
 
     .resourceDetailHeader {
