@@ -294,18 +294,17 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                     style={resourceGridStyle}
                 >
                     {resources.map((resource, resourceIndex) => (
-                        <a
+                        <button
                             className={classForResource(resource.id, resourceIndex)}
+                            aria-label={resource.name}
                             data-resource-id={resource.id}
-                            href={resource.url ?? `#${resource.id}`}
                             key={resource.id}
-                            rel={resource.url ? "noopener noreferrer" : undefined}
                             style={
                                 {
                                     "--resource-color": resourceGroupById[resource.groupId].color,
                                 } as CSSProperties
                             }
-                            target={resource.url ? "_blank" : undefined}
+                            type="button"
                             onBlur={() => hideResourceDetail(resource.id)}
                             onFocus={() => showResourceDetail(resource.id)}
                             onMouseEnter={() => showResourceDetail(resource.id)}
@@ -313,8 +312,7 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                             onPointerDown={() => showResourceDetail(resource.id)}
                         >
                             <span className={styles.badge}>{resource.badge}</span>
-                            <span className={styles.name}>{resource.name}</span>
-                        </a>
+                        </button>
                     ))}
                 </div>
 
@@ -328,18 +326,6 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                         onPointerDown={clearDetailHideTimer}
                     >
                         <div className={styles.resourceDetailHeader}>
-                            {detailResource ? (
-                                <span
-                                    className={styles.detailBadge}
-                                    style={
-                                        {
-                                            "--resource-color": resourceGroupById[detailResource.groupId].color,
-                                        } as CSSProperties
-                                    }
-                                >
-                                    {detailResource.badge}
-                                </span>
-                            ) : null}
                             <h2>{detailResource?.name ?? RESOURCE_ECOSYSTEM_OVERVIEW.title}</h2>
                         </div>
                         <p>

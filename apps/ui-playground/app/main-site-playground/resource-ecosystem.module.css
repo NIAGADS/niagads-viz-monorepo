@@ -15,46 +15,55 @@
 }
 
 .resourceDetailSlot {
-    height: 96px;
+    height: 128px;
     margin-top: 10px;
 }
 
 .resourceDetail {
     box-sizing: border-box;
     display: grid;
-    grid-template-columns: 180px minmax(0, 1fr) max-content;
-    align-items: center;
-    gap: 16px;
+    grid-template-columns: minmax(0, 1fr) max-content;
+    grid-template-rows: auto 1fr;
+    column-gap: 24px;
+    row-gap: 8px;
     height: 100%;
-    padding: 8px 12px;
-    border: 1px solid var(--gray-300);
+    padding: 20px 24px;
+    border: 2px solid color-mix(in srgb, var(--primary-blue), var(--gray-300) 48%);
     border-radius: var(--border-radius);
     color: var(--text-primary);
-    background: color-mix(in srgb, var(--surface), var(--gray-50) 8%);
-    box-shadow: var(--shadow-md);
+    background: color-mix(in srgb, var(--primary-blue), var(--white) 92%);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--primary-blue), transparent 84%);
 }
 
 .resourceDetailHeader {
     display: flex;
     align-items: center;
-    gap: 10px;
+    min-height: 24px;
+    grid-column: 1 / -1;
 }
 
 .resourceDetail h2 {
     margin: 0;
     font:
-        700 15px/1.2 ui-sans-serif,
+        780 20px/1.15 ui-sans-serif,
+        system-ui,
+        sans-serif;
+    letter-spacing: -0.01em;
+    color: var(--primary-blue);
+}
+
+.resourceDetail p {
+    grid-column: 1;
+    margin: 0;
+    color: var(--text-secondary);
+    font:
+        450 13px/1.5 ui-sans-serif,
         system-ui,
         sans-serif;
 }
 
-.resourceDetail p {
-    margin: 0;
-    color: var(--text-secondary);
-    font:
-        450 12px/1.45 ui-sans-serif,
-        system-ui,
-        sans-serif;
+.defaultDetail p {
+    grid-column: 1 / -1;
 }
 
 .detailInstruction {
@@ -64,22 +73,9 @@
     font-weight: 750;
 }
 
-.detailBadge {
-    width: 38px;
-    height: 30px;
-    flex: 0 0 auto;
-    display: grid;
-    place-items: center;
-    border-radius: 6px;
-    background: var(--resource-color);
-    color: var(--white);
-    font:
-        700 10px/1.1 ui-sans-serif,
-        system-ui,
-        sans-serif;
-}
-
 .resourceDetailAction {
+    grid-column: 2;
+    align-self: start;
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -146,10 +142,13 @@
 
 .resource {
     --resource-color: var(--primary-blue);
+    box-sizing: border-box;
+    width: 100%;
     min-height: 48px;
     display: flex;
     position: relative;
     align-items: center;
+    justify-content: center;
     gap: 9px;
     padding: 7px 9px;
     border: 1px solid color-mix(in srgb, var(--resource-color), var(--white) 58%);
@@ -158,6 +157,9 @@
     text-decoration: none;
     background: var(--surface);
     box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    font: inherit;
+    text-align: left;
     transition:
         border-color 160ms ease,
         box-shadow 160ms ease,
@@ -175,6 +177,7 @@
 }
 
 .resource.groupStart {
+    width: calc(100% - 10px);
     margin-left: 10px;
 }
 
@@ -210,17 +213,6 @@
         "Segoe UI",
         sans-serif;
     letter-spacing: 0;
-}
-
-.name {
-    min-width: 0;
-    font:
-        650 clamp(11px, 1vw, 14px) / 1.16 ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
 }
 
 .landscape {
@@ -583,13 +575,30 @@
     }
 
     .resourceDetailSlot {
-        height: 300px;
+        height: auto;
+        min-height: 0;
         margin-top: 8px;
     }
 
     .resourceDetail {
         display: block;
+        height: auto;
         width: auto;
+        padding: 18px;
+    }
+
+    .resourceDetailHeader {
+        margin-bottom: 12px;
+    }
+
+    .resourceDetail p {
+        margin: 0 0 14px;
+        line-height: 1.5;
+    }
+
+    .resourceDetailAction {
+        min-height: 36px;
+        padding: 0 14px;
     }
 
     .landscape,
@@ -611,6 +620,7 @@
     }
 
     .resource.groupStart {
+        width: 100%;
         margin-left: 0;
     }
 
