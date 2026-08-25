@@ -80,7 +80,7 @@
     display: block;
     margin-top: 4px;
     color: var(--resource-color);
-    font-weight: 750;
+    font-weight: 650;
 }
 
 .resourceDetailAction {
@@ -109,15 +109,15 @@
 
 .resourceDetailAction:hover,
 .resourceDetailAction:focus-visible {
-    border-color: var(--accent-teal);
+    border-color: color-mix(in srgb, var(--resource-color), var(--white) 18%);
     color: var(--white);
-    background: var(--accent-teal);
+    background: color-mix(in srgb, var(--resource-color), var(--white) 18%);
     text-decoration: none;
     transform: translateY(-1px);
 }
 
 .resourceDetailAction:focus-visible {
-    outline: 2px solid var(--accent-teal);
+    outline: 2px solid var(--resource-color);
     outline-offset: 2px;
 }
 
