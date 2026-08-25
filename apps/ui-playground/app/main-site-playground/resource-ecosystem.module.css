@@ -16,7 +16,7 @@
 
 .resourceDetailSlot {
     height: 132px;
-    margin-top: 10px;
+    margin: 0 0 10px;
 }
 
 .resourceDetail {
@@ -587,7 +587,7 @@
     .resourceDetailSlot {
         height: auto;
         min-height: 0;
-        margin-top: 8px;
+        margin: 0 0 8px;
     }
 
     .resourceDetail {

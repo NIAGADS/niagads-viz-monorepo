@@ -278,46 +278,6 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
     return (
         <main className={styles.shell}>
             <section className={styles.ecosystem} aria-label="NIAGADS homepage resource visualization prototype">
-                <div className={styles.resourceGroupLabels} aria-hidden="true" style={resourceGridStyle}>
-                    {resourceGroupLabels.map((groupLabel) => (
-                        <span
-                            className={styles.groupLabel}
-                            key={`${groupLabel.label}-${groupLabel.start}`}
-                            style={{ gridColumn: `${groupLabel.start} / span ${groupLabel.span}` }}
-                        >
-                            {groupLabel.label}
-                        </span>
-                    ))}
-                </div>
-                <div
-                    className={styles.resourceRow}
-                    aria-label="Resources"
-                    ref={resourceRowRef}
-                    style={resourceGridStyle}
-                >
-                    {resources.map((resource, resourceIndex) => (
-                        <button
-                            className={classForResource(resource.id, resourceIndex)}
-                            aria-label={resource.name}
-                            data-resource-id={resource.id}
-                            key={resource.id}
-                            style={
-                                {
-                                    "--resource-color": resourceGroupById[resource.groupId].color,
-                                } as CSSProperties
-                            }
-                            type="button"
-                            onBlur={() => hideResourceDetail(resource.id)}
-                            onFocus={() => showResourceDetail(resource.id)}
-                            onMouseEnter={() => showResourceDetail(resource.id)}
-                            onMouseLeave={() => hideResourceDetail(resource.id)}
-                            onPointerDown={() => showResourceDetail(resource.id)}
-                        >
-                            <span className={styles.badge}>{resource.badge}</span>
-                        </button>
-                    ))}
-                </div>
-
                 <div className={styles.resourceDetailSlot}>
                     <Card
                         aria-label={`${detailResource?.name ?? "NIAGADS resource ecosystem"} description`}
@@ -358,6 +318,46 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                             ) : null}
                         </CardBody>
                     </Card>
+                </div>
+
+                <div className={styles.resourceGroupLabels} aria-hidden="true" style={resourceGridStyle}>
+                    {resourceGroupLabels.map((groupLabel) => (
+                        <span
+                            className={styles.groupLabel}
+                            key={`${groupLabel.label}-${groupLabel.start}`}
+                            style={{ gridColumn: `${groupLabel.start} / span ${groupLabel.span}` }}
+                        >
+                            {groupLabel.label}
+                        </span>
+                    ))}
+                </div>
+                <div
+                    className={styles.resourceRow}
+                    aria-label="Resources"
+                    ref={resourceRowRef}
+                    style={resourceGridStyle}
+                >
+                    {resources.map((resource, resourceIndex) => (
+                        <button
+                            className={classForResource(resource.id, resourceIndex)}
+                            aria-label={resource.name}
+                            data-resource-id={resource.id}
+                            key={resource.id}
+                            style={
+                                {
+                                    "--resource-color": resourceGroupById[resource.groupId].color,
+                                } as CSSProperties
+                            }
+                            type="button"
+                            onBlur={() => hideResourceDetail(resource.id)}
+                            onFocus={() => showResourceDetail(resource.id)}
+                            onMouseEnter={() => showResourceDetail(resource.id)}
+                            onMouseLeave={() => hideResourceDetail(resource.id)}
+                            onPointerDown={() => showResourceDetail(resource.id)}
+                        >
+                            <span className={styles.badge}>{resource.badge}</span>
+                        </button>
+                    ))}
                 </div>
 
                 <svg
