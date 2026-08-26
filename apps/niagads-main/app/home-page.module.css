@@ -1,0 +1,13 @@
+.top-section {
+    width: 100vw;
+
+    display: flex;
+    justify-content: space-around;
+}
+
+.bottom-section {
+    width: 100vw;
+
+    display: flex;
+    justify-content: space-around;
+}
