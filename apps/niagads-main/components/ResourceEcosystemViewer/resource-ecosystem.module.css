@@ -1,0 +1,661 @@
+.shell {
+    margin: 0;
+    display: grid;
+    place-items: start center;
+    color: var(--text-primary);
+}
+
+.ecosystem {
+    width: min(1240px, 100%);
+    min-width: 760px;
+    isolation: isolate;
+}
+
+.resourceDetailSlot {
+    height: 132px;
+    margin: 0 0 10px;
+}
+
+.resourceDetail {
+    height: 100%;
+    border: 2px solid color-mix(in srgb, var(--resource-color), var(--gray-300) 48%) !important;
+    background: color-mix(in srgb, var(--resource-color), var(--white) 92%) !important;
+}
+
+.defaultDetail {
+    border: 1px solid var(--border) !important;
+    background: transparent !important;
+}
+
+.defaultDetail h2,
+.defaultDetail p,
+.defaultDetail .detailInstruction {
+    color: var(--text-primary);
+}
+
+.resourceDetailHeader {
+    display: flex;
+    align-items: center;
+    grid-column: 1 / -1;
+}
+
+.resourceDetailBody {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) max-content;
+    align-items: start;
+    column-gap: 24px;
+    row-gap: 6px;
+    height: auto !important;
+    padding: 14px 24px 20px !important;
+}
+
+.resourceDetail h2 {
+    margin: 0;
+    font:
+        780 20px/1.15 ui-sans-serif,
+        system-ui,
+        sans-serif;
+    letter-spacing: -0.01em;
+    color: var(--resource-color);
+}
+
+.resourceDetail p {
+    grid-column: 1;
+    margin: 0;
+    color: var(--text-primary);
+    font:
+        450 14px/1.5 ui-sans-serif,
+        system-ui,
+        sans-serif;
+}
+
+.defaultDetail p {
+    grid-column: 1 / -1;
+}
+
+.detailInstruction {
+    display: block;
+    margin-top: 4px;
+    color: var(--resource-color);
+    font-weight: 650;
+}
+
+.resourceDetailAction {
+    grid-column: 2;
+    align-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 34px;
+    padding: 0 12px;
+    border: 1px solid var(--resource-color);
+    border-radius: var(--border-radius);
+    color: var(--white);
+    background: var(--resource-color);
+    font:
+        700 12px/1.2 ui-sans-serif,
+        system-ui,
+        sans-serif;
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+        background-color 160ms ease,
+        border-color 160ms ease,
+        transform 160ms ease;
+}
+
+.resourceDetailAction:hover,
+.resourceDetailAction:focus-visible {
+    border-color: color-mix(in srgb, var(--resource-color), var(--white) 18%);
+    color: var(--white);
+    background: color-mix(in srgb, var(--resource-color), var(--white) 18%);
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
+.resourceDetailAction:focus-visible {
+    outline: 2px solid var(--resource-color);
+    outline-offset: 2px;
+}
+
+.resourceGroupLabels {
+    min-height: 22px;
+    display: grid;
+    grid-template-columns: repeat(var(--resource-count), minmax(0, 1fr));
+    gap: 10px;
+    align-items: end;
+    margin-bottom: 10px;
+}
+
+.groupLabel {
+    color: var(--text-secondary);
+    font:
+        700 11px/1.1 ui-sans-serif,
+        system-ui,
+        sans-serif;
+    letter-spacing: 0.045em;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.resourceRow {
+    --group-divider-offset: -10.5px;
+    display: grid;
+    grid-template-columns: repeat(var(--resource-count), minmax(0, 1fr));
+    gap: 10px;
+    align-items: stretch;
+    margin: 0 0 2px;
+}
+
+.resource {
+    --resource-color: var(--primary-blue);
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 48px;
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 7px 9px;
+    border: 1px solid color-mix(in srgb, var(--resource-color), var(--white) 58%);
+    border-radius: var(--border-radius);
+    color: var(--text-primary);
+    text-decoration: none;
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    font: inherit;
+    text-align: left;
+    transition:
+        border-color 160ms ease,
+        box-shadow 160ms ease,
+        opacity 160ms ease,
+        transform 160ms ease;
+}
+
+.resource:hover,
+.resource:focus-visible,
+.resource.active {
+    border-color: var(--resource-color);
+    box-shadow: var(--shadow-md);
+    outline: none;
+    transform: translateY(-1px);
+}
+
+.resource.groupStart {
+    width: calc(100% - 10px);
+    margin-left: 10px;
+}
+
+.resource.groupStart::before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    bottom: 5px;
+    left: var(--group-divider-offset);
+    width: 1px;
+    background: var(--gray-300);
+}
+
+.resource.recede {
+    opacity: 0.38;
+}
+
+.badge {
+    width: 38px;
+    height: 30px;
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    border-radius: 6px;
+    background: var(--resource-color);
+    border: 1px solid var(--resource-color);
+    color: var(--white);
+    font:
+        700 11px/1.1 ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    letter-spacing: 0;
+}
+
+.landscape {
+    width: 100%;
+    height: clamp(250px, 31vw, 320px);
+    display: block;
+    overflow: visible;
+}
+
+.contextLayer,
+.linkLayer,
+.conceptMark {
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+.softContour {
+    fill: none;
+    stroke: var(--gray-300);
+    stroke-width: 1.2;
+    stroke-dasharray: 2 9;
+    opacity: 0.7;
+}
+
+.resourceRail {
+    stroke: var(--gray-300);
+    stroke-width: 2;
+}
+
+.peripheralFrame {
+    pointer-events: none;
+}
+
+.contextZone {
+    fill: none;
+    stroke: var(--gray-300);
+    stroke-width: 1.3;
+    stroke-linecap: round;
+    stroke-dasharray: 1 8;
+}
+
+.utilityRule,
+.utilityDivider {
+    fill: none;
+    stroke: var(--gray-300);
+    stroke-width: 1;
+}
+
+.accessZone {
+    fill: none;
+    stroke: var(--gray-300);
+    stroke-width: 1.3;
+    stroke-linecap: round;
+    stroke-dasharray: 1 8;
+}
+
+.zoneLabel {
+    fill: var(--text-muted);
+    font:
+        720 9px/1 ui-sans-serif,
+        system-ui,
+        sans-serif;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.utilityHitArea {
+    fill: transparent;
+    stroke: transparent;
+}
+
+.utilityGlyph {
+    fill: none;
+    stroke: var(--primary-blue);
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: none;
+    transition:
+        stroke 160ms ease,
+        stroke-width 160ms ease;
+}
+
+.utilityLabel {
+    fill: var(--text-secondary);
+    font:
+        650 11px/1.1 ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    paint-order: stroke;
+    stroke: var(--gray-50);
+    stroke-width: 4;
+    stroke-linejoin: round;
+    pointer-events: none;
+}
+
+.conceptMark:focus-visible .utilityLabel,
+.conceptMark:hover .utilityLabel,
+.conceptMark.active .utilityLabel {
+    fill: var(--text-primary);
+    font-weight: 760;
+}
+
+.conceptMark:focus-visible .utilityGlyph,
+.conceptMark:hover .utilityGlyph,
+.conceptMark.active .utilityGlyph {
+    stroke: var(--accent-teal);
+    stroke-width: 2;
+}
+
+.genomeRail {
+    stroke: var(--primary-blue);
+    stroke-width: 1.6;
+}
+
+.geneTrackHit {
+    stroke: transparent;
+    stroke-width: 24;
+}
+
+.geneExon {
+    fill: var(--primary-blue);
+}
+
+.geneDirection {
+    fill: none;
+    stroke: var(--primary-blue);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.link {
+    fill: none;
+    stroke: var(--primary-blue);
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    opacity: 0;
+    transition:
+        opacity 160ms ease,
+        stroke-width 160ms ease;
+}
+
+.link.active {
+    opacity: 0.9;
+    stroke-width: 3;
+}
+
+.link.recede {
+    opacity: 0;
+}
+
+.conceptMark {
+    cursor: default;
+    outline: none;
+    transition:
+        opacity 160ms ease,
+        transform 160ms ease;
+}
+
+.conceptMark:focus-visible .conceptLabel,
+.conceptMark:hover .conceptLabel,
+.conceptMark.active .conceptLabel {
+    fill: var(--text-primary);
+    font-weight: 760;
+}
+
+.conceptMark.active {
+    opacity: 1;
+    transform: scale(1.025);
+}
+
+.conceptMark.recede {
+    opacity: 0.24;
+}
+
+.conceptLabel {
+    fill: var(--text-secondary);
+    font:
+        650 12px/1.15 ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    letter-spacing: 0;
+    paint-order: stroke;
+    stroke: var(--gray-50);
+    stroke-width: 5;
+    stroke-linejoin: round;
+    pointer-events: none;
+    transition:
+        fill 160ms ease,
+        font-weight 160ms ease;
+}
+
+.associationBaseline,
+.paperLine {
+    fill: none;
+    stroke: var(--gray-500);
+    stroke-width: 2;
+    stroke-linecap: round;
+}
+
+.associationThreshold {
+    fill: none;
+    stroke: var(--gray-400);
+    stroke-width: 1;
+    stroke-dasharray: 3 4;
+}
+
+.associationPoint {
+    fill: var(--gray-400);
+}
+
+.associationPointSignificant {
+    fill: var(--accent-teal);
+}
+
+.qtlBridge {
+    fill: none;
+    stroke: var(--gray-500);
+    stroke-width: 1.6;
+    stroke-dasharray: 4 4;
+    stroke-linecap: round;
+    opacity: 0.85;
+}
+
+.variant {
+    fill: var(--gray-50);
+    stroke: var(--accent-teal);
+    stroke-width: 1.5;
+}
+
+.variantHitArea {
+    fill: transparent;
+    stroke: transparent;
+}
+
+.ldTopRule,
+.ldTick {
+    fill: none;
+    stroke: var(--gray-500);
+    stroke-width: 1.4;
+    stroke-linecap: round;
+}
+
+.ldCell {
+    stroke: var(--white);
+    stroke-width: 1.25;
+    stroke-linejoin: round;
+}
+
+.qtlHitArea {
+    fill: transparent;
+    stroke: transparent;
+}
+
+.regulatoryHitArea {
+    fill: transparent;
+    stroke: transparent;
+}
+
+.regulatoryLoop {
+    fill: none;
+    stroke: var(--gray-500);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+}
+
+.regulatoryEnhancer,
+.regulatoryPromoter,
+.regulatorySilencer {
+    stroke: var(--gray-500);
+    stroke-width: 1.2;
+}
+
+.regulatoryEnhancer {
+    fill: url("#regulatoryEnhancerPattern");
+}
+
+.regulatoryPromoter {
+    fill: url("#regulatoryPromoterPattern");
+}
+
+.regulatorySilencer {
+    fill: url("#regulatorySilencerPattern");
+}
+
+.regulatoryMicroLabel {
+    fill: var(--text-secondary);
+    font:
+        700 8px/1 ui-sans-serif,
+        system-ui,
+        sans-serif;
+    paint-order: stroke;
+    stroke: var(--gray-50);
+    stroke-width: 3;
+    stroke-linejoin: round;
+    pointer-events: none;
+}
+
+.cell {
+    fill: color-mix(in srgb, var(--accent-teal), var(--white) 82%);
+    stroke: var(--accent-teal);
+    stroke-width: 1.5;
+}
+
+.paper,
+.phenotypeForm,
+.apiGate {
+    fill: var(--surface);
+    stroke: var(--primary-blue);
+    stroke-width: 1.8;
+}
+
+.paperFold,
+.check,
+.codeMark {
+    fill: none;
+    stroke: var(--primary-blue);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.evidenceMark {
+    fill: none;
+    stroke: var(--primary-blue);
+    stroke-width: 2;
+    stroke-linecap: round;
+}
+
+.evidenceDot {
+    fill: var(--surface);
+    stroke: var(--primary-blue);
+    stroke-width: 1.8;
+}
+
+.datasetLayer {
+    fill: var(--gray-100);
+    stroke: var(--secondary-blue);
+    stroke-width: 1.7;
+}
+
+@media (max-width: 640px) {
+    .shell {
+        display: block;
+        min-height: auto;
+        padding: 12px;
+        overflow-x: hidden;
+    }
+
+    .ecosystem {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .resourceDetailSlot {
+        height: auto;
+        min-height: 0;
+        margin: 0 0 8px;
+    }
+
+    .resourceDetail {
+        display: block;
+        height: auto;
+        width: auto;
+    }
+
+    .resourceDetailHeader {
+        margin-bottom: 12px;
+    }
+
+    .resourceDetailBody {
+        display: block;
+        padding: 16px 18px 18px !important;
+    }
+
+    .resourceDetailHeader {
+        margin-bottom: 12px;
+    }
+
+    .resourceDetail p {
+        margin: 0 0 14px;
+        line-height: 1.5;
+    }
+
+    .resourceDetailAction {
+        min-height: 36px;
+        padding: 0 14px;
+    }
+
+    .landscape,
+    .resourceGroupLabels {
+        display: none;
+    }
+
+    .resourceRow {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin: 0;
+    }
+
+    .resource {
+        min-height: 48px;
+        min-width: 0;
+        padding: 7px;
+        gap: 7px;
+    }
+
+    .resource.groupStart {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .resource.groupStart::before {
+        display: none;
+    }
+
+    .badge {
+        width: 34px;
+        height: 30px;
+        font-size: 9px;
+    }
+
+    .name {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 360px) {
+    .resourceRow {
+        grid-template-columns: 1fr;
+    }
+}

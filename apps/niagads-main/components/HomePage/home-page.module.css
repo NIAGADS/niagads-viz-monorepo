@@ -1,0 +1,7 @@
+.home-page-section {
+    width: 100vw;
+
+    display: flex;
+    justify-content: space-between;
+    padding: 20px
+}
