@@ -9,7 +9,6 @@
     width: 100%;
 
     display: flex;
-    justify-content: space-between;
 
     padding-top: 40px;
     padding-bottom: 40px;
@@ -17,7 +16,9 @@
 
 .home-page-heading {
     max-width: 60%;
-    padding-left: 40px;
+
+    margin-left: 40px;
+    margin-right: 100px;
 }
 
 .home-page-title {
@@ -31,9 +32,9 @@
 }
 
 .home-page-link-buttons {
-    width: 35%;
-
     display: flex;
+    flex: 1;
+
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
@@ -61,7 +62,7 @@
 }
 
 .home-page-signup-buttons {
-    width: 40%;
+    width: 25%;
     padding-left: 40px;
 
     height: 20rem;
@@ -77,5 +78,20 @@
 }
 
 .home-page-rss-feed {
+    display: flex;
+    flex: 1;
 
+    margin-left: 100px;
+}
+
+.home-page-rss-card {
+    margin-right: 20px;
+}
+
+.home-page-rss-card-body-1 {
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
