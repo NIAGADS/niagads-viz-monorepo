@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import logo from "@/public/niagads-logo.svg"
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@niagads/ui";
@@ -22,7 +24,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     return (
         <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
             <Header 
-                logo="NIAGADS"
+                logo={
+                    <figure>
+                        <Image width={200} height={60} src={logo} alt="Niagads GenomicsDB logo" />
+                    </figure>
+                }
                 links={[
                     {text: "About Us", url: ""},
                     {text: "Publications", url: ""},

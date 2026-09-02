@@ -4,7 +4,7 @@ import { Menu } from "lucide-react";
 import styles from "./header.module.css";
 
 interface HeaderProps {
-    logo: string;
+    logo: string | ReactNode;
     links: HeaderLink[];
     children?: ReactNode;
 };
@@ -24,9 +24,7 @@ export const Header = ({
             <div className={styles["logo-container"]}>
                 <div className={styles["logo"]}>
                     <a className={styles["active-menu-item"]} href="/">
-                        <figure>
-                            {logo}
-                        </figure>
+                        {logo}
                     </a>
                 </div>
             </div>
