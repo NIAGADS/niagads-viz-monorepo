@@ -3,6 +3,11 @@
     display: grid;
     place-items: start center;
     color: var(--text-primary);
+
+    padding-left: 40px;
+    padding-right: 40px;
+
+    width: 100%;
 }
 
 .ecosystem {

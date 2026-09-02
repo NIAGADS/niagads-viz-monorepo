@@ -11,7 +11,7 @@ import styles from "./home-page.module.css";
 export const HomePage = () => {
 
     return (
-        <div>
+        <div className={styles["home-page-content"]}>
             <div className={styles["home-page-section"]}>
                 <div className={styles["home-page-heading"]}>
                     <div className={styles["home-page-title"]}>The National Institute on Aging Genetics of Alzheimer's Disease Data Storage Site</div>
@@ -53,26 +53,28 @@ export const HomePage = () => {
             </div>
             <hr />
             <div className={styles["home-page-section"]}>
-                <div className={styles["home-page-buttons"]}>
-                    <a href="https://dss.niagads.org/datasets/">
-                        <Button className={styles["home-page-dss-link-button"]}>Subscribe to our newsletter</Button>
-                    </a>
-                    <a href="https://dss.niagads.org/datasets/">
-                        <Button className={styles["home-page-dss-link-button"]}>Sign up for Help Hours</Button>
-                    </a>
+                <div className={styles["home-page-signup-buttons"]}>
+                    <div>
+                        <div className={styles["home-page-button-label"]}>
+                            Subscribe to our newsletter
+                        </div>
+                        <a href="https://dss.niagads.org/datasets/">
+                            <Button className={styles["home-page-dss-link-button"]}>Subscribe</Button>
+                        </a>
+                    </div>
+                    <div>
+                        <div className={styles["home-page-button-label"]}>
+                            Sign up for Help Hours
+                        </div>
+                        <a href="https://dss.niagads.org/datasets/">
+                            <Button className={styles["home-page-dss-link-button"]}>Book Now</Button>
+                        </a>
+                    </div>
                 </div>
-                <div className={styles[""]}>
+                <hr />
+                <div className={styles["home-page-rss-feed"]}>
                 </div>
             </div>
-            <Footer
-                siteName="NIAGADS"
-                links={[
-                    { display: "About", url: "/about" },
-                    { display: "Contact", url: "#" },
-                    { display: "Privacy", url: "#" },
-                    { display: "Terms", url: "#" },
-                ]}
-            />
         </div>
     );
 };

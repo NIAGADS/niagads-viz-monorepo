@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import logo from "@/public/niagads-logo.svg"
+import logo from "@/public/niagads-logo.svg";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Header } from "@niagads/ui";
+import { Footer, Header } from "@niagads/ui";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -23,20 +23,31 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
     return (
         <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-            <Header 
-                logo={
-                    <figure>
-                        <Image width={200} height={60} src={logo} alt="Niagads GenomicsDB logo" />
-                    </figure>
-                }
-                links={[
-                    {text: "About Us", url: ""},
-                    {text: "Publications", url: ""},
-                    {text: "Cite and Acknowledge", url: ""},
-                    {text: "Help", url: ""},
-                ]}
-            />
-            <body className="content-container">{children}</body>
+            <body className="site-content">
+                <Header
+                    logo={
+                        <figure>
+                            <Image width={200} height={60} src={logo} alt="Niagads GenomicsDB logo" />
+                        </figure>
+                    }
+                    links={[
+                        { text: "About Us", url: "" },
+                        { text: "Publications", url: "" },
+                        { text: "Cite and Acknowledge", url: "" },
+                        { text: "Help", url: "" },
+                    ]}
+                />
+                <div className="content-container">{children}</div>
+                <Footer
+                    siteName="NIAGADS"
+                    links={[
+                        { display: "About", url: "/about" },
+                        { display: "Contact", url: "#" },
+                        { display: "Privacy", url: "#" },
+                        { display: "Terms", url: "#" },
+                    ]}
+                />
+            </body>
         </html>
     );
 }
