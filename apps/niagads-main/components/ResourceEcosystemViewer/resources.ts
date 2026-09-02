@@ -1,6 +1,6 @@
 export const RESOURCE_ECOSYSTEM_OVERVIEW = {
     title: "NIAGADS Ecosystem",
-    description: `Together with partner offerings, NIAGADS provides an integrated suite of resources for discovering, exploring, and accessing Alzheimer’s 
+    description: `Together with partner offerings, NIAGADS provides an integrated suite of resources for discovering, exploring, and accessing Alzheimer's 
         disease and related dementia genetics and genomics data.`,
 
     instruction: "Hover, focus, or tap a resource above to learn more.",
@@ -17,7 +17,7 @@ export const RESOURCES = [
         id: "genomicsdb",
         badge: "GDB",
         name: "Alzheimer's GenomicsDB",
-        description: `The NIAGADS Alzheimer’s GenomicsDB is an interactive knowledgebase for exploring AD/ADRD genetic associations, 
+        description: `The NIAGADS Alzheimer's GenomicsDB is an interactive knowledgebase for exploring AD/ADRD genetic associations, 
             ADSP variants, and functional annotations in the context of genes, variants, and genomic regions. 
             Researchers can search, browse, and integrate GWAS and sequencing results to investigate disease-associated loci 
             and their potential functional relevance.`,
@@ -87,7 +87,7 @@ export const RESOURCES = [
         badge: "PHC",
         name: "ADSP PHC",
         url: "https://vmacdata.org/adsp-phc",
-        description: `The Alzheimer’s Disease Sequencing Project Phenotype Harmonization Consortium (ADSP-PHC) harmonizes phenotypic and endophenotypic data
+        description: `The Alzheimer's Disease Sequencing Project Phenotype Harmonization Consortium (ADSP-PHC) harmonizes phenotypic and endophenotypic data
              across ADSP cohorts to support integrated genetic and genomic analyses of AD/ADRD. Its releases provide standardized 
              data and documentation across domains including cognition, diagnosis, biomarkers, neuropathology, cardiovascular risk, 
              and neuroimaging, with harmonized datasets distributed through the NIAGADS DSS.`,

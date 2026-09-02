@@ -13,11 +13,15 @@ export const HomePage = () => {
     return (
         <div>
             <div className={styles["home-page-section"]}>
-                <div>
-                    <div>The National Institute on Aging Genetics of Alzheimer's Disease Data Storage Site</div>
-                    <div>short description</div>
+                <div className={styles["home-page-heading"]}>
+                    <div className={styles["home-page-title"]}>The National Institute on Aging Genetics of Alzheimer's Disease Data Storage Site</div>
+                    <div className={styles["home-page-description"]}>
+                        NIAGADS is a collaborative agreement between the National Institute on Aging and the University of
+                        Pennsylvania that stores and distributes genetics and genomics data from studies on Alzheimer's disease,
+                        related dementias, and aging to qualified researchers globally.
+                    </div>
                     <Card>
-                        <CardHeader>Search</CardHeader>
+                        <CardHeader>Search the site</CardHeader>
                         <CardBody>
                             <APISearch
                                 suggestions={[]}
@@ -25,16 +29,21 @@ export const HomePage = () => {
                                 onSearch={() => console.log("searching")}
                                 onValueChange={(value) => console.log(value)}
                                 error={""}
+                                placeholder="This does not actually work yet..."
                             />
                         </CardBody>
                     </Card>
                 </div>
-                <div>
-                    <Button>Browse Datasets</Button>
-                    <Button>Submit Data</Button>
-                    <div>
-                        <Twitter />
-                        <Github />
+                <div className={styles["home-page-link-buttons"]}>
+                    <a href="https://dss.niagads.org/datasets/">
+                        <Button className={styles["home-page-dss-link-button"]}>Browse Datasets</Button>
+                    </a>
+                    <a href="">
+                        <Button className={styles["home-page-dss-link-button"]}>Submit Data</Button>
+                    </a>
+                    <div className={styles["home-page-socials"]}>
+                        <Twitter href="" scale={3} />
+                        <Github href="" scale={2} />
                     </div>
                 </div>
             </div>
@@ -44,11 +53,16 @@ export const HomePage = () => {
             </div>
             <hr />
             <div className={styles["home-page-section"]}>
-                <div>
-                    <Button>Sign up for Help Hours</Button>
-                    <Button>Other Button</Button>
+                <div className={styles["home-page-buttons"]}>
+                    <a href="https://dss.niagads.org/datasets/">
+                        <Button className={styles["home-page-dss-link-button"]}>Subscribe to our newsletter</Button>
+                    </a>
+                    <a href="https://dss.niagads.org/datasets/">
+                        <Button className={styles["home-page-dss-link-button"]}>Sign up for Help Hours</Button>
+                    </a>
                 </div>
-                <div></div>
+                <div className={styles[""]}>
+                </div>
             </div>
             <Footer
                 siteName="NIAGADS"
