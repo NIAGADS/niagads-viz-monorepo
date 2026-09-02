@@ -7,18 +7,14 @@ interface HeaderProps {
     logo: string | ReactNode;
     links: HeaderLink[];
     children?: ReactNode;
-};
+}
 
 interface HeaderLink {
     text: string;
     url: string;
 }
 
-export const Header = ({
-    logo,
-    links,
-    children,
-}: HeaderProps) => {
+export const Header = ({ logo, links, children }: HeaderProps) => {
     return (
         <header className={styles["header"]}>
             <div className={styles["logo-container"]}>
@@ -28,25 +24,17 @@ export const Header = ({
                     </a>
                 </div>
             </div>
-            <button
-                className={styles["mobile-menu-button"]}
-                aria-label="Toggle menu"
-                aria-expanded="false"
-            >
+            <button className={styles["mobile-menu-button"]} aria-label="Toggle menu" aria-expanded="false">
                 <Menu size={24} />
             </button>
             <nav className={styles["main-nav"]} role="navigation" aria-label="Main navigation">
-                {links.map(link => (
-                    <a
-                        key={link.text}
-                        href={link.url}
-                        className={styles["nav-link"]}
-                    >
+                {links.map((link) => (
+                    <a key={link.text} href={link.url} className={styles["nav-link"]}>
                         {link.text}
                     </a>
                 ))}
                 {children}
             </nav>
         </header>
-    )
+    );
 };

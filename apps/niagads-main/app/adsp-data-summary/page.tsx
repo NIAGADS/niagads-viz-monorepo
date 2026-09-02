@@ -69,7 +69,12 @@ const DataSummary = () => {
                             </p>
 
                             <figure className="wp-block-image size-large">
-                                <Image width={700} height={400} src={timeline_figure} alt="adsp production and release timeline" />
+                                <Image
+                                    width={700}
+                                    height={400}
+                                    src={timeline_figure}
+                                    alt="adsp production and release timeline"
+                                />
                             </figure>
 
                             <div style={{ height: "30px" }} aria-hidden="true" className="wp-block-spacer"></div>

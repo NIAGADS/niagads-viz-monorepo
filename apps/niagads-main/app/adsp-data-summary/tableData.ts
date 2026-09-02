@@ -1,4 +1,4 @@
-import { TableConfig } from "@niagads/table"
+import { TableConfig } from "@niagads/table";
 
 export const TABLE: TableConfig = {
     id: "sequence_data_releases",
@@ -114,5 +114,5 @@ export const TABLE: TableConfig = {
             vascular_risk_factors: "Select cohorts",
             neuroimaging: "Select cohorts",
         },
-    ]
-} 
+    ],
+};

@@ -1,12 +1,7 @@
 import React from "react";
 
-interface StatementBannerProps {
-
-};
+interface StatementBannerProps {}
 
 export const StatementBanner = ({}: StatementBannerProps) => {
-
-    return (
-        <div></div>
-    )
+    return <div></div>;
 };
