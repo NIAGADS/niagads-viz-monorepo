@@ -118,7 +118,6 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
     const [detailResourceId, setDetailResourceId] = useState<string | null>(null);
     const [resourceCenterX, setResourceCenterX] = useState<Record<string, number>>({});
     const resourceRowRef = useRef<HTMLDivElement>(null);
-    const detailHideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const resourceGridStyle = { "--resource-count": resources.length } as CSSProperties;
     const resourceById = useMemo(
         () => Object.fromEntries(resources.map((resource) => [resource.id, resource])) as Record<string, Resource>,
@@ -219,26 +218,31 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
         return new Set<string>(conceptToResources[active.id]);
     }, [active, conceptToResources]);
 
-    const clearDetailHideTimer = () => {
-        if (detailHideTimerRef.current) {
-            clearTimeout(detailHideTimerRef.current);
-            detailHideTimerRef.current = null;
-        }
-    };
-
-    const showResourceDetail = (resourceId: string) => {
-        clearDetailHideTimer();
+    const selectResource = (resourceId: string) => {
         setDetailResourceId(resourceId);
         setActive({ type: "resource", id: resourceId });
     };
 
-    const hideResourceDetail = (resourceId: string) => {
-        clearDetailHideTimer();
-        detailHideTimerRef.current = setTimeout(() => {
+    const handleOutsidePointerDown = (event: React.PointerEvent<HTMLElement>) => {
+        const target = event.target;
+
+        if (
+            target instanceof Element &&
+            (target.closest("[data-resource-id]") || target.closest(`.${styles.resourceDetail}`))
+        ) {
+            return;
+        }
+
+        setDetailResourceId(null);
+        setActive(null);
+    };
+
+    const handleConceptPointerOver = (event: React.PointerEvent<SVGSVGElement>) => {
+        const target = event.target;
+
+        if (target instanceof Element && target.closest(`.${styles.conceptMark}`)) {
             setDetailResourceId(null);
-            setActive((current) => (current?.type === "resource" && current.id === resourceId ? null : current));
-            detailHideTimerRef.current = null;
-        }, 120);
+        }
     };
 
     const detailResource = detailResourceId ? resourceById[detailResourceId] : undefined;
@@ -276,16 +280,12 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
             .join(" ");
 
     return (
-        <main className={styles.shell}>
+        <main className={styles.shell} onPointerDown={handleOutsidePointerDown}>
             <section className={styles.ecosystem} aria-label="NIAGADS homepage resource visualization prototype">
                 <div className={styles.resourceDetailSlot}>
                     <Card
                         aria-label={`${detailResource?.name ?? "NIAGADS resource ecosystem"} description`}
                         className={`${styles.resourceDetail} ${detailResource ? "" : styles.defaultDetail}`}
-                        onFocus={clearDetailHideTimer}
-                        onMouseEnter={clearDetailHideTimer}
-                        onMouseLeave={detailResource ? () => hideResourceDetail(detailResource.id) : undefined}
-                        onPointerDown={clearDetailHideTimer}
                         style={
                             {
                                 "--resource-color": detailResource
@@ -349,11 +349,11 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                                 } as CSSProperties
                             }
                             type="button"
-                            onBlur={() => hideResourceDetail(resource.id)}
-                            onFocus={() => showResourceDetail(resource.id)}
-                            onMouseEnter={() => showResourceDetail(resource.id)}
-                            onMouseLeave={() => hideResourceDetail(resource.id)}
-                            onPointerDown={() => showResourceDetail(resource.id)}
+                            onBlur={() => setActive(null)}
+                            onFocus={() => selectResource(resource.id)}
+                            onMouseEnter={() => selectResource(resource.id)}
+                            onMouseLeave={() => setActive(null)}
+                            onPointerDown={() => selectResource(resource.id)}
                         >
                             <span className={styles.badge}>{resource.badge}</span>
                         </button>
@@ -365,6 +365,7 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                     viewBox="0 0 1240 340"
                     role="img"
                     aria-labelledby="ecosystem-title ecosystem-desc"
+                    onPointerOver={handleConceptPointerOver}
                 >
                     <title id="ecosystem-title">NIAGADS resource ecosystem concept landscape</title>
                     <desc id="ecosystem-desc">

@@ -3,7 +3,7 @@ export const RESOURCE_ECOSYSTEM_OVERVIEW = {
     description: `Together with partner offerings, NIAGADS provides an integrated suite of resources for discovering, exploring, and accessing Alzheimer’s 
         disease and related dementia genetics and genomics data.`,
 
-    instruction: "Hover, focus, or tap a resource above to learn more.",
+    instruction: "Hover, focus, or tap a resource below to learn more.",
 };
 
 export const RESOURCE_GROUPS = [
