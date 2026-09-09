@@ -1,14 +1,17 @@
 "use client";
 
-import { Button, Card, CardBody, CardHeader, Footer } from "@niagads/ui";
-import { APISearch } from "@niagads/ui/client";
+import { Button, Card, CardBody, CardHeader, Footer, TextInput } from "@niagads/ui";
 import { Github, Twitter } from "lucide-react";
 import { ResourceEcosystemViewer } from "@/components/ResourceEcosystemViewer/ResourceEcosystemViewer";
 import { RESOURCES, RESOURCE_GROUPS } from "@/components/ResourceEcosystemViewer/resources";
 
 import styles from "./home-page.module.css";
+import { useState } from "react";
+import Link from "next/link";
 
 export const HomePage = () => {
+    const [searchTerm, setSearchTerm] = useState("");
+
     return (
         <div className={styles["home-page-content"]}>
             <div className={styles["home-page-section"]}>
@@ -24,14 +27,14 @@ export const HomePage = () => {
                     <Card>
                         <CardHeader>Search the site</CardHeader>
                         <CardBody>
-                            <APISearch
-                                suggestions={[]}
-                                onClick={() => console.log("click search")}
-                                onSearch={() => console.log("searching")}
-                                onValueChange={(value) => console.log(value)}
-                                error={""}
-                                placeholder="This does not actually work yet..."
+                            <TextInput
+                                value={searchTerm}
+                                onChange={setSearchTerm}
+                                placeholder="Search NIAGADS Data..."
                             />
+                            <Link href={`/search?term=${searchTerm}`}>
+                                <Button> Search </Button>
+                            </Link>
                         </CardBody>
                     </Card>
                 </div>
