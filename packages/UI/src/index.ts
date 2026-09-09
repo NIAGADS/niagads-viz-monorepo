@@ -18,3 +18,4 @@ export * from "./FilterChip";
 export * from "./HelpIcon";
 export * from "./Tooltip";
 export * from "./Footer";
+export * from "./Header/Header";
