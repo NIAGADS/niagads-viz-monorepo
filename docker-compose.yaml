@@ -1,10 +1,29 @@
 services:
 
-  genomicsdb-app:
+  genomicsdb:
     container_name: genomicsdb-client
-    image: client-app-genomics:${RELEASE}
+    image: client-app-genomics:${ENV}
     build:
-      context: .
-      dockerfile: ./genomicsdb.Dockerfile
+      context: ./apps/genomicsdb/
+      # dockerfile path is resolved from context
+      dockerfile: ../../next.Dockerfile
     ports:
-      - "${HOST_CLIENT_PORT}:3000"
+      - "${GENOMICSDB_CLIENT_PORT}:3000"
+
+  niagads-main:
+    container_name: niagads-main-client
+    image: client-app-niagads-main:${ENV}
+    build:
+      context: ./apps/niagads-main/
+      dockerfile: ../../next.Dockerfile
+    ports:
+      - "${NIAGADS_MAIN_CLIENT_PORT}:3000"
+
+  igvbrowser:
+    container_name: igvbrowser-client
+    image: client-app-igvbrowser:${ENV}
+    build:
+      context: ./apps/igvbrowser
+      dockerfile: ../../next.Dockerfile
+    ports:
+      - "${IGVBROWSER_CLIENT_PORT}:3000"
