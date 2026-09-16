@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import Table from "@niagads/table";
 import { Tab, TabBody, TabHeader, Tabs } from "@niagads/ui/client";
@@ -13,25 +13,30 @@ const SearchResults = ({ searchResults }: SearchResultsProps) => {
 
     return (
         <div>
-            <Tabs
-                selectedTab={selectedTab}
-                onTabChange={id => setSelectedTab(id)}
-            >
+            <Tabs selectedTab={selectedTab} onTabChange={(id) => setSelectedTab(id)}>
                 <Tab id="datasets">
                     <TabHeader>Datasets</TabHeader>
                     <TabBody>
-                        <Table id="datasets_results" columns={searchResults.datasets.columns} data={searchResults.datasets.columns}/>
+                        <Table
+                            id="datasets_results"
+                            columns={searchResults.datasets.columns}
+                            data={searchResults.datasets.columns}
+                        />
                     </TabBody>
                 </Tab>
                 <Tab id="genes">
                     <TabHeader>Genes</TabHeader>
                     <TabBody>
-                        <Table id="genes_results" columns={searchResults.genes.columns} data={searchResults.genes.data}/>
+                        <Table
+                            id="genes_results"
+                            columns={searchResults.genes.columns}
+                            data={searchResults.genes.data}
+                        />
                     </TabBody>
                 </Tab>
             </Tabs>
         </div>
-    )
+    );
 };
 
 export default SearchResults;

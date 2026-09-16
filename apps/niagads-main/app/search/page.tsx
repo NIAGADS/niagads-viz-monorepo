@@ -16,14 +16,14 @@ const SearchPage = async ({
         genes: {
             columns: [],
             data: [],
-        }
+        },
     };
 
     return (
         <div>
             <h2>Searching for: {searchTerm}</h2>
             <h2>Results:</h2>
-            <SearchResults searchResults={results}/>
+            <SearchResults searchResults={results} />
         </div>
     );
 };
