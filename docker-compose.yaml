@@ -1,6 +1,8 @@
 # TODO:: heartbeat, server side log rollover, adjust package jsons to make sure they have start/build
 # Developer notes: 
 #  - Dockerfile path is resolved from context, which is why the path walks up two directories
+#  - WEBMASTER_GID is provided using `group_add` so that the `node` user in the container will be assigned to that group and logs will be rw by the group on the host
+#  - stdin/out is captured and piped to a <app_name>.log file.  for now one single mounted log dir for all apps, host target directory must 1) exist, 2) belong to webmaster group, 3) have g+rw permissions
 
 x-defaults: &defaults
   restart: unless-stopped
@@ -8,24 +10,27 @@ x-defaults: &defaults
     - ${LOG_DIR}:/var/log/app
   group_add:
     - "${WEBMASTER_GID}"
+
 x-build-defaults: &build-defaults
   dockerfile: ../../next.Dockerfile
   additional_contexts:
     scripts: ./scripts/docker
 
-x-build-args: &build-args
-  APP_ENV: ${APP_ENV}
+x-build-arg-defaults: &build-arg-defaults
+  BUILD: ${BUILD}
 
 services:
 
   genomicsdb:
     <<: *defaults
     container_name: genomicsdb-client
-    image: client-app-genomics:${APP_ENV}
+    image: client-app-genomics:${BUILD}
+    env_file:
+      - ./apps/genomicsdb/.env.local
     build:
       <<: *build-defaults
       args:
-        <<: *build-args
+        <<: *build-arg-defaults
         APP_NAME: genomicsdb
       context: ./apps/genomicsdb/
     ports:
@@ -34,24 +39,27 @@ services:
   niagads-main:
     <<: *defaults
     container_name: niagads-main-client
-    image: client-app-niagads-main:${APP_ENV}
+    image: client-app-niagads-main:${BUILD}
     build:
       <<: *build-defaults
       args:
-        <<: *build-args
+        <<: *build-arg-defaults
         APP_NAME: niagads-main
       context: ./apps/niagads-main/
+
     ports:
       - "${NIAGADS_MAIN_CLIENT_PORT}:3000"
 
   genome-browser:
     <<: *defaults
     container_name: genome-browser-client
-    image: client-app-genome-browser:${APP_ENV}
+    image: client-app-genome-browser:${BUILD}
+    env_file:
+      - ./apps/igvbrowser/.env.local
     build:
       <<: *build-defaults
       args:
-        <<: *build-args
+        <<: *build-arg-defaults
         APP_NAME: genome-browser
       context: ./apps/igvbrowser
     ports:

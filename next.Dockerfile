@@ -1,11 +1,10 @@
 FROM node:24.15-bookworm-slim AS builder
 
-ARG APP_ENV=production
-ARG APP_NAME
+ARG BUILD=production
 
 WORKDIR /app
 
-ENV NODE_ENV=$APP_ENV
+ENV NODE_ENV=$BUILD
 ENV NPM_CONFIG_ALLOW_GIT=all
 
 # install git support (for git-based npm installs) 
@@ -17,24 +16,24 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 COPY package.json ./
-COPY --from=scripts use-canary.mjs ./tmp/use-canary.mjs
+COPY --from=scripts use-canary.mjs /tmp/use-canary.mjs
 
-RUN node /tmp/use-canary.mjs && \
-    npm install --package-lock=false
+RUN node /tmp/use-canary.mjs 
+# && \
+RUN npm install --package-lock=false
 
-COPY .env.local ./
-
-RUN npm run build
+RUN npm run build-app
 RUN npm prune --omit=dev
 
 
 FROM node:24.15-bookworm-slim AS runner
 
-ARG APP_ENV=production
+ARG BUILD=production
+ARG APP_NAME
 
 WORKDIR /app
 
-ENV NODE_ENV=$APP_ENV
+ENV NODE_ENV=$BUILD
 ENV LOG_FILE="/var/log/${APP_NAME}.log"
 
 RUN apt-get update \
@@ -50,7 +49,7 @@ EXPOSE 3000
 
 USER node
 
-CMD sh -c 'npm start 2>&1 | tee -a "$LOG_FILE"'
+CMD sh -c 'npm run start-app 2>&1 | tee -a "$LOG_FILE"'
 
 # CMD ["sh", "-c", "npm start 2>&1 | tee -a \"$LOG_FILE\""]
 
