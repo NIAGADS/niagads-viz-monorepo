@@ -3,13 +3,11 @@
     "version": "0.1.1",
     "private": true,
     "scripts": {
-        "genomicsdb": "npm run dev",
-        "dev": "next dev --turbopack",
-        "genomicsdb-debug": "next dev",
-        "genomicsdb-build": "next build",
-        "genomicsdb-prod": "next start",
-        "build": "next build",
-        "start": "next start",
+        "genomicsdb": "next dev",
+        "build-genomicsdb": "next build",
+        "start-genomicsdb": "next start",
+        "build-app": "next build",
+        "start-app": "next start",
         "lint": "next lint"
     },
     "dependencies": {

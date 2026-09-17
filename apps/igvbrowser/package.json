@@ -1,11 +1,13 @@
 {
-    "name": "igvbrowser",
+    "name": "genome-browser",
     "version": "0.1.1",
     "private": true,
     "scripts": {
-        "igvbrowser": "npm run dev",
-        "dev": "next dev --turbopack",
-        "start": "next start",
+        "genome-browser": "next dev",
+        "build-genome-browser": "next build",
+        "start-genome-browser": "next start",
+        "build-app": "next build",
+        "start-app": "next start",
         "lint": "next lint"
     },
     "dependencies": {

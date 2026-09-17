@@ -4,8 +4,11 @@
     "private": true,
     "scripts": {
         "niagads-main": "next dev",
-        "build-naigads-main": "next build",
-        "start-niagads-main": "next start"
+        "build-niagads-main": "next build",
+        "start-niagads-main": "next start",
+        "build-app": "next build",
+        "start-app": "next start",
+        "lint": "next lint"
     },
     "dependencies": {
         "@niagads/charts": "^0.2.1",
