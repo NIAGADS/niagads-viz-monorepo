@@ -1,29 +1,58 @@
+# TODO:: heartbeat, server side log rollover, adjust package jsons to make sure they have start/build
+# Developer notes: 
+#  - Dockerfile path is resolved from context, which is why the path walks up two directories
+
+x-defaults: &defaults
+  restart: unless-stopped
+  volumes:
+    - ${LOG_DIR}:/var/log/app
+  group_add:
+    - "${WEBMASTER_GID}"
+x-build-defaults: &build-defaults
+  dockerfile: ../../next.Dockerfile
+  additional_contexts:
+    scripts: ./scripts/docker
+
+x-build-args: &build-args
+  APP_ENV: ${APP_ENV}
+
 services:
 
   genomicsdb:
+    <<: *defaults
     container_name: genomicsdb-client
-    image: client-app-genomics:${ENV}
+    image: client-app-genomics:${APP_ENV}
     build:
+      <<: *build-defaults
+      args:
+        <<: *build-args
+        APP_NAME: genomicsdb
       context: ./apps/genomicsdb/
-      # dockerfile path is resolved from context
-      dockerfile: ../../next.Dockerfile
     ports:
       - "${GENOMICSDB_CLIENT_PORT}:3000"
 
   niagads-main:
+    <<: *defaults
     container_name: niagads-main-client
-    image: client-app-niagads-main:${ENV}
+    image: client-app-niagads-main:${APP_ENV}
     build:
+      <<: *build-defaults
+      args:
+        <<: *build-args
+        APP_NAME: niagads-main
       context: ./apps/niagads-main/
-      dockerfile: ../../next.Dockerfile
     ports:
       - "${NIAGADS_MAIN_CLIENT_PORT}:3000"
 
-  igvbrowser:
-    container_name: igvbrowser-client
-    image: client-app-igvbrowser:${ENV}
+  genome-browser:
+    <<: *defaults
+    container_name: genome-browser-client
+    image: client-app-genome-browser:${APP_ENV}
     build:
+      <<: *build-defaults
+      args:
+        <<: *build-args
+        APP_NAME: genome-browser
       context: ./apps/igvbrowser
-      dockerfile: ../../next.Dockerfile
     ports:
       - "${IGVBROWSER_CLIENT_PORT}:3000"

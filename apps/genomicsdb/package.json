@@ -8,6 +8,7 @@
         "genomicsdb-debug": "next dev",
         "genomicsdb-build": "next build",
         "genomicsdb-prod": "next start",
+        "build": "next build",
         "start": "next start",
         "lint": "next lint"
     },
