@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 
 import { InlineIcon } from "@/src/InlineIcon";
-import { StylingProps } from "@/src/types";
+import { StylingProps } from "../types";
 import styles from "./badge.module.css";
 
 interface BadgeProps extends StylingProps {

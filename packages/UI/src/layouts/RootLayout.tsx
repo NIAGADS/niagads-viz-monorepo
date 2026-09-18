@@ -2,7 +2,7 @@ import { Navigation, NavigationConfig } from "@/src/Navigation";
 import React, { ReactNode } from "react";
 
 import { LayoutProps } from "./types";
-import { ThemeVariant } from "@/src/types";
+import { ThemeVariant } from "../types";
 import { isNavigationConfig } from "./utils";
 
 interface RootLayoutProps extends LayoutProps {

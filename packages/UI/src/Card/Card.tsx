@@ -1,6 +1,6 @@
 import React, { ElementType, ReactNode } from "react";
 
-import { StylingProps } from "@/src/types";
+import { StylingProps } from "../types";
 import styles from "./card.module.css";
 
 // ─── Sub-components ────────────────────────────────────────────────────────────

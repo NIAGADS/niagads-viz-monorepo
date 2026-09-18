@@ -1,5 +1,5 @@
 import React from "react";
-import { StylingProps } from "@/src/types";
+import { StylingProps } from "../types";
 import styles from "./textinput.module.css";
 
 interface TextInputProps extends StylingProps {

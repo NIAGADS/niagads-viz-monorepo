@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 
 import { Info } from "lucide-react";
 import { InlineIcon } from "@/src/InlineIcon";
-import { ThemeVariant } from "@/src/types";
+import { ThemeVariant } from "../types";
 import styles from "./navigation.module.css";
 
 /** TODO:

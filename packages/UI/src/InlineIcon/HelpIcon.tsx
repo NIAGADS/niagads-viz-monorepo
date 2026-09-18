@@ -3,7 +3,7 @@ import React, { ReactNode } from "react";
 import { Tooltip, TooltipPosition } from "@/src/Tooltip";
 
 import { InlineIcon } from "./InlineIcon";
-import { StylingProps } from "@/src/types";
+import { StylingProps } from "../types";
 import { _get } from "@niagads/common";
 
 const ICONS = {

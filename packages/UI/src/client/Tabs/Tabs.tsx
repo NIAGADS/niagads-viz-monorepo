@@ -2,7 +2,7 @@ import React, { ReactElement, ReactNode, useEffect, useId, useState } from "reac
 
 import { Card } from "@/src/Card";
 import { HelpIconWrapper } from "@/src/InlineIcon";
-import { StylingProps } from "@/src/types";
+import { StylingProps } from "../../types";
 import styles from "./tabs.module.css";
 
 interface TabsProps extends StylingProps {
