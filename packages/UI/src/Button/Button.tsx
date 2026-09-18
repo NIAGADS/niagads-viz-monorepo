@@ -1,8 +1,8 @@
 import React, { ReactNode } from "react";
 
+import { InlineIcon } from "@/src/InlineIcon";
 import { StylingProps } from "@/src/types";
 import styles from "./button.module.css";
-import { InlineIcon } from "./InlineIcon";
 
 type ButtonVariants = "default" | "icon";
 export type ButtonColorVariants = "default" | "primary" | "white";

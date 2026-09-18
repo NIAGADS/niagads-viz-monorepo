@@ -1,7 +1,7 @@
 import { BadgeCheck, HardHat, Info, OctagonAlert, TriangleAlert } from "lucide-react";
 import React, { ReactNode } from "react";
 
-import { InlineIcon } from "./InlineIcon";
+import { InlineIcon } from "@/src/InlineIcon";
 import { StylingProps } from "@/src/types";
 import { _get } from "@niagads/common";
 import styles from "./alert.module.css";

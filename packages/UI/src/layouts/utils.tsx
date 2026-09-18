@@ -1,5 +1,5 @@
 import React from "react";
-import { NavigationConfig } from "../Navigation/Navigation";
+import { NavigationConfig } from "@/src/Navigation";
 
 // check if navigation content is a config (vs a child ReactNode)
 export const isNavigationConfig = (obj: unknown): obj is NavigationConfig =>

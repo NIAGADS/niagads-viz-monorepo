@@ -1,6 +1,6 @@
 import { AlertCircle, HelpCircle, Info, ShieldAlert } from "lucide-react";
 import React, { ReactNode } from "react";
-import { Tooltip, TooltipPosition } from "./Tooltip";
+import { Tooltip, TooltipPosition } from "@/src/Tooltip";
 
 import { InlineIcon } from "./InlineIcon";
 import { StylingProps } from "@/src/types";

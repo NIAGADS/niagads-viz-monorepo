@@ -1,7 +1,6 @@
 import "../global.css";
 
 export * from "./ActionMenu";
-export * from "./APISearch";
 export * from "./Autocomplete";
 export * from "./RichSelect";
 export * from "./Slider";

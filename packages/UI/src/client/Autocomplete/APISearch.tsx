@@ -1,7 +1,7 @@
 import { ArrowRight, Search } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 
-import { LoadingSpinner } from "../LoadingSpinner/LoadingSpinner";
+import { LoadingSpinner } from "@/src/LoadingSpinner";
 import styles from "./Autocomplete/autocomplete.module.css";
 
 const useDebounce = (value: string) => {

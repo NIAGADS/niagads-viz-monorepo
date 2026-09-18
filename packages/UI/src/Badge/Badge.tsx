@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 
-import { InlineIcon } from "./InlineIcon";
+import { InlineIcon } from "@/src/InlineIcon";
 import { StylingProps } from "@/src/types";
 import styles from "./badge.module.css";
 
