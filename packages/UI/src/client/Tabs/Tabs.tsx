@@ -1,7 +1,7 @@
 import React, { ReactElement, ReactNode, useEffect, useId, useState } from "react";
 
 import { Card } from "@/src/Card";
-import { HelpIconWrapper } from "@/src/HelpIcon";
+import { HelpIconWrapper } from "@/src/InlineIcon";
 import { StylingProps } from "@/src/types";
 import styles from "./tabs.module.css";
 

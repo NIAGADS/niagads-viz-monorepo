@@ -1,3 +1,3 @@
-import "../styles/global.css";
+import "../global.css";
 
 export * from "./RootLayout";
