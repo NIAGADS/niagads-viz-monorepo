@@ -6,6 +6,7 @@ WORKDIR /app
 
 ENV NODE_ENV=$BUILD
 ENV NPM_CONFIG_ALLOW_GIT=all
+ENV NEXT_TELEMETRY_DISABLED=1
 
 
 # 1. force update the OS packages to pull down newest security patches to 
@@ -18,7 +19,7 @@ RUN apt-get update \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/* 
 
-COPY package.json ./
+COPY . .
 COPY --from=scripts use-canary.mjs /tmp/use-canary.mjs
 
 # 1. Tell Git to downgrade SSH requests back to HTTPS
