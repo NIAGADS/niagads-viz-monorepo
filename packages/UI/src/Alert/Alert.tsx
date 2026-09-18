@@ -2,7 +2,7 @@ import { BadgeCheck, HardHat, Info, OctagonAlert, TriangleAlert } from "lucide-r
 import React, { ReactNode } from "react";
 
 import { InlineIcon } from "./InlineIcon";
-import { StylingProps } from "./types";
+import { StylingProps } from "@/src/types";
 import { _get } from "@niagads/common";
 import styles from "./alert.module.css";
 

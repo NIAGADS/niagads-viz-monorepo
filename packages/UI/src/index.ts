@@ -1,4 +1,4 @@
-import "./styles/global.css";
+import "./global.css";
 
 export * from "./types";
 export * from "./Alert";

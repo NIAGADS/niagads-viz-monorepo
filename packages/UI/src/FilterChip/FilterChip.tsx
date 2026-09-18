@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 
-import { StylingProps } from "./types";
+import { StylingProps } from "@/src/types";
 import styles from "./filterchip.module.css";
 
 export interface FilterChipProps extends StylingProps {

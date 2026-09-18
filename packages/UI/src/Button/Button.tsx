@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 
-import { StylingProps } from "./types";
+import { StylingProps } from "@/src/types";
 import styles from "./button.module.css";
 import { InlineIcon } from "./InlineIcon";
 
