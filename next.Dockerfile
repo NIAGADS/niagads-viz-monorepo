@@ -7,17 +7,27 @@ WORKDIR /app
 ENV NODE_ENV=$BUILD
 ENV NPM_CONFIG_ALLOW_GIT=all
 
-# install git support (for git-based npm installs) 
-# and force update the OS packages to pull down newest security patches 
-# to migitgate legacy CVEs since last image build
+
+# 1. force update the OS packages to pull down newest security patches to 
+#    migitgate legacy CVEs since last image build
+# 2. install git & ca-certificates for HTTPS (for git-based npm installs) 
+
 RUN apt-get update \
     && apt-get upgrade -y \
     && apt-get install -y --no-install-recommends git \
-    && rm -rf /var/lib/apt/lists/*
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/* 
 
 COPY package.json ./
 COPY --from=scripts use-canary.mjs /tmp/use-canary.mjs
 
+# 1. Tell Git to downgrade SSH requests back to HTTPS
+# 2. install npm 12.0.2
+# 3. substitute canary versions for @niagads packages as needed for staging 
+#    or development builds
+# 4. run the build
+
+RUN npm install -g npm@12.0.2
 RUN node /tmp/use-canary.mjs 
 # && \
 RUN npm install --package-lock=false
