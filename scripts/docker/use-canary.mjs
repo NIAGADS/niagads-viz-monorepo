@@ -7,7 +7,7 @@
 import fs from "node:fs";
 import { spawnSync } from "node:child_process";
 
-if (process.env.NODE_ENV === "production") {
+if (process.env.BUILD_ENV === "production") {
     process.exit(0);
 }
 

@@ -46,7 +46,7 @@ services:
         <<: *build-arg-defaults
         APP_NAME: niagads-main
       context: ./apps/niagads-main/
-
+      target: builder
     ports:
       - "${NIAGADS_MAIN_CLIENT_PORT}:3000"
 
