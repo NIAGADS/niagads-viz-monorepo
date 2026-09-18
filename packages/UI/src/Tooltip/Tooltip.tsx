@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 
-import styles from "./styles/tooltip.module.css";
+import styles from "./tooltip.module.css";
 
 export type TooltipPosition = "top" | "bottom" | "left" | "right";
 interface TooltipProps {

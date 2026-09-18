@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./styles/select.module.css";
+import styles from "./select.module.css";
 
 interface SelectProps {
     fields: string[] | { [key: string]: string } | number[];

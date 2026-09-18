@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect, useRef, useState } from "react";
 
 import { ChevronDown } from "lucide-react";
-import styles from "../styles/richselect.module.css";
+import styles from "./richselect.module.css";
 
 interface RichSelectProps {
     options: Record<string, ReactNode>;

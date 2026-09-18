@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./styles/checkbox.module.css";
+import styles from "./checkbox.module.css";
 
 export type CheckboxVariants = "default" | "primary" | "secondary" | "pink" | "accent";
 export interface CheckboxProps {

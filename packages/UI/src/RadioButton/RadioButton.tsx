@@ -1,6 +1,6 @@
 import { CheckboxProps as RadioButtonProps } from "./Checkbox";
 import React from "react";
-import styles from "./styles/checkbox.module.css";
+import styles from "../Checkbox/checkbox.module.css";
 
 export const RadioButton = ({
     variant = "default",

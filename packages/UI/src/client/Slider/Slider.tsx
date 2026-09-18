@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 import { Range } from "@niagads/common";
-import styles from "../styles/slider.module.css";
+import styles from "./slider.module.css";
 
 export type SliderVariant = "min" | "max" | "single";
 

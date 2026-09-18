@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, Search } from "lucide-react";
-import styles from "../styles/autocomplete.module.css";
+import styles from "./autocomplete.module.css";
 
 interface AutocompleteProps {
     suggestions: string[];

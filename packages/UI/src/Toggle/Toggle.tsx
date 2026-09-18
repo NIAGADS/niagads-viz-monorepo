@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 
 import { StylingProps } from "./types";
-import styles from "./styles/toggle.module.css";
+import styles from "./toggle.module.css";
 
 type ToggleVariant = "default" | "primary";
 

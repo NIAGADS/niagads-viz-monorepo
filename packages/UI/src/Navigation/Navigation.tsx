@@ -3,7 +3,7 @@ import React, { ReactNode } from "react";
 import { Info } from "lucide-react";
 import { InlineIcon } from "./InlineIcon";
 import { ThemeVariant } from "./types";
-import styles from "./styles/navigation.module.css";
+import styles from "./navigation.module.css";
 
 /** TODO:
  * theme-based variants

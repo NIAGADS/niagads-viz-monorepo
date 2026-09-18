@@ -1,9 +1,9 @@
 import React, { ReactElement, ReactNode, useEffect, useId, useState } from "react";
 
-import { Card } from "../Card";
-import { HelpIconWrapper } from "../HelpIcon";
-import { StylingProps } from "../types";
-import styles from "../styles/tabs.module.css";
+import { Card } from "../../Card/Card";
+import { HelpIconWrapper } from "../../HelpIcon/HelpIcon";
+import { StylingProps } from "../../types";
+import styles from "./tabs.module.css";
 
 interface TabsProps extends StylingProps {
     children: ReactElement<TabProps>[];

@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 
 import { StylingProps } from "./types";
-import styles from "./styles/button.module.css";
+import styles from "./button.module.css";
 import { InlineIcon } from "./InlineIcon";
 
 type ButtonVariants = "default" | "icon";

@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 
 import { StylingProps } from "./types";
-import styles from "./styles/inline-icon.module.css";
+import styles from "./inline-icon.module.css";
 
 export interface InlineIconProps {
     icon: ReactNode;

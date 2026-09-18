@@ -4,7 +4,7 @@ import React, { ReactNode } from "react";
 import { InlineIcon } from "./InlineIcon";
 import { StylingProps } from "./types";
 import { _get } from "@niagads/common";
-import styles from "./styles/alert.module.css";
+import styles from "./alert.module.css";
 
 interface Alert extends StylingProps {
     variant?: AlertVariants;

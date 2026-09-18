@@ -1,4 +1,4 @@
-import { Navigation, NavigationConfig } from "../Navigation";
+import { Navigation, NavigationConfig } from "../Navigation/Navigation";
 import React, { ReactNode } from "react";
 
 import { LayoutProps } from "./types";

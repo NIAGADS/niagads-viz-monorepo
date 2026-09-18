@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./styles/skeleton.module.css";
+import styles from "./skeleton.module.css";
 
 type SkeletonTypes = "default" | "card" | "table";
 
