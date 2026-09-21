@@ -1,5 +1,9 @@
 {
     "name": "@niagads/locuszoom",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/NIAGADS/niagads-viz-monorepo.git"
+    },
     "dependencies": {
         "locuszoom": "^0.14.0"
     },
