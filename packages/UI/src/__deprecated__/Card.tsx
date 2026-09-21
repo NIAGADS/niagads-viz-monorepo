@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 
 import { StylingProps } from "./types";
-import styles from "./styles/card.module.css";
+import styles from "../Card/card.module.css";
 
 interface CardBodyProps {
     children: ReactNode;

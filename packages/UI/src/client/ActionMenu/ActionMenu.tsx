@@ -1,9 +1,8 @@
-import React, { ReactNode, useEffect, useId, useRef, useState } from "react";
-
 import { Button, ButtonColorVariants } from "@/src/Button";
-import { InlineIcon } from "@/src/InlineIcon";
-import { StylingProps } from "@/src/types";
+import React, { ReactNode, useId, useRef, useState } from "react";
 
+import { InlineIcon } from "@/src/InlineIcon";
+import { StylingProps } from "../../types";
 import styles from "./action-menu.module.css";
 import { useClickAway } from "@/src/hooks/useClickAway";
 
