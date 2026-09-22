@@ -25,12 +25,31 @@ export type ConceptType =
 interface Concept {
     id: ConceptType;
     label: string;
+}
+
+type GenomicConceptId = Extract<
+    ConceptType,
+    "genes" | "variants" | "gwas" | "ld" | "qtls" | "regulatory" | "sequencing"
+>;
+type AccessConceptId = Exclude<ConceptType, GenomicConceptId>;
+
+interface GenomicBandLayout {
+    id: GenomicConceptId;
     x: number;
     y: number;
-    connectorX?: number;
-    connectorY?: number;
-    labelX?: number;
-    labelY?: number;
+    labelDx: number;
+    labelDy: number;
+    connectorDx: number;
+    connectorDy: number;
+}
+
+interface AccessLayout {
+    id: AccessConceptId;
+    x: number;
+    y: number;
+    connectorY: number;
+    labelX: number;
+    labelY: number;
 }
 
 export interface ResourceGroup {
@@ -70,47 +89,68 @@ interface ResourceGroupLabel {
 type ActiveTarget = { type: "resource"; id: string } | { type: "concept"; id: ConceptType } | null;
 
 const CONCEPTS: Concept[] = [
-    { id: "genes", label: "Genes", x: 140, y: 150, connectorX: 61, connectorY: 120, labelX: 111, labelY: 194 },
-    { id: "variants", label: "Variants", x: 310, y: 150, labelX: 310, labelY: 176 },
-    { id: "gwas", label: "Genetic associations", x: 310, y: 90, labelX: 310, labelY: 56 },
-    { id: "ld", label: "LD", x: 310, y: 210, labelX: 310, labelY: 264 },
-    {
-        id: "qtls",
-        label: "Molecular QTLs",
-        x: 810,
-        y: 168,
-        connectorY: 132,
-        labelX: 840,
-        labelY: 246,
-    },
-    { id: "regulatory", label: "Regulatory elements", x: 570, y: 150, labelX: 570, labelY: 194 },
-    { id: "biosamples", label: "Biosamples", x: 365, y: 300, connectorY: 292, labelX: 330, labelY: 305 },
-    { id: "curatedEvidence", label: "Curated evidence", x: 201, y: 300, connectorY: 292, labelX: 170, labelY: 305 },
-    { id: "phenotypes", label: "Phenotypes", x: 538, y: 300, connectorY: 292, labelX: 498, labelY: 305 },
-    { id: "openAccess", label: "Open", x: 760, y: 300, connectorY: 292, labelX: 760, labelY: 305 },
-    { id: "restrictedAccess", label: "Restricted", x: 865, y: 300, connectorY: 292, labelX: 850, labelY: 305 },
-    { id: "downloads", label: "Downloads", x: 982, y: 300, connectorY: 292, labelX: 970, labelY: 305 },
-    { id: "cloudAccess", label: "API / Cloud", x: 1124, y: 300, connectorY: 292, labelX: 1084, labelY: 305 },
-    {
-        id: "sequencing",
-        label: "Sequencing",
-        x: 1165,
-        y: 120,
-        connectorX: 1180,
-        connectorY: 84,
-        labelX: 1135,
-        labelY: 176,
-    },
+    { id: "genes", label: "Genes" },
+    { id: "variants", label: "Variants" },
+    { id: "gwas", label: "Genetic associations" },
+    { id: "ld", label: "LD" },
+    { id: "qtls", label: "Molecular QTLs" },
+    { id: "regulatory", label: "Regulatory elements" },
+    { id: "biosamples", label: "Biosamples" },
+    { id: "curatedEvidence", label: "Curated evidence" },
+    { id: "phenotypes", label: "Phenotypes" },
+    { id: "openAccess", label: "Open" },
+    { id: "restrictedAccess", label: "Restricted" },
+    { id: "downloads", label: "Downloads" },
+    { id: "cloudAccess", label: "API / Cloud" },
+    { id: "sequencing", label: "Sequencing" },
+];
+
+const GENOMIC_BAND_LAYOUT: GenomicBandLayout[] = [
+    { id: "genes", x: 140, y: 150, labelDx: -29, labelDy: 44, connectorDx: -79, connectorDy: -30 },
+    { id: "variants", x: 310, y: 150, labelDx: 0, labelDy: 26, connectorDx: 0, connectorDy: -18 },
+    { id: "gwas", x: 310, y: 90, labelDx: 0, labelDy: -34, connectorDx: 0, connectorDy: -18 },
+    { id: "ld", x: 310, y: 210, labelDx: 0, labelDy: 54, connectorDx: 0, connectorDy: -18 },
+    { id: "qtls", x: 810, y: 168, labelDx: 30, labelDy: 78, connectorDx: 0, connectorDy: -36 },
+    { id: "regulatory", x: 570, y: 150, labelDx: 0, labelDy: 44, connectorDx: 0, connectorDy: -18 },
+    { id: "sequencing", x: 1165, y: 120, labelDx: -30, labelDy: 56, connectorDx: 15, connectorDy: -36 },
+];
+
+const ACCESS_LAYOUT: AccessLayout[] = [
+    { id: "biosamples", x: 365, y: 300, connectorY: 292, labelX: 330, labelY: 305 },
+    { id: "curatedEvidence", x: 201, y: 300, connectorY: 292, labelX: 170, labelY: 305 },
+    { id: "phenotypes", x: 538, y: 300, connectorY: 292, labelX: 498, labelY: 305 },
+    { id: "openAccess", x: 760, y: 300, connectorY: 292, labelX: 760, labelY: 305 },
+    { id: "restrictedAccess", x: 865, y: 300, connectorY: 292, labelX: 850, labelY: 305 },
+    { id: "downloads", x: 982, y: 300, connectorY: 292, labelX: 970, labelY: 305 },
+    { id: "cloudAccess", x: 1124, y: 300, connectorY: 292, labelX: 1084, labelY: 305 },
 ];
 
 const LANDSCAPE_WIDTH = 1240;
 
-function getConceptConnectorX(concept: Concept) {
-    return concept.connectorX ?? concept.x;
-}
+const genomicLayoutById = Object.fromEntries(GENOMIC_BAND_LAYOUT.map((layout) => [layout.id, layout])) as Record<
+    GenomicConceptId,
+    GenomicBandLayout
+>;
 
-function getConceptConnectorY(concept: Concept) {
-    return concept.connectorY ?? concept.y - 18;
+const accessLayoutById = Object.fromEntries(ACCESS_LAYOUT.map((layout) => [layout.id, layout])) as Record<
+    AccessConceptId,
+    AccessLayout
+>;
+
+function getConnectorGeometry(conceptId: ConceptType) {
+    if (conceptId in genomicLayoutById) {
+        const layout = genomicLayoutById[conceptId as GenomicConceptId];
+
+        return {
+            anchorY: layout.y,
+            x: layout.x + layout.connectorDx,
+            y: layout.y + layout.connectorDy,
+        };
+    }
+
+    const layout = accessLayoutById[conceptId as AccessConceptId];
+
+    return { anchorY: layout.y, x: layout.x, y: layout.connectorY };
 }
 
 function getFallbackResourceCenterX(index: number, resourceCount: number) {
@@ -479,18 +519,13 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                     <g className={styles.linkLayer} aria-hidden="true">
                         {resources.flatMap((resource, resourceIndex) =>
                             resource.concepts.map((conceptId) => {
-                                const concept = conceptById[conceptId];
-
-                                if (!concept) {
-                                    return null;
-                                }
-
                                 const start =
                                     resourceCenterX[resource.id] ??
                                     getFallbackResourceCenterX(resourceIndex, resources.length);
-                                const bend = Math.max(62, concept.y - 58);
-                                const targetX = getConceptConnectorX(concept);
-                                const targetY = getConceptConnectorY(concept);
+                                const connector = getConnectorGeometry(conceptId);
+                                const bend = Math.max(62, connector.anchorY - 58);
+                                const targetX = connector.x;
+                                const targetY = connector.y;
                                 const connectorPath =
                                     conceptId === "sequencing"
                                         ? `M ${start} 42 C ${start} 58, ${targetX + 28} 72, ${targetX} ${targetY}`
@@ -539,7 +574,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                                 key={index}
                             />
                         ))}
-                        <ConceptLabel conceptId="gwas" />
+                        <GenomicLabel conceptId="gwas" />
                     </g>
 
                     <g
@@ -558,7 +593,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                             <rect className={styles.geneExon} x={x} y="142" width={width} height="16" key={x} />
                         ))}
                         <path className={styles.geneDirection} d="M46 142 V132 H66 M61 128 L66 132 L61 136" />
-                        <ConceptLabel conceptId="genes" />
+                        <GenomicLabel conceptId="genes" />
                     </g>
 
                     <g
@@ -576,7 +611,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         {[268, 282, 296, 310, 324, 338, 352].map((x) => (
                             <path className={styles.variant} d={`M ${x} 145 l 5 5 l -5 5 l -5 -5 Z`} key={x} />
                         ))}
-                        <ConceptLabel conceptId="variants" />
+                        <GenomicLabel conceptId="variants" />
                     </g>
 
                     <g
@@ -614,7 +649,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                                 );
                             })
                         )}
-                        <ConceptLabel conceptId="ld" />
+                        <GenomicLabel conceptId="ld" />
                     </g>
 
                     <g
@@ -634,7 +669,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         <path className={styles.qtlBridge} d="M810 150 C835 196 890 196 915 158" />
                         <path className={styles.qtlBridge} d="M810 150 C850 222 940 222 980 150" />
                         <path className={styles.variant} d="M810 144 l6 6 l-6 6 l-6 -6 Z" />
-                        <ConceptLabel conceptId="qtls" />
+                        <GenomicLabel conceptId="qtls" />
                     </g>
 
                     <g
@@ -675,7 +710,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                                 );
                             })}
                         </g>
-                        <ConceptLabel conceptId="sequencing" />
+                        <GenomicLabel conceptId="sequencing" />
                     </g>
 
                     <g
@@ -706,7 +741,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         <text className={styles.regulatoryMicroLabel} x="664" y="136" textAnchor="middle">
                             Silencer
                         </text>
-                        <ConceptLabel conceptId="regulatory" />
+                        <GenomicLabel conceptId="regulatory" />
                     </g>
 
                     <g
@@ -826,14 +861,15 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
     );
 }
 
-function ConceptLabel({ conceptId }: { conceptId: ConceptType }) {
+function GenomicLabel({ conceptId }: { conceptId: GenomicConceptId }) {
     const concept = conceptById[conceptId];
+    const layout = genomicLayoutById[conceptId as GenomicConceptId];
 
     return (
         <text
             className={styles.conceptLabel}
-            x={concept.labelX ?? concept.x}
-            y={concept.labelY ?? concept.y}
+            x={layout.x + layout.labelDx}
+            y={layout.y + layout.labelDy}
             textAnchor="middle"
         >
             {concept.label}
@@ -841,16 +877,12 @@ function ConceptLabel({ conceptId }: { conceptId: ConceptType }) {
     );
 }
 
-function UtilityLabel({ conceptId }: { conceptId: ConceptType }) {
+function UtilityLabel({ conceptId }: { conceptId: AccessConceptId }) {
     const concept = conceptById[conceptId];
+    const layout = accessLayoutById[conceptId];
 
     return (
-        <text
-            className={styles.utilityLabel}
-            x={concept.labelX ?? concept.x}
-            y={concept.labelY ?? concept.y}
-            textAnchor="start"
-        >
+        <text className={styles.utilityLabel} x={layout.labelX} y={layout.labelY} textAnchor="start">
             {concept.label}
         </text>
     );
@@ -910,8 +942,8 @@ function UtilityGlyph({
     }[kind];
 
     return (
-        <g className={styles.utilityGlyph} transform={`translate(${x} ${y})`} aria-hidden="true">
+        <svg className={styles.utilityGlyph} x={x} y={y} width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
             {glyph}
-        </g>
+        </svg>
     );
 }
