@@ -83,6 +83,7 @@ const CONCEPTS: Concept[] = [
 ];
 
 const LANDSCAPE_WIDTH = 1240;
+const GENOMIC_CONTENT_SHIFT_X = -80;
 
 function getFallbackResourceCenterX(index: number, resourceCount: number) {
     return ((index + 0.5) / resourceCount) * LANDSCAPE_WIDTH;
@@ -463,7 +464,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                                 return (
                                     <path
                                         className={pathClass(resource.id, conceptId)}
-                                        d={`M ${start} 42 C ${start} ${bend}, ${concept.x} ${bend}, ${concept.x} ${concept.y - 18}`}
+                                        d={`M ${start} 42 C ${start} ${bend}, ${concept.x + GENOMIC_CONTENT_SHIFT_X} ${bend}, ${concept.x + GENOMIC_CONTENT_SHIFT_X} ${concept.y - 18}`}
                                         key={`${resource.id}-${conceptId}`}
                                         style={{ stroke: resourceGroupById[resource.groupId].color }}
                                     />
@@ -474,6 +475,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
 
                     <g
                         className={classForConcept("gwas")}
+                        transform={`translate(${GENOMIC_CONTENT_SHIFT_X} 0)`}
                         tabIndex={0}
                         role="button"
                         aria-label="Genetic associations, shown as a schematic Manhattan plot"
@@ -502,6 +504,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
 
                     <g
                         className={classForConcept("genes")}
+                        transform={`translate(${GENOMIC_CONTENT_SHIFT_X} 0)`}
                         tabIndex={0}
                         role="button"
                         aria-label="Genes"
@@ -520,6 +523,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
 
                     <g
                         className={classForConcept("variants")}
+                        transform={`translate(${GENOMIC_CONTENT_SHIFT_X} 0)`}
                         tabIndex={0}
                         role="button"
                         aria-label="Variants"
@@ -540,6 +544,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
 
                     <g
                         className={classForConcept("ld")}
+                        transform={`translate(${GENOMIC_CONTENT_SHIFT_X} 0)`}
                         tabIndex={0}
                         role="button"
                         aria-label="Linkage disequilibrium, shown as a schematic triangular pairwise matrix"
@@ -579,6 +584,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
 
                     <g
                         className={classForConcept("qtls")}
+                        transform={`translate(${GENOMIC_CONTENT_SHIFT_X} 0)`}
                         tabIndex={0}
                         role="button"
                         aria-label="Molecular QTLs, shown as multiple relationships from a variant to genomic targets"
@@ -629,6 +635,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
 
                     <g
                         className={classForConcept("regulatory")}
+                        transform={`translate(${GENOMIC_CONTENT_SHIFT_X} 0)`}
                         tabIndex={0}
                         role="button"
                         aria-label="Regulatory elements"

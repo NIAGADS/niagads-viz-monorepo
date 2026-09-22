@@ -395,7 +395,6 @@
 
 .conceptMark.active {
     opacity: 1;
-    transform: scale(1.025);
 }
 
 .conceptMark.recede {
