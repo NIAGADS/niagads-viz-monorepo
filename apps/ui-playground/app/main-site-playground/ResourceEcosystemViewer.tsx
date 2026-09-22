@@ -79,11 +79,16 @@ const CONCEPTS: Concept[] = [
     { id: "restrictedAccess", label: "Restricted", x: 865, y: 300 },
     { id: "downloads", label: "Downloads", x: 982, y: 300 },
     { id: "cloudAccess", label: "API / Cloud", x: 1124, y: 300 },
-    { id: "sequencing", label: "Sequencing", x: 1105, y: 202 },
+    { id: "sequencing", label: "Sequencing", x: 1150, y: 120 },
 ];
 
 const LANDSCAPE_WIDTH = 1240;
 const GENOMIC_CONTENT_SHIFT_X = -80;
+const shiftedConcepts = new Set<ConceptType>(["gwas", "genes", "variants", "ld", "qtls", "regulatory"]);
+
+function getConceptShiftX(conceptId: ConceptType) {
+    return shiftedConcepts.has(conceptId) ? GENOMIC_CONTENT_SHIFT_X : 0;
+}
 
 function getFallbackResourceCenterX(index: number, resourceCount: number) {
     return ((index + 0.5) / resourceCount) * LANDSCAPE_WIDTH;
@@ -461,10 +466,12 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                                     resourceCenterX[resource.id] ??
                                     getFallbackResourceCenterX(resourceIndex, resources.length);
                                 const bend = Math.max(62, concept.y - 58);
+                                const conceptShiftX = getConceptShiftX(conceptId);
+                                const targetX = concept.x + conceptShiftX;
                                 return (
                                     <path
                                         className={pathClass(resource.id, conceptId)}
-                                        d={`M ${start} 42 C ${start} ${bend}, ${concept.x + GENOMIC_CONTENT_SHIFT_X} ${bend}, ${concept.x + GENOMIC_CONTENT_SHIFT_X} ${concept.y - 18}`}
+                                        d={`M ${start} 42 C ${start} ${bend}, ${targetX} ${bend}, ${targetX} ${concept.y - 18}`}
                                         key={`${resource.id}-${conceptId}`}
                                         style={{ stroke: resourceGroupById[resource.groupId].color }}
                                     />
@@ -606,10 +613,18 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                     </g>
 
                     <g
-                        className={styles.sequencingLayer}
+                        className={classForConcept("sequencing")}
                         aria-label="Sequencing data, shown as aligned reads"
+                        role="button"
+                        tabIndex={0}
                         transform="translate(30 0)"
+                        onBlur={() => setActive(null)}
+                        onFocus={() => setActive({ type: "concept", id: "sequencing" })}
+                        onMouseEnter={() => setActive({ type: "concept", id: "sequencing" })}
+                        onMouseLeave={() => setActive(null)}
+                        onPointerDown={() => setActive({ type: "concept", id: "sequencing" })}
                     >
+                        <rect className={styles.sequencingHitArea} x="1015" y="92" width="190" height="70" rx="6" />
                         <g transform="translate(562.5 0) scale(0.5 1)">
                             {SEQUENCING_READS.map(([x, width, y], index) => {
                                 const mismatchX = x + Math.min(width - 8, 28 + (index % 4) * 9);
@@ -778,7 +793,6 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         <UtilityGlyph kind="cloud" x={1052} y={288} />
                         <UtilityLabel conceptId="cloudAccess" x={1084} y={305} />
                     </g>
-
                 </svg>
             </section>
         </main>
