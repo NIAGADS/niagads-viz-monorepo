@@ -346,6 +346,11 @@
     stroke-width: 24;
 }
 
+.geneConceptHitArea {
+    fill: transparent;
+    stroke: transparent;
+}
+
 .geneExon {
     fill: var(--primary-blue);
 }
@@ -470,6 +475,11 @@
     stroke: var(--gray-500);
     stroke-width: 1.4;
     stroke-linecap: round;
+}
+
+.ldHitArea {
+    fill: transparent;
+    stroke: transparent;
 }
 
 .ldCell {

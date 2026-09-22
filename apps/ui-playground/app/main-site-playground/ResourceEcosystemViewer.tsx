@@ -530,6 +530,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         onPointerDown={() => setActive({ type: "concept", id: "genes" })}
                         onMouseLeave={() => setActive(null)}
                     >
+                        <rect className={styles.geneConceptHitArea} x="100" y="118" width="180" height="84" rx="6" />
                         {GENE_EXONS.map(([x, width]) => (
                             <rect className={styles.geneExon} x={x} y="142" width={width} height="16" key={x} />
                         ))}
@@ -570,6 +571,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         onPointerDown={() => setActive({ type: "concept", id: "ld" })}
                         onMouseLeave={() => setActive(null)}
                     >
+                        <rect className={styles.ldHitArea} x="330" y="180" width="120" height="90" rx="6" />
                         <path className={styles.ldTopRule} d="M341 190 H439" />
                         {LD_VALUES[0].map((_, index) => (
                             <path
@@ -633,7 +635,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         onMouseLeave={() => setActive(null)}
                         onPointerDown={() => setActive({ type: "concept", id: "sequencing" })}
                     >
-                        <rect className={styles.sequencingHitArea} x="1015" y="92" width="190" height="70" rx="6" />
+                        <rect className={styles.sequencingHitArea} x="1015" y="92" width="190" height="110" rx="6" />
                         <g transform="translate(562.5 0) scale(0.5 1)">
                             {SEQUENCING_READS.map(([x, width, y], index) => {
                                 const mismatchX = x + Math.min(width - 8, 28 + (index % 4) * 9);
