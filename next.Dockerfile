@@ -1,4 +1,6 @@
-FROM node:24.15-bookworm-slim AS builder
+# this Dockerfile uses conditional targets to build production, development, and staging deployments
+
+FROM node:24.15-bookworm-slim AS base-builder
 
 ARG BUILD=production
 
@@ -19,6 +21,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* 
 
 COPY . .
+COPY build.env .env.local
 COPY --from=scripts use-canary.mjs /tmp/use-canary.mjs
 
 # 1. Tell Git to downgrade SSH requests back to HTTPS
@@ -31,38 +34,55 @@ RUN npm install -g npm@12.0.2 \
     && node /tmp/use-canary.mjs \
     && npm install --package-lock=false
 
-CMD ["bash"]
 
-FROM builder AS breakpoint
-
-RUN if [ "$BUILD" != "development" ]; then npm run build-app && npm prune --omit=dev; fi
+FROM base-builder AS development-builder
 
 
-FROM node:24.15-bookworm-slim AS runner
+# source files required to build source tree for next dev
+# no production build is required
 
-ARG BUILD=production
-ARG APP_NAME
+FROM base-builder AS production-builder
 
-WORKDIR /app
+RUN npm run build-app \
+    && npm prune --omit=dev
 
-ENV LOG_FILE="/var/log/${APP_NAME}.log"
-ENV BUILD_ENV=$BUILD
+FROM node:24.15-bookworm-slim AS base-runner
 
+# 1. force update the OS packages to pull down newest security patches to 
+#    migitgate legacy CVEs since last image build
 RUN apt-get update \
     && apt-get upgrade -y \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/package.json ./package.json
+ARG APP_NAME
+ENV LOG_FILE="/var/log/app/${APP_NAME}.log"
+WORKDIR /app
+
+COPY --from=base-builder --chown=node:node /app/.env.local ./.
+
+FROM base-runner AS development-runner
+
+# need full code base to build dev source trees
+COPY --from=development-builder --chown=node:node /app ./
+
+EXPOSE 3000 
+
+USER node
+
+CMD sh -c 'exec npm run start-dev-app >> "$LOG_FILE" 2>&1'
+
+FROM base-runner AS production-runner
+
+# only need compiled app
+COPY --from=production-builder /app/node_modules ./node_modules
+COPY --from=production-builder /app/.next ./.next
+COPY --from=production-builder /app/public ./public
+COPY --from=production-builder /app/package.json ./package.json
 
 EXPOSE 3000
 
 USER node
 
-# run next dev if development, next start if 
-CMD sh -c 'if [ "$BUILD_ENV" = "development" ]; then exec npm run start-dev-app; else exec npm run start-app; fi'
-# CMD ["sh", "-c", "if [ \"$BUILD_ENV\" = \"development\" ]; then export NODE_ENV=development; exec npm run start-dev-app; else export NODE_ENV=production; exec npm run start-app; fi"]
+CMD sh -c 'exec npm run start-app >> "$LOG_FILE" 2>&1'
 
-
+FROM production-runner AS staging-runner

@@ -15,10 +15,14 @@ x-build-defaults: &build-defaults
   dockerfile: ../../next.Dockerfile
   additional_contexts:
     scripts: ./scripts/docker
+  target: ${BUILD}-runner
 
 x-build-arg-defaults: &build-arg-defaults
   BUILD: ${BUILD}
 
+networks:
+  default:
+    name: oa-network
 services:
 
   genomicsdb:
@@ -26,7 +30,7 @@ services:
     container_name: genomicsdb-client
     image: client-app-genomics:${BUILD}
     env_file:
-      - ./apps/genomicsdb/.env.local
+      - ./apps/genomicsdb/runtime.env
     build:
       <<: *build-defaults
       args:
@@ -46,7 +50,6 @@ services:
         <<: *build-arg-defaults
         APP_NAME: niagads-main
       context: ./apps/niagads-main/
-      target: builder
     ports:
       - "${NIAGADS_MAIN_CLIENT_PORT}:3000"
 
@@ -55,7 +58,7 @@ services:
     container_name: genome-browser-client
     image: client-app-genome-browser:${BUILD}
     env_file:
-      - ./apps/igvbrowser/.env.local
+      - ./apps/igvbrowser/runtime.env
     build:
       <<: *build-defaults
       args:
