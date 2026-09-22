@@ -68,7 +68,19 @@ Components wrapping a customized [locuszoom.js](https://statgen.github.io/locusz
 
 More information to be added later.
 
-See the [for developers section](#for-developers) for information on deploying each application in a development environment. Each application is dockerized for production deployment; see application-specific Dockerfile and/or docker-compose.yaml files.
+See the [for developers section](#for-developers) for information on deploying each application in a development environment. Each application is dockerized for production deployment.  See [docker deployment](./DOCKER_DEPLOYMENT.md) instructions for more information.
+
+### Application environment-file samples
+
+Applications provide separate environment-file samples for Docker and non-Docker use:
+
+| File | Purpose |
+| --- | --- |
+| `sample.build.env` | Docker build-time configuration. These values are available while the application image is built and may be incorporated into the generated application output. |
+| `sample.runtime.env` | Docker runtime configuration, including secrets. This file is supplied when the container is deployed and is not included in the image. |
+| `sample.env.local` | Complete configuration for a non-Docker deployment. It combines the build-time and runtime values required by the application and is copied to `.env.local`. |
+
+Use the Docker-specific samples when building and deploying an image. Use `sample.env.local` only when running the application outside Docker.
 
 ### Storybook
 
@@ -95,8 +107,6 @@ export const MyStory: StoryObj<typeof Component> = {
 ### niagads-api-client
 
 > temporarily moved to own repo until we can break tailwindcss dependendency (niagads-api)
-
-### track-collection-microservice
 
 ### igvbrowser (app)
 
