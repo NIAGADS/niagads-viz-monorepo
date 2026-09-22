@@ -526,10 +526,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                                 const bend = Math.max(62, connector.anchorY - 58);
                                 const targetX = connector.x;
                                 const targetY = connector.y;
-                                const connectorPath =
-                                    conceptId === "sequencing"
-                                        ? `M ${start} 42 C ${start} 58, ${targetX + 28} 72, ${targetX} ${targetY}`
-                                        : `M ${start} 42 C ${start} ${bend}, ${targetX} ${bend}, ${targetX} ${targetY}`;
+                                const connectorPath = `M ${start} 42 C ${start} ${bend}, ${targetX} ${bend}, ${targetX} ${targetY}`;
                                 const isActiveLink = activeResources.has(resource.id) && activeConcepts.has(conceptId);
                                 return (
                                     <g key={`${resource.id}-${conceptId}`}>
