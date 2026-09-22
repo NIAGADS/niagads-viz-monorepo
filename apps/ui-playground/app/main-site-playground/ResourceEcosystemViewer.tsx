@@ -27,7 +27,6 @@ interface Concept {
     label: string;
     x: number;
     y: number;
-    shiftX?: number;
     connectorX?: number;
     connectorY?: number;
     labelX?: number;
@@ -71,21 +70,20 @@ interface ResourceGroupLabel {
 type ActiveTarget = { type: "resource"; id: string } | { type: "concept"; id: ConceptType } | null;
 
 const CONCEPTS: Concept[] = [
-    { id: "genes", label: "Genes", x: 220, y: 150, shiftX: -80, connectorX: 141, connectorY: 120, labelX: 191 },
-    { id: "variants", label: "Variants", x: 390, y: 150, shiftX: -80, labelX: 390, labelY: 176 },
-    { id: "gwas", label: "Genetic associations", x: 390, y: 90, shiftX: -80, labelX: 390, labelY: 56 },
-    { id: "ld", label: "LD", x: 390, y: 210, shiftX: -80, labelX: 390, labelY: 264 },
+    { id: "genes", label: "Genes", x: 140, y: 150, connectorX: 61, connectorY: 120, labelX: 191, labelY: 194 },
+    { id: "variants", label: "Variants", x: 310, y: 150, labelX: 390, labelY: 176 },
+    { id: "gwas", label: "Genetic associations", x: 310, y: 90, labelX: 390, labelY: 56 },
+    { id: "ld", label: "LD", x: 310, y: 210, labelX: 390, labelY: 264 },
     {
         id: "qtls",
         label: "Molecular QTLs",
-        x: 890,
+        x: 810,
         y: 168,
-        shiftX: -80,
         connectorY: 132,
         labelX: 920,
         labelY: 246,
     },
-    { id: "regulatory", label: "Regulatory elements", x: 650, y: 150, shiftX: -80, labelX: 650, labelY: 194 },
+    { id: "regulatory", label: "Regulatory elements", x: 570, y: 150, labelX: 650, labelY: 194 },
     { id: "biosamples", label: "Biosamples", x: 365, y: 300, connectorY: 292, labelX: 330, labelY: 305 },
     { id: "curatedEvidence", label: "Curated evidence", x: 201, y: 300, connectorY: 292, labelX: 170, labelY: 305 },
     { id: "phenotypes", label: "Phenotypes", x: 538, y: 300, connectorY: 292, labelX: 498, labelY: 305 },
@@ -106,10 +104,6 @@ const CONCEPTS: Concept[] = [
 ];
 
 const LANDSCAPE_WIDTH = 1240;
-
-function getConceptShiftX(concept: Concept) {
-    return concept.shiftX ?? 0;
-}
 
 function getConceptConnectorX(concept: Concept) {
     return concept.connectorX ?? concept.x;
@@ -495,8 +489,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                                     resourceCenterX[resource.id] ??
                                     getFallbackResourceCenterX(resourceIndex, resources.length);
                                 const bend = Math.max(62, concept.y - 58);
-                                const conceptShiftX = getConceptShiftX(concept);
-                                const targetX = getConceptConnectorX(concept) + conceptShiftX;
+                                const targetX = getConceptConnectorX(concept);
                                 const targetY = getConceptConnectorY(concept);
                                 const connectorPath =
                                     conceptId === "sequencing"
@@ -525,7 +518,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
 
                     <g
                         className={classForConcept("gwas")}
-                        transform={`translate(${conceptById.gwas.shiftX ?? 0} 0)`}
+                        transform="translate(-80 0)"
                         tabIndex={0}
                         role="button"
                         aria-label="Genetic associations, shown as a schematic Manhattan plot"
@@ -552,7 +545,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
 
                     <g
                         className={classForConcept("genes")}
-                        transform={`translate(${conceptById.genes.shiftX ?? 0} 0)`}
+                        transform="translate(-80 0)"
                         tabIndex={0}
                         role="button"
                         aria-label="Genes"
@@ -572,7 +565,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
 
                     <g
                         className={classForConcept("variants")}
-                        transform={`translate(${conceptById.variants.shiftX ?? 0} 0)`}
+                        transform="translate(-80 0)"
                         tabIndex={0}
                         role="button"
                         aria-label="Variants"
@@ -591,7 +584,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
 
                     <g
                         className={classForConcept("ld")}
-                        transform={`translate(${conceptById.ld.shiftX ?? 0} 0)`}
+                        transform="translate(-80 0)"
                         tabIndex={0}
                         role="button"
                         aria-label="Linkage disequilibrium, shown as a schematic triangular pairwise matrix"
@@ -630,7 +623,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
 
                     <g
                         className={classForConcept("qtls")}
-                        transform={`translate(${conceptById.qtls.shiftX ?? 0} 0)`}
+                        transform="translate(-80 0)"
                         tabIndex={0}
                         role="button"
                         aria-label="Molecular QTLs, shown as multiple relationships from a variant to genomic targets"
@@ -685,7 +678,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
 
                     <g
                         className={classForConcept("regulatory")}
-                        transform={`translate(${conceptById.regulatory.shiftX ?? 0} 0)`}
+                        transform="translate(-80 0)"
                         tabIndex={0}
                         role="button"
                         aria-label="Regulatory elements"
