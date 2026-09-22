@@ -90,6 +90,14 @@ function getConceptShiftX(conceptId: ConceptType) {
     return shiftedConcepts.has(conceptId) ? GENOMIC_CONTENT_SHIFT_X : 0;
 }
 
+function getConceptConnectorX(conceptId: ConceptType, concept: Concept) {
+    return conceptId === "genes" ? 141 : concept.x;
+}
+
+function getConceptConnectorY(conceptId: ConceptType, concept: Concept) {
+    return conceptId === "genes" ? 120 : concept.y - 18;
+}
+
 function getFallbackResourceCenterX(index: number, resourceCount: number) {
     return ((index + 0.5) / resourceCount) * LANDSCAPE_WIDTH;
 }
@@ -467,11 +475,12 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                                     getFallbackResourceCenterX(resourceIndex, resources.length);
                                 const bend = Math.max(62, concept.y - 58);
                                 const conceptShiftX = getConceptShiftX(conceptId);
-                                const targetX = concept.x + conceptShiftX;
+                                const targetX = getConceptConnectorX(conceptId, concept) + conceptShiftX;
+                                const targetY = getConceptConnectorY(conceptId, concept);
                                 return (
                                     <path
                                         className={pathClass(resource.id, conceptId)}
-                                        d={`M ${start} 42 C ${start} ${bend}, ${targetX} ${bend}, ${targetX} ${concept.y - 18}`}
+                                        d={`M ${start} 42 C ${start} ${bend}, ${targetX} ${bend}, ${targetX} ${targetY}`}
                                         key={`${resource.id}-${conceptId}`}
                                         style={{ stroke: resourceGroupById[resource.groupId].color }}
                                     />
@@ -525,7 +534,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                             <rect className={styles.geneExon} x={x} y="142" width={width} height="16" key={x} />
                         ))}
                         <path className={styles.geneDirection} d="M126 142 V132 H146 M141 128 L146 132 L141 136" />
-                        <ConceptLabel conceptId="genes" />
+                        <ConceptLabel conceptId="genes" x={191} />
                     </g>
 
                     <g
@@ -799,11 +808,11 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
     );
 }
 
-function ConceptLabel({ conceptId }: { conceptId: ConceptType }) {
+function ConceptLabel({ conceptId, x }: { conceptId: ConceptType; x?: number }) {
     const concept = conceptById[conceptId];
 
     return (
-        <text className={styles.conceptLabel} x={concept.x} y={concept.y + 44} textAnchor="middle">
+        <text className={styles.conceptLabel} x={x ?? concept.x} y={concept.y + 44} textAnchor="middle">
             {concept.label}
         </text>
     );
