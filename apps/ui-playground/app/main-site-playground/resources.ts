@@ -58,7 +58,7 @@ export const RESOURCES = [
             and apply for controlled access to data appropriate for their research.`,
         url: "https://dss.niagads.org/datasets/",
         groupId: "access",
-        concepts: ["downloads", "openAccess", "restrictedAccess"],
+        concepts: ["downloads", "openAccess", "restrictedAccess", "sequencing", "gwas", "qtls"],
     },
     {
         id: "api",

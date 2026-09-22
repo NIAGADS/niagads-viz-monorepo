@@ -27,6 +27,11 @@ interface Concept {
     label: string;
     x: number;
     y: number;
+    shiftX?: number;
+    connectorX?: number;
+    connectorY?: number;
+    labelX?: number;
+    labelY?: number;
 }
 
 export interface ResourceGroup {
@@ -66,48 +71,52 @@ interface ResourceGroupLabel {
 type ActiveTarget = { type: "resource"; id: string } | { type: "concept"; id: ConceptType } | null;
 
 const CONCEPTS: Concept[] = [
-    { id: "genes", label: "Genes", x: 220, y: 150 },
-    { id: "variants", label: "Variants", x: 390, y: 150 },
-    { id: "gwas", label: "Genetic associations", x: 390, y: 90 },
-    { id: "ld", label: "LD", x: 390, y: 210 },
-    { id: "qtls", label: "Molecular QTLs", x: 890, y: 168 },
-    { id: "regulatory", label: "Regulatory elements", x: 650, y: 150 },
-    { id: "biosamples", label: "Biosamples", x: 365, y: 300 },
-    { id: "curatedEvidence", label: "Curated evidence", x: 201, y: 300 },
-    { id: "phenotypes", label: "Phenotypes", x: 538, y: 300 },
-    { id: "openAccess", label: "Open", x: 760, y: 300 },
-    { id: "restrictedAccess", label: "Restricted", x: 865, y: 300 },
-    { id: "downloads", label: "Downloads", x: 982, y: 300 },
-    { id: "cloudAccess", label: "API / Cloud", x: 1124, y: 300 },
-    { id: "sequencing", label: "Sequencing", x: 1150, y: 120 },
+    { id: "genes", label: "Genes", x: 220, y: 150, shiftX: -80, connectorX: 141, connectorY: 120, labelX: 191 },
+    { id: "variants", label: "Variants", x: 390, y: 150, shiftX: -80, labelX: 390, labelY: 176 },
+    { id: "gwas", label: "Genetic associations", x: 390, y: 90, shiftX: -80, labelX: 390, labelY: 56 },
+    { id: "ld", label: "LD", x: 390, y: 210, shiftX: -80, labelX: 390, labelY: 264 },
+    {
+        id: "qtls",
+        label: "Molecular QTLs",
+        x: 890,
+        y: 168,
+        shiftX: -80,
+        connectorY: 132,
+        labelX: 920,
+        labelY: 246,
+    },
+    { id: "regulatory", label: "Regulatory elements", x: 650, y: 150, shiftX: -80, labelX: 650, labelY: 194 },
+    { id: "biosamples", label: "Biosamples", x: 365, y: 300, connectorY: 292, labelX: 330, labelY: 305 },
+    { id: "curatedEvidence", label: "Curated evidence", x: 201, y: 300, connectorY: 292, labelX: 170, labelY: 305 },
+    { id: "phenotypes", label: "Phenotypes", x: 538, y: 300, connectorY: 292, labelX: 498, labelY: 305 },
+    { id: "openAccess", label: "Open", x: 760, y: 300, connectorY: 292, labelX: 760, labelY: 305 },
+    { id: "restrictedAccess", label: "Restricted", x: 865, y: 300, connectorY: 292, labelX: 850, labelY: 305 },
+    { id: "downloads", label: "Downloads", x: 982, y: 300, connectorY: 292, labelX: 970, labelY: 305 },
+    { id: "cloudAccess", label: "API / Cloud", x: 1124, y: 300, connectorY: 292, labelX: 1084, labelY: 305 },
+    {
+        id: "sequencing",
+        label: "Sequencing",
+        x: 1165,
+        y: 120,
+        connectorX: 1180,
+        connectorY: 84,
+        labelX: 1105,
+        labelY: 176,
+    },
 ];
 
 const LANDSCAPE_WIDTH = 1240;
-const GENOMIC_CONTENT_SHIFT_X = -80;
-const shiftedConcepts = new Set<ConceptType>(["gwas", "genes", "variants", "ld", "qtls", "regulatory"]);
 
-function getConceptShiftX(conceptId: ConceptType) {
-    return shiftedConcepts.has(conceptId) ? GENOMIC_CONTENT_SHIFT_X : 0;
+function getConceptShiftX(concept: Concept) {
+    return concept.shiftX ?? 0;
 }
 
-function getConceptConnectorX(conceptId: ConceptType, concept: Concept) {
-    return conceptId === "genes" ? 141 : concept.x;
+function getConceptConnectorX(concept: Concept) {
+    return concept.connectorX ?? concept.x;
 }
 
-function getConceptConnectorY(conceptId: ConceptType, concept: Concept) {
-    if (conceptId === "genes") {
-        return 120;
-    }
-
-    if (conceptId === "qtls") {
-        return 132;
-    }
-
-    if (conceptId === "sequencing") {
-        return 84;
-    }
-
-    return concept.y >= 300 ? 292 : concept.y - 18;
+function getConceptConnectorY(concept: Concept) {
+    return concept.connectorY ?? concept.y - 18;
 }
 
 function getFallbackResourceCenterX(index: number, resourceCount: number) {
@@ -486,15 +495,19 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                                     resourceCenterX[resource.id] ??
                                     getFallbackResourceCenterX(resourceIndex, resources.length);
                                 const bend = Math.max(62, concept.y - 58);
-                                const conceptShiftX = getConceptShiftX(conceptId);
-                                const targetX = getConceptConnectorX(conceptId, concept) + conceptShiftX;
-                                const targetY = getConceptConnectorY(conceptId, concept);
+                                const conceptShiftX = getConceptShiftX(concept);
+                                const targetX = getConceptConnectorX(concept) + conceptShiftX;
+                                const targetY = getConceptConnectorY(concept);
+                                const connectorPath =
+                                    conceptId === "sequencing"
+                                        ? `M ${start} 42 C ${start} 58, ${targetX + 28} 72, ${targetX} ${targetY}`
+                                        : `M ${start} 42 C ${start} ${bend}, ${targetX} ${bend}, ${targetX} ${targetY}`;
                                 const isActiveLink = activeResources.has(resource.id) && activeConcepts.has(conceptId);
                                 return (
                                     <g key={`${resource.id}-${conceptId}`}>
                                         <path
                                             className={pathClass(resource.id, conceptId)}
-                                            d={`M ${start} 42 C ${start} ${bend}, ${targetX} ${bend}, ${targetX} ${targetY}`}
+                                            d={connectorPath}
                                             style={{ stroke: resourceGroupById[resource.groupId].color }}
                                         />
                                         <circle
@@ -512,7 +525,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
 
                     <g
                         className={classForConcept("gwas")}
-                        transform={`translate(${GENOMIC_CONTENT_SHIFT_X} 0)`}
+                        transform={`translate(${conceptById.gwas.shiftX ?? 0} 0)`}
                         tabIndex={0}
                         role="button"
                         aria-label="Genetic associations, shown as a schematic Manhattan plot"
@@ -534,14 +547,12 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                                 key={index}
                             />
                         ))}
-                        <text className={styles.conceptLabel} x="390" y="56" textAnchor="middle">
-                            Genetic associations
-                        </text>
+                        <ConceptLabel conceptId="gwas" />
                     </g>
 
                     <g
                         className={classForConcept("genes")}
-                        transform={`translate(${GENOMIC_CONTENT_SHIFT_X} 0)`}
+                        transform={`translate(${conceptById.genes.shiftX ?? 0} 0)`}
                         tabIndex={0}
                         role="button"
                         aria-label="Genes"
@@ -556,12 +567,12 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                             <rect className={styles.geneExon} x={x} y="142" width={width} height="16" key={x} />
                         ))}
                         <path className={styles.geneDirection} d="M126 142 V132 H146 M141 128 L146 132 L141 136" />
-                        <ConceptLabel conceptId="genes" x={191} />
+                        <ConceptLabel conceptId="genes" />
                     </g>
 
                     <g
                         className={classForConcept("variants")}
-                        transform={`translate(${GENOMIC_CONTENT_SHIFT_X} 0)`}
+                        transform={`translate(${conceptById.variants.shiftX ?? 0} 0)`}
                         tabIndex={0}
                         role="button"
                         aria-label="Variants"
@@ -575,14 +586,12 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         {[348, 362, 376, 390, 404, 418, 432].map((x) => (
                             <path className={styles.variant} d={`M ${x} 145 l 5 5 l -5 5 l -5 -5 Z`} key={x} />
                         ))}
-                        <text className={styles.conceptLabel} x="390" y="176" textAnchor="middle">
-                            Variants
-                        </text>
+                        <ConceptLabel conceptId="variants" />
                     </g>
 
                     <g
                         className={classForConcept("ld")}
-                        transform={`translate(${GENOMIC_CONTENT_SHIFT_X} 0)`}
+                        transform={`translate(${conceptById.ld.shiftX ?? 0} 0)`}
                         tabIndex={0}
                         role="button"
                         aria-label="Linkage disequilibrium, shown as a schematic triangular pairwise matrix"
@@ -616,14 +625,12 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                                 );
                             })
                         )}
-                        <text className={styles.conceptLabel} x="390" y="264" textAnchor="middle">
-                            LD
-                        </text>
+                        <ConceptLabel conceptId="ld" />
                     </g>
 
                     <g
                         className={classForConcept("qtls")}
-                        transform={`translate(${GENOMIC_CONTENT_SHIFT_X} 0)`}
+                        transform={`translate(${conceptById.qtls.shiftX ?? 0} 0)`}
                         tabIndex={0}
                         role="button"
                         aria-label="Molecular QTLs, shown as multiple relationships from a variant to genomic targets"
@@ -639,9 +646,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         <path className={styles.qtlBridge} d="M890 150 C915 196 970 196 995 158" />
                         <path className={styles.qtlBridge} d="M890 150 C930 222 1020 222 1060 150" />
                         <path className={styles.variant} d="M890 144 l6 6 l-6 6 l-6 -6 Z" />
-                        <text className={styles.conceptLabel} x="920" y="246" textAnchor="middle">
-                            Molecular QTLs
-                        </text>
+                        <ConceptLabel conceptId="qtls" />
                     </g>
 
                     <g
@@ -675,14 +680,12 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                                 );
                             })}
                         </g>
-                        <text className={styles.conceptLabel} x="1105" y="176" textAnchor="middle">
-                            Sequencing
-                        </text>
+                        <ConceptLabel conceptId="sequencing" />
                     </g>
 
                     <g
                         className={classForConcept("regulatory")}
-                        transform={`translate(${GENOMIC_CONTENT_SHIFT_X} 0)`}
+                        transform={`translate(${conceptById.regulatory.shiftX ?? 0} 0)`}
                         tabIndex={0}
                         role="button"
                         aria-label="Regulatory elements"
@@ -709,9 +712,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         <text className={styles.regulatoryMicroLabel} x="744" y="136" textAnchor="middle">
                             Silencer
                         </text>
-                        <text className={styles.conceptLabel} x="650" y="194" textAnchor="middle">
-                            Regulatory elements
-                        </text>
+                        <ConceptLabel conceptId="regulatory" />
                     </g>
 
                     <g
@@ -727,7 +728,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                     >
                         <rect className={styles.utilityHitArea} x="290" y="282" width="142" height="40" rx="6" />
                         <UtilityGlyph kind="biosample" x={298} y={288} />
-                        <UtilityLabel conceptId="biosamples" x={330} y={305} />
+                        <UtilityLabel conceptId="biosamples" />
                     </g>
 
                     <g
@@ -743,7 +744,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                     >
                         <rect className={styles.utilityHitArea} x="130" y="282" width="150" height="40" rx="6" />
                         <UtilityGlyph kind="evidence" x={138} y={288} />
-                        <UtilityLabel conceptId="curatedEvidence" x={170} y={305} />
+                        <UtilityLabel conceptId="curatedEvidence" />
                     </g>
 
                     <g
@@ -759,7 +760,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                     >
                         <rect className={styles.utilityHitArea} x="458" y="282" width="160" height="40" rx="6" />
                         <UtilityGlyph kind="phenotype" x={466} y={288} />
-                        <UtilityLabel conceptId="phenotypes" x={498} y={305} />
+                        <UtilityLabel conceptId="phenotypes" />
                     </g>
 
                     <g
@@ -775,7 +776,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                     >
                         <rect className={styles.utilityHitArea} x="720" y="282" width="80" height="40" rx="6" />
                         <UtilityGlyph kind="openLock" x={728} y={288} />
-                        <UtilityLabel conceptId="openAccess" x={760} y={305} />
+                        <UtilityLabel conceptId="openAccess" />
                     </g>
 
                     <g
@@ -791,7 +792,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                     >
                         <rect className={styles.utilityHitArea} x="810" y="282" width="110" height="40" rx="6" />
                         <UtilityGlyph kind="closedLock" x={818} y={288} />
-                        <UtilityLabel conceptId="restrictedAccess" x={850} y={305} />
+                        <UtilityLabel conceptId="restrictedAccess" />
                     </g>
 
                     <g
@@ -807,7 +808,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                     >
                         <rect className={styles.utilityHitArea} x="930" y="282" width="104" height="40" rx="6" />
                         <UtilityGlyph kind="download" x={938} y={288} />
-                        <UtilityLabel conceptId="downloads" x={970} y={305} />
+                        <UtilityLabel conceptId="downloads" />
                     </g>
 
                     <g
@@ -823,7 +824,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                     >
                         <rect className={styles.utilityHitArea} x="1044" y="282" width="161" height="40" rx="6" />
                         <UtilityGlyph kind="cloud" x={1052} y={288} />
-                        <UtilityLabel conceptId="cloudAccess" x={1084} y={305} />
+                        <UtilityLabel conceptId="cloudAccess" />
                     </g>
                 </svg>
             </section>
@@ -831,20 +832,32 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
     );
 }
 
-function ConceptLabel({ conceptId, x }: { conceptId: ConceptType; x?: number }) {
+function ConceptLabel({ conceptId }: { conceptId: ConceptType }) {
     const concept = conceptById[conceptId];
 
     return (
-        <text className={styles.conceptLabel} x={x ?? concept.x} y={concept.y + 44} textAnchor="middle">
+        <text
+            className={styles.conceptLabel}
+            x={concept.labelX ?? concept.x}
+            y={concept.labelY ?? concept.y}
+            textAnchor="middle"
+        >
             {concept.label}
         </text>
     );
 }
 
-function UtilityLabel({ conceptId, x, y }: { conceptId: ConceptType; x: number; y: number }) {
+function UtilityLabel({ conceptId }: { conceptId: ConceptType }) {
+    const concept = conceptById[conceptId];
+
     return (
-        <text className={styles.utilityLabel} x={x} y={y} textAnchor="start">
-            {conceptById[conceptId].label}
+        <text
+            className={styles.utilityLabel}
+            x={concept.labelX ?? concept.x}
+            y={concept.labelY ?? concept.y}
+            textAnchor="start"
+        >
+            {concept.label}
         </text>
     );
 }
