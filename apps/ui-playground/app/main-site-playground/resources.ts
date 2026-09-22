@@ -83,15 +83,12 @@ export const RESOURCES = [
         concepts: ["gwas", "genes", "variants", "curatedEvidence", "openAccess", "phenotypes"],
     },
     {
-        id: "phc",
-        badge: "PHC",
-        name: "ADSP PHC",
-        url: "https://vmacdata.org/adsp-phc",
-        description: `The Alzheimer’s Disease Sequencing Project Phenotype Harmonization Consortium (ADSP-PHC) harmonizes phenotypic and endophenotypic data
-             across ADSP cohorts to support integrated genetic and genomic analyses of AD/ADRD. Its releases provide standardized 
-             data and documentation across domains including cognition, diagnosis, biomarkers, neuropathology, cardiovascular risk, 
-             and neuroimaging, with harmonized datasets distributed through the NIAGADS DSS.`,
+        id: "adsp",
+        badge: "ADSP",
+        name: "Alzheimer's Disease Sequencing Project",
+        url: "https://www.niagads.org/adsp",
+        description: `NIAGADS serves as the Data Coordinating Center for the The Alzheimer’s Disease Sequencing Project (ADSP).`,
         groupId: "partner",
-        concepts: ["phenotypes", "restrictedAccess"],
+        concepts: ["variants", "ld", "phenotypes", "restrictedAccess", "openAccess", "downloads"],
     },
 ];

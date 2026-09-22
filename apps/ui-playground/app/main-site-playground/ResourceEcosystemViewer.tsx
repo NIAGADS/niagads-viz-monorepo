@@ -355,10 +355,8 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                                 } as CSSProperties
                             }
                             type="button"
-                            onBlur={() => setActive(null)}
                             onFocus={() => selectResource(resource.id)}
                             onMouseEnter={() => selectResource(resource.id)}
-                            onMouseLeave={() => setActive(null)}
                             onPointerDown={() => selectResource(resource.id)}
                         >
                             <span className={styles.badge}>{resource.badge}</span>
