@@ -778,6 +778,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         <UtilityGlyph kind="cloud" x={1052} y={288} />
                         <UtilityLabel conceptId="cloudAccess" x={1084} y={305} />
                     </g>
+
                 </svg>
             </section>
         </main>
