@@ -484,6 +484,23 @@
     stroke: transparent;
 }
 
+.sequencingLayer {
+    pointer-events: none;
+}
+
+.sequencingRead {
+    stroke: var(--primary-blue);
+    stroke-width: 2;
+    stroke-linecap: round;
+    opacity: 0.78;
+}
+
+.sequencingBase {
+    stroke: var(--accent-teal);
+    stroke-width: 2;
+    stroke-linecap: round;
+}
+
 .regulatoryHitArea {
     fill: transparent;
     stroke: transparent;

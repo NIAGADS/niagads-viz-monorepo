@@ -19,7 +19,8 @@ export type ConceptType =
     | "openAccess"
     | "restrictedAccess"
     | "downloads"
-    | "cloudAccess";
+    | "cloudAccess"
+    | "sequencing";
 
 interface Concept {
     id: ConceptType;
@@ -78,9 +79,16 @@ const CONCEPTS: Concept[] = [
     { id: "restrictedAccess", label: "Restricted", x: 865, y: 300 },
     { id: "downloads", label: "Downloads", x: 982, y: 300 },
     { id: "cloudAccess", label: "API / Cloud", x: 1124, y: 300 },
+    { id: "sequencing", label: "Sequencing", x: 1105, y: 202 },
 ];
 
 const LANDSCAPE_WIDTH = 1240;
+const GENOMIC_CONTENT_SHIFT_X = -120;
+const GENE_CONTENT_SHIFT_X = -60;
+
+function getConceptShiftX(conceptId: ConceptType) {
+    return conceptId === "genes" ? GENE_CONTENT_SHIFT_X : GENOMIC_CONTENT_SHIFT_X;
+}
 
 function getFallbackResourceCenterX(index: number, resourceCount: number) {
     return ((index + 0.5) / resourceCount) * LANDSCAPE_WIDTH;
@@ -113,6 +121,33 @@ const LD_VALUES = [
 ] as const;
 
 const LD_COLORS = ["var(--gray-100)", "var(--gray-300)", "var(--secondary-blue)", "var(--primary-blue)"] as const;
+
+const SEQUENCING_READS = [
+    [1052, 24, 101],
+    [1080, 18, 101],
+    [1110, 30, 101],
+    [1148, 20, 101],
+    [1062, 34, 108],
+    [1102, 22, 108],
+    [1132, 28, 108],
+    [1168, 18, 108],
+    [1044, 18, 115],
+    [1070, 26, 115],
+    [1108, 18, 115],
+    [1140, 32, 115],
+    [1050, 28, 122],
+    [1058, 42, 129],
+    [1068, 36, 136],
+    [1078, 52, 143],
+    [1090, 46, 122],
+    [1100, 58, 129],
+    [1112, 34, 136],
+    [1122, 48, 143],
+    [1132, 40, 122],
+    [1144, 54, 129],
+    [1156, 30, 136],
+    [1164, 44, 143],
+] as const;
 
 const conceptById = Object.fromEntries(CONCEPTS.map((concept) => [concept.id, concept])) as Record<
     ConceptType,
@@ -307,9 +342,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                             <p>
                                 {detailResource?.description ?? overview.description}
                                 {!detailResource ? (
-                                    <strong className={styles.detailInstruction}>
-                                        {overview.instruction}
-                                    </strong>
+                                    <strong className={styles.detailInstruction}>{overview.instruction}</strong>
                                 ) : null}
                             </p>
                             {detailResource?.url ? (
@@ -366,7 +399,8 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
 
                 <svg
                     className={styles.landscape}
-                    viewBox="0 0 1240 340"
+                    viewBox={`0 0 ${LANDSCAPE_WIDTH} 340`}
+                    preserveAspectRatio="none"
                     role="img"
                     aria-labelledby="ecosystem-title ecosystem-desc"
                     onPointerOver={handleConceptPointerOver}
@@ -394,7 +428,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                     </defs>
 
                     <g className={styles.peripheralFrame} aria-hidden="true">
-                        <path className={styles.utilityRule} d="M76 278 H1164" />
+                        <path className={styles.utilityRule} d="M0 278 H1240" />
                         <text className={styles.zoneLabel} x="76" y="305">
                             Context
                         </text>
@@ -407,19 +441,28 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                     <g className={styles.contextLayer}>
                         <path
                             className={styles.softContour}
-                            d="M92 126 C235 76 392 95 530 132 S799 185 950 132 1138 100 1180 146"
+                            d="M0 126 C235 76 392 95 530 132 S799 185 950 132 1138 100 1240 146"
                         />
                         <path
                             className={styles.softContour}
-                            d="M118 265 C274 216 410 254 556 242 S785 204 910 249 1082 286 1176 244"
+                            d="M0 265 C274 216 410 254 556 242 S785 204 910 249 1082 286 1240 244"
                         />
-                        <line className={styles.resourceRail} x1="76" x2="1164" y1="32" y2="32" />
+                        <line className={styles.resourceRail} x1="0" x2="1240" y1="32" y2="32" />
                     </g>
+
+                    <line className={styles.geneTrackHit} x1="0" x2="1240" y1="150" y2="150" />
+                    <line className={styles.genomeRail} x1="0" x2="1240" y1="150" y2="150" />
 
                     <g className={styles.linkLayer} aria-hidden="true">
                         {resources.flatMap((resource, resourceIndex) =>
                             resource.concepts.map((conceptId) => {
                                 const concept = conceptById[conceptId];
+
+                                if (!concept) {
+                                    return null;
+                                }
+
+                                const conceptShiftX = getConceptShiftX(conceptId);
                                 const start =
                                     resourceCenterX[resource.id] ??
                                     getFallbackResourceCenterX(resourceIndex, resources.length);
@@ -427,7 +470,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                                 return (
                                     <path
                                         className={pathClass(resource.id, conceptId)}
-                                        d={`M ${start} 42 C ${start} ${bend}, ${concept.x} ${bend}, ${concept.x} ${concept.y - 18}`}
+                                        d={`M ${start} 42 C ${start} ${bend}, ${concept.x + conceptShiftX} ${bend}, ${concept.x + conceptShiftX} ${concept.y - 18}`}
                                         key={`${resource.id}-${conceptId}`}
                                         style={{ stroke: resourceGroupById[resource.groupId].color }}
                                     />
@@ -438,6 +481,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
 
                     <g
                         className={classForConcept("gwas")}
+                        transform={`translate(${GENOMIC_CONTENT_SHIFT_X} 0)`}
                         tabIndex={0}
                         role="button"
                         aria-label="Genetic associations, shown as a schematic Manhattan plot"
@@ -466,6 +510,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
 
                     <g
                         className={classForConcept("genes")}
+                        transform={`translate(${GENE_CONTENT_SHIFT_X} 0)`}
                         tabIndex={0}
                         role="button"
                         aria-label="Genes"
@@ -475,8 +520,6 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         onPointerDown={() => setActive({ type: "concept", id: "genes" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <line className={styles.geneTrackHit} x1="92" x2="1160" y1="150" y2="150" />
-                        <line className={styles.genomeRail} x1="92" x2="1160" y1="150" y2="150" />
                         {GENE_EXONS.map(([x, width]) => (
                             <rect className={styles.geneExon} x={x} y="142" width={width} height="16" key={x} />
                         ))}
@@ -486,6 +529,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
 
                     <g
                         className={classForConcept("variants")}
+                        transform={`translate(${GENOMIC_CONTENT_SHIFT_X} 0)`}
                         tabIndex={0}
                         role="button"
                         aria-label="Variants"
@@ -506,6 +550,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
 
                     <g
                         className={classForConcept("ld")}
+                        transform={`translate(${GENOMIC_CONTENT_SHIFT_X} 0)`}
                         tabIndex={0}
                         role="button"
                         aria-label="Linkage disequilibrium, shown as a schematic triangular pairwise matrix"
@@ -545,6 +590,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
 
                     <g
                         className={classForConcept("qtls")}
+                        transform={`translate(${GENOMIC_CONTENT_SHIFT_X} 0)`}
                         tabIndex={0}
                         role="button"
                         aria-label="Molecular QTLs, shown as multiple relationships from a variant to genomic targets"
@@ -566,7 +612,36 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                     </g>
 
                     <g
+                        className={styles.sequencingLayer}
+                        aria-label="Sequencing data, shown as aligned reads"
+                        transform="translate(30 0)"
+                    >
+                        <g transform="translate(562.5 0) scale(0.5 1)">
+                            {SEQUENCING_READS.map(([x, width, y], index) => {
+                                const mismatchX = x + Math.min(width - 8, 28 + (index % 4) * 9);
+
+                                return (
+                                    <g key={`${x}-${width}`}>
+                                        <line className={styles.sequencingRead} x1={x} x2={x + width} y1={y} y2={y} />
+                                        <line
+                                            className={styles.sequencingBase}
+                                            x1={mismatchX}
+                                            x2={mismatchX}
+                                            y1={y - 2.5}
+                                            y2={y + 2.5}
+                                        />
+                                    </g>
+                                );
+                            })}
+                        </g>
+                        <text className={styles.conceptLabel} x="1105" y="176" textAnchor="middle">
+                            Sequencing
+                        </text>
+                    </g>
+
+                    <g
                         className={classForConcept("regulatory")}
+                        transform={`translate(${GENOMIC_CONTENT_SHIFT_X} 0)`}
                         tabIndex={0}
                         role="button"
                         aria-label="Regulatory elements"
