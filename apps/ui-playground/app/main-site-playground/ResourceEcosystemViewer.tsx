@@ -5,7 +5,6 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react"
 import { Card, CardBody } from "@niagads/ui";
 
 import styles from "./resource-ecosystem.module.css";
-import { RESOURCE_ECOSYSTEM_OVERVIEW } from "./resources";
 
 export type ConceptType =
     | "genes"
@@ -45,7 +44,14 @@ export interface Resource {
     concepts: ConceptType[];
 }
 
+export interface ResourceEcosystemOverview {
+    title: string;
+    description: string;
+    instruction: string;
+}
+
 interface ResourceEcosystemViewerProps {
+    overview: ResourceEcosystemOverview;
     resources: Resource[];
     resourceGroups: ResourceGroup[];
 }
@@ -113,7 +119,7 @@ const conceptById = Object.fromEntries(CONCEPTS.map((concept) => [concept.id, co
     (typeof CONCEPTS)[number]
 >;
 
-export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceEcosystemViewerProps) {
+export function ResourceEcosystemViewer({ overview, resources, resourceGroups }: ResourceEcosystemViewerProps) {
     const [active, setActive] = useState<ActiveTarget>(null);
     const [detailResourceId, setDetailResourceId] = useState<string | null>(null);
     const [resourceCenterX, setResourceCenterX] = useState<Record<string, number>>({});
@@ -296,13 +302,13 @@ export function ResourceEcosystemViewer({ resources, resourceGroups }: ResourceE
                     >
                         <CardBody className={styles.resourceDetailBody}>
                             <div className={styles.resourceDetailHeader}>
-                                <h2>{detailResource?.name ?? RESOURCE_ECOSYSTEM_OVERVIEW.title}</h2>
+                                <h2>{detailResource?.name ?? overview.title}</h2>
                             </div>
                             <p>
-                                {detailResource?.description ?? RESOURCE_ECOSYSTEM_OVERVIEW.description}
+                                {detailResource?.description ?? overview.description}
                                 {!detailResource ? (
                                     <strong className={styles.detailInstruction}>
-                                        {RESOURCE_ECOSYSTEM_OVERVIEW.instruction}
+                                        {overview.instruction}
                                     </strong>
                                 ) : null}
                             </p>
