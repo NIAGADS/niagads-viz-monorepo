@@ -375,12 +375,21 @@
 }
 
 .link.active {
-    opacity: 0.9;
-    stroke-width: 3;
+    opacity: 0.7;
+    stroke-width: 1.8;
 }
 
 .link.recede {
     opacity: 0;
+}
+
+.linkTarget {
+    opacity: 0;
+    stroke: none;
+}
+
+.linkTarget.active {
+    opacity: 0.85;
 }
 
 .conceptMark {

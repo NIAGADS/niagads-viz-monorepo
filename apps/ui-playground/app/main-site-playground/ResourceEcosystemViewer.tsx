@@ -72,8 +72,8 @@ const CONCEPTS: Concept[] = [
     { id: "ld", label: "LD", x: 390, y: 210 },
     { id: "qtls", label: "Molecular QTLs", x: 890, y: 168 },
     { id: "regulatory", label: "Regulatory elements", x: 650, y: 150 },
-    { id: "biosamples", label: "Biosamples", x: 201, y: 300 },
-    { id: "curatedEvidence", label: "Curated evidence", x: 365, y: 300 },
+    { id: "biosamples", label: "Biosamples", x: 365, y: 300 },
+    { id: "curatedEvidence", label: "Curated evidence", x: 201, y: 300 },
     { id: "phenotypes", label: "Phenotypes", x: 538, y: 300 },
     { id: "openAccess", label: "Open", x: 760, y: 300 },
     { id: "restrictedAccess", label: "Restricted", x: 865, y: 300 },
@@ -95,7 +95,19 @@ function getConceptConnectorX(conceptId: ConceptType, concept: Concept) {
 }
 
 function getConceptConnectorY(conceptId: ConceptType, concept: Concept) {
-    return conceptId === "genes" ? 120 : concept.y - 18;
+    if (conceptId === "genes") {
+        return 120;
+    }
+
+    if (conceptId === "qtls") {
+        return 132;
+    }
+
+    if (conceptId === "sequencing") {
+        return 84;
+    }
+
+    return concept.y >= 300 ? 292 : concept.y - 18;
 }
 
 function getFallbackResourceCenterX(index: number, resourceCount: number) {
@@ -477,13 +489,22 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                                 const conceptShiftX = getConceptShiftX(conceptId);
                                 const targetX = getConceptConnectorX(conceptId, concept) + conceptShiftX;
                                 const targetY = getConceptConnectorY(conceptId, concept);
+                                const isActiveLink = activeResources.has(resource.id) && activeConcepts.has(conceptId);
                                 return (
-                                    <path
-                                        className={pathClass(resource.id, conceptId)}
-                                        d={`M ${start} 42 C ${start} ${bend}, ${targetX} ${bend}, ${targetX} ${targetY}`}
-                                        key={`${resource.id}-${conceptId}`}
-                                        style={{ stroke: resourceGroupById[resource.groupId].color }}
-                                    />
+                                    <g key={`${resource.id}-${conceptId}`}>
+                                        <path
+                                            className={pathClass(resource.id, conceptId)}
+                                            d={`M ${start} 42 C ${start} ${bend}, ${targetX} ${bend}, ${targetX} ${targetY}`}
+                                            style={{ stroke: resourceGroupById[resource.groupId].color }}
+                                        />
+                                        <circle
+                                            className={`${styles.linkTarget} ${isActiveLink ? styles.active : ""}`}
+                                            cx={targetX}
+                                            cy={targetY}
+                                            r="3.5"
+                                            style={{ fill: resourceGroupById[resource.groupId].color }}
+                                        />
+                                    </g>
                                 );
                             })
                         )}
@@ -704,9 +725,9 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         onPointerDown={() => setActive({ type: "concept", id: "biosamples" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <rect className={styles.utilityHitArea} x="130" y="282" width="142" height="40" rx="6" />
-                        <UtilityGlyph kind="biosample" x={138} y={288} />
-                        <UtilityLabel conceptId="biosamples" x={170} y={305} />
+                        <rect className={styles.utilityHitArea} x="290" y="282" width="142" height="40" rx="6" />
+                        <UtilityGlyph kind="biosample" x={298} y={288} />
+                        <UtilityLabel conceptId="biosamples" x={330} y={305} />
                     </g>
 
                     <g
@@ -720,9 +741,9 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         onPointerDown={() => setActive({ type: "concept", id: "curatedEvidence" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <rect className={styles.utilityHitArea} x="290" y="282" width="150" height="40" rx="6" />
-                        <UtilityGlyph kind="evidence" x={298} y={288} />
-                        <UtilityLabel conceptId="curatedEvidence" x={330} y={305} />
+                        <rect className={styles.utilityHitArea} x="130" y="282" width="150" height="40" rx="6" />
+                        <UtilityGlyph kind="evidence" x={138} y={288} />
+                        <UtilityLabel conceptId="curatedEvidence" x={170} y={305} />
                     </g>
 
                     <g
