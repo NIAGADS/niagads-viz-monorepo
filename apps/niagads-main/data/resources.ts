@@ -1,9 +1,11 @@
+import type { Resource } from "@/components/ResourceEcosystemViewer/ResourceEcosystemViewer";
+
 export const RESOURCE_ECOSYSTEM_OVERVIEW = {
     title: "NIAGADS Ecosystem",
-    description: `Together with partner offerings, NIAGADS provides an integrated suite of resources for discovering, exploring, and accessing Alzheimer's 
+    description: `Together with partner offerings, NIAGADS provides an integrated suite of resources for discovering, exploring, and accessing Alzheimer’s 
         disease and related dementia genetics and genomics data.`,
 
-    instruction: "Hover, focus, or tap a resource above to learn more.",
+    instruction: "Hover, focus, or tap a resource below to learn more.",
 };
 
 export const RESOURCE_GROUPS = [
@@ -12,12 +14,12 @@ export const RESOURCE_GROUPS = [
     { id: "partner", label: "Partner Resources", color: "var(--warning-amber)" },
 ];
 
-export const RESOURCES = [
+export const RESOURCES: Resource[] = [
     {
         id: "genomicsdb",
         badge: "GDB",
         name: "Alzheimer's GenomicsDB",
-        description: `The NIAGADS Alzheimer's GenomicsDB is an interactive knowledgebase for exploring AD/ADRD genetic associations, 
+        description: `The NIAGADS Alzheimer’s GenomicsDB is an interactive knowledgebase for exploring AD/ADRD genetic associations, 
             ADSP variants, and functional annotations in the context of genes, variants, and genomic regions. 
             Researchers can search, browse, and integrate GWAS and sequencing results to investigate disease-associated loci 
             and their potential functional relevance.`,
@@ -58,7 +60,7 @@ export const RESOURCES = [
             and apply for controlled access to data appropriate for their research.`,
         url: "https://dss.niagads.org/datasets/",
         groupId: "access",
-        concepts: ["downloads", "openAccess", "restrictedAccess"],
+        concepts: ["downloads", "openAccess", "restrictedAccess", "sequencing", "gwas", "qtls"],
     },
     {
         id: "api",
@@ -83,15 +85,12 @@ export const RESOURCES = [
         concepts: ["gwas", "genes", "variants", "curatedEvidence", "openAccess", "phenotypes"],
     },
     {
-        id: "phc",
-        badge: "PHC",
-        name: "ADSP PHC",
-        url: "https://vmacdata.org/adsp-phc",
-        description: `The Alzheimer's Disease Sequencing Project Phenotype Harmonization Consortium (ADSP-PHC) harmonizes phenotypic and endophenotypic data
-             across ADSP cohorts to support integrated genetic and genomic analyses of AD/ADRD. Its releases provide standardized 
-             data and documentation across domains including cognition, diagnosis, biomarkers, neuropathology, cardiovascular risk, 
-             and neuroimaging, with harmonized datasets distributed through the NIAGADS DSS.`,
+        id: "adsp",
+        badge: "ADSP",
+        name: "Alzheimer's Disease Sequencing Project",
+        url: "https://www.niagads.org/adsp",
+        description: `NIAGADS serves as the Data Coordinating Center for the The Alzheimer’s Disease Sequencing Project (ADSP).`,
         groupId: "partner",
-        concepts: ["phenotypes", "restrictedAccess"],
+        concepts: ["qtls", "sequencing", "variants", "ld", "phenotypes", "restrictedAccess", "openAccess", "downloads"],
     },
 ];
