@@ -5,11 +5,9 @@
     "scripts": {
         "watch": "npx lerna watch -- lerna run build --scope=\\$LERNA_PACKAGE_NAME",
         "storybook": "concurrently \"npm run watch\" \"npx lerna run storybook\"",
-        "igvbrowser": "concurrently \"npm run watch\" \"npx lerna run igvbrowser\"",
+        "genome-browser": "concurrently \"npm run watch\" \"npx lerna run genome-browser\"",
         "genomicsdb": "concurrently \"npm run watch\" \"npx lerna run genomicsdb\"",
-        "genomicsdb-debug": "concurrently \"npm run watch\" \"npx lerna run genomicsdb-debug\"",
-        "genomicsdb-prod": "npx lerna run genomicsdb-prod",
-        "genomicsdb-build": "npx lerna run genomicsdb-build",
+        "genomicsdb-build": "npx lerna run build-genomicsdb",
         "niagads-main": "concurrently \"npm run watch\" \"npx lerna run niagads-main\"",
         "ui-playground": "concurrently \"npm run watch\" \"npx lerna run ui-playground\"",
         "lint": "npx prettier . --write",
@@ -42,13 +40,12 @@
         "npm": ">=12.0.2 <13.0.0"
     },
     "allowScripts": {
-        "es5-ext@0.10.64": true,
-        "nx@23.1.1": true,
+        "es5-ext": true,
+        "nx": true,
         "esbuild": true,
         "unrs-resolver": true,
-        "github:NIAGADS/igv.js#53e6169d6fb8fcaeecd8ce369e622a79824f5ef7": true,
-        "github:NIAGADS/export-from-json#8a860ce5ce19dc3fba7370e3a00c3b0cf4ca8ff1": true,
         "sharp": true,
-        "github:NIAGADS/export-from-json#122dec96e063279cc65c2ef0c94ed92cc796f452": true
+        "NIAGADS/igv.js": true,
+        "NIAGADS/export-from-json": true
     }
 }

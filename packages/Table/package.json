@@ -32,7 +32,7 @@
         "@niagads/ui": "^0.2.1",
         "@tanstack/match-sorter-utils": "^8.19.4",
         "@tanstack/react-table": "^8.11.8",
-        "export-from-json": "github:NIAGADS/export-from-json#niagads",
+        "export-from-json": "git+https://github.com/NIAGADS/export-from-json.git#niagads",
         "lucide-react": "^0.513.0",
         "style-inject": "^0.3.0",
         "tslib": "^2"
