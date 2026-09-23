@@ -41,6 +41,7 @@ export default [
                 ],
                 // Optional: set copyOnce: true to only copy on first build (for watch mode)
                 // copyOnce: true,
+                flatten: false,
             }),
         ],
     },
