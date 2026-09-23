@@ -76,7 +76,8 @@ Applications provide separate environment-file samples for Docker and non-Docker
 
 | File | Purpose |
 | --- | --- |
-| `sample.build.env` | Docker build-time configuration. These values are available while the application image is built and may be incorporated into the generated application output. |
+| `dev.build.env.local` | Docker build-time configuration for `dev` builds. **Also used by PR actions to test for broken dependencies**. These values are available while the application image is built and may be incorporated into the generated application output. |
+| `prod.build.env.local` | Docker build-time configuration for `staging` and `prod` builds. These values are available while the application image is built and may be incorporated into the generated application output. |
 | `sample.runtime.env` | Docker runtime configuration, including secrets. This file is supplied when the container is deployed and is not included in the image. |
 | `sample.env.local` | Complete configuration for a non-Docker deployment. It combines the build-time and runtime values required by the application and is copied to `.env.local`. |
 

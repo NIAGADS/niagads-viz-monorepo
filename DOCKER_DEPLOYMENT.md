@@ -8,11 +8,11 @@ Each service image is built from its own application context. The Dockerfile sel
 
 ## Deployment modes
 
-- `production` builds with the versions of `@niagads/*` packages declared in `package.json` and runs in the production Node environment.
+- `prod` builds with the versions of `@niagads/*` packages declared in `package.json` and runs in the production Node environment.
 
 - `staging` builds with canary versions of `@niagads/*` packages when available and runs in the production Node environment.
 
-- `development` builds with canary versions of `@niagads/*` packages when available and runs in the development Node environment.
+- `dev` builds with canary versions of `@niagads/*` packages when available and runs in the development Node environment.
 
 ## Environment configuration and secrets
 
@@ -21,20 +21,22 @@ Configuration is separated by lifecycle:
 | File | Purpose |
 | --- | --- |
 | `.env` | Compose-level deployment settings, including ports, log location, group ID, and `BUILD` |
-| `build.env` | Application values needed during image creation, copied into image as `.env.local` |
+| `dev.build.env.local` | Application values needed during image creation for `dev` builds, copied into image as `.env.local` |
+| `prod.build.env.local` | Application values needed during image creation for `prod` or `staging` builds, copied into image as `.env.local` |
 | `runtime.env` | Values supplied when the container starts, including credentials and other secrets |
 
 Create deployment configuration by copying the sample files; do not rename or modify the sample files:
 
 ```sh
 cp sample.docker.env .env
-cp apps/<application>/sample.build.env apps/<application>/.env.local
 cp apps/<application>/sample.runtime.env apps/<application>/runtime.env
 ```
 
-Never commit populated deployment configuration or secrets to this repository. Sample `runtime.env` configurations (placeholders only), including database credentials, Cognito configuration, and related settings, are maintained in the private [NIAGADS/oa-web-env-template](https://github.com/NIAGADS/oa-web-env-template) Docker repository.
+There should be no need to alter the `*.env.local` files.
 
-For automated staging and production builds, the content of `runtime.env` is left blank during image generation. The populated runtime file is supplied only when the pre-built application image is deployed with `docker run --env-file`.  For local, non-automated docker-deployments, if users do not have access to the private repository, comments in the application's `sample.env.local` file indicate runtime-values that should be copied into `runtime.env`.
+Never commit populated deployment configuration or secrets to this repository. Sample `runtime.env` configurations (placeholders only), including database credentials, Cognito configuration, and related settings, and `docker run` scripts are maintained in the private [NIAGADS/oa-web-env-template](https://github.com/NIAGADS/oa-web-env-template) Docker repository.
+
+For automated staging and production builds, the content of `runtime.env` can be left blank or commented-out during image generation. The populated runtime file is supplied only when the pre-built application image is deployed with `docker run --env-file`.  For local, non-automated docker-deployments, if users do not have access to the private repository, comments in the application's `sample.env.local` file indicate runtime-values that should be copied into `runtime.env`.
 
 ## Compose deployment
 

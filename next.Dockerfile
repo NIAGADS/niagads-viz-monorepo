@@ -21,7 +21,6 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* 
 
 COPY . .
-COPY build.env .env.local
 COPY --from=scripts use-canary.mjs /tmp/use-canary.mjs
 
 # 1. Tell Git to downgrade SSH requests back to HTTPS
@@ -34,14 +33,16 @@ RUN npm install -g npm@12.0.2 \
     && node /tmp/use-canary.mjs \
     && npm install --package-lock=false
 
+FROM base-builder AS dev-builder
 
-FROM base-builder AS development-builder
-
+COPY dev.build.env.local .env.local
 
 # source files required to build source tree for next dev
 # no production build is required
 
-FROM base-builder AS production-builder
+FROM base-builder AS prod-builder
+
+COPY prod.build.env.local .env.local
 
 RUN npm run build-app \
     && npm prune --omit=dev
@@ -58,12 +59,12 @@ ARG APP_NAME
 ENV LOG_FILE="/var/log/app/${APP_NAME}.log"
 WORKDIR /app
 
-COPY --from=base-builder --chown=node:node /app/.env.local ./.
 
-FROM base-runner AS development-runner
+FROM base-runner AS dev-runner
 
 # need full code base to build dev source trees
-COPY --from=development-builder --chown=node:node /app ./
+COPY --from=dev-builder --chown=node:node /app ./
+COPY --from=dev-builder --chown=node:node /app/.env.local ./.
 
 EXPOSE 3000 
 
@@ -71,13 +72,14 @@ USER node
 
 CMD sh -c 'exec npm run start-dev-app >> "$LOG_FILE" 2>&1'
 
-FROM base-runner AS production-runner
+FROM base-runner AS prod-runner
 
 # only need compiled app
-COPY --from=production-builder /app/node_modules ./node_modules
-COPY --from=production-builder /app/.next ./.next
-COPY --from=production-builder /app/public ./public
-COPY --from=production-builder /app/package.json ./package.json
+COPY --from=prod-builder /app/node_modules ./node_modules
+COPY --from=prod-builder /app/.next ./.next
+COPY --from=prod-builder /app/public ./public
+COPY --from=prod-builder /app/package.json ./package.json
+COPY --from=prod-builder --chown=node:node /app/.env.local ./.
 
 EXPOSE 3000
 
@@ -85,4 +87,4 @@ USER node
 
 CMD sh -c 'exec npm run start-app >> "$LOG_FILE" 2>&1'
 
-FROM production-runner AS staging-runner
+FROM prod-runner AS staging-runner
