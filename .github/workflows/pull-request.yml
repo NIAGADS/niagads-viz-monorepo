@@ -20,4 +20,4 @@ jobs:
       - run: npx prettier . --check
       - run: npm run build
       - run: mv apps/genomicsdb/dev.build.env.local apps/genomicsdb/.env.local
-      - run: npm run build-genomicsdb
+      - run: npm run genomicsdb-build

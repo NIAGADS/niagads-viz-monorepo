@@ -7,6 +7,7 @@
         "storybook": "concurrently \"npm run watch\" \"npx lerna run storybook\"",
         "genome-browser": "concurrently \"npm run watch\" \"npx lerna run genome-browser\"",
         "genomicsdb": "concurrently \"npm run watch\" \"npx lerna run genomicsdb\"",
+        "genomicsdb-build": "npx lerna run build-genomicsdb",
         "niagads-main": "concurrently \"npm run watch\" \"npx lerna run niagads-main\"",
         "ui-playground": "concurrently \"npm run watch\" \"npx lerna run ui-playground\"",
         "lint": "npx prettier . --write",
