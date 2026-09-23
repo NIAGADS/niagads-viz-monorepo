@@ -3,7 +3,7 @@
 import { Button, Card, CardBody, CardHeader, Footer, TextInput } from "@niagads/ui";
 import { Github, Twitter } from "lucide-react";
 import { ResourceEcosystemViewer } from "@/components/ResourceEcosystemViewer/ResourceEcosystemViewer";
-import { RESOURCES, RESOURCE_GROUPS } from "@/components/ResourceEcosystemViewer/resources";
+import { RESOURCES, RESOURCE_GROUPS, RESOURCE_ECOSYSTEM_OVERVIEW } from "@/data/resources";
 
 import styles from "./home-page.module.css";
 import { useState } from "react";
@@ -54,7 +54,11 @@ export const HomePage = () => {
             </div>
             <hr />
             <div className={styles["home-page-section"]}>
-                <ResourceEcosystemViewer resources={RESOURCES} resourceGroups={RESOURCE_GROUPS} />
+                <ResourceEcosystemViewer
+                    overview={RESOURCE_ECOSYSTEM_OVERVIEW}
+                    resources={RESOURCES}
+                    resourceGroups={RESOURCE_GROUPS}
+                />
             </div>
             <hr />
             <div className={styles["home-page-section"]}>

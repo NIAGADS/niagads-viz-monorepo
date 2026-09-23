@@ -1,13 +1,12 @@
 .shell {
+    box-sizing: border-box;
+    width: 100%;
     margin: 0;
     display: grid;
     place-items: start center;
+    padding: clamp(12px, 2vw, 24px);
+    background: transparent;
     color: var(--text-primary);
-
-    padding-left: 40px;
-    padding-right: 40px;
-
-    width: 100%;
 }
 
 .ecosystem {
@@ -24,7 +23,9 @@
 .resourceDetail {
     height: 100%;
     border: 2px solid color-mix(in srgb, var(--resource-color), var(--gray-300) 48%) !important;
+    border-radius: 10px;
     background: color-mix(in srgb, var(--resource-color), var(--white) 92%) !important;
+    box-shadow: 0 8px 20px rgb(20 43 73 / 12%);
 }
 
 .defaultDetail {
@@ -57,7 +58,7 @@
 .resourceDetail h2 {
     margin: 0;
     font:
-        780 20px/1.15 ui-sans-serif,
+        800 21px/1.15 ui-sans-serif,
         system-ui,
         sans-serif;
     letter-spacing: -0.01em;
@@ -82,7 +83,7 @@
     display: block;
     margin-top: 4px;
     color: var(--resource-color);
-    font-weight: 650;
+    font-weight: 700;
 }
 
 .resourceDetailAction {
@@ -124,18 +125,18 @@
 }
 
 .resourceGroupLabels {
-    min-height: 22px;
+    min-height: 24px;
     display: grid;
     grid-template-columns: repeat(var(--resource-count), minmax(0, 1fr));
     gap: 10px;
     align-items: end;
-    margin-bottom: 10px;
+    margin-bottom: 14px;
 }
 
 .groupLabel {
     color: var(--text-secondary);
     font:
-        700 11px/1.1 ui-sans-serif,
+        750 11px/1.1 ui-sans-serif,
         system-ui,
         sans-serif;
     letter-spacing: 0.045em;
@@ -163,12 +164,12 @@
     justify-content: center;
     gap: 9px;
     padding: 7px 9px;
-    border: 1px solid color-mix(in srgb, var(--resource-color), var(--white) 58%);
-    border-radius: var(--border-radius);
+    border: 1px solid color-mix(in srgb, var(--resource-color), var(--white) 64%);
+    border-radius: 8px;
     color: var(--text-primary);
     text-decoration: none;
     background: var(--surface);
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 2px 7px rgb(20 43 73 / 8%);
     cursor: pointer;
     font: inherit;
     text-align: left;
@@ -183,7 +184,7 @@
 .resource:focus-visible,
 .resource.active {
     border-color: var(--resource-color);
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 5px 12px rgb(20 43 73 / 14%);
     outline: none;
     transform: translateY(-1px);
 }
@@ -208,12 +209,12 @@
 }
 
 .badge {
-    width: 38px;
-    height: 30px;
+    width: 42px;
+    height: 32px;
     flex: 0 0 auto;
     display: grid;
     place-items: center;
-    border-radius: 6px;
+    border-radius: 7px;
     background: var(--resource-color);
     border: 1px solid var(--resource-color);
     color: var(--white);
@@ -234,13 +235,6 @@
     overflow: visible;
 }
 
-.contextLayer,
-.linkLayer,
-.conceptMark {
-    transform-box: fill-box;
-    transform-origin: center;
-}
-
 .softContour {
     fill: none;
     stroke: var(--gray-300);
@@ -258,27 +252,11 @@
     pointer-events: none;
 }
 
-.contextZone {
-    fill: none;
-    stroke: var(--gray-300);
-    stroke-width: 1.3;
-    stroke-linecap: round;
-    stroke-dasharray: 1 8;
-}
-
 .utilityRule,
 .utilityDivider {
     fill: none;
     stroke: var(--gray-300);
     stroke-width: 1;
-}
-
-.accessZone {
-    fill: none;
-    stroke: var(--gray-300);
-    stroke-width: 1.3;
-    stroke-linecap: round;
-    stroke-dasharray: 1 8;
 }
 
 .zoneLabel {
@@ -348,6 +326,11 @@
     stroke-width: 24;
 }
 
+.geneConceptHitArea {
+    fill: transparent;
+    stroke: transparent;
+}
+
 .geneExon {
     fill: var(--primary-blue);
 }
@@ -372,20 +355,27 @@
 }
 
 .link.active {
-    opacity: 0.9;
-    stroke-width: 3;
+    opacity: 0.7;
+    stroke-width: 1.8;
 }
 
 .link.recede {
     opacity: 0;
 }
 
+.linkTarget {
+    opacity: 0;
+    stroke: none;
+}
+
+.linkTarget.active {
+    opacity: 0.85;
+}
+
 .conceptMark {
     cursor: default;
     outline: none;
-    transition:
-        opacity 160ms ease,
-        transform 160ms ease;
+    transition: opacity 160ms ease;
 }
 
 .conceptMark:focus-visible .conceptLabel,
@@ -397,7 +387,6 @@
 
 .conceptMark.active {
     opacity: 1;
-    transform: scale(1.025);
 }
 
 .conceptMark.recede {
@@ -424,8 +413,7 @@
         font-weight 160ms ease;
 }
 
-.associationBaseline,
-.paperLine {
+.associationBaseline {
     fill: none;
     stroke: var(--gray-500);
     stroke-width: 2;
@@ -475,6 +463,11 @@
     stroke-linecap: round;
 }
 
+.ldHitArea {
+    fill: transparent;
+    stroke: transparent;
+}
+
 .ldCell {
     stroke: var(--white);
     stroke-width: 1.25;
@@ -484,6 +477,24 @@
 .qtlHitArea {
     fill: transparent;
     stroke: transparent;
+}
+
+.sequencingRead {
+    stroke: var(--primary-blue);
+    stroke-width: 2;
+    stroke-linecap: round;
+    opacity: 0.78;
+}
+
+.sequencingHitArea {
+    fill: transparent;
+    stroke: transparent;
+}
+
+.sequencingBase {
+    stroke: var(--accent-teal);
+    stroke-width: 2;
+    stroke-linecap: round;
 }
 
 .regulatoryHitArea {
@@ -530,49 +541,6 @@
     pointer-events: none;
 }
 
-.cell {
-    fill: color-mix(in srgb, var(--accent-teal), var(--white) 82%);
-    stroke: var(--accent-teal);
-    stroke-width: 1.5;
-}
-
-.paper,
-.phenotypeForm,
-.apiGate {
-    fill: var(--surface);
-    stroke: var(--primary-blue);
-    stroke-width: 1.8;
-}
-
-.paperFold,
-.check,
-.codeMark {
-    fill: none;
-    stroke: var(--primary-blue);
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-.evidenceMark {
-    fill: none;
-    stroke: var(--primary-blue);
-    stroke-width: 2;
-    stroke-linecap: round;
-}
-
-.evidenceDot {
-    fill: var(--surface);
-    stroke: var(--primary-blue);
-    stroke-width: 1.8;
-}
-
-.datasetLayer {
-    fill: var(--gray-100);
-    stroke: var(--secondary-blue);
-    stroke-width: 1.7;
-}
-
 @media (max-width: 640px) {
     .shell {
         display: block;
@@ -596,10 +564,6 @@
         display: block;
         height: auto;
         width: auto;
-    }
-
-    .resourceDetailHeader {
-        margin-bottom: 12px;
     }
 
     .resourceDetailBody {
@@ -652,10 +616,6 @@
         width: 34px;
         height: 30px;
         font-size: 9px;
-    }
-
-    .name {
-        font-size: 12px;
     }
 }
 
