@@ -34,7 +34,7 @@ cp apps/<application>/sample.runtime.env apps/<application>/runtime.env
 
 There should be no need to alter the `*.env.local` files.
 
-Never commit populated deployment configuration or secrets to this repository. Sample `runtime.env` configurations (placeholders only), including database credentials, Cognito configuration, and related settings, and `docker run` scripts are maintained in the private [NIAGADS/oa-web-env-template](https://github.com/NIAGADS/oa-web-env-template) Docker repository.
+Never commit populated deployment configuration or secrets to this repository. Sample `runtime.env` configurations (placeholders only), related settings, and `docker run` scripts are maintained in the private [NIAGADS/oa-web-env-template](https://github.com/NIAGADS/oa-web-env-template) Docker repository.
 
 For automated staging and production builds, the content of `runtime.env` can be left blank or commented-out during image generation. The populated runtime file is supplied only when the pre-built application image is deployed with `docker run --env-file`.  For local, non-automated docker-deployments, if users do not have access to the private repository, comments in the application's `sample.env.local` file indicate runtime-values that should be copied into `runtime.env`.
 
