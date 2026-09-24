@@ -1,5 +1,6 @@
 import React, { useEffect, useId, useRef, useState } from "react";
 
+import { ActionButton } from "@niagads/ui";
 import styles from "./VisualizationInfo.module.css";
 
 /** A named visual encoding explained in a chart's information panel. */
@@ -26,6 +27,8 @@ export interface VisualizationInfoProps {
     /** Structured explanatory content supplied by the chart wrapper. */
     content: VisualizationInfoContent;
 }
+
+const InfoIcon = () => <span aria-hidden="true">ⓘ</span>;
 
 /**
  * Shared React disclosure for chart explanations.
@@ -65,17 +68,15 @@ const VisualizationInfo = ({ content }: VisualizationInfoProps) => {
 
     return (
         <div ref={infoRef} className={styles["visualization-info"]}>
-            <button
-                type="button"
-                className={styles["visualization-info-button"]}
+            <ActionButton
+                icon={<InfoIcon />}
                 title="About this visualization"
                 aria-expanded={isOpen}
                 aria-controls={panelId}
                 onClick={() => setIsOpen((current) => !current)}
             >
-                <span aria-hidden="true">ⓘ</span>
-                <span>About this visualization</span>
-            </button>
+                About this visualization
+            </ActionButton>
             {isOpen && (
                 <section
                     id={panelId}

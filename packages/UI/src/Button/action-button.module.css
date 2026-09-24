@@ -1,4 +1,4 @@
-.visualization-export-button {
+.action-button {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -12,8 +12,8 @@
     cursor: pointer;
 }
 
-.visualization-export-button:hover,
-.visualization-export-button:focus-visible {
+.action-button:hover,
+.action-button:focus-visible {
     border-color: var(--viz-accent, #4e79a7);
     color: var(--viz-text, #1f2937);
 }
