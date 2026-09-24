@@ -1,6 +1,6 @@
 import React, { RefObject } from "react";
 
-import styles from "./VisualizationExport.module.css";
+import { ActionButton } from "@niagads/ui";
 
 export interface VisualizationExportProps {
     /** Element containing the SVG to export. */
@@ -40,6 +40,24 @@ const getFilename = (filename: string): string => {
         .replace(/^-+|-+$/g, "");
     return `${safeFilename || "visualization"}.svg`;
 };
+
+const ExportIcon = ({ size = 14 }: { size?: number }) => (
+    <svg
+        viewBox="0 0 24 24"
+        width={size}
+        height={size}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+    >
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+        <path d="M7 10l5 5 5-5" />
+        <path d="M12 15V3" />
+    </svg>
+);
 
 const inlinePresentationStyles = (source: SVGSVGElement, clone: SVGSVGElement): void => {
     const sourceElements = [source, ...Array.from(source.querySelectorAll<SVGElement>("*"))];
@@ -90,29 +108,9 @@ const VisualizationExport = ({ targetRef, filename = "visualization.svg" }: Visu
     };
 
     return (
-        <button
-            type="button"
-            className={styles["visualization-export-button"]}
-            title="Export visualization as SVG"
-            onClick={exportSvg}
-        >
-            <svg
-                viewBox="0 0 24 24"
-                width="14"
-                height="14"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-            >
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <path d="M7 10l5 5 5-5" />
-                <path d="M12 15V3" />
-            </svg>
-            <span>Export SVG</span>
-        </button>
+        <ActionButton icon={<ExportIcon />} title="Export visualization as SVG" onClick={exportSvg}>
+            Export SVG
+        </ActionButton>
     );
 };
 
