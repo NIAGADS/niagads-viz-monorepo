@@ -1,15 +1,16 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-
 import { AxisConfig, DataPointInfo, DisplayProps } from "../d3/types";
-import VisualizationExport from "../d3/VisualizationExport";
-import VisualizationInfo, { VisualizationInfoContent } from "../d3/VisualizationInfo";
-import chartStyles from "../styles/Charts.module.css";
-import styles from "./RegionalManhattanPlot.module.css";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
     RegionalManhattanPlotSummary,
     destroyRegionalManhattanPlot,
     regionalManhattanPlot,
 } from "./d3RegionalManhattanPlot";
+import VisualizationInfo, { VisualizationInfoContent } from "../d3/VisualizationInfo";
+
+import VisualizationDataExport from "../d3/VisualizationDataExport";
+import VisualizationExport from "../d3/VisualizationExport";
+import chartStyles from "../styles/Charts.module.css";
+import styles from "./RegionalManhattanPlot.module.css";
 
 export interface RegionalManhattanPlotDataPoint {
     position: number;
@@ -60,6 +61,14 @@ const getAllLabel = (label: string): string => {
     const noun = label.split(/\s+/).at(-1)?.toLowerCase() ?? label.toLowerCase();
     return `All ${noun.endsWith("s") ? noun : `${noun}s`}`;
 };
+
+const toSnakeCase = (value: string): string =>
+    value
+        .trim()
+        .replace(/([a-z0-9])([A-Z])/g, "$1_$2")
+        .replace(/[^a-zA-Z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "")
+        .toLowerCase();
 
 const DEFAULT_RULES = [
     "Summary cards describe only points visible after filters and zoom are applied.",
@@ -191,13 +200,44 @@ const RegionalManhattanPlot = ({
         setViewDomain(initialViewDomain);
     };
 
+    const getExportData = () => {
+        const colorLabel = legend?.colorLabel ?? "Color";
+        const symbolLabel = legend?.symbolLabel ?? "Symbol";
+
+        return points
+            .filter(
+                (datum) =>
+                    (selectedColor === "all" || datum.colorCategory === selectedColor) &&
+                    (selectedSymbol === "all" || datum.symbolCategory === selectedSymbol) &&
+                    datum.score >= minimumScore &&
+                    datum.position >= viewDomain[0] &&
+                    datum.position <= viewDomain[1]
+            )
+            .map(({ colorCategory, symbolCategory, tooltipInfo, ...datum }) => ({
+                ...Object.fromEntries(Object.entries(datum).map(([key, value]) => [toSnakeCase(key), value])),
+                position: Math.round(datum.position * 1_000_000),
+                [toSnakeCase(colorLabel)]: colorCategory,
+                [toSnakeCase(symbolLabel)]: symbolCategory,
+                ...Object.fromEntries(
+                    tooltipInfo?.map(({ label, value }) => [
+                        toSnakeCase(label),
+                        label === "Distance to target" && typeof value === "string"
+                            ? Number(value.replaceAll(",", ""))
+                            : value,
+                    ]) ?? []
+                ),
+            }));
+    };
+    const exportFilename = `${gene?.gene_symbol ?? "regional-manhattan-plot"}-${title ?? "associations"}`;
+
     return (
         <div className={styles["regional-manhattan-plot-wrapper"]}>
             <div className={styles["regional-manhattan-plot-header"]}>
                 {title && <div className={chartStyles["chart-title"]}>{title}</div>}
                 <div className={styles["regional-manhattan-plot-actions"]}>
                     {visualizationInfoContent && <VisualizationInfo content={visualizationInfoContent} />}
-                    <VisualizationExport targetRef={chartRef} filename={title ?? "regional-manhattan-plot"} />
+                    <VisualizationDataExport getExportData={getExportData} filename={exportFilename} />
+                    <VisualizationExport targetRef={chartRef} filename={exportFilename} />
                 </div>
             </div>
             <div className={styles["regional-manhattan-plot-controls"]}>

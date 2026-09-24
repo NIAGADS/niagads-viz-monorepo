@@ -11,6 +11,10 @@ import {
     BubbleHeatmapTranslators,
 } from "./BubbleHeatmap/partnerDataTranslators";
 import { DataPointInfo } from "./d3/types";
+import VisualizationDataExport, {
+    VisualizationDataExportProps,
+    VisualizationExportData,
+} from "./d3/VisualizationDataExport";
 import VisualizationExport, { VisualizationExportProps } from "./d3/VisualizationExport";
 import VisualizationInfo, {
     VisualizationEncoding,
@@ -47,6 +51,7 @@ export {
     Histogram,
     BubbleHeatmap,
     BubbleHeatmapTranslators,
+    VisualizationDataExport,
     VisualizationExport,
     VisualizationInfo,
     RangeSelectHistogram,
@@ -67,6 +72,8 @@ export type {
     ADSPFunGenVariantXQTLRecord,
     ADSPFunGenXQTLRecord,
     DataPointInfo,
+    VisualizationDataExportProps,
+    VisualizationExportData,
     VisualizationExportProps,
     VisualizationEncoding,
     VisualizationInfoContent,
