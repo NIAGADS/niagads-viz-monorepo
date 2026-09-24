@@ -9,21 +9,8 @@ export interface ActionButtonProps extends StylingProps, React.HTMLAttributes<HT
 }
 
 /** A compact, icon-leading control for contextual actions. */
-export const ActionButton = ({
-    children,
-    className,
-    icon,
-    id,
-    style,
-    ...rest
-}: ActionButtonProps) => (
-    <button
-        type="button"
-        id={id}
-        className={`${styles["action-button"]} ${className ?? ""}`}
-        style={style}
-        {...rest}
-    >
+export const ActionButton = ({ children, className, icon, id, style, ...rest }: ActionButtonProps) => (
+    <button type="button" id={id} className={`${styles["action-button"]} ${className ?? ""}`} style={style} {...rest}>
         {icon}
         <span>{children}</span>
     </button>

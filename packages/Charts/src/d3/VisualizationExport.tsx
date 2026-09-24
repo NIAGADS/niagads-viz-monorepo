@@ -108,11 +108,7 @@ const VisualizationExport = ({ targetRef, filename = "visualization.svg" }: Visu
     };
 
     return (
-        <ActionButton
-            icon={<ExportIcon />}
-            title="Export visualization as SVG"
-            onClick={exportSvg}
-        >
+        <ActionButton icon={<ExportIcon />} title="Export visualization as SVG" onClick={exportSvg}>
             Export SVG
         </ActionButton>
     );
