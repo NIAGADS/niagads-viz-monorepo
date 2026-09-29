@@ -17,14 +17,14 @@ export const HomePage = () => {
         <div className={styles["home-page-section"]}>
             <div className={styles["home-page-link-buttons"]}>
                 <a href="https://adsp-data.niagads.org/">
-                    <Button title="" className={styles["home-page-dss-link-button"]} disabled>
+                    <Button title="" className={styles["home-page-hero-link-button"]} disabled>
                         ADSP Data
                     </Button>
                 </a>
                 <a href="https://dss.niagads.org/datasets/">
                     <Button
                         title="Search, apply for and get controlled access data"
-                        className={styles["home-page-dss-link-button"]}
+                        className={styles["home-page-hero-link-button"]}
                     >
                         Browse Datasets
                     </Button>
@@ -32,7 +32,7 @@ export const HomePage = () => {
                 <a href="">
                     <Button
                         title="Submit data to the NIAGADS repository"
-                        className={styles["home-page-dss-link-button"]}
+                        className={styles["home-page-hero-link-button"]}
                     >
                         Submit Data
                     </Button>
@@ -48,7 +48,7 @@ export const HomePage = () => {
     return (
         <div className={styles["home-page-content"]}>
             <HeroSection
-                title="The National Institute on Aging Genetics of Alzheimer's Disease Data Storage Site"
+                title="National Institute on Aging Genetics of Alzheimer's Disease Data Storage Site"
                 subtitle={`Advancing Alzheimer’s and related dementias research through
                     genomic data generation, sharing, resources, and discovery.`}
                 search={<HeroSectionSearch />}
@@ -66,15 +66,15 @@ export const HomePage = () => {
             <div className={styles["home-page-section"]}>
                 <div className={styles["home-page-signup-buttons"]}>
                     <div>
-                        <div className={styles["home-page-button-label"]}>Subscribe to our newsletter</div>
+                        <div>Subscribe to our newsletter</div>
                         <a href="https://dss.niagads.org/datasets/">
-                            <Button className={styles["home-page-dss-link-button"]}>Subscribe</Button>
+                            <Button className={styles["home-page-hero-link-button"]}>Subscribe</Button>
                         </a>
                     </div>
                     <div>
-                        <div className={styles["home-page-button-label"]}>Sign up for Help Hours</div>
+                        <div>Sign up for Help Hours</div>
                         <a href="https://dss.niagads.org/datasets/">
-                            <Button className={styles["home-page-dss-link-button"]}>Book Now</Button>
+                            <Button className={styles["home-page-hero-link-button"]}>Book Now</Button>
                         </a>
                     </div>
                 </div>

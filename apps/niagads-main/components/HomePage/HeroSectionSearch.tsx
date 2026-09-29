@@ -1,6 +1,7 @@
 "use client";
 
 import { Button, Card, CardBody, CardHeader, TextInput } from "@niagads/ui";
+
 import Link from "next/link";
 import { useState } from "react";
 
@@ -9,7 +10,7 @@ export const HeroSectionSearch = () => {
 
     return (
         <Card>
-            <CardHeader>Search the site</CardHeader>
+            <CardHeader style={{ fontWeight: "normal" }}>Search NIAGADS </CardHeader>
             <CardBody>
                 <TextInput value={searchTerm} onChange={setSearchTerm} placeholder="Search NIAGADS Data..." />
                 <Link href={`/search?term=${searchTerm}`}>

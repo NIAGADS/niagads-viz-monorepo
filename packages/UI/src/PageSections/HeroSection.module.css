@@ -1,20 +1,16 @@
 /* Hero Section */
 .hero-section {
-    /* background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%); */
-    padding: 4rem 2rem;
-    /* border-bottom: 1px solid var(--border); */
-    /* background: radial-gradient(circle at 78% 8%, rgba(61, 90, 128, .30), transparent 28%),
-        radial-gradient(circle at 15% 32%, rgba(155, 108, 255, .11), transparent 30%),
-        linear-gradient(180deg, var(--dark-blue) 0%, var(--dark-blue) 42%, var(--dark-blue) 100%); */
-    /* background:  linear-gradient(180deg, var(--dark-blue) 0%, var(--dark-blue) 42%, var(--dark-blue) 100%); */
-    background: radial-gradient(circle, rgba(42, 50, 62, 0.95) 0%, var(--dark-blue) 87%);
+    padding: 2.5rem 2rem;
+    background:
+        radial-gradient(circle at 84% 0%, rgba(61, 90, 128, 0.24), transparent 42%),
+        radial-gradient(circle at 8% 100%, rgba(61, 90, 128, 0.16), transparent 45%),
+        linear-gradient(115deg, var(--dark-blue) 0%, #2c394d 48%, #344b64 100%);
     box-sizing: border-box;
-    /* background-color: #fff; */
 }
 
 .hero-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-columns: minmax(0, 2fr) auto minmax(0, 1fr);
     gap: 3rem;
     align-items: center;
     max-width: 1200px;
@@ -48,19 +44,20 @@
 }
 
 .hero-title {
-    font-size: 2.4rem;
+    font-size: 2.1rem;
     font-weight: 700;
     max-width: 500px;
     color: #fff;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
     line-height: 1.1;
 }
 
 .hero-subtitle {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     color: #fff;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     max-width: 500px;
+    font-weight: normal;
 }
 .hero-graphic {
     display: flex;
@@ -71,7 +68,7 @@
 }
 .hero-search {
     max-width: 800px;
-    margin-top: 2.25rem;
+    margin-top: 1.5rem;
     margin-bottom: 0;
 }
 
@@ -159,7 +156,7 @@
 
 @media (max-width: 768px) {
     .hero-section {
-        padding: 3rem 1.5rem;
+        padding: 2rem 1.5rem;
     }
 
     .hero-grid {
@@ -176,10 +173,10 @@
     }
 
     .hero-title {
-        font-size: 2rem;
+        font-size: 1.8rem;
     }
 
     .hero-subtitle {
-        font-size: 1.1rem;
+        font-size: 1rem;
     }
 }
