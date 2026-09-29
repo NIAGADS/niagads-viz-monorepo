@@ -18,3 +18,4 @@ export * from "./Tooltip";
 export * from "./Footer";
 export * from "./Header";
 export * from "./StatementBanner";
+export * from "./PageSections";

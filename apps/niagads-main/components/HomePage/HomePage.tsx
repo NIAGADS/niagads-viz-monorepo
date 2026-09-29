@@ -1,57 +1,44 @@
 "use client";
 
-import { Button, Card, CardBody, CardHeader, Footer, TextInput } from "@niagads/ui";
+import { Button, Card, CardBody, CardHeader, Footer, HeroSection, TextInput } from "@niagads/ui";
 import { Github, Twitter } from "lucide-react";
-import { ResourceEcosystemViewer } from "@/components/ResourceEcosystemViewer/ResourceEcosystemViewer";
-import { RESOURCES, RESOURCE_GROUPS, RESOURCE_ECOSYSTEM_OVERVIEW } from "@/data/resources";
+import { RESOURCES, RESOURCE_ECOSYSTEM_OVERVIEW, RESOURCE_GROUPS } from "@/data/resources";
 
+import { HeroSectionSearch } from "./HeroSectionSearch";
+import Link from "next/link";
+import { ResourceEcosystemViewer } from "@/components/ResourceEcosystemViewer/ResourceEcosystemViewer";
 import styles from "./home-page.module.css";
 import { useState } from "react";
-import Link from "next/link";
 
 export const HomePage = () => {
     const [searchTerm, setSearchTerm] = useState("");
 
-    return (
-        <div className={styles["home-page-content"]}>
-            <div className={styles["home-page-section"]}>
-                <div className={styles["home-page-heading"]}>
-                    <div className={styles["home-page-title"]}>
-                        The National Institute on Aging Genetics of Alzheimer's Disease Data Storage Site
-                    </div>
-                    <div className={styles["home-page-description"]}>
-                        NIAGADS is a collaborative agreement between the National Institute on Aging and the University
-                        of Pennsylvania that stores and distributes genetics and genomics data from studies on
-                        Alzheimer's disease, related dementias, and aging to qualified researchers globally.
-                    </div>
-                    <Card>
-                        <CardHeader>Search the site</CardHeader>
-                        <CardBody>
-                            <TextInput
-                                value={searchTerm}
-                                onChange={setSearchTerm}
-                                placeholder="Search NIAGADS Data..."
-                            />
-                            <Link href={`/search?term=${searchTerm}`}>
-                                <Button> Search </Button>
-                            </Link>
-                        </CardBody>
-                    </Card>
-                </div>
-                <hr />
-                <div className={styles["home-page-link-buttons"]}>
-                    <a href="https://dss.niagads.org/datasets/">
-                        <Button className={styles["home-page-dss-link-button"]}>Browse Datasets</Button>
-                    </a>
-                    <a href="">
-                        <Button className={styles["home-page-dss-link-button"]}>Submit Data</Button>
-                    </a>
-                    <div className={styles["home-page-socials"]}>
-                        <Twitter href="" scale={3} />
-                        <Github href="" scale={2} />
-                    </div>
+    const renderHeroSectionContents = () => (
+        <div className={styles["home-page-section"]}>
+            <div className={styles["home-page-link-buttons"]}>
+                <a href="https://dss.niagads.org/datasets/">
+                    <Button className={styles["home-page-dss-link-button"]}>Browse Datasets</Button>
+                </a>
+                <a href="">
+                    <Button className={styles["home-page-dss-link-button"]}>Submit Data</Button>
+                </a>
+                <div className={styles["home-page-socials"]}>
+                    <Twitter href="" scale={3} />
+                    <Github href="" scale={2} />
                 </div>
             </div>
+        </div>
+    );
+
+    return (
+        <div className={styles["home-page-content"]}>
+            <HeroSection
+                title="The National Institute on Aging Genetics of Alzheimer's Disease Data Storage Site"
+                subtitle={`Advancing Alzheimer’s and related dementias research through
+                    genomic data generation, sharing, resources, and discovery.`}
+                search={<HeroSectionSearch />}
+                children={renderHeroSectionContents()}
+            ></HeroSection>
             <hr />
             <div className={styles["home-page-section"]}>
                 <ResourceEcosystemViewer

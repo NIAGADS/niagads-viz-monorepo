@@ -1,8 +1,5 @@
 .home-page-content {
-    width: 100vw;
-
-    padding-left: 50px;
-    padding-right: 50px;
+    width: 100%;
 }
 
 .home-page-section {
@@ -12,6 +9,13 @@
 
     padding-top: 40px;
     padding-bottom: 40px;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.home-page-section:has(> .home-page-link-buttons) {
+    display: block;
+    padding: 0;
 }
 
 .home-page-heading {
@@ -33,11 +37,10 @@
 
 .home-page-link-buttons {
     display: flex;
-    flex: 1;
-
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
+    gap: 0.9rem;
 }
 
 .home-page-dss-link-button {
@@ -51,14 +54,21 @@
 
     text-decoration: none;
     font-size: 1.2rem;
+    box-shadow: 0 8px 18px rgba(10, 18, 30, 0.18);
 }
 
 .home-page-socials {
-    width: 80%;
-
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
+    gap: 2rem;
+    margin-top: 0.5rem;
+    color: #fff;
+}
+
+.home-page-socials svg {
+    color: currentColor;
+    stroke: currentColor;
 }
 
 .home-page-signup-buttons {
