@@ -84,13 +84,4 @@ export const RESOURCES: Resource[] = [
         groupId: "partner",
         concepts: ["gwas", "genes", "variants", "curatedEvidence", "openAccess", "phenotypes"],
     },
-    {
-        id: "adsp",
-        badge: "ADSP",
-        name: "Alzheimer's Disease Sequencing Project",
-        url: "https://www.niagads.org/adsp",
-        description: `NIAGADS serves as the Data Coordinating Center for the The Alzheimer’s Disease Sequencing Project (ADSP).`,
-        groupId: "partner",
-        concepts: ["qtls", "sequencing", "variants", "ld", "phenotypes", "restrictedAccess", "openAccess", "downloads"],
-    },
 ];
