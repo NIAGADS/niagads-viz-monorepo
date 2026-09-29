@@ -1,9 +1,11 @@
-import type { Metadata } from "next";
-import Image from "next/image";
-import logo from "@/public/niagads-logo.svg";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+
 import { Footer, Header } from "@niagads/ui";
+import { Geist, Geist_Mono } from "next/font/google";
+
+import Image from "next/image";
+import type { Metadata } from "next";
+import logo from "@/public/niagads-logo.svg";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -32,8 +34,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                         </figure>
                     }
                     links={[
-                        { text: "About Us", url: "" },
-                        { text: "Publications", url: "" },
+                        { text: "About Us", url: "/about" },
+                        { text: "Publications", url: "/publications" },
                         { text: "Cite and Acknowledge", url: "" },
                         { text: "Help", url: "" },
                     ]}
