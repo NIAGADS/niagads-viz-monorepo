@@ -1,6 +1,6 @@
 "use client";
 
-import { BlueSkyIcon, Button, Card, CardBody, CardHeader, HeroSection, XTwitterIcon } from "@niagads/ui";
+import { BlueSkyIcon, Button, Card, CardBody, CardHeader, GitHubIcon, HeroSection, XTwitterIcon } from "@niagads/ui";
 import { RESOURCES, RESOURCE_ECOSYSTEM_OVERVIEW, RESOURCE_GROUPS } from "@/data/resources";
 
 import { HeroSectionSearch } from "./HeroSectionSearch";
@@ -42,6 +42,7 @@ export const HomePage = () => {
                 <div className={styles["home-page-socials"]}>
                     <XTwitterIcon scale={3} />
                     <BlueSkyIcon scale={2} />
+                    <GitHubIcon scale={3} />
                 </div>
             </div>
         </div>
