@@ -1,11 +1,10 @@
 "use client";
 
-import { Button, Card, CardBody, CardHeader, Footer, HeroSection, TextInput } from "@niagads/ui";
-import { Github, Twitter } from "lucide-react";
+import { BlueSkyIcon, Button, Card, CardBody, CardHeader, HeroSection, XTwitterIcon } from "@niagads/ui";
 import { RESOURCES, RESOURCE_ECOSYSTEM_OVERVIEW, RESOURCE_GROUPS } from "@/data/resources";
 
 import { HeroSectionSearch } from "./HeroSectionSearch";
-import Link from "next/link";
+import { NewsTeaser } from "./NewsTeaser";
 import { ResourceEcosystemViewer } from "@/components/ResourceEcosystemViewer/ResourceEcosystemViewer";
 import styles from "./home-page.module.css";
 import { useState } from "react";
@@ -14,7 +13,7 @@ export const HomePage = () => {
     const [searchTerm, setSearchTerm] = useState("");
 
     const renderHeroSectionContents = () => (
-        <div className={styles["home-page-section"]}>
+        <div className={styles["home-page-hero-panel"]}>
             <div className={styles["home-page-link-buttons"]}>
                 <a href="https://adsp-data.niagads.org/">
                     <Button title="" className={styles["home-page-hero-link-button"]} disabled>
@@ -37,9 +36,12 @@ export const HomePage = () => {
                         Submit Data
                     </Button>
                 </a>
+            </div>
+            <div className={styles["home-page-news-column"]}>
+                <NewsTeaser />
                 <div className={styles["home-page-socials"]}>
-                    <Twitter href="" scale={3} />
-                    <Github href="" scale={2} />
+                    <XTwitterIcon scale={3} />
+                    <BlueSkyIcon scale={2} />
                 </div>
             </div>
         </div>
