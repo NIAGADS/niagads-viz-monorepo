@@ -1,7 +1,8 @@
 "use client";
 
-import Table from "@niagads/table";
 import { TableCell, TableColumn } from "@niagads/table";
+
+import Table from "@niagads/table";
 
 export type PublicationRow = Record<string, TableCell | TableCell[]>;
 export type PublicationsTableData = PublicationRow[];
@@ -39,9 +40,9 @@ export const PublicationsTable = ({ data, id = "niagads-publications" }: Publica
         columns={columns}
         data={data}
         options={{
-            enableColumnFilters: true,
+            enableColumnFilters: false,
             enableExport: true,
-            defaultColumns: ["title", "authors", "year", "journal", "publicationType", "links"],
+            defaultColumns: ["title", "authors", "year", "journal", "links"],
             filterGroupOrder: ["Publication"],
         }}
     />

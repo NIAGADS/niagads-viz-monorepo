@@ -2,28 +2,32 @@ import type { PublicationRow, PublicationsTableData } from "@/components/Publica
 
 const ZOTERO_COLLECTIONS_URL = "https://api.zotero.org/groups/2437940/collections";
 const REVALIDATE_SECONDS = 60 * 60 * 24;
+const ZOTERO_PAGE_SIZE = 100;
 
-interface ZoteroAuthor {
-    family?: string;
-    given?: string;
-    literal?: string;
+interface ZoteroCreator {
+    creatorType?: string;
+    firstName?: string;
+    lastName?: string;
+    name?: string;
 }
 
 interface ZoteroItem {
-    abstract?: string;
-    author?: ZoteroAuthor[];
-    "container-title"?: string;
-    DOI?: string;
-    issued?: { "date-parts"?: Array<Array<number | string>> };
-    note?: string;
-    title?: string;
-    type?: string;
-    URL?: string;
+    data: {
+        abstractNote?: string;
+        creators?: ZoteroCreator[];
+        date?: string;
+        DOI?: string;
+        extra?: string;
+        itemType?: string;
+        publicationTitle?: string;
+        title?: string;
+        url?: string;
+    };
 }
 
 const getYear = (item: ZoteroItem) => {
-    const year = item.issued?.["date-parts"]?.[0]?.[0];
-    return typeof year === "number" ? year : Number(year) || null;
+    const year = item.data.date?.match(/\d{4}/)?.[0];
+    return year ? Number(year) : null;
 };
 
 const getNoteField = (note: string | undefined, field: string) =>
@@ -33,35 +37,32 @@ const getNoteField = (note: string | undefined, field: string) =>
         ?.trim() || "n/a";
 
 const toTableRow = (item: ZoteroItem): PublicationRow => {
-    const doi = item.DOI ? `https://doi.org/${item.DOI}` : undefined;
-    const pmid = getNoteField(item.note, "PMID").match(/\d+/)?.[0];
+    const { data } = item;
+    const doi = data.DOI ? `https://doi.org/${data.DOI}` : undefined;
+    const pmid = getNoteField(data.extra, "PMID").match(/\d+/)?.[0];
     const pubmed = pmid ? `https://pubmed.ncbi.nlm.nih.gov/${pmid}/` : undefined;
-    const title = item.title || "Untitled publication";
-    const titleUrl = item.URL || doi;
-    const links = [
-        ...(doi ? [{ value: "DOI", url: doi }] : []),
-        ...(pubmed ? [{ value: "PubMed", url: pubmed }] : []),
-    ];
-    const authors = item.author
-        ?.map(({ given, family, literal }) => literal || `${given || ""} ${family || ""}`.trim())
-        .filter((name) => name !== "")
-        .join("; ") || "n/a";
+    const title = data.title || "Untitled publication";
+    const titleUrl = data.url || doi;
+    const links = [...(doi ? [{ value: "DOI", url: doi }] : []), ...(pubmed ? [{ value: "PubMed", url: pubmed }] : [])];
+    const authors =
+        data.creators
+            ?.filter(({ creatorType }) => creatorType === "author")
+            .map(({ firstName, lastName, name }) => name || `${firstName || ""} ${lastName || ""}`.trim())
+            .filter((name) => name !== "")
+            .join("; ") || "n/a";
 
     return {
         title: titleUrl ? { value: title, url: titleUrl } : title,
         authors,
         year: getYear(item),
-        journal: item["container-title"] || "n/a",
-        publicationType: item.type
-            ? item.type
-                  .split("-")
-                  .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                  .join(" ")
+        journal: data.publicationTitle || "n/a",
+        publicationType: data.itemType
+            ? data.itemType.replace(/([a-z])([A-Z])/g, "$1 $2").replaceAll("-", " ")
             : "n/a",
         links: links.length ? links : "n/a",
-        abstract: item.abstract || "n/a",
+        abstract: data.abstractNote || "n/a",
         pmid: pmid || "n/a",
-        grants: getNoteField(item.note, "Grants"),
+        grants: getNoteField(data.extra, "Grants"),
     };
 };
 
@@ -74,7 +75,8 @@ const loadCollection = async (collectionId: string): Promise<PublicationsTableDa
 
     while (true) {
         const url = new URL(`${ZOTERO_COLLECTIONS_URL}/${encodeURIComponent(collectionId)}/items`);
-        url.searchParams.set("format", "csljson");
+        url.searchParams.set("format", "json");
+        url.searchParams.set("limit", String(ZOTERO_PAGE_SIZE));
         url.searchParams.set("start", String(start));
 
         const response = await fetch(url, {
@@ -88,8 +90,9 @@ const loadCollection = async (collectionId: string): Promise<PublicationsTableDa
         if (!Array.isArray(page)) throw new Error("Zotero returned an unexpected response format.");
 
         items.push(...page);
-        const total = Number(response.headers.get("total-results"));
-        if (page.length === 0 || (Number.isFinite(total) && items.length >= total)) break;
+        const totalHeader = response.headers.get("total-results");
+        const total = totalHeader ? Number(totalHeader) : undefined;
+        if (page.length === 0 || (total !== undefined && Number.isFinite(total) && items.length >= total)) break;
         start += page.length;
     }
 
