@@ -1,9 +1,10 @@
-import { parse, filter, type TNode } from "txml";
 import { createHash, randomUUID } from "node:crypto";
 import { mkdir, readFile, rename, unlink, writeFile } from "node:fs/promises";
-import path from "node:path";
-import type { PublicationRow, PublicationsTableData } from "@/components/Publications/PublicationsTable";
+
+import type { PublicationsTableData } from "@/components/Publications/PublicationsTable";
 import { URLS } from "@/data/url_ref";
+import { parsePubMedPublications } from "./pubmed";
+import path from "node:path";
 
 const ZOTERO_PAGE_SIZE = 100;
 const PUBMED_BATCH_SIZE = 100;
@@ -37,91 +38,11 @@ const checkCollection = async (collection: string): Promise<string> => {
     return `${version ?? ""}:${total}`;
 };
 
-const getNoteField = (note: string | undefined, field: string) =>
+const extractZoteroNote = (note: string | undefined, field: string) =>
     note
         ?.replaceAll("\\n", "\n")
         .match(new RegExp(`(?:^|\\r?\\n)${field}:\\s*([^\\r\\n]+)`, "i"))?.[1]
         ?.trim() || null;
-
-const elements = (node: TNode | null | undefined, tag: string): TNode[] | null => {
-    if (!node) return null;
-    const matches = filter(node.children, (child) => child.tagName === tag);
-    return matches.length ? matches : null;
-};
-
-const first = (node: TNode | null | undefined, tag: string) => elements(node, tag)?.[0] ?? null;
-
-// Concatenate inline text without adding spaces inside words or before punctuation.
-const text = (node: TNode | string | null | undefined): string | null => {
-    if (node == null) return null;
-    return typeof node === "string" ? node : node.children.map(text).join("") || null;
-};
-
-const content = (node: TNode | null | undefined) => text(node)?.replace(/\s+/g, " ").trim() || null;
-
-const parsePubMedArticle = (xml: TNode, grantsByPmid: Map<string, string | null>): PublicationRow | null => {
-    const citation = first(xml, "MedlineCitation");
-    const pmid = content(first(citation, "PMID"));
-    const article = first(citation, "Article");
-    if (!pmid || !article) return null;
-
-    const authors: string[] = [];
-    for (const author of elements(article, "Author") ?? []) {
-        let name = content(first(author, "CollectiveName"));
-        if (!name) {
-            const foreName = content(first(author, "ForeName"));
-            const lastName = content(first(author, "LastName"));
-            name = foreName && lastName ? `${foreName} ${lastName}` : foreName || lastName;
-        }
-        if (name) authors.push(name);
-    }
-    const abstract: string[] = [];
-    for (const section of elements(article, "AbstractText") ?? []) {
-        const value = content(section);
-        if (value) {
-            const label = section.attributes.Label || section.attributes.NlmCategory;
-            abstract.push(label ? `${label}: ${value}` : value);
-        }
-    }
-    const publicationTypes: string[] = [];
-    for (const publicationType of elements(article, "PublicationType") ?? []) {
-        const value = content(publicationType);
-        if (value) publicationTypes.push(value);
-    }
-    const ids = elements(first(xml, "PubmedData"), "ArticleId");
-    const journal = first(article, "Journal");
-    const pubDate = first(journal, "PubDate");
-    const year = (content(first(pubDate, "Year")) || content(first(pubDate, "MedlineDate")))?.match(/\d{4}/)?.[0];
-    const meshTerms: string[] = [];
-    for (const heading of elements(citation, "MeshHeading") ?? []) {
-        const descriptor = content(first(heading, "DescriptorName"));
-        if (descriptor) meshTerms.push(descriptor);
-    }
-
-    const doi = content(ids?.find((id) => id.attributes.IdType?.toLowerCase() === "doi"));
-    const pmcid = content(ids?.find((id) => id.attributes.IdType?.toLowerCase() === "pmc"));
-    const title = content(first(article, "ArticleTitle"));
-    const pubmedUrl = `${URLS.PUBMED}/${pmid}/`;
-    const links: { value: string; url: string }[] = [];
-    if (doi) links.push({ value: "DOI", url: `${URLS.DOI}/${doi}` });
-    links.push({ value: "PubMed", url: pubmedUrl });
-    if (pmcid) links.push({ value: "PMC", url: `${URLS.PMC}/${pmcid}/` });
-
-    return {
-        pmid,
-        authors: authors.join("; ") || null,
-        title: title === null ? null : { value: title, url: pubmedUrl },
-        abstract: abstract.join(" ") || null,
-        doi,
-        journal: content(first(journal, "Title")),
-        publicationType: publicationTypes.join("; ") || null,
-        year: year ? Number(year) : null,
-        pmcid,
-        meshTerms,
-        links,
-        grants: grantsByPmid.get(pmid) ?? null,
-    };
-};
 
 interface ZoteroPage {
     grantsByPmid: Map<string, string | null>;
@@ -143,8 +64,8 @@ const fetchZoteroPage = async (collection: string, start: number): Promise<Zoter
     if (!Array.isArray(page)) throw new Error("Zotero returned an unexpected response format.");
     for (const item of page) {
         const note = item.data?.extra;
-        const pmid = getNoteField(note, "PMID")?.match(/\d+/)?.[0];
-        if (pmid) grantsByPmid.set(pmid, getNoteField(note, "Grants"));
+        const pmid = extractZoteroNote(note, "PMID")?.match(/\d+/)?.[0];
+        if (pmid) grantsByPmid.set(pmid, extractZoteroNote(note, "Grants"));
     }
 
     const total = Number(response.headers.get("total-results"));
@@ -163,22 +84,13 @@ const fetchPubMedPublications = async (grantsByPmid: Map<string, string | null>)
         const response = await fetch(url, { cache: "no-store" });
         if (!response.ok) throw new Error(`PubMed E-utilities request failed with status ${response.status}.`);
 
-        const document = parse(await response.text(), {
-            decodeEntities: true,
-            keepWhitespace: true,
-            skipXmlDeclaration: true,
-            selfClosingTags: [],
-        });
-        for (const article of filter(document, (node) => node.tagName === "PubmedArticle")) {
-            const row = parsePubMedArticle(article, grantsByPmid);
-            if (row) publications.push(row);
-        }
+        publications.push(...parsePubMedPublications(await response.text(), grantsByPmid));
     }
     return publications;
 };
 
 const loadCollection = async (collection: string): Promise<PublicationsTableData> => {
-    const publicationRequests: Promise<PublicationsTableData>[] = [];
+    const publicationRequests: Promise<PublicationsTableData | Error>[] = [];
     let start = 0;
     let total = 0;
 
@@ -186,60 +98,128 @@ const loadCollection = async (collection: string): Promise<PublicationsTableData
         const page = await fetchZoteroPage(collection, start);
         total = page.total;
         // Start this page's PubMed request before retrieving the next Zotero page.
-        publicationRequests.push(fetchPubMedPublications(page.grantsByPmid));
+        // Capture failures immediately so an early rejection is not unhandled
+        // while subsequent Zotero pages are still being fetched.
+        publicationRequests.push(
+            fetchPubMedPublications(page.grantsByPmid).catch((error) =>
+                error instanceof Error ? error : new Error(String(error))
+            )
+        );
         start += ZOTERO_PAGE_SIZE;
     } while (start < total);
 
-    const publications = (await Promise.all(publicationRequests)).flat();
+    const publications: PublicationsTableData = [];
+    for (const result of await Promise.all(publicationRequests)) {
+        if (result instanceof Error) throw result;
+        publications.push(...result);
+    }
     return publications.sort((a, b) => Number(b.year ?? 0) - Number(a.year ?? 0));
 };
 
+interface CachePaths {
+    directory: string;
+    data: string;
+    revision: string;
+}
+
+const getCachePaths = (collection: string): CachePaths => {
+    const directory = path.resolve(process.env.CACHE_DIR || "/tmp/next-cache");
+    const key = createHash("sha256").update(collection).digest("hex");
+    return {
+        directory,
+        data: path.join(directory, `publications-${key}.json`),
+        revision: path.join(directory, `publications-${key}.current-revision`),
+    };
+};
+
+const isMissingFile = (error: unknown) => error instanceof Error && "code" in error && error.code === "ENOENT";
+
+const readCacheFile = async (filename: string): Promise<string | null> => {
+    try {
+        return await readFile(filename, "utf8");
+    } catch (error) {
+        // A missing file is an ordinary cache miss; other failures need visibility.
+        if (!isMissingFile(error)) console.warn(`Unable to read publications cache file ${filename}:`, error);
+        return null;
+    }
+};
+
+const dataHash = (data: string) => createHash("sha256").update(data).digest("hex");
+
+const readCachedPublications = async (paths: CachePaths, revision?: string): Promise<string | null> => {
+    // On upstream failure, the atomically saved data is usable regardless of revision.
+    if (revision === undefined) return readCacheFile(paths.data);
+    const marker = await readCacheFile(paths.revision);
+    if (marker === null) return null;
+
+    let cached: { revision: string; dataHash: string };
+    try {
+        cached = JSON.parse(marker);
+        if (!cached || typeof cached.revision !== "string" || typeof cached.dataHash !== "string") {
+            throw new Error("Invalid publications revision marker.");
+        }
+    } catch (error) {
+        console.warn("Unable to parse the publications revision marker:", error);
+        return null;
+    }
+    if (cached.revision !== revision) return null;
+    const data = await readCacheFile(paths.data);
+    if (data !== null && dataHash(data) !== cached.dataHash) {
+        console.warn("Publications cache data and revision marker do not match; rebuilding.");
+        return null;
+    }
+    return data;
+};
+
+const removeTemporaryFile = async (filename: string): Promise<void> => {
+    try {
+        await unlink(filename);
+    } catch (error) {
+        if (!isMissingFile(error)) console.warn(`Unable to remove temporary cache file ${filename}:`, error);
+    }
+};
+
+const writeCachedPublications = async (paths: CachePaths, revision: string, data: string): Promise<void> => {
+    const suffix = `${randomUUID()}.tmp`;
+    const temporaryData = `${paths.data}.${suffix}`;
+    const temporaryRevision = `${paths.revision}.${suffix}`;
+    try {
+        await mkdir(paths.directory, { recursive: true });
+        await writeFile(temporaryData, data);
+        await writeFile(temporaryRevision, JSON.stringify({ revision, dataHash: dataHash(data) }));
+        await rename(temporaryData, paths.data);
+        // The checksum lets readers reject mismatched pairs after an interrupted
+        // or concurrent write, since two separate renames cannot be atomic together.
+        await rename(temporaryRevision, paths.revision);
+    } catch (error) {
+        console.warn("Unable to save the publications cache; serving fetched data:", error);
+    } finally {
+        await removeTemporaryFile(temporaryData);
+        await removeTemporaryFile(temporaryRevision);
+    }
+};
+
 export async function GET(_: Request, { params }: { params: Promise<{ collection: string }> }) {
-    let filename: string | undefined;
+    let paths: CachePaths | undefined;
     const headers = { "Content-Type": "application/json", "Cache-Control": "no-store" };
     try {
         const { collection } = await params;
-        const directory = path.resolve(process.env.CACHE_DIR || "/tmp/next-cache");
-        const key = createHash("sha256").update(collection).digest("hex");
-        filename = path.join(directory, `publications-${key}.json`);
-        const revisionFile = path.join(directory, `publications-${key}.current-revision`);
+        paths = getCachePaths(collection);
         const revision = await checkCollection(collection);
-
-        try {
-            if ((await readFile(revisionFile, "utf8")) === revision) {
-                return new Response(await readFile(filename, "utf8"), { headers });
-            }
-        } catch {
-            // Missing or unreadable cache files are rebuilt from upstream.
-        }
+        const cached = await readCachedPublications(paths, revision);
+        if (cached !== null) return new Response(cached, { headers });
 
         const publications = await loadCollection(collection);
-        const suffix = `${randomUUID()}.tmp`;
-        const temporaryFile = `${filename}.${suffix}`;
-        const temporaryRevisionFile = `${revisionFile}.${suffix}`;
-        try {
-            await mkdir(directory, { recursive: true });
-            await writeFile(temporaryFile, JSON.stringify(publications));
-            await writeFile(temporaryRevisionFile, revision);
-            // Readers only see complete responses, including during concurrent writes.
-            await rename(temporaryFile, filename);
-            // Publish the revision only after its data has been saved.
-            await rename(temporaryRevisionFile, revisionFile);
-        } catch (error) {
-            console.warn("Unable to save the publications cache:", error);
-        } finally {
-            await unlink(temporaryFile).catch(() => {});
-            await unlink(temporaryRevisionFile).catch(() => {});
+        if ((await checkCollection(collection)) !== revision) {
+            throw new Error("The Zotero collection changed while loading publications.");
         }
-        return Response.json(publications, { headers: { "Cache-Control": "no-store" } });
+        const data = JSON.stringify(publications);
+        await writeCachedPublications(paths, revision, data);
+        return new Response(data, { headers });
     } catch (error) {
-        if (filename) {
-            try {
-                return new Response(await readFile(filename, "utf8"), { headers });
-            } catch {
-                // No saved data is available for the upstream failure fallback.
-            }
-        }
+        console.error("Unable to refresh publications:", error);
+        const cached = paths ? await readCachedPublications(paths) : null;
+        if (cached !== null) return new Response(cached, { headers });
         const message = error instanceof Error ? error.message : "Unable to load this collection.";
         return Response.json({ error: message }, { status: 502 });
     }
