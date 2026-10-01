@@ -26,6 +26,9 @@ const columns: TableColumn[] = [
     { id: "links", header: "Links", type: "link", disableColumnFilter: true, disableSorting: true },
     { id: "abstract", header: "Abstract", type: "text", disableColumnFilter: true },
     { id: "pmid", header: "PMID", type: "text", disableColumnFilter: true },
+    { id: "doi", header: "DOI", type: "text", disableColumnFilter: true },
+    { id: "pmcid", header: "PMCID", type: "text", disableColumnFilter: true },
+    { id: "meshTerms", header: "MeSH terms", type: "text", disableColumnFilter: true },
     { id: "grants", header: "Grants", type: "text", disableColumnFilter: true },
 ];
 

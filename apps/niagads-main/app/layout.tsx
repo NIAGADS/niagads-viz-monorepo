@@ -30,7 +30,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                 <Header
                     logo={
                         <figure>
-                            <Image width={200} height={60} src={logo} alt="Niagads GenomicsDB logo" />
+                            <Image width={200} height={60} src={logo} alt="Niagads GenomicsDB logo" loading="eager" />
                         </figure>
                     }
                     links={[
