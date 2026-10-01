@@ -1,16 +1,22 @@
-import { createHash, randomUUID } from "node:crypto";
-import { mkdir, readFile, rename, unlink, writeFile } from "node:fs/promises";
-
 import type { PublicationsTableData } from "@/components/Publications/PublicationsTable";
 import { URLS } from "@/data/url_ref";
 import { parsePubMedPublications } from "./pubmed";
-import path from "node:path";
+import { getCachePaths, readCachedPublications, writeCachedPublications, type CachePaths } from "./cache";
 
 const ZOTERO_PAGE_SIZE = 100;
 const PUBMED_BATCH_SIZE = 100;
 
 interface ZoteroItem {
     data?: { extra?: string };
+}
+
+interface ZoteroGrantsSummary {
+    grantsByPmid: Map<string, string | null>;
+    total: number;
+}
+
+interface PublicationsRouteContext {
+    params: Promise<{ collection: string }>;
 }
 
 const zoteroItemsUrl = (collection: string) => {
@@ -24,8 +30,21 @@ const zoteroHeaders = () => {
     return { "Zotero-API-Key": apiKey, "Zotero-API-Version": "3" };
 };
 
-// Check upstream on every request, without downloading the full collection.
-const checkCollection = async (collection: string): Promise<string> => {
+const extractZoteroNote = (note: string | undefined, field: string) =>
+    note
+        ?.replaceAll("\\n", "\n")
+        .match(new RegExp(`(?:^|\\r?\\n)${field}:\\s*([^\\r\\n]+)`, "i"))?.[1]
+        ?.trim() || null;
+
+/**
+ * Checks Zotero directly using a one-item request instead of downloading the
+ * collection. Returns a freshness marker combining Last-Modified-Version and
+ * Total-Results; if Zotero omits the version, only count changes are detectable.
+ * The route checks this before reading cached data and again after rebuilding
+ * to avoid saving results under a revision that changed during retrieval.
+ * Throws on upstream failure or an invalid count so GET can use saved data.
+ */
+const checkZoteroCollectionRevision = async (collection: string): Promise<string> => {
     const url = zoteroItemsUrl(collection);
     url.searchParams.set("limit", "1");
     const response = await fetch(url, { headers: zoteroHeaders(), cache: "no-store" });
@@ -38,18 +57,7 @@ const checkCollection = async (collection: string): Promise<string> => {
     return `${version ?? ""}:${total}`;
 };
 
-const extractZoteroNote = (note: string | undefined, field: string) =>
-    note
-        ?.replaceAll("\\n", "\n")
-        .match(new RegExp(`(?:^|\\r?\\n)${field}:\\s*([^\\r\\n]+)`, "i"))?.[1]
-        ?.trim() || null;
-
-interface ZoteroPage {
-    grantsByPmid: Map<string, string | null>;
-    total: number;
-}
-
-const fetchZoteroPage = async (collection: string, start: number): Promise<ZoteroPage> => {
+const fetchZoteroPage = async (collection: string, start: number): Promise<ZoteroGrantsSummary> => {
     const grantsByPmid = new Map<string, string | null>();
     const url = zoteroItemsUrl(collection);
     url.searchParams.set("format", "json");
@@ -116,101 +124,18 @@ const loadCollection = async (collection: string): Promise<PublicationsTableData
     return publications.sort((a, b) => Number(b.year ?? 0) - Number(a.year ?? 0));
 };
 
-interface CachePaths {
-    directory: string;
-    data: string;
-    revision: string;
-}
-
-const getCachePaths = (collection: string): CachePaths => {
-    const directory = path.resolve(process.env.CACHE_DIR || "/tmp/next-cache");
-    const key = createHash("sha256").update(collection).digest("hex");
-    return {
-        directory,
-        data: path.join(directory, `publications-${key}.json`),
-        revision: path.join(directory, `publications-${key}.current-revision`),
-    };
-};
-
-const isMissingFile = (error: unknown) => error instanceof Error && "code" in error && error.code === "ENOENT";
-
-const readCacheFile = async (filename: string): Promise<string | null> => {
-    try {
-        return await readFile(filename, "utf8");
-    } catch (error) {
-        // A missing file is an ordinary cache miss; other failures need visibility.
-        if (!isMissingFile(error)) console.warn(`Unable to read publications cache file ${filename}:`, error);
-        return null;
-    }
-};
-
-const dataHash = (data: string) => createHash("sha256").update(data).digest("hex");
-
-const readCachedPublications = async (paths: CachePaths, revision?: string): Promise<string | null> => {
-    // On upstream failure, the atomically saved data is usable regardless of revision.
-    if (revision === undefined) return readCacheFile(paths.data);
-    const marker = await readCacheFile(paths.revision);
-    if (marker === null) return null;
-
-    let cached: { revision: string; dataHash: string };
-    try {
-        cached = JSON.parse(marker);
-        if (!cached || typeof cached.revision !== "string" || typeof cached.dataHash !== "string") {
-            throw new Error("Invalid publications revision marker.");
-        }
-    } catch (error) {
-        console.warn("Unable to parse the publications revision marker:", error);
-        return null;
-    }
-    if (cached.revision !== revision) return null;
-    const data = await readCacheFile(paths.data);
-    if (data !== null && dataHash(data) !== cached.dataHash) {
-        console.warn("Publications cache data and revision marker do not match; rebuilding.");
-        return null;
-    }
-    return data;
-};
-
-const removeTemporaryFile = async (filename: string): Promise<void> => {
-    try {
-        await unlink(filename);
-    } catch (error) {
-        if (!isMissingFile(error)) console.warn(`Unable to remove temporary cache file ${filename}:`, error);
-    }
-};
-
-const writeCachedPublications = async (paths: CachePaths, revision: string, data: string): Promise<void> => {
-    const suffix = `${randomUUID()}.tmp`;
-    const temporaryData = `${paths.data}.${suffix}`;
-    const temporaryRevision = `${paths.revision}.${suffix}`;
-    try {
-        await mkdir(paths.directory, { recursive: true });
-        await writeFile(temporaryData, data);
-        await writeFile(temporaryRevision, JSON.stringify({ revision, dataHash: dataHash(data) }));
-        await rename(temporaryData, paths.data);
-        // The checksum lets readers reject mismatched pairs after an interrupted
-        // or concurrent write, since two separate renames cannot be atomic together.
-        await rename(temporaryRevision, paths.revision);
-    } catch (error) {
-        console.warn("Unable to save the publications cache; serving fetched data:", error);
-    } finally {
-        await removeTemporaryFile(temporaryData);
-        await removeTemporaryFile(temporaryRevision);
-    }
-};
-
-export async function GET(_: Request, { params }: { params: Promise<{ collection: string }> }) {
+export async function GET(_: Request, { params }: PublicationsRouteContext) {
     let paths: CachePaths | undefined;
     const headers = { "Content-Type": "application/json", "Cache-Control": "no-store" };
     try {
         const { collection } = await params;
         paths = getCachePaths(collection);
-        const revision = await checkCollection(collection);
+        const revision = await checkZoteroCollectionRevision(collection);
         const cached = await readCachedPublications(paths, revision);
         if (cached !== null) return new Response(cached, { headers });
 
         const publications = await loadCollection(collection);
-        if ((await checkCollection(collection)) !== revision) {
+        if ((await checkZoteroCollectionRevision(collection)) !== revision) {
             throw new Error("The Zotero collection changed while loading publications.");
         }
         const data = JSON.stringify(publications);
