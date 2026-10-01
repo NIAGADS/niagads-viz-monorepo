@@ -4,7 +4,8 @@ import type { PublicationRow, PublicationsTableData } from "@/components/Publica
 import { URLS } from "@/data/url_ref";
 
 const REVALIDATE_SECONDS = 60 * 60 * 24;
-const PUBMED_BATCH_SIZE = 200;
+const ZOTERO_PAGE_SIZE = 100;
+const PUBMED_BATCH_SIZE = 100;
 
 interface ZoteroItem {
     data?: { extra?: string };
@@ -121,39 +122,33 @@ const parsePubMedArticle = (xml: TNode, grantsByPmid: Map<string, string | null>
     };
 };
 
-const fetchZoteroGrants = async (collection: string): Promise<Map<string, string | null>> => {
+interface ZoteroPage {
+    grantsByPmid: Map<string, string | null>;
+    total: number;
+}
+
+const fetchZoteroPage = async (collection: string, start: number): Promise<ZoteroPage> => {
     const grantsByPmid = new Map<string, string | null>();
+    const url = zoteroItemsUrl(collection);
+    url.searchParams.set("format", "json");
+    url.searchParams.set("include", "data");
+    url.searchParams.set("start", String(start));
+    url.searchParams.set("limit", String(ZOTERO_PAGE_SIZE));
 
-    let start = 0;
-    let total: number | undefined;
+    const response = await fetch(url, { headers: zoteroHeaders(), cache: "no-store" });
+    if (!response.ok) throw new Error(`Zotero request failed with status ${response.status}.`);
 
-    while (total === undefined || start < total) {
-        const url = zoteroItemsUrl(collection);
-        url.searchParams.set("format", "json");
-        url.searchParams.set("include", "data");
-        url.searchParams.set("start", String(start));
-        url.searchParams.set("limit", "100");
-
-        const response = await fetch(url, {
-            headers: zoteroHeaders(),
-            cache: "no-store",
-        });
-        if (!response.ok) throw new Error(`Zotero request failed with status ${response.status}.`);
-
-        const page: ZoteroItem[] = await response.json();
-        if (!Array.isArray(page)) throw new Error("Zotero returned an unexpected response format.");
-        for (const item of page) {
-            const note = item.data?.extra;
-            const pmid = getNoteField(note, "PMID")?.match(/\d+/)?.[0];
-            if (pmid) grantsByPmid.set(pmid, getNoteField(note, "Grants"));
-        }
-
-        const totalHeader = response.headers.get("total-results");
-        if (totalHeader && Number.isFinite(Number(totalHeader))) total = Number(totalHeader);
-        start += page.length;
-        if (page.length === 0) break;
+    const page: ZoteroItem[] = await response.json();
+    if (!Array.isArray(page)) throw new Error("Zotero returned an unexpected response format.");
+    for (const item of page) {
+        const note = item.data?.extra;
+        const pmid = getNoteField(note, "PMID")?.match(/\d+/)?.[0];
+        if (pmid) grantsByPmid.set(pmid, getNoteField(note, "Grants"));
     }
-    return grantsByPmid;
+
+    const total = Number(response.headers.get("total-results"));
+    if (!Number.isFinite(total)) throw new Error("Zotero did not return a valid collection count.");
+    return { grantsByPmid, total };
 };
 
 const fetchPubMedPublications = async (grantsByPmid: Map<string, string | null>): Promise<PublicationsTableData> => {
@@ -182,8 +177,19 @@ const fetchPubMedPublications = async (grantsByPmid: Map<string, string | null>)
 };
 
 const loadCollection = async (collection: string): Promise<PublicationsTableData> => {
-    const grantsByPmid = await fetchZoteroGrants(collection);
-    const publications = await fetchPubMedPublications(grantsByPmid);
+    const publicationRequests: Promise<PublicationsTableData>[] = [];
+    let start = 0;
+    let total = 0;
+
+    do {
+        const page = await fetchZoteroPage(collection, start);
+        total = page.total;
+        // Start this page's PubMed request before retrieving the next Zotero page.
+        publicationRequests.push(fetchPubMedPublications(page.grantsByPmid));
+        start += ZOTERO_PAGE_SIZE;
+    } while (start < total);
+
+    const publications = (await Promise.all(publicationRequests)).flat();
     return publications.sort((a, b) => Number(b.year ?? 0) - Number(a.year ?? 0));
 };
 
