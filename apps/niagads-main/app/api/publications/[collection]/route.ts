@@ -1,9 +1,10 @@
 import { parse, filter, type TNode } from "txml";
-import { revalidateTag, unstable_cache } from "next/cache";
+import { createHash, randomUUID } from "node:crypto";
+import { mkdir, readFile, rename, unlink, writeFile } from "node:fs/promises";
+import path from "node:path";
 import type { PublicationRow, PublicationsTableData } from "@/components/Publications/PublicationsTable";
 import { URLS } from "@/data/url_ref";
 
-const REVALIDATE_SECONDS = 60 * 60 * 24;
 const ZOTERO_PAGE_SIZE = 100;
 const PUBMED_BATCH_SIZE = 100;
 
@@ -194,26 +195,51 @@ const loadCollection = async (collection: string): Promise<PublicationsTableData
 };
 
 export async function GET(_: Request, { params }: { params: Promise<{ collection: string }> }) {
+    let filename: string | undefined;
+    const headers = { "Content-Type": "application/json", "Cache-Control": "no-store" };
     try {
         const { collection } = await params;
+        const directory = path.resolve(process.env.CACHE_DIR || "/tmp/next-cache");
+        const key = createHash("sha256").update(collection).digest("hex");
+        filename = path.join(directory, `publications-${key}.json`);
+        const revisionFile = path.join(directory, `publications-${key}.current-revision`);
         const revision = await checkCollection(collection);
-        const tag = `publications:${collection}`;
-        // Only the processed rows and their freshness marker enter the Data Cache.
-        // Keep a stable collection key; store the revision alongside the rows to
-        // compare it with the live check before serving the response.
-        const getCachedCollection = unstable_cache(
-            async () => ({ revision, publications: await loadCollection(collection) }),
-            ["processed-publications", collection],
-            { tags: [tag], revalidate: REVALIDATE_SECONDS },
-        );
-        let cached = await getCachedCollection();
-        if (cached.revision !== revision) {
-            // Expire immediately so this request waits for the rebuilt response.
-            revalidateTag(tag, { expire: 0 });
-            cached = await getCachedCollection();
+
+        try {
+            if ((await readFile(revisionFile, "utf8")) === revision) {
+                return new Response(await readFile(filename, "utf8"), { headers });
+            }
+        } catch {
+            // Missing or unreadable cache files are rebuilt from upstream.
         }
-        return Response.json(cached.publications, { headers: { "Cache-Control": "no-store" } });
+
+        const publications = await loadCollection(collection);
+        const suffix = `${randomUUID()}.tmp`;
+        const temporaryFile = `${filename}.${suffix}`;
+        const temporaryRevisionFile = `${revisionFile}.${suffix}`;
+        try {
+            await mkdir(directory, { recursive: true });
+            await writeFile(temporaryFile, JSON.stringify(publications));
+            await writeFile(temporaryRevisionFile, revision);
+            // Readers only see complete responses, including during concurrent writes.
+            await rename(temporaryFile, filename);
+            // Publish the revision only after its data has been saved.
+            await rename(temporaryRevisionFile, revisionFile);
+        } catch (error) {
+            console.warn("Unable to save the publications cache:", error);
+        } finally {
+            await unlink(temporaryFile).catch(() => {});
+            await unlink(temporaryRevisionFile).catch(() => {});
+        }
+        return Response.json(publications, { headers: { "Cache-Control": "no-store" } });
     } catch (error) {
+        if (filename) {
+            try {
+                return new Response(await readFile(filename, "utf8"), { headers });
+            } catch {
+                // No saved data is available for the upstream failure fallback.
+            }
+        }
         const message = error instanceof Error ? error.message : "Unable to load this collection.";
         return Response.json({ error: message }, { status: 502 });
     }
