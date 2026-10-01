@@ -1,6 +1,6 @@
 "use client";
 
-import { BlueSkyIcon, Button, Card, CardBody, CardHeader, GitHubIcon, HeroSection, XTwitterIcon } from "@niagads/ui";
+import { Button, Card, CardBody, CardHeader, HeroSection } from "@niagads/ui";
 import { RESOURCES, RESOURCE_ECOSYSTEM_OVERVIEW, RESOURCE_GROUPS } from "@/data/resources";
 
 import { HeroSectionSearch } from "./HeroSectionSearch";
@@ -8,57 +8,54 @@ import { NewsTeaser } from "./NewsTeaser";
 import { ResourceEcosystemViewer } from "@/components/ResourceEcosystemViewer/ResourceEcosystemViewer";
 import styles from "./home-page.module.css";
 import { useState } from "react";
+import { HeroQuickLinks } from "./HeroQuickLinks";
+import { HeroScrollCue } from "./HeroScrollCue";
 
 export const HomePage = () => {
     const [searchTerm, setSearchTerm] = useState("");
 
-    const renderHeroSectionContents = () => (
-        <div className={styles["home-page-hero-panel"]}>
-            <div className={styles["home-page-link-buttons"]}>
-                <a href="https://adsp-data.niagads.org/">
-                    <Button title="" className={styles["home-page-hero-link-button"]} disabled>
-                        ADSP Data
-                    </Button>
-                </a>
-                <a href="https://dss.niagads.org/datasets/">
-                    <Button
-                        title="Search, apply for and get controlled access data"
-                        className={styles["home-page-hero-link-button"]}
-                    >
-                        Browse Datasets
-                    </Button>
-                </a>
-                <a href="">
-                    <Button
-                        title="Submit data to the NIAGADS repository"
-                        className={styles["home-page-hero-link-button"]}
-                    >
-                        Submit Data
-                    </Button>
-                </a>
-            </div>
-            <div className={styles["home-page-news-column"]}>
-                <NewsTeaser />
-                <div className={styles["home-page-socials"]}>
-                    <XTwitterIcon scale={3} />
-                    <BlueSkyIcon scale={2} />
-                    <GitHubIcon scale={3} />
-                </div>
-            </div>
-        </div>
-    );
-
     return (
         <div className={styles["home-page-content"]}>
             <HeroSection
-                title="National Institute on Aging Genetics of Alzheimer's Disease Data Storage Site"
+                title={
+                    <>
+                        National Institute on Aging
+                        <br />
+                        Genetics of Alzheimer's Disease
+                        <br />
+                        Data Storage Site
+                    </>
+                }
                 subtitle={`Advancing Alzheimer’s and related dementias research through
                     genomic data generation, sharing, resources, and discovery.`}
                 search={<HeroSectionSearch />}
-                children={renderHeroSectionContents()}
-            ></HeroSection>
-            <hr />
-            <div className={styles["home-page-section"]}>
+                belowSearch={<HeroQuickLinks />}
+                scrollCue={
+                    <HeroScrollCue
+                        href="#ecosystem"
+                        label="Explore NIAGADS"
+                    />
+                }
+                className={styles["niagads-hero-section"]}
+                classNames={{
+                    grid: styles["niagads-hero-grid"],
+                    content: styles["niagads-hero-content"],
+                    title: styles["niagads-hero-title"],
+                    subtitle: styles["niagads-hero-subtitle"],
+                    search: styles["niagads-hero-search"],
+                    rightPanel: styles["niagads-hero-right-panel"],
+                }}
+            >
+                <div className={styles["home-page-hero-panel"]}>
+                    <div className={styles["home-page-news-column"]}>
+                        <NewsTeaser />                        
+                    </div>
+                </div>
+                
+            </HeroSection>
+           
+                
+            <div id="ecosystem" className={styles["home-page-section"]}>
                 <ResourceEcosystemViewer
                     overview={RESOURCE_ECOSYSTEM_OVERVIEW}
                     resources={RESOURCES}
