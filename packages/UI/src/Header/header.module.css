@@ -96,8 +96,23 @@
 }
 
 @media (max-width: 768px) {
+    .header.has-mobile-menu {
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        gap: 1rem;
+        width: 100%;
+        max-width: 100vw;
+        box-sizing: border-box;
+    }
+    .has-mobile-menu .logo-container {
+        flex: 0 1 auto;
+    }
     .mobile-menu-button {
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        margin-left: auto;
     }
     .has-mobile-menu .main-nav {
         display: none;
