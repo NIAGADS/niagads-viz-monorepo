@@ -1,0 +1,18 @@
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/roboto-mono";
+@import "@fontsource-variable/geist-mono/wght.css";
+@import "@fontsource/lato/300.css";
+@import "@fontsource/lato/400.css";
+@import "@fontsource/lato/700.css";
+
+:root {
+    --font-inter: "Inter Variable", sans-serif;
+    --font-mono: "Roboto Mono Variable", monospace;
+    --font-geist-mono: "Geist Mono Variable", monospace;
+    --font-lato: "Lato", sans-serif;
+
+    /* Compatibility with existing styles */
+    --font-roboto-mono: var(--font-mono);
+    --font-family-mono: var(--font-mono);
+    --font-source-sans: var(--font-lato);
+}

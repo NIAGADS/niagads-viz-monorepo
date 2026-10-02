@@ -29,6 +29,10 @@
         "rollup-plugin-postcss": "^4.0.2"
     },
     "dependencies": {
+        "@fontsource-variable/geist-mono": "^5.2.6",
+        "@fontsource-variable/inter": "^5.0.0",
+        "@fontsource-variable/roboto-mono": "^5.0.0",
+        "@fontsource/lato": "^5.0.0",
         "tslib": "^2"
     },
     "main": "dist/index.js",
