@@ -11,6 +11,11 @@
         sans-serif;
 }
 
+.fitToContent {
+    width: fit-content;
+    max-width: 100%;
+}
+
 .alert.info {
     color: var(--dark-blue);
     border: 1px solid var(--dark-blue);

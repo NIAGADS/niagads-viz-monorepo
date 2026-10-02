@@ -1,53 +1,26 @@
-import type { Metadata } from "next";
-import Image from "next/image";
-import logo from "@/public/niagads-logo.svg";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Footer, Header } from "@niagads/ui";
 
-const geistSans = Geist({
-    variable: "--font-geist-sans",
-    subsets: ["latin"],
-});
+import { APP_METADATA } from "@/data/metadata";
+import { LoadingProvider } from "@/components/providers";
+import { MainLayout } from "@/components/MainLayout";
+import type React from "react";
+import logo from "@public/niagads-logo.svg";
 
-const geistMono = Geist_Mono({
-    variable: "--font-geist-mono",
-    subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-    title: "NIAGADS",
-    description:
-        "NIAGADS is a collaborative agreement between the National Institute on Aging and the University of Pennsylvania that stores and distributes genetics and genomics data from studies on Alzheimer’s disease, related dementias, and aging to qualified researchers globally.",
+// Viewport (Next.js handles meta injection)
+export const viewport = {
+    width: "device-width",
+    initialScale: 1,
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export const metadata = APP_METADATA;
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-            <body className="site-content">
-                <Header
-                    logo={
-                        <figure>
-                            <Image width={200} height={60} src={logo} alt="Niagads GenomicsDB logo" />
-                        </figure>
-                    }
-                    links={[
-                        { text: "About Us", url: "" },
-                        { text: "Publications", url: "" },
-                        { text: "Cite and Acknowledge", url: "" },
-                        { text: "Help", url: "" },
-                    ]}
-                />
-                <div className="content-container">{children}</div>
-                <Footer
-                    siteName="NIAGADS"
-                    links={[
-                        { display: "About", url: "/about" },
-                        { display: "Contact", url: "#" },
-                        { display: "Privacy", url: "#" },
-                        { display: "Terms", url: "#" },
-                    ]}
-                />
+        <html lang="en">
+            <body>
+                <LoadingProvider>
+                    <MainLayout>{children}</MainLayout>
+                </LoadingProvider>
             </body>
         </html>
     );
