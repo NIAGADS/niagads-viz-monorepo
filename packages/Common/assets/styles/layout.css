@@ -22,11 +22,23 @@
 }
 
 /* Optional utility wrapper for centered pages */
-.max-text-width {
+.content-section-centered {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
     padding: 1.5rem;
+}
+
+@media (min-width: 1440px) {
+    .content-section-centered {
+        max-width: 1440px;
+    }
+}
+
+@media (max-width: 768px) {
+    .content-section-centered {
+        padding: 0;
+    }
 }
 
 /* Generic content helpers */

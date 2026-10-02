@@ -1,6 +1,6 @@
-import { PublicationsTabs } from "@/components/Publications/PublicationsTabs";
-import type { PublicationCollection } from "@/components/Publications/PublicationsTabs";
 import { Alert } from "@niagads/ui";
+import type { PublicationCollection } from "@/components/Publications/PublicationsTabs";
+import { PublicationsTabs } from "@/components/Publications/PublicationsTabs";
 
 const getCollections = (): PublicationCollection[] =>
     (process.env.ZOTERO_COLLECTION_IDS || "")
@@ -16,14 +16,16 @@ export default function PublicationsPage() {
 
     return (
         <main>
-            <h1>Publications</h1>
-            {collections.length === 0 ? (
-                <Alert variant="error" message="Publications are currently unavailable.">
-                    The Zotero collections are not configured.
-                </Alert>
-            ) : (
-                <PublicationsTabs collections={collections} />
-            )}
+            <div className="content-section content-section-centered">
+                <h1>Publications</h1>
+                {collections.length === 0 ? (
+                    <Alert variant="error" message="Publications are currently unavailable.">
+                        The Zotero collections are not configured.
+                    </Alert>
+                ) : (
+                    <PublicationsTabs collections={collections} />
+                )}
+            </div>
         </main>
     );
 }
