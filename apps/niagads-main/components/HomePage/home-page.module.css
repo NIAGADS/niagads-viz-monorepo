@@ -1,28 +1,37 @@
 .home-page-content {
     width: 100%;
 }
-
 .home-page-section {
     width: 100%;
-
     display: flex;
-
     padding-top: 40px;
     padding-bottom: 40px;
     padding-left: 50px;
     padding-right: 50px;
 }
-
 .home-page-heading {
     max-width: 60%;
-
     margin-left: 40px;
     margin-right: 100px;
 }
+.home-page-content .niagads-hero-section {
+    background-color: #ffffff;
+    background-image: url("/Minimalist-Wireframe-Brain-Network.jpg");
+    background-repeat: no-repeat;
+    background-position: 10% 50%;
+    background-size: cover;
+}
 
-.home-page-title {
+.niagads-hero-section .niagads-hero-title {
     font-size: 2.5rem;
+    color: var(--foreground);
     padding-bottom: 1rem;
+}
+.niagads-hero-section .niagads-hero-subtitle {
+    color: var(--foreground);
+}
+.niagads-hero-section .niagads-hero-search input {
+    border: 1px solid var(--gray-300);
 }
 
 .home-page-description {
@@ -30,37 +39,15 @@
     padding-bottom: 2rem;
 }
 
-.home-page-hero-panel {
-    display: grid;
-    grid-template-columns: minmax(160px, 0.9fr) minmax(0, 1.1fr);
-    gap: 1.5rem;
-    align-items: center;
-    width: 100%;
-}
-
-.home-page-link-buttons {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 0.9rem;
-}
-
 .home-page-news-column {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    min-width: 0;
-}
-
-.home-page-news-teaser {
-    max-width: 24rem;
-    color: #fff;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 1rem;
+    padding: 1.5rem;
 }
 
 .home-page-news-label {
     margin-bottom: 0.5rem;
-    color: var(--secondary-blue);
+    color: var(--primary-blue);
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -76,7 +63,7 @@
 .home-page-news-teaser time {
     display: block;
     margin-top: 0.4rem;
-    color: rgba(255, 255, 255, 0.72);
+    /* color: rgba(255, 255, 255, 0.72); */
     font-size: 0.8rem;
 }
 
@@ -87,18 +74,15 @@
 }
 
 .home-page-news-teaser a {
-    color: #fff;
+    /* color: #fff; */
     font-weight: 700;
     text-decoration: underline;
     text-underline-offset: 0.15em;
 }
 
 .home-page-hero-link-button {
-    width: 185px;
-
     justify-content: space-evenly;
     align-items: center;
-
     text-decoration: none;
     font-size: 1.2rem;
 }

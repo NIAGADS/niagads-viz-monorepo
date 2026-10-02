@@ -1,6 +1,6 @@
-/* Hero Section */
 .hero-section {
-    padding: 2.5rem 2rem;
+    position: relative;
+    padding: 3rem 2rem 3.5rem;
     background:
         radial-gradient(circle at 84% 0%, rgba(61, 90, 128, 0.24), transparent 42%),
         radial-gradient(circle at 8% 100%, rgba(61, 90, 128, 0.16), transparent 45%),
@@ -10,7 +10,7 @@
 
 .hero-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.6fr) auto minmax(0, 1.4fr);
+    grid-template-columns: minmax(0, 1.62fr) auto minmax(0, 1fr);
     gap: 3rem;
     align-items: center;
     max-width: 1200px;
@@ -44,9 +44,9 @@
 }
 
 .hero-title {
-    font-size: 2.1rem;
+    font-size: 2rem;
     font-weight: 700;
-    max-width: 500px;
+    /* max-width: 500px; */
     color: #fff;
     margin-bottom: 0.75rem;
     line-height: 1.1;
@@ -56,7 +56,7 @@
     font-size: 1.1rem;
     color: #fff;
     margin-bottom: 1.5rem;
-    max-width: 500px;
+    /* max-width: 500px; */
     font-weight: normal;
 }
 .hero-graphic {
@@ -153,7 +153,15 @@
     justify-content: flex-start;
     flex-wrap: wrap;
 }
-
+.hero-scroll-cue {
+    position: absolute;
+    bottom: 0.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    width: auto;
+}
 @media (max-width: 768px) {
     .hero-section {
         padding: 2rem 1.5rem;

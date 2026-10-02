@@ -10,7 +10,7 @@ export const HeroSectionSearch = () => {
 
     return (
         <Card>
-            <CardHeader style={{ fontWeight: "normal" }}>Search NIAGADS </CardHeader>
+            {/* <CardHeader style={{ fontWeight: "normal" }}>Search NIAGADS </CardHeader> */}
             <CardBody>
                 <TextInput value={searchTerm} onChange={setSearchTerm} placeholder="Search NIAGADS Data..." />
                 <Link href={`/search?term=${searchTerm}`}>

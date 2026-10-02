@@ -2,3 +2,78 @@
 @import "@niagads/common/assets/styles/theme.css";
 @import "@niagads/common/assets/styles/layout.css";
 @import "@niagads/common/assets/styles/typography.css";
+
+:root {
+    --background: var(--white);
+    --foreground: var(--gray-900);
+    --header-height: 60px;
+    /* Typography */
+    --font-family-sans:
+        var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+    --font-family-mono: var(--font-roboto-mono), "SF Mono", "Monaco", "Inconsolata", "Source Code Pro", monospace;
+
+    --font-family-display: var(--font-source-sans), var(--font-inter), -apple-system, BlinkMacSystemFont, sans-serif;
+
+    /* NIAGADS Brand */
+    --site-primary: var(--primary-blue);
+    --site-primary-light: var(--secondary-blue);
+    --site-accent: var(--accent-teal);
+
+    /* Site Surfaces */
+    --site-background: var(--white);
+    --site-surface: var(--white);
+    --site-surface-subtle: var(--gray-50);
+
+    /* Site Text */
+    --site-text-primary: var(--gray-800);
+    --site-text-secondary: var(--gray-600);
+    --site-text-muted: var(--gray-500);
+
+    /* Site Borders */
+    --site-border: var(--gray-200);
+    --site-border-strong: var(--gray-300);
+
+    /* Hero */
+    --hero-background: var(--white);
+    --hero-text: var(--gray-800);
+    --hero-text-secondary: var(--gray-600);
+
+    /* Cards */
+    --card-background: var(--white);
+    --card-border: var(--gray-200);
+    --card-hover-border: var(--secondary-blue);
+
+    /* CTA / Interactive */
+    --cta-background: var(--white);
+    --cta-icon-background: var(--gray-50);
+    --cta-icon-color: var(--primary-blue);
+    --cta-text: var(--gray-800);
+    --cta-border: var(--gray-200);
+    --cta-border-hover: var(--secondary-blue);
+
+    /* Scroll Cue */
+    --scroll-cue-text: var(--gray-500);
+    --scroll-cue-color: var(--primary-blue);
+    --scroll-cue-background: var(--white);
+    --scroll-cue-border: var(--gray-300);
+    --scroll-cue-border-hover: var(--gray-400);
+}
+html {
+    scroll-behavior: smooth;
+}
+body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Area below fixed header */
+
+a {
+    text-decoration: none;
+}
+
+#ecosystem {
+    scroll-margin-top: calc(var(--header-height) + 0.25rem);
+}
