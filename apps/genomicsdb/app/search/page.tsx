@@ -37,7 +37,7 @@ const SearchPage = async ({ searchParams }: PageProps) => {
                     </div>
                 </div>
             ) : (
-                <div className="max-text-width">
+                <div className="content-section-centered">
                     <Card outline={false}>
                         <div className="content-header">
                             <div>

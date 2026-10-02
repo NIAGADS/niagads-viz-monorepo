@@ -1,21 +1,5 @@
-/* CSS-only show header when scroll up, hide when scroll down - for browsers that support it */
-/* @supports (container-type: scroll-state) {
-    html {
-        container-type: scroll-state;
-    }
-
-    .header {
-        @container scroll-state(scrolled: bottom) {
-            translate: 0 -100%;
-        }
-        @container scroll-state(scrolled: top) {
-            translate: 0 0;
-        }
-    }
-} */
-
 .header {
-    height: var(--header-height);
+    height: var(--header-height, 4rem);
     background-color: var(--dark-blue);
     color: var(--text-primary);
     display: flex;
@@ -30,10 +14,15 @@
     right: 0;
     z-index: 101;
 }
+
 .logo-container {
     display: flex;
     align-items: center;
     gap: 2rem;
+    min-width: 0;
+}
+.logo {
+    flex-shrink: 0;
     line-height: 0;
 }
 .logo img {
@@ -41,51 +30,27 @@
     height: auto;
 }
 
-/* .logo-image {
-  width: 40px;
-  height: 40px;
-  color: var(--accent-teal);
-}
-
-.logo-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.2;
-} */
-
-/* .logo-text .primary {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--text-primary);
-} */
-
-/* .logo-text .secondary {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-} */
 .header-search {
     display: none;
     flex: 1;
+    min-width: 0;
     max-width: 600px;
     margin: 0 1rem;
 }
-.mobile-menu-search .search-input,
-.header-search .search-input {
+.header-search input {
     background-color: transparent;
     color: var(--gray-50);
     border: 1px solid var(--gray-400);
 }
-.mobile-menu-search .search-input:focus,
-.header-search .search-input:focus {
+.header-search input:focus {
     border-color: var(--gray-50);
     box-shadow: var(--focus-ring);
 }
-.mobile-menu-search .search-input::placeholder,
-.header-search .search-input::placeholder {
+.header-search input::placeholder {
     color: var(--gray-400);
 }
 @media screen and (min-width: 960px) {
-    .logo-container {
+    .logo-container.with-search {
         width: 45%;
     }
     .header-search {
@@ -95,6 +60,7 @@
 .main-nav {
     display: flex;
     gap: 0.5rem;
+    align-items: center;
 }
 
 .nav-link {
@@ -130,34 +96,33 @@
 }
 
 @media (max-width: 768px) {
-    .mobile-menu-button {
-        display: block;
+    .header.has-mobile-menu {
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        gap: 1rem;
+        width: 100%;
+        max-width: 100vw;
+        box-sizing: border-box;
     }
-    .main-nav {
+    .has-mobile-menu .logo-container {
+        flex: 0 1 auto;
+    }
+    .mobile-menu-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        margin-left: auto;
+    }
+    .has-mobile-menu .main-nav {
         display: none;
     }
-}
-
-.user-menu {
-    margin-left: 5px;
-    margin-right: 5px;
-}
-
-.user-menu-item {
-    display: block;
-
-    width: 100%;
-    padding: 2px;
-
-    border-radius: var(--border-radius);
-    border: 1px;
-
-    cursor: pointer;
-
-    color: var(--text-primary);
-}
-
-.user-menu-item:hover {
-    background-color: var(--gray-50);
-    text-decoration: none;
+    .header:not(.has-mobile-menu) {
+        height: auto;
+        min-height: var(--header-height, 4rem);
+        flex-wrap: wrap;
+    }
+    .main-nav {
+        flex-wrap: wrap;
+    }
 }

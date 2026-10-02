@@ -1,44 +1,44 @@
 .mobile-menu-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 60;
-    opacity: 1;
-    visibility: visible;
+    z-index: 110;
 }
 
 .mobile-menu {
     position: fixed;
     top: 0;
-    right: 0;
+    /* Match the viewport width even when page content overflows horizontally. */
+    left: max(15vw, calc(100vw - 280px));
     height: 100vh;
+    height: 100dvh;
+    overflow-y: auto;
     width: 280px;
     max-width: 85vw;
     background-color: var(--gray-800);
     color: var(--gray-100);
-    z-index: 70;
+    z-index: 111;
     display: flex;
     flex-direction: column;
     box-shadow: var(--shadow-lg);
     transform: translateX(0);
-    transition: transform var(--transition-normal);
+}
+
+.mobile-menu-header,
+.mobile-menu-search {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--gray-700);
 }
 
 .mobile-menu-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid var(--gray-700);
 }
 
 .mobile-menu-title {
     font-size: 1.125rem;
     font-weight: 600;
-    color: var(--gray-100);
 }
 
 .mobile-menu-close {
@@ -59,11 +59,6 @@
     color: var(--gray-100);
 }
 
-.mobile-menu-search {
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid var(--gray-700);
-}
-
 .mobile-menu-nav {
     flex: 1;
     padding: 1rem 0;
@@ -81,14 +76,13 @@
     border-left: 3px solid transparent;
 }
 
-.mobile-menu-link:hover {
+.mobile-menu-link:hover,
+.mobile-menu-link.active {
     background-color: var(--blue);
     color: var(--gray-100);
 }
 
 .mobile-menu-link.active {
-    background-color: var(--blue);
-    color: var(--gray-100);
     border-left-color: var(--gray-100);
 }
 
@@ -96,18 +90,6 @@
     padding: 1rem 1.5rem;
     border-top: 1px solid var(--gray-800);
     text-align: center;
-}
-
-.mobile-menu-footer-text {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--gray-100);
-    margin-bottom: 0.25rem;
-}
-
-.mobile-menu-footer-subtext {
-    font-size: 0.75rem;
-    color: var(--gray-400);
 }
 
 /* Animation for menu entrance */
@@ -126,7 +108,21 @@
     }
 }
 
-/* Prevent body scroll when menu is open */
-.mobile-menu-open {
-    overflow: hidden;
+.mobile-menu-search input {
+    background-color: transparent;
+    color: var(--gray-50);
+    border: 1px solid var(--gray-400);
+}
+.mobile-menu-search input:focus {
+    border-color: var(--gray-50);
+    box-shadow: var(--focus-ring);
+}
+.mobile-menu-search input::placeholder {
+    color: var(--gray-400);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mobile-menu {
+        animation: none;
+    }
 }

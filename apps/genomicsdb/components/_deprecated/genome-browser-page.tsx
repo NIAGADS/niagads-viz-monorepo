@@ -10,7 +10,7 @@ export function GenomeBrowserPage() {
     const suggestions = ["APOE", "TREM2", "APP", "PSEN1", "chr19:44905791-44909393"];
 
     return (
-        <div className="max-text-width">
+        <div className="content-section-centered">
             <div className="card" role="tabpanel">
                 <div className="card-header">
                     <div className="card-title">Genome Visualization</div>

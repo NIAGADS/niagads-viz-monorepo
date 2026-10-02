@@ -1,0 +1,49 @@
+.userMenu {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.userMenuItem {
+    display: block;
+
+    width: 100%;
+    padding: 2px;
+
+    border-radius: var(--border-radius);
+    border: none;
+    background: transparent;
+    text-align: left;
+    font: inherit;
+
+    cursor: pointer;
+
+    color: var(--text-primary);
+}
+
+.userMenuItem:hover {
+    background-color: var(--gray-50);
+    text-decoration: none;
+}
+
+.login {
+    background: none;
+    border: none;
+    color: var(--gray-50);
+    padding: 0.5rem;
+    border-radius: var(--border-radius);
+    font: inherit;
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.login:hover {
+    color: var(--gray-300);
+}
+
+.mobileMenuFooter {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--gray-100);
+    margin-bottom: 0.25rem;
+}

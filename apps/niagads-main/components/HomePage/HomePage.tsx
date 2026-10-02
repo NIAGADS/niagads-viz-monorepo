@@ -30,12 +30,7 @@ export const HomePage = () => {
                     genomic data generation, sharing, resources, and discovery.`}
                 search={<HeroSectionSearch />}
                 belowSearch={<HeroQuickLinks />}
-                scrollCue={
-                    <HeroScrollCue
-                        href="#ecosystem"
-                        label="Explore NIAGADS"
-                    />
-                }
+                scrollCue={<HeroScrollCue href="#ecosystem" label="Explore NIAGADS" />}
                 className={styles["niagads-hero-section"]}
                 classNames={{
                     grid: styles["niagads-hero-grid"],
@@ -48,13 +43,11 @@ export const HomePage = () => {
             >
                 <div className={styles["home-page-hero-panel"]}>
                     <div className={styles["home-page-news-column"]}>
-                        <NewsTeaser />                        
+                        <NewsTeaser />
                     </div>
                 </div>
-                
             </HeroSection>
-           
-                
+
             <div id="ecosystem" className={styles["home-page-section"]}>
                 <ResourceEcosystemViewer
                     overview={RESOURCE_ECOSYSTEM_OVERVIEW}
