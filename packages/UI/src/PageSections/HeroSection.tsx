@@ -43,16 +43,16 @@ export const HeroSection = ({
 
     return (
         <section id={id} className={`${styles["hero-section"]} ${className}`} style={style}>
-            <div className={`${styles["hero-grid"]} ${!hasRightPanel ? styles["hero-grid-single"] : ""} ${classNames.grid || ""}`}>
+            <div
+                className={`${styles["hero-grid"]} ${!hasRightPanel ? styles["hero-grid-single"] : ""} ${classNames.grid || ""}`}
+            >
                 <div className={`${styles["hero-content"]} ${classNames.content || ""}`}>
                     <h1 className={`${styles["hero-title"]} ${classNames.title || ""}`}>{title}</h1>
-                    {subtitle && <p className={`${styles["hero-subtitle"]} ${classNames.subtitle || ""}`}>{subtitle}</p>}
-                    {search && <div className={`${styles["hero-search"]} ${classNames.search || ""}`}>{search}</div>}
-                    {belowSearch && (
-                        <div className={classNames.belowSearch || ""}>
-                            {belowSearch}
-                        </div>
+                    {subtitle && (
+                        <p className={`${styles["hero-subtitle"]} ${classNames.subtitle || ""}`}>{subtitle}</p>
                     )}
+                    {search && <div className={`${styles["hero-search"]} ${classNames.search || ""}`}>{search}</div>}
+                    {belowSearch && <div className={classNames.belowSearch || ""}>{belowSearch}</div>}
                 </div>
                 {hasRightPanel && <hr className={`${styles["hero-divider"]} ${classNames.divider || ""}`} />}
                 {hasRightPanel && (
@@ -63,13 +63,7 @@ export const HeroSection = ({
                 )}
             </div>
             {scrollCue && (
-                <div
-                    className={`${styles["hero-scroll-cue"]} ${
-                        classNames.scrollCue || ""
-                    }`}
-                >
-                    {scrollCue}
-                </div>
+                <div className={`${styles["hero-scroll-cue"]} ${classNames.scrollCue || ""}`}>{scrollCue}</div>
             )}
         </section>
     );
