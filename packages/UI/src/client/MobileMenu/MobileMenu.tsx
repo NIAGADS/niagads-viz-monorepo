@@ -1,4 +1,4 @@
-import type { HeaderProps, NavigationMenuLink } from "../../Header";
+import type { HeaderProps, NavigationMenuLink } from "../Header";
 import React, { ReactNode, useEffect, useRef } from "react";
 
 import { X } from "lucide-react";

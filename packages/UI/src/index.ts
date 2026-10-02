@@ -16,7 +16,6 @@ export * from "./Toggle";
 export * from "./FilterChip";
 export * from "./Tooltip";
 export * from "./Footer";
-export * from "./Header";
 export * from "./StatementBanner";
 export * from "./PageSections";
 export * from "./Icons";

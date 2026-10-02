@@ -4,7 +4,7 @@ import { User } from "lucide-react";
 import Link from "next/link";
 
 const meta = {
-    title: "UI/Header",
+    title: "UI/Client/Header",
     component: Header,
     tags: ["autodocs"],
     parameters: { layout: "fullscreen" },

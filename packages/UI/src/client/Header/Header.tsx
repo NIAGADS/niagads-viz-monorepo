@@ -1,7 +1,7 @@
 import React, { ReactNode, useState } from "react";
 import { Menu } from "lucide-react";
 
-import { MobileMenu, type MobileMenuProps } from "../client/MobileMenu";
+import { MobileMenu, type MobileMenuProps } from "../MobileMenu";
 
 import styles from "./header.module.css";
 
