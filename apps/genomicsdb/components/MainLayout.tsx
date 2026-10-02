@@ -1,9 +1,9 @@
 "use client";
 
 import React, { type ReactNode } from "react";
-import { Header } from "./Header/Header";
+import { Header } from "@/components/Header";
 import { Footer } from "@niagads/ui";
-import { BackToTop } from "./BackToTop";
+import { BackToTop } from "@niagads/ui/client";
 
 interface MainLayoutProps {
     children: ReactNode;
