@@ -3,7 +3,7 @@ import type { PublicationCollection } from "@/components/Publications/Publicatio
 import { PublicationsTabs } from "@/components/Publications/PublicationsTabs";
 
 const getCollections = (): PublicationCollection[] =>
-    (process.env.ZOTERO_COLLECTION_IDS || "")
+    (process.env.ZOTERO_COLLECTIONS || "")
         .split(",")
         .map((value) => {
             const [id, name] = value.split("|").map((part) => part.trim());
