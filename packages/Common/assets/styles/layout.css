@@ -1,0 +1,114 @@
+/* App shell */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--background);
+}
+
+/* Area below fixed header */
+.content-container {
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+    padding-top: var(--header-height);
+}
+
+/* Main page outlet */
+.main-content {
+    flex: 1 1 auto;
+    min-width: 0;
+    background-color: var(--background);
+}
+
+/* Optional utility wrapper for centered pages */
+.max-text-width {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+/* Generic content helpers */
+.content {
+    width: 100%;
+    min-width: 0;
+}
+
+.content-section {
+    margin-top: 0;
+}
+
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.content-title {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text-primary);
+}
+
+.content-subtitle {
+    margin-top: 0.5rem;
+    color: var(--text-secondary);
+}
+
+/* Page-level helpers */
+.page-container,
+.page-container-capped {
+    min-height: calc(100vh - var(--header-height));
+}
+
+/* Grid and Spacing Classes */
+.flex {
+    display: flex;
+}
+.flex-col {
+    flex-direction: column;
+}
+.items-center {
+    align-items: center;
+}
+.justify-between {
+    justify-content: space-between;
+}
+.justify-center {
+    justify-content: center;
+}
+.gap-025 {
+    gap: 0.25rem;
+}
+.gap-05 {
+    gap: 0.5rem;
+}
+.gap-075 {
+    gap: 0.75rem;
+}
+.gap-1 {
+    gap: 1rem;
+}
+.gap-15 {
+    gap: 1.5rem;
+}
+.gap-2 {
+    gap: 2rem;
+}
+.w-full {
+    width: 100%;
+}
+
+.mb-1 {
+    margin-bottom: 1rem;
+}
+.mb-15 {
+    margin-bottom: 1.5rem;
+}
+.space-y-15 > * + * {
+    margin-top: 1.5rem;
+}
