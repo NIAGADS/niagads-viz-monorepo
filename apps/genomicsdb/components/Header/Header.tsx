@@ -1,9 +1,9 @@
 "use client";
 
+import { ActionMenu, Header as UIHeader } from "@niagads/ui/client";
 import { signIn, signOut, useSession } from "next-auth/react";
 
-import { ActionMenu, Header as UIHeader } from "@niagads/ui/client";
-import { EnhancedSearch } from "../EnhancedSearch";
+import { EnhancedSearch } from "@/components/EnhancedSearch";
 import Image from "next/image";
 import Link from "next/link";
 import { User } from "lucide-react";
@@ -24,7 +24,7 @@ export const Header = () => {
 
     return (
         <UIHeader
-            logo={<Image width={200} height={60} src={logo} alt="Niagads GenomicsDB logo" />}
+            logo={<Image width={200} height={60} src={logo} alt="Niagads GenomicsDB" loading="eager" />}
             links={navigationLinks.map((link) => ({
                 ...link,
                 active: pathname === link.url || pathname.startsWith(`${link.url}/`),
