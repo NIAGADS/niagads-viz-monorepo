@@ -8,6 +8,8 @@ import resolve from "@rollup/plugin-node-resolve";
 import terser from "@rollup/plugin-terser";
 import typescript from "@rollup/plugin-typescript";
 
+const clientModules = new Set();
+
 export default [
     {
         input: ["./src/index.ts"],
@@ -18,10 +20,21 @@ export default [
                 dir: "dist",
                 preserveModules: true,
                 preserveModulesRoot: "src",
+                banner: (chunk) =>
+                    Object.keys(chunk.modules).some((id) => clientModules.has(id)) ? '"use client";' : "",
             },
         ],
         external: [/node_modules/, "tslib"],
         plugins: [
+            {
+                name: "preserve-use-client-directives",
+                transform(code, id) {
+                    if (/^\s*(["'])use client\1\s*;?/.test(code)) {
+                        clientModules.add(id);
+                    }
+                    return null;
+                },
+            },
             resolve(),
             commonjs(),
             external(),
