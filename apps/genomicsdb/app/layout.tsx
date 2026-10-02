@@ -1,6 +1,5 @@
 import "./globals.css";
 
-import { Inter, Lato, Roboto_Mono } from "next/font/google";
 import { LoadingProvider, SessionProvider } from "@/components/providers";
 
 import { MainLayout } from "@/components/MainLayout";
@@ -14,26 +13,6 @@ export const viewport = {
     width: "device-width",
     initialScale: 1,
 };
-
-// Fonts
-const inter = Inter({
-    subsets: ["latin"],
-    display: "swap",
-    variable: "--font-inter",
-});
-
-const robotoMono = Roboto_Mono({
-    subsets: ["latin"],
-    display: "swap",
-    variable: "--font-roboto-mono",
-});
-
-const lato = Lato({
-    subsets: ["latin"],
-    display: "swap",
-    variable: "--font-source-sans",
-    weight: ["300", "400", "700"],
-});
 
 // Metadata
 export const metadata: Metadata = {

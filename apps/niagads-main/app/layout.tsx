@@ -1,32 +1,9 @@
 import "./globals.css";
 
-import { Inter, Lato, Roboto_Mono } from "next/font/google";
-
-import { LoadingProvider } from "@niagads/common";
+import { LoadingProvider } from "@/components/providers";
+import { MainLayout } from "@/components/MainLayout";
 import type { Metadata } from "next";
 import type React from "react";
-
-
-// Fonts
-const inter = Inter({
-    subsets: ["latin"],
-    display: "swap",
-    variable: "--font-inter",
-});
-
-const robotoMono = Roboto_Mono({
-    subsets: ["latin"],
-    display: "swap",
-    variable: "--font-roboto-mono",
-});
-
-const lato = Lato({
-    subsets: ["latin"],
-    display: "swap",
-    variable: "--font-source-sans",
-    weight: ["300", "400", "700"],
-});
-
 
 // Viewport (Next.js handles meta injection)
 export const viewport = {
@@ -36,10 +13,26 @@ export const viewport = {
 
 export const metadata: Metadata = {
     title: "NIAGADS",
+    keywords: "genomics, alzheimer's, genetics, database, NIAGADS",
+
+    authors: [{ name: "NIAGADS Team" }],
     description:
         "NIAGADS is a collaborative agreement between the National Institute on Aging and the University of Pennsylvania that stores and distributes genetics and genomics data from studies on Alzheimer’s disease, related dementias, and aging to qualified researchers globally.",
 };
 
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+    return (
+        <html lang="en" className={`${inter.variable} ${robotoMono.variable} ${lato.variable}`}>
+            <body className={inter.className}>
+                <LoadingProvider>
+                    <MainLayout>{children}</MainLayout>
+                </LoadingProvider>
+            </body>
+        </html>
+    );
+}
+
+/*
 export default function RootLayout({ children }: LayoutProps<"/">) {
     return (
         <html lang="en" className={`${inter.variable} ${robotoMono.variable} ${lato.variable}`}>
@@ -76,4 +69,4 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </body>
         </html>
     );
-}
+} */
