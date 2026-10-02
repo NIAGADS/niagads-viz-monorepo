@@ -1,5 +1,5 @@
 .header {
-    height: var(--header-height);
+    height: var(--header-height, 4rem);
     background-color: var(--dark-blue);
     color: var(--text-primary);
     display: flex;
@@ -119,7 +119,7 @@
     }
     .header:not(.has-mobile-menu) {
         height: auto;
-        min-height: var(--header-height);
+        min-height: var(--header-height, 4rem);
         flex-wrap: wrap;
     }
     .main-nav {

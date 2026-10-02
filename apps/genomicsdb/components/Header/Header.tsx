@@ -7,7 +7,6 @@ import { EnhancedSearch } from "@/components/EnhancedSearch";
 import Image from "next/image";
 import Link from "next/link";
 import { User } from "lucide-react";
-import dynamic from "next/dynamic";
 import { getPublicUrl } from "@/lib/utils";
 import logo from "@public/genomicsdb_logo.svg";
 import styles from "./user-menu.module.css";
@@ -20,19 +19,12 @@ const navigationLinks = [
     { text: "About", url: "/about" },
 ];
 
-/*
-// Dynamically import the header to bypass server-side rendering and eliminate style flash
-const UIHeader = dynamic(
-    () => import("@niagads/ui/client").then((mod) => mod.Header),
-    { ssr: false } // Bypasses server-side rendering to eliminate the style flash
-);*/
-
 export const Header = () => {
     const pathname = usePathname();
 
     return (
         <UIHeader
-            logo={<Image width={200} height={60} src={logo} alt="Niagads GenomicsDB" loading="eager" />}
+            logo={<Image width={200} height={60} src={logo} alt="NIAGADS GenomicsDB" loading="eager" />}
             links={navigationLinks.map((link) => ({
                 ...link,
                 active: pathname === link.url || pathname.startsWith(`${link.url}/`),
@@ -41,7 +33,7 @@ export const Header = () => {
             linkComponent={Link}
             mobileMenu
             mobileMenuConfig={{
-                footer: <div className={styles.mobileMenuFooter}>NIAGADS GenomicsDB</div>,
+                footer: <div>NIAGADS GenomicsDB</div>,
             }}
             search={<EnhancedSearch placeholder="Search for genes, tracks, regions..." autoRoute={true} />}
             userMenu={<UserMenu />}
