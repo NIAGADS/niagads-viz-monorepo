@@ -1,7 +1,7 @@
 import type { PublicationsTableData } from "@/components/Publications/PublicationsTable";
 import { URLS } from "@/data/url_ref";
 import { parsePubMedPublications } from "./pubmed";
-import { getCachePaths, readCachedPublications, writeCachedPublications, type CachePaths } from "./cache";
+import { getCachePaths, readCachedResponse, writeCachedResponse, type CachePaths } from "../../cache";
 
 const ZOTERO_PAGE_SIZE = 100;
 const PUBMED_BATCH_SIZE = 100;
@@ -129,9 +129,9 @@ export async function GET(_: Request, { params }: PublicationsRouteContext) {
     const headers = { "Content-Type": "application/json", "Cache-Control": "no-store" };
     try {
         const { collection } = await params;
-        paths = getCachePaths(collection);
+        paths = getCachePaths("publications", collection);
         const revision = await checkZoteroCollectionRevision(collection);
-        const cached = await readCachedPublications(paths, revision);
+        const cached = await readCachedResponse(paths, revision);
         if (cached !== null) return new Response(cached, { headers });
 
         const publications = await loadCollection(collection);
@@ -139,11 +139,11 @@ export async function GET(_: Request, { params }: PublicationsRouteContext) {
             throw new Error("The Zotero collection changed while loading publications.");
         }
         const data = JSON.stringify(publications);
-        await writeCachedPublications(paths, revision, data);
+        await writeCachedResponse(paths, revision, data);
         return new Response(data, { headers });
     } catch (error) {
         console.error("Unable to refresh publications:", error);
-        const cached = paths ? await readCachedPublications(paths) : null;
+        const cached = paths ? await readCachedResponse(paths) : null;
         if (cached !== null) return new Response(cached, { headers });
         const message = error instanceof Error ? error.message : "Unable to load this collection.";
         return Response.json({ error: message }, { status: 502 });
