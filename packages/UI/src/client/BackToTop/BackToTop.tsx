@@ -1,4 +1,5 @@
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+
 import styles from "./back-to-top.module.css";
 
 export function BackToTop() {

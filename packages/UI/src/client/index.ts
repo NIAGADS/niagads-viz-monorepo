@@ -9,3 +9,4 @@ export * from "./TooltipClient";
 export * from "./CollapsibleSection";
 export * from "./MobileMenu";
 export * from "./Header";
+export * from "./BackToTop";
