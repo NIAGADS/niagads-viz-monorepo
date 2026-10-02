@@ -7,5 +7,5 @@ export const URLS: Record<string, string> = {
     HOW_TO_CITE_FAQ:
         "https://niagads.scrollhelp.site/support/acknowledging-and-citing-niagads-and-datasets#AcknowledgingandCitingNIAGADSandDatasets-CitingNIAGADS",
     FAQ: "https://niagads.scrollhelp.site/support",
-    NIAGADS_NEWS_FEED: "https://www.penn-ngc.org/wp-json/wp/v2",
+    NEWS_API: "https://dss.niagads.org/wp-json/wp/v2",
 };

@@ -1,9 +1,9 @@
 import { createHash } from "node:crypto";
 import { URLS } from "@/data/url_ref";
 import { getCachePaths, readCachedResponse, writeCachedResponse, type CachePaths } from "../cache";
-import { parseNewsPost, type NewsPost } from "./news";
+import { parseNewsPost, type NewsPost } from "./types";
 
-const BATCH_SIZE = 100;
+const BATCH_SIZE = 10;
 
 const getNewsGroups = (request: Request): string[] => {
     const groups = new URL(request.url).searchParams
@@ -18,36 +18,38 @@ const getNewsGroups = (request: Request): string[] => {
     return [...new Set(groups)];
 };
 
-const fetchNewsPage = async (group: string, perPage: number, page = 1) => {
-    const url = new URL(`${URLS.NIAGADS_NEWS_FEED.replace(/\/$/, "")}/posts`);
+const fetchNewsPage = async (group: string, perPage: number, page = 1): Promise<NewsPost[] | null> => {
+    const url = new URL(`${URLS.NEWS_API}/posts`);
     url.searchParams.set("per_page", String(perPage));
     url.searchParams.set("categories", group);
     url.searchParams.set("page", String(page));
     url.searchParams.set("orderby", "date");
     url.searchParams.set("order", "desc");
     const response = await fetch(url, { cache: "no-store" });
+    if (response.status === 400) {
+        const error = await response.json();
+        if (error?.code === "rest_post_invalid_page_number") return null;
+    }
     if (!response.ok) throw new Error(`News feed request failed with status ${response.status}.`);
     const posts: NewsPost[] = await response.json();
     if (!Array.isArray(posts)) throw new Error("The news feed returned an unexpected response format.");
-    const totalPages = response.headers.get("X-WP-TotalPages");
-    if (totalPages === null || !/^\d+$/.test(totalPages)) {
-        throw new Error("The news feed did not return a valid page count.");
-    }
-    return { posts, totalPages: Number(totalPages) };
+    return posts;
 };
 
 // Only the first provided group controls freshness, including an empty feed.
 const checkLatestNewsItem = async (group: string): Promise<string> => {
-    const { posts } = await fetchNewsPage(group, 1);
+    const posts = await fetchNewsPage(group, 1);
     return createHash("sha256")
-        .update(JSON.stringify(posts[0] ?? null))
+        .update(JSON.stringify(posts?.[0] ?? null))
         .digest("hex");
 };
 
 const loadNewsGroup = async (group: string): Promise<NewsPost[]> => {
-    const { posts, totalPages } = await fetchNewsPage(group, BATCH_SIZE);
-    for (let page = 2; page <= totalPages; page++) {
-        posts.push(...(await fetchNewsPage(group, BATCH_SIZE, page)).posts);
+    const posts: NewsPost[] = [];
+    for (let page = 1; ; page++) {
+        const batch = await fetchNewsPage(group, BATCH_SIZE, page);
+        if (batch === null) break;
+        posts.push(...batch);
     }
     return posts;
 };
