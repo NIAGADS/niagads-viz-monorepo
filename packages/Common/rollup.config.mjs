@@ -47,7 +47,11 @@ export default [
                     path: "./postcss.config.js",
                 },
             }),
-            terser(),
+            terser({
+                compress: {
+                    directives: false,
+                },
+            }),
             copy({
                 targets: [
                     { src: "assets/**/*", dest: "dist/assets" }, // copies all files from assets to dist/assets
