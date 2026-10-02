@@ -7,6 +7,7 @@ import { EnhancedSearch } from "@/components/EnhancedSearch";
 import Image from "next/image";
 import Link from "next/link";
 import { User } from "lucide-react";
+import dynamic from "next/dynamic";
 import { getPublicUrl } from "@/lib/utils";
 import logo from "@public/genomicsdb_logo.svg";
 import styles from "./user-menu.module.css";
@@ -18,6 +19,13 @@ const navigationLinks = [
     { text: "Tutorials", url: "/tutorials" },
     { text: "About", url: "/about" },
 ];
+
+/*
+// Dynamically import the header to bypass server-side rendering and eliminate style flash
+const UIHeader = dynamic(
+    () => import("@niagads/ui/client").then((mod) => mod.Header),
+    { ssr: false } // Bypasses server-side rendering to eliminate the style flash
+);*/
 
 export const Header = () => {
     const pathname = usePathname();

@@ -2,8 +2,8 @@ import "./globals.css";
 
 import { LoadingProvider, SessionProvider } from "@/components/providers";
 
+import { APP_METADATA } from "@/data/metadata";
 import { MainLayout } from "@/components/MainLayout";
-import type { Metadata } from "next";
 import type React from "react";
 import { authOptions } from "./api/auth/[...nextauth]/authConfig";
 import { getServerSession } from "next-auth";
@@ -14,21 +14,14 @@ export const viewport = {
     initialScale: 1,
 };
 
-// Metadata
-export const metadata: Metadata = {
-    title: "NIAGADS GenomicsDB",
-    description: "An interactive knowledge base for Alzheimer's disease (AD) genetics.",
-    // SEO metadata
-    keywords: "genomics, alzheimer's, genetics, database, NIAGADS",
-    authors: [{ name: "NIAGADS Team" }],
-};
+export const metadata = APP_METADATA;
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
     const session = await getServerSession(authOptions);
 
     return (
-        <html lang="en" className={`${inter.variable} ${robotoMono.variable} ${lato.variable}`}>
-            <body className={inter.className}>
+        <html lang="en">
+            <body>
                 <LoadingProvider>
                     <SessionProvider session={session}>
                         <MainLayout>{children}</MainLayout>

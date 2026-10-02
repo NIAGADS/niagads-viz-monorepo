@@ -4,12 +4,13 @@ import React, { type ReactNode } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@niagads/ui";
 import { BackToTop } from "@niagads/ui/client";
+import dynamic from "next/dynamic";
 
 interface MainLayoutProps {
     children: ReactNode;
 }
 
-export const MainLayout = ({ children }: MainLayoutProps) => {
+const MainLayoutContent = ({ children }: MainLayoutProps) => {
     return (
         <div className="app-container">
             <Header />
@@ -31,3 +32,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
         </div>
     );
 };
+
+// Dynamically import/export the header to bypass server-side rendering and eliminate style flash
+// caused by the style-injected @niagads/UI
+export const MainLayout = dynamic(() => Promise.resolve(MainLayoutContent), { ssr: false });
