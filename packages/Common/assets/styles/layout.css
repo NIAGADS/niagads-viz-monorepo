@@ -22,7 +22,8 @@
 }
 
 /* Optional utility wrapper for centered pages */
-.content-section-centered {
+.content-section-centered,
+.content-section-narrow {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
@@ -36,7 +37,8 @@
 }
 
 @media (max-width: 768px) {
-    .content-section-centered {
+    .content-section-centered,
+    .content-section-narrow {
         padding: 0;
     }
 }

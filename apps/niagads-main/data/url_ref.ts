@@ -4,4 +4,7 @@ export const URLS: Record<string, string> = {
     PUBMED: "https://pubmed.ncbi.nlm.nih.gov",
     DOI: "https://doi.org",
     PMC: "https://pmc.ncbi.nlm.nih.gov/articles/",
+    HOW_TO_CITE_FAQ:
+        "https://niagads.scrollhelp.site/support/acknowledging-and-citing-niagads-and-datasets#AcknowledgingandCitingNIAGADSandDatasets-CitingNIAGADS",
+    FAQ: "https://niagads.scrollhelp.site/support",
 };
