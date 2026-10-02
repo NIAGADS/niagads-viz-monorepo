@@ -1,9 +1,10 @@
 import { createHash } from "node:crypto";
 import { URLS } from "@/data/url_ref";
 import { getCachePaths, readCachedResponse, writeCachedResponse, type CachePaths } from "../cache";
-import { parseNewsPost, type NewsPost } from "./types";
+import { parseNewsPost, type NewsPost } from "./news-post";
 
 const BATCH_SIZE = 10;
+const CACHE_FORMAT_VERSION = 1;
 
 const getNewsGroups = (request: Request): string[] => {
     const groups = new URL(request.url).searchParams
@@ -67,7 +68,7 @@ export async function GET(request: Request) {
     const headers = { "Content-Type": "application/json", "Cache-Control": "no-store" };
 
     try {
-        paths = getCachePaths("news", JSON.stringify(groups));
+        paths = getCachePaths("news", JSON.stringify({ groups, formatVersion: CACHE_FORMAT_VERSION }));
         const revision = await checkLatestNewsItem(groups[0]);
         const cached = await readCachedResponse(paths, revision);
         if (cached !== null) return new Response(cached, { headers });
