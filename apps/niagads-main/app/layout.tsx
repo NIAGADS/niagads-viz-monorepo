@@ -1,21 +1,38 @@
 import "./globals.css";
 
-import { Footer, Header } from "@niagads/ui";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Lato, Roboto_Mono } from "next/font/google";
 
-import Image from "next/image";
+import { LoadingProvider } from "@niagads/common";
 import type { Metadata } from "next";
-import logo from "@/public/niagads-logo.svg";
+import type React from "react";
 
-const geistSans = Geist({
-    variable: "--font-geist-sans",
+
+// Fonts
+const inter = Inter({
     subsets: ["latin"],
+    display: "swap",
+    variable: "--font-inter",
 });
 
-const geistMono = Geist_Mono({
-    variable: "--font-geist-mono",
+const robotoMono = Roboto_Mono({
     subsets: ["latin"],
+    display: "swap",
+    variable: "--font-roboto-mono",
 });
+
+const lato = Lato({
+    subsets: ["latin"],
+    display: "swap",
+    variable: "--font-source-sans",
+    weight: ["300", "400", "700"],
+});
+
+
+// Viewport (Next.js handles meta injection)
+export const viewport = {
+    width: "device-width",
+    initialScale: 1,
+};
 
 export const metadata: Metadata = {
     title: "NIAGADS",
@@ -25,7 +42,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
     return (
-        <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+        <html lang="en" className={`${inter.variable} ${robotoMono.variable} ${lato.variable}`}>
+            <body className={inter.className}>
+                <LoadingProvider></LoadingProvider>
+                
+
+
+
             <body className="site-content">
                 <Header
                     logo={
