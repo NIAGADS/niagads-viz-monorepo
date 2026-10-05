@@ -18,3 +18,4 @@ export * from "./Footer";
 export * from "./StatementBanner";
 export * from "./PageSections";
 export * from "./Icons";
+export * from "./SocialFeed";

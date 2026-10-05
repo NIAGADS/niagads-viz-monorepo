@@ -7,17 +7,19 @@ interface TextInputProps extends StylingProps {
     onChange: (val: string) => void;
     placeholder?: string;
     label?: string;
+    type?: string;
 }
 
-export const TextInput = ({ value, onChange, placeholder, className, style }: TextInputProps) => {
+export const TextInput = ({ value, onChange, placeholder, className, style, type = "text", id }: TextInputProps) => {
     const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => onChange(evt.currentTarget.value);
     return (
         <input
+            id={id}
             className={`${styles["ui-text-input"]} ${className}`}
             style={style}
             onChange={handleChange}
             placeholder={placeholder ? placeholder : "Search"}
-            type="text"
+            type={type}
             value={value}
         />
     );

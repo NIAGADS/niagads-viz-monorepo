@@ -1,0 +1,86 @@
+.feed {
+    border: 1px solid var(--gray-200);
+    border-radius: var(--border-radius);
+    background: var(--surface);
+    color: var(--text-primary);
+    overflow: hidden;
+    box-shadow: none;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.feed .header {
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    min-height: 0;
+    padding: 0.75rem 1rem;
+    border: 0;
+    background: var(--gray-100);
+}
+
+.header h2 {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.header a,
+.postLink {
+    color: #145c85;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    text-decoration: none;
+}
+
+.header a:hover,
+.postLink:hover {
+    text-decoration: underline;
+}
+
+.post {
+    border-top: 1px solid var(--gray-200);
+}
+
+.feed .postBody {
+    height: auto;
+    padding: 0.875rem 1rem;
+}
+
+.meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    color: var(--text-secondary);
+    font-size: 0.8125rem;
+}
+
+.text {
+    margin: 0.5rem 0;
+    color: var(--text-secondary);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.postLink {
+    display: inline-block;
+    padding-block: 0.25rem;
+}
+
+.empty {
+    margin: 0;
+    color: var(--text-secondary);
+}
+
+.feed a:focus-visible {
+    outline: 2px solid #145c85;
+    outline-offset: 3px;
+}
+
+@media (pointer: coarse) {
+    .feed a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+    }
+}

@@ -15,6 +15,7 @@ interface MainLayoutProps {
 
 const navigationLinks = [
     { text: "About Us", url: "/about" },
+    { text: "News", url: "/news" },
     { text: "Publications", url: "/publications" },
     { text: "Cite and Acknowledge", url: "" },
     { text: "Help", url: "" },
