@@ -5,6 +5,7 @@ export interface NewsItem {
     content: string;
     excerpt: string;
     resource: string[];
+    link: string;
     type: string[];
 }
 
@@ -14,6 +15,7 @@ export interface NewsPost {
     title: { rendered: string };
     content: { rendered: string };
     excerpt: { rendered: string };
+    link: string;
     class_list?: string[];
 }
 
@@ -86,5 +88,6 @@ export const parseNewsPost = (post: NewsPost): NewsItem => ({
     content: post.content.rendered,
     excerpt: post.content.rendered,
     resource: parseResources(post.class_list),
+    link: post.link,
     type: [extractNewsType(post)],
 });
