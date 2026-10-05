@@ -1,0 +1,225 @@
+.browser {
+    --news-text: var(--text-primary, #1e293b);
+    --news-muted: var(--text-secondary, #475569);
+    --news-border: var(--gray-200, #e2e8f0);
+    --news-surface: var(--surface, #fff);
+    --news-soft: var(--gray-100, #f1f5f9);
+    --news-link: #145c85;
+    color: var(--news-text);
+    font-family: inherit;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    container-type: inline-size;
+    container-name: news-browser;
+}
+
+.browser *,
+.browser *::before,
+.browser *::after {
+    box-sizing: border-box;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+.header h2 {
+    margin: 0;
+    color: var(--news-text);
+    font-size: 1.375rem;
+    font-weight: 600;
+}
+.browser .clear {
+    flex: none;
+    padding: 0.5rem 0;
+    border: 0;
+    background: transparent;
+    color: var(--news-link);
+    font: inherit;
+    cursor: pointer;
+}
+.browser .clear:hover {
+    background: transparent;
+    color: var(--news-link);
+    box-shadow: none;
+    text-decoration: underline;
+}
+.filters {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr 0.7fr;
+    gap: 0.75rem;
+    margin: 1.25rem 0 0.75rem;
+}
+.filters label {
+    min-width: 0;
+    color: var(--news-muted);
+    font-size: 0.75rem;
+}
+.filters > div {
+    min-width: 0;
+    font: inherit;
+    font-size: 0.75rem;
+}
+.filters input,
+.filters select {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    min-height: 2.375rem;
+    margin-top: 0.375rem;
+    padding: 0.5rem;
+    border: 1px solid var(--news-border);
+    border-radius: var(--border-radius-sm, 4px);
+    background: var(--news-surface);
+    color: var(--news-text);
+    font: inherit;
+}
+.filters input::placeholder {
+    color: var(--text-muted, #64748b);
+}
+.count {
+    margin: 0;
+    color: var(--news-muted);
+    font-size: 0.75rem;
+}
+.empty {
+    margin: 0;
+    padding: 1.5rem 0;
+    color: var(--news-muted);
+}
+.yearGroup {
+    display: grid;
+    grid-template-columns: 4.625rem minmax(0, 1fr);
+    gap: 1.375rem;
+    margin-top: 1.375rem;
+}
+.year {
+    margin: 0.75rem 0;
+    color: var(--news-link);
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+.entry {
+    padding: 1rem 0;
+    border-top: 1px solid var(--news-border);
+    overflow-wrap: anywhere;
+}
+.meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--news-muted);
+    font-size: 0.75rem;
+}
+.browser .badge {
+    padding: 0.125rem 0.4375rem;
+    border-radius: var(--border-radius-sm, 4px);
+    background: var(--news-soft);
+    color: var(--news-text);
+    font-weight: 400;
+    letter-spacing: normal;
+    line-height: inherit;
+    white-space: normal;
+}
+.resource + .resource::before {
+    content: "·";
+    margin-right: 0.5rem;
+}
+.title {
+    margin: 0.5rem 0 0.25rem;
+    color: var(--news-link);
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+.title a,
+.source {
+    color: var(--news-link);
+    text-decoration: none;
+}
+.title a:hover,
+.source:hover {
+    text-decoration: underline;
+}
+.summary {
+    margin: 0;
+    color: var(--news-muted);
+}
+.source {
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-size: 0.8125rem;
+}
+.details {
+    margin-top: 0.5rem;
+}
+.details summary {
+    width: fit-content;
+    color: var(--news-link);
+    font-size: 0.8125rem;
+    cursor: pointer;
+    list-style: none;
+}
+.details summary::-webkit-details-marker {
+    display: none;
+}
+.details summary:hover {
+    text-decoration: underline;
+}
+.arrow {
+    display: inline-block;
+}
+.details[open] .arrow {
+    transform: rotate(180deg);
+}
+.body {
+    margin-top: 0.75rem;
+    padding: 0.75rem;
+    background: var(--news-soft);
+    white-space: pre-wrap;
+}
+.browser :is(a, button, input, select, summary):focus-visible {
+    outline: 2px solid var(--news-link);
+    outline-offset: 3px;
+}
+
+@container news-browser (max-width: 680px) {
+    .filters {
+        grid-template-columns: 1fr 1fr;
+    }
+    .filters input,
+    .filters select {
+        font-size: 1rem;
+    }
+    .yearGroup {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0;
+    }
+    .year {
+        margin: 0 0 0.5rem;
+    }
+}
+@container news-browser (max-width: 380px) {
+    .filters {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+@media (pointer: coarse) {
+    .clear,
+    .filters input,
+    .filters select,
+    .details summary,
+    .source,
+    .title a {
+        min-height: 44px;
+    }
+    .details summary,
+    .source,
+    .title a {
+        padding-block: 0.625rem;
+    }
+    .title a {
+        display: inline-block;
+    }
+}
