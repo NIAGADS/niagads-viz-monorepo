@@ -1,3 +1,6 @@
+import { NewsItem } from "@niagads/ui/client";
+
+/* 
 export interface NewsItem {
     year: number;
     date: string;
@@ -7,7 +10,7 @@ export interface NewsItem {
     resource: string[];
     link: string;
     type: string[];
-}
+} */
 
 export interface NewsPost {
     id: number;
@@ -82,12 +85,11 @@ const extractNewsType = (post: NewsPost): string => {
 };
 
 export const parseNewsPost = (post: NewsPost): NewsItem => ({
-    year: Number(post.date.slice(0, 4)),
     date: post.date,
     title: post.title.rendered,
-    content: post.content.rendered,
-    excerpt: post.content.rendered,
-    resource: parseResources(post.class_list),
-    link: post.link,
-    type: [extractNewsType(post)],
+    body: post.content.rendered,
+    summary: post.content.rendered,
+    resources: parseResources(post.class_list),
+    url: post.link,
+    news_type: extractNewsType(post),
 });
