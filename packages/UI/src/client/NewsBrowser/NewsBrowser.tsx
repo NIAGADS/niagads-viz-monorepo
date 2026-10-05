@@ -172,7 +172,7 @@ export const NewsBrowser = ({ news, heading = "All news", className = "", style,
                                     {item.url ? <a href={item.url}>{item.title}</a> : item.title}
                                 </h4>
                                 {item.summary && <p className={styles.summary}>{item.summary}</p>}
-                                {item.body ? (
+                                {item.body && (
                                     <details className={styles.details}>
                                         <summary>
                                             Read more{" "}
@@ -180,19 +180,13 @@ export const NewsBrowser = ({ news, heading = "All news", className = "", style,
                                                 ↓
                                             </span>
                                         </summary>
-                                        <div className={styles.body}>{item.body}</div>
-                                        {item.url && (
-                                            <a className={styles.source} href={item.url}>
-                                                View original post ↗
-                                            </a>
-                                        )}
+                                        <div className={styles.body} dangerouslySetInnerHTML={{ __html: item.body }} />
                                     </details>
-                                ) : (
-                                    item.url && (
-                                        <a className={styles.source} href={item.url}>
-                                            Read more →
-                                        </a>
-                                    )
+                                )}
+                                {item.url && (
+                                    <a className={styles.source} href={item.url}>
+                                        View original post ↗
+                                    </a>
                                 )}
                             </article>
                         ))}

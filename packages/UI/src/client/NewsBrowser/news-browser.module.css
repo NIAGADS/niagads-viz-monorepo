@@ -177,7 +177,6 @@
     margin-top: 0.75rem;
     padding: 0.75rem;
     background: var(--news-soft);
-    white-space: pre-wrap;
 }
 .browser :is(a, button, input, select, summary):focus-visible {
     outline: 2px solid var(--news-link);

@@ -11,7 +11,7 @@ const news: NewsItem[] = [
         resources: ["NIAGADS DSS", "ADSP"],
         title: "New ADSP whole-genome sequencing data available",
         summary: "A new release is available through the controlled-access repository.",
-        body: "Visit NIAGADS DSS to review the release documentation and access requirements.",
+        body: "<p>Visit NIAGADS DSS to review the release documentation and access requirements.</p>",
         url: "https://dss.niagads.org/",
     },
     {
