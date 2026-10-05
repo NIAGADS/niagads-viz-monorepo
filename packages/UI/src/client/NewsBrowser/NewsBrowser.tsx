@@ -26,8 +26,44 @@ export interface NewsBrowserProps extends StylingProps {
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
 
+const SUMMARY_LENGTH = 240;
+
+const NewsContent = ({ item }: { item: NewsItem }) => {
+    const summary = item.summary?.trim() || "";
+    const truncated = summary.length > SUMMARY_LENGTH;
+    const preview = truncated
+        ? `${summary
+              .slice(0, SUMMARY_LENGTH - 1)
+              .replace(/\s+\S*$/, "")
+              .trimEnd()}…`
+        : summary;
+    const showBody = !item.url && Boolean(item.body);
+    const showMore = showBody || truncated;
+
+    return (
+        <>
+            {summary && <p className={styles.summary}>{preview}</p>}
+            {showMore && (
+                <details className={styles.details}>
+                    <summary>
+                        Read more{" "}
+                        <span className={styles.arrow} aria-hidden="true">
+                            ↓
+                        </span>
+                    </summary>
+                    {showBody ? (
+                        <div className={styles.body} dangerouslySetInnerHTML={{ __html: item.body! }} />
+                    ) : (
+                        <p className={styles.body}>{summary}</p>
+                    )}
+                </details>
+            )}
+        </>
+    );
+};
+
 /** Searchable, newest-first news grouped by publication year. Filters are local to each instance. */
-export const NewsBrowser = ({ news, heading = "All news", className = "", style, id }: NewsBrowserProps) => {
+export const NewsBrowser = ({ news, heading, className = "", style, id }: NewsBrowserProps) => {
     const generatedId = useId();
     const prefix = id ?? generatedId;
     const [query, setQuery] = useState("");
@@ -99,10 +135,11 @@ export const NewsBrowser = ({ news, heading = "All news", className = "", style,
             id={id}
             style={style}
             className={`${styles.browser} ${className}`.trim()}
-            aria-labelledby={`${prefix}-heading`}
+            aria-labelledby={heading ? `${prefix}-heading` : undefined}
+            aria-label={heading ? undefined : "News"}
         >
             <div className={styles.header}>
-                <h2 id={`${prefix}-heading`}>{heading}</h2>
+                {heading && <h2 id={`${prefix}-heading`}>{heading}</h2>}
                 <Button className={styles.clear} onClick={clearFilters}>
                     Clear filters
                 </Button>
@@ -171,18 +208,7 @@ export const NewsBrowser = ({ news, heading = "All news", className = "", style,
                                 <h4 className={styles.title}>
                                     {item.url ? <a href={item.url}>{item.title}</a> : item.title}
                                 </h4>
-                                {item.summary && <p className={styles.summary}>{item.summary}</p>}
-                                {item.body && (
-                                    <details className={styles.details}>
-                                        <summary>
-                                            Read more{" "}
-                                            <span className={styles.arrow} aria-hidden="true">
-                                                ↓
-                                            </span>
-                                        </summary>
-                                        <div className={styles.body} dangerouslySetInnerHTML={{ __html: item.body }} />
-                                    </details>
-                                )}
+                                <NewsContent item={item} />
                                 {item.url && (
                                     <a className={styles.source} href={item.url}>
                                         View original post ↗

@@ -88,6 +88,51 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 export const Empty: Story = { args: { news: [] } };
+const longSummary = "A new release supports research into Alzheimer's disease. ".repeat(8).trim();
+
+export const SummaryExpansion: Story = {
+    args: {
+        news: [
+            {
+                date: "2026-10-01",
+                title: "Linked announcement",
+                summary: longSummary,
+                body: "<p>Full linked article should stay on the original site.</p>",
+                url: "https://dss.niagads.org/",
+            },
+            {
+                date: "2026-09-30",
+                title: "Local announcement",
+                summary: "A short preview of the local article.",
+                body: "<p>Full local article is available here.</p>",
+            },
+            {
+                date: "2026-09-29",
+                title: "Short linked announcement",
+                summary: "A short summary needs no expansion.",
+                body: "<p>Another linked article should stay on the original site.</p>",
+                url: "https://dss.niagads.org/",
+            },
+        ],
+    },
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        const articles = canvas.getAllByRole("article");
+        const linked = within(articles[0]);
+        const local = within(articles[1]);
+        const preview = articles[0].querySelector("p")!;
+        await expect(preview.textContent!.length).toBeLessThanOrEqual(240);
+        await expect(preview.textContent).toMatch(/…$/);
+        await expect(linked.getByText(longSummary)).not.toBeVisible();
+        await userEvent.click(linked.getByText("Read more", { exact: false }));
+        await expect(linked.getByText(longSummary)).toBeVisible();
+        await expect(canvas.queryByText("Full linked article should stay on the original site.")).toBeNull();
+        await userEvent.click(local.getByText("Read more", { exact: false }));
+        await expect(local.getByText("Full local article is available here.")).toBeVisible();
+        await expect(articles[2].querySelector("details")).toBeNull();
+        await expect(canvas.queryByText("Another linked article should stay on the original site.")).toBeNull();
+    },
+};
 export const Mobile: Story = {
     decorators: [
         (Story) => (
@@ -117,7 +162,7 @@ export const FilterAndExpand: Story = {
             canvas.getAllByText("Read more", { exact: false }).find((element) => element.tagName === "SUMMARY")!
         );
         await expect(
-            canvas.getByText("Visit NIAGADS DSS to review the release documentation and access requirements.")
+            canvas.getByText("The webinar covers dataset discovery, access applications, and open-access resources.")
         ).toBeVisible();
     },
 };
