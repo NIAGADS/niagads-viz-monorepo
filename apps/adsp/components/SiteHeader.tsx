@@ -1,8 +1,8 @@
 "use client";
 import { usePathname } from "next/navigation";
 import { ADSP_DATA } from "@/lib/data";
-import { A } from "./A";
 import { Navigation } from "./ds";
+import Link from "next/link";
 
 const NAV = [
     ["/", "Home"],
@@ -142,7 +142,7 @@ export function SiteHeader() {
                         {NAV.map(([href, label]) => {
                             const on = isCurrent(href);
                             return (
-                                <A
+                                <Link
                                     key={href}
                                     href={href}
                                     aria-current={on ? "page" : undefined}
@@ -157,7 +157,7 @@ export function SiteHeader() {
                                     }}
                                 >
                                     {label}
-                                </A>
+                                </Link>
                             );
                         })}
                     </nav>

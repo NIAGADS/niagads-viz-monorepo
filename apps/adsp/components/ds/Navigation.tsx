@@ -1,5 +1,5 @@
+import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
-import { A } from "../A";
 
 export interface NavigationProps {
     variant?: "light" | "dark" | "primary" | "secondary";
@@ -71,7 +71,7 @@ export function Navigation({
                 }}
             >
                 {brand && (
-                    <A
+                    <Link
                         href={brand.href || "/"}
                         style={{ display: "flex", alignItems: "center", gap: "0.75rem", textDecoration: "none" }}
                     >
@@ -83,7 +83,7 @@ export function Navigation({
                                 {brand.label}
                             </span>
                         )}
-                    </A>
+                    </Link>
                 )}
                 {children ? (
                     <div style={{ display: "flex", alignItems: "center", gap: "2rem" }}>{children}</div>
@@ -101,7 +101,7 @@ export function Navigation({
                     >
                         {items.map((item, i) => (
                             <li key={i}>
-                                <A
+                                <Link
                                     href={item.href}
                                     target={item.target}
                                     aria-current={item.active ? "page" : undefined}
@@ -116,7 +116,7 @@ export function Navigation({
                                     }}
                                 >
                                     {item.label}
-                                </A>
+                                </Link>
                             </li>
                         ))}
                     </ul>

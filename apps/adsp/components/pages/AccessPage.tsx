@@ -1,9 +1,10 @@
 "use client";
 import { Fragment, useState } from "react";
 import type { CSSProperties } from "react";
-import { Select } from "@/components/ds";
 import { Button, Card } from "@niagads/ui";
 import Link from "next/link";
+import { ADSP_DATA as D } from "@/lib/data";
+import { ext } from "@/lib/util";
 
 export function AccessPage() {
     const [visibleSection, setVisibleSection] = useState("overview");
@@ -21,6 +22,14 @@ export function AccessPage() {
             id: "gen3",
         },
     ];
+
+    const accessSteps = D.access.steps.map((label, i) => ({ n: i + 1, label }));
+    const access = D.access;
+    const links = D.links;
+    const gen3 = ext(D.links.gen3);
+    const phc = ext(D.links.phcWebsite);
+    const guide = ext(D.links.accessGuide);
+
 
     return (
         <>
@@ -211,12 +220,16 @@ export function AccessPage() {
                                         ))}
                                     </ol>
                                     <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
-                                        <Button color="primary" href={links.ng00067} target="_blank">
+                                      <Link href={links.ng00067} target="_blank">
+                                        <Button color="primary">
                                             Review NG00067 ↗
                                         </Button>
-                                        <Button href={guideHref} disabled={guideDisabled} target="_blank">
-                                            {guideLabel}
-                                        </Button>
+                                      </Link>
+                                        <Link href={guide.href!} target="_blank">
+                                          <Button disabled={guide.disabled}>
+                                              {guide.disabled ? "NIAGADS application instructions — URL TBD" : "NIAGADS application instructions ↗"}
+                                          </Button>
+                                        </Link>
                                     </div>
                                 </Card>
                             </>
@@ -265,9 +278,11 @@ export function AccessPage() {
                                                 <li>Supporting documentation and metadata</li>
                                             </ul>
                                             <div>
-                                                <Button color="primary" href={links.ng00067} target="_blank">
+                                              <Link href={links.ng00067} target="_blank">
+                                                <Button color="primary">
                                                     Open NG00067 ↗
                                                 </Button>
+                                                </Link>
                                             </div>
                                         </Card>
                                         <Card>
@@ -301,8 +316,10 @@ export function AccessPage() {
                                                 <li>Available files and data</li>
                                             </ul>
                                             <div>
-                                                <Link href={gen3Href} target="_blank">
-                                                    <Button disabled={gen3Disabled}>{gen3Label}</Button>
+                                                <Link href={gen3.href!} target="_blank">
+                                                    <Button disabled={gen3.disabled}>
+                                                      {gen3.disabled ? "Gen3 production URL to be confirmed" : "NIAGADS Gen3 Discovery Portal"}
+                                                    </Button>
                                                 </Link>
                                             </div>
                                         </Card>

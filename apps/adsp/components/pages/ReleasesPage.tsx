@@ -1,9 +1,11 @@
 "use client";
 import { Fragment } from "react";
 import type { CSSProperties } from "react";
-import { A } from "@/components/A";
-import { Badge, Button, Card, FilterChip, TextInput } from "@/components/ds";
+import { Badge, FilterChip, TextInput } from "@/components/ds";
+import { Button, Card } from "@niagads/ui";
 import { useSiteVals, type ReleasesView } from "@/lib/useSiteVals";
+import { ADSP_DATA as D } from "@/lib/data";
+import Link from "next/link";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
@@ -26,7 +28,6 @@ export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
         isProdView,
         isReleasedView,
         isWide,
-        links,
         prodBadge,
         prodCards,
         prodCols,
@@ -37,6 +38,9 @@ export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
         samplesAll,
         viewTabs,
     } = useSiteVals({ page: "releases", view });
+
+    const links = D.links;
+
     return (
         <>
             <main
@@ -78,9 +82,9 @@ export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
                         </strong>{" "}
                         <span style={{ color: "var(--text-secondary)" }}>cohorts contribute participants to ADSP</span>
                     </span>
-                    <A href={cohortsDssHref} target="_blank" rel="noopener" style={{ fontWeight: "700" }}>
+                    <Link href={cohortsDssHref} target="_blank" rel="noopener" style={{ fontWeight: "700" }}>
                         Browse ADSP cohorts on DSS ↗
-                    </A>
+                    </Link>
                 </p>
                 <nav
                     aria-label="Sequencing rounds view"
@@ -95,7 +99,7 @@ export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
                 >
                     {(viewTabs ?? []).map((t: any, $index: number) => (
                         <Fragment key={$index}>
-                            <A
+                            <Link
                                 className="hv4"
                                 href={t.href}
                                 aria-current={t.current}
@@ -117,7 +121,7 @@ export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
                                 }
                             >
                                 {t.label}
-                            </A>
+                            </Link>
                         </Fragment>
                     ))}
                 </nav>
@@ -143,7 +147,7 @@ export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
                                             {(arNav ?? []).map((n: any, $index: number) => (
                                                 <Fragment key={$index}>
                                                     <li>
-                                                        <A
+                                                        <Link
                                                             className="hv5"
                                                             href="/releases"
                                                             onClick={n.onClick}
@@ -161,7 +165,7 @@ export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
                                                             }
                                                         >
                                                             {n.label}
-                                                        </A>
+                                                        </Link>
                                                     </li>
                                                 </Fragment>
                                             ))}
@@ -319,7 +323,7 @@ export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
                                                                         whiteSpace: "nowrap",
                                                                     }}
                                                                 >
-                                                                    <A
+                                                                    <Link
                                                                         href={r.href}
                                                                         target="_blank"
                                                                         rel="noopener"
@@ -327,7 +331,7 @@ export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
                                                                         style={{ fontWeight: "700" }}
                                                                     >
                                                                         {r.firstV}
-                                                                    </A>{" "}
+                                                                    </Link>{" "}
                                                                     · {r.firstD}
                                                                 </td>
                                                                 <td
@@ -426,7 +430,7 @@ export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
                                                                                             alignItems: "center",
                                                                                         }}
                                                                                     >
-                                                                                        <A
+                                                                                        <Link
                                                                                             href={c.href}
                                                                                             target="_blank"
                                                                                             rel="noopener"
@@ -437,7 +441,7 @@ export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
                                                                                             }}
                                                                                         >
                                                                                             {c.v}
-                                                                                        </A>
+                                                                                        </Link>
                                                                                         <span
                                                                                             style={{
                                                                                                 fontSize: "0.75rem",
@@ -506,14 +510,14 @@ export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
                                         <h2 style={{ fontSize: "1.5rem", fontWeight: "700", margin: "0" }}>
                                             Samples &amp; Studies
                                         </h2>
-                                        <A
+                                        <Link
                                             href={cohortsDssHref}
                                             target="_blank"
                                             rel="noopener"
                                             style={{ fontSize: "0.875rem", fontWeight: "600" }}
                                         >
                                             Browse ADSP cohorts on DSS ↗
-                                        </A>
+                                        </Link>
                                     </div>
                                     <p
                                         style={{
@@ -779,7 +783,7 @@ export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
                                                                                 fontWeight: "700",
                                                                             }}
                                                                         >
-                                                                            <A
+                                                                            <Link
                                                                                 className="hv3"
                                                                                 href={r.href}
                                                                                 target="_blank"
@@ -790,7 +794,7 @@ export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
                                                                                 }}
                                                                             >
                                                                                 {r.label}
-                                                                            </A>
+                                                                            </Link>
                                                                         </td>
                                                                     </>
                                                                 ) : null}
@@ -810,7 +814,7 @@ export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
                                                                                     gap: "0.1rem",
                                                                                 }}
                                                                             >
-                                                                                <A
+                                                                                <Link
                                                                                     className="hv3"
                                                                                     href={r.study.href}
                                                                                     target="_blank"
@@ -822,7 +826,7 @@ export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
                                                                                     }}
                                                                                 >
                                                                                     {r.study.name}
-                                                                                </A>
+                                                                                </Link>
                                                                                 <span
                                                                                     style={{
                                                                                         fontFamily:
@@ -849,7 +853,7 @@ export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
                                                                                     gap: "0.1rem",
                                                                                 }}
                                                                             >
-                                                                                <A
+                                                                                <Link
                                                                                     className="hv3"
                                                                                     href={r.set.href}
                                                                                     target="_blank"
@@ -861,7 +865,7 @@ export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
                                                                                     }}
                                                                                 >
                                                                                     {r.set.name}
-                                                                                </A>
+                                                                                </Link>
                                                                                 <span
                                                                                     style={{
                                                                                         fontFamily:
@@ -1456,9 +1460,9 @@ export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
                                             }}
                                         >
                                             Need other combinations or filters?{" "}
-                                            <A href={gen3Href} target="_blank" rel="noopener">
+                                            <Link href={gen3Href} target="_blank" rel="noopener">
                                                 Build custom counts in Gen3 ↗
-                                            </A>
+                                            </Link>
                                         </p>
                                     </Card>
                                 </section>
@@ -1475,7 +1479,7 @@ export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
                                         }}
                                     >
                                         Publications describing or analyzing released ADSP sequencing data. Methods
-                                        papers are listed under <A href="/methods">Pipelines &amp; Methods</A>.
+                                        papers are listed under <Link href="/methods">Pipelines &amp; Methods</Link>.
                                     </p>
                                     <Card {...cardStyle2}>
                                         <ul style={{ listStyle: "none", margin: "0", padding: "0" }}>
@@ -1527,14 +1531,14 @@ export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
                                                                 }}
                                                             >
                                                                 <span>{p.note}</span>
-                                                                <A
+                                                                <Link
                                                                     href={p.href}
                                                                     target="_blank"
                                                                     rel="noopener"
                                                                     style={{ fontFamily: "var(--font-mono)" }}
                                                                 >
                                                                     PMID {p.pmid} ↗
-                                                                </A>
+                                                                </Link>
                                                             </div>
                                                         </div>
                                                     </li>
@@ -1544,14 +1548,14 @@ export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
                                     </Card>
                                 </section>
                                 <p style={{ fontSize: "1rem", margin: "0" }}>
-                                    <A
+                                    <Link
                                         href={links.ng00067}
                                         target="_blank"
                                         rel="noopener"
                                         style={{ fontWeight: "700" }}
                                     >
                                         View complete NG00067 release history on NIAGADS DSS ↗
-                                    </A>
+                                    </Link>
                                 </p>
                             </div>
                         </div>
@@ -1569,7 +1573,7 @@ export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
                             >
                                 {(prodCards ?? []).map((c: any, $index: number) => (
                                     <Fragment key={$index}>
-                                        <A
+                                        <Link
                                             className="hv6"
                                             href={c.href}
                                             onClick={c.onClick}
@@ -1606,7 +1610,7 @@ export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
                                             >
                                                 Jump to {c.id} ↓
                                             </span>
-                                        </A>
+                                        </Link>
                                     </Fragment>
                                 ))}
                             </div>
@@ -2018,9 +2022,9 @@ export function ReleasesPage({ view = "released" }: { view?: ReleasesView }) {
                                             borderTop: "1px solid var(--gray-100)",
                                         }}
                                     >
-                                        <A href="/methods" style={{ fontWeight: "700" }}>
+                                        <Link href="/methods" style={{ fontWeight: "700" }}>
                                             How ADSP data are processed → Pipelines &amp; Methods
-                                        </A>
+                                        </Link>
                                     </p>
                                 </Card>
                             </section>

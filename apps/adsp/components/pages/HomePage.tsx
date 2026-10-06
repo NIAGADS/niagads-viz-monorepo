@@ -1,11 +1,11 @@
 "use client";
 import { Fragment } from "react";
 import type { CSSProperties } from "react";
-import { A } from "@/components/A";
-import { Button } from "@/components/ds";
+import { Button } from "@niagads/ui";
 import { useSiteVals } from "@/lib/useSiteVals";
 import type { LiveStats } from "@/lib/types";
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ADSP_DATA as D } from "@/lib/data";
+import Link from "next/link";
 
 export function HomePage({ live }: { live?: LiveStats | null }) {
     const {
@@ -21,9 +21,11 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
         hasProdNow,
         heroGenomes,
         inProdNow,
-        links,
         wesN,
     } = useSiteVals({ page: "home", live });
+
+    const links = D.links;
+
     return (
         <>
             <main style={{ flex: "1" }}>
@@ -87,9 +89,11 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                     currently in production.
                                 </p>
                                 <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap", alignItems: "center" }}>
-                                    <Button color="white" href="/releases">
-                                        Explore ADSP Data →
-                                    </Button>
+                                    <Link href="/releases">
+                                        <Button color="white">
+                                            Explore ADSP Data →
+                                        </Button>
+                                    </Link>
                                 </div>
                             </div>
                             <figure style={{ margin: "0" }}>
@@ -239,7 +243,7 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                         gap: "1.25rem 4rem",
                                     }}
                                 >
-                                    <A
+                                    <Link
                                         href={links.ng00067}
                                         target="_blank"
                                         rel="noopener"
@@ -287,9 +291,9 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                         >
                                             {glanceVersion.note}
                                         </span>
-                                    </A>
-                                    <A
-                                        href={glanceDars.href}
+                                    </Link>
+                                    <Link
+                                        href={glanceDars.href!}
                                         target="_blank"
                                         rel="noopener"
                                         style={{
@@ -335,7 +339,7 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                         >
                                             Data Access Requests
                                         </span>
-                                    </A>
+                                    </Link>
                                     <div
                                         style={{
                                             marginLeft: "auto",
@@ -355,9 +359,11 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                         >
                                             Access is through a NIAGADS DAR for NG00067.
                                         </span>
-                                        <Button color="white" variant="outline" href="/access">
-                                            How to access ADSP data →
-                                        </Button>
+                                        <Link href="/access">
+                                            <Button color="white">
+                                                How to access ADSP data →
+                                            </Button>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>
@@ -373,7 +379,7 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                 borderTop: "1px solid rgba(255,255,255,0.18)",
                             }}
                         >
-                            <A
+                            <Link
                                 href={links.adseq}
                                 target="_blank"
                                 rel="noopener"
@@ -387,8 +393,8 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                 }}
                             >
                                 Learn more about the ADSP at adseq.org ↗
-                            </A>
-                            <A
+                            </Link>
+                            <Link
                                 href={links.adseq}
                                 target="_blank"
                                 rel="noopener"
@@ -400,7 +406,7 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                     alt="Alzheimer's Disease Sequencing Project"
                                     style={{ display: "block", height: "28px", width: "auto" }}
                                 />
-                            </A>
+                            </Link>
                         </div>
                     </div>
                 </section>
@@ -435,7 +441,7 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                     >
                         {(guideCards ?? []).map((c: any, $index: number) => (
                             <Fragment key={$index}>
-                                <A
+                                <Link
                                     className="hv2"
                                     href={c.href}
                                     style={{
@@ -489,7 +495,7 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                     >
                                         {c.cta}
                                     </span>
-                                </A>
+                                </Link>
                             </Fragment>
                         ))}
                     </div>
@@ -588,7 +594,7 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                 {cumulNote}
                             </p>
                             <div style={{ marginTop: "auto" }}>
-                                <A
+                                <Link
                                     className="hv3"
                                     href="/releases"
                                     style={{
@@ -599,7 +605,7 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                     }}
                                 >
                                     Explore released data →
-                                </A>
+                                </Link>
                             </div>
                         </div>
                         {hasProdNow ? (
@@ -655,7 +661,7 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                         ))}
                                     </div>
                                     <div style={{ marginTop: "auto" }}>
-                                        <A
+                                        <Link
                                             className="hv3"
                                             href="/releases/production"
                                             style={{
@@ -666,7 +672,7 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                             }}
                                         >
                                             View production status →
-                                        </A>
+                                        </Link>
                                     </div>
                                 </div>
                             </>
@@ -786,14 +792,14 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                 </li>
                                 <li>
                                     Access open-access data products through the{" "}
-                                    <A
+                                    <Link
                                         href="https://dss.niagads.org/open-access-data-portal/#NG00067"
                                         target="_blank"
                                         rel="noopener"
                                         style={{ color: "var(--primary-blue)", fontWeight: "600" }}
                                     >
                                         NIAGADS Open Access Data Portal ↗
-                                    </A>
+                                    </Link>
                                 </li>
                             </ul>
                             <div
@@ -806,7 +812,7 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                     gap: "0.4rem",
                                 }}
                             >
-                                <A
+                                <Link
                                     className="hv3"
                                     href={links.ng00067}
                                     target="_blank"
@@ -819,8 +825,8 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                     }}
                                 >
                                     Browse NG00067 on DSS ↗
-                                </A>
-                                <A
+                                </Link>
+                                <Link
                                     className="hv3"
                                     href="https://dss.niagads.org/open-access-data-portal/#NG00067"
                                     target="_blank"
@@ -833,7 +839,7 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                     }}
                                 >
                                     Open Access Data Portal ↗
-                                </A>
+                                </Link>
                             </div>
                         </div>
                         <div
@@ -910,7 +916,7 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                     background: "var(--gray-50)",
                                 }}
                             >
-                                <A
+                                <Link
                                     className="hv3"
                                     href={gen3Href}
                                     target="_blank"
@@ -924,7 +930,7 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                     }}
                                 >
                                     Explore in Gen3 ↗
-                                </A>
+                                </Link>
                             </div>
                         </div>
                         <div
@@ -1002,7 +1008,7 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                     background: "var(--gray-50)",
                                 }}
                             >
-                                <A
+                                <Link
                                     className="hv3"
                                     href="/access/apply"
                                     style={{
@@ -1013,7 +1019,7 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                     }}
                                 >
                                     How to request access →
-                                </A>
+                                </Link>
                             </div>
                         </div>
                     </div>

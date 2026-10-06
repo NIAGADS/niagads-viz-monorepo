@@ -1,0 +1,52 @@
+/* ============================================================
+   NIAGADS — Base reset & element defaults
+   Mirrors the global resets shipped by @niagads/common.
+   ============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-family: var(--font-sans);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+body {
+    background: var(--background);
+    font-size: var(--text-base);
+    line-height: var(--leading-base);
+}
+
+/* Links — secondary blue, underline on hover (NIAGADS convention) */
+a {
+    color: var(--secondary-blue);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+/* Focus management — slate focus ring, never browser default */
+*:focus {
+    outline: none;
+}
+*:focus-visible {
+    box-shadow: var(--focus-ring);
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+    line-height: var(--leading-snug);
+    font-weight: var(--weight-bold);
+}
+
+code, kbd, samp, pre {
+    font-family: var(--font-mono);
+}

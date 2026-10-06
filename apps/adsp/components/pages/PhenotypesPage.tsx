@@ -1,9 +1,11 @@
 "use client";
 import { Fragment } from "react";
 import type { CSSProperties } from "react";
-import { A } from "@/components/A";
-import { Button, Card, TextInput } from "@/components/ds";
+import { TextInput } from "@/components/ds";
+import { Button, Card } from "@niagads/ui";
 import { useSiteVals } from "@/lib/useSiteVals";
+import Link from "next/link";
+import { ADSP_DATA as D } from "@/lib/data";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export function PhenotypesPage() {
@@ -12,7 +14,6 @@ export function PhenotypesPage() {
         cardStyle3,
         cardStyle4,
         cardStyle6,
-        links,
         phcBars,
         phcDisabled,
         phcHeadGroups,
@@ -23,6 +24,9 @@ export function PhenotypesPage() {
         toBasic,
         toPhc,
     } = useSiteVals({ page: "phc" });
+
+    const links = D.links;
+
     return (
         <>
             <main
@@ -67,7 +71,7 @@ export function PhenotypesPage() {
                             gap: "1.25rem",
                         }}
                     >
-                        <A
+                        <Link
                             className="hv7"
                             href="/phenotypes"
                             onClick={toBasic}
@@ -120,8 +124,8 @@ export function PhenotypesPage() {
                             <span style={{ fontSize: "0.875rem", fontWeight: "600", color: "var(--primary-blue)" }}>
                                 Go to Basic Phenotypes ↓
                             </span>
-                        </A>
-                        <A
+                        </Link>
+                        <Link
                             className="hv7"
                             href="/phenotypes"
                             onClick={toPhc}
@@ -174,7 +178,7 @@ export function PhenotypesPage() {
                             <span style={{ fontSize: "0.875rem", fontWeight: "600", color: "var(--primary-blue)" }}>
                                 Go to ADSP-PHC Phenotypes ↓
                             </span>
-                        </A>
+                        </Link>
                     </div>
                 </div>
                 <section
@@ -215,9 +219,9 @@ export function PhenotypesPage() {
                         >
                             Basic phenotypes are collected across ADSP cohorts and organized to accommodate different
                             study designs. Data dictionaries are available on the{" "}
-                            <A href={links.ng00067} target="_blank" rel="noopener">
+                            <Link href={links.ng00067} target="_blank" rel="noopener">
                                 NG00067 dataset page ↗
-                            </A>
+                            </Link>
                             .
                         </p>
                     </div>
@@ -601,13 +605,14 @@ export function PhenotypesPage() {
                                     sample set for AD case/control analysis.
                                 </p>
                                 <div>
-                                    <Button
-                                        color="primary"
+                                    <Link
                                         href="https://github.com/NIAGADS/ADSPIntegratedPhenotypes"
                                         target="_blank"
                                     >
-                                        View ADSP Integrated Phenotypes on GitHub ↗
-                                    </Button>
+                                        <Button color="primary" >
+                                            View ADSP Integrated Phenotypes on GitHub ↗
+                                        </Button>
+                                    </Link>
                                 </div>
                             </div>
                         </Card>
@@ -663,11 +668,13 @@ export function PhenotypesPage() {
                                 cohorts for genomic analysis. Harmonized resources distributed through NIAGADS are
                                 available in fileset <span style={{ fontFamily: "var(--font-mono)" }}>fsa000027</span>.
                             </p>
-                            <Button color="primary" href={phcHref} disabled={phcDisabled} target="_blank">
+                            <Link href={phcHref} target="_blank">
+                             <Button disabled={phcDisabled} color="primary">
                                 {phcLabel}
-                            </Button>
+                                </Button>
+                            </Link>
                         </div>
-                        <A
+                        <Link
                             href={phcHref}
                             target="_blank"
                             rel="noopener"
@@ -679,7 +686,7 @@ export function PhenotypesPage() {
                                 alt="ADSP Phenotype Harmonization Consortium"
                                 style={{ display: "block", height: "96px", width: "auto", mixBlendMode: "multiply" }}
                             />
-                        </A>
+                        </Link>
                     </div>
                     <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                         <div
@@ -1010,7 +1017,7 @@ export function PhenotypesPage() {
                                                             ) : null}
                                                             {r.hasHref ? (
                                                                 <>
-                                                                    <A
+                                                                    <Link
                                                                         className="hv3"
                                                                         href={r.href}
                                                                         target="_blank"
@@ -1023,7 +1030,7 @@ export function PhenotypesPage() {
                                                                         }
                                                                     >
                                                                         {r.name}
-                                                                    </A>
+                                                                    </Link>
                                                                 </>
                                                             ) : null}
                                                             {r.noHref ? (

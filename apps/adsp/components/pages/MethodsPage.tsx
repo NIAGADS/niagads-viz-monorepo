@@ -1,9 +1,9 @@
 "use client";
 import { Fragment } from "react";
 import type { CSSProperties } from "react";
-import { A } from "@/components/A";
-import { Card } from "@/components/ds";
+import { Card } from "@niagads/ui";
 import { useSiteVals } from "@/lib/useSiteVals";
+import Link from "next/link";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export function MethodsPage() {
@@ -59,7 +59,7 @@ export function MethodsPage() {
                                     {(dgNav ?? []).map((n: any, $index: number) => (
                                         <Fragment key={$index}>
                                             <li>
-                                                <A
+                                                <Link
                                                     className="hv5"
                                                     href="/methods"
                                                     onClick={n.onClick}
@@ -77,7 +77,7 @@ export function MethodsPage() {
                                                     }
                                                 >
                                                     {n.label}
-                                                </A>
+                                                </Link>
                                             </li>
                                         </Fragment>
                                     ))}
@@ -1065,7 +1065,7 @@ export function MethodsPage() {
                                         }}
                                     >
                                         Variant consequence and functional annotation resources generated for selected
-                                        sequencing rounds. See <A href="/releases">Sequencing Rounds</A> for
+                                        sequencing rounds. See <Link href="/releases">Sequencing Rounds</Link> for
                                         availability.
                                     </span>
                                 </div>
@@ -1212,7 +1212,7 @@ export function MethodsPage() {
                                 }}
                             >
                                 Code and methods publications for the workflows above. Data-release papers are listed
-                                under <A href="/releases">Sequencing Rounds → Related Publications</A>.
+                                under <Link href="/releases">Sequencing Rounds → Related Publications</Link>.
                             </p>
                             <div
                                 style={{
@@ -1267,22 +1267,22 @@ export function MethodsPage() {
                                                     fontSize: "0.8125rem",
                                                 }}
                                             >
-                                                <A
+                                                <Link
                                                     href="http://www.niagads.org/VCPA"
                                                     target="_blank"
                                                     rel="noopener"
                                                     style={{ fontWeight: "600", textDecoration: "none" }}
                                                 >
                                                     niagads.org/VCPA ↗
-                                                </A>
-                                                <A
+                                                </Link>
+                                                <Link
                                                     href="https://pubmed.ncbi.nlm.nih.gov/30351394/"
                                                     target="_blank"
                                                     rel="noopener"
                                                     style={{ fontWeight: "600", textDecoration: "none" }}
                                                 >
                                                     PMID 30351394 ↗
-                                                </A>
+                                                </Link>
                                             </div>
                                         </li>
                                         <li
@@ -1320,22 +1320,22 @@ export function MethodsPage() {
                                                     fontSize: "0.8125rem",
                                                 }}
                                             >
-                                                <A
+                                                <Link
                                                     href="https://bitbucket.org/Taha_Iqbal_UPenn/gcad-vcf-qc_public/src/master/"
                                                     target="_blank"
                                                     rel="noopener"
                                                     style={{ fontWeight: "600", textDecoration: "none" }}
                                                 >
                                                     gcad-vcf-qc_public (R5) ↗
-                                                </A>
-                                                <A
+                                                </Link>
+                                                <Link
                                                     href="https://pubmed.ncbi.nlm.nih.gov/29857119/"
                                                     target="_blank"
                                                     rel="noopener"
                                                     style={{ fontWeight: "600", textDecoration: "none" }}
                                                 >
                                                     PMID 29857119 ↗
-                                                </A>
+                                                </Link>
                                             </div>
                                         </li>
                                         <li
@@ -1367,14 +1367,14 @@ export function MethodsPage() {
                                                     fontSize: "0.8125rem",
                                                 }}
                                             >
-                                                <A
+                                                <Link
                                                     href="https://bitbucket.org/NIAGADS/compact_vcf/src/master/"
                                                     target="_blank"
                                                     rel="noopener"
                                                     style={{ fontWeight: "600", textDecoration: "none" }}
                                                 >
                                                     compact_vcf ↗
-                                                </A>
+                                                </Link>
                                             </div>
                                         </li>
                                     </ul>
@@ -1427,7 +1427,7 @@ export function MethodsPage() {
                                         }}
                                     >
                                         Annotation products are not generated for every sequencing round. See{" "}
-                                        <A href="/releases">Sequencing Rounds</A> for available resources.
+                                        <Link href="/releases">Sequencing Rounds</Link> for available resources.
                                     </p>
                                 </Card>
                             </div>

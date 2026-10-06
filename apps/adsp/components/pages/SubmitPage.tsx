@@ -1,6 +1,6 @@
 "use client";
-import { A } from "@/components/A";
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import Link from "next/link";
 
 export function SubmitPage() {
     return (
@@ -69,26 +69,26 @@ export function SubmitPage() {
                                     }}
                                 >
                                     <li>
-                                        <A
+                                        <Link
                                             href="https://niagads.scrollhelp.site/support/documents#Institutional-Certification"
                                             target="_blank"
                                             rel="noopener"
                                             style={{ fontWeight: "600" }}
                                         >
                                             Institutional Certification for ADRD Studies
-                                        </A>{" "}
+                                        </Link>{" "}
                                         covering all subjects in your study. Multiple certifications may be required.
                                     </li>
                                     <li>
                                         Signed copy of the{" "}
-                                        <A
+                                        <Link
                                             href="https://www.nia.nih.gov/sites/default/files/2017-06/revised-ADSP-sharing-plan-6-13-17.docx"
                                             target="_blank"
                                             rel="noopener"
                                             style={{ fontWeight: "600" }}
                                         >
                                             NIA AD Genomics Sharing Plan
-                                        </A>
+                                        </Link>
                                         .
                                     </li>
                                     <li>Completed Dataset Registration Template.</li>
@@ -111,7 +111,7 @@ export function SubmitPage() {
                                         borderTop: "1px solid var(--gray-100)",
                                     }}
                                 >
-                                    <A
+                                    <Link
                                         href="https://niagads.scrollhelp.site/support/documents#Institutional-Certification"
                                         target="_blank"
                                         rel="noopener"
@@ -123,7 +123,7 @@ export function SubmitPage() {
                                         }}
                                     >
                                         Institutional Certification documents ↗
-                                    </A>
+                                    </Link>
                                     <span style={{ fontSize: "0.8125rem", color: "var(--text-muted)" }}>
                                         Institutional Certification
                                     </span>
@@ -137,7 +137,7 @@ export function SubmitPage() {
                                         borderTop: "1px solid var(--gray-100)",
                                     }}
                                 >
-                                    <A
+                                    <Link
                                         href="https://www.nia.nih.gov/sites/default/files/2017-06/revised-ADSP-sharing-plan-6-13-17.docx"
                                         target="_blank"
                                         rel="noopener"
@@ -149,7 +149,7 @@ export function SubmitPage() {
                                         }}
                                     >
                                         revised-ADSP-sharing-plan-6-13-17.docx ↓
-                                    </A>
+                                    </Link>
                                     <span style={{ fontSize: "0.8125rem", color: "var(--text-muted)" }}>
                                         NIA AD Genomics Sharing Plan
                                     </span>
@@ -163,7 +163,7 @@ export function SubmitPage() {
                                         borderTop: "1px solid var(--gray-100)",
                                     }}
                                 >
-                                    <A
+                                    <Link
                                         href="https://www.adgenomics.org/wp-content/uploads/2023/01/01_DSS_Dataset_Registration_Template.docx"
                                         target="_blank"
                                         rel="noopener"
@@ -175,7 +175,7 @@ export function SubmitPage() {
                                         }}
                                     >
                                         01_DSS_Dataset_Registration_Template.docx ↓
-                                    </A>
+                                    </Link>
                                     <span style={{ fontSize: "0.8125rem", color: "var(--text-muted)" }}>
                                         Dataset Registration Template
                                     </span>
@@ -240,7 +240,7 @@ export function SubmitPage() {
                                         borderTop: "1px solid var(--gray-100)",
                                     }}
                                 >
-                                    <A
+                                    <Link
                                         href="https://www.adgenomics.org/wp-content/uploads/2023/01/02_ADSPID_Assignment_Instructions.docx"
                                         target="_blank"
                                         rel="noopener"
@@ -252,7 +252,7 @@ export function SubmitPage() {
                                         }}
                                     >
                                         02_ADSPID_Assignment_Instructions.docx ↓
-                                    </A>
+                                    </Link>
                                     <span style={{ fontSize: "0.8125rem", color: "var(--text-muted)" }}>
                                         Instructions
                                     </span>
@@ -266,7 +266,7 @@ export function SubmitPage() {
                                         borderTop: "1px solid var(--gray-100)",
                                     }}
                                 >
-                                    <A
+                                    <Link
                                         href="https://www.adgenomics.org/wp-content/uploads/2023/01/02_SampleID_forADSPassign.xlsx"
                                         target="_blank"
                                         rel="noopener"
@@ -278,7 +278,7 @@ export function SubmitPage() {
                                         }}
                                     >
                                         02_SampleID_forADSPassign_DS.xlsx ↓
-                                    </A>
+                                    </Link>
                                     <span style={{ fontSize: "0.8125rem", color: "var(--text-muted)" }}>
                                         Sample information template
                                     </span>
@@ -330,7 +330,7 @@ export function SubmitPage() {
                                         borderTop: "1px solid var(--gray-100)",
                                     }}
                                 >
-                                    <A
+                                    <Link
                                         href="https://www.adgenomics.org/wp-content/uploads/2023/01/03_ADSP_Phenotypes_Augmentation_DD.docx"
                                         target="_blank"
                                         rel="noopener"
@@ -342,7 +342,7 @@ export function SubmitPage() {
                                         }}
                                     >
                                         03_ADSP_Phenotypes_Augmentation_DD.docx ↓
-                                    </A>
+                                    </Link>
                                     <span style={{ fontSize: "0.8125rem", color: "var(--text-muted)" }}>
                                         Data dictionary
                                     </span>
@@ -356,7 +356,7 @@ export function SubmitPage() {
                                         borderTop: "1px solid var(--gray-100)",
                                     }}
                                 >
-                                    <A
+                                    <Link
                                         href="https://www.adgenomics.org/wp-content/uploads/2023/01/03_ADSP_Phenotypes_Augmentation_DS.xlsx"
                                         target="_blank"
                                         rel="noopener"
@@ -368,7 +368,7 @@ export function SubmitPage() {
                                         }}
                                     >
                                         03_ADSP_Phenotypes_Augmentation_DS.xlsx ↓
-                                    </A>
+                                    </Link>
                                     <span style={{ fontSize: "0.8125rem", color: "var(--text-muted)" }}>
                                         Phenotype template
                                     </span>
@@ -615,9 +615,9 @@ export function SubmitPage() {
                             Questions about preparing or transferring an ADSP sequencing submission, the template forms,
                             or uploading issues?
                         </p>
-                        <A href="mailto:NIAGADS@pennmedicine.upenn.edu" style={{ fontSize: "1rem", fontWeight: "700" }}>
+                        <Link href="mailto:NIAGADS@pennmedicine.upenn.edu" style={{ fontSize: "1rem", fontWeight: "700" }}>
                             NIAGADS@pennmedicine.upenn.edu
-                        </A>
+                        </Link>
                     </div>
                 </section>
             </main>

@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Footer } from "@/components/ds";
-import { LegacyHashRedirect } from "@/components/LegacyHashRedirect";
 import { SiteHeader } from "@/components/SiteHeader";
 import { ADSP_DATA } from "@/lib/data";
+import { Footer } from "@niagads/ui";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -21,7 +20,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     return (
         <html lang="en">
             <body>
-                <LegacyHashRedirect />
                 <div
                     style={{
                         fontFamily: "var(--font-sans)",

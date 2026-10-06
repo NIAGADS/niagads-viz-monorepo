@@ -3,10 +3,12 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "dev": "next dev",
-        "build": "next build",
-        "start": "next start",
-        "lint": "eslint"
+        "adsp": "next dev",
+        "build-adsp": "next build",
+        "start-adsp": "next start",
+        "build-app": "next build",
+        "start-app": "next start",
+        "start-dev-app": "next dev"
     },
     "dependencies": {
         "@niagads/charts": "^0.2.1",

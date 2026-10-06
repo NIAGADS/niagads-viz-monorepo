@@ -1352,7 +1352,7 @@ export const ADSP_DATA: AdspData = {
      Diagnosis_harmonized case variants merged (AD_case → AD case, etc.).
      -------------------------------------------------------------------------- */
     /* Cross-tab counts for "Compare with". Key "<dimA>|<dimB>" (either order works).
-     Shape: { R1: { "<A category>": { "<B category>": count, ... }, ... }, R2: ... }
+     Shape: { R1: { "<Linkcategory>": { "<B category>": count, ... }, ... }, R2: ... }
      Pre-aggregate from the ALL phenotype file (subject-level data never ships to the browser).
      Pairs not listed show a "not yet generated" notice with a Gen3 link.
      GENERATED from sample_list_ex.xlsx, same membership as composition (marginals verified).
