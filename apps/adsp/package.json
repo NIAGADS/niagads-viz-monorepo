@@ -9,7 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "next": "16.3.7",
+    "@niagads/charts": "^0.2.1",
+    "@niagads/common": "^0.2.1",
+    "@niagads/table": "^0.2.1",
+    "@niagads/ui": "^0.2.1",
+    "next": "16.3.1",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },
@@ -18,7 +22,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.3.7",
+    "eslint-config-next": "16.3.1",
     "typescript": "^5"
   }
 }

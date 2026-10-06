@@ -1,0 +1,8 @@
+/* Hover states lifted from the prototype’s inline style-hover rules (!important beats inline styles). */
+.hv1:hover { background: rgba(255,255,255,0.08) !important; }
+.hv2:hover { border-top-color: var(--niagads-gold) !important; }
+.hv3:hover { text-decoration: underline !important; }
+.hv4:hover { border-color: var(--primary-blue) !important; }
+.hv5:hover { background: var(--gray-100) !important; }
+.hv6:hover { border-style: solid !important; }
+.hv7:hover { border-color: var(--secondary-blue) !important; }
