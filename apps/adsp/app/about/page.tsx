@@ -4,5 +4,5 @@ import { AboutPage } from "@/components/pages/AboutPage";
 export const metadata: Metadata = { title: "About" };
 
 export default function Page() {
-  return <AboutPage />;
+    return <AboutPage />;
 }
