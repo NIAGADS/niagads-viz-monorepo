@@ -47,7 +47,6 @@ const STATE: Record<string, { marker: string; label: string; color: string }> = 
 interface Cell { v: string; bg: string; align: string; color: string; weight: string; padL: string; ws: string }
 const cell = (v: string, o: Partial<Cell> = {}): Cell =>
   ({ v, bg: o.bg || "transparent", align: o.align || "left", color: o.color || "var(--text-primary)", weight: o.weight || "400", padL: o.padL || "1rem", ws: o.ws || "nowrap" });
-const ext = (url?: string) => (isTBD(url) ? { href: undefined, disabled: true } : { href: url, disabled: false });
 
 const csvEsc = (v: unknown) => { const t = v == null ? "" : String(v); return /[",\n]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t; };
 function downloadCsv(lines: unknown[][], filename: string) {
@@ -215,7 +214,6 @@ export function useSiteVals({ page, view = "released", section: sectionProp = "o
   const PROD = REL.filter((r) => r.status === "in_production");
   const relNotes = (v: string) => D.links.releaseNotes.replace("{version}", v);
 
-  const gen3 = ext(D.links.gen3), phc = ext(D.links.phcWebsite), guide = ext(D.links.accessGuide);
 
   // ---- Access sections ----
   const section = ACCESS_SECTIONS.some(([k]) => k === sectionProp) ? sectionProp : ACCESS_SECTIONS[0][0];
@@ -403,12 +401,6 @@ export function useSiteVals({ page, view = "released", section: sectionProp = "o
 
   return {
     ...CARD_STYLES,
-    links: D.links,
-    gen3Href: gen3.href, gen3Disabled: gen3.disabled, gen3Title: gen3.disabled ? "Gen3 production URL to be confirmed" : "NIAGADS Gen3 Discovery Portal",
-    gen3Label: gen3.disabled ? "Gen3 — URL TBD" : "Explore in Gen3 ↗",
-    phcHref: phc.href, phcDisabled: phc.disabled, phcLabel: phc.disabled ? "ADSP-PHC website — URL TBD" : "Visit the ADSP-PHC website ↗",
-    guideHref: guide.href, guideDisabled: guide.disabled, guideLabel: guide.disabled ? "NIAGADS application instructions — URL TBD" : "NIAGADS application instructions ↗",
-
     aboutRoles: [
       ["Coordinate Data Intake", "Receive sequencing data, study information, metadata, phenotypes, consent documentation, and related information needed to integrate new ADSP submissions."],
       ["Generate & Release Genomic Data", "Process ADSP sequencing data:  individual-level processing, joint calling, structural variant calling, QC, and prepare genomic data products for release."],

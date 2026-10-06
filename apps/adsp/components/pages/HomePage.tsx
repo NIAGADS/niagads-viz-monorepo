@@ -6,13 +6,12 @@ import { useSiteVals } from "@/lib/useSiteVals";
 import type { LiveStats } from "@/lib/types";
 import { ADSP_DATA as D } from "@/lib/data";
 import Link from "next/link";
+import { ext } from "@/lib/util";
 
 export function HomePage({ live }: { live?: LiveStats | null }) {
     const {
         availNow,
         cumulNote,
-        gen3Href,
-        gen3Title,
         glanceDars,
         glanceVersion,
         growth,
@@ -25,6 +24,7 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
     } = useSiteVals({ page: "home", live });
 
     const links = D.links;
+    const gen3 = ext(D.links.gen3);
 
     return (
         <>
@@ -918,10 +918,10 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                             >
                                 <Link
                                     className="hv3"
-                                    href={gen3Href}
+                                    href={gen3.href!}
                                     target="_blank"
                                     rel="noopener"
-                                    title={gen3Title}
+                                    title={gen3.disabled ? "Gen3 production URL to be confirmed" : "NIAGADS Gen3 Discovery Portal"}
                                     style={{
                                         fontSize: "0.9375rem",
                                         fontWeight: "700",
