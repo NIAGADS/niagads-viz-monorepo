@@ -51,10 +51,11 @@ const parsePubMedArticle = (xml: TNode, grantsByPmid: Map<string, string | null>
     const journal = first(article, "Journal");
     const pubDate = first(journal, "PubDate");
     const year = (content(first(pubDate, "Year")) || content(first(pubDate, "MedlineDate")))?.match(/\d{4}/)?.[0];
-    const meshTerms: string[] = [];
+    const meshTerms: { value: string; id: string | null }[] = [];
     for (const heading of elements(citation, "MeshHeading") ?? []) {
-        const descriptor = content(first(heading, "DescriptorName"));
-        if (descriptor) meshTerms.push(descriptor);
+        const descriptor = first(heading, "DescriptorName");
+        const value = content(descriptor);
+        if (value) meshTerms.push({ value, id: descriptor?.attributes.UI || null });
     }
 
     const doi = content(ids?.find((id) => id.attributes.IdType?.toLowerCase() === "doi"));

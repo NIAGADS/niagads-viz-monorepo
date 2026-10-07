@@ -5,6 +5,7 @@ import { getCachePaths, readCachedResponse, writeCachedResponse, type CachePaths
 
 const ZOTERO_PAGE_SIZE = 100;
 const PUBMED_BATCH_SIZE = 100;
+const PUBLICATIONS_CACHE_VERSION = "mesh-ids-v1";
 
 interface ZoteroItem {
     data?: { extra?: string };
@@ -54,7 +55,7 @@ const checkZoteroCollectionRevision = async (collection: string): Promise<string
     if (total === null || !/^\d+$/.test(total)) {
         throw new Error("Zotero did not return a valid collection count.");
     }
-    return `${version ?? ""}:${total}`;
+    return `${PUBLICATIONS_CACHE_VERSION}:${version ?? ""}:${total}`;
 };
 
 const fetchZoteroPage = async (collection: string, start: number): Promise<ZoteroGrantsSummary> => {
