@@ -1,6 +1,6 @@
 .hero-section {
     position: relative;
-    padding: 3rem 2rem 3.5rem;
+    padding: 4rem 2rem 4.5rem;
     background:
         radial-gradient(circle at 84% 0%, rgba(61, 90, 128, 0.24), transparent 42%),
         radial-gradient(circle at 8% 100%, rgba(61, 90, 128, 0.16), transparent 45%),
@@ -13,7 +13,7 @@
     grid-template-columns: minmax(0, 1.62fr) auto minmax(0, 1fr);
     gap: 3rem;
     align-items: center;
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
 }
 
