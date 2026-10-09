@@ -67,3 +67,16 @@ services:
       context: ./apps/igvbrowser
     ports:
       - "${IGVBROWSER_CLIENT_PORT}:3000"
+
+  adsp-data:
+    <<: *defaults
+    container_name: adsp-data-client
+    image: client-app-adsp-data:${BUILD}
+    build:
+      <<: *build-defaults
+      args:
+        <<: *build-arg-defaults
+        APP_NAME: adsp-data
+      context: ./apps/adsp
+    ports:
+      - "${ADSPDATA_CLIENT_PORT}:3000"

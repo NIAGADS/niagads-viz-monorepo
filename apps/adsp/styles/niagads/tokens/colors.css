@@ -1,0 +1,68 @@
+/* ============================================================
+   NIAGADS — Color Tokens
+   Source of truth: @niagads/common theme.css (niagads-viz-monorepo)
+   The brand "one color blue" wordmark = --niagads-blue (#3d5a80)
+   ============================================================ */
+
+:root {
+    /* ---- Brand ---- */
+    --niagads-dark-blue: #293241; /* deepest slate — footers, headers, dark UI */
+    --niagads-blue: #3d5a80; /* PRIMARY brand blue — the logo color */
+    --niagads-blue-2: #618eb5; /* secondary / lighter blue — links, accents */
+    --niagads-gold: #ffc665; /* warm accent — banners, highlights */
+
+    /* ---- Primary aliases (component API names) ---- */
+    --dark-blue: var(--niagads-dark-blue);
+    --blue: var(--niagads-blue);
+    --primary-blue: var(--niagads-blue);
+    --secondary-blue: var(--niagads-blue-2);
+    --yellow: var(--niagads-gold);
+
+    /* ---- Semantic status ---- */
+    --accent-teal: #0d9488;
+    --success-green: #059669;
+    --warning-amber: #d97706;
+    --error-red: #dc2626;
+    --error-red-light: #fee2e2;
+
+    /* ---- Neutral gray scale (slate) ---- */
+    --white: #ffffff;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-300: #cbd5e1;
+    --gray-400: #94a3b8;
+    --gray-500: #64748b;
+    --gray-600: #475569;
+    --gray-700: #334155;
+    --gray-800: #1e293b;
+    --gray-900: #0f172a;
+    --black: #000000;
+
+    /* ---- Semantic surfaces & text ---- */
+    --background: #ffffff;
+    --surface: #ffffff;
+    --surface-elevated: #ffffff;
+    --border: var(--gray-300);
+    --border-hover: var(--gray-400);
+    --text-primary: var(--gray-800);
+    --text-secondary: var(--gray-600);
+    --text-muted: var(--gray-500);
+    --text-inverse: #ffffff;
+
+    /* ---- Interactive states ---- */
+    --hover-bg: var(--gray-50);
+    --active-bg: var(--gray-100);
+    --focus-ring: 0 0 0 3px rgba(61, 90, 128, 0.18);
+
+    /* ---- Data-viz: color-blind-friendly categorical palette ---- *
+       (from @niagads/common COLOR_BLIND_FRIENDLY_PALETTES.eight_color) */
+    --viz-1: #332288;
+    --viz-2: #117733;
+    --viz-3: #44aa99;
+    --viz-4: #88ccee;
+    --viz-5: #ddcc77;
+    --viz-6: #cc6677;
+    --viz-7: #aa4499;
+    --viz-8: #882255;
+}
