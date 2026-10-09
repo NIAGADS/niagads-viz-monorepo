@@ -5,8 +5,11 @@ import { SideNavSection, TabbedSideNav } from "@niagads/ui/client";
 import Link from "next/link";
 import { ADSP_DATA as D } from "@/lib/data";
 import { ext } from "@/lib/util";
+import { useSiteVals } from "@/lib/useSiteVals";
 
 export function AccessPage() {
+    const { cardStyle2, cardStyle3, cardStyle6, } = useSiteVals({ page: "access" });
+
     const accessSteps = D.access.steps.map((label, i) => ({ n: i + 1, label }));
     const access = D.access;
     const links = D.links;
@@ -49,11 +52,9 @@ export function AccessPage() {
                 Full application guidance is in the NIAGADS documentation.
             </p>
             <TabbedSideNav>
-                <SideNavSection id="1" label="test1">
+                <SideNavSection id="overview" label="Overview">
                     <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-                        <Card>
-                            {" "}
-                            {/*style3*/}
+                        <Card {...cardStyle3}>
                             <h2 style={{ fontSize: "1.25rem", fontWeight: "700", margin: "0 0 0.75rem" }}>
                                 What do I apply for?
                             </h2>
@@ -71,9 +72,7 @@ export function AccessPage() {
                                 governed by the investigator’s approved authorization/data-use terms.
                             </p>
                         </Card>
-                        <Card>
-                            {" "}
-                            {/*style3*/}
+                        <Card {...cardStyle3}>
                             <h2 style={{ fontSize: "1.25rem", fontWeight: "700", margin: "0 0 0.9rem" }}>
                                 What does NG00067 include?
                             </h2>
@@ -106,10 +105,8 @@ export function AccessPage() {
                         </Card>
                     </div>
                 </SideNavSection>
-                <SideNavSection id="2" label="test2">
-                    <Card>
-                        {" "}
-                        {/*style3*/}
+                <SideNavSection id="howto" label="How to Apply">
+                    <Card {...cardStyle3}>
                         <h2 style={{ fontSize: "1.25rem", fontWeight: "700", margin: "0 0 1.25rem" }}>
                             How do I apply?
                         </h2>
@@ -161,7 +158,7 @@ export function AccessPage() {
                         </div>
                     </Card>
                 </SideNavSection>
-                <SideNavSection id="3" label="test3">
+                <SideNavSection id="dssgen3" label="DSS & Gen3">
                     <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
                         <h2 style={{ fontSize: "1.375rem", fontWeight: "700", margin: "0" }}>DSS &amp; Gen3</h2>
                         <div
@@ -171,9 +168,7 @@ export function AccessPage() {
                                 gap: "1.25rem",
                             }}
                         >
-                            <Card>
-                                {" "}
-                                {/*cardStyle6*/}
+                            <Card {...cardStyle6}>
                                 <div
                                     style={{
                                         fontSize: "0.6875rem",
@@ -208,9 +203,7 @@ export function AccessPage() {
                                     </Link>
                                 </div>
                             </Card>
-                            <Card>
-                                {" "}
-                                {/*cardStyle6*/}
+                            <Card {...cardStyle6}>
                                 <div
                                     style={{
                                         fontSize: "0.6875rem",
@@ -249,9 +242,7 @@ export function AccessPage() {
                                 </div>
                             </Card>
                         </div>
-                        <Card>
-                            {" "}
-                            {/*cardStyle2*/}
+                        <Card {...cardStyle2}>
                             <div
                                 style={{
                                     padding: "1.25rem 1.5rem",
