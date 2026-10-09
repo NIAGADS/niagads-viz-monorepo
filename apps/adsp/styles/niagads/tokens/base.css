@@ -41,12 +41,20 @@ a:hover {
     outline-offset: 2px;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     color: var(--text-primary);
     line-height: var(--leading-snug);
     font-weight: var(--weight-bold);
 }
 
-code, kbd, samp, pre {
+code,
+kbd,
+samp,
+pre {
     font-family: var(--font-mono);
 }

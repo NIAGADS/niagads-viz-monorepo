@@ -8,10 +8,7 @@ import { useSiteVals } from "@/lib/useSiteVals";
 import { ADSP_DATA as D } from "@/lib/data";
 
 export function AboutPage() {
-    const {
-        aboutRoles,
-        timeline,
-    } = useSiteVals({ page: "releases" });
+    const { aboutRoles, timeline } = useSiteVals({ page: "releases" });
 
     const links = D.links;
 

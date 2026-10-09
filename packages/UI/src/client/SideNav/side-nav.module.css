@@ -6,9 +6,9 @@
 }
 
 .side-nav-section-selector {
- flex: 0 0 230px;
- position: sticky;
- top: 1.5rem;
+    flex: 0 0 230px;
+    position: sticky;
+    top: 1.5rem;
 }
 
 .side-nav-sections {

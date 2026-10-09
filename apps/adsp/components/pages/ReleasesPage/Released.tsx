@@ -1433,4 +1433,4 @@ export const Released = () => {
             </div>
         </div>
     );
-}
+};

@@ -615,7 +615,10 @@ export function SubmitPage() {
                             Questions about preparing or transferring an ADSP sequencing submission, the template forms,
                             or uploading issues?
                         </p>
-                        <Link href="mailto:NIAGADS@pennmedicine.upenn.edu" style={{ fontSize: "1rem", fontWeight: "700" }}>
+                        <Link
+                            href="mailto:NIAGADS@pennmedicine.upenn.edu"
+                            style={{ fontSize: "1rem", fontWeight: "700" }}
+                        >
                             NIAGADS@pennmedicine.upenn.edu
                         </Link>
                     </div>

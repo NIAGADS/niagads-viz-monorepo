@@ -7,22 +7,21 @@
 
 :root {
     /* ---- Families ---- */
-    --font-sans: "Inter", "Lucida Sans", "Lucida Grande", "Lucida Sans Unicode",
-        Geneva, Verdana, system-ui, sans-serif;
+    --font-sans: "Inter", "Lucida Sans", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, system-ui, sans-serif;
     --font-inter: "Inter", system-ui, sans-serif;
     --font-open-sans: "Open Sans", system-ui, sans-serif;
     --font-mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
     /* ---- Type scale (rem / line-height) — matches @niagads/common ---- */
-    --text-xs: 0.75rem;     /* 12px / 16 */
-    --text-sm: 0.875rem;    /* 14px / 20 */
-    --text-base: 1rem;      /* 16px / 24 */
-    --text-lg: 1.125rem;    /* 18px / 28 */
-    --text-xl: 1.25rem;     /* 20px / 28 */
-    --text-2xl: 1.5rem;     /* 24px / 32 */
-    --text-3xl: 1.875rem;   /* 30px / 36 */
-    --text-4xl: 2.25rem;    /* 36px / 40 */
-    --text-5xl: 3rem;       /* 48px — hero */
+    --text-xs: 0.75rem; /* 12px / 16 */
+    --text-sm: 0.875rem; /* 14px / 20 */
+    --text-base: 1rem; /* 16px / 24 */
+    --text-lg: 1.125rem; /* 18px / 28 */
+    --text-xl: 1.25rem; /* 20px / 28 */
+    --text-2xl: 1.5rem; /* 24px / 32 */
+    --text-3xl: 1.875rem; /* 30px / 36 */
+    --text-4xl: 2.25rem; /* 36px / 40 */
+    --text-5xl: 3rem; /* 48px — hero */
 
     --leading-xs: 1rem;
     --leading-sm: 1.25rem;
@@ -32,7 +31,7 @@
     --leading-2xl: 2rem;
     --leading-3xl: 2.25rem;
     --leading-4xl: 2.5rem;
-    --leading-snug: 1.1;    /* hero headlines */
+    --leading-snug: 1.1; /* hero headlines */
     --leading-relaxed: 1.6; /* body copy */
 
     /* ---- Weights ---- */

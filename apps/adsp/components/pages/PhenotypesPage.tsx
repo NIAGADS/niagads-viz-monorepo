@@ -604,13 +604,8 @@ export function PhenotypesPage() {
                                     sample set for AD case/control analysis.
                                 </p>
                                 <div>
-                                    <Link
-                                        href="https://github.com/NIAGADS/ADSPIntegratedPhenotypes"
-                                        target="_blank"
-                                    >
-                                        <Button color="primary" >
-                                            View ADSP Integrated Phenotypes on GitHub ↗
-                                        </Button>
+                                    <Link href="https://github.com/NIAGADS/ADSPIntegratedPhenotypes" target="_blank">
+                                        <Button color="primary">View ADSP Integrated Phenotypes on GitHub ↗</Button>
                                     </Link>
                                 </div>
                             </div>
@@ -668,8 +663,8 @@ export function PhenotypesPage() {
                                 available in fileset <span style={{ fontFamily: "var(--font-mono)" }}>fsa000027</span>.
                             </p>
                             <Link href={phc.href!} target="_blank">
-                             <Button disabled={phc.disabled} color="primary">
-                                {phc.disabled ? "ADSP-PHC website — URL TBD" : "Visit the ADSP-PHC website ↗"}
+                                <Button disabled={phc.disabled} color="primary">
+                                    {phc.disabled ? "ADSP-PHC website — URL TBD" : "Visit the ADSP-PHC website ↗"}
                                 </Button>
                             </Link>
                         </div>

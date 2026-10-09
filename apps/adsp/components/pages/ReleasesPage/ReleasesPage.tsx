@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Link from "next/link";
 import { CSSProperties, useState } from "react";
@@ -7,21 +7,19 @@ import { useSiteVals } from "@/lib/useSiteVals";
 import { Released } from "./Released";
 
 export const ReleasesPage = () => {
-    const [activeView, setActiveView] = useState<typeof viewTabs[number]['id']>("released");
+    const [activeView, setActiveView] = useState<(typeof viewTabs)[number]["id"]>("released");
     const viewTabs = [
-        { 
+        {
             id: "released",
-            label: "Released Rounds"
-         },
+            label: "Released Rounds",
+        },
         {
             id: "production",
-            label: "In Production"
+            label: "In Production",
         },
     ] as const;
 
-    const {
-        glanceCohorts,
-    } = useSiteVals({ page: "releases" });
+    const { glanceCohorts } = useSiteVals({ page: "releases" });
 
     const cohortsDssHref = "https://dss.niagads.org/adsp-cohort-information/";
 
@@ -96,7 +94,7 @@ export const ReleasesPage = () => {
                                 fontSize: "0.9375rem",
                                 fontWeight: "600",
                                 whiteSpace: "nowrap",
-                                background: `${ activeView === t.id ? "var(--primary-blue)" : "var(--surface)"}`,
+                                background: `${activeView === t.id ? "var(--primary-blue)" : "var(--surface)"}`,
                                 border: `1px solid ${activeView === t.id ? "var(--primary-blue)" : "var(--border)"}`,
                                 color: `${activeView === t.id ? "#ffffff" : "var(--text-primary)"}`,
                                 cursor: "pointer",
@@ -107,14 +105,7 @@ export const ReleasesPage = () => {
                     </div>
                 ))}
             </nav>
-            {activeView === "released" ? (
-                <Released />
-            ) : activeView === "production" ? (
-                <Production />
-
-            ) : (
-                <div></div>
-            )}
+            {activeView === "released" ? <Released /> : activeView === "production" ? <Production /> : <div></div>}
         </main>
     );
 };

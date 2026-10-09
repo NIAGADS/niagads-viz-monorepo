@@ -90,9 +90,7 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                 </p>
                                 <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap", alignItems: "center" }}>
                                     <Link href="/releases">
-                                        <Button color="white">
-                                            Explore ADSP Data →
-                                        </Button>
+                                        <Button color="white">Explore ADSP Data →</Button>
                                     </Link>
                                 </div>
                             </div>
@@ -360,9 +358,7 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                             Access is through a NIAGADS DAR for NG00067.
                                         </span>
                                         <Link href="/access">
-                                            <Button color="white">
-                                                How to access ADSP data →
-                                            </Button>
+                                            <Button color="white">How to access ADSP data →</Button>
                                         </Link>
                                     </div>
                                 </div>
@@ -921,7 +917,11 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                     href={gen3.href!}
                                     target="_blank"
                                     rel="noopener"
-                                    title={gen3.disabled ? "Gen3 production URL to be confirmed" : "NIAGADS Gen3 Discovery Portal"}
+                                    title={
+                                        gen3.disabled
+                                            ? "Gen3 production URL to be confirmed"
+                                            : "NIAGADS Gen3 Discovery Portal"
+                                    }
                                     style={{
                                         fontSize: "0.9375rem",
                                         fontWeight: "700",

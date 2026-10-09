@@ -29,7 +29,11 @@ export const TabbedSideNav = ({ children, onSectionChange }: TabbedSideNavProps)
                     {(children ?? []).map((s: any, $index: number) => (
                         <li key={$index}>
                             <span
-                                className={selectedSectionId === s.props.id ? styles["side-nav-section-selected"] : styles["side-nav-section"]}
+                                className={
+                                    selectedSectionId === s.props.id
+                                        ? styles["side-nav-section-selected"]
+                                        : styles["side-nav-section"]
+                                }
                                 aria-current={s.current}
                                 onClick={() => setSelectedSectionId(s.props.id)}
                             >

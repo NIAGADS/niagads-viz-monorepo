@@ -6,10 +6,10 @@
 
 :root {
     /* ---- Brand ---- */
-    --niagads-dark-blue: #293241;   /* deepest slate — footers, headers, dark UI */
-    --niagads-blue: #3d5a80;        /* PRIMARY brand blue — the logo color */
-    --niagads-blue-2: #618eb5;      /* secondary / lighter blue — links, accents */
-    --niagads-gold: #ffc665;        /* warm accent — banners, highlights */
+    --niagads-dark-blue: #293241; /* deepest slate — footers, headers, dark UI */
+    --niagads-blue: #3d5a80; /* PRIMARY brand blue — the logo color */
+    --niagads-blue-2: #618eb5; /* secondary / lighter blue — links, accents */
+    --niagads-gold: #ffc665; /* warm accent — banners, highlights */
 
     /* ---- Primary aliases (component API names) ---- */
     --dark-blue: var(--niagads-dark-blue);
@@ -59,10 +59,10 @@
        (from @niagads/common COLOR_BLIND_FRIENDLY_PALETTES.eight_color) */
     --viz-1: #332288;
     --viz-2: #117733;
-    --viz-3: #44AA99;
-    --viz-4: #88CCEE;
-    --viz-5: #DDCC77;
-    --viz-6: #CC6677;
-    --viz-7: #AA4499;
+    --viz-3: #44aa99;
+    --viz-4: #88ccee;
+    --viz-5: #ddcc77;
+    --viz-6: #cc6677;
+    --viz-7: #aa4499;
     --viz-8: #882255;
 }
