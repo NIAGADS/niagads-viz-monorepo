@@ -4,11 +4,16 @@ import { Fragment } from "react";
 import type { CSSProperties } from "react";
 import { Button } from "@niagads/ui";
 import Link from "next/link";
+import { useSiteVals } from "@/lib/useSiteVals";
+import { ADSP_DATA as D } from "@/lib/data";
 
 export function AboutPage() {
-    const aboutRoles = [];
-    const timeline = [];
-    const adseqLink = "";
+    const {
+        aboutRoles,
+        timeline,
+    } = useSiteVals({ page: "releases" });
+
+    const links = D.links;
 
     return (
         <>
@@ -281,7 +286,7 @@ export function AboutPage() {
                             alt="Alzheimer's Disease Sequencing Project"
                             style={{ display: "block", height: "72px", width: "auto" }}
                         />
-                        <Link href={adseqLink} target="_blank">
+                        <Link href={links.adseq} target="_blank">
                             <Button color="primary">Learn about the ADSP consortium ↗</Button>
                         </Link>
                     </div>

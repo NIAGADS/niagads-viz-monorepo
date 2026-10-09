@@ -7,69 +7,50 @@ import { ADSP_DATA as D } from "@/lib/data";
 import { ext } from "@/lib/util";
 
 export function AccessPage() {
-    const [visibleSection, setVisibleSection] = useState("overview");
-    const sideItems = [
-        {
-            display: "Overview",
-            id: "overview",
-        },
-        {
-            display: "How to Apply",
-            id: "howTo",
-        },
-        {
-            display: "DSS & Gen3",
-            id: "gen3",
-        },
-    ];
-
     const accessSteps = D.access.steps.map((label, i) => ({ n: i + 1, label }));
     const access = D.access;
     const links = D.links;
     const gen3 = ext(D.links.gen3);
-    const phc = ext(D.links.phcWebsite);
     const guide = ext(D.links.accessGuide);
 
     return (
-        <>
-            <main
+        <main
+            style={{
+                flex: "1",
+                maxWidth: "1200px",
+                margin: "0 auto",
+                padding: "2.5rem 2rem 4rem",
+                width: "100%",
+                boxSizing: "border-box",
+            }}
+        >
+            <div
                 style={{
-                    flex: "1",
-                    maxWidth: "1200px",
-                    margin: "0 auto",
-                    padding: "2.5rem 2rem 4rem",
-                    width: "100%",
-                    boxSizing: "border-box",
+                    display: "flex",
+                    alignItems: "baseline",
+                    gap: "0.75rem",
+                    flexWrap: "wrap",
+                    marginBottom: "0.5rem",
                 }}
             >
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "baseline",
-                        gap: "0.75rem",
-                        flexWrap: "wrap",
-                        marginBottom: "0.5rem",
-                    }}
-                >
-                    <h1 style={{ fontSize: "2.25rem", fontWeight: "700", margin: "0", letterSpacing: "-0.02em" }}>
-                        Access ADSP Data
-                    </h1>
-                </div>
-                <p
-                    style={{
-                        fontSize: "1.0625rem",
-                        color: "var(--text-secondary)",
-                        margin: "0 0 2rem",
-                        maxWidth: "74ch",
-                    }}
-                >
-                    ADSP controlled-access data are distributed through the{" "}
-                    <strong>ADSP Umbrella dataset, NG00067</strong>. Full application guidance is in the NIAGADS
-                    documentation.
-                </p>
-                <TabbedSideNav>
-                    <SideNavSection id="1" label="test1">
-                      <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+                <h1 style={{ fontSize: "2.25rem", fontWeight: "700", margin: "0", letterSpacing: "-0.02em" }}>
+                    Access ADSP Data
+                </h1>
+            </div>
+            <p
+                style={{
+                    fontSize: "1.0625rem",
+                    color: "var(--text-secondary)",
+                    margin: "0 0 2rem",
+                    maxWidth: "74ch",
+                }}
+            >
+                ADSP controlled-access data are distributed through the <strong>ADSP Umbrella dataset, NG00067</strong>.
+                Full application guidance is in the NIAGADS documentation.
+            </p>
+            <TabbedSideNav>
+                <SideNavSection id="1" label="test1">
+                    <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
                         <Card>
                             {" "}
                             {/*style3*/}
@@ -123,65 +104,65 @@ export function AccessPage() {
                                 See what each round contains in <Link href="/releases">Sequencing Rounds</Link>.
                             </p>
                         </Card>
+                    </div>
+                </SideNavSection>
+                <SideNavSection id="2" label="test2">
+                    <Card>
+                        {" "}
+                        {/*style3*/}
+                        <h2 style={{ fontSize: "1.25rem", fontWeight: "700", margin: "0 0 1.25rem" }}>
+                            How do I apply?
+                        </h2>
+                        <ol
+                            style={{
+                                listStyle: "none",
+                                margin: "0 0 1.5rem",
+                                padding: "0",
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: "0.9rem",
+                            }}
+                        >
+                            {(accessSteps ?? []).map((s: any, $index: number) => (
+                                <Fragment key={$index}>
+                                    <li style={{ display: "flex", gap: "0.9rem", alignItems: "center" }}>
+                                        <span
+                                            style={{
+                                                flex: "0 0 2rem",
+                                                height: "2rem",
+                                                borderRadius: "50%",
+                                                background: "var(--primary-blue)",
+                                                color: "#fff",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                fontWeight: "700",
+                                                fontSize: "0.875rem",
+                                            }}
+                                        >
+                                            {s.n}
+                                        </span>{" "}
+                                        <span style={{ fontSize: "0.9375rem", fontWeight: "500" }}>{s.label}</span>
+                                    </li>
+                                </Fragment>
+                            ))}
+                        </ol>
+                        <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
+                            <Link href={links.ng00067} target="_blank">
+                                <Button color="primary">Review NG00067 ↗</Button>
+                            </Link>
+                            <Link href={guide.href!} target="_blank">
+                                <Button disabled={guide.disabled}>
+                                    {guide.disabled
+                                        ? "NIAGADS application instructions — URL TBD"
+                                        : "NIAGADS application instructions ↗"}
+                                </Button>
+                            </Link>
                         </div>
-                      </SideNavSection>
-                    <SideNavSection id="2" label="test2">
-                        <Card>
-                            {" "}
-                            {/*style3*/}
-                            <h2 style={{ fontSize: "1.25rem", fontWeight: "700", margin: "0 0 1.25rem" }}>
-                                How do I apply?
-                            </h2>
-                            <ol
-                                style={{
-                                    listStyle: "none",
-                                    margin: "0 0 1.5rem",
-                                    padding: "0",
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    gap: "0.9rem",
-                                }}
-                            >
-                                {(accessSteps ?? []).map((s: any, $index: number) => (
-                                    <Fragment key={$index}>
-                                        <li style={{ display: "flex", gap: "0.9rem", alignItems: "center" }}>
-                                            <span
-                                                style={{
-                                                    flex: "0 0 2rem",
-                                                    height: "2rem",
-                                                    borderRadius: "50%",
-                                                    background: "var(--primary-blue)",
-                                                    color: "#fff",
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    justifyContent: "center",
-                                                    fontWeight: "700",
-                                                    fontSize: "0.875rem",
-                                                }}
-                                            >
-                                                {s.n}
-                                            </span>{" "}
-                                            <span style={{ fontSize: "0.9375rem", fontWeight: "500" }}>{s.label}</span>
-                                        </li>
-                                    </Fragment>
-                                ))}
-                            </ol>
-                            <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
-                                <Link href={links.ng00067} target="_blank">
-                                    <Button color="primary">Review NG00067 ↗</Button>
-                                </Link>
-                                <Link href={guide.href!} target="_blank">
-                                    <Button disabled={guide.disabled}>
-                                        {guide.disabled
-                                            ? "NIAGADS application instructions — URL TBD"
-                                            : "NIAGADS application instructions ↗"}
-                                    </Button>
-                                </Link>
-                            </div>
-                        </Card>
-                    </SideNavSection>
-                    <SideNavSection id="3" label="test3">
-                      <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+                    </Card>
+                </SideNavSection>
+                <SideNavSection id="3" label="test3">
+                    <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
                         <h2 style={{ fontSize: "1.375rem", fontWeight: "700", margin: "0" }}>DSS &amp; Gen3</h2>
                         <div
                             style={{
@@ -417,10 +398,9 @@ export function AccessPage() {
                                 </div>
                             </div>
                         </Card>
-                        </div>
-                      </SideNavSection>
-                </TabbedSideNav>
-            </main>
-        </>
+                    </div>
+                </SideNavSection>
+            </TabbedSideNav>
+        </main>
     );
 }
