@@ -56,6 +56,30 @@ docker compose up -d <service>
 
 The Compose build target is derived from the deployment mode. Development selects the development runner; staging and production select production-style runners.
 
+## Publishing a pre-built image
+
+Login to docker hub
+
+```bash
+docker login -u <username>
+```
+
+Publish
+
+First tag:
+
+```bash
+docker tag <local_image_name>:<current_tag> <YOUR_DOCKERHUB_USERNAME>/<repository_name>:<new_tag>
+```
+
+e.g., docker tag client-app-adsp-data:staging fossilfriend/niagads-beta-adsp-data:beta-v1
+
+and then push
+
+```bash
+docker push <YOUR_DOCKERHUB_USERNAME>/<repository_name>:<new_tag>
+```
+
 ## Deploying a pre-built image
 
 Pre-built images can be run directly on a deployment host. Supply the runtime configuration, host log volume, network, webmaster group id, and published port at container creation time:
@@ -79,6 +103,12 @@ If `oa-network` does not already exist, create it before running the container:
 ```sh
 docker network create oa-network
 ```
+
+Example:
+
+```bash
+ docker run -d --name adsp-data-client --restart unless-stopped --network oa-network -p 3003:3000 --group-add 1004 -v /mnt/www/logs:/var/log/app fossilfriend/niagads-beta-adsp-data:beta-v1
+ ```
 
 ## Logging
 
