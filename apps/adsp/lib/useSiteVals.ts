@@ -1067,15 +1067,13 @@ export function useSiteVals({ page, view = "released", section: sectionProp = "o
         ],
         coreRows: CORE.map((r) => ({
             label: r[0],
-            cells: r
-                .slice(1)
-                .map((c: any) => ({
-                    has: !!c,
-                    none: !c,
-                    v: c ? c[0] : "",
-                    date: c ? c[1] : "",
-                    href: c ? relNotes(c[0].replace(/^v|\*$/g, "")) : "",
-                })),
+            cells: r.slice(1).map((c: any) => ({
+                has: !!c,
+                none: !c,
+                v: c ? c[0] : "",
+                date: c ? c[1] : "",
+                href: c ? relNotes(c[0].replace(/^v|\*$/g, "")) : "",
+            })),
         })),
         relPubs: PUBS.filter((p) => p.group === "release" || p.group === "preprint").map((p) => ({
             roundsLabel: (p.releases || []).join(" · "),
