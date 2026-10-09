@@ -6,6 +6,7 @@ import { Button, Card } from "@niagads/ui";
 import { useSiteVals } from "@/lib/useSiteVals";
 import Link from "next/link";
 import { ADSP_DATA as D } from "@/lib/data";
+import { ext } from "@/lib/util";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export function PhenotypesPage() {
@@ -15,10 +16,7 @@ export function PhenotypesPage() {
         cardStyle4,
         cardStyle6,
         phcBars,
-        phcDisabled,
         phcHeadGroups,
-        phcHref,
-        phcLabel,
         phcStats,
         phcTable,
         toBasic,
@@ -26,6 +24,7 @@ export function PhenotypesPage() {
     } = useSiteVals({ page: "phc" });
 
     const links = D.links;
+    const phc = ext(D.links.phcWebsite);
 
     return (
         <>
@@ -668,14 +667,14 @@ export function PhenotypesPage() {
                                 cohorts for genomic analysis. Harmonized resources distributed through NIAGADS are
                                 available in fileset <span style={{ fontFamily: "var(--font-mono)" }}>fsa000027</span>.
                             </p>
-                            <Link href={phcHref} target="_blank">
-                             <Button disabled={phcDisabled} color="primary">
-                                {phcLabel}
+                            <Link href={phc.href!} target="_blank">
+                             <Button disabled={phc.disabled} color="primary">
+                                {phc.disabled ? "ADSP-PHC website — URL TBD" : "Visit the ADSP-PHC website ↗"}
                                 </Button>
                             </Link>
                         </div>
                         <Link
-                            href={phcHref}
+                            href={phc.href!}
                             target="_blank"
                             rel="noopener"
                             aria-label="ADSP Phenotype Harmonization Consortium website"
