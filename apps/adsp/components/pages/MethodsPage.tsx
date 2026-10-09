@@ -1065,7 +1065,7 @@ export function MethodsPage() {
                                         }}
                                     >
                                         Variant consequence and functional annotation resources generated for selected
-                                        sequencing rounds. See <Link href="/releases">Sequencing Rounds</Link> for
+                                        sequencing rounds. See <Link href="/sequencing-rounds">Sequencing Rounds</Link> for
                                         availability.
                                     </span>
                                 </div>
@@ -1212,7 +1212,7 @@ export function MethodsPage() {
                                 }}
                             >
                                 Code and methods publications for the workflows above. Data-release papers are listed
-                                under <Link href="/releases">Sequencing Rounds → Related Publications</Link>.
+                                under <Link href="/sequencing-rounds">Sequencing Rounds → Related Publications</Link>.
                             </p>
                             <div
                                 style={{
@@ -1427,7 +1427,7 @@ export function MethodsPage() {
                                         }}
                                     >
                                         Annotation products are not generated for every sequencing round. See{" "}
-                                        <Link href="/releases">Sequencing Rounds</Link> for available resources.
+                                        <Link href="/sequencing-rounds">Sequencing Rounds</Link> for available resources.
                                     </p>
                                 </Card>
                             </div>

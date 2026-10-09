@@ -89,7 +89,7 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                     currently in production.
                                 </p>
                                 <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap", alignItems: "center" }}>
-                                    <Link href="/releases">
+                                    <Link href="/sequencing-rounds">
                                         <Button color="white">Explore ADSP Data →</Button>
                                     </Link>
                                 </div>
@@ -592,7 +592,7 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                             <div style={{ marginTop: "auto" }}>
                                 <Link
                                     className="hv3"
-                                    href="/releases"
+                                    href="/sequencing-rounds"
                                     style={{
                                         fontSize: "0.9375rem",
                                         fontWeight: "700",
@@ -659,7 +659,7 @@ export function HomePage({ live }: { live?: LiveStats | null }) {
                                     <div style={{ marginTop: "auto" }}>
                                         <Link
                                             className="hv3"
-                                            href="/releases/production"
+                                            href="/sequencing-rounds"
                                             style={{
                                                 fontSize: "0.9375rem",
                                                 fontWeight: "700",

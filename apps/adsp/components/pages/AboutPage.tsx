@@ -223,7 +223,7 @@ export function AboutPage() {
                     </ol>
                     <p style={{ fontSize: "0.8125rem", color: "var(--text-muted)", margin: "1rem 0 0" }}>
                         Selected milestones in the growth of the ADSP data resource at NIAGADS. See{" "}
-                        <Link href="/releases">Sequencing Rounds</Link> for detailed release history.
+                        <Link href="/sequencing-rounds">Sequencing Rounds</Link> for detailed release history.
                     </p>
                 </section>
                 <section

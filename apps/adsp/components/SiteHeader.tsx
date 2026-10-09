@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const NAV = [
     ["/", "Home"],
-    ["/releases", "Sequencing Rounds"],
+    ["/sequencing-rounds", "Sequencing Rounds"],
     ["/methods", "Pipelines & Methods"],
     ["/phenotypes", "Phenotypes"],
     ["/access", "Access"],

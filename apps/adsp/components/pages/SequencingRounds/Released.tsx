@@ -51,7 +51,7 @@ export const Released = () => {
                                     <li>
                                         <Link
                                             className="hv5"
-                                            href="/releases"
+                                            href="/sequencing-rounds"
                                             onClick={n.onClick}
                                             style={
                                                 {

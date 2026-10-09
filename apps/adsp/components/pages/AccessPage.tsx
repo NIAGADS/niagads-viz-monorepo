@@ -101,7 +101,7 @@ export function AccessPage() {
                                     margin: "1rem 0 0",
                                 }}
                             >
-                                See what each round contains in <Link href="/releases">Sequencing Rounds</Link>.
+                                See what each round contains in <Link href="/sequencing-rounds">Sequencing Rounds</Link>.
                             </p>
                         </Card>
                     </div>

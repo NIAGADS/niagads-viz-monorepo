@@ -6,7 +6,7 @@ import { Production } from "./Production";
 import { useSiteVals } from "@/lib/useSiteVals";
 import { Released } from "./Released";
 
-export const ReleasesPage = () => {
+export const SequencingRoundsPage = () => {
     const [activeView, setActiveView] = useState<(typeof viewTabs)[number]["id"]>("released");
     const viewTabs = [
         {

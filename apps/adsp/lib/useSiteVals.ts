@@ -901,7 +901,7 @@ export function useSiteVals({ page, view = "released", section: sectionProp = "o
                     (lw && x[0] === lw[0] && x[5] !== "—" && x[4] !== x[6] ? " preview" : ""),
                 note: k === 0 ? "NIAGADS begins distributing ADSP sequencing data" : "First released " + x[4],
                 kind: "rel",
-                href: "/releases",
+                href: "/sequencing-rounds",
             })),
             ...(lw && lw[6] && lw[6] !== lw[4]
                 ? [
@@ -910,7 +910,7 @@ export function useSiteVals({ page, view = "released", section: sectionProp = "o
                           title: lw[0] + " QC'd WGS callset",
                           note: "Released " + lw[6],
                           kind: "rel",
-                          href: "/releases",
+                          href: "/sequencing-rounds",
                       } as T,
                   ]
                 : []),
@@ -921,7 +921,7 @@ export function useSiteVals({ page, view = "released", section: sectionProp = "o
                           title: PROD.map((r) => r.id).join(" and ") + " in production",
                           note: "Follow production status",
                           kind: "prod",
-                          href: "/releases/production",
+                          href: "/sequencing-rounds",
                       } as T,
                   ]
                 : []),
@@ -992,7 +992,7 @@ export function useSiteVals({ page, view = "released", section: sectionProp = "o
                 title: "Sequencing Rounds",
                 body: "Compare released ADSP sequencing data and see what's currently in production.",
                 cta: "Explore sequencing data →",
-                href: "/releases",
+                href: "/sequencing-rounds",
             },
             {
                 title: "Pipelines & Methods",
@@ -1034,20 +1034,6 @@ export function useSiteVals({ page, view = "released", section: sectionProp = "o
             "dim2"
         ),
         cross,
-        viewTabs: (
-            [
-                ["released", "Released Rounds", "/releases"],
-                ["production", "In Production", "/releases/production"],
-            ] as const
-        ).map(([k, label, href]) => ({
-            label,
-            href,
-            active: view === k,
-            current: view === k ? ("page" as const) : undefined,
-            bg: view === k ? "var(--primary-blue)" : "var(--surface)",
-            fg: view === k ? "#ffffff" : "var(--text-primary)",
-            bd: view === k ? "var(--primary-blue)" : "var(--border)",
-        })),
         isReleasedView: page === "releases" && view === "released",
         isProdView: page === "releases" && view === "production",
         roundOverview: OVR.map((o) => ({
