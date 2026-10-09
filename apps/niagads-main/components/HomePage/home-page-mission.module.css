@@ -1,0 +1,194 @@
+.home-page-mission {
+    background: var(--site-surface-subtle);
+}
+
+/* About */
+
+.about-section {
+    position: relative;
+    overflow: hidden;
+    padding-block: 3rem 3.5rem;
+}
+
+.about-section::after {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image: url("/niagads_bg_overlay.png");
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: cover;
+    content: "";
+    opacity: 0.4;
+    pointer-events: none;
+    mask-image: linear-gradient(
+        to right,
+        transparent 30%,
+        black 68%
+    );
+}
+
+.about-content {
+    position: relative;
+    z-index: 1;
+    max-width: 820px;
+    color: var(--site-text-secondary);
+}
+
+.eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    color: var(--site-text-muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.eyebrow-line {
+    display: block;
+
+    width: 3rem;
+    height: 1px;
+
+    background: var(--site-text-muted);
+}
+
+.about-heading {
+    max-width: 820px;
+    margin-block: 1.25rem;
+    color: var(--site-text-primary);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+}
+
+.subscribe-card {
+    max-width: 500px;
+    margin-top: 2rem;
+}
+
+/* Partners */
+
+.partners-section {
+    padding-block: 2.25rem 2.75rem;
+    border-top: 1px solid var(--site-border);
+}
+.partners-content {
+    /* border-top: 1px solid var(--site-border);
+    margin-top: -2.25rem; */
+}
+   
+.partner-description {
+    margin: 1.5rem 0;
+}
+.partner-scroll {
+    margin-top: 1.75rem;
+}
+
+.partner-row {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+}
+
+.partner-logo {
+    display: flex;
+    flex: 1 1 0;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 0;
+    min-height: 84px;
+    padding-inline: 1.25rem;
+}
+
+.partner-logo + .partner-logo {
+    border-left: 1px solid var(--site-border);
+}
+
+.partner-logo img {
+    width: auto;
+    height: auto;
+
+    max-width: 100%;
+    max-height: 58px;
+
+    object-fit: contain;
+}
+
+/* Tablet */
+
+@media (max-width: 1100px) {
+    .about-section::after {
+        opacity: 0.08;
+
+        mask-image: linear-gradient(
+            to right,
+            transparent 20%,
+            black 60%
+        );
+    }
+
+    .about-content {
+        max-width: 700px;
+    }
+
+    .partner-scroll {
+        overflow-x: auto;
+    }
+
+    .partner-row {
+        width: max-content;
+    }
+
+    .partner-logo {
+        flex: 0 0 170px;
+    }
+}
+
+/* Mobile */
+
+@media (max-width: 768px) {
+    .about-section,
+    .partners-section {
+        padding-inline: 1.25rem;
+    }
+
+    .about-section {
+        padding-block: 2.5rem;
+    }
+
+    .about-section::after {
+        right: -8rem;
+        left: auto;
+
+        width: 150%;
+
+        opacity: 0.05;
+
+        mask-image: none;
+    }
+
+    .subscribe-card {
+        max-width: none;
+        margin-top: 1.5rem;
+    }
+
+    .partners-section {
+        padding-block: 2rem 2.5rem;
+    }
+
+    .partner-scroll {
+        margin-top: 1.5rem;
+    }
+
+    .partner-logo {
+        flex-basis: 150px;
+    }
+
+    .partner-logo img {
+        max-height: 48px;
+    }
+}
