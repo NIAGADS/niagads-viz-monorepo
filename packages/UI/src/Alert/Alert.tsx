@@ -10,6 +10,7 @@ interface Alert extends StylingProps {
     variant?: AlertVariants;
     message: string;
     children?: ReactNode;
+    fitToContent?: boolean;
 }
 
 const ICONS = {
@@ -22,8 +23,14 @@ const ICONS = {
 
 type AlertVariants = keyof typeof ICONS;
 
-export const Alert = ({ variant = "info", message, children, className, style = {} }: Alert) => {
-    const classes = [styles.alert, styles[variant === "construction" ? "warning" : variant]].filter(Boolean).join(" ");
+export const Alert = ({ variant = "info", message, children, fitToContent = false, className, style = {} }: Alert) => {
+    const classes = [
+        styles.alert,
+        styles[variant === "construction" ? "warning" : variant],
+        fitToContent && styles.fitToContent,
+    ]
+        .filter(Boolean)
+        .join(" ");
 
     const Icon = ICONS[variant] || Info;
 

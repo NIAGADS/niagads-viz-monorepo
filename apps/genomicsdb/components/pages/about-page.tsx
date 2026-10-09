@@ -6,7 +6,7 @@ import { Alert } from "@niagads/ui";
 
 export function AboutPage() {
     return (
-        <div className="max-text-width">
+        <div className="content-section-centered">
             {/* About the Project */}
             <section className="about-section">
                 <h2>About the Project</h2>

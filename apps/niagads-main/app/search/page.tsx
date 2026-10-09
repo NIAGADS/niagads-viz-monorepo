@@ -20,11 +20,13 @@ const SearchPage = async ({
     };
 
     return (
-        <div>
-            <h2>Searching for: {searchTerm}</h2>
-            <h2>Results:</h2>
-            <SearchResults searchResults={results} />
-        </div>
+        <main>
+            <div className="content-section content-section-centered">
+                <h2>Searching for: {searchTerm}</h2>
+                <h2>Results:</h2>
+                <SearchResults searchResults={results} />
+            </div>
+        </main>
     );
 };
 

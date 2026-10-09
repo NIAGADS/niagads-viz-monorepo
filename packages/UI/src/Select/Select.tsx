@@ -19,7 +19,7 @@ export const Select = ({
     label,
     name,
     value,
-    defaultValue,
+    defaultValue = "",
     inline = false,
     onChange,
     variant = "outline",
@@ -57,8 +57,8 @@ export const Select = ({
                     className={`${styles.select} ${styles[variant]}`}
                     value={value}
                 >
-                    <option key="default" value="">
-                        Select...
+                    <option key="default" value={defaultValue}>
+                        {defaultValue || "Select..."}
                     </option>
                     {Array.isArray(fields) ? _optionsFromArray(fields) : _optionsFromObj(fields)}
                 </select>

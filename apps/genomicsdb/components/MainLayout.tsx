@@ -1,35 +1,19 @@
 "use client";
 
-import React, { useState, useEffect, type ReactNode } from "react";
-import { Header } from "./Header/Header";
+import React, { type ReactNode } from "react";
+import { Header } from "@/components/Header";
 import { Footer } from "@niagads/ui";
-import { BackToTop } from "./BackToTop";
-import { MobileMenu } from "./MobileMenu/MobileMenu";
+import { BackToTop } from "@niagads/ui/client";
+import dynamic from "next/dynamic";
 
 interface MainLayoutProps {
     children: ReactNode;
 }
 
-export const MainLayout = ({ children }: MainLayoutProps) => {
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-    // Prevent body scroll when mobile menu is open
-    useEffect(() => {
-        if (mobileMenuOpen) {
-            document.body.classList.add("mobile-menu-open");
-        } else {
-            document.body.classList.remove("mobile-menu-open");
-        }
-
-        return () => {
-            document.body.classList.remove("mobile-menu-open");
-        };
-    }, [mobileMenuOpen]);
-
+const MainLayoutContent = ({ children }: MainLayoutProps) => {
     return (
         <div className="app-container">
-            <Header onMenuToggle={() => setMobileMenuOpen((prev) => !prev)} />
-            <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
+            <Header />
 
             <div className="content-container">
                 <main className="main-content">{children}</main>
@@ -48,3 +32,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
         </div>
     );
 };
+
+// Dynamically import/export the header to bypass server-side rendering and eliminate style flash
+// caused by the style-injected @niagads/UI
+export const MainLayout = dynamic(() => Promise.resolve(MainLayoutContent), { ssr: false });

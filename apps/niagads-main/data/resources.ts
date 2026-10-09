@@ -25,7 +25,17 @@ export const RESOURCES: Resource[] = [
             and their potential functional relevance.`,
         url: "https://www.niagads.org/genomics",
         groupId: "knowledgebase",
-        concepts: ["genes", "variants", "gwas", "ld", "cloudAccess", "curatedEvidence", "openAccess", "phenotypes"],
+        concepts: [
+            "adspData",
+            "genes",
+            "variants",
+            "gwas",
+            "ld",
+            "cloudAccess",
+            "curatedEvidence",
+            "openAccess",
+            "phenotypes",
+        ],
     },
     {
         id: "xqtl",
@@ -36,7 +46,7 @@ export const RESOURCES: Resource[] = [
             and other molecular traits.`,
         url: "https://xqtl.niagads.org",
         groupId: "knowledgebase",
-        concepts: ["qtls", "variants", "genes", "biosamples", "openAccess"],
+        concepts: ["adspData", "qtls", "variants", "genes", "biosamples", "openAccess"],
     },
     {
         id: "filer",
@@ -60,7 +70,7 @@ export const RESOURCES: Resource[] = [
             and apply for controlled access to data appropriate for their research.`,
         url: "https://dss.niagads.org/datasets/",
         groupId: "access",
-        concepts: ["downloads", "openAccess", "restrictedAccess", "sequencing", "gwas", "qtls"],
+        concepts: ["adspData", "downloads", "openAccess", "restrictedAccess", "sequencing"],
     },
     {
         id: "api",
@@ -72,7 +82,7 @@ export const RESOURCES: Resource[] = [
             applications, and computational workflows.`,
         url: "https://api.niagads.org",
         groupId: "access",
-        concepts: ["cloudAccess", "openAccess"],
+        concepts: ["adspData", "cloudAccess", "openAccess"],
     },
     {
         id: "advp",
@@ -83,14 +93,5 @@ export const RESOURCES: Resource[] = [
         url: "https://advp.niagads.org",
         groupId: "partner",
         concepts: ["gwas", "genes", "variants", "curatedEvidence", "openAccess", "phenotypes"],
-    },
-    {
-        id: "adsp",
-        badge: "ADSP",
-        name: "Alzheimer's Disease Sequencing Project",
-        url: "https://www.niagads.org/adsp",
-        description: `NIAGADS serves as the Data Coordinating Center for the The Alzheimer’s Disease Sequencing Project (ADSP).`,
-        groupId: "partner",
-        concepts: ["qtls", "sequencing", "variants", "ld", "phenotypes", "restrictedAccess", "openAccess", "downloads"],
     },
 ];

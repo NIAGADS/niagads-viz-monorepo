@@ -13,8 +13,9 @@ export type ConceptType =
     | "ld"
     | "qtls"
     | "regulatory"
-    | "biosamples"
     | "curatedEvidence"
+    | "adspData"
+    | "biosamples"
     | "phenotypes"
     | "openAccess"
     | "restrictedAccess"
@@ -95,8 +96,9 @@ const CONCEPTS: Concept[] = [
     { id: "ld", label: "LD" },
     { id: "qtls", label: "Molecular QTLs" },
     { id: "regulatory", label: "Regulatory elements" },
-    { id: "biosamples", label: "Biosamples" },
     { id: "curatedEvidence", label: "Curated evidence" },
+    { id: "adspData", label: "ADSP Data" },
+    { id: "biosamples", label: "Biosamples" },
     { id: "phenotypes", label: "Phenotypes" },
     { id: "openAccess", label: "Open" },
     { id: "restrictedAccess", label: "Restricted" },
@@ -112,13 +114,14 @@ const GENOMIC_BAND_LAYOUT: GenomicBandLayout[] = [
     { id: "ld", x: 310, y: 210, labelDx: 0, labelDy: 54, connectorDx: 0, connectorDy: -18 },
     { id: "qtls", x: 810, y: 168, labelDx: 30, labelDy: 78, connectorDx: 0, connectorDy: -36 },
     { id: "regulatory", x: 570, y: 150, labelDx: 0, labelDy: 44, connectorDx: 0, connectorDy: -18 },
-    { id: "sequencing", x: 1165, y: 120, labelDx: -30, labelDy: 56, connectorDx: 15, connectorDy: -36 },
+    { id: "sequencing", x: 1160, y: 120, labelDx: 0, labelDy: 56, connectorDx: 0, connectorDy: -36 },
 ];
 
 const ACCESS_LAYOUT: AccessLayout[] = [
-    { id: "biosamples", x: 365, y: 300, connectorY: 292, labelX: 330, labelY: 305 },
     { id: "curatedEvidence", x: 201, y: 300, connectorY: 292, labelX: 170, labelY: 305 },
-    { id: "phenotypes", x: 538, y: 300, connectorY: 292, labelX: 498, labelY: 305 },
+    { id: "adspData", x: 365, y: 300, connectorY: 292, labelX: 330, labelY: 305 },
+    { id: "biosamples", x: 490, y: 300, connectorY: 292, labelX: 464, labelY: 305 },
+    { id: "phenotypes", x: 610, y: 300, connectorY: 292, labelX: 585, labelY: 305 },
     { id: "openAccess", x: 760, y: 300, connectorY: 292, labelX: 760, labelY: 305 },
     { id: "restrictedAccess", x: 865, y: 300, connectorY: 292, labelX: 850, labelY: 305 },
     { id: "downloads", x: 982, y: 300, connectorY: 292, labelX: 970, labelY: 305 },
@@ -495,8 +498,8 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         <text className={styles.zoneLabel} x="76" y="305">
                             Context
                         </text>
-                        <path className={styles.utilityDivider} d="M630 286 V316" />
-                        <text className={styles.zoneLabel} x="650" y="305">
+                        <path className={styles.utilityDivider} d="M660 286 V316" />
+                        <text className={styles.zoneLabel} x="680" y="305">
                             Access
                         </text>
                     </g>
@@ -680,7 +683,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         onMouseLeave={() => setActive(null)}
                         onPointerDown={() => setActive({ type: "concept", id: "sequencing" })}
                     >
-                        <rect className={styles.sequencingHitArea} x="1045" y="92" width="190" height="110" rx="6" />
+                        <rect className={styles.sequencingHitArea} x="1070" y="92" width="170" height="110" rx="6" />
                         <g>
                             {SEQUENCING_READS.map(([x, width, y], index) => {
                                 const readX = 592.5 + x / 2;
@@ -742,22 +745,6 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                     </g>
 
                     <g
-                        className={classForConcept("biosamples")}
-                        tabIndex={0}
-                        role="button"
-                        aria-label="Biosamples"
-                        onBlur={() => setActive(null)}
-                        onFocus={() => setActive({ type: "concept", id: "biosamples" })}
-                        onMouseEnter={() => setActive({ type: "concept", id: "biosamples" })}
-                        onPointerDown={() => setActive({ type: "concept", id: "biosamples" })}
-                        onMouseLeave={() => setActive(null)}
-                    >
-                        <rect className={styles.utilityHitArea} x="290" y="282" width="142" height="40" rx="6" />
-                        <UtilityGlyph kind="biosample" x={298} y={288} />
-                        <UtilityLabel conceptId="biosamples" />
-                    </g>
-
-                    <g
                         className={classForConcept("curatedEvidence")}
                         tabIndex={0}
                         role="button"
@@ -774,6 +761,38 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                     </g>
 
                     <g
+                        className={classForConcept("adspData")}
+                        tabIndex={0}
+                        role="button"
+                        aria-label="ADSP Data"
+                        onBlur={() => setActive(null)}
+                        onFocus={() => setActive({ type: "concept", id: "adspData" })}
+                        onMouseEnter={() => setActive({ type: "concept", id: "adspData" })}
+                        onPointerDown={() => setActive({ type: "concept", id: "adspData" })}
+                        onMouseLeave={() => setActive(null)}
+                    >
+                        <rect className={styles.utilityHitArea} x="290" y="282" width="140" height="40" rx="6" />
+                        <UtilityGlyph kind="dna" x={298} y={288} />
+                        <UtilityLabel conceptId="adspData" />
+                    </g>
+
+                    <g
+                        className={classForConcept("biosamples")}
+                        tabIndex={0}
+                        role="button"
+                        aria-label="Biosamples"
+                        onBlur={() => setActive(null)}
+                        onFocus={() => setActive({ type: "concept", id: "biosamples" })}
+                        onMouseEnter={() => setActive({ type: "concept", id: "biosamples" })}
+                        onPointerDown={() => setActive({ type: "concept", id: "biosamples" })}
+                        onMouseLeave={() => setActive(null)}
+                    >
+                        <rect className={styles.utilityHitArea} x="430" y="282" width="120" height="40" rx="6" />
+                        <UtilityGlyph kind="biosample" x={438} y={288} />
+                        <UtilityLabel conceptId="biosamples" />
+                    </g>
+
+                    <g
                         className={classForConcept("phenotypes")}
                         tabIndex={0}
                         role="button"
@@ -784,8 +803,8 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         onPointerDown={() => setActive({ type: "concept", id: "phenotypes" })}
                         onMouseLeave={() => setActive(null)}
                     >
-                        <rect className={styles.utilityHitArea} x="458" y="282" width="160" height="40" rx="6" />
-                        <UtilityGlyph kind="phenotype" x={466} y={288} />
+                        <rect className={styles.utilityHitArea} x="555" y="282" width="95" height="40" rx="6" />
+                        <UtilityGlyph kind="phenotype" x={563} y={288} />
                         <UtilityLabel conceptId="phenotypes" />
                     </g>
 
@@ -890,7 +909,7 @@ function UtilityGlyph({
     x,
     y,
 }: {
-    kind: "biosample" | "phenotype" | "evidence" | "download" | "cloud" | "openLock" | "closedLock";
+    kind: "biosample" | "phenotype" | "evidence" | "dna" | "download" | "cloud" | "openLock" | "closedLock";
     x: number;
     y: number;
 }) {
@@ -911,6 +930,12 @@ function UtilityGlyph({
                 <path d="M5 2 h9 l5 5 v6 M14 2 v5 h5 M5 2 v20 h10" />
                 <circle cx="14" cy="15" r="4" />
                 <path d="m17 18 l4 4" />
+            </>
+        ),
+        dna: (
+            <>
+                <path d="M7 2 C19 6 19 18 7 22 M17 2 C5 6 5 18 17 22" />
+                <path d="M8.5 4.5 H15.5 M10.5 8.5 H13.5 M13 12 H11 M10.5 15.5 H13.5 M8.5 19.5 H15.5" />
             </>
         ),
         download: <path d="M12 2 v13 M7 10 l5 5 l5 -5 M4 20 v2 h16 v-2" />,

@@ -1,111 +1,63 @@
 "use client";
 
-import { Menu } from "lucide-react";
-import Link from "next/link";
-import Image from "next/image";
-import logo from "@public/genomicsdb_logo.svg";
-import { usePathname } from "next/navigation";
-import { EnhancedSearch } from "../EnhancedSearch";
-import { getPublicUrl } from "@/lib/utils";
+import { ActionMenu, Header as UIHeader } from "@niagads/ui/client";
 import { signIn, signOut, useSession } from "next-auth/react";
+
+import { EnhancedSearch } from "@/components/EnhancedSearch";
+import Image from "next/image";
+import Link from "next/link";
 import { User } from "lucide-react";
-import { ActionMenu } from "@niagads/ui/client";
+import { getPublicUrl } from "@/lib/utils";
+import logo from "@public/genomicsdb_logo.svg";
+import styles from "./user-menu.module.css";
+import { usePathname } from "next/navigation";
 
-import "./header.css";
+const navigationLinks = [
+    { text: "Browse Datasets", url: "/browse-datasets" },
+    { text: "Genome Browser", url: "/genome-browser" },
+    { text: "Tutorials", url: "/tutorials" },
+    { text: "About", url: "/about" },
+];
 
-interface HeaderProps {
-    onMenuToggle: () => void;
-    showSearch?: boolean;
-}
-
-export const Header = ({ onMenuToggle, showSearch = true }: HeaderProps) => {
+export const Header = () => {
     const pathname = usePathname();
 
-    const isActive = (path: string) => {
-        if (path === "/" && pathname === "/") return true;
-        if (path !== "/" && pathname.startsWith(path)) return true;
-        return false;
-    };
-
     return (
-        <header className="header">
-            <div className="logo-container">
-                <div className="logo">
-                    <Link className="active-menu-item" href="/">
-                        <figure>
-                            <Image width={200} height={60} src={logo} alt="Niagads GenomicsDB logo" />
-                        </figure>
-                    </Link>
-                </div>
-
-                {showSearch && (
-                    <div className="header-search">
-                        <EnhancedSearch placeholder={"Search for genes, tracks, regions..."} autoRoute={true} />
-                    </div>
-                )}
-            </div>
-            <button
-                className="mobile-menu-button"
-                onClick={onMenuToggle}
-                aria-label="Toggle menu"
-                aria-expanded="false"
-            >
-                <Menu size={24} />
-            </button>
-            <nav className="main-nav" role="navigation" aria-label="Main navigation">
-                <Link
-                    href={`${getPublicUrl(true)}/browse-datasets`}
-                    className={`nav-link ${isActive("/browse-datasets") ? "active" : ""}`}
-                    aria-current={isActive("/browse-datasets") ? "page" : undefined}
-                >
-                    Browse Datasets
-                </Link>
-                <Link
-                    href={`${getPublicUrl(true)}/genome-browser`}
-                    className={`nav-link ${isActive("/genome-browser") ? "active" : ""}`}
-                    aria-current={isActive("/genome-browser") ? "page" : undefined}
-                >
-                    Genome Browser
-                </Link>
-                <Link
-                    href={`${getPublicUrl(true)}/tutorials`}
-                    className={`nav-link ${isActive("/tutorials") ? "active" : ""}`}
-                    aria-current={isActive("/tutorials") ? "page" : undefined}
-                >
-                    Tutorials
-                </Link>
-                <Link
-                    href={`${getPublicUrl(true)}/about`}
-                    className={`nav-link ${isActive("/about") ? "active" : ""}`}
-                    aria-current={isActive("/about") ? "page" : undefined}
-                >
-                    About
-                </Link>
-                <UserMenu />
-            </nav>
-        </header>
+        <UIHeader
+            logo={<Image width={200} height={60} src={logo} alt="NIAGADS GenomicsDB" loading="eager" />}
+            links={navigationLinks.map((link) => ({
+                ...link,
+                active: pathname === link.url || pathname.startsWith(`${link.url}/`),
+                url: `${getPublicUrl(true)}${link.url}`,
+            }))}
+            linkComponent={Link}
+            mobileMenu
+            mobileMenuConfig={{
+                footer: <div>NIAGADS GenomicsDB</div>,
+            }}
+            search={<EnhancedSearch placeholder="Search for genes, tracks, regions..." autoRoute={true} />}
+            userMenu={<UserMenu />}
+        />
     );
 };
 
 const UserMenu = () => {
     const { data: session } = useSession();
 
-    console.log(session);
-
     return session ? (
         <ActionMenu label={`${session.user?.name}`} icon={User}>
-            <div className="user-menu">
-                <Link className="user-menu-item" href={`${getPublicUrl(true)}/user/profile`}>
+            <div className={styles.userMenu}>
+                <Link className={styles.userMenuItem} href={`${getPublicUrl(true)}/user/profile`}>
                     Profile
                 </Link>
-                <div className="user-menu-item" onClick={() => signOut()}>
+                <button type="button" className={styles.userMenuItem} onClick={() => signOut()}>
                     Sign Out
-                </div>
+                </button>
             </div>
         </ActionMenu>
     ) : (
-        <div onClick={() => signIn("cognito")} className={`nav-link`} style={{ cursor: "pointer" }}>
+        <button type="button" onClick={() => signIn("cognito")} className={styles.login}>
             Log In
-        </div>
+        </button>
     );
 };

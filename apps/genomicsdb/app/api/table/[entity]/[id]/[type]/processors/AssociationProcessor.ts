@@ -1,9 +1,9 @@
-"use server";
+// "use server"; - temporarily commented out. next.js 16.3+ throws error b/c it expects server actions to be async
 
 import { APITableResponse } from "@/lib/types";
-import { prefixClientRoute } from "@/lib/utils";
 import { PieChartDataRow } from "@niagads/charts";
 import { TableColumn } from "@niagads/table";
+import { prefixClientRoute } from "@/lib/utils";
 import { table } from "console";
 
 const AssociationProcessor = (rawTable: APITableResponse) => {
