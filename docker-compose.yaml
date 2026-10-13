@@ -23,14 +23,15 @@ x-build-arg-defaults: &build-arg-defaults
 networks:
   default:
     name: oa-network
-services:
 
+services:
   genomicsdb:
     <<: *defaults
     container_name: genomicsdb-client
     image: client-app-genomics:${BUILD}
     env_file:
-      - ./apps/genomicsdb/runtime.env
+      - path: ./apps/genomicsdb/runtime.env
+        required: false
     build:
       <<: *build-defaults
       args:
@@ -58,7 +59,8 @@ services:
     container_name: genome-browser-client
     image: client-app-genome-browser:${BUILD}
     env_file:
-      - ./apps/igvbrowser/runtime.env
+      - path: ./apps/igvbrowser/runtime.env
+        required: false
     build:
       <<: *build-defaults
       args:
@@ -68,15 +70,15 @@ services:
     ports:
       - "${IGVBROWSER_CLIENT_PORT}:3000"
 
-  adsp-data:
+  adsp:
     <<: *defaults
-    container_name: adsp-data-client
-    image: client-app-adsp-data:${BUILD}
+    container_name: adsp-client
+    image: client-app-adsp:${BUILD}
     build:
       <<: *build-defaults
       args:
         <<: *build-arg-defaults
-        APP_NAME: adsp-data
+        APP_NAME: adsp
       context: ./apps/adsp
     ports:
-      - "${ADSPDATA_CLIENT_PORT}:3000"
+      - "${ADSP_CLIENT_PORT}:3000"
