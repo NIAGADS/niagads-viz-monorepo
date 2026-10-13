@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 
 import { HeroSection } from "@niagads/ui";
 import { RESOURCES, RESOURCE_ECOSYSTEM_OVERVIEW, RESOURCE_GROUPS } from "@/data/resources";
@@ -11,6 +11,7 @@ import styles from "./home-page.module.css";
 import { HeroQuickLinks } from "./HeroQuickLinks";
 import { HeroScrollCue } from "./HeroScrollCue";
 import { HomePageMission } from "./HomePageMission";
+import { LatestNewsTeaser } from "../News/LatestNewsTeaser";
 
 export const HomePage = () => {
     // const [searchTerm, setSearchTerm] = useState("");
@@ -44,7 +45,7 @@ export const HomePage = () => {
             >
                 <div className={styles["home-page-hero-panel"]}>
                     <div className={styles["home-page-news-column"]}>
-                        <NewsTeaser />
+                        <LatestNewsTeaser groups={process.env.NEWS_GROUPS || ""}  />
                     </div>
                 </div>
             </HeroSection>

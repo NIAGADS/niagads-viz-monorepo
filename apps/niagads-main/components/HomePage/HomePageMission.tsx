@@ -4,37 +4,37 @@ import { SubscribeCard } from "./SubscribeCard";
 import styles from "./home-page-mission.module.css";
 
 const partners = [
-    {
-        name: "National Institute on Aging",
-        logo: "/partners/nia.svg",
-    },
+    // {
+    //     name: "National Institute on Aging",
+    //     logo: "/partners/nia.svg",
+    // },
     {
         name: "University of Pennsylvania",
         logo: "/partners/penn.svg",
     },
-    {
-        name: "Alzheimer's Disease Sequencing Project",
-        logo: "/partners/adsp.svg",
-    },
-    {
-        name: "Alzheimer's Disease Genetics Consortium",
-        logo: "/partners/adgc.svg",
-    },
+    // {
+    //     name: "Alzheimer's Disease Sequencing Project",
+    //     logo: "/partners/adsp.svg",
+    // },
+    // {
+    //     name: "Alzheimer's Disease Genetics Consortium",
+    //     logo: "/partners/adgc.svg",
+    // },
     {
         name: "AD Knowledge Portal",
         logo: "/partners/ad-knowledge-portal.svg",
     },
     {
         name: "National Alzheimer's Coordinating Center",
-        logo: "/partners/nacc.svg",
+        logo: "/partners/nacc.png",
     },
-    {
-        name: "National Centralized Repository for Alzheimer's Disease",
-        logo: "/partners/ncrad.svg",
-    },
+    // {
+    //     name: "National Centralized Repository for Alzheimer's Disease",
+    //     logo: "/partners/ncrad.png",
+    // },
     {
         name: "NIA-AD Family Based Study",
-        logo: "/partners/nia-ad-fbs.svg",
+        logo: "/partners/ALZFBS.png",
     },
 ];
 
