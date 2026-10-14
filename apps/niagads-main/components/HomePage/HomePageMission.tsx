@@ -4,37 +4,44 @@ import { SubscribeCard } from "./SubscribeCard";
 import styles from "./home-page-mission.module.css";
 
 const partners = [
-    // {
-    //     name: "National Institute on Aging",
-    //     logo: "/partners/nia.svg",
-    // },
+    {
+        name: "National Institute on Aging",
+        href: "https://www.nia.nih.gov/",
+    },
     {
         name: "University of Pennsylvania",
         logo: "/partners/penn.svg",
+        href: "https://www.pennmedicine.org/",
     },
-    // {
-    //     name: "Alzheimer's Disease Sequencing Project",
-    //     logo: "/partners/adsp.svg",
-    // },
-    // {
-    //     name: "Alzheimer's Disease Genetics Consortium",
-    //     logo: "/partners/adgc.svg",
-    // },
+    {
+        name: "Alzheimer's Disease Sequencing Project",
+        logo: "/partners/adsp.svg",
+        href: "https://adseq.org/",
+    },
+    {
+        name: "Alzheimer's Disease Genetics Consortium",
+        logo: "/partners/adgc.svg",
+        href: "https://www.adgenetics.org/",
+    },
     {
         name: "AD Knowledge Portal",
         logo: "/partners/ad-knowledge-portal.svg",
+        href: "https://adknowledgeportal.synapse.org/",
     },
     {
         name: "National Alzheimer's Coordinating Center",
         logo: "/partners/nacc.png",
+        href: "https://www.nacc.org/"
     },
-    // {
-    //     name: "National Centralized Repository for Alzheimer's Disease",
-    //     logo: "/partners/ncrad.png",
-    // },
+    {
+        name: "National Centralized Repository for Alzheimer's Disease",
+        logo: "/partners/ncrad.png",
+        href: "https://www.ncrad.iu.edu/"
+    },
     {
         name: "NIA-AD Family Based Study",
         logo: "/partners/ALZFBS.png",
+        href: "https://www.alzheimersfamilystudy.org/index.html"
     },
 ];
 
@@ -108,12 +115,31 @@ export const HomePageMission = () => {
                                     className={styles["partner-logo"]}
                                     role="listitem"
                                 >
-                                    <Image
-                                        src={partner.logo}
-                                        alt={partner.name}
-                                        width={180}
-                                        height={70}
-                                    />
+                                    <a
+                                        href={partner.href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className={styles["partner-link"]}
+                                    >
+                                        {partner.logo ? (
+                                            <Image
+                                                src={partner.logo}
+                                                alt={partner.name}
+                                                width={180}
+                                                height={70}
+                                            />
+                                        ) : (
+                                            <span
+                                                className={
+                                                    styles["partner-text-link"]
+                                                }
+                                            >
+                                                National Institute
+                                                <br />
+                                                on Aging
+                                            </span>
+                                        )}
+                                    </a>
                                 </div>
                             ))}
                         </div>
