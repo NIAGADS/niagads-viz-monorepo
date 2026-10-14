@@ -89,9 +89,9 @@ a {
     text-decoration: none;
 }
 
-#ecosystem {
+/* #ecosystem {
     scroll-margin-top: calc(var(--header-height) + 0.25rem);
-}
+} */
 .content-section-centered {
     padding: 3rem 1.5rem;
 }
