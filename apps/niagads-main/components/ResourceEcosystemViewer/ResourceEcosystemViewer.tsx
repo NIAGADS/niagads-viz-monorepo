@@ -1,9 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-
-import { Card, CardBody } from "@niagads/ui";
-
+import { Card,
+         CardBody,
+         NIAGADSLogo,
+         NIAGADSAPILogo,
+         NIAGADSDSSLogo,
+         NIAGADSFilerLogo,
+         NIAGADSGenomicsDBLogo,
+         NIAGADSXQTLLogo,
+         ADVPLogo
+} from "@niagads/ui";
 import styles from "./resource-ecosystem.module.css";
 
 export type ConceptType =
@@ -58,6 +65,22 @@ export interface ResourceGroup {
     label: string;
     color: string;
 }
+const RESOURCE_LOGOS = {
+    genomicsdb: NIAGADSGenomicsDBLogo,
+    xqtl: NIAGADSXQTLLogo,
+    filer: NIAGADSFilerLogo,
+    dss: NIAGADSDSSLogo,
+    api: NIAGADSAPILogo,
+    advp: ADVPLogo,
+} as const;
+
+export type ResourceLogo =
+    | "genomicsdb"
+    | "xqtl"
+    | "filer"
+    | "dss"
+    | "api"
+    | "advp";
 
 export interface Resource {
     id: string;
@@ -65,6 +88,7 @@ export interface Resource {
     name: string;
     description: string;
     url?: string;
+    logo?: ResourceLogo;
     groupId: string;
     concepts: ConceptType[];
 }
@@ -73,6 +97,10 @@ export interface ResourceEcosystemOverview {
     title: string;
     description: string;
     instruction: string;
+     defaultDetail: {
+        title: string;
+        description: string;
+    };
 }
 
 interface ResourceEcosystemViewerProps {
@@ -354,6 +382,10 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
 
     const detailResource = detailResourceId ? resourceById[detailResourceId] : undefined;
 
+    const ResourceLogo = detailResource?.logo
+    ? RESOURCE_LOGOS[detailResource.logo]
+    : NIAGADSLogo;
+
     const classForConcept = (id: ConceptType) =>
         [
             styles.conceptMark,
@@ -389,40 +421,13 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
     return (
         <main className={styles.shell} onPointerDown={handleOutsidePointerDown}>
             <section className={styles.ecosystem} aria-label="NIAGADS homepage resource visualization prototype">
-                <div className={styles.resourceDetailSlot}>
-                    <Card
-                        aria-label={`${detailResource?.name ?? "NIAGADS resource ecosystem"} description`}
-                        className={`${styles.resourceDetail} ${detailResource ? "" : styles.defaultDetail}`}
-                        style={
-                            {
-                                "--resource-color": detailResource
-                                    ? resourceGroupById[detailResource.groupId].color
-                                    : "var(--primary-blue)",
-                            } as CSSProperties
-                        }
-                    >
-                        <CardBody className={styles.resourceDetailBody}>
-                            <div className={styles.resourceDetailHeader}>
-                                <h2>{detailResource?.name ?? overview.title}</h2>
-                            </div>
-                            <p>
-                                {detailResource?.description ?? overview.description}
-                                {!detailResource ? (
-                                    <strong className={styles.detailInstruction}>{overview.instruction}</strong>
-                                ) : null}
-                            </p>
-                            {detailResource?.url ? (
-                                <a
-                                    className={styles.resourceDetailAction}
-                                    href={detailResource.url}
-                                    rel="noopener noreferrer"
-                                    target="_blank"
-                                >
-                                    Explore resource <span aria-hidden="true">→</span>
-                                </a>
-                            ) : null}
-                        </CardBody>
-                    </Card>
+                
+                <div className={styles.ecosystemIntro}>
+                    <h2>{overview.title}</h2>
+                    <p>{overview.description}</p>
+                    <p className={styles.ecosystemInstruction}>
+                        {overview.instruction}
+                    </p>
                 </div>
 
                 <div className={styles.resourceGroupLabels} aria-hidden="true" style={resourceGridStyle}>
@@ -458,7 +463,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                             onMouseEnter={() => selectResource(resource.id)}
                             onPointerDown={() => selectResource(resource.id)}
                         >
-                            <span className={styles.badge}>{resource.badge}</span>
+                            <span className={styles.badge}>{resource.name}</span>
                         </button>
                     ))}
                 </div>
@@ -872,6 +877,55 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         <UtilityLabel conceptId="cloudAccess" />
                     </g>
                 </svg>
+
+                <div className={styles.resourceDetailSlot}>
+                    <Card
+                        aria-label={`${detailResource?.name ?? "NIAGADS resource ecosystem"} description`}
+                        className={`${styles.resourceDetail} ${detailResource ? "" : styles.defaultDetail}`}
+                        style={
+                            {
+                                "--resource-color": detailResource
+                                    ? resourceGroupById[detailResource.groupId].color
+                                    : "var(--primary-blue)",
+                            } as CSSProperties
+                        }
+                    >
+                        <CardBody className={styles.resourceDetailBody}>
+                            {detailResource && (
+                                <div className={styles.resourceLogoContainer}>
+                                    <ResourceLogo
+                                        width={180}
+                                        height="auto"
+                                        className={styles.resourceLogo}
+                                        role="img"
+                                        aria-label={`${detailResource.name} logo`}
+                                    />
+                                </div>
+                            )}
+
+                            <div className={styles.resourceDetailContent}>
+                                <div className={styles.resourceDetailHeader}>
+                                    <h2>{detailResource?.name ?? overview.defaultDetail.title}</h2>
+                                </div>
+
+                                <p>
+                                    {detailResource?.description ?? overview.defaultDetail.description}
+                                </p>
+                            </div>
+
+                            {detailResource?.url && (
+                                <a
+                                    className={styles.resourceDetailAction}
+                                    href={detailResource.url}
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                >
+                                    Explore resource <span aria-hidden="true">→</span>
+                                </a>
+                            )}
+                        </CardBody>
+                    </Card>
+                </div>
             </section>
         </main>
     );
