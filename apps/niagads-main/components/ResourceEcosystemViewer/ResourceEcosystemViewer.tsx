@@ -249,12 +249,14 @@ const conceptById = Object.fromEntries(CONCEPTS.map((concept) => [concept.id, co
 >;
 
 export function ResourceEcosystemViewer({ overview, resources, resourceGroups }: ResourceEcosystemViewerProps) {
-    // Hover previews any target; clicking locks a resource until another selection or an outside click.
+    // Hovering or focusing a resource selects it persistently; taps/clicks also select it.
+    // Concept highlights remain temporary.
     const [hovered, setHovered] = useState<ActiveTarget>(null);
     const [selectedResourceId, setSelectedResourceId] = useState<string | null>(null);
-    const active: ActiveTarget = selectedResourceId
-        ? { type: "resource", id: selectedResourceId }
-        : hovered;
+    const active = useMemo<ActiveTarget>(
+        () => (selectedResourceId ? { type: "resource", id: selectedResourceId } : hovered),
+        [selectedResourceId, hovered]
+    );
     const [resourceCenterX, setResourceCenterX] = useState<Record<string, number>>({});
     const shellRef = useRef<HTMLElement>(null);
     const resourceRowRef = useRef<HTMLDivElement>(null);
@@ -358,7 +360,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
         return new Set<string>(conceptToResources[active.id]);
     }, [active, conceptToResources]);
 
-    // Clicking anywhere outside a resource, concept, or detail card clears the lock.
+    // Clicking anywhere outside a resource, concept, or detail card clears the selection.
     // Listen on document so a click outside the graph also dismisses a selection.
     useEffect(() => {
         const handleDocumentPointerDown = (event: PointerEvent) => {
@@ -378,8 +380,19 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
             }
         };
 
+        const handleDocumentKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "Escape") {
+                setSelectedResourceId(null);
+                setHovered(null);
+            }
+        };
+
         document.addEventListener("pointerdown", handleDocumentPointerDown);
-        return () => document.removeEventListener("pointerdown", handleDocumentPointerDown);
+        document.addEventListener("keydown", handleDocumentKeyDown);
+        return () => {
+            document.removeEventListener("pointerdown", handleDocumentPointerDown);
+            document.removeEventListener("keydown", handleDocumentKeyDown);
+        };
     }, []);
 
     const clearHover = (type: NonNullable<ActiveTarget>["type"], id: string) => {
@@ -495,10 +508,8 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                             }
                             type="button"
                             aria-pressed={selectedResourceId === resource.id}
-                            onFocus={() => setHovered({ type: "resource", id: resource.id })}
-                            onBlur={() => clearHover("resource", resource.id)}
-                            onMouseEnter={() => setHovered({ type: "resource", id: resource.id })}
-                            onMouseLeave={() => clearHover("resource", resource.id)}
+                            onFocus={() => selectResource(resource.id)}
+                            onMouseEnter={() => selectResource(resource.id)}
                             onClick={() => selectResource(resource.id)}
                         >
                             <span className={styles.badge}>{resource.name}</span>
@@ -872,7 +883,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                                 <div className={styles.resourceLogoContainer}>
                                     <ResourceLogo
                                         width={180}
-                                        height="auto"
+                                        style={{ height: "auto" }}
                                         className={styles.resourceLogo}
                                         role="img"
                                         aria-label={`${detailResource.name} logo`}
