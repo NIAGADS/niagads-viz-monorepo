@@ -249,9 +249,14 @@ const conceptById = Object.fromEntries(CONCEPTS.map((concept) => [concept.id, co
 >;
 
 export function ResourceEcosystemViewer({ overview, resources, resourceGroups }: ResourceEcosystemViewerProps) {
-    const [active, setActive] = useState<ActiveTarget>(null);
-    const [detailResourceId, setDetailResourceId] = useState<string | null>(null);
+    // Hover previews any target; clicking locks a resource until another selection or an outside click.
+    const [hovered, setHovered] = useState<ActiveTarget>(null);
+    const [selectedResourceId, setSelectedResourceId] = useState<string | null>(null);
+    const active: ActiveTarget = selectedResourceId
+        ? { type: "resource", id: selectedResourceId }
+        : hovered;
     const [resourceCenterX, setResourceCenterX] = useState<Record<string, number>>({});
+    const shellRef = useRef<HTMLElement>(null);
     const resourceRowRef = useRef<HTMLDivElement>(null);
     const resourceGridStyle = { "--resource-count": resources.length } as CSSProperties;
     const resourceById = useMemo(
@@ -353,38 +358,66 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
         return new Set<string>(conceptToResources[active.id]);
     }, [active, conceptToResources]);
 
-    const selectResource = (resourceId: string) => {
-        setDetailResourceId(resourceId);
-        setActive({ type: "resource", id: resourceId });
+    // Clicking anywhere outside a resource, concept, or detail card clears the lock.
+    // Listen on document so a click outside the graph also dismisses a selection.
+    useEffect(() => {
+        const handleDocumentPointerDown = (event: PointerEvent) => {
+            const target = event.target;
+            const shell = shellRef.current;
+            if (!(target instanceof Element) || !shell) return;
+
+            const isInteractiveTarget =
+                shell.contains(target) &&
+                (target.closest("[data-resource-id]") ||
+                    target.closest("[data-concept-id]") ||
+                    target.closest(`.${styles.resourceDetail}`));
+
+            if (!isInteractiveTarget) {
+                setSelectedResourceId(null);
+                setHovered(null);
+            }
+        };
+
+        document.addEventListener("pointerdown", handleDocumentPointerDown);
+        return () => document.removeEventListener("pointerdown", handleDocumentPointerDown);
+    }, []);
+
+    const clearHover = (type: NonNullable<ActiveTarget>["type"], id: string) => {
+        setHovered((previous) => (previous?.type === type && previous.id === id ? null : previous));
     };
 
-    const handleOutsidePointerDown = (event: React.PointerEvent<HTMLElement>) => {
-        const target = event.target;
-
-        if (
-            target instanceof Element &&
-            (target.closest("[data-resource-id]") || target.closest(`.${styles.resourceDetail}`))
-        ) {
-            return;
-        }
-
-        setDetailResourceId(null);
-        setActive(null);
+    const selectResource = (id: string) => {
+        setSelectedResourceId(id);
+        setHovered(null);
     };
 
-    const handleConceptPointerOver = (event: React.PointerEvent<SVGSVGElement>) => {
-        const target = event.target;
-
-        if (target instanceof Element && target.closest(`.${styles.conceptMark}`)) {
-            setDetailResourceId(null);
-        }
+    const activateConcept = (id: ConceptType) => {
+        // Concepts retain their temporary highlight, but do not lock project details.
+        setSelectedResourceId(null);
+        setHovered({ type: "concept", id });
     };
 
-    const detailResource = detailResourceId ? resourceById[detailResourceId] : undefined;
+    // SVG groups with role="button" need keyboard activation (unlike native buttons).
+    const conceptInteractions = (id: ConceptType) => ({
+        "data-concept-id": id,
+        onFocus: () => setHovered({ type: "concept" as const, id }),
+        onBlur: () => clearHover("concept", id),
+        onMouseEnter: () => setHovered({ type: "concept" as const, id }),
+        onMouseLeave: () => clearHover("concept", id),
+        onClick: () => activateConcept(id),
+        onKeyDown: (event: React.KeyboardEvent<SVGGElement>) => {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                activateConcept(id);
+            }
+        },
+    });
+
+    const detailResource = active?.type === "resource" ? resourceById[active.id] : undefined;
 
     const ResourceLogo = detailResource?.logo
-    ? RESOURCE_LOGOS[detailResource.logo]
-    : NIAGADSLogo;
+        ? RESOURCE_LOGOS[detailResource.logo]
+        : NIAGADSLogo;
 
     const classForConcept = (id: ConceptType) =>
         [
@@ -419,7 +452,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
             .join(" ");
 
     return (
-        <main className={styles.shell} onPointerDown={handleOutsidePointerDown}>
+        <main className={styles.shell} ref={shellRef}>
             <section className={styles.ecosystem} aria-label="NIAGADS homepage resource visualization prototype">
                 
                 <div className={styles.ecosystemIntro}>
@@ -456,12 +489,17 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                             style={
                                 {
                                     "--resource-color": resourceGroupById[resource.groupId].color,
+                                    // Other project buttons must remain clickable while one is selected.
+                                    pointerEvents: "auto",
                                 } as CSSProperties
                             }
                             type="button"
-                            onFocus={() => selectResource(resource.id)}
-                            onMouseEnter={() => selectResource(resource.id)}
-                            onPointerDown={() => selectResource(resource.id)}
+                            aria-pressed={selectedResourceId === resource.id}
+                            onFocus={() => setHovered({ type: "resource", id: resource.id })}
+                            onBlur={() => clearHover("resource", resource.id)}
+                            onMouseEnter={() => setHovered({ type: "resource", id: resource.id })}
+                            onMouseLeave={() => clearHover("resource", resource.id)}
+                            onClick={() => selectResource(resource.id)}
                         >
                             <span className={styles.badge}>{resource.name}</span>
                         </button>
@@ -474,7 +512,6 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                     preserveAspectRatio="none"
                     role="img"
                     aria-labelledby="ecosystem-title ecosystem-desc"
-                    onPointerOver={handleConceptPointerOver}
                 >
                     <title id="ecosystem-title">NIAGADS resource ecosystem concept landscape</title>
                     <desc id="ecosystem-desc">
@@ -561,11 +598,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         tabIndex={0}
                         role="button"
                         aria-label="Genetic associations, shown as a schematic Manhattan plot"
-                        onBlur={() => setActive(null)}
-                        onFocus={() => setActive({ type: "concept", id: "gwas" })}
-                        onMouseEnter={() => setActive({ type: "concept", id: "gwas" })}
-                        onPointerDown={() => setActive({ type: "concept", id: "gwas" })}
-                        onMouseLeave={() => setActive(null)}
+                        {...conceptInteractions("gwas")}
                     >
                         <rect fill="none" pointerEvents="all" x="250" y="42" width="120" height="90" rx="6" />
                         <path className={styles.associationBaseline} d="M261 128 H359" />
@@ -587,11 +620,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         tabIndex={0}
                         role="button"
                         aria-label="Genes"
-                        onBlur={() => setActive(null)}
-                        onFocus={() => setActive({ type: "concept", id: "genes" })}
-                        onMouseEnter={() => setActive({ type: "concept", id: "genes" })}
-                        onPointerDown={() => setActive({ type: "concept", id: "genes" })}
-                        onMouseLeave={() => setActive(null)}
+                        {...conceptInteractions("genes")}
                     >
                         <rect className={styles.geneConceptHitArea} x="20" y="118" width="180" height="84" rx="6" />
                         {GENE_EXONS.map(([x, width]) => (
@@ -606,11 +635,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         tabIndex={0}
                         role="button"
                         aria-label="Variants"
-                        onBlur={() => setActive(null)}
-                        onFocus={() => setActive({ type: "concept", id: "variants" })}
-                        onMouseEnter={() => setActive({ type: "concept", id: "variants" })}
-                        onPointerDown={() => setActive({ type: "concept", id: "variants" })}
-                        onMouseLeave={() => setActive(null)}
+                        {...conceptInteractions("variants")}
                     >
                         <rect className={styles.variantHitArea} x="252" y="134" width="116" height="48" rx="5" />
                         {[268, 282, 296, 310, 324, 338, 352].map((x) => (
@@ -624,11 +649,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         tabIndex={0}
                         role="button"
                         aria-label="Linkage disequilibrium, shown as a schematic triangular pairwise matrix"
-                        onBlur={() => setActive(null)}
-                        onFocus={() => setActive({ type: "concept", id: "ld" })}
-                        onMouseEnter={() => setActive({ type: "concept", id: "ld" })}
-                        onPointerDown={() => setActive({ type: "concept", id: "ld" })}
-                        onMouseLeave={() => setActive(null)}
+                        {...conceptInteractions("ld")}
                     >
                         <rect className={styles.ldHitArea} x="250" y="180" width="120" height="90" rx="6" />
                         <path className={styles.ldTopRule} d="M261 190 H359" />
@@ -662,11 +683,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         tabIndex={0}
                         role="button"
                         aria-label="Molecular QTLs, shown as multiple relationships from a variant to genomic targets"
-                        onBlur={() => setActive(null)}
-                        onFocus={() => setActive({ type: "concept", id: "qtls" })}
-                        onMouseEnter={() => setActive({ type: "concept", id: "qtls" })}
-                        onPointerDown={() => setActive({ type: "concept", id: "qtls" })}
-                        onMouseLeave={() => setActive(null)}
+                        {...conceptInteractions("qtls")}
                     >
                         <rect className={styles.qtlHitArea} x="684" y="108" width="310" height="146" rx="6" />
                         <path className={styles.qtlBridge} d="M810 150 C798 122 772 122 760 150" />
@@ -682,11 +699,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         aria-label="Sequencing data, shown as aligned reads"
                         role="button"
                         tabIndex={0}
-                        onBlur={() => setActive(null)}
-                        onFocus={() => setActive({ type: "concept", id: "sequencing" })}
-                        onMouseEnter={() => setActive({ type: "concept", id: "sequencing" })}
-                        onMouseLeave={() => setActive(null)}
-                        onPointerDown={() => setActive({ type: "concept", id: "sequencing" })}
+                        {...conceptInteractions("sequencing")}
                     >
                         <rect className={styles.sequencingHitArea} x="1070" y="92" width="170" height="110" rx="6" />
                         <g>
@@ -723,11 +736,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         tabIndex={0}
                         role="button"
                         aria-label="Regulatory elements"
-                        onBlur={() => setActive(null)}
-                        onFocus={() => setActive({ type: "concept", id: "regulatory" })}
-                        onMouseEnter={() => setActive({ type: "concept", id: "regulatory" })}
-                        onPointerDown={() => setActive({ type: "concept", id: "regulatory" })}
-                        onMouseLeave={() => setActive(null)}
+                        {...conceptInteractions("regulatory")}
                     >
                         <rect className={styles.regulatoryHitArea} x="444" y="104" width="250" height="94" rx="6" />
                         <path className={styles.regulatoryLoop} d="M476 142 C486 110 528 110 538 140" />
@@ -754,11 +763,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         tabIndex={0}
                         role="button"
                         aria-label="Curated evidence"
-                        onBlur={() => setActive(null)}
-                        onFocus={() => setActive({ type: "concept", id: "curatedEvidence" })}
-                        onMouseEnter={() => setActive({ type: "concept", id: "curatedEvidence" })}
-                        onPointerDown={() => setActive({ type: "concept", id: "curatedEvidence" })}
-                        onMouseLeave={() => setActive(null)}
+                        {...conceptInteractions("curatedEvidence")}
                     >
                         <rect className={styles.utilityHitArea} x="130" y="282" width="150" height="40" rx="6" />
                         <UtilityGlyph kind="evidence" x={138} y={288} />
@@ -770,11 +775,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         tabIndex={0}
                         role="button"
                         aria-label="ADSP Data"
-                        onBlur={() => setActive(null)}
-                        onFocus={() => setActive({ type: "concept", id: "adspData" })}
-                        onMouseEnter={() => setActive({ type: "concept", id: "adspData" })}
-                        onPointerDown={() => setActive({ type: "concept", id: "adspData" })}
-                        onMouseLeave={() => setActive(null)}
+                        {...conceptInteractions("adspData")}
                     >
                         <rect className={styles.utilityHitArea} x="290" y="282" width="140" height="40" rx="6" />
                         <UtilityGlyph kind="dna" x={298} y={288} />
@@ -786,11 +787,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         tabIndex={0}
                         role="button"
                         aria-label="Biosamples"
-                        onBlur={() => setActive(null)}
-                        onFocus={() => setActive({ type: "concept", id: "biosamples" })}
-                        onMouseEnter={() => setActive({ type: "concept", id: "biosamples" })}
-                        onPointerDown={() => setActive({ type: "concept", id: "biosamples" })}
-                        onMouseLeave={() => setActive(null)}
+                        {...conceptInteractions("biosamples")}
                     >
                         <rect className={styles.utilityHitArea} x="430" y="282" width="120" height="40" rx="6" />
                         <UtilityGlyph kind="biosample" x={438} y={288} />
@@ -802,11 +799,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         tabIndex={0}
                         role="button"
                         aria-label="Harmonized phenotypes"
-                        onBlur={() => setActive(null)}
-                        onFocus={() => setActive({ type: "concept", id: "phenotypes" })}
-                        onMouseEnter={() => setActive({ type: "concept", id: "phenotypes" })}
-                        onPointerDown={() => setActive({ type: "concept", id: "phenotypes" })}
-                        onMouseLeave={() => setActive(null)}
+                        {...conceptInteractions("phenotypes")}
                     >
                         <rect className={styles.utilityHitArea} x="555" y="282" width="95" height="40" rx="6" />
                         <UtilityGlyph kind="phenotype" x={563} y={288} />
@@ -818,11 +811,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         tabIndex={0}
                         role="button"
                         aria-label="Open access"
-                        onBlur={() => setActive(null)}
-                        onFocus={() => setActive({ type: "concept", id: "openAccess" })}
-                        onMouseEnter={() => setActive({ type: "concept", id: "openAccess" })}
-                        onPointerDown={() => setActive({ type: "concept", id: "openAccess" })}
-                        onMouseLeave={() => setActive(null)}
+                        {...conceptInteractions("openAccess")}
                     >
                         <rect className={styles.utilityHitArea} x="720" y="282" width="80" height="40" rx="6" />
                         <UtilityGlyph kind="openLock" x={728} y={288} />
@@ -834,11 +823,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         tabIndex={0}
                         role="button"
                         aria-label="Restricted access"
-                        onBlur={() => setActive(null)}
-                        onFocus={() => setActive({ type: "concept", id: "restrictedAccess" })}
-                        onMouseEnter={() => setActive({ type: "concept", id: "restrictedAccess" })}
-                        onPointerDown={() => setActive({ type: "concept", id: "restrictedAccess" })}
-                        onMouseLeave={() => setActive(null)}
+                        {...conceptInteractions("restrictedAccess")}
                     >
                         <rect className={styles.utilityHitArea} x="810" y="282" width="110" height="40" rx="6" />
                         <UtilityGlyph kind="closedLock" x={818} y={288} />
@@ -850,11 +835,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         tabIndex={0}
                         role="button"
                         aria-label="Downloads"
-                        onBlur={() => setActive(null)}
-                        onFocus={() => setActive({ type: "concept", id: "downloads" })}
-                        onMouseEnter={() => setActive({ type: "concept", id: "downloads" })}
-                        onPointerDown={() => setActive({ type: "concept", id: "downloads" })}
-                        onMouseLeave={() => setActive(null)}
+                        {...conceptInteractions("downloads")}
                     >
                         <rect className={styles.utilityHitArea} x="930" y="282" width="104" height="40" rx="6" />
                         <UtilityGlyph kind="download" x={938} y={288} />
@@ -866,11 +847,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         tabIndex={0}
                         role="button"
                         aria-label="Programmatic and cloud access"
-                        onBlur={() => setActive(null)}
-                        onFocus={() => setActive({ type: "concept", id: "cloudAccess" })}
-                        onMouseEnter={() => setActive({ type: "concept", id: "cloudAccess" })}
-                        onPointerDown={() => setActive({ type: "concept", id: "cloudAccess" })}
-                        onMouseLeave={() => setActive(null)}
+                        {...conceptInteractions("cloudAccess")}
                     >
                         <rect className={styles.utilityHitArea} x="1044" y="282" width="161" height="40" rx="6" />
                         <UtilityGlyph kind="cloud" x={1052} y={288} />
