@@ -15,36 +15,36 @@
     isolation: isolate;
 }
 
-.ecosystemIntro {
+.ecosystem-intro {
     margin-bottom: 32px;
 }
 
-.ecosystemIntro h2 {
+.ecosystem-intro h2 {
     margin: 0 0 12px;
     color: var(--primary-blue);
     font-weight: 700;
     line-height: 1.25;
 }
 
-.ecosystemIntro p {
+.ecosystem-intro p {
     margin: 0;
     color: var(--text-primary);
     font-size: 1rem;
     line-height: 1.6;
 }
 
-.ecosystemIntro .ecosystemInstruction {
+.ecosystem-intro .ecosystem-instruction {
     margin-top: 8px;
     color: var(--text-secondary);
     font-weight: 500;
 }
 
-.resourceDetailSlot {
+.resource-detail-slot {
     height: 150px;
     margin: 12px 0 0;
 }
 
-.resourceDetail {
+.resource-detail {
     box-sizing: border-box;
     height: 100%;
     border: 1px solid var(--border) !important;
@@ -53,27 +53,27 @@
     box-shadow: none;
 }
 
-.defaultDetail .resourceDetailBody {
+.default-detail .resource-detail-body {
     grid-template-columns: 1fr;
     align-content: center;
 }
 
-.defaultDetail .resourceDetailContent {
+.default-detail .resource-detail-content {
     grid-column: 1;
     max-width: 750px;
 }
 
-.defaultDetail h2,
-.defaultDetail p {
+.default-detail h2,
+.default-detail p {
     color: var(--text-primary);
 }
 
-.resourceDetailHeader {
+.resource-detail-header {
     display: flex;
     align-items: center;
 }
 
-.resourceDetailBody {
+.resource-detail-body {
     display: grid;
     grid-template-columns: 150px minmax(0, 1fr) auto;
     align-items: center;
@@ -83,13 +83,13 @@
     padding: 20px 28px !important;
 }
 
-.resourceLogoContainer {
+.resource-logo-container {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.resourceLogo {
+.resource-logo {
     display: block;
     width: 150px;
     height: auto;
@@ -97,14 +97,14 @@
     color: var(--primary-blue);
 }
 
-.resourceDetailContent {
+.resource-detail-content {
     display: flex;
     flex-direction: column;
     gap: 8px;
     min-width: 0;
 }
 
-.resourceDetail h2 {
+.resource-detail h2 {
     margin: 0;
     color: var(--text-secondary);
     font-size: 1.125rem;
@@ -113,14 +113,14 @@
     letter-spacing: -0.015em;
 }
 
-.resourceDetail p {
+.resource-detail p {
     margin: 0;
     font-size: 0.875rem;
     font-weight: 400;
     line-height: 1.6;
 }
 
-.resourceDetailAction {
+.resource-detail-action {
     grid-column: 3;
     align-self: center;
     display: inline-flex;
@@ -138,19 +138,19 @@
     transition: color 160ms ease;
 }
 
-.resourceDetailAction:hover {
+.resource-detail-action:hover {
     color: var(--text-primary);
     text-decoration: underline;
     background: transparent;
     transform: none;
 }
 
-.resourceDetailAction:focus-visible {
+.resource-detail-action:focus-visible {
     outline: 2px solid var(--resource-color);
     outline-offset: 4px;
 }
 
-.resourceGroupLabels {
+.resource-group-labels {
     min-height: 24px;
     display: grid;
     grid-template-columns: repeat(var(--resource-count), minmax(0, 1fr));
@@ -159,7 +159,7 @@
     margin-bottom: 14px;
 }
 
-.groupLabel {
+.group-label {
     color: var(--text-secondary);
     font:
         750 11px/1.1 ui-sans-serif,
@@ -170,7 +170,7 @@
     text-transform: uppercase;
 }
 
-.resourceRow {
+.resource-row {
     --group-divider-offset: -10.5px;
     display: grid;
     grid-template-columns: repeat(var(--resource-count), minmax(0, 1fr));
@@ -223,12 +223,12 @@
     outline-offset: 3px;
 }
 
-.resource.groupStart {
+.resource.group-start {
     width: calc(100% - 10px);
     margin-left: 10px;
 }
 
-.resource.groupStart::before {
+.resource.group-start::before {
     content: "";
     position: absolute;
     top: 5px;
@@ -265,7 +265,7 @@
     overflow: visible;
 }
 
-.softContour {
+.soft-contour {
     fill: none;
     stroke: var(--gray-300);
     stroke-width: 1.2;
@@ -273,23 +273,23 @@
     opacity: 0.7;
 }
 
-.resourceRail {
+.resource-rail {
     stroke: var(--gray-300);
     stroke-width: 2;
 }
 
-.peripheralFrame {
+.peripheral-frame {
     pointer-events: none;
 }
 
-.utilityRule,
-.utilityDivider {
+.utility-rule,
+.utility-divider {
     fill: none;
     stroke: var(--gray-300);
     stroke-width: 1;
 }
 
-.zoneLabel {
+.zone-label {
     fill: var(--text-muted);
     font:
         720 9px/1 ui-sans-serif,
@@ -299,12 +299,12 @@
     text-transform: uppercase;
 }
 
-.utilityHitArea {
+.utility-hit-area {
     fill: transparent;
     stroke: transparent;
 }
 
-.utilityGlyph {
+.utility-glyph {
     fill: none;
     stroke: var(--primary-blue);
     stroke-width: 1.7;
@@ -316,7 +316,7 @@
         stroke-width 160ms ease;
 }
 
-.utilityLabel {
+.utility-label {
     fill: var(--text-secondary);
     font:
         650 11px/1.1 ui-sans-serif,
@@ -332,40 +332,40 @@
     pointer-events: none;
 }
 
-.conceptMark:focus-visible .utilityLabel,
-.conceptMark:hover .utilityLabel,
-.conceptMark.active .utilityLabel {
+.concept-mark:focus-visible .utility-label,
+.concept-mark:hover .utility-label,
+.concept-mark.active .utility-label {
     fill: var(--text-primary);
     font-weight: 760;
 }
 
-.conceptMark:focus-visible .utilityGlyph,
-.conceptMark:hover .utilityGlyph,
-.conceptMark.active .utilityGlyph {
+.concept-mark:focus-visible .utility-glyph,
+.concept-mark:hover .utility-glyph,
+.concept-mark.active .utility-glyph {
     stroke: var(--accent-teal);
     stroke-width: 2;
 }
 
-.genomeRail {
+.genome-rail {
     stroke: var(--primary-blue);
     stroke-width: 1.6;
 }
 
-.geneTrackHit {
+.gene-track-hit {
     stroke: transparent;
     stroke-width: 24;
 }
 
-.geneConceptHitArea {
+.gene-concept-hit-area {
     fill: transparent;
     stroke: transparent;
 }
 
-.geneExon {
+.gene-exon {
     fill: var(--primary-blue);
 }
 
-.geneDirection {
+.gene-direction {
     fill: none;
     stroke: var(--primary-blue);
     stroke-width: 1.6;
@@ -393,37 +393,37 @@
     opacity: 0;
 }
 
-.linkTarget {
+.link-target {
     opacity: 0;
     stroke: none;
 }
 
-.linkTarget.active {
+.link-target.active {
     opacity: 1;
 }
 
-.conceptMark {
+.concept-mark {
     cursor: default;
     outline: none;
     transition: opacity 160ms ease;
 }
 
-.conceptMark:focus-visible .conceptLabel,
-.conceptMark:hover .conceptLabel,
-.conceptMark.active .conceptLabel {
+.concept-mark:focus-visible .concept-label,
+.concept-mark:hover .concept-label,
+.concept-mark.active .concept-label {
     fill: var(--text-primary);
     font-weight: 760;
 }
 
-.conceptMark.active {
+.concept-mark.active {
     opacity: 1;
 }
 
-.conceptMark.recede {
+.concept-mark.recede {
     opacity: 0.5;
 }
 
-.conceptLabel {
+.concept-label {
     fill: var(--text-secondary);
     font:
         650 12px/1.15 ui-sans-serif,
@@ -443,29 +443,29 @@
         font-weight 160ms ease;
 }
 
-.associationBaseline {
+.association-baseline {
     fill: none;
     stroke: var(--gray-500);
     stroke-width: 2;
     stroke-linecap: round;
 }
 
-.associationThreshold {
+.association-threshold {
     fill: none;
     stroke: var(--gray-400);
     stroke-width: 1;
     stroke-dasharray: 3 4;
 }
 
-.associationPoint {
+.association-point {
     fill: var(--gray-400);
 }
 
-.associationPointSignificant {
+.association-point-significant {
     fill: var(--accent-teal);
 }
 
-.qtlBridge {
+.qtl-bridge {
     fill: none;
     stroke: var(--gray-500);
     stroke-width: 1.6;
@@ -480,85 +480,85 @@
     stroke-width: 1.5;
 }
 
-.variantHitArea {
+.variant-hit-area {
     fill: transparent;
     stroke: transparent;
 }
 
-.ldTopRule,
-.ldTick {
+.ld-top-rule,
+.ld-tick {
     fill: none;
     stroke: var(--gray-500);
     stroke-width: 1.4;
     stroke-linecap: round;
 }
 
-.ldHitArea {
+.ld-hit-area {
     fill: transparent;
     stroke: transparent;
 }
 
-.ldCell {
+.ld-cell {
     stroke: var(--white);
     stroke-width: 1.25;
     stroke-linejoin: round;
 }
 
-.qtlHitArea {
+.qtl-hit-area {
     fill: transparent;
     stroke: transparent;
 }
 
-.sequencingRead {
+.sequencing-read {
     stroke: var(--primary-blue);
     stroke-width: 2;
     stroke-linecap: round;
     opacity: 0.78;
 }
 
-.sequencingHitArea {
+.sequencing-hit-area {
     fill: transparent;
     stroke: transparent;
 }
 
-.sequencingBase {
+.sequencing-base {
     stroke: var(--accent-teal);
     stroke-width: 2;
     stroke-linecap: round;
 }
 
-.regulatoryHitArea {
+.regulatory-hit-area {
     fill: transparent;
     stroke: transparent;
 }
 
-.regulatoryLoop {
+.regulatory-loop {
     fill: none;
     stroke: var(--gray-500);
     stroke-width: 1.5;
     stroke-linecap: round;
 }
 
-.regulatoryEnhancer,
-.regulatoryPromoter,
-.regulatorySilencer {
+.regulatory-enhancer,
+.regulatory-promoter,
+.regulatory-silencer {
     stroke: var(--gray-500);
     stroke-width: 1.2;
 }
 
-.regulatoryEnhancer {
+.regulatory-enhancer {
     fill: url("#regulatoryEnhancerPattern");
 }
 
-.regulatoryPromoter {
+.regulatory-promoter {
     fill: url("#regulatoryPromoterPattern");
 }
 
-.regulatorySilencer {
+.regulatory-silencer {
     fill: url("#regulatorySilencerPattern");
 }
 
-.regulatoryMicroLabel {
+.regulatory-micro-label {
     fill: var(--text-secondary);
     font:
         700 8px/1 ui-sans-serif,
@@ -583,18 +583,18 @@
         min-width: 0;
     }
 
-    .resourceDetailSlot {
+    .resource-detail-slot {
         height: auto;
         margin: 10px 0 18px;
     }
 
-    .resourceDetail {
+    .resource-detail {
         display: block;
         height: auto;
         width: auto;
     }
 
-    .resourceDetailBody {
+    .resource-detail-body {
         display: flex;
         flex-direction: column;
         align-items: stretch;
@@ -602,20 +602,20 @@
         padding: 16px 18px 18px !important;
     }
 
-    .resourceLogoContainer {
+    .resource-logo-container {
         justify-content: flex-start;
     }
 
-    .resourceLogo {
+    .resource-logo {
         max-height: 56px;
     }
 
-    .resourceDetail p {
+    .resource-detail p {
         margin: 0;
         line-height: 1.55;
     }
 
-    .resourceDetailAction {
+    .resource-detail-action {
         align-self: flex-start;
         min-height: auto;
         margin-top: 4px;
@@ -623,11 +623,11 @@
     }
 
     .landscape,
-    .resourceGroupLabels {
+    .resource-group-labels {
         display: none;
     }
 
-    .resourceRow {
+    .resource-row {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 8px;
         margin: 0;
@@ -640,12 +640,12 @@
         gap: 7px;
     }
 
-    .resource.groupStart {
+    .resource.group-start {
         width: 100%;
         margin-left: 0;
     }
 
-    .resource.groupStart::before {
+    .resource.group-start::before {
         display: none;
     }
 
@@ -657,7 +657,7 @@
 }
 
 @media (max-width: 360px) {
-    .resourceRow {
+    .resource-row {
         grid-template-columns: 1fr;
     }
 }

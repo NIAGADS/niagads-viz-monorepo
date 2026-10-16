@@ -372,7 +372,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                 shell.contains(target) &&
                 (target.closest("[data-resource-id]") ||
                     target.closest("[data-concept-id]") ||
-                    target.closest(`.${styles.resourceDetail}`));
+                    target.closest(`.${styles["resource-detail"]}`));
 
             if (!isInteractiveTarget) {
                 setSelectedResourceId(null);
@@ -434,7 +434,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
 
     const classForConcept = (id: ConceptType) =>
         [
-            styles.conceptMark,
+            styles["concept-mark"],
             active && !activeConcepts.has(id) ? styles.recede : "",
             activeConcepts.has(id) ? styles.active : "",
         ]
@@ -447,7 +447,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
 
         return [
             styles.resource,
-            startsGroup ? styles.groupStart : "",
+            startsGroup ? styles["group-start"] : "",
             active && !activeResources.has(id) ? styles.recede : "",
             activeResources.has(id) ? styles.active : "",
         ]
@@ -468,18 +468,18 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
         <main className={styles.shell} ref={shellRef}>
             <section className={styles.ecosystem} aria-label="NIAGADS homepage resource visualization prototype">
                 
-                <div className={styles.ecosystemIntro}>
+                <div className={styles["ecosystem-intro"]}>
                     <h2>{overview.title}</h2>
                     <p>{overview.description}</p>
-                    <p className={styles.ecosystemInstruction}>
+                    <p className={styles["ecosystem-instruction"]}>
                         {overview.instruction}
                     </p>
                 </div>
 
-                <div className={styles.resourceGroupLabels} aria-hidden="true" style={resourceGridStyle}>
+                <div className={styles["resource-group-labels"]} aria-hidden="true" style={resourceGridStyle}>
                     {resourceGroupLabels.map((groupLabel) => (
                         <span
-                            className={styles.groupLabel}
+                            className={styles["group-label"]}
                             key={`${groupLabel.label}-${groupLabel.start}`}
                             style={{ gridColumn: `${groupLabel.start} / span ${groupLabel.span}` }}
                         >
@@ -488,7 +488,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                     ))}
                 </div>
                 <div
-                    className={styles.resourceRow}
+                    className={styles["resource-row"]}
                     aria-label="Resources"
                     ref={resourceRowRef}
                     style={resourceGridStyle}
@@ -546,33 +546,33 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         </pattern>
                     </defs>
 
-                    <g className={styles.peripheralFrame} aria-hidden="true">
-                        <path className={styles.utilityRule} d="M0 278 H1240" />
-                        <text className={styles.zoneLabel} x="76" y="305">
+                    <g className={styles["peripheral-frame"]} aria-hidden="true">
+                        <path className={styles["utility-rule"]} d="M0 278 H1240" />
+                        <text className={styles["zone-label"]} x="76" y="305">
                             Context
                         </text>
-                        <path className={styles.utilityDivider} d="M660 286 V316" />
-                        <text className={styles.zoneLabel} x="680" y="305">
+                        <path className={styles["utility-divider"]} d="M660 286 V316" />
+                        <text className={styles["zone-label"]} x="680" y="305">
                             Access
                         </text>
                     </g>
 
-                    <g className={styles.contextLayer}>
+                    <g className={styles["context-layer"]}>
                         <path
-                            className={styles.softContour}
+                            className={styles["soft-contour"]}
                             d="M0 126 C235 76 392 95 530 132 S799 185 950 132 1138 100 1240 146"
                         />
                         <path
-                            className={styles.softContour}
+                            className={styles["soft-contour"]}
                             d="M0 265 C274 216 410 254 556 242 S785 204 910 249 1082 286 1240 244"
                         />
-                        <line className={styles.resourceRail} x1="0" x2="1240" y1="32" y2="32" />
+                        <line className={styles["resource-rail"]} x1="0" x2="1240" y1="32" y2="32" />
                     </g>
 
-                    <line className={styles.geneTrackHit} x1="0" x2="1240" y1="150" y2="150" />
-                    <line className={styles.genomeRail} x1="0" x2="1240" y1="150" y2="150" />
+                    <line className={styles["gene-track-hit"]} x1="0" x2="1240" y1="150" y2="150" />
+                    <line className={styles["genome-rail"]} x1="0" x2="1240" y1="150" y2="150" />
 
-                    <g className={styles.linkLayer} aria-hidden="true">
+                    <g className={styles["link-layer"]} aria-hidden="true">
                         {resources.flatMap((resource, resourceIndex) =>
                             resource.concepts.map((conceptId) => {
                                 const start =
@@ -592,7 +592,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                                             style={{ stroke: resourceGroupById[resource.groupId].color }}
                                         />
                                         <circle
-                                            className={`${styles.linkTarget} ${isActiveLink ? styles.active : ""}`}
+                                            className={`${styles["link-target"]} ${isActiveLink ? styles.active : ""}`}
                                             cx={targetX}
                                             cy={targetY}
                                             r="3.5"
@@ -612,11 +612,11 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         {...conceptInteractions("gwas")}
                     >
                         <rect fill="none" pointerEvents="all" x="250" y="42" width="120" height="90" rx="6" />
-                        <path className={styles.associationBaseline} d="M261 128 H359" />
-                        <path className={styles.associationThreshold} d="M261 96 H359" />
+                        <path className={styles["association-baseline"]} d="M261 128 H359" />
+                        <path className={styles["association-threshold"]} d="M261 96 H359" />
                         {ASSOCIATION_POINT_Y.map((y, index) => (
                             <circle
-                                className={`${styles.associationPoint} ${y < 96 ? styles.associationPointSignificant : ""}`}
+                                className={`${styles["association-point"]} ${y < 96 ? styles["association-point-significant"] : ""}`}
                                 cx={261 + index * 3.5}
                                 cy={y}
                                 r={y < 96 ? 2.2 : 1.7}
@@ -633,11 +633,11 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         aria-label="Genes"
                         {...conceptInteractions("genes")}
                     >
-                        <rect className={styles.geneConceptHitArea} x="20" y="118" width="180" height="84" rx="6" />
+                        <rect className={styles["gene-concept-hit-area"]} x="20" y="118" width="180" height="84" rx="6" />
                         {GENE_EXONS.map(([x, width]) => (
-                            <rect className={styles.geneExon} x={x} y="142" width={width} height="16" key={x} />
+                            <rect className={styles["gene-exon"]} x={x} y="142" width={width} height="16" key={x} />
                         ))}
-                        <path className={styles.geneDirection} d="M46 142 V132 H66 M61 128 L66 132 L61 136" />
+                        <path className={styles["gene-direction"]} d="M46 142 V132 H66 M61 128 L66 132 L61 136" />
                         <GenomicLabel conceptId="genes" />
                     </g>
 
@@ -648,7 +648,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         aria-label="Variants"
                         {...conceptInteractions("variants")}
                     >
-                        <rect className={styles.variantHitArea} x="252" y="134" width="116" height="48" rx="5" />
+                        <rect className={styles["variant-hit-area"]} x="252" y="134" width="116" height="48" rx="5" />
                         {[268, 282, 296, 310, 324, 338, 352].map((x) => (
                             <path className={styles.variant} d={`M ${x} 145 l 5 5 l -5 5 l -5 -5 Z`} key={x} />
                         ))}
@@ -662,11 +662,11 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         aria-label="Linkage disequilibrium, shown as a schematic triangular pairwise matrix"
                         {...conceptInteractions("ld")}
                     >
-                        <rect className={styles.ldHitArea} x="250" y="180" width="120" height="90" rx="6" />
-                        <path className={styles.ldTopRule} d="M261 190 H359" />
+                        <rect className={styles["ld-hit-area"]} x="250" y="180" width="120" height="90" rx="6" />
+                        <path className={styles["ld-top-rule"]} d="M261 190 H359" />
                         {LD_VALUES[0].map((_, index) => (
                             <path
-                                className={styles.ldTick}
+                                className={styles["ld-tick"]}
                                 d={`M ${268 + index * 14} 182 V190`}
                                 key={`tick-${index}`}
                             />
@@ -678,7 +678,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
 
                                 return (
                                     <path
-                                        className={styles.ldCell}
+                                        className={styles["ld-cell"]}
                                         d={`M ${cx} ${cy - 7} L ${cx + 7} ${cy} L ${cx} ${cy + 7} L ${cx - 7} ${cy} Z`}
                                         fill={LD_COLORS[value]}
                                         key={`${rowIndex}-${columnIndex}`}
@@ -696,11 +696,11 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         aria-label="Molecular QTLs, shown as multiple relationships from a variant to genomic targets"
                         {...conceptInteractions("qtls")}
                     >
-                        <rect className={styles.qtlHitArea} x="684" y="108" width="310" height="146" rx="6" />
-                        <path className={styles.qtlBridge} d="M810 150 C798 122 772 122 760 150" />
-                        <path className={styles.qtlBridge} d="M810 150 C785 205 732 205 700 158" />
-                        <path className={styles.qtlBridge} d="M810 150 C835 196 890 196 915 158" />
-                        <path className={styles.qtlBridge} d="M810 150 C850 222 940 222 980 150" />
+                        <rect className={styles["qtl-hit-area"]} x="684" y="108" width="310" height="146" rx="6" />
+                        <path className={styles["qtl-bridge"]} d="M810 150 C798 122 772 122 760 150" />
+                        <path className={styles["qtl-bridge"]} d="M810 150 C785 205 732 205 700 158" />
+                        <path className={styles["qtl-bridge"]} d="M810 150 C835 196 890 196 915 158" />
+                        <path className={styles["qtl-bridge"]} d="M810 150 C850 222 940 222 980 150" />
                         <path className={styles.variant} d="M810 144 l6 6 l-6 6 l-6 -6 Z" />
                         <GenomicLabel conceptId="qtls" />
                     </g>
@@ -712,7 +712,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         tabIndex={0}
                         {...conceptInteractions("sequencing")}
                     >
-                        <rect className={styles.sequencingHitArea} x="1070" y="92" width="170" height="110" rx="6" />
+                        <rect className={styles["sequencing-hit-area"]} x="1070" y="92" width="170" height="110" rx="6" />
                         <g>
                             {SEQUENCING_READS.map(([x, width, y], index) => {
                                 const readX = 592.5 + x / 2;
@@ -722,14 +722,14 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                                 return (
                                     <g key={`${x}-${width}`}>
                                         <line
-                                            className={styles.sequencingRead}
+                                            className={styles["sequencing-read"]}
                                             x1={readX}
                                             x2={readX + readWidth}
                                             y1={y}
                                             y2={y}
                                         />
                                         <line
-                                            className={styles.sequencingBase}
+                                            className={styles["sequencing-base"]}
                                             x1={mismatchX}
                                             x2={mismatchX}
                                             y1={y - 2.5}
@@ -749,21 +749,21 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         aria-label="Regulatory elements"
                         {...conceptInteractions("regulatory")}
                     >
-                        <rect className={styles.regulatoryHitArea} x="444" y="104" width="250" height="94" rx="6" />
-                        <path className={styles.regulatoryLoop} d="M476 142 C486 110 528 110 538 140" />
-                        <rect className={styles.regulatoryEnhancer} x="460" y="142" width="32" height="16" rx="2" />
-                        <rect className={styles.regulatoryPromoter} x="530" y="140" width="16" height="20" rx="2" />
-                        <rect className={styles.regulatorySilencer} x="650" y="143" width="28" height="14" rx="2" />
-                        <text className={styles.regulatoryMicroLabel} x="476" y="136" textAnchor="middle">
+                        <rect className={styles["regulatory-hit-area"]} x="444" y="104" width="250" height="94" rx="6" />
+                        <path className={styles["regulatory-loop"]} d="M476 142 C486 110 528 110 538 140" />
+                        <rect className={styles["regulatory-enhancer"]} x="460" y="142" width="32" height="16" rx="2" />
+                        <rect className={styles["regulatory-promoter"]} x="530" y="140" width="16" height="20" rx="2" />
+                        <rect className={styles["regulatory-silencer"]} x="650" y="143" width="28" height="14" rx="2" />
+                        <text className={styles["regulatory-micro-label"]} x="476" y="136" textAnchor="middle">
                             Enhancer
                         </text>
-                        <text className={styles.regulatoryMicroLabel} x="538" y="174" textAnchor="middle">
+                        <text className={styles["regulatory-micro-label"]} x="538" y="174" textAnchor="middle">
                             Promoter
                         </text>
-                        <text className={styles.regulatoryMicroLabel} x="588" y="136" textAnchor="middle">
+                        <text className={styles["regulatory-micro-label"]} x="588" y="136" textAnchor="middle">
                             Gene
                         </text>
-                        <text className={styles.regulatoryMicroLabel} x="664" y="136" textAnchor="middle">
+                        <text className={styles["regulatory-micro-label"]} x="664" y="136" textAnchor="middle">
                             Silencer
                         </text>
                         <GenomicLabel conceptId="regulatory" />
@@ -776,7 +776,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         aria-label="Curated evidence"
                         {...conceptInteractions("curatedEvidence")}
                     >
-                        <rect className={styles.utilityHitArea} x="130" y="282" width="150" height="40" rx="6" />
+                        <rect className={styles["utility-hit-area"]} x="130" y="282" width="150" height="40" rx="6" />
                         <UtilityGlyph kind="evidence" x={138} y={288} />
                         <UtilityLabel conceptId="curatedEvidence" />
                     </g>
@@ -788,7 +788,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         aria-label="ADSP Data"
                         {...conceptInteractions("adspData")}
                     >
-                        <rect className={styles.utilityHitArea} x="290" y="282" width="140" height="40" rx="6" />
+                        <rect className={styles["utility-hit-area"]} x="290" y="282" width="140" height="40" rx="6" />
                         <UtilityGlyph kind="dna" x={298} y={288} />
                         <UtilityLabel conceptId="adspData" />
                     </g>
@@ -800,7 +800,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         aria-label="Biosamples"
                         {...conceptInteractions("biosamples")}
                     >
-                        <rect className={styles.utilityHitArea} x="430" y="282" width="120" height="40" rx="6" />
+                        <rect className={styles["utility-hit-area"]} x="430" y="282" width="120" height="40" rx="6" />
                         <UtilityGlyph kind="biosample" x={438} y={288} />
                         <UtilityLabel conceptId="biosamples" />
                     </g>
@@ -812,7 +812,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         aria-label="Harmonized phenotypes"
                         {...conceptInteractions("phenotypes")}
                     >
-                        <rect className={styles.utilityHitArea} x="555" y="282" width="95" height="40" rx="6" />
+                        <rect className={styles["utility-hit-area"]} x="555" y="282" width="95" height="40" rx="6" />
                         <UtilityGlyph kind="phenotype" x={563} y={288} />
                         <UtilityLabel conceptId="phenotypes" />
                     </g>
@@ -824,7 +824,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         aria-label="Open access"
                         {...conceptInteractions("openAccess")}
                     >
-                        <rect className={styles.utilityHitArea} x="720" y="282" width="80" height="40" rx="6" />
+                        <rect className={styles["utility-hit-area"]} x="720" y="282" width="80" height="40" rx="6" />
                         <UtilityGlyph kind="openLock" x={728} y={288} />
                         <UtilityLabel conceptId="openAccess" />
                     </g>
@@ -836,7 +836,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         aria-label="Restricted access"
                         {...conceptInteractions("restrictedAccess")}
                     >
-                        <rect className={styles.utilityHitArea} x="810" y="282" width="110" height="40" rx="6" />
+                        <rect className={styles["utility-hit-area"]} x="810" y="282" width="110" height="40" rx="6" />
                         <UtilityGlyph kind="closedLock" x={818} y={288} />
                         <UtilityLabel conceptId="restrictedAccess" />
                     </g>
@@ -848,7 +848,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         aria-label="Downloads"
                         {...conceptInteractions("downloads")}
                     >
-                        <rect className={styles.utilityHitArea} x="930" y="282" width="104" height="40" rx="6" />
+                        <rect className={styles["utility-hit-area"]} x="930" y="282" width="104" height="40" rx="6" />
                         <UtilityGlyph kind="download" x={938} y={288} />
                         <UtilityLabel conceptId="downloads" />
                     </g>
@@ -860,16 +860,16 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         aria-label="Programmatic and cloud access"
                         {...conceptInteractions("cloudAccess")}
                     >
-                        <rect className={styles.utilityHitArea} x="1044" y="282" width="161" height="40" rx="6" />
+                        <rect className={styles["utility-hit-area"]} x="1044" y="282" width="161" height="40" rx="6" />
                         <UtilityGlyph kind="cloud" x={1052} y={288} />
                         <UtilityLabel conceptId="cloudAccess" />
                     </g>
                 </svg>
 
-                <div className={styles.resourceDetailSlot}>
+                <div className={styles["resource-detail-slot"]}>
                     <Card
                         aria-label={`${detailResource?.name ?? "NIAGADS resource ecosystem"} description`}
-                        className={`${styles.resourceDetail} ${detailResource ? "" : styles.defaultDetail}`}
+                        className={`${styles["resource-detail"]} ${detailResource ? "" : styles["default-detail"]}`}
                         style={
                             {
                                 "--resource-color": detailResource
@@ -878,21 +878,21 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                             } as CSSProperties
                         }
                     >
-                        <CardBody className={styles.resourceDetailBody}>
+                        <CardBody className={styles["resource-detail-body"]}>
                             {detailResource && (
-                                <div className={styles.resourceLogoContainer}>
+                                <div className={styles["resource-logo-container"]}>
                                     <ResourceLogo
                                         width={180}
                                         style={{ height: "auto" }}
-                                        className={styles.resourceLogo}
+                                        className={styles["resource-logo"]}
                                         role="img"
                                         aria-label={`${detailResource.name} logo`}
                                     />
                                 </div>
                             )}
 
-                            <div className={styles.resourceDetailContent}>
-                                <div className={styles.resourceDetailHeader}>
+                            <div className={styles["resource-detail-content"]}>
+                                <div className={styles["resource-detail-header"]}>
                                     <h2>{detailResource?.name ?? overview.defaultDetail.title}</h2>
                                 </div>
 
@@ -903,7 +903,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
 
                             {detailResource?.url && (
                                 <a
-                                    className={styles.resourceDetailAction}
+                                    className={styles["resource-detail-action"]}
                                     href={detailResource.url}
                                     rel="noopener noreferrer"
                                     target="_blank"
@@ -925,7 +925,7 @@ function GenomicLabel({ conceptId }: { conceptId: GenomicConceptId }) {
 
     return (
         <text
-            className={styles.conceptLabel}
+            className={styles["concept-label"]}
             x={layout.x + layout.labelDx}
             y={layout.y + layout.labelDy}
             textAnchor="middle"
@@ -940,7 +940,7 @@ function UtilityLabel({ conceptId }: { conceptId: AccessConceptId }) {
     const layout = accessLayoutById[conceptId];
 
     return (
-        <text className={styles.utilityLabel} x={layout.labelX} y={layout.labelY} textAnchor="start">
+        <text className={styles["utility-label"]} x={layout.labelX} y={layout.labelY} textAnchor="start">
             {concept.label}
         </text>
     );
@@ -1006,7 +1006,7 @@ function UtilityGlyph({
     }[kind];
 
     return (
-        <svg className={styles.utilityGlyph} x={x} y={y} width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+        <svg className={styles["utility-glyph"]} x={x} y={y} width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
             {glyph}
         </svg>
     );
