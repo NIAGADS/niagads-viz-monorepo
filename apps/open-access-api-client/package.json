@@ -6,6 +6,9 @@
         "open-access-api-client": "next dev",
         "build-open-access-api-client": "next build",
         "start-open-access-api-client": "next start",
+        "build-app": "next build",
+        "start-app": "next start",
+        "start-dev-app": "next dev",
         "lint": "eslint ."
     },
     "dependencies": {
