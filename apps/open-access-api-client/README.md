@@ -1,6 +1,59 @@
 # NIAGADS Open Access API Client
 
-Next.js client for the [NIAGADS Open Access API](https://api.niagads.org). Currently provides the API documentation at `/docs`, rendered from the API's OpenAPI specification using [Scalar](https://github.com/scalar/scalar) (`@scalar/api-reference-react`). `/docs` is one route in the app; the root route `/` is reserved for the rest of the application (e.g., dashboards).
+## ASK NIAGADS prototype
+
+The root route now hosts a current-session conversation; `/docs` stays available.
+It uses `ai`/`@ai-sdk/react` and a fixed server-side `/api/ask` proxy to the existing
+FastAPI app. Set **ASK_API_URL** in `.env.local` to that API's base URL. Provider
+credentials and Logfire settings belong only on the Python server.
+
+After the root `npm ci`, build the reused workspace components once:
+
+```bash
+npx lerna run build --scope=@niagads/table --scope=@niagads/charts --include-dependencies --concurrency=1
+```
+
+Run this app's existing development command or `npm run build-app`. New dependency
+versions are pinned in the lockfile: AI SDK 7.0.143 and AI SDK React 4.0.147, paired
+with the backend's PydanticAI 2.57.0 Vercel adapter (`sdk_version=7`).
+
+For a database-free cloud smoke run, start the Python repository's test-only
+`test/bases/niagads/open_access_api/ask/serve_prototype.py`, then run:
+
+```bash
+ASK_API_URL=http://127.0.0.1:8010 npm run open-access-api-client
+```
+
+This harness uses synthetic records and a fake model, not real NIAGADS answers.
+Try `Show a dashboard for the test gene`, `Find the test transcript associations`,
+or `Find genes for the test phenotype`. The latter two expose pending retrieval
+capabilities honestly. See the Python base's `ASK_NIAGADS.md` for the full handoff.
+
+The UI shows streamed text/tool progress, source IDs, validated evidence tables,
+and an optional source-summary chart. Table and chart adapters reuse
+`@niagads/table` and `@niagads/charts`; raw records remain available if a component
+cannot load. Chart counts describe evidence in the retrieved page. Only complete
+`data-niagads-result` parts are rendered. Source metadata is displayed as text;
+model-generated HTML, code, and arbitrary links are never executed.
+
+History is memory-only. New session/reload clears it; no browser storage,
+Valkey, or Cognito persistence is added. Missing/unsupported retrieval is not an
+empty successful answer. Database queries, ORM updates, and embedding integration
+are deferred to the user's system.
+
+Focused frontend tests (from this app's directory):
+
+```bash
+node --experimental-strip-types --test tests/ask.test.ts
+npx tsc --noEmit
+```
+
+To register another component, extend the backend Presentation model/result-kind
+validation, mirror that discriminator in `app/ask/contracts.ts`, and add an adapter
+to the registry in `app/ask/Results.tsx`. Add contract/rendering tests and retain
+accessible data alternatives. See the Python documentation for the envelope.
+
+Next.js client for the [NIAGADS Open Access API](https://api.niagads.org). Provides API documentation at `/docs`, rendered from the API's OpenAPI specification using [Scalar](https://github.com/scalar/scalar) (`@scalar/api-reference-react`), and the ASK NIAGADS prototype at `/`.
 
 > NOTE: Not a stand-alone microservice. It renders the specification served by the Open Access API, which is an independent application.
 

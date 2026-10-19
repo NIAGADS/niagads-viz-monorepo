@@ -1,0 +1,179 @@
+.app {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem;
+    color: #192c3b;
+    font-family: Arial, sans-serif;
+    line-height: 1.55;
+}
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border-bottom: 2px solid #22647e;
+    padding-bottom: 1rem;
+}
+.header h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+.header a {
+    color: #165976;
+}
+.eyebrow {
+    margin: 0;
+    font-size: 0.85rem;
+}
+.notice {
+    padding: 0.8rem 1rem;
+    background: #eef4f6;
+    border-left: 3px solid #537d8c;
+}
+.examples,
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+}
+.app button {
+    border: 1px solid #397389;
+    border-radius: 4px;
+    padding: 0.65rem 1rem;
+    min-height: 44px;
+    background: white;
+    color: #164b62;
+    cursor: pointer;
+    font: inherit;
+    text-align: left;
+}
+.app button[type="submit"] {
+    background: #195c76;
+    color: white;
+}
+.app button:disabled {
+    opacity: 0.55;
+    cursor: default;
+}
+.app button:focus-visible,
+.app a:focus-visible,
+.app textarea:focus-visible,
+.app summary:focus-visible {
+    outline: 3px solid #b86c18;
+    outline-offset: 3px;
+}
+.conversation {
+    margin-top: 2rem;
+}
+.message {
+    border-bottom: 1px solid #cad8df;
+    padding: 1rem 0;
+    overflow-wrap: anywhere;
+}
+.message h2 {
+    font-size: 1rem;
+    margin-bottom: 0.4rem;
+}
+.prose {
+    white-space: pre-wrap;
+}
+.progress {
+    font-size: 0.85rem;
+    color: #48636f;
+}
+.panel {
+    margin: 1.2rem 0;
+    padding: 1rem;
+    border: 1px solid #cad8df;
+    border-radius: 4px;
+    min-width: 0;
+}
+.panel h3 {
+    margin-top: 0;
+}
+.table {
+    overflow-x: auto;
+    max-width: 100%;
+}
+.tableContent {
+    min-width: 650px;
+    overflow-wrap: normal;
+}
+.table:focus-visible {
+    outline: 3px solid #b86c18;
+    outline-offset: 3px;
+}
+.chart {
+    height: 360px;
+    min-width: 300px;
+}
+.sourceTable {
+    border-collapse: collapse;
+    width: 100%;
+}
+.sourceTable th,
+.sourceTable td {
+    text-align: left;
+    padding: 0.5rem;
+    border-bottom: 1px solid #cad8df;
+}
+.raw {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    max-height: 450px;
+    overflow: auto;
+    font-size: 0.8rem;
+}
+.composer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    margin: 2rem 0;
+}
+.composer label {
+    font-weight: bold;
+}
+.composer textarea {
+    box-sizing: border-box;
+    width: 100%;
+    resize: vertical;
+    padding: 0.8rem;
+    font: inherit;
+    border: 1px solid #6b8490;
+    border-radius: 4px;
+    color: inherit;
+}
+.error {
+    color: #9d2424;
+    padding: 0.8rem;
+    border: 1px solid currentColor;
+}
+.app summary {
+    cursor: pointer;
+    padding: 0.5rem 0;
+}
+.srOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+}
+@media (max-width: 640px) {
+    .app {
+        padding: 1rem;
+    }
+    .header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+    .panel {
+        padding: 0.6rem;
+    }
+    .chart {
+        height: 320px;
+    }
+    .examples button {
+        width: 100%;
+    }
+}
