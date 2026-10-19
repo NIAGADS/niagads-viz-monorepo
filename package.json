@@ -9,6 +9,7 @@
         "genomicsdb": "concurrently \"npm run watch\" \"npx lerna run genomicsdb\"",
         "genomicsdb-build": "npx lerna run build-genomicsdb",
         "niagads-main": "concurrently \"npm run watch\" \"npx lerna run niagads-main\"",
+        "open-access-api-client": "concurrently \"npm run watch\" \"npx lerna run open-access-api-client\"",
         "adsp": "concurrently \"npm run watch\" \"npx lerna run adsp\"",
         "ui-playground": "concurrently \"npm run watch\" \"npx lerna run ui-playground\"",
         "lint": "npx prettier . --write",
@@ -30,6 +31,7 @@
         "apps/genomicsdb",
         "apps/igvbrowser",
         "apps/niagads-main",
+        "apps/open-access-api-client",
         "apps/ui-playground"
     ],
     "devDependencies": {
@@ -47,6 +49,7 @@
         "esbuild": true,
         "unrs-resolver": true,
         "sharp": true,
+        "vue-demi": true,
         "NIAGADS/igv.js": true,
         "NIAGADS/export-from-json": true
     }
