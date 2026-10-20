@@ -90,6 +90,23 @@ test("rejects invented result references", () => {
     );
 });
 
+test("accepts variant record tables and rejects association charts for variant annotations", () => {
+    const envelope = {
+        version: 1,
+        status: "ok",
+        results: [{ ...result, kind: "variants", rows: [{ id: "rs7412" }] }],
+        presentation: [{ component: "table", result_id: "r1", title: "Variant", slot: "primary" }],
+        warnings: [],
+    };
+    assert.equal(parseEnvelope(envelope).results[0].kind, "variants");
+    assert.throws(() =>
+        parseEnvelope({
+            ...envelope,
+            presentation: [{ ...envelope.presentation[0], component: "association_source_bar" }],
+        })
+    );
+});
+
 test("nested result data is rendered as text instead of executable cell configuration", () => {
     const rows = tableData(result);
     assert.equal(rows.columns[0].type, "text");

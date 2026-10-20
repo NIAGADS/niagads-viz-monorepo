@@ -2,6 +2,11 @@
 
 ## ASK NIAGADS prototype
 
+The API adapter supports gene, variant, and track identifier lookups and
+gene/variant association pages. Variant records use the existing table view.
+Semantic search remains planned; the assistant reports it as unavailable until
+the query endpoints are implemented.
+
 The root route now hosts a current-session conversation; `/docs` stays available.
 It uses `ai`/`@ai-sdk/react` and a fixed server-side `/api/ask` proxy to the existing
 FastAPI app. Set **ASK_API_URL** in `.env.local` to that API's base URL. Provider

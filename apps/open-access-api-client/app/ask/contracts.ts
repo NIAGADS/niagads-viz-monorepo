@@ -3,7 +3,7 @@ import { z } from "zod";
 const resultSchema = z
     .object({
         id: z.string().min(1),
-        kind: z.enum(["genes", "tracks", "associations", "structure", "operations"]),
+        kind: z.enum(["genes", "variants", "tracks", "associations", "structure", "operations"]),
         rows: z.array(z.record(z.string(), z.unknown())).max(100),
         page: z.number().int().min(1),
         limit: z.number().int().min(1).max(100),
