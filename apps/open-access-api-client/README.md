@@ -9,6 +9,10 @@ It requires a server-side key and the exact ETL embedding model to be available
 through OpenRouter. Live semantic retrieval remains unverified. Variant semantic
 search is still planned.
 
+On the Python server, `ASK_MODEL=openrouter/free` lets OpenRouter choose a chat
+model per request. Embeddings use the separate `OPENROUTER_EMBEDDING_MODEL`
+setting, currently restricted to `liquid/lfm-2.5-embedding-350m:free`.
+
 The root route now hosts a current-session conversation; `/docs` stays available.
 It uses `ai`/`@ai-sdk/react` and a fixed server-side `/api/ask` proxy to the existing
 FastAPI app. Set **ASK_API_URL** in `.env.local` to that API's base URL. Provider
