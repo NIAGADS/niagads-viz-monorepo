@@ -4,8 +4,10 @@
 
 The API adapter supports gene, variant, and track identifier lookups and
 gene/variant association pages. Variant records use the existing table view.
-Semantic search remains planned; the assistant reports it as unavailable until
-the query endpoints are implemented.
+Gene/track semantic search uses OpenRouter query embeddings in the API layer.
+It requires a server-side key and the exact ETL embedding model to be available
+through OpenRouter. Live semantic retrieval remains unverified. Variant semantic
+search is still planned.
 
 The root route now hosts a current-session conversation; `/docs` stays available.
 It uses `ai`/`@ai-sdk/react` and a fixed server-side `/api/ask` proxy to the existing
