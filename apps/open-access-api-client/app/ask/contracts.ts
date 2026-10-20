@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { issueSchema } from "./errors.ts";
 import { AnnotationKind, Entity, ResponseContent, sourceChartTypes } from "./types.generated.ts";
 
 const associationSummaryRowSchema = z.object({
@@ -24,6 +25,7 @@ const resultSchema = z
 
 const envelopeSchema = z
     .object({
+        issues: z.array(issueSchema).default([]),
         version: z.literal(2),
         status: z.enum([
             "ok",
@@ -59,14 +61,18 @@ const envelopeSchema = z
             if (
                 p.component === "association_source_bar" &&
                 result &&
-                (result.content !== ResponseContent.SUMMARY || !sourceChartTypes.some(
-                    (type) => type.entity === result.entity && type.annotation === result.annotation
-                ))
+                (result.content !== ResponseContent.SUMMARY ||
+                    !sourceChartTypes.some(
+                        (type) => type.entity === result.entity && type.annotation === result.annotation
+                    ))
             ) {
                 ctx.addIssue({ code: "custom", message: "Association chart requires summary content" });
             } else if (p.component === "association_source_bar" && result) {
                 if (!result.rows.every((row) => associationSummaryRowSchema.safeParse(row).success)) {
-                    ctx.addIssue({ code: "custom", message: "Association summary requires track identifiers and nonnegative integer counts" });
+                    ctx.addIssue({
+                        code: "custom",
+                        message: "Association summary requires track identifiers and nonnegative integer counts",
+                    });
                 }
             }
         });

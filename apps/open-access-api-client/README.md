@@ -49,6 +49,13 @@ A returned summary page can contain only some tracks. Only complete
 `data-niagads-result` parts are rendered. Source metadata is displayed as text;
 model-generated HTML, code, and arbitrary links are never executed.
 
+Operation failures are rendered once from validated `issues` in result parts.
+Terminal stream failures and pre-stream proxy failures use the same safe issue
+contract and show available request references. The proxy maps HTTP status to
+controlled messages without forwarding upstream error bodies. Raw SDK parsing
+errors are replaced with a safe response message. An empty successful retrieval
+is displayed separately from a failure.
+
 History is memory-only. New session/reload clears it; no browser storage,
 Valkey, or Cognito persistence is added. Missing/unsupported retrieval is not an
 empty successful answer. Database queries, ORM updates, and embedding integration

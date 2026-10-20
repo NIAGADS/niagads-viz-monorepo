@@ -88,22 +88,34 @@ export default function Results({ value }: { value: unknown }) {
     try {
         envelope = parseEnvelope(value);
     } catch {
-        return <p role="alert">The response contains invalid or unsupported result configuration.</p>;
+        return <p role="alert">The results could not be displayed. Contact support if the problem continues.</p>;
     }
     return (
         <div>
-            {envelope.status !== "ok" && (
+            {envelope.status !== "ok" && !envelope.issues.length && !envelope.warnings.length && (
                 <p className={styles.notice}>
                     {envelope.status === "empty"
                         ? "No matching records were returned."
-                        : `Result status: ${envelope.status.replaceAll("_", " ")}`}
+                        : envelope.status === "clarification"
+                          ? "More information is needed to complete this request."
+                          : "Part of this request could not be completed."}
                 </p>
             )}
-            {envelope.warnings.map((warning, i) => (
-                <p key={i} className={styles.notice}>
-                    {warning}
-                </p>
-            ))}
+            {Array.from(new Map(envelope.issues.map((issue) => [JSON.stringify(issue), issue])).values()).map(
+                (issue, i) => (
+                    <p key={`issue-${i}`} role="alert" className={styles.error}>
+                        {issue.message}
+                        {issue.request_id ? ` Reference: ${issue.request_id}.` : ""}
+                    </p>
+                )
+            )}
+            {[...new Set(envelope.warnings)]
+                .filter((warning) => !envelope.issues.some((issue) => issue.message === warning))
+                .map((warning, i) => (
+                    <p key={i} className={styles.notice}>
+                        {warning}
+                    </p>
+                ))}
             {envelope.presentation.map((panel, i) => {
                 const result = envelope.results.find((r) => r.id === panel.result_id)!;
                 const View = registry[panel.component];

@@ -5,6 +5,7 @@ import { DefaultChatTransport, type UIMessage } from "ai";
 import Link from "next/link";
 import { useMemo, useState, type FormEvent } from "react";
 import Results from "./Results";
+import { errorMessage, fetchAsk } from "./errors";
 import { textHistory, type AskEnvelope } from "./contracts";
 import styles from "./ask.module.css";
 
@@ -12,11 +13,11 @@ type Message = UIMessage<unknown, { "niagads-result": AskEnvelope }>;
 
 export default function Chat() {
     const [input, setInput] = useState("");
-    const [submissionError, setSubmissionError] = useState("");
     const transport = useMemo(
         () =>
             new DefaultChatTransport<Message>({
                 api: "/api/ask",
+                fetch: fetchAsk,
                 prepareSendMessagesRequest: ({ messages }) => ({ body: { messages: textHistory(messages) } }),
             }),
         []
@@ -28,13 +29,9 @@ export default function Chat() {
         event.preventDefault();
         const text = input.trim();
         if (!text || busy) return;
-        setSubmissionError("");
+        clearError();
         setInput("");
-        try {
-            await sendMessage({ text });
-        } catch {
-            setSubmissionError("The query could not be completed. Please retry.");
-        }
+        await sendMessage({ text });
     }
 
     return (
@@ -98,9 +95,9 @@ export default function Chat() {
                       ? "Retrieving evidence and preparing a response…"
                       : ""}
             </p>
-            {(error || submissionError) && (
+            {error && (
                 <p role="alert" className={styles.error}>
-                    {submissionError || error?.message || "The assistant is unavailable. Please retry."}
+                    {errorMessage(error)}
                 </p>
             )}
             <form onSubmit={submit} className={styles.composer}>
@@ -129,7 +126,6 @@ export default function Chat() {
                             setMessages([]);
                             clearError();
                             setInput("");
-                            setSubmissionError("");
                         }}
                     >
                         New session

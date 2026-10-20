@@ -131,11 +131,15 @@ test("distinguishes association annotations from reports and search candidates",
     assert.throws(() => parseEnvelope({ ...envelope, version: 1 }));
 });
 
-
 test("rejects charts from full association rows and malformed summary counts", () => {
     const envelope = {
-        version: 2, status: "ok", results: [result], warnings: [],
-        presentation: [{ component: "association_source_bar", result_id: "r1", title: "Associations", slot: "primary" }],
+        version: 2,
+        status: "ok",
+        results: [result],
+        warnings: [],
+        presentation: [
+            { component: "association_source_bar", result_id: "r1", title: "Associations", slot: "primary" },
+        ],
     };
     for (const invalidResult of [
         { ...result, content: "full" },
@@ -146,4 +150,25 @@ test("rejects charts from full association rows and malformed summary counts", (
     ]) {
         assert.throws(() => parseEnvelope({ ...envelope, results: [invalidResult] }));
     }
+});
+
+test("operation failures remain distinct from successful empty results", () => {
+    const envelope = parseEnvelope({
+        version: 2,
+        status: "retrieval_error",
+        results: [],
+        presentation: [],
+        warnings: [],
+        issues: [
+            {
+                code: "not_found",
+                operation: "gene",
+                message: "Gene lookup failed. Check its identifier.",
+                request_id: "request-123",
+                provider_request_id: null,
+            },
+        ],
+    });
+    assert.equal(envelope.issues[0].code, "not_found");
+    assert.notEqual(envelope.status, "empty");
 });
