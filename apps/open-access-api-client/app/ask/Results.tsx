@@ -42,29 +42,29 @@ function TableView({ result }: { result: ResultSet }) {
 function SourceSummary({ result }: { result: ResultSet }) {
     const [chartOpen, setChartOpen] = useState(false);
     const counts = sourceCounts(result);
-    if (!counts.length) return <p>No source counts are available for this result.</p>;
+    if (!counts.length) return <p>No association counts are available for this result.</p>;
     return (
         <figure>
-            <figcaption>Evidence entries by source in this retrieved page</figcaption>
+            <figcaption>Association counts by track from the returned summary</figcaption>
             <details onToggle={(event) => setChartOpen(event.currentTarget.open)}>
                 <summary>Show source chart</summary>
-                <div className={styles.chart} aria-label="Source evidence chart">
+                <div className={styles.chart} aria-label="Association counts by track">
                     {chartOpen && (
                         <SourceBar
                             id={`${result.id}-sources`}
                             keys={["count"]}
                             data={counts}
-                            xAxisLabel="Evidence entries"
+                            xAxisLabel="Associations"
                         />
                     )}
                 </div>
             </details>
             <table className={styles.sourceTable}>
-                <caption className={styles.srOnly}>Source chart data</caption>
+                <caption className={styles.srOnly}>Association summary counts</caption>
                 <thead>
                     <tr>
-                        <th scope="col">Source</th>
-                        <th scope="col">Evidence entries</th>
+                        <th scope="col">Track</th>
+                        <th scope="col">Associations</th>
                     </tr>
                 </thead>
                 <tbody>

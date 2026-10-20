@@ -43,7 +43,9 @@ capabilities honestly. See the Python base's `ASK_NIAGADS.md` for the full hando
 The UI shows streamed text/tool progress, source IDs, validated evidence tables,
 and an optional source-summary chart. Table and chart adapters reuse
 `@niagads/table` and `@niagads/charts`; raw records remain available if a component
-cannot load. Chart counts describe evidence in the retrieved page. Only complete
+cannot load. Charts display the API summary
+`num_associations` counts by track; they do not recount individual associations.
+A returned summary page can contain only some tracks. Only complete
 `data-niagads-result` parts are rendered. Source metadata is displayed as text;
 model-generated HTML, code, and arbitrary links are never executed.
 
@@ -59,10 +61,20 @@ node --experimental-strip-types --test tests/ask.test.ts
 npx tsc --noEmit
 ```
 
-To register another component, extend the backend Presentation model/result-kind
-validation, mirror that discriminator in `app/ask/contracts.ts`, and add an adapter
-to the registry in `app/ask/Results.tsx`. Add contract/rendering tests and retain
+To register another component, extend the backend Presentation model and its
+entity/annotation validation, mirror the discriminator in `app/ask/contracts.ts`,
+and add an adapter to the registry in `app/ask/Results.tsx`. Add contract/rendering tests and retain
 accessible data alternatives. See the Python documentation for the envelope.
+
+The version 2 result envelope identifies the queried `entity` separately from its
+`annotation` kind (`report`, `associations`, or `structure`). Search candidates
+have `annotation: null`. Results also retain the existing API `content` selector.
+The association chart requires `annotation: "associations"`, `content: "summary"`,
+and the API's `track`/`num_associations` fields. Full records and gene reports use
+tables. Entity, annotation, and response-content enums plus source-chart
+compatibility are generated from Python into `app/ask/types.generated.ts`; do
+not maintain independent lists here. See the Python run guide for regeneration.
+Update the paired backend and frontend together; version 1 is not accepted.
 
 Next.js client for the [NIAGADS Open Access API](https://api.niagads.org). Provides API documentation at `/docs`, rendered from the API's OpenAPI specification using [Scalar](https://github.com/scalar/scalar) (`@scalar/api-reference-react`), and the ASK NIAGADS prototype at `/`.
 

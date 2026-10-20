@@ -1,9 +1,17 @@
 import { z } from "zod";
+import { AnnotationKind, Entity, ResponseContent, sourceChartTypes } from "./types.generated.ts";
+
+const associationSummaryRowSchema = z.object({
+    track: z.string().min(1),
+    num_associations: z.number().int().nonnegative(),
+});
 
 const resultSchema = z
     .object({
         id: z.string().min(1),
-        kind: z.enum(["genes", "variants", "tracks", "associations", "structure", "operations"]),
+        entity: z.enum(Entity),
+        annotation: z.enum(AnnotationKind).nullable(),
+        content: z.enum(ResponseContent).default(ResponseContent.FULL),
         rows: z.array(z.record(z.string(), z.unknown())).max(100),
         page: z.number().int().min(1),
         limit: z.number().int().min(1).max(100),
@@ -16,7 +24,7 @@ const resultSchema = z
 
 const envelopeSchema = z
     .object({
-        version: z.literal(1),
+        version: z.literal(2),
         status: z.enum([
             "ok",
             "empty",
@@ -51,9 +59,15 @@ const envelopeSchema = z
             if (
                 p.component === "association_source_bar" &&
                 result &&
-                !["genes", "associations"].includes(result.kind)
+                (result.content !== ResponseContent.SUMMARY || !sourceChartTypes.some(
+                    (type) => type.entity === result.entity && type.annotation === result.annotation
+                ))
             ) {
-                ctx.addIssue({ code: "custom", message: "Incompatible chart data" });
+                ctx.addIssue({ code: "custom", message: "Association chart requires summary content" });
+            } else if (p.component === "association_source_bar" && result) {
+                if (!result.rows.every((row) => associationSummaryRowSchema.safeParse(row).success)) {
+                    ctx.addIssue({ code: "custom", message: "Association summary requires track identifiers and nonnegative integer counts" });
+                }
             }
         });
     });
@@ -87,25 +101,10 @@ export function textHistory<
 }
 
 export function sourceCounts(result: ResultSet): { term: string; count: number }[] {
-    const counts = new Map<string, number>();
-    for (const row of result.rows) {
-        const sources: string[] = [];
-        if (Array.isArray(row.evidence)) {
-            for (const evidence of row.evidence) {
-                if (
-                    evidence &&
-                    typeof evidence === "object" &&
-                    "data_source" in evidence &&
-                    typeof evidence.data_source === "string"
-                ) {
-                    sources.push(evidence.data_source);
-                }
-            }
-        }
-        if (typeof row.track === "string") sources.push(row.track);
-        for (const source of sources) counts.set(source, (counts.get(source) ?? 0) + 1);
-    }
-    return [...counts.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([term, count]) => ({ term, count }));
+    return result.rows.map((row) => {
+        const summary = associationSummaryRowSchema.parse(row);
+        return { term: summary.track, count: summary.num_associations };
+    });
 }
 
 export function tableData(result: ResultSet) {
