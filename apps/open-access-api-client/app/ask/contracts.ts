@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { issueSchema } from "./errors.ts";
 
 const resultSchema = z
     .object({
@@ -16,6 +17,7 @@ const resultSchema = z
 
 const envelopeSchema = z
     .object({
+        issues: z.array(issueSchema).default([]),
         version: z.literal(1),
         status: z.enum([
             "ok",

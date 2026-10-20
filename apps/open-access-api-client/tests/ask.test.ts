@@ -113,3 +113,24 @@ test("nested result data is rendered as text instead of executable cell configur
     assert.match(rows.data[0].evidence, /track-b/);
     assert.equal(typeof rows.data[0].evidence, "string");
 });
+
+test("operation failures remain distinct from successful empty results", () => {
+    const envelope = parseEnvelope({
+        version: 1,
+        status: "retrieval_error",
+        results: [],
+        presentation: [],
+        warnings: [],
+        issues: [
+            {
+                code: "not_found",
+                operation: "gene",
+                message: "Gene lookup failed. Check its identifier.",
+                request_id: "request-123",
+                provider_request_id: null,
+            },
+        ],
+    });
+    assert.equal(envelope.issues[0].code, "not_found");
+    assert.notEqual(envelope.status, "empty");
+});
