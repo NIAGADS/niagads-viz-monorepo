@@ -17,9 +17,10 @@ test("safe stream errors retain request references", () => {
     assert.match(errorMessage(new Error(JSON.stringify(issue))), /time/);
 });
 
-test("stream errors retain their original diagnostic message", () => {
+test("stream diagnostics stay in details instead of the alert heading", () => {
     const message = "API retrieval failed: database unavailable. Reference: request-123.";
-    assert.equal(errorMessage(new Error(message)), message);
+    assert.equal(errorMessage(new Error(message)), "An unexpected error occurred while processing your request.");
+    assert.equal(errorDetails(new Error(message)).response, message);
 });
 
 test("FastAPI runtime errors retain detail, reporting instructions and request reference", () => {
@@ -30,8 +31,9 @@ test("FastAPI runtime errors retain detail, reporting instructions and request r
     };
     assert.equal(
         errorMessage(new Error(JSON.stringify(payload))),
-        `${payload.detail} ${payload.message} Request reference: request-123.`
+        `${payload.message} Request reference: request-123.`
     );
+    assert.match(errorDetails(new Error(JSON.stringify(payload))).response, /ASK_MODEL is missing/);
 });
 
 test("FastAPI service errors retain administrator contact instructions", () => {
@@ -43,10 +45,21 @@ test("FastAPI service errors retain administrator contact instructions", () => {
     };
     const message = errorMessage(new Error(JSON.stringify(payload)));
 
-    assert.match(message, /Database connection unavailable/);
+    assert.doesNotMatch(message, /Database connection unavailable/);
+    assert.match(errorDetails(new Error(JSON.stringify(payload))).response, /Database connection unavailable/);
     assert.match(message, /help@niagads.org/);
     assert.match(message, /NIAGADS API Systems Error/);
     assert.match(message, /Request reference: request-db/);
+});
+
+test("SDK validation diagnostics cannot become a wall of text in the alert heading", () => {
+    const message =
+        'Type validation failed: Value: {"type":"data-niagads-result","id":null}. ' +
+        'Error message: [{"code":"invalid_union","message":"Invalid input"}]';
+    const error = new Error(message);
+
+    assert.equal(errorMessage(error), "An unexpected error occurred while processing your request.");
+    assert.equal(errorDetails(error).response, message);
 });
 
 test("error details separate readable stack frames from formatted response metadata", () => {

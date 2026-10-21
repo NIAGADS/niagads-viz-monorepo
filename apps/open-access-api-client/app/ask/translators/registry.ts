@@ -11,6 +11,8 @@ export type FieldSpec = {
     paths: readonly string[];
     required: boolean;
     categorical: boolean;
+    filterType?: "histogram" | "multiselect";
+    traitContext?: "population" | "race" | "ethnicity" | "disease" | "neuropathology" | "other";
     projection: "scalar" | "text_list" | "traits";
 };
 type TableRule = {
@@ -48,17 +50,24 @@ export function fieldValue(row: Record<string, unknown>, field: FieldSpec): unkn
     return null;
 }
 
-export function traitLabels(value: unknown): string[] {
+const TRAIT_CONTEXTS = new Set(["population", "race", "ethnicity", "disease", "neuropathology"]);
+
+export function traitLabels(value: unknown, selectedContext?: FieldSpec["traitContext"]): string[] {
     if (value === null || typeof value !== "object" || Array.isArray(value))
         throw new Error("Traits must be grouped ontology terms");
-    return Object.entries(value).flatMap(([context, terms]) => {
+    const groups = value as Record<string, unknown>;
+    const entries =
+        selectedContext && selectedContext !== "other"
+            ? [[selectedContext, groups[selectedContext] ?? []] as const]
+            : Object.entries(groups).filter(([context]) => !selectedContext || !TRAIT_CONTEXTS.has(context));
+    return entries.flatMap(([context, terms]) => {
         if (!Array.isArray(terms)) throw new Error("Trait groups must contain lists");
         return terms.map((term: unknown) => {
             if (!term || typeof term !== "object" || Array.isArray(term)) throw new Error("Invalid trait term");
             const entry = term as Record<string, unknown>;
             const label = entry.term ?? entry.id;
             if (typeof label !== "string") throw new Error("Trait term requires a label or identifier");
-            return `${context}: ${label}`;
+            return selectedContext && selectedContext !== "other" ? label : `${context}: ${label}`;
         });
     });
 }
@@ -73,7 +82,7 @@ export function validateRows(result: Pick<ResultSet, "rows">, id: TableTranslato
             }
             let valid: boolean;
             if (field.projection === "traits") {
-                traitLabels(value);
+                traitLabels(value, field.traitContext);
                 continue;
             } else if (field.projection === "text_list")
                 valid = Array.isArray(value) && value.every((v) => typeof v === "string");

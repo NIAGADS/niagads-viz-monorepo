@@ -69,6 +69,23 @@ compact-working-context-review.md for run-local compaction and its sixteen
 recorded-data/protocol/SDK checks. Cross-turn evidence memory and real local
 API/OpenRouter validation remain deferred. Earlier task branches below are
 historical; do not resume them for this change.
+## Error heading correction — 2026-10-21
+
+Raw stream/SDK diagnostics now use the short heading "An unexpected error occurred
+while processing your request." FastAPI's user-facing message is retained, with
+request reference when available; technical detail is displayed only in collapsed
+error details. Email/GitHub reporting instructions and collapsible stack traces
+remain. Eight focused error tests passed, including SDK type-validation output.
+The underlying malformed-stream failure in the user's screenshot was not fixed.
+
+Association dashboard changes are implemented but live verification was stopped
+at the user's request: complete FastAPI pages, six trait columns, three requested
+multiselects, precomputed-log p-value histogram, existing significance colors,
+and removal of source-ID clutter/sorting help. Common/Table builds, app ESLint
+and typecheck, numeric threshold/sorting checks passed. Table typecheck passed
+with --ignoreDeprecations 5.0 to accommodate its existing config/tool mismatch.
+Local API checks failed in the sandbox; escalated reads were declined. The user
+has moved the API to the host. No browser/full-page data validation is claimed.
 
 ## Error reporting guidance — 2026-10-21
 

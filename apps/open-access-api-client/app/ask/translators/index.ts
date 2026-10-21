@@ -1,4 +1,5 @@
 import type { TableColumn, TableConfig, TableCell } from "@niagads/table";
+import { getPvalueStyle } from "@niagads/common";
 import {
     fieldValue,
     tableRules,
@@ -41,18 +42,32 @@ export function translateTable(result: PresentationData): TableConfig {
             header: field.header,
             type: field.type,
             required: field.required,
-            disableColumnFilter: !field.categorical,
-            filterOpts: field.categorical ? { filterType: field.type === "boolean" ? "boolean" : "pie" } : undefined,
+            disableColumnFilter: !field.categorical && !field.filterType,
+            filterOpts: field.filterType
+                ? { filterType: field.filterType }
+                : field.categorical
+                  ? { filterType: field.type === "boolean" ? "boolean" : "pie" }
+                  : undefined,
         };
         if (field.type === "pvalue") {
+            column.styling = {
+                getStyle: (value) =>
+                    value != null && DECIMAL_PVALUE.test(String(value)) ? getPvalueStyle(value) : {},
+            };
+            column.filterOpts = {
+                filterType: "histogram",
+                valueColumn: "neg_log10_pvalue",
+                filterFn: (row, _columnId, threshold) => {
+                    if (threshold === undefined) return true;
+                    const value = row.getValue("neg_log10_pvalue");
+                    return typeof value === "number" && value >= threshold;
+                },
+            };
             column.disableSorting = result.rows.some((row) => {
                 const value = fieldValue(row, field);
                 return value !== null && !DECIMAL_PVALUE.test(String(value));
             });
             column.sortingFn = (a, b, id) => comparePvalues(a.getValue(id), b.getValue(id));
-            column.description = column.disableSorting
-                ? "Reported p-value text is preserved. Use the separate −log10(p) column for numeric sorting."
-                : "Reported p-value text is preserved; numeric sorting supports scientific notation.";
         }
         if (field.id === "score")
             column.description = "Semantic similarity is a search score, not association significance.";
@@ -63,7 +78,8 @@ export function translateTable(result: PresentationData): TableConfig {
             fields.map((field): [string, TableCell | TableCell[]] => {
                 const value = fieldValue(row, field);
                 if (value === null) return [field.id, null];
-                if (field.projection === "traits") return [field.id, traitLabels(value).map((value) => ({ value }))];
+                if (field.projection === "traits")
+                    return [field.id, traitLabels(value, field.traitContext).map((value) => ({ value }))];
                 if (field.projection === "text_list")
                     return [field.id, (value as string[]).map((value) => ({ value }))];
                 if (field.type === "link") {

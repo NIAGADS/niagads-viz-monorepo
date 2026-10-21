@@ -7,6 +7,7 @@ import { parseEnvelope } from "./contracts";
 import RecordSummary, { isSingleRecord } from "./RecordSummary";
 import ResultNotices from "./ResultNotices";
 import RetrievedData from "./RetrievedData";
+import styles from "./ask.module.css";
 
 export default function ChatResult({ value, dashboardId }: { value: unknown; dashboardId: string | null }) {
     const parsed = useMemo(() => {
@@ -40,14 +41,14 @@ export default function ChatResult({ value, dashboardId }: { value: unknown; das
                 <RecordSummary key={result.id} result={result} />
             ))}
             {lists.length > 0 && dashboardId && (
-                <p>
-                    <Link href={`/dashboard/${dashboardId}`}>Open dashboard</Link> ·{" "}
-                    {lists.reduce((count, result) => count + result.rows.length, 0)} loaded records in this response.
-                    Page limits apply.
-                </p>
-            )}
-            {envelope.results.length > 0 && (
-                <RetrievedData value={value} filename={`ask-response-${envelope.results[0].id}.json`} />
+                <div className={styles.dashboardAction}>
+                    <Link className={styles.dashboardLink} href={`/dashboard/${dashboardId}`}>
+                        Open dashboard
+                    </Link>
+                    <span>
+                        {lists.reduce((count, result) => count + result.rows.length, 0)} loaded records in this response.
+                    </span>
+                </div>
             )}
         </>
     );

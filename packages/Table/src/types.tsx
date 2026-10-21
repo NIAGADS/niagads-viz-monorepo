@@ -50,6 +50,7 @@ export interface ColumnFilteringOpts {
     filterFn?: FilterFnOption<TableRow>; // defaults based on data type in  column
     // valueTransformFn?: (value: BasicType) => BasicType; // for transforming value for filter display
     filterGroup?: string;
+    valueColumn?: string; // precomputed filter values; pvalue columns expect -log10(p)
 }
 
 export interface ColumnStylingOpts {
@@ -87,6 +88,7 @@ declare module "@tanstack/react-table" {
         type: CellType;
         filterType?: ColumnFilterType;
         filterGroup?: string;
+        filterValueColumn?: string;
         naValue?: string;
         trueValue?: BasicType;
         description?: string;

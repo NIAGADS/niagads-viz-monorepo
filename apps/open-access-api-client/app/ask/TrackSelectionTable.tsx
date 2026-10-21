@@ -6,7 +6,6 @@ import { Button } from "@niagads/ui";
 import type { TableConfig, RowSelectionState } from "@niagads/table";
 import ComponentBoundary from "./ComponentBoundary";
 import { useAskSession } from "./AskSessionProvider";
-import RetrievedData from "./RetrievedData";
 import { errorMessage, fetchAsk } from "./errors";
 import {
     assembleTrackData,
@@ -51,14 +50,13 @@ function FetchedTrackData({ batch, id }: { batch: TrackDataBatch; id: string }) 
                 <ComponentBoundary
                     fallback={
                         <p role="alert">
-                            The combined table could not be displayed. Full track responses remain available below.
+                            The combined table could not be displayed.
                         </p>
                     }
                 >
                     <CombinedTrackTable batch={batch} id={id} />
                 </ComponentBoundary>
             )}
-            <RetrievedData value={batch} filename={`ask-track-data-${id}.json`} />
         </section>
     );
 }
