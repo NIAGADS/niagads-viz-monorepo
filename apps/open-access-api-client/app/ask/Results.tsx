@@ -44,6 +44,12 @@ function PanelView({
                 aria-label="Evidence table; scroll horizontally on narrow screens"
             >
                 <div className={styles.tableContent}>
+                    {panel.filters.length > 0 && (
+                        <p role="status">
+                            Showing {config.data.length} of {result.rows.length} loaded records matching the requested
+                            filters.
+                        </p>
+                    )}
                     <EvidenceTable {...config} />
                 </div>
             </div>
@@ -118,8 +124,7 @@ export default function Results({ value }: { value: unknown }) {
                         </CardHeader>
                         <CardBody>
                             <p>
-                                {result.rows.length} loaded records · API page {result.page}
-                                {result.has_more ? " · More results available; this is not the full result set." : ""}
+                                {result.rows.length} loaded records
                                 {result.annotation === null
                                     ? " · Ranked candidates are not an exhaustive set of matches."
                                     : ""}

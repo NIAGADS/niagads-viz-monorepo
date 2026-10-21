@@ -39,9 +39,7 @@ export default function Dashboard({ id }: { id: string }) {
                     </ActionButton>
                 </div>
             </header>
-            <p>
-                Follow-up results are added here. Earlier results retain their original retrieval scope and pagination.
-            </p>
+            <p>Follow-up results are added here. Earlier results retain their original retrieval scope.</p>
             <Alert variant="info" message="Temporary dashboard">
                 <p>
                     Available in this tab only. Refresh, close, or New session clears these results. Download data to

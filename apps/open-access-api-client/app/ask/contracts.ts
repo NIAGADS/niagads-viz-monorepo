@@ -19,6 +19,17 @@ export const presentationSchema = z
         group_by: z.string().min(1).nullable().default(null),
         x: z.string().min(1).nullable().default(null),
         y: z.string().min(1).nullable().default(null),
+        filters: z
+            .array(
+                z
+                    .object({
+                        field: z.string().min(1),
+                        value: z.union([z.string(), z.boolean(), z.number().finite()]),
+                    })
+                    .strict()
+            )
+            .max(10)
+            .default([]),
     })
     .strict();
 export type PresentationIntent = z.infer<typeof presentationSchema>;

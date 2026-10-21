@@ -36,12 +36,7 @@ function FetchedTrackData({ batch, id }: { batch: TrackDataBatch; id: string }) 
                                 {track.request_id ? ` Reference: ${track.request_id}.` : ""}
                             </span>
                         ) : (
-                            <span>
-                                {track.response.data.length} returned records.
-                                {track.response.pagination
-                                    ? ` API page ${track.response.pagination.page} of ${track.response.pagination.total_pages}.${track.response.pagination.total_pages > track.response.pagination.page ? " More records are available; this is not the complete track data." : ""}`
-                                    : " Pagination was not reported; completeness is unknown."}
-                            </span>
+                            <span>{track.response.data.length} returned records.</span>
                         )}
                     </li>
                 ))}

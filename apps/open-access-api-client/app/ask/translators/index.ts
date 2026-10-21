@@ -121,7 +121,7 @@ export function translateBar(result: PresentationData, groupBy: string | null, m
     let scope: string;
     if (summary) {
         data = result.rows.map((row) => ({ term: row.track as string, count: row.num_associations as number }));
-        scope = "Association counts from the returned API summary; this page may contain only some tracks.";
+        scope = "Association counts from the returned API summary.";
     } else {
         const field = tableRules[id].fields.find((f) => f.id === groupBy && f.categorical);
         if (!field) throw new Error("Choose a supported categorical grouping field for this plot");
