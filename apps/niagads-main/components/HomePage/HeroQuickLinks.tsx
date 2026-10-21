@@ -16,14 +16,14 @@ export const HeroQuickLinks = () => {
                 <span className={styles["hero-quick-link-title"]}>Browse Datasets</span>
                 <span className={styles["hero-quick-link-arrow"]}>→</span>
             </a>
-            <a href="#" target="_blank" rel="noopener noreferrer" className={styles["hero-quick-link"]}>
+            <a href="https://niagads.scrollhelp.site/support/data-submission" target="_blank" rel="noopener noreferrer" className={styles["hero-quick-link"]}>
                 <span className={styles["hero-quick-link-icon"]} aria-hidden="true">
                     <Upload />
                 </span>
                 <span className={styles["hero-quick-link-title"]}>Submit Data</span>
                 <span className={styles["hero-quick-link-arrow"]}>→</span>
             </a>
-            <a
+            {/* <a
                 href="https://adsp-data.niagads.org/"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -34,7 +34,7 @@ export const HeroQuickLinks = () => {
                 </span>
                 <span className={styles["hero-quick-link-title"]}>ADSP Data</span>
                 <span className={styles["hero-quick-link-arrow"]}>→</span>
-            </a>
+            </a> */}
         </div>
     );
 };

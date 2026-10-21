@@ -1,5 +1,5 @@
-import Chat from "./ask/Chat";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-    return <Chat />;
+    redirect("/ask");
 }

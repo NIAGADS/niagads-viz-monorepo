@@ -17,13 +17,13 @@ export async function POST(request: Request) {
             { status: 422 }
         );
     }
-    const base = process.env.ASK_API_URL;
-    if (!base) return Response.json({ message: "ASK_API_URL is not configured" }, { status: 503 });
+    const base = process.env.API_INTERNAL_URL;
+    if (!base) return Response.json({ message: "API_INTERNAL_URL is not configured" }, { status: 503 });
     try {
         if (!["http:", "https:"].includes(new URL(base).protocol))
-            throw new Error("ASK_API_URL must use HTTP or HTTPS");
+            throw new Error("API_INTERNAL_URL must use HTTP or HTTPS");
     } catch {
-        return Response.json({ message: "ASK_API_URL must be a valid HTTP or HTTPS URL" }, { status: 503 });
+        return Response.json({ message: "API_INTERNAL_URL must be a valid HTTP or HTTPS URL" }, { status: 503 });
     }
     const headers = new Headers({ accept: "application/json", "x-request-id": requestId });
     for (const name of ["authorization", "cookie"]) {
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
             let upstreamId: string | null = requestId;
             let httpStatus: number | null = null;
             try {
-                const target = `${base.replace(/\/$/, "")}/track/${encodeURIComponent(track_id)}/data`;
+                const target = `${base.replace(/\/$/, "")}/record/track/${encodeURIComponent(track_id)}/data`;
                 const upstream = await fetch(target, { headers, signal, cache: "no-store", redirect: "error" });
                 upstreamId = safeRequestId(upstream.headers.get("x-request-id")) ?? requestId;
                 httpStatus = upstream.status;

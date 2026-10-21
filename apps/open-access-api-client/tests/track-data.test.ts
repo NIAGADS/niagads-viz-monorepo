@@ -7,7 +7,11 @@ const response = (track_id: string, rows: Record<string, unknown>[], page = 1, t
     track_id,
     status: "ok" as const,
     request_id: null,
-    response: { data: rows, pagination: { page, total_pages }, request: { endpoint: `/track/${track_id}/data` } },
+    response: {
+        data: rows,
+        pagination: { page, total_pages },
+        request: { endpoint: `/record/track/${track_id}/data` },
+    },
 });
 
 test("table limit rejects sixth selection but permits deselection and unlimited callers", () => {
@@ -66,8 +70,8 @@ test("malformed track rows are not treated as successful empty data", () => {
 
 test("proxy calls only fixed track paths and preserves partial outcomes", async (t) => {
     const { POST } = await import("../app/api/track-data/route.ts");
-    const prior = process.env.ASK_API_URL;
-    process.env.ASK_API_URL = "https://api.example.test";
+    const prior = process.env.API_INTERNAL_URL;
+    process.env.API_INTERNAL_URL = "https://api.example.test";
     const calls: string[] = [];
     t.mock.method(globalThis, "fetch", async (input: string | URL | Request) => {
         const url = String(input);
@@ -89,14 +93,14 @@ test("proxy calls only fixed track paths and preserves partial outcomes", async 
         );
         const batch = trackBatchSchema.parse(await response.json());
         assert.deepEqual(calls, [
-            "https://api.example.test/track/t1/data",
-            "https://api.example.test/track/failed/data",
+            "https://api.example.test/record/track/t1/data",
+            "https://api.example.test/record/track/failed/data",
         ]);
         assert.equal(batch.tracks[0].status, "ok");
         assert.equal(batch.tracks[1].status, "error");
         assert.equal(batch.tracks[1].status === "error" && batch.tracks[1].http_status, 501);
     } finally {
-        if (prior === undefined) delete process.env.ASK_API_URL;
-        else process.env.ASK_API_URL = prior;
+        if (prior === undefined) delete process.env.API_INTERNAL_URL;
+        else process.env.API_INTERNAL_URL = prior;
     }
 });

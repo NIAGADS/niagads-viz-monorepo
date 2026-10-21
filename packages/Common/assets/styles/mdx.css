@@ -10,19 +10,19 @@
 
 .mdx-content :is(h1, h2, h3, h4, h5, h6) {
     color: var(--gray-900);
-    font-family: var(--font-inter);
+    /* font-family: var(--font-inter); */
     font-weight: 600;
     line-height: 1.25;
-    margin-block: 2rem 0.75rem;
+    /* margin-block: 2rem 0.75rem; */
 }
 
-.mdx-content h1 {
+/* .mdx-content h1 {
     font-size: 2rem;
 }
 
 .mdx-content h2 {
     font-size: 1.5rem;
-}
+} */
 
 .mdx-content #on-this-page {
     font-size: 1.125rem;
@@ -46,12 +46,12 @@
 }
 
 .mdx-content h3 {
-    font-size: 1.25rem;
+    /* font-size: 1.25rem; */
 }
 
-.mdx-content :is(h4, h5, h6) {
+/* .mdx-content :is(h4, h5, h6) {
     font-size: 1.125rem;
-}
+} */
 
 .mdx-content :is(p, ul, ol, blockquote, pre, table, figure) {
     margin-block: 1rem;

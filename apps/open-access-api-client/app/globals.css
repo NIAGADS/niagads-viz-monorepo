@@ -1,0 +1,39 @@
+@import "@niagads/common/assets/styles/fonts.css";
+@import "@niagads/common/assets/styles/theme.css";
+@import "@niagads/common/assets/styles/layout.css";
+@import "@niagads/common/assets/styles/typography.css";
+
+html:root {
+    /* NIAGADS API logo colors and their theme variations. */
+    --primary: #405565;
+    --primary-light: #5c778b;
+    --primary-dark: #2d3c47;
+    --primary-subtle: #eef2f5;
+    --accent: #b62725;
+    --primary-blue: var(--primary);
+    --secondary-blue: var(--primary-light);
+    --dark-blue: var(--primary-dark);
+    --blue: var(--primary);
+    --focus-ring: 0 0 0 3px rgb(182 39 37 / 25%);
+    --font-family-sans: var(--font-inter), Arial, sans-serif;
+}
+
+body {
+    background: var(--background);
+    color: var(--text-primary);
+    font-family: var(--font-family-sans);
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+}
+
+button,
+textarea {
+    font: inherit;
+}
+
+.scalar-app {
+    --scalar-custom-header-height: var(--header-height);
+}

@@ -55,9 +55,9 @@ Unchecked rows are disabled at the cap; selected rows can still be deselected,
 including across pages/filters. Bulk updates cannot add beyond the cap.
 
 The client action POSTs selected IDs to `/api/track-data`. Its server-side proxy
-calls exactly `/track/{track_id}/data` for each ID in parallel using ASK_API_URL,
-with no query parameters or LLM request. This upstream endpoint is maintained in
-another branch; it was not added or tested against a live API here. IDs are
+calls exactly `/record/track/{track_id}/data` for each ID in parallel using API_INTERNAL_URL,
+with no query parameters or LLM request. The upstream endpoint is now included from the merged development base; it was
+not tested against a live API here. IDs are
 validated/encoded; authentication forwarding follows the existing ASK proxy.
 
 Each action appends an independent association table below its source track list.
@@ -102,6 +102,25 @@ Python syntax/style/tool-schema checks and repository diff checks passed;
 independent targeted static review found no high-confidence defects. Tests and
 live model/database requests remain unrun under the existing policy.
 
+### Development-base merge — 2026-10-21
+
+Merged refactor/api at 4fe3a8de into the Python dashboard branch and app/oa-api at
+7d21bf3e into the frontend dashboard branch. Existing dashboard translators,
+five-track selection, fetched-data tables and phenotype-mapping fix are retained.
+Frontend conflict resolution preserves the base's Card/Alert styling and dashboard
+result grouping/raw provenance. The track-data proxy now follows API_INTERNAL_URL
+and /record/track/{track}/data, matching the merged API route. The Python TODO
+relocation is retained; dashboard follow-ups moved to developer-notes/TODO.md.
+
+Validation: merged Python syntax and ASK response/tool schemas passed; the
+ASK transport passes Black/isort. Independent merge review found no actionable
+issues. The UI workspace package rebuilt with the existing temporary compiler
+compatibility override; its build emitted inherited deprecated-module/type and
+bundling warnings. Full API-client TypeScript and targeted ESLint passed after the UI rebuild. Tests and live
+model/database calls remain unrun. Incoming unrelated whitespace was preserved;
+focused dashboard diff checks relative to the new bases pass.
+No changes to query-planning branches.
+
 ## Merged prototype checkpoint (historical)
 
 Updated: 2026-10-20. Work is on codex/cloud-environment-setup, based on app/oa-api,
@@ -116,7 +135,7 @@ current implementation, user decisions, validation limits, deferred work and a
 suggested prompt for local continuation. If both repositories are checked out
 beside each other, the file is ../niagads-pylib/ASK_NIAGADS_HANDOFF.md.
 
-The UI is apps/open-access-api-client. Its server-side ASK_API_URL points to the
+The UI is apps/open-access-api-client. Its server-side API_INTERNAL_URL points to the
 Python API; OpenRouter credentials and model settings belong on the Python
 server. Chat can use ASK_MODEL=openrouter/free. Embeddings have their own
 OPENROUTER_EMBEDDING_MODEL setting, currently restricted to

@@ -15,7 +15,7 @@ setting, currently restricted to `liquid/lfm-2.5-embedding-350m:free`.
 
 The root route now hosts a current-session conversation; `/docs` stays available.
 It uses `ai`/`@ai-sdk/react` and a fixed server-side `/api/ask` proxy to the existing
-FastAPI app. Set **ASK_API_URL** in `.env.local` to that API's base URL. Provider
+FastAPI app. Set **API_INTERNAL_URL** in `.env.local` to that API's base URL. Provider
 credentials and Logfire settings belong only on the Python server.
 
 After the root `npm ci`, build the reused workspace components once:
@@ -32,7 +32,7 @@ For a database-free cloud smoke run, start the Python repository's test-only
 `test/bases/niagads/open_access_api/ask/serve_prototype.py`, then run:
 
 ```bash
-ASK_API_URL=http://127.0.0.1:8010 npm run open-access-api-client
+API_INTERNAL_URL=http://127.0.0.1:8010 npm run open-access-api-client
 ```
 
 This harness uses synthetic records and a fake model, not real NIAGADS answers.
@@ -153,8 +153,8 @@ Scalar depends on `vue-demi`, whose `postinstall` script is allowed in the root 
 
 ASK track search and track-record tables support selecting up to five tracks and
 fetching their data. The button uses the server-side `/api/track-data` proxy, which
-calls `/track/{track_id}/data` on ASK_API_URL once per selected track, in parallel
-and without query parameters. The upstream endpoint is maintained separately.
+calls `/record/track/{track_id}/data` on API_INTERNAL_URL once per selected track, in parallel
+and without query parameters. The upstream endpoint is supplied by the merged API development base.
 
 Each action adds an independent association table, preserving requested track IDs,
 API-reported source tracks, per-track failures and pagination. Original responses

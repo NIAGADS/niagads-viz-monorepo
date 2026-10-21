@@ -17,7 +17,16 @@ export default function PublicationsPage() {
     return (
         <main>
             <div className="content-section content-section-centered">
-                <h1>Publications</h1>
+                <header className="content-header">
+                    <div>
+                        <h1>Publications</h1>
+                        <p className="content-subtitle">
+                           Explore publications highlighting NIAGADS’ contributions to Alzheimer’s disease research, from discoveries by NIAGADS investigators to studies enabled by its genomic data resources and research tools.
+                        </p>
+                    </div>
+                </header>
+
+                
                 {collections.length === 0 ? (
                     <Alert variant="error" message="Publications are currently unavailable.">
                         The Zotero collections are not configured.

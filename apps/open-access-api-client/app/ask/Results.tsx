@@ -1,5 +1,6 @@
 "use client";
 
+import { Alert, Card, CardBody, CardHeader } from "@niagads/ui";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import { parseEnvelope, type ResultSet, type Presentation } from "./contracts";
@@ -87,7 +88,12 @@ export default function Results({ value }: { value: unknown }) {
     try {
         envelope = parseEnvelope(value);
     } catch {
-        return <p role="alert">The results could not be displayed. Contact support if the problem continues.</p>;
+        return (
+            <Alert
+                variant="error"
+                message="The results could not be displayed. Contact support if the problem continues."
+            />
+        );
     }
     return (
         <div>
@@ -102,10 +108,11 @@ export default function Results({ value }: { value: unknown }) {
             )}
             {Array.from(new Map(envelope.issues.map((issue) => [JSON.stringify(issue), issue])).values()).map(
                 (issue, i) => (
-                    <p key={`issue-${i}`} role="alert" className={styles.error}>
-                        {issue.message}
-                        {issue.request_id ? ` Reference: ${issue.request_id}.` : ""}
-                    </p>
+                    <Alert
+                        key={`issue-${i}`}
+                        variant="error"
+                        message={`${issue.message}${issue.request_id ? ` Reference: ${issue.request_id}.` : ""}`}
+                    />
                 )
             )}
             {[...new Set(envelope.warnings)]
@@ -118,49 +125,54 @@ export default function Results({ value }: { value: unknown }) {
             {envelope.results.map((result) => {
                 const panels = envelope.presentation.filter((panel) => panel.result_id === result.id);
                 return (
-                    <section key={result.id} className={styles.panel}>
-                        <p>
-                            {result.rows.length} loaded records · API page {result.page}
-                            {result.has_more ? " · More results available; this is not the full result set." : ""}
-                            {result.annotation === null
-                                ? " · Ranked candidates are not an exhaustive set of matches."
-                                : ""}
-                        </p>
-                        {result.warnings.map((warning, j) => (
-                            <p key={j}>{warning}</p>
-                        ))}
-                        {result.sources.length > 0 && <p>Source identifiers: {result.sources.join(", ")}</p>}
-                        {!panels.length && (
+                    <Card key={result.id} className={styles.panel}>
+                        <CardHeader>
+                            <h3>{panels.length === 1 ? panels[0].title : "Retrieved records"}</h3>
+                        </CardHeader>
+                        <CardBody>
                             <p>
-                                No registered presentation was selected for this result. Retrieved records remain
-                                available below.
+                                {result.rows.length} loaded records · API page {result.page}
+                                {result.has_more ? " · More results available; this is not the full result set." : ""}
+                                {result.annotation === null
+                                    ? " · Ranked candidates are not an exhaustive set of matches."
+                                    : ""}
                             </p>
-                        )}
-                        {panels.map((panel, i) => (
-                            <div key={`${panel.translator}-${i}`}>
-                                <h3>{panel.title}</h3>
-                                <ComponentBoundary
-                                    fallback={
-                                        <p role="alert">
-                                            This presentation is incompatible with its data or could not be loaded.
-                                            Retrieved records remain available below.
-                                        </p>
-                                    }
-                                >
-                                    <PanelView
-                                        result={result}
-                                        panel={panel}
-                                        maxCategories={envelope.max_bar_categories}
-                                        panelIndex={i}
-                                    />
-                                </ComponentBoundary>
-                            </div>
-                        ))}
-                        <details>
-                            <summary>Full retrieved records and provenance</summary>
-                            <pre className={styles.raw}>{JSON.stringify(result, null, 2)}</pre>
-                        </details>
-                    </section>
+                            {result.warnings.map((warning, j) => (
+                                <p key={j}>{warning}</p>
+                            ))}
+                            {result.sources.length > 0 && <p>Source identifiers: {result.sources.join(", ")}</p>}
+                            {!panels.length && (
+                                <p>
+                                    No registered presentation was selected for this result. Retrieved records remain
+                                    available below.
+                                </p>
+                            )}
+                            {panels.map((panel, i) => (
+                                <div key={`${panel.translator}-${i}`}>
+                                    {panels.length > 1 && <h4>{panel.title}</h4>}
+                                    <ComponentBoundary
+                                        fallback={
+                                            <p role="alert">
+                                                This presentation is incompatible with its data or could not be loaded.
+                                                Retrieved records remain available below.
+                                            </p>
+                                        }
+                                    >
+                                        <PanelView
+                                            result={result}
+                                            panel={panel}
+                                            maxCategories={envelope.max_bar_categories}
+                                            panelIndex={i}
+                                        />
+                                    </ComponentBoundary>
+                                </div>
+                            ))}
+                            <details>
+                                <summary>Full retrieved records and provenance</summary>
+                                <pre className={styles.raw}>{JSON.stringify(result, null, 2)}</pre>
+                            </details>
+                        </CardBody>
+                    </Card>
                 );
             })}
         </div>

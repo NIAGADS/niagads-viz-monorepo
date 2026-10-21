@@ -2,7 +2,7 @@
 
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
-import Link from "next/link";
+import { ActionButton, Alert, Badge, Button, Card, CardBody, CardGrid, LoadingSpinner } from "@niagads/ui";
 import { useMemo, useState, type FormEvent } from "react";
 import Results from "./Results";
 import { errorMessage, fetchAsk } from "./errors";
@@ -35,36 +35,41 @@ export default function Chat() {
     }
 
     return (
-        <main className={styles.app}>
+        <div className={styles.app}>
             <header className={styles.header}>
                 <div>
-                    <p className={styles.eyebrow}>NIAGADS Open Access · Prototype</p>
+                    <p className={styles.eyebrow}>NIAGADS Open Access API</p>
                     <h1>ASK NIAGADS</h1>
                 </div>
-                <Link href="/docs">API documentation</Link>
+                <Badge variant="pill" className={styles.prototype}>
+                    Prototype
+                </Badge>
             </header>
             <p>
                 Explore datasets, genes, and the evidence behind associations. Ask about an API endpoint or request a
                 table or source summary.
             </p>
-            <p className={styles.notice}>
-                Conversation history lasts for this session only. Some retrieval capabilities are not yet available in
-                this prototype.
-            </p>
+            <Alert
+                variant="info"
+                message="Conversation history lasts for this session only. Some retrieval capabilities are not yet available in this prototype."
+            />
             {!messages.length && (
                 <section aria-label="Example questions" className={styles.examples}>
-                    {[
-                        "Find datasets related to Alzheimer Disease",
-                        "Show the available annotations for APOE",
-                        "Which endpoint retrieves associations in a region?",
-                    ].map((text) => (
-                        <button key={text} type="button" onClick={() => setInput(text)}>
-                            {text}
-                        </button>
-                    ))}
+                    <h2>Start with a question</h2>
+                    <CardGrid>
+                        {[
+                            "Find datasets related to Alzheimer Disease",
+                            "Show the available annotations for APOE",
+                            "Which endpoint retrieves associations in a region?",
+                        ].map((text) => (
+                            <Card key={text} span={4} onClick={() => setInput(text)} className={styles.example}>
+                                <CardBody>{text}</CardBody>
+                            </Card>
+                        ))}
+                    </CardGrid>
                 </section>
             )}
-            <div className={styles.conversation} aria-label="Conversation" aria-busy={busy}>
+            <section aria-label="Conversation" aria-busy={busy}>
                 {messages.map((message) => (
                     <article key={message.id} className={styles.message}>
                         <h2>{message.role === "user" ? "You" : "ASK NIAGADS"}</h2>
@@ -87,19 +92,20 @@ export default function Chat() {
                         })}
                     </article>
                 ))}
+            </section>
+            <div role="status" aria-live="polite">
+                {busy && (
+                    <LoadingSpinner
+                        size="sm"
+                        message={
+                            status === "submitted"
+                                ? "Submitting question…"
+                                : "Retrieving evidence and preparing a response…"
+                        }
+                    />
+                )}
             </div>
-            <p role="status" aria-live="polite">
-                {status === "submitted"
-                    ? "Submitting question…"
-                    : status === "streaming"
-                      ? "Retrieving evidence and preparing a response…"
-                      : ""}
-            </p>
-            {error && (
-                <p role="alert" className={styles.error}>
-                    {errorMessage(error)}
-                </p>
-            )}
+            {error && <Alert variant="error" message={errorMessage(error)} />}
             <form onSubmit={submit} className={styles.composer}>
                 <label htmlFor="ask-question">Your question</label>
                 <textarea
@@ -111,16 +117,11 @@ export default function Chat() {
                     placeholder="Ask a research question or explore the API…"
                 />
                 <div className={styles.actions}>
-                    <button type="submit" disabled={busy || !input.trim()}>
+                    <Button color="primary" disabled={busy || !input.trim()}>
                         Ask NIAGADS
-                    </button>
-                    {busy && (
-                        <button type="button" onClick={() => void stop()}>
-                            Stop response
-                        </button>
-                    )}
-                    <button
-                        type="button"
+                    </Button>
+                    {busy && <ActionButton onClick={() => void stop()}>Stop response</ActionButton>}
+                    <ActionButton
                         onClick={async () => {
                             await stop();
                             setMessages([]);
@@ -129,9 +130,9 @@ export default function Chat() {
                         }}
                     >
                         New session
-                    </button>
+                    </ActionButton>
                 </div>
             </form>
-        </main>
+        </div>
     );
 }

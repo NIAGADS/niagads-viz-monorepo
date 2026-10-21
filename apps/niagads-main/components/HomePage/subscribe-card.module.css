@@ -1,0 +1,74 @@
+.subscribe-card-body {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.subscribe-card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-width: 0;
+}
+
+.subscribe-card-icon {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--border-radius-lg);
+    background: var(--gray-100);
+    color: var(--site-primary);
+}
+
+.subscribe-button {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    min-width: 140px;
+    min-height: 44px;
+    padding: 0.65rem 1rem;
+    border: 1px solid var(--secondary-blue);
+    border-radius: var(--border-radius);
+    background: var(--white);
+    color: var(--site-primary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition:
+        background-color var(--transition-fast),
+        border-color var(--transition-fast),
+        color var(--transition-fast);
+}
+
+.subscribe-button:hover {
+    background: var(--gray-50);
+    border-color: var(--site-primary);
+    color: var(--site-primary);
+}
+
+.subscribe-button:focus-visible {
+    outline: 2px solid var(--secondary-blue);
+    outline-offset: 2px;
+}
+
+.subscribe-button svg {
+    flex: 0 0 auto;
+}
+
+@media (max-width: 650px) {
+    .subscribe-card-body {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    .subscribe-button {
+        width: 100%;
+    }
+}
