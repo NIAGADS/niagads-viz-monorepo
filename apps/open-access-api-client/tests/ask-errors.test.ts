@@ -8,7 +8,7 @@ test("HTTP failures give appropriate actions without exposing server settings", 
     assert.match(httpIssue(429).message, /Wait/);
     assert.match(httpIssue(413).message, /shorter/);
     assert.doesNotMatch(httpIssue(501).message, /embedding|retry|shorter/i);
-    assert.doesNotMatch(httpIssue(503).message, /ASK_API_URL|configuration|shorter/);
+    assert.doesNotMatch(httpIssue(503).message, /API_INTERNAL_URL|configuration|shorter/);
 });
 
 test("safe stream errors retain request references", () => {

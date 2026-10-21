@@ -12,7 +12,7 @@ current implementation, user decisions, validation limits, deferred work and a
 suggested prompt for local continuation. If both repositories are checked out
 beside each other, the file is ../niagads-pylib/ASK_NIAGADS_HANDOFF.md.
 
-The UI is apps/open-access-api-client. Its server-side ASK_API_URL points to the
+The UI is apps/open-access-api-client. Its server-side API_INTERNAL_URL points to the
 Python API; OpenRouter credentials and model settings belong on the Python
 server. Chat can use ASK_MODEL=openrouter/free. Embeddings have their own
 OPENROUTER_EMBEDDING_MODEL setting, currently restricted to
