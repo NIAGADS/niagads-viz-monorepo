@@ -9,6 +9,9 @@ import { resolvePresentation } from "./translators/presentation.ts";
 import { MAX_BAR_CATEGORIES } from "./translators/config.ts";
 import ComponentBoundary from "./ComponentBoundary";
 import TrackSelectionTable from "./TrackSelectionTable";
+import RecordSummary, { isSingleRecord } from "./RecordSummary";
+import ResultNotices from "./ResultNotices";
+import RetrievedData from "./RetrievedData";
 
 const EvidenceTable = dynamic(() => import("@niagads/table"), { ssr: false });
 const SourceBar = dynamic(() => import("@niagads/charts").then((m) => m.BarChart), { ssr: false });
@@ -91,39 +94,18 @@ export default function Results({ value }: { value: unknown }) {
         envelope = parseEnvelope(value);
     } catch {
         return (
-            <Alert
-                variant="error"
-                message="The results could not be displayed. Contact support if the problem continues."
-            />
+            <>
+                <Alert
+                    variant="error"
+                    message="The structured results could not be displayed. The original payload can be downloaded below."
+                />
+                <RetrievedData value={value} filename="ask-unrendered-result.json" />
+            </>
         );
     }
     return (
         <div>
-            {envelope.status !== "ok" && !envelope.issues.length && !envelope.warnings.length && (
-                <p className={styles.notice}>
-                    {envelope.status === "empty"
-                        ? "No matching records were returned."
-                        : envelope.status === "clarification"
-                          ? "More information is needed to complete this request."
-                          : "Part of this request could not be completed."}
-                </p>
-            )}
-            {Array.from(new Map(envelope.issues.map((issue) => [JSON.stringify(issue), issue])).values()).map(
-                (issue, i) => (
-                    <Alert
-                        key={`issue-${i}`}
-                        variant="error"
-                        message={`${issue.message}${issue.request_id ? ` Reference: ${issue.request_id}.` : ""}`}
-                    />
-                )
-            )}
-            {[...new Set(envelope.warnings)]
-                .filter((warning) => !envelope.issues.some((issue) => issue.message === warning))
-                .map((warning, i) => (
-                    <p key={i} className={styles.notice}>
-                        {warning}
-                    </p>
-                ))}
+            <ResultNotices envelope={envelope} />
             {envelope.results.map((result) => {
                 const preferences = envelope.presentation.filter((intent) => intent.result_id === result.id);
                 const panels = preferences.length
@@ -146,30 +128,31 @@ export default function Results({ value }: { value: unknown }) {
                                 <p key={j}>{warning}</p>
                             ))}
                             {result.sources.length > 0 && <p>Source identifiers: {result.sources.join(", ")}</p>}
-                            {panels.map((panel, i) => (
-                                <div key={`${panel.view}-${i}`}>
-                                    {panels.length > 1 && <h4>{panel.title}</h4>}
-                                    <ComponentBoundary
-                                        fallback={
-                                            <p role="alert">
-                                                This presentation is incompatible with its data or could not be loaded.
-                                                Retrieved records remain available below.
-                                            </p>
-                                        }
-                                    >
-                                        <PanelView
-                                            result={result}
-                                            panel={panel}
-                                            maxCategories={MAX_BAR_CATEGORIES}
-                                            panelIndex={i}
-                                        />
-                                    </ComponentBoundary>
-                                </div>
-                            ))}
-                            <details>
-                                <summary>Full retrieved records and provenance</summary>
-                                <pre className={styles.raw}>{JSON.stringify(result, null, 2)}</pre>
-                            </details>
+                            {isSingleRecord(result) ? (
+                                <RecordSummary result={result} />
+                            ) : (
+                                panels.map((panel, i) => (
+                                    <div key={`${panel.view}-${i}`}>
+                                        {panels.length > 1 && <h4>{panel.title}</h4>}
+                                        <ComponentBoundary
+                                            fallback={
+                                                <p role="alert">
+                                                    This presentation is incompatible with its data or could not be
+                                                    loaded. Retrieved records remain available below.
+                                                </p>
+                                            }
+                                        >
+                                            <PanelView
+                                                result={result}
+                                                panel={panel}
+                                                maxCategories={MAX_BAR_CATEGORIES}
+                                                panelIndex={i}
+                                            />
+                                        </ComponentBoundary>
+                                    </div>
+                                ))
+                            )}
+                            <RetrievedData value={result} filename={`ask-result-${result.id}.json`} />
                         </CardBody>
                     </Card>
                 );

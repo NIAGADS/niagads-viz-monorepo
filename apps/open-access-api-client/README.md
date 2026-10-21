@@ -1,5 +1,23 @@
 # NIAGADS Open Access API Client
 
+## Chat and dashboard navigation
+
+Chat uses conversation cards, brief Markdown summaries, record-summary cards and
+dashboard links. Lists/charts render at /dashboard/{id}; same-tab navigation back
+to chat preserves history and allows follow-ups to append results. Completed
+track fetches survive navigation too. Refresh, close or New session clears all
+in-memory state; dashboard links are not shareable. Unknown IDs show a notice.
+
+Single gene/variant/track lookups use API summary content and provide a full JSON
+link through a fixed /api/record/{entity}/{id} proxy. Download JSON preserves the
+retrieved payload/provenance even on presentation failure. Downloads include only
+retrieved pages. Markdown renders with raw HTML disabled; data tables are replaced
+by a dashboard notice. Brief-answer rules need live model validation.
+
+Install the updated root lockfile and rebuild UI for the native ActionButton prop
+typing correction. Protocol v4 is unchanged. See ASK_CHAT_DASHBOARD.md and
+ASK_NIAGADS_HANDOFF.md at the repository root for continuation details.
+
 ## Structured query plans
 
 ASK now streams a separate `data-niagads-plan` part before the evidence response.
@@ -46,8 +64,8 @@ returned association trait annotations with source/page context. A phenotype-fir
 request without candidate genes needs scope clarification. See the Python base's
 `ASK_NIAGADS.md` for the full handoff.
 
-The UI shows streamed text/tool progress, source IDs, typed evidence tables and
-optional categorical bars using `@niagads/table` and `@niagads/charts`. Deterministic
+Chat shows brief streamed summaries and collapsible retrieval progress. The
+dashboard shows source IDs, typed evidence tables and optional categorical bars using `@niagads/table` and `@niagads/charts`. Deterministic
 adapters convert retrieved records; the agent records coarse presentation intent
 and result references. All mappings and UI choices belong to this frontend. Tables use curated field mappings and
 categorical/boolean graphical filters. Numeric histogram filters are disabled.

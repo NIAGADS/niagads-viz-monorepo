@@ -1,5 +1,6 @@
 import "./globals.css";
 
+import AskSessionProvider from "./ask/AskSessionProvider";
 import { MainLayout } from "@/components/MainLayout";
 import { LoadingProvider } from "@/components/providers";
 import { APP_METADATA } from "@/data/metadata";
@@ -20,7 +21,9 @@ export default function RootLayout({
         <html lang="en">
             <body>
                 <LoadingProvider>
-                    <MainLayout>{children}</MainLayout>
+                    <AskSessionProvider>
+                        <MainLayout>{children}</MainLayout>
+                    </AskSessionProvider>
                 </LoadingProvider>
             </body>
         </html>
