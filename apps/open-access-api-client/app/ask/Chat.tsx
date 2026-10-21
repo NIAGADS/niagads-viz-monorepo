@@ -1,16 +1,19 @@
 "use client";
 
-import { ActionButton, Alert, Badge, Button, Card, CardBody, CardHeader, CardGrid, LoadingSpinner } from "@niagads/ui";
+import { ActionButton, Alert, Badge, Button, Card, CardBody, CardHeader, CardGrid } from "@niagads/ui";
 import type { FormEvent } from "react";
 import Feedback from "./Feedback";
 import { errorDetails, errorMessage } from "./errors";
 import { useAskSession } from "./AskSessionProvider";
 import ChatResult from "./ChatResult";
 import MarkdownSummary from "./MarkdownSummary";
+import ModelStatusIndicator from "./ModelStatusIndicator";
+import { MODEL_BUSY_MESSAGE } from "./model-status";
 import styles from "./ask.module.css";
 
 export default function Chat() {
-    const { messages, status, error, stop, input, setInput, ask, newSession, dashboardId } = useAskSession();
+    const { messages, status, error, stop, input, setInput, ask, newSession, dashboardId, modelStatus, retry } =
+        useAskSession();
     const busy = status === "submitted" || status === "streaming";
     const diagnostics = error ? errorDetails(error) : null;
 
@@ -118,26 +121,32 @@ export default function Chat() {
                 ))}
             </section>
             <div role="status" aria-live="polite">
-                {busy && (
-                    <LoadingSpinner
-                        size="sm"
-                        message={
-                            status === "submitted"
-                                ? "Submitting question…"
-                                : "Interpreting your request and preparing a response…"
-                        }
-                    />
-                )}
+                {busy && <ModelStatusIndicator status={modelStatus} />}
             </div>
             {error && (
-                <Alert variant="error" message={errorMessage(error)}>
-                    <p>
-                        Please contact <a href="mailto:help@niagads.org">help@niagads.org</a> or{" "}
-                        <a href="https://github.com/NIAGADS/niagads-api/issues" target="_blank" rel="noopener noreferrer">
-                            report an issue on GitHub
-                        </a>
-                        . Include the error details below and the request reference, if shown, so we can investigate.
-                    </p>
+                <Alert
+                    variant={modelStatus?.state === "failed" ? "info" : "error"}
+                    message={modelStatus?.state === "failed" ? MODEL_BUSY_MESSAGE : errorMessage(error)}
+                >
+                    {modelStatus?.state === "failed" && (
+                        <ActionButton disabled={busy} onClick={() => void retry()}>
+                            Retry
+                        </ActionButton>
+                    )}
+                    {modelStatus?.state !== "failed" && (
+                        <p>
+                            Please contact <a href="mailto:help@niagads.org">help@niagads.org</a> or{" "}
+                            <a
+                                href="https://github.com/NIAGADS/niagads-api/issues"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                report an issue on GitHub
+                            </a>
+                            . Include the error details below and the request reference, if shown, so we can
+                            investigate.
+                        </p>
+                    )}
                     <details>
                         <summary>Error details to include in your report</summary>
                         <pre className={styles.errorDetails}>{diagnostics?.response}</pre>

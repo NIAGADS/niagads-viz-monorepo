@@ -1,7 +1,6 @@
 import { httpIssue, safeRequestId } from "../../ask/errors";
 
 export const runtime = "nodejs";
-export const maxDuration = 120;
 
 export async function POST(request: Request) {
     const requestId = safeRequestId(request.headers.get("x-request-id")) ?? crypto.randomUUID();
@@ -18,7 +17,10 @@ export async function POST(request: Request) {
         console.error("ASK proxy configuration invalid", { requestId });
         return Response.json(httpIssue(503, requestId), { status: 503 });
     }
-    const timeout = AbortSignal.timeout(100000);
+    // Bound connection/header setup; the backend bounds active work while
+    // excluding announced retry waits from its deadline.
+    const timeout = new AbortController();
+    const connectionTimer = setTimeout(() => timeout.abort(), 100000);
     try {
         const chunks: Uint8Array[] = [];
         let size = 0;
@@ -49,10 +51,11 @@ export async function POST(request: Request) {
             method: "POST",
             body,
             headers,
-            signal: AbortSignal.any([request.signal, timeout]),
+            signal: AbortSignal.any([request.signal, timeout.signal]),
             cache: "no-store",
             redirect: "error",
         });
+        clearTimeout(connectionTimer);
         const upstreamId = safeRequestId(upstream.headers.get("x-request-id")) ?? requestId;
         if (!upstream.ok) {
             console.warn("ASK API rejected conversation", { requestId, upstreamId, status: upstream.status });
@@ -90,12 +93,14 @@ export async function POST(request: Request) {
         });
     } catch (error) {
         if (request.signal.aborted) return new Response(null, { status: 499 });
-        const status = timeout.aborted ? 504 : 502;
+        const status = timeout.signal.aborted ? 504 : 502;
         console.error("ASK proxy request failed", {
             requestId,
             status,
             exceptionType: error instanceof Error ? error.name : "Unknown",
         });
         return Response.json(httpIssue(status, requestId), { status });
+    } finally {
+        clearTimeout(connectionTimer);
     }
 }
