@@ -8,7 +8,7 @@ import { ext } from "@/lib/util";
 import { useSiteVals } from "@/lib/useSiteVals";
 
 export function AccessPage() {
-    const { cardStyle2, cardStyle3, cardStyle6 } = useSiteVals({ page: "access" });
+    const { cardStyle2, cardStyle3, cardStyle6, } = useSiteVals({ page: "access" });
 
     const accessSteps = D.access.steps.map((label, i) => ({ n: i + 1, label }));
     const access = D.access;
@@ -100,8 +100,7 @@ export function AccessPage() {
                                     margin: "1rem 0 0",
                                 }}
                             >
-                                See what each round contains in <Link href="/sequencing-rounds">Sequencing Rounds</Link>
-                                .
+                                See what each round contains in <Link href="/sequencing-rounds">Sequencing Rounds</Link>.
                             </p>
                         </Card>
                     </div>

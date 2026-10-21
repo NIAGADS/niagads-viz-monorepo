@@ -80,16 +80,3 @@ services:
       context: ./apps/adsp
     ports:
       - "${ADSPDATA_CLIENT_PORT}:3000"
-
-  open-access-api-client:
-    <<: *defaults
-    container_name: open-access-api-client
-    image: client-app-open-access-api:${BUILD}
-    build:
-      <<: *build-defaults
-      args:
-        <<: *build-arg-defaults
-        APP_NAME: open-access-api
-      context: ./apps/open-access-api-client
-    ports:
-      - "${OPEN_ACCESS_API_CLIENT_PORT}:3000"
