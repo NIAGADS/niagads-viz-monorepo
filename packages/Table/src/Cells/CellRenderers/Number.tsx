@@ -28,7 +28,7 @@ export const Float = <T,>({ props }: TextRenderer<T>) => {
     const style = { fontFamily: "var(--font-mono)", ...(_get("style", props) || {}) };
 
     const cellType = _get("type", props);
-    if (cellType === "integer") {
+    if (cellType === "integer" || (cellType === "pvalue" && typeof value === "string")) {
         return <Text props={Object.assign(props as any, { value, style })} />;
     }
 
