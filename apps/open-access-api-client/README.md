@@ -36,9 +36,11 @@ ASK_API_URL=http://127.0.0.1:8010 npm run open-access-api-client
 ```
 
 This harness uses synthetic records and a fake model, not real NIAGADS answers.
-Try `Show a dashboard for the test gene`, `Find the test transcript associations`,
-or `Find genes for the test phenotype`. The latter two expose pending retrieval
-capabilities honestly. See the Python base's `ASK_NIAGADS.md` for the full handoff.
+Try `Show a dashboard for the test gene` or `Find the test transcript associations`.
+For phenotype questions, identify a gene or candidate genes; ASK can inspect the
+returned association trait annotations with source/page context. A phenotype-first
+request without candidate genes needs scope clarification. See the Python base's
+`ASK_NIAGADS.md` for the full handoff.
 
 The UI shows streamed text/tool progress, source IDs, typed evidence tables and
 optional categorical bars using `@niagads/table` and `@niagads/charts`. Deterministic
