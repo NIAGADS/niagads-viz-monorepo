@@ -60,26 +60,17 @@ export function httpIssue(status: number, requestId: string | null = null): AskI
 
 export function errorMessage(error: Error): string {
     try {
-        const issue = issueSchema.parse(JSON.parse(error.message));
-        return issue.message + (issue.request_id ? ` Reference: ${issue.request_id}.` : "");
+        const payload = JSON.parse(error.message);
+        const message = payload.detail ?? payload.message;
+        const text = typeof message === "string" ? message : JSON.stringify(message);
+        return text + (payload.request_id ? ` Reference: ${payload.request_id}.` : "");
     } catch {
-        return "The response was interrupted or could not be read. Contact support if the problem continues.";
+        return error.message;
     }
 }
 
 export async function fetchAsk(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
-    let response: Response;
-    try {
-        response = await fetch(input, init);
-    } catch (error) {
-        if (error instanceof Error && error.name === "AbortError") throw error;
-        throw new Error(JSON.stringify(httpIssue(502)));
-    }
-    if (!response.ok) {
-        // This route emits only controlled errors; never use arbitrary response text.
-        const payload: unknown = await response.json().catch(() => null);
-        const parsed = issueSchema.safeParse(payload);
-        throw new Error(JSON.stringify(parsed.success ? parsed.data : httpIssue(response.status)));
-    }
+    const response = await fetch(input, init);
+    if (!response.ok) throw new Error(await response.text());
     return response;
 }

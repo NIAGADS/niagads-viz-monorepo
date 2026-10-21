@@ -56,13 +56,13 @@ export async function POST(request: Request) {
         const upstreamId = safeRequestId(upstream.headers.get("x-request-id")) ?? requestId;
         if (!upstream.ok) {
             console.warn("ASK API rejected conversation", { requestId, upstreamId, status: upstream.status });
-            await upstream.body?.cancel();
             const responseHeaders = new Headers({ "x-request-id": upstreamId });
             const retryAfter = upstream.headers.get("retry-after");
             if (upstream.status === 429 && retryAfter && /^\d{1,8}$/.test(retryAfter)) {
                 responseHeaders.set("retry-after", retryAfter);
             }
-            return Response.json(httpIssue(upstream.status, upstreamId), {
+            responseHeaders.set("Content-Type", upstream.headers.get("content-type") ?? "application/json");
+            return new Response(upstream.body, {
                 status: upstream.status,
                 headers: responseHeaders,
             });

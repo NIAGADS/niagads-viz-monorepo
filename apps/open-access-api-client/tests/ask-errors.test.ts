@@ -17,8 +17,19 @@ test("safe stream errors retain request references", () => {
     assert.match(errorMessage(new Error(JSON.stringify(issue))), /time/);
 });
 
-test("raw SDK or malformed upstream errors are never displayed", () => {
-    const message = errorMessage(new Error("secret-response-body"));
-    assert.doesNotMatch(message, /secret/);
-    assert.match(message, /response/);
+test("stream errors retain their original diagnostic message", () => {
+    const message = "API retrieval failed: database unavailable. Reference: request-123.";
+    assert.equal(errorMessage(new Error(message)), message);
+});
+
+test("FastAPI runtime errors retain detail and request reference", () => {
+    const payload = {
+        detail: "ASK configuration failed: ASK_MODEL is missing",
+        message: "Please report this error.",
+        request_id: "request-123",
+    };
+    assert.equal(
+        errorMessage(new Error(JSON.stringify(payload))),
+        "ASK configuration failed: ASK_MODEL is missing Reference: request-123."
+    );
 });
