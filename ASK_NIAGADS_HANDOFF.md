@@ -24,8 +24,10 @@ silently weakening the user's request. Model and embedding settings are unchange
 Current full TypeScript and targeted ESLint checks passed in this cloud workspace.
 Python schema/syntax/style checks also passed. New test cases were not run;
 neither live model/database behavior nor actual browser streaming is verified.
-No subagents were explicitly requested, so review was performed inline. No dependency changes
-were needed. See the Python branch's ASK_NIAGADS_HANDOFF.md and
+After the initial inline review, the user explicitly authorized subagents for this
+task. Parallel Python and frontend reviews found no actionable issues; these were
+static reviews, not runtime verification. No dependency changes were needed.
+See the Python branch's ASK_NIAGADS_HANDOFF.md and
 developer-notes/plans/ask/structured-query-planning.md for scope and progress.
 
 ## Merged prototype checkpoint (historical)
