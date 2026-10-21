@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { issueSchema } from "./errors.ts";
-import { AnnotationKind, Entity, ResponseContent, sourceChartTypes } from "./types.generated.ts";
+import { AnnotationKind, Entity, ResponseContent } from "./types.generated.ts";
 
 export const feedbackSchema = z
     .object({
@@ -10,10 +10,18 @@ export const feedbackSchema = z
     })
     .strict();
 
-const associationSummaryRowSchema = z.object({
-    track: z.string().min(1),
-    num_associations: z.number().int().nonnegative(),
-});
+export const presentationSchema = z
+    .object({
+        result_id: z.string().min(1),
+        view: z.enum(["auto", "table", "plot"]).default("auto"),
+        title: z.string().max(160).default("Retrieved evidence"),
+        plot_type: z.string().min(1).nullable().default(null),
+        group_by: z.string().min(1).nullable().default(null),
+        x: z.string().min(1).nullable().default(null),
+        y: z.string().min(1).nullable().default(null),
+    })
+    .strict();
+export type PresentationIntent = z.infer<typeof presentationSchema>;
 
 const resultSchema = z
     .object({
@@ -34,30 +42,11 @@ const resultSchema = z
 const envelopeSchema = z
     .object({
         issues: z.array(issueSchema).default([]),
-        version: z.literal(2),
+        version: z.literal(4),
         feedback_reference: z.string().max(120).nullable().optional(),
-        status: z.enum([
-            "ok",
-            "empty",
-            "clarification",
-            "unsupported",
-            "retrieval_error",
-            "provider_error",
-            "invalid_presentation",
-        ]),
+        status: z.enum(["ok", "empty", "clarification", "unsupported", "retrieval_error", "provider_error"]),
         results: z.array(resultSchema).max(12),
-        presentation: z
-            .array(
-                z
-                    .object({
-                        component: z.enum(["table", "association_source_bar"]),
-                        result_id: z.string().min(1),
-                        title: z.string().max(160),
-                        slot: z.enum(["primary", "secondary"]),
-                    })
-                    .strict()
-            )
-            .max(6),
+        presentation: z.array(presentationSchema).max(6),
         warnings: z.array(z.string()),
     })
     .strict()
@@ -67,23 +56,6 @@ const envelopeSchema = z
         value.presentation.forEach((p) => {
             const result = value.results.find((r) => r.id === p.result_id);
             if (!result) ctx.addIssue({ code: "custom", message: "Unknown result reference" });
-            if (
-                p.component === "association_source_bar" &&
-                result &&
-                (result.content !== ResponseContent.SUMMARY ||
-                    !sourceChartTypes.some(
-                        (type) => type.entity === result.entity && type.annotation === result.annotation
-                    ))
-            ) {
-                ctx.addIssue({ code: "custom", message: "Association chart requires summary content" });
-            } else if (p.component === "association_source_bar" && result) {
-                if (!result.rows.every((row) => associationSummaryRowSchema.safeParse(row).success)) {
-                    ctx.addIssue({
-                        code: "custom",
-                        message: "Association summary requires track identifiers and nonnegative integer counts",
-                    });
-                }
-            }
         });
     });
 
@@ -113,30 +85,4 @@ export function textHistory<
             ),
         }))
         .filter((message) => message.parts.length > 0);
-}
-
-export function sourceCounts(result: ResultSet): { term: string; count: number }[] {
-    return result.rows.map((row) => {
-        const summary = associationSummaryRowSchema.parse(row);
-        return { term: summary.track, count: summary.num_associations };
-    });
-}
-
-export function tableData(result: ResultSet) {
-    const keys = [...new Set(result.rows.flatMap(Object.keys))].slice(0, 12);
-    return {
-        columns: keys.map((id) => ({ id, header: id.replaceAll("_", " "), type: "text" as const })),
-        data: result.rows.map((row) =>
-            Object.fromEntries(
-                keys.map((key) => [
-                    key,
-                    row[key] == null
-                        ? ""
-                        : typeof row[key] === "string"
-                          ? (row[key] as string)
-                          : JSON.stringify(row[key]),
-                ])
-            )
-        ),
-    };
 }

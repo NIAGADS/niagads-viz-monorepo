@@ -2,87 +2,88 @@
 
 import { Alert, Card, CardBody, CardHeader } from "@niagads/ui";
 import dynamic from "next/dynamic";
-import { Component, useState, type ReactNode } from "react";
-import { parseEnvelope, sourceCounts, tableData, type ResultSet } from "./contracts";
+import { useState } from "react";
+import { parseEnvelope, presentationSchema, type ResultSet, type PresentationIntent } from "./contracts";
 import styles from "./ask.module.css";
+import { resolvePresentation } from "./translators/presentation.ts";
+import { MAX_BAR_CATEGORIES } from "./translators/config.ts";
+import ComponentBoundary from "./ComponentBoundary";
+import TrackSelectionTable from "./TrackSelectionTable";
 
 const EvidenceTable = dynamic(() => import("@niagads/table"), { ssr: false });
 const SourceBar = dynamic(() => import("@niagads/charts").then((m) => m.BarChart), { ssr: false });
 
-class ComponentBoundary extends Component<{ children: ReactNode; fallback: ReactNode }, { failed: boolean }> {
-    state = { failed: false };
-    static getDerivedStateFromError() {
-        return { failed: true };
-    }
-    render() {
-        return this.state.failed ? this.props.fallback : this.props.children;
-    }
-}
-
-function TableView({ result }: { result: ResultSet }) {
-    const config = tableData(result);
-    return (
-        <div
-            className={styles.table}
-            role="region"
-            tabIndex={0}
-            aria-label="Evidence table; scroll horizontally on narrow screens"
-        >
-            <div className={styles.tableContent}>
-                <EvidenceTable
-                    id={result.id}
-                    columns={config.columns}
-                    data={config.data}
-                    options={{ enableExport: true, enableColumnFilters: false }}
-                />
-            </div>
-        </div>
-    );
-}
-
-function SourceSummary({ result }: { result: ResultSet }) {
+function PanelView({
+    result,
+    panel,
+    maxCategories,
+    panelIndex,
+}: {
+    result: ResultSet;
+    panel: PresentationIntent;
+    maxCategories: number;
+    panelIndex: number;
+}) {
     const [chartOpen, setChartOpen] = useState(false);
-    const counts = sourceCounts(result);
-    if (!counts.length) return <p>No association counts are available for this result.</p>;
+    const resolved = resolvePresentation(result, panel, maxCategories);
+    if (resolved.kind === "unsupported") return <Alert variant="info" message={resolved.message} />;
+    if (resolved.kind === "table") {
+        const config = resolved.config;
+        config.id = `${config.id}-${panelIndex}`;
+        if (result.entity === "track" && (result.annotation === null || result.annotation === "report")) {
+            return <TrackSelectionTable config={config} />;
+        }
+        return (
+            <div
+                className={styles.table}
+                role="region"
+                tabIndex={0}
+                aria-label="Evidence table; scroll horizontally on narrow screens"
+            >
+                <div className={styles.tableContent}>
+                    <EvidenceTable {...config} />
+                </div>
+            </div>
+        );
+    }
+    const summary = resolved.config;
     return (
         <figure>
-            <figcaption>Association counts by track from the returned summary</figcaption>
-            <details onToggle={(event) => setChartOpen(event.currentTarget.open)}>
-                <summary>Show source chart</summary>
-                <div className={styles.chart} aria-label="Association counts by track">
-                    {chartOpen && (
-                        <SourceBar
-                            id={`${result.id}-sources`}
-                            keys={["count"]}
-                            data={counts}
-                            xAxisLabel="Associations"
-                        />
-                    )}
+            <figcaption>{summary.scope}</figcaption>
+            {summary.notice && <p role="status">{summary.notice}</p>}
+            {!summary.data.length && <p>No categorical counts are available for this result.</p>}
+            {summary.showChart && (
+                <details onToggle={(event) => setChartOpen(event.currentTarget.open)}>
+                    <summary>Show bar chart</summary>
+                    <div className={styles.chart} aria-label={panel.title}>
+                        {chartOpen && (
+                            <SourceBar
+                                id={`${result.id}-bar-${panelIndex}`}
+                                keys={["count"]}
+                                data={summary.data}
+                                xAxisLabel={
+                                    result.annotation === "associations" && result.content === "summary"
+                                        ? "Associations"
+                                        : "Loaded records"
+                                }
+                            />
+                        )}
+                    </div>
+                </details>
+            )}
+            <div
+                className={styles.table}
+                role="region"
+                tabIndex={0}
+                aria-label="Summary counts; scroll horizontally on narrow screens"
+            >
+                <div className={styles.tableContent}>
+                    <EvidenceTable {...summary.table} id={`${summary.table.id}-${panelIndex}`} />
                 </div>
-            </details>
-            <table className={styles.sourceTable}>
-                <caption className={styles.srOnly}>Association summary counts</caption>
-                <thead>
-                    <tr>
-                        <th scope="col">Track</th>
-                        <th scope="col">Associations</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {counts.map((row) => (
-                        <tr key={row.term}>
-                            <th scope="row">{row.term}</th>
-                            <td>{row.count}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            </div>
         </figure>
     );
 }
-
-// Explicit registry: the model selects a name and a result reference, never code.
-const registry = { table: TableView, association_source_bar: SourceSummary };
 
 export default function Results({ value }: { value: unknown }) {
     let envelope;
@@ -123,35 +124,51 @@ export default function Results({ value }: { value: unknown }) {
                         {warning}
                     </p>
                 ))}
-            {envelope.presentation.map((panel, i) => {
-                const result = envelope.results.find((r) => r.id === panel.result_id)!;
-                const View = registry[panel.component];
+            {envelope.results.map((result) => {
+                const preferences = envelope.presentation.filter((intent) => intent.result_id === result.id);
+                const panels = preferences.length
+                    ? preferences
+                    : [presentationSchema.parse({ result_id: result.id, title: "Retrieved records" })];
                 return (
-                    <Card key={`${panel.result_id}-${panel.component}-${i}`} className={styles.panel}>
+                    <Card key={result.id} className={styles.panel}>
                         <CardHeader>
-                            <h3>{panel.title}</h3>
+                            <h3>{panels.length === 1 ? panels[0].title : "Retrieved records"}</h3>
                         </CardHeader>
                         <CardBody>
                             <p>
-                                {result.rows.length} records · Page {result.page}
+                                {result.rows.length} loaded records · API page {result.page}
                                 {result.has_more ? " · More results available; this is not the full result set." : ""}
+                                {result.annotation === null
+                                    ? " · Ranked candidates are not an exhaustive set of matches."
+                                    : ""}
                             </p>
                             {result.warnings.map((warning, j) => (
                                 <p key={j}>{warning}</p>
                             ))}
                             {result.sources.length > 0 && <p>Source identifiers: {result.sources.join(", ")}</p>}
-                            <ComponentBoundary
-                                fallback={
-                                    <p role="alert">
-                                        This component could not be loaded. Full records remain available below.
-                                    </p>
-                                }
-                            >
-                                <View result={result} />
-                            </ComponentBoundary>
+                            {panels.map((panel, i) => (
+                                <div key={`${panel.view}-${i}`}>
+                                    {panels.length > 1 && <h4>{panel.title}</h4>}
+                                    <ComponentBoundary
+                                        fallback={
+                                            <p role="alert">
+                                                This presentation is incompatible with its data or could not be loaded.
+                                                Retrieved records remain available below.
+                                            </p>
+                                        }
+                                    >
+                                        <PanelView
+                                            result={result}
+                                            panel={panel}
+                                            maxCategories={MAX_BAR_CATEGORIES}
+                                            panelIndex={i}
+                                        />
+                                    </ComponentBoundary>
+                                </div>
+                            ))}
                             <details>
                                 <summary>Full retrieved records and provenance</summary>
-                                <pre className={styles.raw}>{JSON.stringify(result.rows, null, 2)}</pre>
+                                <pre className={styles.raw}>{JSON.stringify(result, null, 2)}</pre>
                             </details>
                         </CardBody>
                     </Card>

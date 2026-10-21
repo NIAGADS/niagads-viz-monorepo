@@ -6,11 +6,12 @@ import { ActionButton, Alert, Badge, Button, Card, CardBody, CardGrid, LoadingSp
 import { useMemo, useState, type FormEvent } from "react";
 import Results from "./Results";
 import Feedback from "./Feedback";
+import type { QueryPlan } from "./planning";
 import { errorMessage, fetchAsk } from "./errors";
 import { textHistory, type AskEnvelope } from "./contracts";
 import styles from "./ask.module.css";
 
-type Message = UIMessage<unknown, { "niagads-result": AskEnvelope }>;
+type Message = UIMessage<unknown, { "niagads-result": AskEnvelope; "niagads-plan": QueryPlan }>;
 
 export default function Chat() {
     const [input, setInput] = useState("");
@@ -118,7 +119,7 @@ export default function Chat() {
                         message={
                             status === "submitted"
                                 ? "Submitting question…"
-                                : "Retrieving evidence and preparing a response…"
+                                : "Interpreting your request and preparing a response…"
                         }
                     />
                 )}
