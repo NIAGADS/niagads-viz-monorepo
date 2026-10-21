@@ -46,13 +46,20 @@ export default function Chat() {
                 </Badge>
             </header>
             <p>
-                Explore datasets, genes, and the evidence behind associations. Ask about an API endpoint or request a
-                table or source summary.
+                <strong>Explore Alzheimer&apos;s disease genomics through natural-language questions.</strong>
             </p>
-            <Alert
-                variant="info"
-                message="Conversation history lasts for this session only. Some retrieval capabilities are not yet available in this prototype."
-            />
+            <p>
+                ASK NIAGADS provides a conversational interface to NIAGADS Open Access, helping researchers discover
+                datasets, explore genes and genomic associations, and retrieve supporting evidence. Responses can
+                include summaries, structured data, and visualizations.
+            </p>
+            <Alert variant="info" message="Prototype — Limited Availability">
+                <p>
+                    ASK NIAGADS is under active development. This prototype supports a select range of NIAGADS Open
+                    Access resources and query capabilities. Additional data access and functionality will roll out
+                    throughout November 2026. Check back for updates.
+                </p>
+            </Alert>
             {!messages.length && (
                 <section aria-label="Example questions" className={styles.examples}>
                     <h2>Start with a question</h2>
@@ -114,6 +121,7 @@ export default function Chat() {
                     onChange={(event) => setInput(event.target.value)}
                     rows={3}
                     maxLength={8000}
+                    aria-describedby="session-notice"
                     placeholder="Ask a research question or explore the API…"
                 />
                 <div className={styles.actions}>
@@ -133,6 +141,9 @@ export default function Chat() {
                     </ActionButton>
                 </div>
             </form>
+            <p id="session-notice" className={styles.sessionNotice}>
+                Conversation history is retained for the current session only.
+            </p>
         </div>
     );
 }
