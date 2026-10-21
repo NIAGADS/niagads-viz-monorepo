@@ -17,6 +17,19 @@ export default function Chat() {
     const busy = status === "submitted" || status === "streaming";
     const diagnostics = error ? errorDetails(error) : null;
 
+    const diagnosticDetails = error && (
+        <details>
+            <summary>Error details to include in your report</summary>
+            <pre className={styles.errorDetails}>{diagnostics?.response}</pre>
+            {diagnostics?.stackTrace && (
+                <details>
+                    <summary>Stack trace</summary>
+                    <pre className={styles.errorDetails}>{diagnostics.stackTrace}</pre>
+                </details>
+            )}
+        </details>
+    );
+
     async function submit(event: FormEvent) {
         event.preventDefault();
         const text = input.trim();
@@ -123,40 +136,29 @@ export default function Chat() {
             <div role="status" aria-live="polite">
                 {busy && <ModelStatusIndicator status={modelStatus} />}
             </div>
-            {error && (
-                <Alert
-                    variant={modelStatus?.state === "failed" ? "info" : "error"}
-                    message={modelStatus?.state === "failed" ? MODEL_BUSY_MESSAGE : errorMessage(error)}
-                >
-                    {modelStatus?.state === "failed" && (
-                        <ActionButton disabled={busy} onClick={() => void retry()}>
-                            Retry
-                        </ActionButton>
-                    )}
-                    {modelStatus?.state !== "failed" && (
-                        <p>
-                            Please contact <a href="mailto:help@niagads.org">help@niagads.org</a> or{" "}
-                            <a
-                                href="https://github.com/NIAGADS/niagads-api/issues"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                report an issue on GitHub
-                            </a>
-                            . Include the error details below and the request reference, if shown, so we can
-                            investigate.
-                        </p>
-                    )}
-                    <details>
-                        <summary>Error details to include in your report</summary>
-                        <pre className={styles.errorDetails}>{diagnostics?.response}</pre>
-                        {diagnostics?.stackTrace && (
-                            <details>
-                                <summary>Stack trace</summary>
-                                <pre className={styles.errorDetails}>{diagnostics.stackTrace}</pre>
-                            </details>
-                        )}
-                    </details>
+            {error && modelStatus?.state === "failed" && (
+                <div>
+                    <p>{MODEL_BUSY_MESSAGE}</p>
+                    <ActionButton disabled={busy} onClick={() => void retry()}>
+                        Retry
+                    </ActionButton>
+                    {diagnosticDetails}
+                </div>
+            )}
+            {error && modelStatus?.state !== "failed" && (
+                <Alert variant="error" message={errorMessage(error)}>
+                    <p>
+                        Please contact <a href="mailto:help@niagads.org">help@niagads.org</a> or{" "}
+                        <a
+                            href="https://github.com/NIAGADS/niagads-api/issues"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            report an issue on GitHub
+                        </a>
+                        . Include the error details below and the request reference, if shown, so we can investigate.
+                    </p>
+                    {diagnosticDetails}
                 </Alert>
             )}
             <form onSubmit={submit} className={styles.composer}>

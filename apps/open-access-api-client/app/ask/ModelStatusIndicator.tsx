@@ -16,9 +16,14 @@ export default function ModelStatusIndicator({ status }: { status: ModelStatus |
         0,
         Math.ceil((status.receivedAt + status.waitSeconds * 1000 - Math.max(now, status.receivedAt)) / 1000)
     );
+    const waitingMessages = [
+        `Our models are busy — trying again in ${seconds}s…`,
+        `High demand right now — reconnecting in ${seconds}s…`,
+        `Still working on it — next attempt in ${seconds}s…`,
+    ];
     const message =
         status.state === "waiting"
-            ? `The free models are busy — brewing another attempt in ${seconds}s…`
+            ? waitingMessages[Math.min(Math.max(status.attempt - 2, 0), waitingMessages.length - 1)]
             : status.state === "retrying"
               ? `Percolating again (attempt ${status.attempt} of 5)…`
               : "Percolating…";

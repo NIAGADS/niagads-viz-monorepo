@@ -1,5 +1,13 @@
 # ASK NIAGADS local Codex handoff
 
+## Retry presentation correction — 2026-10-21
+
+Active retry waits use the existing loading spinner with the user's countdown
+messages (busy, high demand, still working), selected by attempt. Exhaustion uses
+plain text and Retry with expandable native diagnostics; no retry alert box.
+Other errors retain their existing alerts. Backend retry behavior is unchanged.
+
+
 ## Current branch — 2026-10-21
 
 The user requested moving this work to feature branches. Continue on

@@ -9,4 +9,4 @@ export const modelStatusSchema = z
     .strict();
 
 export type ModelStatus = z.infer<typeof modelStatusSchema> & { receivedAt: number };
-export const MODEL_BUSY_MESSAGE = "The free models are swamped right now. Try again in a minute.";
+export const MODEL_BUSY_MESSAGE = "Our models are busy right now. Try again in a minute.";
