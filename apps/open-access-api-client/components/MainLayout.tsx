@@ -9,6 +9,7 @@ import type { ReactNode } from "react";
 
 const navigationLinks = [
     { text: "ASK NIAGADS", url: "/ask" },
+    { text: "Open Access", url: "/open-access" },
     { text: "NIAGADS Home", url: "https://www.niagads.org" },
     { text: "API documentation", url: "/docs" },
 ];
@@ -43,7 +44,7 @@ const MainLayoutContent = ({ children }: { children: ReactNode }) => {
                 siteName="NIAGADS"
                 links={[
                     { display: "About", url: "https://www.niagads.org/about" },
-                    { display: "Contact", url: "https://www.niagads.org/contact-us" },
+                    { display: "Contact", url: "https://niagads.scrollhelp.site/support/contact-our-support-team" },
                     { display: "Privacy", url: "https://www.niagads.org/privacy-policy/" },
                     { display: "Terms", url: "https://niagads.scrollhelp.site/support/code-of-conduct" },
                 ]}
