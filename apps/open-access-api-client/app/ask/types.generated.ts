@@ -56,18 +56,3 @@ export const ResponseContent = {
     "URLS": "urls",
     "IDS": "ids"
 } as const;
-
-export const sourceChartTypes = [
-    {
-        "entity": "gene",
-        "annotation": "associations"
-    },
-    {
-        "entity": "variant",
-        "annotation": "associations"
-    },
-    {
-        "entity": "region",
-        "annotation": "associations"
-    }
-] as const;

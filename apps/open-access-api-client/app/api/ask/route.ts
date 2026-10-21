@@ -5,7 +5,7 @@ export const maxDuration = 120;
 
 export async function POST(request: Request) {
     const requestId = safeRequestId(request.headers.get("x-request-id")) ?? crypto.randomUUID();
-    const base = process.env.ASK_API_URL;
+    const base = process.env.API_INTERNAL_URL;
     if (!base) {
         console.error("ASK proxy configuration missing", { requestId });
         return Response.json(httpIssue(503, requestId), { status: 503 });

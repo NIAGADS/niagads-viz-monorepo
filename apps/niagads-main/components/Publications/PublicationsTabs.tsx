@@ -6,6 +6,7 @@ import { Tab, TabBody, TabHeader, Tabs } from "@niagads/ui/client";
 
 import useSWR from "swr";
 import { useCallback, useEffect, useState } from "react";
+import styles from "./publications-tabs.module.css";
 
 export interface PublicationCollection {
     id: string;
@@ -65,19 +66,21 @@ export const PublicationsTabs = ({ collections }: PublicationsTabsProps) => {
     }, []);
 
     return (
-        <Tabs selectedTab={selectedTab} onTabChange={setSelectedTab}>
-            {collections.map((collection) => (
-                <Tab id={collection.id} key={collection.id}>
-                    <TabHeader>
-                        {counts[collection.id] !== undefined
-                            ? `${collection.name} (${counts[collection.id]})`
-                            : collection.name}
-                    </TabHeader>
-                    <TabBody>
-                        <CollectionTable collection={collection} onTableLoad={onTableLoad} />
-                    </TabBody>
-                </Tab>
-            ))}
-        </Tabs>
+        <div className={styles["publications-tabs"]}>
+            <Tabs selectedTab={selectedTab} onTabChange={setSelectedTab}>
+                {collections.map((collection) => (
+                    <Tab id={collection.id} key={collection.id}>
+                        <TabHeader>
+                            {counts[collection.id] !== undefined
+                                ? `${collection.name} (${counts[collection.id]})`
+                                : collection.name}
+                        </TabHeader>
+                        <TabBody>
+                            <CollectionTable collection={collection} onTableLoad={onTableLoad} />
+                        </TabBody>
+                    </Tab>
+                ))}
+            </Tabs>
+        </div>
     );
 };
