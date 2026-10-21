@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { parseEnvelope, type ResultSet } from "../app/ask/contracts.ts";
+import { type ResultSet } from "../app/ask/contracts.ts";
 import { translateTable, translateBar, comparePvalues } from "../app/ask/translators/index.ts";
 
 const result: ResultSet = {
@@ -17,24 +17,17 @@ const result: ResultSet = {
     rows: [{ id: "t1", name: "Study", is_download_only: false, provenance: { data_source: "ENCODE" } }],
 };
 
-test("typed tables retain booleans, nested categories, nulls and provenance", () => {
-    const table = translateTable(result, {
-        translator: "track_records_table",
-        result_id: "r1",
-        title: "Tracks",
-        slot: "primary",
-        parameters: {},
-    });
+test("frontend record adapters retain booleans, nested categories and nulls", () => {
+    const table = translateTable(result);
     assert.equal(table.data[0].is_download_only, false);
     assert.equal(table.data[0].data_source, "ENCODE");
     assert.equal(table.data[0].description, null);
     assert.equal(table.columns.find((c) => c.id === "is_download_only")?.type, "boolean");
     assert.equal(result.page, 2);
-    assert.equal(result.has_more, true);
 });
 
-test("numeric fields do not enable buggy histogram controls", () => {
-    const association: ResultSet = {
+test("numeric fields retain zero and p-value strings without histogram controls", () => {
+    const table = translateTable({
         ...result,
         entity: "gene",
         annotation: "associations",
@@ -49,21 +42,26 @@ test("numeric fields do not enable buggy histogram controls", () => {
                 track: "t1",
             },
         ],
-    };
-    const table = translateTable(association, {
-        translator: "associations_table",
-        result_id: "r1",
-        title: "Associations",
-        slot: "primary",
-        parameters: {},
     });
-    for (const column of table.columns.filter((c) => ["integer", "float", "pvalue"].includes(c.type!)))
-        assert.equal(column.disableColumnFilter, true);
+    for (const col of table.columns.filter((c) => ["integer", "float", "pvalue"].includes(c.type!)))
+        assert.equal(col.disableColumnFilter, true);
     assert.equal(table.data[0].pvalue, "1.2e-500");
     assert.equal(table.data[0].position, 0);
 });
 
-test("bars count loaded records and distinguish missing from a real missing label", () => {
+test("search adapters distinguish matched text, rank and semantic score", () => {
+    const table = translateTable({
+        ...result,
+        entity: "gene",
+        annotation: null,
+        rows: [{ id: "g1", label: "Gene", rank: 1, score: 0, matched_text: "reported match" }],
+    });
+    assert.equal(table.data[0].score, 0);
+    assert.equal(table.data[0].matched_text, "reported match");
+    assert.match(table.columns.find((c) => c.id === "score")!.header!, /Semantic/);
+});
+
+test("loaded-row bars distinguish missing categories from a real missing label", () => {
     const source = {
         ...result,
         rows: [
@@ -72,23 +70,13 @@ test("bars count loaded records and distinguish missing from a real missing labe
             { id: "c", provenance: { data_source: "Missing" } },
         ],
     };
-    const bar = translateBar(
-        source,
-        {
-            translator: "category_counts_bar",
-            result_id: "r1",
-            title: "Sources",
-            slot: "primary",
-            parameters: { group_by: "data_source" },
-        },
-        7
-    );
+    const bar = translateBar(source, "data_source", 7);
     assert.deepEqual(bar.data.map((row) => row.count).sort(), [1, 2]);
     assert.equal(new Set(bar.data.map((row) => row.term)).size, 2);
     assert.match(bar.scope, /loaded/);
 });
 
-test("too many categories keeps the table without truncating or fabricating Other", () => {
+test("API aggregate bars preserve all counts when cardinality prevents plotting", () => {
     const source = {
         ...result,
         rows: Array.from({ length: 8 }, (_, i) => ({ track: `t${i}`, num_associations: i })),
@@ -96,41 +84,12 @@ test("too many categories keeps the table without truncating or fabricating Othe
         annotation: "associations" as const,
         content: "summary" as const,
     };
-    const bar = translateBar(
-        source,
-        { translator: "association_counts_bar", result_id: "r1", title: "Counts", slot: "primary", parameters: {} },
-        7
-    );
+    const bar = translateBar(source, null, 7);
     assert.equal(bar.data.length, 8);
     assert.equal(bar.showChart, false);
 });
 
-test("v3 rejects executable props, incompatible mappings and hidden identifiers", () => {
-    const envelope = {
-        version: 3,
-        max_bar_categories: 7,
-        status: "ok",
-        results: [result],
-        warnings: [],
-        presentation: [
-            { translator: "track_records_table", result_id: "r1", title: "Tracks", slot: "primary", parameters: {} },
-        ],
-    };
-    assert.equal(parseEnvelope(envelope).version, 3);
-    for (const parameters of [{ columns: ["name"] }, { columns: ["id", "eval"] }, { onClick: "run()" }])
-        assert.throws(() =>
-            parseEnvelope({ ...envelope, presentation: [{ ...envelope.presentation[0], parameters }] })
-        );
-    assert.throws(() => parseEnvelope({ ...envelope, version: 2 }));
-    assert.throws(() =>
-        parseEnvelope({
-            ...envelope,
-            presentation: [{ ...envelope.presentation[0], translator: "gene_records_table" }],
-        })
-    );
-});
-
-test("reported p-values sort below floating-point range without becoming zero", () => {
+test("p-values sort below floating-point range without becoming zero", () => {
     assert.ok(comparePvalues("1e-500", "1e-400") < 0);
     assert.equal(comparePvalues("0.01", "1e-2"), 0);
     assert.ok(comparePvalues("0", "1e-500") < 0);

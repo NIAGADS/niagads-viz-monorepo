@@ -44,15 +44,15 @@ request without candidate genes needs scope clarification. See the Python base's
 
 The UI shows streamed text/tool progress, source IDs, typed evidence tables and
 optional categorical bars using `@niagads/table` and `@niagads/charts`. Deterministic
-translators convert retrieved records; the agent selects validated translator IDs,
-result references and supported parameters. Tables use curated field mappings and
+adapters convert retrieved records; the agent records coarse presentation intent
+and result references. All mappings and UI choices belong to this frontend. Tables use curated field mappings and
 categorical/boolean graphical filters. Numeric histogram filters are disabled.
 Reported p-value strings are preserved, including scientific notation below
 floating-point range; rebuild the workspace Table package before local review.
 
 `category_counts_bar` counts loaded records; `association_counts_bar` displays API
 summary counts without recounting. Bars are independent of table filters and label
-their data scope. The Python setting `ASK_MAX_BAR_CATEGORIES` defaults to 7. Larger
+their data scope. The frontend setting `NEXT_PUBLIC_ASK_MAX_BAR_CATEGORIES` defaults to 7. Larger
 sets keep all counts in a table instead of a bar. Raw result records, provenance,
 and pagination remain inspectable even without a supported presentation. Only
 complete `data-niagads-result` parts render. Model-generated code is never run.
@@ -76,21 +76,26 @@ node --experimental-strip-types --test tests/ask.test.ts tests/ask-dashboard.tes
 npx tsc --noEmit
 ```
 
-To register a translator, extend the Python capability registry and field mapping
-rules in `ask/presentations.py`, regenerate `app/ask/types.generated.ts`, and add
-any required deterministic projection in `app/ask/translators`. Keep backend and
-client parameter/compatibility validation aligned. New mappings must preserve
-scientific values and provide accessible table alternatives for charts.
+To add a view, register a frontend adapter for an expected API output in
+app/ask/translators, following the Charts source-format translator pattern. Local
+record adapters own field mappings, runtime row validation, table props, chart
+eligibility and transforms. No Python presentation registry or generated UI
+mapping is involved. Existing data enums alone remain generated from Python.
 
-The version 3 result envelope retains entity/annotation/content, pagination and
-source metadata. Presentation entries use `translator`, `result_id`, `title`,
-`slot`, and translator-specific `parameters`. Table parameters optionally select
-registered `columns`, retaining required identifiers. Categorical bars require a
-registered scalar `group_by`. API association bars accept no arbitrary options.
-Update both repositories together: version-2 component payloads are rejected.
+The v4 result envelope carries authoritative results and coarse presentation
+intent: result_id, view (auto/table/plot), title and optional plot_type/group_by/x/y
+hints. Plot types and field hints are open strings, not backend component names.
+Python validates intent structure and evidence references. The frontend resolves
+views using its adapters: explicit tables stay tables, plots are rendered when a
+compatible adapter exists, and unsupported requests receive a notice with raw
+records retained. Auto defaults to a supported table. UI changes need no Python
+change; API record-schema changes may require an adapter update.
 
-Deferred: histogram-filter repair, shared panel state, standalone pies, and regional
-Manhattan adaptation for position/-log10(p) with disease/population grouping.
+NEXT_PUBLIC_ASK_MAX_BAR_CATEGORIES is a positive integer (default 7). Oversized
+categorical sets retain their count table and an explanation. Backend
+ASK_MAX_BAR_CATEGORIES is removed. Update both repos together for v4; v3 UI
+selection payloads are rejected. Numeric histogram filters remain disabled.
+Regional Manhattan, standalone pies and shared panel state remain follow-ups.
 
 Next.js client for the [NIAGADS Open Access API](https://api.niagads.org). Provides API documentation at `/docs`, rendered from the API's OpenAPI specification using [Scalar](https://github.com/scalar/scalar) (`@scalar/api-reference-react`), and the ASK NIAGADS prototype at `/`.
 

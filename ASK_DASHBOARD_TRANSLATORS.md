@@ -1,26 +1,18 @@
-# ASK dashboard translators
+# ASK frontend presentation adapters
 
-Status: contract proposal approved; implementation complete with static checks and independent review.
+Current protocol: v4. The user rejected Python-owned UI mappings.
 
-This branch is codex/ask-dashboard-translators, based on app/oa-api at c3962e5f.
-The paired Python branch has the same name, based on refactor/api at ef6d2ba1.
-The separate structured-query-planning branches are preserved.
+Python returns authoritative datasets/provenance/pagination and presentation
+intent (auto/table/plot with optional plot/field hints), validating only structure
+and run-local result references. There is no Python UI registry or chart policy.
 
-Canonical proposal: [dashboard-translators.md](https://github.com/NIAGADS/niagads-pylib/blob/codex/ask-dashboard-translators/developer-notes/plans/ask/dashboard-translators.md).
-Locally: ../niagads-pylib/developer-notes/plans/ask/dashboard-translators.md.
+Frontend source-format adapters under app/ask/translators own table columns,
+filters, chart transforms/eligibility, selection actions and layout. Explicit
+requests are honored or explained; raw records remain available. Display changes
+do not require Python changes or regenerating Python exports. Data enums alone
+remain shared. NEXT_PUBLIC_ASK_MAX_BAR_CATEGORIES defaults to 7 in the frontend.
 
-Scope: deterministic TypeScript translators selected by the agent, typed tables
-with existing categorical graphical filters, independent categorical bars.
-Histogram filters are explicitly excluded; numeric columns retain numeric types
-with column filtering disabled. No standalone pies or cross-panel filtering.
-
-Proposed contract: registered translator + result_id + supported parameters,
-with a coordinated envelope version 3. No LLM-generated transformed data.
-The user approved the v3 contract and configurable seven-category bar policy.
-
-See ASK_NIAGADS_HANDOFF.md for implementation behavior, validation and continuation instructions.
-
-Track selection follow-up: implemented optional Table maxSelectedRows, ASK's five
-track selection limit, and a fixed-path proxy action appending an association
-table. Per-track failures, pagination, raw responses and requested/reported track
-IDs are preserved. See the current handoff for verification and continuation.
+See ASK_NIAGADS_HANDOFF.md and the Python plan
+[frontend-presentation-adapters.md](https://github.com/NIAGADS/niagads-pylib/blob/codex/ask-dashboard-translators/developer-notes/plans/ask/frontend-presentation-adapters.md)
+for continuation and validation. Existing dashboard branches are retained;
+query-planning branches remain independent.

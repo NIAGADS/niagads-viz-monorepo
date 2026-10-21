@@ -1,6 +1,12 @@
 import type { TableColumn, TableConfig, TableCell } from "@niagads/table";
-import type { Presentation, TablePresentation } from "../contracts.ts";
-import { fieldValue, tableRules, traitLabels, validateSelection, type PresentationData } from "./registry.ts";
+import {
+    fieldValue,
+    tableRules,
+    tableTranslator,
+    traitLabels,
+    validateRows,
+    type PresentationData,
+} from "./registry.ts";
 
 const DECIMAL_PVALUE = /^\+?(\d*\.?\d+)(?:e([+-]?\d+))?$/i;
 
@@ -24,12 +30,11 @@ export function comparePvalues(a: unknown, b: unknown): number {
     return x.digits === y.digits ? 0 : x.digits > y.digits ? 1 : -1;
 }
 
-export function translateTable(result: PresentationData, panel: TablePresentation): TableConfig {
-    const id = validateSelection(result, panel);
-    const allFields = tableRules[id].fields;
-    const fields = panel.parameters.columns
-        ? panel.parameters.columns.map((id) => allFields.find((f) => f.id === id)!)
-        : allFields;
+export function translateTable(result: PresentationData): TableConfig {
+    const id = tableTranslator(result);
+    if (!id) throw new Error("No table adapter supports these records");
+    validateRows(result, id);
+    const fields = tableRules[id].fields;
     const columns: TableColumn[] = fields.map((field) => {
         const column: TableColumn = {
             id: field.id,
@@ -70,14 +75,13 @@ export function translateTable(result: PresentationData, panel: TablePresentatio
         )
     );
     return {
-        id: `${result.id}-${panel.translator}`,
+        id: `${result.id}-${id}`,
         columns,
         data,
         options: { enableExport: true, enableColumnFilters: true },
     };
 }
 
-type BarPresentation = Exclude<Presentation, TablePresentation>;
 export type TranslatedBar = {
     data: { term: string; count: number }[];
     scope: string;
@@ -86,15 +90,20 @@ export type TranslatedBar = {
     table: TableConfig;
 };
 
-export function translateBar(result: PresentationData, panel: BarPresentation, maxCategories: number): TranslatedBar {
-    const id = validateSelection(result, panel);
+export function translateBar(result: PresentationData, groupBy: string | null, maxCategories: number): TranslatedBar {
+    const id = tableTranslator(result);
+    if (!id) throw new Error("No bar adapter supports these records");
+    validateRows(result, id);
+    const summary = id === "association_counts_table";
+    if (summary && groupBy && groupBy !== "track") throw new Error("The API count summary supports grouping by track");
     let data: TranslatedBar["data"];
     let scope: string;
-    if (panel.translator === "association_counts_bar") {
+    if (summary) {
         data = result.rows.map((row) => ({ term: row.track as string, count: row.num_associations as number }));
         scope = "Association counts from the returned API summary; this page may contain only some tracks.";
     } else {
-        const field = tableRules[id].fields.find((f) => f.id === panel.parameters.group_by)!;
+        const field = tableRules[id].fields.find((f) => f.id === groupBy && f.categorical);
+        if (!field) throw new Error("Choose a supported categorical grouping field for this plot");
         const counts = new Map<string | null, number>();
         for (const row of result.rows) {
             const value = fieldValue(row, field);
@@ -107,18 +116,18 @@ export function translateBar(result: PresentationData, panel: BarPresentation, m
         scope = `${field.header}: counts of loaded records, independent of table filters; not database totals.`;
     }
     const table: TableConfig = {
-        id: `${result.id}-${panel.translator}-counts`,
+        id: `${result.id}-counts-${groupBy ?? "track"}`,
         columns: [
             {
                 id: "term",
-                header: panel.translator === "association_counts_bar" ? "Track" : "Category",
+                header: summary ? "Track" : "Category",
                 type: "text",
                 required: true,
                 disableColumnFilter: true,
             },
             {
                 id: "count",
-                header: panel.translator === "association_counts_bar" ? "Associations" : "Loaded records",
+                header: summary ? "Associations" : "Loaded records",
                 type: "integer",
                 disableColumnFilter: true,
             },

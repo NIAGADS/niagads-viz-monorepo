@@ -1,41 +1,19 @@
 import { z } from "zod";
 import { issueSchema } from "./errors.ts";
 import { AnnotationKind, Entity, ResponseContent } from "./types.generated.ts";
-import { tableTranslatorIds, validateSelection } from "./translators/registry.ts";
 
-const panelFields = {
-    result_id: z.string().min(1),
-    title: z.string().max(160).default("Retrieved evidence"),
-    slot: z.enum(["primary", "secondary"]).default("primary"),
-};
-export const presentationSchema = z.discriminatedUnion("translator", [
-    z
-        .object({
-            ...panelFields,
-            translator: z.enum(tableTranslatorIds),
-            parameters: z
-                .object({ columns: z.array(z.string()).min(1).nullable().optional() })
-                .strict()
-                .default({}),
-        })
-        .strict(),
-    z
-        .object({
-            ...panelFields,
-            translator: z.literal("category_counts_bar"),
-            parameters: z.object({ group_by: z.string().min(1) }).strict(),
-        })
-        .strict(),
-    z
-        .object({
-            ...panelFields,
-            translator: z.literal("association_counts_bar"),
-            parameters: z.object({}).strict().default({}),
-        })
-        .strict(),
-]);
-export type Presentation = z.infer<typeof presentationSchema>;
-export type TablePresentation = Extract<Presentation, { translator: (typeof tableTranslatorIds)[number] }>;
+export const presentationSchema = z
+    .object({
+        result_id: z.string().min(1),
+        view: z.enum(["auto", "table", "plot"]).default("auto"),
+        title: z.string().max(160).default("Retrieved evidence"),
+        plot_type: z.string().min(1).nullable().default(null),
+        group_by: z.string().min(1).nullable().default(null),
+        x: z.string().min(1).nullable().default(null),
+        y: z.string().min(1).nullable().default(null),
+    })
+    .strict();
+export type PresentationIntent = z.infer<typeof presentationSchema>;
 
 const resultSchema = z
     .object({
@@ -56,8 +34,7 @@ const resultSchema = z
 const envelopeSchema = z
     .object({
         issues: z.array(issueSchema).default([]),
-        version: z.literal(3),
-        max_bar_categories: z.number().int().positive().default(7),
+        version: z.literal(4),
         status: z.enum([
             "ok",
             "empty",
@@ -65,7 +42,6 @@ const envelopeSchema = z
             "unsupported",
             "retrieval_error",
             "provider_error",
-            "invalid_presentation",
         ]),
         results: z.array(resultSchema).max(12),
         presentation: z.array(presentationSchema).max(6),
@@ -78,16 +54,6 @@ const envelopeSchema = z
         value.presentation.forEach((p) => {
             const result = value.results.find((r) => r.id === p.result_id);
             if (!result) ctx.addIssue({ code: "custom", message: "Unknown result reference" });
-            if (result) {
-                try {
-                    validateSelection(result, p);
-                } catch (error) {
-                    ctx.addIssue({
-                        code: "custom",
-                        message: error instanceof Error ? error.message : "Invalid presentation",
-                    });
-                }
-            }
         });
     });
 

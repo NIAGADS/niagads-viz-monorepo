@@ -1,9 +1,9 @@
-import { tableTranslatorRules } from "../types.generated.ts";
-import type { Presentation, ResultSet } from "../contracts.ts";
+import { recordAdapters } from "./records.ts";
+import type { ResultSet } from "../contracts.ts";
 
 export type PresentationData = Pick<ResultSet, "id" | "entity" | "annotation" | "content" | "rows">;
 
-export type TableTranslatorId = keyof typeof tableTranslatorRules;
+export type TableTranslatorId = keyof typeof recordAdapters;
 export type FieldSpec = {
     id: string;
     header: string;
@@ -19,7 +19,7 @@ type TableRule = {
     content: readonly string[];
     fields: readonly FieldSpec[];
 };
-export const tableRules: Record<TableTranslatorId, TableRule> = tableTranslatorRules;
+export const tableRules: Record<TableTranslatorId, TableRule> = recordAdapters;
 export const tableTranslatorIds = Object.keys(tableRules) as [TableTranslatorId, ...TableTranslatorId[]];
 
 export function tableTranslator(
@@ -89,28 +89,4 @@ export function validateRows(result: Pick<ResultSet, "rows">, id: TableTranslato
                 throw new Error("Association counts must be nonnegative integers");
         }
     }
-}
-
-export function validateSelection(result: PresentationData, panel: Presentation): TableTranslatorId {
-    if (panel.result_id !== result.id) throw new Error("Unknown result reference");
-    const id = tableTranslator(result);
-    if (!id) throw new Error("No registered translator supports this result");
-    validateRows(result, id);
-    const fields = tableRules[id].fields;
-    if (panel.translator === "category_counts_bar") {
-        if (!fields.some((f) => f.categorical && f.id === panel.parameters.group_by))
-            throw new Error("Grouping field is not registered for this result");
-    } else if (panel.translator === "association_counts_bar") {
-        if (id !== "association_counts_table") throw new Error("Bar requires an association summary");
-    } else {
-        if (panel.translator !== id) throw new Error("Table translator is incompatible with this result");
-        const columns = panel.parameters.columns;
-        if (columns) {
-            if (new Set(columns).size !== columns.length || columns.some((id) => !fields.some((f) => f.id === id)))
-                throw new Error("Columns must be unique registered fields");
-            if (fields.some((f) => f.required && !columns.includes(f.id)))
-                throw new Error("Required identifier columns cannot be hidden");
-        }
-    }
-    return id;
 }

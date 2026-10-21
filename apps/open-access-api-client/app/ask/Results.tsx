@@ -3,9 +3,10 @@
 import { Alert, Card, CardBody, CardHeader } from "@niagads/ui";
 import dynamic from "next/dynamic";
 import { useState } from "react";
-import { parseEnvelope, type ResultSet, type Presentation } from "./contracts";
+import { parseEnvelope, presentationSchema, type ResultSet, type PresentationIntent } from "./contracts";
 import styles from "./ask.module.css";
-import { translateBar, translateTable } from "./translators/index.ts";
+import { resolvePresentation } from "./translators/presentation.ts";
+import { MAX_BAR_CATEGORIES } from "./translators/config.ts";
 import ComponentBoundary from "./ComponentBoundary";
 import TrackSelectionTable from "./TrackSelectionTable";
 
@@ -19,18 +20,17 @@ function PanelView({
     panelIndex,
 }: {
     result: ResultSet;
-    panel: Presentation;
+    panel: PresentationIntent;
     maxCategories: number;
     panelIndex: number;
 }) {
     const [chartOpen, setChartOpen] = useState(false);
-    if (panel.translator !== "category_counts_bar" && panel.translator !== "association_counts_bar") {
-        const config = translateTable(result, panel);
+    const resolved = resolvePresentation(result, panel, maxCategories);
+    if (resolved.kind === "unsupported") return <Alert variant="info" message={resolved.message} />;
+    if (resolved.kind === "table") {
+        const config = resolved.config;
         config.id = `${config.id}-${panelIndex}`;
-        if (
-            result.entity === "track" &&
-            (panel.translator === "search_matches_table" || panel.translator === "track_records_table")
-        ) {
+        if (result.entity === "track" && (result.annotation === null || result.annotation === "report")) {
             return <TrackSelectionTable config={config} />;
         }
         return (
@@ -46,7 +46,7 @@ function PanelView({
             </div>
         );
     }
-    const summary = translateBar(result, panel, maxCategories);
+    const summary = resolved.config;
     return (
         <figure>
             <figcaption>{summary.scope}</figcaption>
@@ -58,11 +58,13 @@ function PanelView({
                     <div className={styles.chart} aria-label={panel.title}>
                         {chartOpen && (
                             <SourceBar
-                                id={`${result.id}-${panel.translator}-${panelIndex}`}
+                                id={`${result.id}-bar-${panelIndex}`}
                                 keys={["count"]}
                                 data={summary.data}
                                 xAxisLabel={
-                                    panel.translator === "association_counts_bar" ? "Associations" : "Loaded records"
+                                    result.annotation === "associations" && result.content === "summary"
+                                        ? "Associations"
+                                        : "Loaded records"
                                 }
                             />
                         )}
@@ -123,7 +125,10 @@ export default function Results({ value }: { value: unknown }) {
                     </p>
                 ))}
             {envelope.results.map((result) => {
-                const panels = envelope.presentation.filter((panel) => panel.result_id === result.id);
+                const preferences = envelope.presentation.filter((intent) => intent.result_id === result.id);
+                const panels = preferences.length
+                    ? preferences
+                    : [presentationSchema.parse({ result_id: result.id, title: "Retrieved records" })];
                 return (
                     <Card key={result.id} className={styles.panel}>
                         <CardHeader>
@@ -141,14 +146,8 @@ export default function Results({ value }: { value: unknown }) {
                                 <p key={j}>{warning}</p>
                             ))}
                             {result.sources.length > 0 && <p>Source identifiers: {result.sources.join(", ")}</p>}
-                            {!panels.length && (
-                                <p>
-                                    No registered presentation was selected for this result. Retrieved records remain
-                                    available below.
-                                </p>
-                            )}
                             {panels.map((panel, i) => (
-                                <div key={`${panel.translator}-${i}`}>
+                                <div key={`${panel.view}-${i}`}>
                                     {panels.length > 1 && <h4>{panel.title}</h4>}
                                     <ComponentBoundary
                                         fallback={
@@ -161,7 +160,7 @@ export default function Results({ value }: { value: unknown }) {
                                         <PanelView
                                             result={result}
                                             panel={panel}
-                                            maxCategories={envelope.max_bar_categories}
+                                            maxCategories={MAX_BAR_CATEGORIES}
                                             panelIndex={i}
                                         />
                                     </ComponentBoundary>

@@ -74,13 +74,7 @@ export function assembleTrackData(batch: TrackDataBatch, id: string): TableConfi
         content: "full",
         rows,
     };
-    const table = translateTable(result, {
-        translator: "associations_table",
-        result_id: id,
-        title: "Selected track data",
-        slot: "secondary",
-        parameters: {},
-    });
+    const table = translateTable(result);
     table.columns.unshift({
         id: "requested_track",
         header: "Requested track ID",
