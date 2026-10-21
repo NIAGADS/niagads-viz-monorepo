@@ -2,6 +2,14 @@ import { z } from "zod";
 import { issueSchema } from "./errors.ts";
 import { AnnotationKind, Entity, ResponseContent, sourceChartTypes } from "./types.generated.ts";
 
+export const feedbackSchema = z
+    .object({
+        reference: z.string().regex(/^00-[0-9a-f]{32}-[0-9a-f]{16}-01\.[0-9a-f]{64}$/),
+        rating: z.union([z.literal(0), z.literal(1)]),
+        comment: z.string().max(2000).nullable().optional(),
+    })
+    .strict();
+
 const associationSummaryRowSchema = z.object({
     track: z.string().min(1),
     num_associations: z.number().int().nonnegative(),
@@ -27,6 +35,7 @@ const envelopeSchema = z
     .object({
         issues: z.array(issueSchema).default([]),
         version: z.literal(2),
+        feedback_reference: z.string().max(120).nullable().optional(),
         status: z.enum([
             "ok",
             "empty",

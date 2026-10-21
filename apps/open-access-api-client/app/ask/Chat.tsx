@@ -5,6 +5,7 @@ import { DefaultChatTransport, type UIMessage } from "ai";
 import { ActionButton, Alert, Badge, Button, Card, CardBody, CardGrid, LoadingSpinner } from "@niagads/ui";
 import { useMemo, useState, type FormEvent } from "react";
 import Results from "./Results";
+import Feedback from "./Feedback";
 import { errorMessage, fetchAsk } from "./errors";
 import { textHistory, type AskEnvelope } from "./contracts";
 import styles from "./ask.module.css";
@@ -77,7 +78,7 @@ export default function Chat() {
                 </section>
             )}
             <section aria-label="Conversation" aria-busy={busy}>
-                {messages.map((message) => (
+                {messages.map((message, messageIndex) => (
                     <article key={message.id} className={styles.message}>
                         <h2>{message.role === "user" ? "You" : "ASK NIAGADS"}</h2>
                         {message.parts.map((part, index) => {
@@ -87,7 +88,17 @@ export default function Chat() {
                                         {part.text}
                                     </p>
                                 );
-                            if (part.type === "data-niagads-result") return <Results key={index} value={part.data} />;
+                            if (part.type === "data-niagads-result")
+                                return (
+                                    <div key={index}>
+                                        <Results value={part.data} />
+                                        {message.role === "assistant" &&
+                                            part.data.feedback_reference &&
+                                            (messageIndex < messages.length - 1 || !busy) && (
+                                                <Feedback reference={part.data.feedback_reference} />
+                                            )}
+                                    </div>
+                                );
                             if (part.type.startsWith("tool-") && "state" in part)
                                 return (
                                     <p key={index} className={styles.progress}>
