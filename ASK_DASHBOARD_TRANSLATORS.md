@@ -19,3 +19,8 @@ with a coordinated envelope version 3. No LLM-generated transformed data.
 The user approved the v3 contract and configurable seven-category bar policy.
 
 See ASK_NIAGADS_HANDOFF.md for implementation behavior, validation and continuation instructions.
+
+Track selection follow-up: implemented optional Table maxSelectedRows, ASK's five
+track selection limit, and a fixed-path proxy action appending an association
+table. Per-track failures, pagination, raw responses and requested/reported track
+IDs are preserved. See the current handoff for verification and continuation.

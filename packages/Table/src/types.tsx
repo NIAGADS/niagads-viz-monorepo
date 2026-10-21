@@ -23,6 +23,7 @@ export interface RowSelectOptions {
     header: string; // select column header
     description?: string; // select column description
     enableMultiSelect?: boolean; // optional: allow selection of multiple rows, false if missing
+    maxSelectedRows?: number; // optional positive limit; omitted means unlimited
     rowUniqueKey: string; // specify a field containing unique values to return as the row_id
 }
 

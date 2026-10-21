@@ -1,23 +1,15 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Component, useState, type ReactNode } from "react";
+import { useState } from "react";
 import { parseEnvelope, type ResultSet, type Presentation } from "./contracts";
 import styles from "./ask.module.css";
 import { translateBar, translateTable } from "./translators/index.ts";
+import ComponentBoundary from "./ComponentBoundary";
+import TrackSelectionTable from "./TrackSelectionTable";
 
 const EvidenceTable = dynamic(() => import("@niagads/table"), { ssr: false });
 const SourceBar = dynamic(() => import("@niagads/charts").then((m) => m.BarChart), { ssr: false });
-
-class ComponentBoundary extends Component<{ children: ReactNode; fallback: ReactNode }, { failed: boolean }> {
-    state = { failed: false };
-    static getDerivedStateFromError() {
-        return { failed: true };
-    }
-    render() {
-        return this.state.failed ? this.props.fallback : this.props.children;
-    }
-}
 
 function PanelView({
     result,
@@ -33,6 +25,13 @@ function PanelView({
     const [chartOpen, setChartOpen] = useState(false);
     if (panel.translator !== "category_counts_bar" && panel.translator !== "association_counts_bar") {
         const config = translateTable(result, panel);
+        config.id = `${config.id}-${panelIndex}`;
+        if (
+            result.entity === "track" &&
+            (panel.translator === "search_matches_table" || panel.translator === "track_records_table")
+        ) {
+            return <TrackSelectionTable config={config} />;
+        }
         return (
             <div
                 className={styles.table}
@@ -41,7 +40,7 @@ function PanelView({
                 aria-label="Evidence table; scroll horizontally on narrow screens"
             >
                 <div className={styles.tableContent}>
-                    <EvidenceTable {...config} id={`${config.id}-${panelIndex}`} />
+                    <EvidenceTable {...config} />
                 </div>
             </div>
         );

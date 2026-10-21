@@ -145,3 +145,21 @@ The full list of options is defined in `@scalar/types` (`node_modules/@scalar/ty
 ## Install Scripts
 
 Scalar depends on `vue-demi`, whose `postinstall` script is allowed in the root `package.json` `allowScripts` (npm ignores `allowScripts` in workspace `package.json` files).
+
+
+## Track selection actions
+
+ASK track search and track-record tables support selecting up to five tracks and
+fetching their data. The button uses the server-side `/api/track-data` proxy, which
+calls `/track/{track_id}/data` on ASK_API_URL once per selected track, in parallel
+and without query parameters. The upstream endpoint is maintained separately.
+
+Each action adds an independent association table, preserving requested track IDs,
+API-reported source tracks, per-track failures and pagination. Original responses
+remain inspectable. No automatic page retrieval, LLM call or chat-history update
+is performed. Missing pagination is labelled as unknown completeness. Rebuild the
+workspace Table package to enable its new `rowSelectOpts.maxSelectedRows` option;
+existing Table consumers retain unlimited selection unless configured.
+
+Focused action cases (run only when requested):
+`node --experimental-strip-types --test tests/track-data.test.ts`.

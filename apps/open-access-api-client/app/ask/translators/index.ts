@@ -1,6 +1,6 @@
 import type { TableColumn, TableConfig, TableCell } from "@niagads/table";
-import type { Presentation, ResultSet, TablePresentation } from "../contracts.ts";
-import { fieldValue, tableRules, traitLabels, validateSelection } from "./registry.ts";
+import type { Presentation, TablePresentation } from "../contracts.ts";
+import { fieldValue, tableRules, traitLabels, validateSelection, type PresentationData } from "./registry.ts";
 
 const DECIMAL_PVALUE = /^\+?(\d*\.?\d+)(?:e([+-]?\d+))?$/i;
 
@@ -24,7 +24,7 @@ export function comparePvalues(a: unknown, b: unknown): number {
     return x.digits === y.digits ? 0 : x.digits > y.digits ? 1 : -1;
 }
 
-export function translateTable(result: ResultSet, panel: TablePresentation): TableConfig {
+export function translateTable(result: PresentationData, panel: TablePresentation): TableConfig {
     const id = validateSelection(result, panel);
     const allFields = tableRules[id].fields;
     const fields = panel.parameters.columns
@@ -86,7 +86,7 @@ export type TranslatedBar = {
     table: TableConfig;
 };
 
-export function translateBar(result: ResultSet, panel: BarPresentation, maxCategories: number): TranslatedBar {
+export function translateBar(result: PresentationData, panel: BarPresentation, maxCategories: number): TranslatedBar {
     const id = validateSelection(result, panel);
     let data: TranslatedBar["data"];
     let scope: string;

@@ -451,7 +451,8 @@ export const tableTranslatorRules = {
         "entities": [
             "gene",
             "variant",
-            "region"
+            "region",
+            "track"
         ],
         "annotation": "associations",
         "content": [

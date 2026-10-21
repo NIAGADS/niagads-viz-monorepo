@@ -1,6 +1,8 @@
 import { tableTranslatorRules } from "../types.generated.ts";
 import type { Presentation, ResultSet } from "../contracts.ts";
 
+export type PresentationData = Pick<ResultSet, "id" | "entity" | "annotation" | "content" | "rows">;
+
 export type TableTranslatorId = keyof typeof tableTranslatorRules;
 export type FieldSpec = {
     id: string;
@@ -20,7 +22,9 @@ type TableRule = {
 export const tableRules: Record<TableTranslatorId, TableRule> = tableTranslatorRules;
 export const tableTranslatorIds = Object.keys(tableRules) as [TableTranslatorId, ...TableTranslatorId[]];
 
-export function tableTranslator(result: ResultSet): TableTranslatorId | undefined {
+export function tableTranslator(
+    result: Pick<ResultSet, "entity" | "annotation" | "content">
+): TableTranslatorId | undefined {
     return tableTranslatorIds.find((id) => {
         const rule = tableRules[id];
         return (
@@ -59,7 +63,7 @@ export function traitLabels(value: unknown): string[] {
     });
 }
 
-export function validateRows(result: ResultSet, id: TableTranslatorId): void {
+export function validateRows(result: Pick<ResultSet, "rows">, id: TableTranslatorId): void {
     for (const row of result.rows) {
         for (const field of tableRules[id].fields) {
             const value = fieldValue(row, field);
@@ -87,7 +91,7 @@ export function validateRows(result: ResultSet, id: TableTranslatorId): void {
     }
 }
 
-export function validateSelection(result: ResultSet, panel: Presentation): TableTranslatorId {
+export function validateSelection(result: PresentationData, panel: Presentation): TableTranslatorId {
     if (panel.result_id !== result.id) throw new Error("Unknown result reference");
     const id = tableTranslator(result);
     if (!id) throw new Error("No registered translator supports this result");
