@@ -56,8 +56,9 @@ export default function Chat() {
                             "Find datasets related to Alzheimer Disease",
                             "Show the available annotations for APOE",
                             "Which endpoint retrieves associations in a region?",
-                            "Show Alzheimer's disease associations for rs429358 with a ±10 kb flank",
+                            "Show Alzheimer's disease associations for rs429358 with a +/-10kb flank",
                             "Fetch all ADSP variants in and near TREM2",
+                            "Plot all variant associations reported for the BIN1 locus.  Categorize by population and AD vs ADRD.",
                         ].map((text) => (
                             <Card key={text} span={4} onClick={() => setInput(text)} className={styles.example}>
                                 <CardBody>{text}</CardBody>
