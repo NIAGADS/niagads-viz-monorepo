@@ -63,13 +63,18 @@ export function translateTable(result: PresentationData): TableConfig {
             fields.map((field): [string, TableCell | TableCell[]] => {
                 const value = fieldValue(row, field);
                 if (value === null) return [field.id, null];
-                if (field.projection === "traits") return [field.id, traitLabels(value)];
+                if (field.projection === "traits") return [field.id, traitLabels(value).map((value) => ({ value }))];
+                if (field.projection === "text_list")
+                    return [field.id, (value as string[]).map((value) => ({ value }))];
                 if (field.type === "link") {
                     const url = new URL(value as string);
                     if (!["https:", "http:", "ftp:"].includes(url.protocol))
                         throw new Error("Unsupported download URL scheme");
                     return [field.id, { value, url: value }];
                 }
+                // Table can interpret JSON-looking strings as cell configuration.
+                // Explicit values preserve retrieved text, IDs and p-value strings.
+                if (typeof value === "string") return [field.id, { value }];
                 return [field.id, value as TableCell];
             })
         )
@@ -132,7 +137,7 @@ export function translateBar(result: PresentationData, groupBy: string | null, m
                 disableColumnFilter: true,
             },
         ],
-        data,
+        data: data.map(({ term, count }) => ({ term: { value: term }, count })),
         options: { enableExport: true },
     };
     return {

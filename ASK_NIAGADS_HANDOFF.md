@@ -1,5 +1,13 @@
 # ASK NIAGADS local Codex handoff
 
+## Current task: chat and temporary dashboards
+
+Continue on codex/ask-chat-dashboard-navigation from the updated app/oa-api base.
+The paired Python branch starts from refactor/api. See ASK_CHAT_DASHBOARD.md and
+the Python plan at developer-notes/plans/ask/chat-dashboard-navigation.md for
+current behavior and verification. Earlier checkpoints below are historical.
+No synthetic tests or live database/model requests are authorized by this handoff.
+
 ## Current task: query planning integrated with dashboard v4
 
 Work is on codex/ask-structured-query-planning in both repositories. The user

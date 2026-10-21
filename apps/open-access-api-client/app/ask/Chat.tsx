@@ -1,39 +1,23 @@
 "use client";
 
-import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport, type UIMessage } from "ai";
-import { ActionButton, Alert, Badge, Button, Card, CardBody, CardGrid, LoadingSpinner } from "@niagads/ui";
-import { useMemo, useState, type FormEvent } from "react";
-import Results from "./Results";
+import { ActionButton, Alert, Badge, Button, Card, CardBody, CardHeader, CardGrid, LoadingSpinner } from "@niagads/ui";
+import type { FormEvent } from "react";
 import Feedback from "./Feedback";
-import type { QueryPlan } from "./planning";
-import { errorMessage, fetchAsk } from "./errors";
-import { textHistory, type AskEnvelope } from "./contracts";
+import { errorMessage } from "./errors";
+import { useAskSession } from "./AskSessionProvider";
+import ChatResult from "./ChatResult";
+import MarkdownSummary from "./MarkdownSummary";
 import styles from "./ask.module.css";
 
-type Message = UIMessage<unknown, { "niagads-result": AskEnvelope; "niagads-plan": QueryPlan }>;
-
 export default function Chat() {
-    const [input, setInput] = useState("");
-    const transport = useMemo(
-        () =>
-            new DefaultChatTransport<Message>({
-                api: "/api/ask",
-                fetch: fetchAsk,
-                prepareSendMessagesRequest: ({ messages }) => ({ body: { messages: textHistory(messages) } }),
-            }),
-        []
-    );
-    const { messages, sendMessage, status, error, stop, setMessages, clearError } = useChat<Message>({ transport });
+    const { messages, status, error, stop, input, setInput, ask, newSession, dashboardId } = useAskSession();
     const busy = status === "submitted" || status === "streaming";
 
     async function submit(event: FormEvent) {
         event.preventDefault();
         const text = input.trim();
         if (!text || busy) return;
-        clearError();
-        setInput("");
-        await sendMessage({ text });
+        await ask(text);
     }
 
     return (
@@ -81,34 +65,54 @@ export default function Chat() {
             <section aria-label="Conversation" aria-busy={busy}>
                 {messages.map((message, messageIndex) => (
                     <article key={message.id} className={styles.message}>
-                        <h2>{message.role === "user" ? "You" : "ASK NIAGADS"}</h2>
-                        {message.parts.map((part, index) => {
-                            if (part.type === "text")
-                                return (
-                                    <p className={styles.prose} key={index}>
-                                        {part.text}
+                        <Card>
+                            <CardHeader>
+                                <h2>{message.role === "user" ? "You" : "ASK NIAGADS"}</h2>
+                            </CardHeader>
+                            <CardBody>
+                                {message.role === "user" ? (
+                                    <p className={styles.prose}>
+                                        {message.parts
+                                            .filter((part) => part.type === "text")
+                                            .map((part) => part.text)
+                                            .join("\n\n")}
                                     </p>
-                                );
-                            if (part.type === "data-niagads-result")
-                                return (
-                                    <div key={index}>
-                                        <Results value={part.data} />
-                                        {message.role === "assistant" &&
-                                            part.data.feedback_reference &&
-                                            (messageIndex < messages.length - 1 || !busy) && (
-                                                <Feedback reference={part.data.feedback_reference} />
-                                            )}
-                                    </div>
-                                );
-                            if (part.type.startsWith("tool-") && "state" in part)
-                                return (
-                                    <p key={index} className={styles.progress}>
-                                        {part.type.slice(5).replaceAll("_", " ")}:{" "}
-                                        {String(part.state).replaceAll("-", " ")}
-                                    </p>
-                                );
-                            return null;
-                        })}
+                                ) : (
+                                    <MarkdownSummary
+                                        text={message.parts
+                                            .filter((part) => part.type === "text")
+                                            .map((part) => part.text)
+                                            .join("\n\n")}
+                                    />
+                                )}
+                                {message.parts.map((part, index) => {
+                                    if (part.type !== "data-niagads-result") return null;
+                                    return (
+                                        <div key={index}>
+                                            <ChatResult value={part.data} dashboardId={dashboardId} />
+                                            {message.role === "assistant" &&
+                                                part.data.feedback_reference &&
+                                                (messageIndex < messages.length - 1 || !busy) && (
+                                                    <Feedback reference={part.data.feedback_reference} />
+                                                )}
+                                        </div>
+                                    );
+                                })}
+                                {message.parts.some((part) => part.type.startsWith("tool-")) && (
+                                    <details>
+                                        <summary>Retrieval details</summary>
+                                        {message.parts.map((part, index) =>
+                                            part.type.startsWith("tool-") && "state" in part ? (
+                                                <p key={index} className={styles.progress}>
+                                                    {part.type.slice(5).replaceAll("_", " ")}:{" "}
+                                                    {String(part.state).replaceAll("-", " ")}
+                                                </p>
+                                            ) : null
+                                        )}
+                                    </details>
+                                )}
+                            </CardBody>
+                        </Card>
                     </article>
                 ))}
             </section>
@@ -142,11 +146,8 @@ export default function Chat() {
                     </Button>
                     {busy && <ActionButton onClick={() => void stop()}>Stop response</ActionButton>}
                     <ActionButton
-                        onClick={async () => {
-                            await stop();
-                            setMessages([]);
-                            clearError();
-                            setInput("");
+                        onClick={() => {
+                            void newSession();
                         }}
                     >
                         New session
@@ -154,7 +155,7 @@ export default function Chat() {
                 </div>
             </form>
             <p id="session-notice" className={styles.sessionNotice}>
-                Conversation history is retained for the current session only.
+                Conversation and dashboard data are kept in this tab only. Refresh, close, or New session clears them.
             </p>
         </div>
     );

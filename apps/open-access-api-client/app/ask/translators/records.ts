@@ -82,7 +82,7 @@ export const recordAdapters = {
     gene_records_table: {
         entities: ["gene"],
         annotation: "report",
-        content: ["full"],
+        content: ["full", "summary"],
         fields: [
             {
                 id: "id",
@@ -152,7 +152,7 @@ export const recordAdapters = {
     variant_records_table: {
         entities: ["variant"],
         annotation: "report",
-        content: ["full"],
+        content: ["full", "summary"],
         fields: [
             {
                 id: "id",
@@ -240,7 +240,7 @@ export const recordAdapters = {
     track_records_table: {
         entities: ["track"],
         annotation: "report",
-        content: ["full"],
+        content: ["full", "summary"],
         fields: [
             {
                 id: "id",

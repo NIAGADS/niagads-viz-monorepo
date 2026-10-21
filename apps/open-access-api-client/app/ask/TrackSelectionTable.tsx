@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@niagads/ui";
 import type { TableConfig, RowSelectionState } from "@niagads/table";
 import ComponentBoundary from "./ComponentBoundary";
+import { useAskSession } from "./AskSessionProvider";
+import RetrievedData from "./RetrievedData";
 import { errorMessage, fetchAsk } from "./errors";
 import {
     assembleTrackData,
@@ -56,10 +58,7 @@ function FetchedTrackData({ batch, id }: { batch: TrackDataBatch; id: string }) 
                     <CombinedTrackTable batch={batch} id={id} />
                 </ComponentBoundary>
             )}
-            <details>
-                <summary>Track responses, pagination and provenance</summary>
-                <pre className={styles.raw}>{JSON.stringify(batch, null, 2)}</pre>
-            </details>
+            <RetrievedData value={batch} filename={`ask-track-data-${id}.json`} />
         </section>
     );
 }
@@ -84,7 +83,8 @@ export default function TrackSelectionTable({ config }: { config: TableConfig })
     const [selection, setSelection] = useState<RowSelectionState>({});
     const [fetching, setFetching] = useState(false);
     const [failure, setFailure] = useState<string | null>(null);
-    const [batches, setBatches] = useState<{ id: string; batch: TrackDataBatch }[]>([]);
+    const { trackBatches, addTrackBatch } = useAskSession();
+    const batches = trackBatches[config.id] ?? [];
     const controller = useRef<AbortController | null>(null);
     useEffect(() => () => controller.current?.abort(), []);
     const selectedTracks = Object.keys(selection).filter((id) => selection[id]);
@@ -115,7 +115,7 @@ export default function TrackSelectionTable({ config }: { config: TableConfig })
                 signal: pending.signal,
             });
             const batch = trackBatchSchema.parse(await response.json());
-            setBatches((previous) => [...previous, { id: crypto.randomUUID(), batch }]);
+            addTrackBatch(config.id, batch);
         } catch (error) {
             if (!pending.signal.aborted)
                 setFailure(error instanceof Error ? errorMessage(error) : "Track data request failed");
