@@ -1,5 +1,74 @@
 # ASK NIAGADS local Codex handoff
 
+## Retry presentation correction — 2026-10-21
+
+Active retry waits use the existing loading spinner with the user's countdown
+messages (busy, high demand, still working), selected by attempt. Exhaustion shows
+a brief Alert identifying OpenRouter and suggesting trying again later. Retry
+diagnostics are not displayed; native server logs retain them.
+Other errors retain their existing alerts. Backend retry behavior is unchanged.
+
+
+## Current branch — 2026-10-21
+
+The user requested moving this work to feature branches. Continue on
+`codex/ask-context-recovery-retries`, created from `app/oa-api` in this repo.
+The same feature branch name is used in both repositories. All pending
+context compaction, token recovery and OpenRouter retry changes were
+preserved. The user subsequently authorized committing and pushing both
+feature branches. Earlier notes describing uncommitted work are historical.
+This supersedes instructions to work on development bases, avoid new
+branches, or leave this work uncommitted.
+
+## OpenRouter retry indicator — 2026-10-21
+
+Paired with refactor/api: transient data-niagads-model-status carries the four
+requesting/waiting/retrying/failed states; explicit null clears progress as soon
+as the model response arrives. ModelStatusIndicator reuses LoadingSpinner and
+counts down live. Exhaustion shows the requested friendly message and Retry
+button with native diagnostics retained. Retry resubmits the last question without
+deleting prior results. Stop and New session clear progress and cancel work.
+
+The user approved pausing the backend active-work deadline during retry sleeps.
+The proxy's 100-second timer now applies only until response headers arrive;
+client cancellation and the backend deadline bound the stream. Removed the
+120-second maxDuration hint; hosting/reverse-proxy caps must allow longer retries.
+Backend sends SSE keep-alives while waiting. Model/routing and dependencies stay
+unchanged.
+
+45 backend protocol/evidence checks and eight client error/limit checks pass,
+alongside app type checking and targeted lint/format checks. Countdown/browser
+click verification is pending: the existing dev server on 18000 did not respond
+and blocked another server. Its process was preserved; no live model/database
+calls were made. Changes remain uncommitted on app/oa-api.
+
+## Token-limit recovery — 2026-10-21
+
+Paired with refactor/api: contracts.ts accepts token_limit, preserving native
+usage_limit diagnostics. ResultNotices marks results incomplete and puts the
+original diagnostic/request reference in a closed details block. The backend
+streams a brief deterministic summary and narrower follow-up suggestion, keeping
+retrieved rows and presentation references without another model call. Existing
+UI default adapters, dashboard navigation and downloads remain unchanged.
+
+Eight focused client error/limit checks, tsc --noEmit --incremental false,
+targeted ESLint and Prettier pass. No live model/database calls or browser
+validation. Deploy frontend/backend together because the old strict schema does
+not accept token_limit. Changes remain uncommitted on app/oa-api.
+
+## Working context planner alignment — 2026-10-21
+
+Current changes are uncommitted on app/oa-api, paired with refactor/api. The ASK
+planner schema now accepts optional gene_evidence, defaulting to an empty list,
+using the Python-generated GeneEvidence enum. This keeps strict plan validation
+aligned with selective annotation/transcript/exon evidence requirements. No UI
+presentation, dashboard/session behavior or result v4 contract changes.
+
+App tsc --noEmit and targeted ESLint pass. See the backend CHECKPOINT.md and
+compact-working-context-review.md for run-local compaction and its sixteen
+recorded-data/protocol/SDK checks. Cross-turn evidence memory and real local
+API/OpenRouter validation remain deferred. Earlier task branches below are
+historical; do not resume them for this change.
 ## Error heading correction — 2026-10-21
 
 Raw stream/SDK diagnostics now use the short heading "An unexpected error occurred

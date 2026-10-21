@@ -1,18 +1,34 @@
 "use client";
 
-import { ActionButton, Alert, Badge, Button, Card, CardBody, CardHeader, CardGrid, LoadingSpinner } from "@niagads/ui";
+import { ActionButton, Alert, Badge, Button, Card, CardBody, CardHeader, CardGrid } from "@niagads/ui";
 import type { FormEvent } from "react";
 import Feedback from "./Feedback";
 import { errorDetails, errorMessage } from "./errors";
 import { useAskSession } from "./AskSessionProvider";
 import ChatResult from "./ChatResult";
 import MarkdownSummary from "./MarkdownSummary";
+import ModelStatusIndicator from "./ModelStatusIndicator";
+import { MODEL_BUSY_MESSAGE } from "./model-status";
 import styles from "./ask.module.css";
 
 export default function Chat() {
-    const { messages, status, error, stop, input, setInput, ask, newSession, dashboardId } = useAskSession();
+    const { messages, status, error, stop, input, setInput, ask, newSession, dashboardId, modelStatus, retry } =
+        useAskSession();
     const busy = status === "submitted" || status === "streaming";
     const diagnostics = error ? errorDetails(error) : null;
+
+    const diagnosticDetails = error && (
+        <details>
+            <summary>Error details to include in your report</summary>
+            <pre className={styles.errorDetails}>{diagnostics?.response}</pre>
+            {diagnostics?.stackTrace && (
+                <details>
+                    <summary>Stack trace</summary>
+                    <pre className={styles.errorDetails}>{diagnostics.stackTrace}</pre>
+                </details>
+            )}
+        </details>
+    );
 
     async function submit(event: FormEvent) {
         event.preventDefault();
@@ -137,18 +153,16 @@ export default function Chat() {
                 ))}
             </section>
             <div role="status" aria-live="polite">
-                {busy && (
-                    <LoadingSpinner
-                        size="sm"
-                        message={
-                            status === "submitted"
-                                ? "Submitting question…"
-                                : "Interpreting your request and preparing a response…"
-                        }
-                    />
-                )}
+                {busy && <ModelStatusIndicator status={modelStatus} />}
             </div>
-            {error && (
+            {error && modelStatus?.state === "failed" && (
+                <Alert variant="info" message={MODEL_BUSY_MESSAGE}>
+                    <ActionButton disabled={busy} onClick={() => void retry()}>
+                        Retry
+                    </ActionButton>
+                </Alert>
+            )}
+            {error && modelStatus?.state !== "failed" && (
                 <Alert variant="error" message={errorMessage(error)}>
                     <p>
                         Please contact <a href="mailto:help@niagads.org">help@niagads.org</a> or{" "}
@@ -161,16 +175,7 @@ export default function Chat() {
                         </a>
                         . Include the error details below and the request reference, if shown, so we can investigate.
                     </p>
-                    <details>
-                        <summary>Error details to include in your report</summary>
-                        <pre className={styles.errorDetails}>{diagnostics?.response}</pre>
-                        {diagnostics?.stackTrace && (
-                            <details>
-                                <summary>Stack trace</summary>
-                                <pre className={styles.errorDetails}>{diagnostics.stackTrace}</pre>
-                            </details>
-                        )}
-                    </details>
+                    {diagnosticDetails}
                 </Alert>
             )}
             <form onSubmit={submit} className={styles.composer}>

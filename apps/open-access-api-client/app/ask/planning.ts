@@ -1,5 +1,13 @@
 import { z } from "zod";
-import { BooleanOperator, ConceptCategory, Entity, GenomeBuild, LocationKind, QueryIntent } from "./types.generated.ts";
+import {
+    BooleanOperator,
+    ConceptCategory,
+    Entity,
+    GeneEvidence,
+    GenomeBuild,
+    LocationKind,
+    QueryIntent,
+} from "./types.generated.ts";
 
 type Concept = { category: (typeof ConceptCategory)[keyof typeof ConceptCategory]; text: string };
 type Expression =
@@ -42,6 +50,7 @@ const queryPlanSchema = z
             )
             .default([]),
         exclusions: z.array(z.string()).default([]),
+        gene_evidence: z.array(z.enum(GeneEvidence)).default([]),
     })
     .strict();
 
