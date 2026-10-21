@@ -24,11 +24,14 @@ export interface NewsBrowserProps extends StylingProps {
     heading?: string;
 }
 
-const dateFormatter = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
-
+const monthFormatter = new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    timeZone: "UTC",
+});
 const SUMMARY_LENGTH = 240;
 
 const NewsContent = ({ item }: { item: NewsItem }) => {
+    const [expanded, setExpanded] = useState(false);
     const summary = item.summary?.trim() || "";
     const truncated = summary.length > SUMMARY_LENGTH;
     const preview = truncated
@@ -37,26 +40,51 @@ const NewsContent = ({ item }: { item: NewsItem }) => {
               .replace(/\s+\S*$/, "")
               .trimEnd()}…`
         : summary;
-    const showBody = !item.url && Boolean(item.body);
-    const showMore = showBody || truncated;
+    const hasBody = !item.url && Boolean(item.body);
+    const canExpand = Boolean(summary) && (truncated || hasBody);
+    const showingBody = expanded && hasBody;
 
     return (
         <>
-            {summary && <p className={styles.summary}>{preview}</p>}
-            {showMore && (
-                <details className={styles.details}>
-                    <summary>
-                        Read more{" "}
-                        <span className={styles.arrow} aria-hidden="true">
-                            ↓
-                        </span>
-                    </summary>
-                    {showBody ? (
-                        <div className={styles.body} dangerouslySetInnerHTML={{ __html: item.body! }} />
-                    ) : (
-                        <p className={styles.body}>{summary}</p>
+            {showingBody ? (
+                // Body HTML must come from a trusted or sanitized source.
+                <div className={styles.body} dangerouslySetInnerHTML={{ __html: item.body! }} />
+            ) : summary ? (
+                <p className={styles.summary}>
+                    {expanded ? summary : preview}
+                    {canExpand && (
+                        <>
+                            {" "}
+                            <button
+                                type="button"
+                                className={styles["read-toggle"]}
+                                onClick={() => setExpanded((value) => !value)}
+                                aria-expanded={expanded}
+                            >
+                                {expanded ? "Read less ↑" : "Read more ↓"}
+                            </button>
+                        </>
                     )}
-                </details>
+                </p>
+            ) : hasBody ? (
+                <div className={styles.body} dangerouslySetInnerHTML={{ __html: item.body! }} />
+            ) : null}
+
+            {showingBody && (
+                <button
+                    type="button"
+                    className={styles["read-toggle"]}
+                    onClick={() => setExpanded(false)}
+                    aria-expanded={true}
+                >
+                    Read less ↑
+                </button>
+            )}
+
+            {item.url && (
+                <a className={styles.source} href={item.url} target="_blank" rel="noopener noreferrer">
+                    View original post ↗
+                </a>
             )}
         </>
     );
@@ -138,12 +166,11 @@ export const NewsBrowser = ({ news, heading, className = "", style, id }: NewsBr
             aria-labelledby={heading ? `${prefix}-heading` : undefined}
             aria-label={heading ? undefined : "News"}
         >
-            <div className={styles.header}>
-                {heading && <h2 id={`${prefix}-heading`}>{heading}</h2>}
-                <Button className={styles.clear} onClick={clearFilters}>
-                    Clear filters
-                </Button>
-            </div>
+            {heading && (
+                <div className={styles.header}>
+                    <h2 id={`${prefix}-heading`}>{heading}</h2>
+                </div>
+            )}
             <div className={styles.filters}>
                 <label htmlFor={`${prefix}-search`}>
                     Search
@@ -180,42 +207,80 @@ export const NewsBrowser = ({ news, heading, className = "", style, id }: NewsBr
                     onChange={(event) => setYear(event.target.value === "All years" ? "" : event.target.value)}
                 />
             </div>
-            <p className={styles.count} role="status" aria-atomic="true">
-                {count} news {count === 1 ? "item" : "items"} · Newest first
-            </p>
+            <div className={styles["filter-footer"]}>
+                <p className={styles.count} role="status" aria-atomic="true">
+                    {count} news {count === 1 ? "item" : "items"} · Newest first
+                </p>
+
+                <Button
+                    className={styles.clear}
+                    onClick={clearFilters}
+                    disabled={!query && !resource && !type && !year}
+                >
+                    Clear filters
+                </Button>
+            </div>
             {count === 0 && (
                 <p className={styles.empty}>{news.length ? "No news matches these filters." : "No news available."}</p>
             )}
+
             {groups.map(({ year: groupYear, entries }) => (
-                <section key={groupYear} className={styles.yearGroup} aria-labelledby={`${prefix}-year-${groupYear}`}>
+                <section
+                    key={groupYear}
+                    className={styles["year-group"]}
+                    aria-labelledby={`${prefix}-year-${groupYear}`}
+                >
                     <h3 id={`${prefix}-year-${groupYear}`} className={styles.year}>
                         {groupYear}
                     </h3>
-                    <div>
-                        {entries.map((item, index) => (
-                            <article key={index} className={styles.entry}>
-                                <div className={styles.meta}>
-                                    <time dateTime={item.date.slice(0, 10)}>
-                                        {dateFormatter.format(new Date(`${item.date.slice(0, 10)}T12:00:00Z`))}
-                                    </time>
-                                    {item.news_type && <Badge className={styles.badge}>{item.news_type}</Badge>}
-                                    {item.resources?.map((value) => (
-                                        <span key={value} className={styles.resource}>
-                                            {value}
+
+                    <div className={styles["year-entries"]}>
+                        {entries.map((item, index) => {
+                            const date = new Date(`${item.date.slice(0, 10)}T12:00:00Z`);
+
+                            return (
+                                <article key={index} className={styles.entry}>
+                                    <time
+                                        className={styles["entry-date"]}
+                                        dateTime={item.date.slice(0, 10)}
+                                    >
+                                        <span className={styles["date-month"]}>
+                                            {monthFormatter.format(date)}
                                         </span>
-                                    ))}
-                                </div>
-                                <h4 className={styles.title}>
-                                    {item.url ? <a href={item.url}>{item.title}</a> : item.title}
-                                </h4>
-                                <NewsContent item={item} />
-                                {item.url && (
-                                    <a className={styles.source} href={item.url}>
-                                        View original post ↗
-                                    </a>
-                                )}
-                            </article>
-                        ))}
+                                        <span className={styles["date-day"]}>
+                                            {date.getUTCDate()}
+                                        </span>
+                                    </time>
+
+                                    <div className={styles["entry-content"]}>
+                                        <div className={styles.meta}>
+                                            {item.news_type && (
+                                                <Badge className={styles.badge}>{item.news_type}</Badge>
+                                            )}
+
+                                            {item.resources?.map((value) => (
+                                                <span key={value} className={styles.resource}>
+                                                    {value}
+                                                </span>
+                                            ))}
+                                        </div>
+
+                                        <h4 className={styles.title}>
+                                            {item.url ? (
+                                                <a href={item.url} target="_blank" rel="noopener noreferrer">
+                                                    {item.title}
+                                                </a>
+                                            ) : (
+                                                item.title
+                                            )}
+                                        </h4>
+
+                                        <NewsContent item={item} />
+
+                                    </div>
+                                </article>
+                            );
+                        })}
                     </div>
                 </section>
             ))}

@@ -15,7 +15,16 @@ const fetchNews = async (url: string): Promise<NewsItems> => {
     // WordPress returns HTML and entities; the browser's title and summary are plain text.
     const plainText = (html: string) => {
         const document = new DOMParser().parseFromString(html, "text/html");
+
         document.querySelectorAll("script, style").forEach((element) => element.remove());
+
+        document.body.querySelectorAll(
+            "p, div, section, article, h1, h2, h3, h4, h5, h6, li, br, blockquote"
+        ).forEach((element) => {
+            element.insertAdjacentText("beforebegin", " ");
+            element.insertAdjacentText("afterend", " ");
+        });
+
         return (document.body.textContent || "").replace(/\s+/g, " ").trim();
     };
     return body.map((item) => ({

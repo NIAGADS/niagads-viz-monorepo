@@ -1,6 +1,8 @@
+
 .home-page-content {
     width: 100%;
 }
+
 .home-page-section {
     width: 100%;
     display: flex;
@@ -9,11 +11,13 @@
     padding-left: 50px;
     padding-right: 50px;
 }
+
 .home-page-heading {
     max-width: 60%;
     margin-left: 40px;
     margin-right: 100px;
 }
+
 .home-page-content .niagads-hero-section {
     background-color: #ffffff;
     background-image: url("/Minimalist-Wireframe-Brain-Network.jpg");
@@ -27,9 +31,11 @@
     color: var(--foreground);
     padding-bottom: 1rem;
 }
+
 .niagads-hero-section .niagads-hero-subtitle {
     color: var(--foreground);
 }
+
 .niagads-hero-section .niagads-hero-search input {
     border: 1px solid var(--gray-300);
 }
@@ -38,6 +44,8 @@
     font-size: 1.1rem;
     padding-bottom: 2rem;
 }
+
+/* Latest News */
 
 .home-page-news-column {
     background-color: rgba(255, 255, 255, 0.8);
@@ -60,10 +68,21 @@
     line-height: 1.25;
 }
 
+.home-page-news-teaser h2 a {
+    color: inherit;
+    font-weight: inherit;
+    text-decoration: none;
+}
+
+.home-page-news-teaser h2 a:hover {
+    color: #41638d;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+}
+
 .home-page-news-teaser time {
     display: block;
     margin-top: 0.4rem;
-    /* color: rgba(255, 255, 255, 0.72); */
     font-size: 0.8rem;
 }
 
@@ -73,12 +92,45 @@
     line-height: 1.45;
 }
 
-.home-page-news-teaser a {
-    /* color: #fff; */
+.home-page-news-teaser p a {
     font-weight: 700;
     text-decoration: underline;
     text-underline-offset: 0.15em;
 }
+
+/* View All News footer */
+
+.home-page-news-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.25rem;
+    padding-top: 0.875rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.home-page-news-all-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #41638d;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.home-page-news-all-link:hover {
+    color: #243f61;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+}
+
+.home-page-news-teaser a:focus-visible {
+    outline: 2px solid var(--primary-blue);
+    outline-offset: 3px;
+    border-radius: 2px;
+}
+
+/* Hero Quick Links */
 
 .home-page-hero-link-button {
     justify-content: space-evenly;
@@ -94,6 +146,8 @@
     box-shadow: 0 4px 10px rgba(41, 50, 65, 0.25);
 }
 
+/* Social Links */
+
 .home-page-socials {
     display: flex;
     justify-content: center;
@@ -107,10 +161,11 @@
     stroke: currentColor;
 }
 
+/* Signup Buttons */
+
 .home-page-signup-buttons {
     width: 25%;
     padding-left: 40px;
-
     height: 20rem;
 
     display: flex;
@@ -123,10 +178,11 @@
     padding-bottom: 10px;
 }
 
+/* RSS Feed */
+
 .home-page-rss-feed {
     display: flex;
     flex: 1;
-
     margin-left: 100px;
 }
 

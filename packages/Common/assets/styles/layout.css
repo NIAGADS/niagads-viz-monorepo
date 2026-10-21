@@ -25,12 +25,12 @@
 .content-section-centered,
 .content-section-narrow {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
     padding: 1.5rem;
 }
 
-@media (min-width: 1440px) {
+@media (min-width: 1640px) {
     .content-section-centered {
         max-width: 1440px;
     }
