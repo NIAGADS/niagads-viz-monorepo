@@ -12,26 +12,21 @@ export const SubscribeCard = () => {
                     </div>
 
                     <div>
-                        <p className="text-base font-semibold">
-                            Stay connected
-                        </p>
+                        <p className="text-base font-semibold">Stay connected</p>
 
-                        <p className="text-sm">
-                            Get NIAGADS news and updates.
-                        </p>
+                        <p className="text-sm">Get NIAGADS news and updates.</p>
                     </div>
                 </div>
-            
-                    <a
-                        href="https://eepurl.com/iA04J-"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={styles["subscribe-button"]}
-                    > 
-                        <span>Subscribe</span>
-                        <ArrowRight aria-hidden="true" size={18} />
-                    </a>
-                       
+
+                <a
+                    href="https://eepurl.com/iA04J-"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles["subscribe-button"]}
+                >
+                    <span>Subscribe</span>
+                    <ArrowRight aria-hidden="true" size={18} />
+                </a>
             </CardBody>
         </Card>
     );

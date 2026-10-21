@@ -1,15 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-import { Card,
-         CardBody,
-         NIAGADSLogo,
-         NIAGADSAPILogo,
-         NIAGADSDSSLogo,
-         NIAGADSFilerLogo,
-         NIAGADSGenomicsDBLogo,
-         NIAGADSXQTLLogo,
-         ADVPLogo
+import {
+    Card,
+    CardBody,
+    NIAGADSLogo,
+    NIAGADSAPILogo,
+    NIAGADSDSSLogo,
+    NIAGADSFilerLogo,
+    NIAGADSGenomicsDBLogo,
+    NIAGADSXQTLLogo,
+    ADVPLogo,
 } from "@niagads/ui";
 import styles from "./resource-ecosystem.module.css";
 
@@ -74,13 +75,7 @@ const RESOURCE_LOGOS = {
     advp: ADVPLogo,
 } as const;
 
-export type ResourceLogo =
-    | "genomicsdb"
-    | "xqtl"
-    | "filer"
-    | "dss"
-    | "api"
-    | "advp";
+export type ResourceLogo = "genomicsdb" | "xqtl" | "filer" | "dss" | "api" | "advp";
 
 export interface Resource {
     id: string;
@@ -97,7 +92,7 @@ export interface ResourceEcosystemOverview {
     title: string;
     description: string;
     instruction: string;
-     defaultDetail: {
+    defaultDetail: {
         title: string;
         description: string;
     };
@@ -428,9 +423,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
 
     const detailResource = active?.type === "resource" ? resourceById[active.id] : undefined;
 
-    const ResourceLogo = detailResource?.logo
-        ? RESOURCE_LOGOS[detailResource.logo]
-        : NIAGADSLogo;
+    const ResourceLogo = detailResource?.logo ? RESOURCE_LOGOS[detailResource.logo] : NIAGADSLogo;
 
     const classForConcept = (id: ConceptType) =>
         [
@@ -467,13 +460,10 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
     return (
         <main className={styles.shell} ref={shellRef}>
             <section className={styles.ecosystem} aria-label="NIAGADS homepage resource visualization prototype">
-                
                 <div className={styles["ecosystem-intro"]}>
                     <h2>{overview.title}</h2>
                     <p>{overview.description}</p>
-                    <p className={styles["ecosystem-instruction"]}>
-                        {overview.instruction}
-                    </p>
+                    <p className={styles["ecosystem-instruction"]}>{overview.instruction}</p>
                 </div>
 
                 <div className={styles["resource-group-labels"]} aria-hidden="true" style={resourceGridStyle}>
@@ -633,7 +623,14 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         aria-label="Genes"
                         {...conceptInteractions("genes")}
                     >
-                        <rect className={styles["gene-concept-hit-area"]} x="20" y="118" width="180" height="84" rx="6" />
+                        <rect
+                            className={styles["gene-concept-hit-area"]}
+                            x="20"
+                            y="118"
+                            width="180"
+                            height="84"
+                            rx="6"
+                        />
                         {GENE_EXONS.map(([x, width]) => (
                             <rect className={styles["gene-exon"]} x={x} y="142" width={width} height="16" key={x} />
                         ))}
@@ -712,7 +709,14 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         tabIndex={0}
                         {...conceptInteractions("sequencing")}
                     >
-                        <rect className={styles["sequencing-hit-area"]} x="1070" y="92" width="170" height="110" rx="6" />
+                        <rect
+                            className={styles["sequencing-hit-area"]}
+                            x="1070"
+                            y="92"
+                            width="170"
+                            height="110"
+                            rx="6"
+                        />
                         <g>
                             {SEQUENCING_READS.map(([x, width, y], index) => {
                                 const readX = 592.5 + x / 2;
@@ -749,7 +753,14 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                         aria-label="Regulatory elements"
                         {...conceptInteractions("regulatory")}
                     >
-                        <rect className={styles["regulatory-hit-area"]} x="444" y="104" width="250" height="94" rx="6" />
+                        <rect
+                            className={styles["regulatory-hit-area"]}
+                            x="444"
+                            y="104"
+                            width="250"
+                            height="94"
+                            rx="6"
+                        />
                         <path className={styles["regulatory-loop"]} d="M476 142 C486 110 528 110 538 140" />
                         <rect className={styles["regulatory-enhancer"]} x="460" y="142" width="32" height="16" rx="2" />
                         <rect className={styles["regulatory-promoter"]} x="530" y="140" width="16" height="20" rx="2" />
@@ -896,9 +907,7 @@ export function ResourceEcosystemViewer({ overview, resources, resourceGroups }:
                                     <h2>{detailResource?.name ?? overview.defaultDetail.title}</h2>
                                 </div>
 
-                                <p>
-                                    {detailResource?.description ?? overview.defaultDetail.description}
-                                </p>
+                                <p>{detailResource?.description ?? overview.defaultDetail.description}</p>
                             </div>
 
                             {detailResource?.url && (
@@ -1006,7 +1015,15 @@ function UtilityGlyph({
     }[kind];
 
     return (
-        <svg className={styles["utility-glyph"]} x={x} y={y} width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+        <svg
+            className={styles["utility-glyph"]}
+            x={x}
+            y={y}
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+        >
             {glyph}
         </svg>
     );

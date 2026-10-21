@@ -189,11 +189,7 @@
     align-items: center;
     justify-content: center;
     padding: 12px 14px;
-    border: 1px solid color-mix(
-        in srgb,
-        var(--resource-color),
-        var(--white) 65%
-    );
+    border: 1px solid color-mix(in srgb, var(--resource-color), var(--white) 65%);
     border-radius: 8px;
     background: var(--surface);
     color: var(--text-primary);

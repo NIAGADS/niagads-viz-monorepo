@@ -21,11 +21,7 @@
     content: "";
     opacity: 0.4;
     pointer-events: none;
-    mask-image: linear-gradient(
-        to right,
-        transparent 30%,
-        black 68%
-    );
+    mask-image: linear-gradient(to right, transparent 30%, black 68%);
 }
 
 .about-content {
@@ -78,7 +74,7 @@
     /* border-top: 1px solid var(--site-border);
     margin-top: -2.25rem; */
 }
-   
+
 .partner-description {
     margin: 1.5rem 0;
 }
@@ -153,11 +149,7 @@
     .about-section::after {
         opacity: 0.08;
 
-        mask-image: linear-gradient(
-            to right,
-            transparent 20%,
-            black 60%
-        );
+        mask-image: linear-gradient(to right, transparent 20%, black 60%);
     }
 
     .about-content {

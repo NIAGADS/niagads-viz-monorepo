@@ -47,7 +47,6 @@
         align-content: flex-start;
         gap: 0.75rem 1rem;
         padding: 1rem;
-     
     }
 
     .publications-table :global([class*="table-toolbar-container"]) {
@@ -81,7 +80,7 @@
     }
 }
 @media (max-width: 768px) {
-     .publications-table :global([class*="table-container"])::before {
+    .publications-table :global([class*="table-container"])::before {
         content: "← Swipe horizontally to view more columns →";
         display: block;
         padding: 0.5rem 0 0.75rem;
@@ -136,8 +135,7 @@
         gap: 0.75rem;
     }
 
-    .publications-table :global([class*="pagination-control-container"])
-        :global([class*="select-wrapper"]) {
+    .publications-table :global([class*="pagination-control-container"]) :global([class*="select-wrapper"]) {
         grid-column: 1 / -1;
         justify-self: start;
     }

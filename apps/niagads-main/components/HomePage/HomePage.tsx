@@ -45,7 +45,7 @@ export const HomePage = () => {
             >
                 <div className={styles["home-page-hero-panel"]}>
                     <div className={styles["home-page-news-column"]}>
-                        <LatestNewsTeaser groups={process.env.NEWS_GROUPS || ""}  />
+                        <LatestNewsTeaser groups={process.env.NEWS_GROUPS || ""} />
                     </div>
                 </div>
             </HeroSection>

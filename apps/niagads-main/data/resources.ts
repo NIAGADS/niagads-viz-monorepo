@@ -8,8 +8,7 @@ export const RESOURCE_ECOSYSTEM_OVERVIEW = {
     instruction: "Select a resource to explore its connections.",
     defaultDetail: {
         title: "Explore the ecosystem",
-        description:
-            "Select a resource to discover its genomic connections, available data, and access options.",
+        description: "Select a resource to discover its genomic connections, available data, and access options.",
     },
 };
 

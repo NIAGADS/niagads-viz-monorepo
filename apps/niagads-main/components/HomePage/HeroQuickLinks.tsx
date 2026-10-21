@@ -16,7 +16,12 @@ export const HeroQuickLinks = () => {
                 <span className={styles["hero-quick-link-title"]}>Browse Datasets</span>
                 <span className={styles["hero-quick-link-arrow"]}>→</span>
             </a>
-            <a href="https://niagads.scrollhelp.site/support/data-submission" target="_blank" rel="noopener noreferrer" className={styles["hero-quick-link"]}>
+            <a
+                href="https://niagads.scrollhelp.site/support/data-submission"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles["hero-quick-link"]}
+            >
                 <span className={styles["hero-quick-link-icon"]} aria-hidden="true">
                     <Upload />
                 </span>

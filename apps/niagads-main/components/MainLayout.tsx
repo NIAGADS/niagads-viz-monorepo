@@ -17,7 +17,10 @@ const navigationLinks = [
     { text: "About Us", url: "/about" },
     { text: "News", url: "/news" },
     { text: "Publications", url: "/publications" },
-    { text: "Cite and Acknowledge", url: "https://niagads.scrollhelp.site/support/acknowledging-and-citing-niagads-and-datasets" },
+    {
+        text: "Cite and Acknowledge",
+        url: "https://niagads.scrollhelp.site/support/acknowledging-and-citing-niagads-and-datasets",
+    },
     { text: "Help", url: "https://niagads.scrollhelp.site/support" },
     { text: "Contact Us", url: "/contact-us" },
 ];
@@ -30,9 +33,7 @@ export const MainLayoutContent = ({ children }: MainLayoutProps) => {
                 logo={<Image width={200} height={60} src={logo} alt="NIAGADS" loading="eager" />}
                 links={navigationLinks.map((link) => ({
                     ...link,
-                    active:
-                        link.url.startsWith("/") &&
-                        (pathname === link.url || pathname.startsWith(`${link.url}/`)),
+                    active: link.url.startsWith("/") && (pathname === link.url || pathname.startsWith(`${link.url}/`)),
                     url: link.url,
                 }))}
                 linkComponent={Link}

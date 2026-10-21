@@ -240,23 +240,14 @@ export const NewsBrowser = ({ news, heading, className = "", style, id }: NewsBr
 
                             return (
                                 <article key={index} className={styles.entry}>
-                                    <time
-                                        className={styles["entry-date"]}
-                                        dateTime={item.date.slice(0, 10)}
-                                    >
-                                        <span className={styles["date-month"]}>
-                                            {monthFormatter.format(date)}
-                                        </span>
-                                        <span className={styles["date-day"]}>
-                                            {date.getUTCDate()}
-                                        </span>
+                                    <time className={styles["entry-date"]} dateTime={item.date.slice(0, 10)}>
+                                        <span className={styles["date-month"]}>{monthFormatter.format(date)}</span>
+                                        <span className={styles["date-day"]}>{date.getUTCDate()}</span>
                                     </time>
 
                                     <div className={styles["entry-content"]}>
                                         <div className={styles.meta}>
-                                            {item.news_type && (
-                                                <Badge className={styles.badge}>{item.news_type}</Badge>
-                                            )}
+                                            {item.news_type && <Badge className={styles.badge}>{item.news_type}</Badge>}
 
                                             {item.resources?.map((value) => (
                                                 <span key={value} className={styles.resource}>
@@ -276,7 +267,6 @@ export const NewsBrowser = ({ news, heading, className = "", style, id }: NewsBr
                                         </h4>
 
                                         <NewsContent item={item} />
-
                                     </div>
                                 </article>
                             );

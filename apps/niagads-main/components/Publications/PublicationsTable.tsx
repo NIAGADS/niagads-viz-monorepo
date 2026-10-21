@@ -10,11 +10,12 @@ export type PublicationsTableData = PublicationRow[];
 const columns: TableColumn[] = [
     { id: "title", header: "Title", type: "link", required: true, disableColumnFilter: true },
     { id: "authors", header: "Authors", type: "text", disableColumnFilter: true },
-    { id: "journal", 
-        header: "Journal", 
-        type: "text", 
-        styling: { getClassName: () => styles["journal-name"],}, 
-        disableColumnFilter: true 
+    {
+        id: "journal",
+        header: "Journal",
+        type: "text",
+        styling: { getClassName: () => styles["journal-name"] },
+        disableColumnFilter: true,
     },
     {
         id: "year",

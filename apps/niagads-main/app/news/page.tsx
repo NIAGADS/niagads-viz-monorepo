@@ -1,4 +1,3 @@
-
 import { BlueSkyIcon, SocialFeed, XTwitterIcon } from "@niagads/ui";
 import type { Metadata } from "next";
 import { NewsArchive } from "@/components/News/NewsArchive";
@@ -53,8 +52,7 @@ export default function NewsPage() {
                                     rel="noopener noreferrer"
                                     className={styles["social-link"]}
                                 >
-                                    <XTwitterIcon size={17} />
-                                    X / Twitter ↗
+                                    <XTwitterIcon size={17} />X / Twitter ↗
                                 </a>
                             </div>
 

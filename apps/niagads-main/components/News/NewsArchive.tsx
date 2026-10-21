@@ -18,12 +18,12 @@ const fetchNews = async (url: string): Promise<NewsItems> => {
 
         document.querySelectorAll("script, style").forEach((element) => element.remove());
 
-        document.body.querySelectorAll(
-            "p, div, section, article, h1, h2, h3, h4, h5, h6, li, br, blockquote"
-        ).forEach((element) => {
-            element.insertAdjacentText("beforebegin", " ");
-            element.insertAdjacentText("afterend", " ");
-        });
+        document.body
+            .querySelectorAll("p, div, section, article, h1, h2, h3, h4, h5, h6, li, br, blockquote")
+            .forEach((element) => {
+                element.insertAdjacentText("beforebegin", " ");
+                element.insertAdjacentText("afterend", " ");
+            });
 
         return (document.body.textContent || "").replace(/\s+/g, " ").trim();
     };
