@@ -1,122 +1,137 @@
 .app {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 2rem;
-    color: #192c3b;
-    font-family: Arial, sans-serif;
-    line-height: 1.55;
+    padding: 2.5rem 1.5rem;
 }
+
+.app > * + * {
+    margin-top: 1.5rem;
+}
+
 .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    border-bottom: 2px solid #22647e;
-    padding-bottom: 1rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 3px solid var(--accent);
 }
+
 .header h1 {
-    margin: 0;
-    font-size: 2rem;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    line-height: 1.2;
+    color: var(--primary);
 }
-.header a {
-    color: #165976;
-}
+
 .eyebrow {
-    margin: 0;
-    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
 }
+
+.prototype {
+    color: var(--accent);
+    background: var(--surface);
+    border-color: var(--accent);
+}
+
 .notice {
+    margin: 1rem 0;
     padding: 0.8rem 1rem;
-    background: #eef4f6;
-    border-left: 3px solid #537d8c;
+    background: var(--primary-subtle);
+    border-left: 3px solid var(--primary);
 }
-.examples,
+
+.examples h2 {
+    margin-bottom: 1rem;
+    font-size: 1.125rem;
+}
+
+.example {
+    min-width: 0;
+    text-align: left;
+    color: var(--primary);
+    font: inherit;
+}
+
 .actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.7rem;
+    align-items: center;
+    gap: 0.75rem;
 }
-.app button {
-    border: 1px solid #397389;
-    border-radius: 4px;
-    padding: 0.65rem 1rem;
+
+.app button,
+.app summary {
     min-height: 44px;
-    background: white;
-    color: #164b62;
-    cursor: pointer;
-    font: inherit;
-    text-align: left;
 }
-.app button[type="submit"] {
-    background: #195c76;
-    color: white;
-}
-.app button:disabled {
-    opacity: 0.55;
-    cursor: default;
-}
+
 .app button:focus-visible,
 .app a:focus-visible,
 .app textarea:focus-visible,
-.app summary:focus-visible {
-    outline: 3px solid #b86c18;
+.app summary:focus-visible,
+.table:focus-visible {
+    outline: 2px solid var(--accent);
     outline-offset: 3px;
 }
-.conversation {
-    margin-top: 2rem;
-}
+
 .message {
-    border-bottom: 1px solid #cad8df;
-    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem 0;
     overflow-wrap: anywhere;
 }
+
 .message h2 {
     font-size: 1rem;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary);
 }
+
 .prose {
     white-space: pre-wrap;
 }
+
 .progress {
-    font-size: 0.85rem;
-    color: #48636f;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
 }
+
 .panel {
-    margin: 1.2rem 0;
-    padding: 1rem;
-    border: 1px solid #cad8df;
-    border-radius: 4px;
+    margin: 1.25rem 0;
     min-width: 0;
 }
+
 .panel h3 {
-    margin-top: 0;
+    font-size: 1.125rem;
 }
+
 .table {
     overflow-x: auto;
     max-width: 100%;
 }
+
 .tableContent {
     min-width: 650px;
     overflow-wrap: normal;
 }
-.table:focus-visible {
-    outline: 3px solid #b86c18;
-    outline-offset: 3px;
-}
+
 .chart {
     height: 360px;
-    min-width: 300px;
+    min-width: 0;
 }
+
 .sourceTable {
     border-collapse: collapse;
     width: 100%;
 }
+
 .sourceTable th,
 .sourceTable td {
     text-align: left;
     padding: 0.5rem;
-    border-bottom: 1px solid #cad8df;
+    border-bottom: 1px solid var(--border);
 }
+
 .raw {
     white-space: pre-wrap;
     overflow-wrap: anywhere;
@@ -124,34 +139,37 @@
     overflow: auto;
     font-size: 0.8rem;
 }
+
 .composer {
     display: flex;
     flex-direction: column;
-    gap: 0.7rem;
-    margin: 2rem 0;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    background: var(--primary-subtle);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius-lg);
 }
+
 .composer label {
-    font-weight: bold;
+    font-weight: 600;
+    color: var(--primary);
 }
+
 .composer textarea {
-    box-sizing: border-box;
     width: 100%;
     resize: vertical;
     padding: 0.8rem;
-    font: inherit;
-    border: 1px solid #6b8490;
-    border-radius: 4px;
-    color: inherit;
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    background: var(--surface);
+    color: var(--text-primary);
 }
-.error {
-    color: #9d2424;
-    padding: 0.8rem;
-    border: 1px solid currentColor;
-}
+
 .app summary {
     cursor: pointer;
     padding: 0.5rem 0;
 }
+
 .srOnly {
     position: absolute;
     width: 1px;
@@ -159,21 +177,17 @@
     overflow: hidden;
     clip-path: inset(50%);
 }
+
 @media (max-width: 640px) {
     .app {
+        padding: 1.5rem 1rem;
+    }
+
+    .composer {
         padding: 1rem;
     }
-    .header {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-    .panel {
-        padding: 0.6rem;
-    }
+
     .chart {
         height: 320px;
-    }
-    .examples button {
-        width: 100%;
     }
 }

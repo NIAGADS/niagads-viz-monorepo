@@ -13,5 +13,5 @@
 
 .text {
     display: inline;
-    line-height: 0;
+    line-height: inherit;
 }

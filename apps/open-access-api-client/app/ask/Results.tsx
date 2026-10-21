@@ -1,5 +1,6 @@
 "use client";
 
+import { Alert, Card, CardBody, CardHeader } from "@niagads/ui";
 import dynamic from "next/dynamic";
 import { Component, useState, type ReactNode } from "react";
 import { parseEnvelope, sourceCounts, tableData, type ResultSet } from "./contracts";
@@ -88,7 +89,12 @@ export default function Results({ value }: { value: unknown }) {
     try {
         envelope = parseEnvelope(value);
     } catch {
-        return <p role="alert">The results could not be displayed. Contact support if the problem continues.</p>;
+        return (
+            <Alert
+                variant="error"
+                message="The results could not be displayed. Contact support if the problem continues."
+            />
+        );
     }
     return (
         <div>
@@ -103,10 +109,11 @@ export default function Results({ value }: { value: unknown }) {
             )}
             {Array.from(new Map(envelope.issues.map((issue) => [JSON.stringify(issue), issue])).values()).map(
                 (issue, i) => (
-                    <p key={`issue-${i}`} role="alert" className={styles.error}>
-                        {issue.message}
-                        {issue.request_id ? ` Reference: ${issue.request_id}.` : ""}
-                    </p>
+                    <Alert
+                        key={`issue-${i}`}
+                        variant="error"
+                        message={`${issue.message}${issue.request_id ? ` Reference: ${issue.request_id}.` : ""}`}
+                    />
                 )
             )}
             {[...new Set(envelope.warnings)]
@@ -120,30 +127,34 @@ export default function Results({ value }: { value: unknown }) {
                 const result = envelope.results.find((r) => r.id === panel.result_id)!;
                 const View = registry[panel.component];
                 return (
-                    <section key={`${panel.result_id}-${panel.component}-${i}`} className={styles.panel}>
-                        <h3>{panel.title}</h3>
-                        <p>
-                            {result.rows.length} records · Page {result.page}
-                            {result.has_more ? " · More results available; this is not the full result set." : ""}
-                        </p>
-                        {result.warnings.map((warning, j) => (
-                            <p key={j}>{warning}</p>
-                        ))}
-                        {result.sources.length > 0 && <p>Source identifiers: {result.sources.join(", ")}</p>}
-                        <ComponentBoundary
-                            fallback={
-                                <p role="alert">
-                                    This component could not be loaded. Full records remain available below.
-                                </p>
-                            }
-                        >
-                            <View result={result} />
-                        </ComponentBoundary>
-                        <details>
-                            <summary>Full retrieved records and provenance</summary>
-                            <pre className={styles.raw}>{JSON.stringify(result.rows, null, 2)}</pre>
-                        </details>
-                    </section>
+                    <Card key={`${panel.result_id}-${panel.component}-${i}`} className={styles.panel}>
+                        <CardHeader>
+                            <h3>{panel.title}</h3>
+                        </CardHeader>
+                        <CardBody>
+                            <p>
+                                {result.rows.length} records · Page {result.page}
+                                {result.has_more ? " · More results available; this is not the full result set." : ""}
+                            </p>
+                            {result.warnings.map((warning, j) => (
+                                <p key={j}>{warning}</p>
+                            ))}
+                            {result.sources.length > 0 && <p>Source identifiers: {result.sources.join(", ")}</p>}
+                            <ComponentBoundary
+                                fallback={
+                                    <p role="alert">
+                                        This component could not be loaded. Full records remain available below.
+                                    </p>
+                                }
+                            >
+                                <View result={result} />
+                            </ComponentBoundary>
+                            <details>
+                                <summary>Full retrieved records and provenance</summary>
+                                <pre className={styles.raw}>{JSON.stringify(result.rows, null, 2)}</pre>
+                            </details>
+                        </CardBody>
+                    </Card>
                 );
             })}
         </div>
