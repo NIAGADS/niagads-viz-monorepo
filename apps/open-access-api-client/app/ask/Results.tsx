@@ -2,8 +2,9 @@
 
 import dynamic from "next/dynamic";
 import { Component, useState, type ReactNode } from "react";
-import { parseEnvelope, sourceCounts, tableData, type ResultSet } from "./contracts";
+import { parseEnvelope, type ResultSet, type Presentation } from "./contracts";
 import styles from "./ask.module.css";
+import { translateBar, translateTable } from "./translators/index.ts";
 
 const EvidenceTable = dynamic(() => import("@niagads/table"), { ssr: false });
 const SourceBar = dynamic(() => import("@niagads/charts").then((m) => m.BarChart), { ssr: false });
@@ -18,70 +19,69 @@ class ComponentBoundary extends Component<{ children: ReactNode; fallback: React
     }
 }
 
-function TableView({ result }: { result: ResultSet }) {
-    const config = tableData(result);
-    return (
-        <div
-            className={styles.table}
-            role="region"
-            tabIndex={0}
-            aria-label="Evidence table; scroll horizontally on narrow screens"
-        >
-            <div className={styles.tableContent}>
-                <EvidenceTable
-                    id={result.id}
-                    columns={config.columns}
-                    data={config.data}
-                    options={{ enableExport: true, enableColumnFilters: false }}
-                />
-            </div>
-        </div>
-    );
-}
-
-function SourceSummary({ result }: { result: ResultSet }) {
+function PanelView({
+    result,
+    panel,
+    maxCategories,
+    panelIndex,
+}: {
+    result: ResultSet;
+    panel: Presentation;
+    maxCategories: number;
+    panelIndex: number;
+}) {
     const [chartOpen, setChartOpen] = useState(false);
-    const counts = sourceCounts(result);
-    if (!counts.length) return <p>No association counts are available for this result.</p>;
+    if (panel.translator !== "category_counts_bar" && panel.translator !== "association_counts_bar") {
+        const config = translateTable(result, panel);
+        return (
+            <div
+                className={styles.table}
+                role="region"
+                tabIndex={0}
+                aria-label="Evidence table; scroll horizontally on narrow screens"
+            >
+                <div className={styles.tableContent}>
+                    <EvidenceTable {...config} id={`${config.id}-${panelIndex}`} />
+                </div>
+            </div>
+        );
+    }
+    const summary = translateBar(result, panel, maxCategories);
     return (
         <figure>
-            <figcaption>Association counts by track from the returned summary</figcaption>
-            <details onToggle={(event) => setChartOpen(event.currentTarget.open)}>
-                <summary>Show source chart</summary>
-                <div className={styles.chart} aria-label="Association counts by track">
-                    {chartOpen && (
-                        <SourceBar
-                            id={`${result.id}-sources`}
-                            keys={["count"]}
-                            data={counts}
-                            xAxisLabel="Associations"
-                        />
-                    )}
+            <figcaption>{summary.scope}</figcaption>
+            {summary.notice && <p role="status">{summary.notice}</p>}
+            {!summary.data.length && <p>No categorical counts are available for this result.</p>}
+            {summary.showChart && (
+                <details onToggle={(event) => setChartOpen(event.currentTarget.open)}>
+                    <summary>Show bar chart</summary>
+                    <div className={styles.chart} aria-label={panel.title}>
+                        {chartOpen && (
+                            <SourceBar
+                                id={`${result.id}-${panel.translator}-${panelIndex}`}
+                                keys={["count"]}
+                                data={summary.data}
+                                xAxisLabel={
+                                    panel.translator === "association_counts_bar" ? "Associations" : "Loaded records"
+                                }
+                            />
+                        )}
+                    </div>
+                </details>
+            )}
+            <div
+                className={styles.table}
+                role="region"
+                tabIndex={0}
+                aria-label="Summary counts; scroll horizontally on narrow screens"
+            >
+                <div className={styles.tableContent}>
+                    <EvidenceTable {...summary.table} id={`${summary.table.id}-${panelIndex}`} />
                 </div>
-            </details>
-            <table className={styles.sourceTable}>
-                <caption className={styles.srOnly}>Association summary counts</caption>
-                <thead>
-                    <tr>
-                        <th scope="col">Track</th>
-                        <th scope="col">Associations</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {counts.map((row) => (
-                        <tr key={row.term}>
-                            <th scope="row">{row.term}</th>
-                            <td>{row.count}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            </div>
         </figure>
     );
 }
-
-// Explicit registry: the model selects a name and a result reference, never code.
-const registry = { table: TableView, association_source_bar: SourceSummary };
 
 export default function Results({ value }: { value: unknown }) {
     let envelope;
@@ -116,32 +116,50 @@ export default function Results({ value }: { value: unknown }) {
                         {warning}
                     </p>
                 ))}
-            {envelope.presentation.map((panel, i) => {
-                const result = envelope.results.find((r) => r.id === panel.result_id)!;
-                const View = registry[panel.component];
+            {envelope.results.map((result) => {
+                const panels = envelope.presentation.filter((panel) => panel.result_id === result.id);
                 return (
-                    <section key={`${panel.result_id}-${panel.component}-${i}`} className={styles.panel}>
-                        <h3>{panel.title}</h3>
+                    <section key={result.id} className={styles.panel}>
                         <p>
-                            {result.rows.length} records · Page {result.page}
+                            {result.rows.length} loaded records · API page {result.page}
                             {result.has_more ? " · More results available; this is not the full result set." : ""}
+                            {result.annotation === null
+                                ? " · Ranked candidates are not an exhaustive set of matches."
+                                : ""}
                         </p>
                         {result.warnings.map((warning, j) => (
                             <p key={j}>{warning}</p>
                         ))}
                         {result.sources.length > 0 && <p>Source identifiers: {result.sources.join(", ")}</p>}
-                        <ComponentBoundary
-                            fallback={
-                                <p role="alert">
-                                    This component could not be loaded. Full records remain available below.
-                                </p>
-                            }
-                        >
-                            <View result={result} />
-                        </ComponentBoundary>
+                        {!panels.length && (
+                            <p>
+                                No registered presentation was selected for this result. Retrieved records remain
+                                available below.
+                            </p>
+                        )}
+                        {panels.map((panel, i) => (
+                            <div key={`${panel.translator}-${i}`}>
+                                <h3>{panel.title}</h3>
+                                <ComponentBoundary
+                                    fallback={
+                                        <p role="alert">
+                                            This presentation is incompatible with its data or could not be loaded.
+                                            Retrieved records remain available below.
+                                        </p>
+                                    }
+                                >
+                                    <PanelView
+                                        result={result}
+                                        panel={panel}
+                                        maxCategories={envelope.max_bar_categories}
+                                        panelIndex={i}
+                                    />
+                                </ComponentBoundary>
+                            </div>
+                        ))}
                         <details>
                             <summary>Full retrieved records and provenance</summary>
-                            <pre className={styles.raw}>{JSON.stringify(result.rows, null, 2)}</pre>
+                            <pre className={styles.raw}>{JSON.stringify(result, null, 2)}</pre>
                         </details>
                     </section>
                 );

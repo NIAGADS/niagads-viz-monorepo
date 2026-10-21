@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { parseEnvelope, sourceCounts, tableData, textHistory, type ResultSet } from "../app/ask/contracts.ts";
+import { parseEnvelope, textHistory, type ResultSet } from "../app/ask/contracts.ts";
 
 const result: ResultSet = {
     id: "r1",
@@ -49,27 +49,24 @@ test("follow-up context keeps at most twelve recent messages", () => {
 
 test("preserves association counts supplied by the API summary", () => {
     const data = parseEnvelope({
-        version: 2,
+        version: 3,
         status: "ok",
         results: [result],
-        presentation: [{ component: "table", result_id: "r1", title: "Evidence", slot: "primary" }],
+        presentation: [{ translator: "association_counts_table", result_id: "r1", title: "Evidence", slot: "primary" }],
         warnings: [],
     });
     assert.equal(data.results[0].has_more, true);
-    assert.deepEqual(sourceCounts(data.results[0]), [
-        { term: "track-a", count: 1200 },
-        { term: "track-b", count: 35 },
-    ]);
+    assert.equal(data.results[0].rows[0].num_associations, 1200);
 });
 
 test("rejects incomplete or unsupported component configuration", () => {
-    assert.throws(() => parseEnvelope({ version: 2, status: "ok" }));
+    assert.throws(() => parseEnvelope({ version: 3, status: "ok" }));
     assert.throws(() =>
         parseEnvelope({
-            version: 2,
+            version: 3,
             status: "ok",
             results: [result],
-            presentation: [{ component: "execute-js", result_id: "r1", title: "Bad", slot: "primary" }],
+            presentation: [{ translator: "execute-js", result_id: "r1", title: "Bad", slot: "primary" }],
             warnings: [],
         })
     );
@@ -78,10 +75,12 @@ test("rejects incomplete or unsupported component configuration", () => {
 test("rejects invented result references", () => {
     assert.throws(() =>
         parseEnvelope({
-            version: 2,
+            version: 3,
             status: "ok",
             results: [result],
-            presentation: [{ component: "table", result_id: "forged", title: "Bad", slot: "primary" }],
+            presentation: [
+                { translator: "association_counts_table", result_id: "forged", title: "Bad", slot: "primary" },
+            ],
             warnings: [],
         })
     );
@@ -89,34 +88,27 @@ test("rejects invented result references", () => {
 
 test("accepts variant record tables and rejects association charts for variant annotations", () => {
     const envelope = {
-        version: 2,
+        version: 3,
         status: "ok",
         results: [{ ...result, entity: "variant", annotation: "report", content: "full", rows: [{ id: "rs7412" }] }],
-        presentation: [{ component: "table", result_id: "r1", title: "Variant", slot: "primary" }],
+        presentation: [{ translator: "variant_records_table", result_id: "r1", title: "Variant", slot: "primary" }],
         warnings: [],
     };
     assert.equal(parseEnvelope(envelope).results[0].entity, "variant");
     assert.throws(() =>
         parseEnvelope({
             ...envelope,
-            presentation: [{ ...envelope.presentation[0], component: "association_source_bar" }],
+            presentation: [{ ...envelope.presentation[0], translator: "association_counts_bar" }],
         })
     );
 });
 
-test("nested result data is rendered as text instead of executable cell configuration", () => {
-    const rows = tableData(result);
-    assert.equal(rows.columns[0].type, "text");
-    assert.match(rows.data[1].traits, /trait-1/);
-    assert.equal(typeof rows.data[1].traits, "string");
-});
-
 test("distinguishes association annotations from reports and search candidates", () => {
     const envelope = {
-        version: 2,
+        version: 3,
         status: "ok",
         results: [{ ...result, entity: "variant", annotation: "associations" }],
-        presentation: [{ component: "association_source_bar", result_id: "r1", title: "Sources", slot: "primary" }],
+        presentation: [{ translator: "association_counts_bar", result_id: "r1", title: "Sources", slot: "primary" }],
         warnings: [],
     };
     assert.equal(parseEnvelope(envelope).results[0].annotation, "associations");
@@ -133,12 +125,12 @@ test("distinguishes association annotations from reports and search candidates",
 
 test("rejects charts from full association rows and malformed summary counts", () => {
     const envelope = {
-        version: 2,
+        version: 3,
         status: "ok",
         results: [result],
         warnings: [],
         presentation: [
-            { component: "association_source_bar", result_id: "r1", title: "Associations", slot: "primary" },
+            { translator: "association_counts_bar", result_id: "r1", title: "Associations", slot: "primary" },
         ],
     };
     for (const invalidResult of [
@@ -154,14 +146,14 @@ test("rejects charts from full association rows and malformed summary counts", (
 
 test("operation failures remain distinct from successful empty results", () => {
     const envelope = parseEnvelope({
-        version: 2,
+        version: 3,
         status: "retrieval_error",
         results: [],
         presentation: [],
         warnings: [],
         issues: [
             {
-                code: "not_found",
+                code: "unsupported",
                 operation: "gene",
                 message: "Gene lookup failed. Check its identifier.",
                 request_id: "request-123",
@@ -169,6 +161,6 @@ test("operation failures remain distinct from successful empty results", () => {
             },
         ],
     });
-    assert.equal(envelope.issues[0].code, "not_found");
+    assert.equal(envelope.issues[0].code, "unsupported");
     assert.notEqual(envelope.status, "empty");
 });

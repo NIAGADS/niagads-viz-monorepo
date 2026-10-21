@@ -1,6 +1,6 @@
 # ASK dashboard translators
 
-Status: contract proposal awaiting review; no product code changes yet.
+Status: contract proposal approved; implementation complete with static checks and independent review.
 
 This branch is codex/ask-dashboard-translators, based on app/oa-api at c3962e5f.
 The paired Python branch has the same name, based on refactor/api at ef6d2ba1.
@@ -16,6 +16,6 @@ with column filtering disabled. No standalone pies or cross-panel filtering.
 
 Proposed contract: registered translator + result_id + supported parameters,
 with a coordinated envelope version 3. No LLM-generated transformed data.
-Category limit and schema changes remain proposals pending user review.
+The user approved the v3 contract and configurable seven-category bar policy.
 
-Next step: review the canonical proposal before implementing product code.
+See ASK_NIAGADS_HANDOFF.md for implementation behavior, validation and continuation instructions.

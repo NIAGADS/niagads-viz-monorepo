@@ -1,11 +1,41 @@
 import { z } from "zod";
 import { issueSchema } from "./errors.ts";
-import { AnnotationKind, Entity, ResponseContent, sourceChartTypes } from "./types.generated.ts";
+import { AnnotationKind, Entity, ResponseContent } from "./types.generated.ts";
+import { tableTranslatorIds, validateSelection } from "./translators/registry.ts";
 
-const associationSummaryRowSchema = z.object({
-    track: z.string().min(1),
-    num_associations: z.number().int().nonnegative(),
-});
+const panelFields = {
+    result_id: z.string().min(1),
+    title: z.string().max(160).default("Retrieved evidence"),
+    slot: z.enum(["primary", "secondary"]).default("primary"),
+};
+export const presentationSchema = z.discriminatedUnion("translator", [
+    z
+        .object({
+            ...panelFields,
+            translator: z.enum(tableTranslatorIds),
+            parameters: z
+                .object({ columns: z.array(z.string()).min(1).nullable().optional() })
+                .strict()
+                .default({}),
+        })
+        .strict(),
+    z
+        .object({
+            ...panelFields,
+            translator: z.literal("category_counts_bar"),
+            parameters: z.object({ group_by: z.string().min(1) }).strict(),
+        })
+        .strict(),
+    z
+        .object({
+            ...panelFields,
+            translator: z.literal("association_counts_bar"),
+            parameters: z.object({}).strict().default({}),
+        })
+        .strict(),
+]);
+export type Presentation = z.infer<typeof presentationSchema>;
+export type TablePresentation = Extract<Presentation, { translator: (typeof tableTranslatorIds)[number] }>;
 
 const resultSchema = z
     .object({
@@ -26,7 +56,8 @@ const resultSchema = z
 const envelopeSchema = z
     .object({
         issues: z.array(issueSchema).default([]),
-        version: z.literal(2),
+        version: z.literal(3),
+        max_bar_categories: z.number().int().positive().default(7),
         status: z.enum([
             "ok",
             "empty",
@@ -37,18 +68,7 @@ const envelopeSchema = z
             "invalid_presentation",
         ]),
         results: z.array(resultSchema).max(12),
-        presentation: z
-            .array(
-                z
-                    .object({
-                        component: z.enum(["table", "association_source_bar"]),
-                        result_id: z.string().min(1),
-                        title: z.string().max(160),
-                        slot: z.enum(["primary", "secondary"]),
-                    })
-                    .strict()
-            )
-            .max(6),
+        presentation: z.array(presentationSchema).max(6),
         warnings: z.array(z.string()),
     })
     .strict()
@@ -58,20 +78,13 @@ const envelopeSchema = z
         value.presentation.forEach((p) => {
             const result = value.results.find((r) => r.id === p.result_id);
             if (!result) ctx.addIssue({ code: "custom", message: "Unknown result reference" });
-            if (
-                p.component === "association_source_bar" &&
-                result &&
-                (result.content !== ResponseContent.SUMMARY ||
-                    !sourceChartTypes.some(
-                        (type) => type.entity === result.entity && type.annotation === result.annotation
-                    ))
-            ) {
-                ctx.addIssue({ code: "custom", message: "Association chart requires summary content" });
-            } else if (p.component === "association_source_bar" && result) {
-                if (!result.rows.every((row) => associationSummaryRowSchema.safeParse(row).success)) {
+            if (result) {
+                try {
+                    validateSelection(result, p);
+                } catch (error) {
                     ctx.addIssue({
                         code: "custom",
-                        message: "Association summary requires track identifiers and nonnegative integer counts",
+                        message: error instanceof Error ? error.message : "Invalid presentation",
                     });
                 }
             }
@@ -104,30 +117,4 @@ export function textHistory<
             ),
         }))
         .filter((message) => message.parts.length > 0);
-}
-
-export function sourceCounts(result: ResultSet): { term: string; count: number }[] {
-    return result.rows.map((row) => {
-        const summary = associationSummaryRowSchema.parse(row);
-        return { term: summary.track, count: summary.num_associations };
-    });
-}
-
-export function tableData(result: ResultSet) {
-    const keys = [...new Set(result.rows.flatMap(Object.keys))].slice(0, 12);
-    return {
-        columns: keys.map((id) => ({ id, header: id.replaceAll("_", " "), type: "text" as const })),
-        data: result.rows.map((row) =>
-            Object.fromEntries(
-                keys.map((key) => [
-                    key,
-                    row[key] == null
-                        ? ""
-                        : typeof row[key] === "string"
-                          ? (row[key] as string)
-                          : JSON.stringify(row[key]),
-                ])
-            )
-        ),
-    };
 }

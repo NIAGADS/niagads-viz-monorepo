@@ -40,14 +40,20 @@ Try `Show a dashboard for the test gene`, `Find the test transcript associations
 or `Find genes for the test phenotype`. The latter two expose pending retrieval
 capabilities honestly. See the Python base's `ASK_NIAGADS.md` for the full handoff.
 
-The UI shows streamed text/tool progress, source IDs, validated evidence tables,
-and an optional source-summary chart. Table and chart adapters reuse
-`@niagads/table` and `@niagads/charts`; raw records remain available if a component
-cannot load. Charts display the API summary
-`num_associations` counts by track; they do not recount individual associations.
-A returned summary page can contain only some tracks. Only complete
-`data-niagads-result` parts are rendered. Source metadata is displayed as text;
-model-generated HTML, code, and arbitrary links are never executed.
+The UI shows streamed text/tool progress, source IDs, typed evidence tables and
+optional categorical bars using `@niagads/table` and `@niagads/charts`. Deterministic
+translators convert retrieved records; the agent selects validated translator IDs,
+result references and supported parameters. Tables use curated field mappings and
+categorical/boolean graphical filters. Numeric histogram filters are disabled.
+Reported p-value strings are preserved, including scientific notation below
+floating-point range; rebuild the workspace Table package before local review.
+
+`category_counts_bar` counts loaded records; `association_counts_bar` displays API
+summary counts without recounting. Bars are independent of table filters and label
+their data scope. The Python setting `ASK_MAX_BAR_CATEGORIES` defaults to 7. Larger
+sets keep all counts in a table instead of a bar. Raw result records, provenance,
+and pagination remain inspectable even without a supported presentation. Only
+complete `data-niagads-result` parts render. Model-generated code is never run.
 
 Operation failures are rendered once from validated `issues` in result parts.
 Terminal stream failures and pre-stream proxy failures use the same safe issue
@@ -64,24 +70,25 @@ are deferred to the user's system.
 Focused frontend tests (from this app's directory):
 
 ```bash
-node --experimental-strip-types --test tests/ask.test.ts
+node --experimental-strip-types --test tests/ask.test.ts tests/ask-dashboard.test.ts
 npx tsc --noEmit
 ```
 
-To register another component, extend the backend Presentation model and its
-entity/annotation validation, mirror the discriminator in `app/ask/contracts.ts`,
-and add an adapter to the registry in `app/ask/Results.tsx`. Add contract/rendering tests and retain
-accessible data alternatives. See the Python documentation for the envelope.
+To register a translator, extend the Python capability registry and field mapping
+rules in `ask/presentations.py`, regenerate `app/ask/types.generated.ts`, and add
+any required deterministic projection in `app/ask/translators`. Keep backend and
+client parameter/compatibility validation aligned. New mappings must preserve
+scientific values and provide accessible table alternatives for charts.
 
-The version 2 result envelope identifies the queried `entity` separately from its
-`annotation` kind (`report`, `associations`, or `structure`). Search candidates
-have `annotation: null`. Results also retain the existing API `content` selector.
-The association chart requires `annotation: "associations"`, `content: "summary"`,
-and the API's `track`/`num_associations` fields. Full records and gene reports use
-tables. Entity, annotation, and response-content enums plus source-chart
-compatibility are generated from Python into `app/ask/types.generated.ts`; do
-not maintain independent lists here. See the Python run guide for regeneration.
-Update the paired backend and frontend together; version 1 is not accepted.
+The version 3 result envelope retains entity/annotation/content, pagination and
+source metadata. Presentation entries use `translator`, `result_id`, `title`,
+`slot`, and translator-specific `parameters`. Table parameters optionally select
+registered `columns`, retaining required identifiers. Categorical bars require a
+registered scalar `group_by`. API association bars accept no arbitrary options.
+Update both repositories together: version-2 component payloads are rejected.
+
+Deferred: histogram-filter repair, shared panel state, standalone pies, and regional
+Manhattan adaptation for position/-log10(p) with disease/population grouping.
 
 Next.js client for the [NIAGADS Open Access API](https://api.niagads.org). Provides API documentation at `/docs`, rendered from the API's OpenAPI specification using [Scalar](https://github.com/scalar/scalar) (`@scalar/api-reference-react`), and the ASK NIAGADS prototype at `/`.
 
