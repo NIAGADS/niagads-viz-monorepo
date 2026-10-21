@@ -1,12 +1,42 @@
 # ASK NIAGADS local Codex handoff
 
+## Active task: structured query planning
+
+The old task branches have been merged. Current branches in both repos are
+**codex/ask-structured-query-planning**, based on frontend **app/oa-api at
+c3962e5f** and Python **refactor/api at 221082c4**. Older checkpoint sections below
+describe the merged prototype and retain important user decisions.
+
+The backend now plans ASK prompts with typed LLM output before tool selection.
+Chat displays a separate validated data-niagads-plan JSON disclosure. Positive
+concepts preserve Boolean grouping, loc/flank/assembly stay unspecified unless
+provided, and clarifications/exclusions are explicit. Plans are interpretation,
+not evidence, and are never accepted back from browser history as authoritative.
+The existing result envelope remains version 2. Planning enums are exported from
+Python through the existing generator; the recursive schema is mirrored in
+app/ask/planning.ts. The QueryPlanView component renders JSON as text only.
+
+Direct /query endpoints, combined ranking/filtering, ontology retrieval and
+genomic-data endpoints were not changed. A backend get_track_data placeholder
+reports unsupported. Exclusions remain deferred and pause retrieval rather than
+silently weakening the user's request. Model and embedding settings are unchanged.
+
+Current full TypeScript and targeted ESLint checks passed in this cloud workspace.
+Python schema/syntax/style checks also passed. New test cases were not run;
+neither live model/database behavior nor actual browser streaming is verified.
+The no-subagents instruction required inline self-review. No dependency changes
+were needed. See the Python branch's ASK_NIAGADS_HANDOFF.md and
+developer-notes/plans/ask/structured-query-planning.md for scope and progress.
+
+## Merged prototype checkpoint (historical)
+
 Updated: 2026-10-20. Work is on codex/cloud-environment-setup, based on app/oa-api,
 with the latest implementation commit c796e7e8. The paired Python repository uses
 the same task branch, based on refactor/api, at c613ea3c. The merge conflicts are
 resolved; both implementation checkouts were clean before these handoff edits.
 Do not base further work on main. These commit IDs precede this checkpoint update.
 
-Read the [full task handoff in niagads-pylib](https://github.com/NIAGADS/niagads-pylib/blob/codex/cloud-environment-setup/ASK_NIAGADS_HANDOFF.md)
+Read the [full task handoff in niagads-pylib](https://github.com/NIAGADS/niagads-pylib/blob/codex/ask-structured-query-planning/ASK_NIAGADS_HANDOFF.md)
 and each repository's AGENTS.md before continuing. That handoff records the
 current implementation, user decisions, validation limits, deferred work and a
 suggested prompt for local continuation. If both repositories are checked out
