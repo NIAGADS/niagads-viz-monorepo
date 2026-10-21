@@ -34,6 +34,10 @@ uses that serialized contract. Association full/summary content comes from the
 selected registry entry. The frontend uses exported shared entity/annotation/
 content values and an explicit presentation registry; it does not infer entity
 or operation types from model-generated records.
+Natural-language API routes use `/query` with the parameter `text`, for example
+`/query/tracks?text=Alzheimer+disease`. The ASK search tool and backend query
+service use `text` consistently. `/search` is reserved in the design for
+structured/exact retrieval; this rename did not add a `/search` route.
 
 Outstanding: the API client still truncates to 50 rows, and contracts/preview
 limits remain. The user's concern about these limits is unresolved. The returned
