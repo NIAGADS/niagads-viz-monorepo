@@ -1,3 +1,4 @@
+import { truncate } from "node:fs";
 import { z } from "zod";
 
 export const issueSchema = z
@@ -65,7 +66,7 @@ export function errorMessage(error: Error): string {
         const text =
             typeof payload.message === "string" && payload.message.length <= 600 ? payload.message : unexpected;
         const reference = typeof payload.request_id === "string" ? safeRequestId(payload.request_id) : null;
-        return text + (reference ? ` Request reference: ${reference}.` : "");
+        return payload.message + (reference ? ` Request reference: ${reference}.` : "");
     } catch {
         return unexpected;
     }
