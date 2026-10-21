@@ -9,7 +9,7 @@ export default function DocsPage() {
     return (
         <ApiReferenceReact
             configuration={{
-                url: `${process.env.API_INTERNAL_URL}/openapi.json`,
+                url: "/api/openapi",
                 agent: { disabled: true },
                 hideClientButton: true,
                 customFetch: fetchDocumentation,

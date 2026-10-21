@@ -31,14 +31,9 @@ export const statusBadgeCss = Array.from(STATUS_BADGES.values(), ({ name, color 
 /** Add presentation metadata only to the OpenAPI document loaded by Scalar. */
 export const fetchDocumentation: typeof fetch = async (input, init) => {
     const response = await fetch(input, init);
-    const openApiUrl = process.env.NEXT_PUBLIC_OPENAPI_URL;
     const requestUrl = input instanceof Request ? input.url : input.toString();
 
-    if (
-        !response.ok ||
-        !openApiUrl ||
-        new URL(requestUrl, window.location.href).href !== new URL(openApiUrl, window.location.href).href
-    ) {
+    if (!response.ok || new URL(requestUrl, window.location.href).pathname !== "/api/openapi") {
         return response;
     }
 
@@ -48,9 +43,11 @@ export const fetchDocumentation: typeof fetch = async (input, init) => {
             if (typeof operation !== "object" || operation === null || !("x-status" in operation)) {
                 continue;
             }
-            const badge = typeof operation["x-status"] === "string" ? STATUS_BADGES.get(operation["x-status"]) : undefined;
+            const badge =
+                typeof operation["x-status"] === "string" ? STATUS_BADGES.get(operation["x-status"]) : undefined;
             if (badge) {
-                const badges = "x-badges" in operation && Array.isArray(operation["x-badges"]) ? operation["x-badges"] : [];
+                const badges =
+                    "x-badges" in operation && Array.isArray(operation["x-badges"]) ? operation["x-badges"] : [];
                 Object.assign(operation, { "x-badges": [...badges, badge] });
             }
         }
