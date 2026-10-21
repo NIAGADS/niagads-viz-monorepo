@@ -28,15 +28,6 @@ Run this app's existing development command or `npm run build-app`. New dependen
 versions are pinned in the lockfile: AI SDK 7.0.143 and AI SDK React 4.0.147, paired
 with the backend's PydanticAI 2.57.0 Vercel adapter (`sdk_version=7`).
 
-For a database-free cloud smoke run, start the Python repository's test-only
-`test/bases/niagads/open_access_api/ask/serve_prototype.py`, then run:
-
-```bash
-API_INTERNAL_URL=http://127.0.0.1:8010 npm run open-access-api-client
-```
-
-This harness uses synthetic records and a fake model, not real NIAGADS answers.
-Try `Show a dashboard for the test gene` or `Find the test transcript associations`.
 For phenotype questions, identify a gene or candidate genes; ASK can inspect the
 returned association trait annotations with source/page context. A phenotype-first
 request without candidate genes needs scope clarification. See the Python base's
@@ -69,12 +60,9 @@ Valkey, or Cognito persistence is added. Missing/unsupported retrieval is not an
 empty successful answer. Database queries, ORM updates, and embedding integration
 are deferred to the user's system.
 
-Focused frontend tests (from this app's directory):
-
-```bash
-node --experimental-strip-types --test tests/ask.test.ts tests/ask-dashboard.test.ts
-npx tsc --noEmit
-```
+Synthetic-record ASK tests have been removed. Dashboard behavior requires validation
+against actual API responses and configured services. TypeScript and lint checks
+check source consistency only; they do not establish real-data correctness.
 
 To add a view, register a frontend adapter for an expected API output in
 app/ask/translators, following the Charts source-format translator pattern. Local
@@ -168,5 +156,5 @@ is performed. Missing pagination is labelled as unknown completeness. Rebuild th
 workspace Table package to enable its new `rowSelectOpts.maxSelectedRows` option;
 existing Table consumers retain unlimited selection unless configured.
 
-Focused action cases (run only when requested):
-`node --experimental-strip-types --test tests/track-data.test.ts`.
+Track selection and fetched-data rendering require validation with actual track
+responses, including pagination and partial failures.
