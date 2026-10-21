@@ -2,6 +2,14 @@ import { z } from "zod";
 import { issueSchema } from "./errors.ts";
 import { AnnotationKind, Entity, ResponseContent } from "./types.generated.ts";
 
+export const feedbackSchema = z
+    .object({
+        reference: z.string().regex(/^00-[0-9a-f]{32}-[0-9a-f]{16}-01\.[0-9a-f]{64}$/),
+        rating: z.union([z.literal(0), z.literal(1)]),
+        comment: z.string().max(2000).nullable().optional(),
+    })
+    .strict();
+
 export const presentationSchema = z
     .object({
         result_id: z.string().min(1),
@@ -35,14 +43,8 @@ const envelopeSchema = z
     .object({
         issues: z.array(issueSchema).default([]),
         version: z.literal(4),
-        status: z.enum([
-            "ok",
-            "empty",
-            "clarification",
-            "unsupported",
-            "retrieval_error",
-            "provider_error",
-        ]),
+        feedback_reference: z.string().max(120).nullable().optional(),
+        status: z.enum(["ok", "empty", "clarification", "unsupported", "retrieval_error", "provider_error"]),
         results: z.array(resultSchema).max(12),
         presentation: z.array(presentationSchema).max(6),
         warnings: z.array(z.string()),

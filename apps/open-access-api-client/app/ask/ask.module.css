@@ -155,7 +155,8 @@
     color: var(--primary);
 }
 
-.composer textarea {
+.composer textarea,
+.feedbackForm textarea {
     width: 100%;
     resize: vertical;
     padding: 0.8rem;
@@ -163,6 +164,27 @@
     border-radius: var(--border-radius);
     background: var(--surface);
     color: var(--text-primary);
+}
+
+.feedback {
+    margin-top: 1.25rem;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.feedback button[aria-pressed="true"] {
+    color: var(--primary);
+    background: var(--primary-subtle);
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.feedbackForm {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+    max-width: 40rem;
 }
 
 .sessionNotice {
