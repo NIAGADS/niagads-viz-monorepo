@@ -1065,8 +1065,8 @@ export function MethodsPage() {
                                         }}
                                     >
                                         Variant consequence and functional annotation resources generated for selected
-                                        sequencing rounds. See <Link href="/sequencing-rounds">Sequencing Rounds</Link>{" "}
-                                        for availability.
+                                        sequencing rounds. See <Link href="/sequencing-rounds">Sequencing Rounds</Link> for
+                                        availability.
                                     </span>
                                 </div>
                                 <div
@@ -1427,8 +1427,7 @@ export function MethodsPage() {
                                         }}
                                     >
                                         Annotation products are not generated for every sequencing round. See{" "}
-                                        <Link href="/sequencing-rounds">Sequencing Rounds</Link> for available
-                                        resources.
+                                        <Link href="/sequencing-rounds">Sequencing Rounds</Link> for available resources.
                                     </p>
                                 </Card>
                             </div>
