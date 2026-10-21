@@ -137,13 +137,11 @@ export default function Chat() {
                 {busy && <ModelStatusIndicator status={modelStatus} />}
             </div>
             {error && modelStatus?.state === "failed" && (
-                <div>
-                    <p>{MODEL_BUSY_MESSAGE}</p>
+                <Alert variant="info" message={MODEL_BUSY_MESSAGE}>
                     <ActionButton disabled={busy} onClick={() => void retry()}>
                         Retry
                     </ActionButton>
-                    {diagnosticDetails}
-                </div>
+                </Alert>
             )}
             {error && modelStatus?.state !== "failed" && (
                 <Alert variant="error" message={errorMessage(error)}>

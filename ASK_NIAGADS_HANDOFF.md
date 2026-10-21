@@ -3,8 +3,9 @@
 ## Retry presentation correction — 2026-10-21
 
 Active retry waits use the existing loading spinner with the user's countdown
-messages (busy, high demand, still working), selected by attempt. Exhaustion uses
-plain text and Retry with expandable native diagnostics; no retry alert box.
+messages (busy, high demand, still working), selected by attempt. Exhaustion shows
+a brief Alert identifying OpenRouter and suggesting trying again later. Retry
+diagnostics are not displayed; native server logs retain them.
 Other errors retain their existing alerts. Backend retry behavior is unchanged.
 
 
