@@ -5,11 +5,13 @@ import { DefaultChatTransport, type UIMessage } from "ai";
 import { ActionButton, Alert, Badge, Button, Card, CardBody, CardGrid, LoadingSpinner } from "@niagads/ui";
 import { useMemo, useState, type FormEvent } from "react";
 import Results from "./Results";
+import QueryPlanView from "./QueryPlanView";
+import type { QueryPlan } from "./planning";
 import { errorMessage, fetchAsk } from "./errors";
 import { textHistory, type AskEnvelope } from "./contracts";
 import styles from "./ask.module.css";
 
-type Message = UIMessage<unknown, { "niagads-result": AskEnvelope }>;
+type Message = UIMessage<unknown, { "niagads-result": AskEnvelope; "niagads-plan": QueryPlan }>;
 
 export default function Chat() {
     const [input, setInput] = useState("");
@@ -88,6 +90,7 @@ export default function Chat() {
                                     </p>
                                 );
                             if (part.type === "data-niagads-result") return <Results key={index} value={part.data} />;
+                            if (part.type === "data-niagads-plan") return <QueryPlanView key={index} value={part.data} />;
                             if (part.type.startsWith("tool-") && "state" in part)
                                 return (
                                     <p key={index} className={styles.progress}>
@@ -107,7 +110,7 @@ export default function Chat() {
                         message={
                             status === "submitted"
                                 ? "Submitting question…"
-                                : "Retrieving evidence and preparing a response…"
+                                : "Interpreting your request and preparing a response…"
                         }
                     />
                 )}

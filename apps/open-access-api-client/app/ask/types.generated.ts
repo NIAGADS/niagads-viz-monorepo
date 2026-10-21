@@ -9,6 +9,41 @@ export const Entity = {
     "ONTOLOGY_TERM": "term"
 } as const;
 
+export const QueryIntent = {
+    "DISCOVER_RESOURCES": "discover_resources",
+    "RETRIEVE_DATA": "retrieve_data",
+    "LOOKUP_RECORD": "lookup_record",
+    "API_HELP": "api_help",
+    "CONVERSATION": "conversation",
+    "OTHER": "other"
+} as const;
+
+export const ConceptCategory = {
+    "ANNOTATION": "annotation",
+    "BIOSAMPLE": "biosample",
+    "SOURCE": "source",
+    "POPULATION": "population",
+    "PHENOTYPE": "phenotype",
+    "ASSAY": "assay",
+    "OTHER": "other"
+} as const;
+
+export const BooleanOperator = {
+    "AND": "and",
+    "OR": "or"
+} as const;
+
+export const LocationKind = {
+    "GENE": "gene",
+    "SPAN": "span",
+    "VARIANT": "variant"
+} as const;
+
+export const GenomeBuild = {
+    "GRCh37": "GRCh37",
+    "GRCh38": "GRCh38"
+} as const;
+
 export const AnnotationKind = {
     "REPORT": "report",
     "ASSOCIATIONS": "associations",

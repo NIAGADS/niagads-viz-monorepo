@@ -1,5 +1,18 @@
 # NIAGADS Open Access API Client
 
+## Structured query plans
+
+ASK now streams a separate `data-niagads-plan` part before the evidence response.
+The chat shows a runtime-validated JSON disclosure labelled as interpretation,
+not retrieved evidence. It preserves Boolean concepts, nullable location details,
+clarifications and deferred exclusions. Plans are never sent back as evidence;
+follow-ups keep text-only history and the backend replans each turn.
+
+This does not add multi-concept ranking or genomic data endpoints. Exclusions
+remain unsupported. Python owns the plan enums through the existing type exporter;
+`app/ask/planning.ts` mirrors the recursive contract. Synthetic planning tests
+were removed at the user's request; real model/API behavior remains unvalidated.
+
 ## ASK NIAGADS prototype
 
 The API adapter supports gene, variant, and track identifier lookups and
