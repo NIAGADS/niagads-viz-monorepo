@@ -48,7 +48,7 @@ export function httpIssue(status: number, requestId: string | null = null): AskI
         429: ["rate_limit", "Too many questions were submitted. Wait before trying again."],
         408: ["timeout", "The question could not be completed in time. Try again later."],
         504: ["timeout", "The question could not be completed in time. Try again later."],
-        502: ["provider_error", "ASK NIAGADS could not be reached. Try again later."],
+        502: ["provider_error", "ASK NIAGADS could not be reached."],
         503: ["provider_error", "ASK NIAGADS is unavailable. Contact support if the problem continues."],
     };
     const [code, message] = failures[status] ?? [
@@ -61,11 +61,29 @@ export function httpIssue(status: number, requestId: string | null = null): AskI
 export function errorMessage(error: Error): string {
     try {
         const payload = JSON.parse(error.message);
-        const message = payload.detail ?? payload.message;
-        const text = typeof message === "string" ? message : JSON.stringify(message);
-        return text + (payload.request_id ? ` Reference: ${payload.request_id}.` : "");
+        const messages = [payload.detail, payload.message]
+            .filter((message) => message != null)
+            .map((message) => (typeof message === "string" ? message : JSON.stringify(message)));
+        const text = [...new Set(messages)].join(" ");
+        return text + (payload.request_id ? ` Request reference: ${payload.request_id}.` : "");
     } catch {
         return error.message;
+    }
+}
+
+export function errorDetails(error: Error): { response: string; stackTrace: string | null } {
+    try {
+        const { stack_trace, ...response } = JSON.parse(error.message);
+        return {
+            response: JSON.stringify(response, null, 2),
+            stackTrace: Array.isArray(stack_trace)
+                ? stack_trace.join("\n")
+                : typeof stack_trace === "string"
+                  ? stack_trace
+                  : null,
+        };
+    } catch {
+        return { response: error.message, stackTrace: null };
     }
 }
 

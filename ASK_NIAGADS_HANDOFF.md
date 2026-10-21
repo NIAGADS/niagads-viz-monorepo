@@ -1,5 +1,30 @@
 # ASK NIAGADS local Codex handoff
 
+## Error reporting guidance — 2026-10-21
+
+ASK Chat error alerts now link help@niagads.org and the existing NIAGADS API
+GitHub issue tracker, instructing users to include error details and a request
+reference when present. The complete received error remains available in an
+expandable, wrapping/scrollable details block. FastAPI detail AND message are
+shown, preserving backend GitHub/admin instructions previously hidden by the
+formatter's detail-or-message selection. Plain stream diagnostics are unchanged.
+The unreachable-service message does not infer a database cause.
+
+When startup fails before FastAPI responds, the proxy has no FastAPI response or
+trace to display. Its generated reference identifies the proxy request in Next.js
+logs; it does not imply an existing backend trace. No backend changes/rebuild or
+runtime failures were induced for this task.
+
+Stack traces now appear in a separate nested, initially collapsed "Stack trace"
+section with one frame per line. Other response fields are formatted JSON;
+plain-text diagnostics remain intact. No trace section appears without a trace.
+
+Verification: all 7 error formatter tests passed with
+`node apps/open-access-api-client/tests/ask-errors.test.ts`; the two reporting
+regressions failed before the fix. Targeted ESLint, app tsc --noEmit and
+git diff --check passed. Browser rendering/live outage handling were not tested.
+Changes remain uncommitted. Context compaction was left for the user's handoff.
+
 ## Current task: chat and temporary dashboards
 
 Continue on codex/ask-chat-dashboard-navigation from the updated app/oa-api base.

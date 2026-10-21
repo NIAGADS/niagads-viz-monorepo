@@ -281,6 +281,13 @@ p.prose {
     background: var(--surface);
 }
 
+.errorDetails {
+    max-height: 20rem;
+    overflow: auto;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
 .prose a {
     text-decoration: underline;
 }
