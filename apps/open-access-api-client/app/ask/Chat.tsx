@@ -41,10 +41,11 @@ export default function Chat() {
                 include summaries, structured data, and visualizations.
             </p>
             <Alert variant="info" message="Prototype — Limited Availability">
+                <p>ASK NIAGADS is under active development and is still brittle.</p>
                 <p>
-                    ASK NIAGADS is under active development. This prototype supports a select range of NIAGADS Open
-                    Access resources and query capabilities. Additional data access and functionality will roll out
-                    throughout November 2026. Check back for updates.
+                    This prototype supports a select range of NIAGADS Open Access resources and query capabilities on a
+                    reduced data snapshot. Additional data access and functionality will roll out throughout November
+                    2026. Check back for updates.
                 </p>
             </Alert>
             {!messages.length && (
@@ -55,6 +56,8 @@ export default function Chat() {
                             "Find datasets related to Alzheimer Disease",
                             "Show the available annotations for APOE",
                             "Which endpoint retrieves associations in a region?",
+                            "Show Alzheimer's disease associations for rs429358 with a ±10 kb flank",
+                            "Fetch all ADSP variants in and near TREM2",
                         ].map((text) => (
                             <Card key={text} span={4} onClick={() => setInput(text)} className={styles.example}>
                                 <CardBody>{text}</CardBody>
@@ -71,6 +74,11 @@ export default function Chat() {
                                 <h2>{message.role === "user" ? "You" : "ASK NIAGADS"}</h2>
                             </CardHeader>
                             <CardBody>
+                                {message.parts.map((part, index) =>
+                                    part.type === "data-niagads-result" ? (
+                                        <ChatResult key={index} value={part.data} dashboardId={dashboardId} />
+                                    ) : null
+                                )}
                                 {message.role === "user" ? (
                                     <p className={styles.prose}>
                                         {message.parts
@@ -80,6 +88,17 @@ export default function Chat() {
                                     </p>
                                 ) : (
                                     <MarkdownSummary
+                                        trackIds={message.parts.flatMap((part) =>
+                                            part.type === "data-niagads-result"
+                                                ? part.data.results
+                                                      .filter((result) => result.entity === "track")
+                                                      .flatMap((result) =>
+                                                          result.rows.flatMap((row) =>
+                                                              typeof row.id === "string" ? [row.id] : []
+                                                          )
+                                                      )
+                                                : []
+                                        )}
                                         text={message.parts
                                             .filter((part) => part.type === "text")
                                             .map((part) => part.text)
@@ -90,7 +109,6 @@ export default function Chat() {
                                     if (part.type !== "data-niagads-result") return null;
                                     return (
                                         <div key={index}>
-                                            <ChatResult value={part.data} dashboardId={dashboardId} />
                                             {message.role === "assistant" &&
                                                 part.data.feedback_reference &&
                                                 (messageIndex < messages.length - 1 || !busy) && (
@@ -133,7 +151,11 @@ export default function Chat() {
                 <Alert variant="error" message={errorMessage(error)}>
                     <p>
                         Please contact <a href="mailto:help@niagads.org">help@niagads.org</a> or{" "}
-                        <a href="https://github.com/NIAGADS/niagads-api/issues" target="_blank" rel="noopener noreferrer">
+                        <a
+                            href="https://github.com/NIAGADS/niagads-api/issues"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
                             report an issue on GitHub
                         </a>
                         . Include the error details below and the request reference, if shown, so we can investigate.

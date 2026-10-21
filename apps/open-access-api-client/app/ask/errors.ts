@@ -59,15 +59,15 @@ export function httpIssue(status: number, requestId: string | null = null): AskI
 }
 
 export function errorMessage(error: Error): string {
+    const unexpected = "An unexpected error occurred while processing your request.";
     try {
         const payload = JSON.parse(error.message);
-        const messages = [payload.detail, payload.message]
-            .filter((message) => message != null)
-            .map((message) => (typeof message === "string" ? message : JSON.stringify(message)));
-        const text = [...new Set(messages)].join(" ");
-        return text + (payload.request_id ? ` Request reference: ${payload.request_id}.` : "");
+        const text =
+            typeof payload.message === "string" && payload.message.length <= 600 ? payload.message : unexpected;
+        const reference = typeof payload.request_id === "string" ? safeRequestId(payload.request_id) : null;
+        return text + (reference ? ` Request reference: ${reference}.` : "");
     } catch {
-        return error.message;
+        return unexpected;
     }
 }
 

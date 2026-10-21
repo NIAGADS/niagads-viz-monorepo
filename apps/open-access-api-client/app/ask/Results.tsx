@@ -127,7 +127,6 @@ export default function Results({ value }: { value: unknown }) {
                             {result.warnings.map((warning, j) => (
                                 <p key={j}>{warning}</p>
                             ))}
-                            {result.sources.length > 0 && <p>Source identifiers: {result.sources.join(", ")}</p>}
                             {isSingleRecord(result) ? (
                                 <RecordSummary result={result} />
                             ) : (
@@ -138,7 +137,7 @@ export default function Results({ value }: { value: unknown }) {
                                             fallback={
                                                 <p role="alert">
                                                     This presentation is incompatible with its data or could not be
-                                                    loaded. Retrieved records remain available below.
+                                                    loaded.
                                                 </p>
                                             }
                                         >
@@ -152,7 +151,6 @@ export default function Results({ value }: { value: unknown }) {
                                     </div>
                                 ))
                             )}
-                            <RetrievedData value={result} filename={`ask-result-${result.id}.json`} />
                         </CardBody>
                     </Card>
                 );

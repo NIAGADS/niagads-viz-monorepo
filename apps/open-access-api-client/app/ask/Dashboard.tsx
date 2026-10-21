@@ -1,13 +1,15 @@
 "use client";
 
-import { Alert } from "@niagads/ui";
+import { ActionButton, Alert } from "@niagads/ui";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useAskSession } from "./AskSessionProvider";
 import Results from "./Results";
 import styles from "./ask.module.css";
 
 export default function Dashboard({ id }: { id: string }) {
-    const { dashboardId, messages } = useAskSession();
+    const { dashboardId, messages, newSession } = useAskSession();
+    const router = useRouter();
     if (id !== dashboardId)
         return (
             <div className={styles.app}>
@@ -25,7 +27,17 @@ export default function Dashboard({ id }: { id: string }) {
         <div className={styles.dashboard}>
             <header className={styles.header}>
                 <h1>Conversation dashboard</h1>
-                <Link href="/ask">Back to chat · Ask a follow-up</Link>
+                <div className={styles.actions}>
+                    <Link href="/ask">Back to chat</Link>
+                    <ActionButton
+                        onClick={async () => {
+                            await newSession();
+                            router.push("/ask");
+                        }}
+                    >
+                        New session
+                    </ActionButton>
+                </div>
             </header>
             <p>
                 Follow-up results are added here. Earlier results retain their original retrieval scope and pagination.

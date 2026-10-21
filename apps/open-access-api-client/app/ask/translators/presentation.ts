@@ -30,7 +30,7 @@ export function resolvePresentation(
         ) {
             return {
                 kind: "unsupported",
-                message: `The requested plot type “${intent.plot_type}” has no supported adapter. Retrieved records remain available below.`,
+                message: `The requested plot type “${intent.plot_type}” has no supported adapter.`,
             };
         }
         const id = tableTranslator(result);
@@ -56,7 +56,7 @@ export function resolvePresentation(
     } catch (error) {
         return {
             kind: "unsupported",
-            message: `${error instanceof Error ? error.message : "The requested view could not be prepared"}. Retrieved records remain available below.`,
+            message: `${error instanceof Error ? error.message : "The requested view could not be prepared"}.`,
         };
     }
 }
