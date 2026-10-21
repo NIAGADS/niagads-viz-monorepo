@@ -1,5 +1,10 @@
-import Chat from "./ask/Chat";
+import Link from "next/link";
 
 export default function Home() {
-    return <Chat />;
+    return (
+        <main>
+            <h1>NIAGADS Open Access API</h1>
+            <Link href="/docs">API documentation</Link>
+        </main>
+    );
 }
