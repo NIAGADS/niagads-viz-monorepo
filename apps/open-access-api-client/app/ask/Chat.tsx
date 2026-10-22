@@ -57,11 +57,11 @@ export default function Chat() {
                 include summaries, structured data, and visualizations.
             </p>
             <Alert variant="info" message="Prototype — Limited Availability">
-                <p>ASK NIAGADS is under active development and is still brittle.</p>
                 <p>
-                    This prototype supports a select range of NIAGADS Open Access resources and query capabilities on a
-                    reduced data snapshot. Additional data access and functionality will roll out throughout November
-                    2026. Check back for updates.
+                    ASK NIAGADS is under active development and is still brittle. This prototype supports a select range
+                    of NIAGADS Open Access resources and query capabilities on a reduced data snapshot. \ Additional
+                    data access and functionality will roll out throughout November 2026.
+                    {"  "} <a href="/open-acess">More information.</a>
                 </p>
             </Alert>
             {!messages.length && (
