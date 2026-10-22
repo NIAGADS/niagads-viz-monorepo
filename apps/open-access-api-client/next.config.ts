@@ -6,6 +6,7 @@ if (!process.env.API_INTERNAL_URL) {
 
 const nextConfig: NextConfig = {
     reactStrictMode: true,
+    devIndicators: false,
 };
 
 export default nextConfig;
