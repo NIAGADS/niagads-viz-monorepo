@@ -45,7 +45,7 @@ export default function MarkdownSummary({ text, trackIds = [] }: { text: string;
                             {children}
                         </a>
                     ),
-                    table: () => <p>Tabular results belong on the dashboard.</p>,
+                    table: () => null,
                 }}
             >
                 {text}
