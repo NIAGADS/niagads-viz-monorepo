@@ -1,4 +1,3 @@
-import { truncate } from "node:fs";
 import { z } from "zod";
 
 export const issueSchema = z
@@ -60,15 +59,22 @@ export function httpIssue(status: number, requestId: string | null = null): AskI
 }
 
 export function errorMessage(error: Error): string {
-    const unexpected = "An unexpected error occurred while processing your request.";
     try {
         const payload = JSON.parse(error.message);
-        const text =
-            typeof payload.message === "string" && payload.message.length <= 600 ? payload.message : unexpected;
+        if (typeof payload === "string") return payload;
+        if (!payload || typeof payload !== "object") return error.message;
+        const detail =
+            typeof payload.detail === "string"
+                ? payload.detail
+                : payload.detail !== undefined
+                  ? JSON.stringify(payload.detail)
+                  : null;
+        const message = typeof payload.message === "string" ? payload.message : null;
+        const text = [...new Set([detail, message].filter(Boolean))].join("\n") || error.message;
         const reference = typeof payload.request_id === "string" ? safeRequestId(payload.request_id) : null;
-        return payload.message + (reference ? ` Request reference: ${reference}.` : "");
+        return text + (reference ? ` Request reference: ${reference}.` : "");
     } catch {
-        return unexpected;
+        return error.message;
     }
 }
 
@@ -84,7 +90,7 @@ export function errorDetails(error: Error): { response: string; stackTrace: stri
                   : null,
         };
     } catch {
-        return { response: error.message, stackTrace: null };
+        return { response: error.message, stackTrace: error.stack ?? null };
     }
 }
 

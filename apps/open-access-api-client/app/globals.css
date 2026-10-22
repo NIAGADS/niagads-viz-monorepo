@@ -15,11 +15,6 @@ body {
     line-height: 1.6;
 }
 
-a {
-    /* text-decoration: none; */
-    color: var(--accent) !important;
-}
-
 button,
 textarea {
     font: inherit;

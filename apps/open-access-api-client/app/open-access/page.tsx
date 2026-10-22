@@ -24,7 +24,7 @@ export default function OpenAccessPage() {
     return (
         <div className={styles.page}>
             <header className={styles.intro}>
-                <h1>Open access</h1>
+                <h1>NIAGADS Open Access</h1>
                 <p className={styles.lead}>Genetics and genomics resources for Alzheimer’s disease research.</p>
                 <p>
                     NIAGADS open access resources bring together genetic associations, variant annotations, and

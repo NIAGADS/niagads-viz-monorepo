@@ -69,23 +69,6 @@
     margin-bottom: 1rem;
 }
 
-.dashboardLink {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 44px;
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    background: var(--primary);
-    color: var(--text-inverse);
-    font-weight: 600;
-    text-decoration: none;
-}
-
-.dashboardLink:hover {
-    background: var(--primary-dark);
-}
-
 .trackApiLinks a {
     color: var(--primary-dark);
     text-decoration: underline;
@@ -195,7 +178,8 @@ p.prose {
 }
 
 .composer textarea,
-.feedbackForm textarea {
+.feedbackForm textarea,
+.trackDataForm input {
     width: 100%;
     resize: vertical;
     padding: 0.8rem;
@@ -224,6 +208,32 @@ p.prose {
     gap: 0.75rem;
     margin-top: 0.75rem;
     max-width: 40rem;
+}
+
+.trackDataForm {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 0.75rem 0 1rem;
+}
+
+.trackDataControls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.trackDataControls input {
+    flex: 1 1 16rem;
+    min-width: 0;
+    max-width: 26rem;
+}
+
+.trackDataForm p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
 }
 
 .sessionNotice {

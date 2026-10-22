@@ -1,7 +1,7 @@
 // Frontend-owned adapters for expected NIAGADS API record outputs.
 export const recordAdapters = {
     search_matches_table: {
-        entities: ["gene", "track"],
+        entities: ["gene", "track", "variants"],
         annotation: null,
         content: ["full"],
         fields: [

@@ -16,7 +16,10 @@ export const presentationSchema = z
         view: z.enum(["auto", "table", "plot"]).default("auto"),
         title: z.string().max(160).default("Retrieved evidence"),
         plot_type: z.string().min(1).nullable().default(null),
-        group_by: z.string().min(1).nullable().default(null),
+        group_by: z
+            .union([z.string().min(1), z.array(z.string().min(1)).min(1)])
+            .nullable()
+            .default(null),
         x: z.string().min(1).nullable().default(null),
         y: z.string().min(1).nullable().default(null),
         filters: z

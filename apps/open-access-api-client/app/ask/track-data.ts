@@ -4,12 +4,26 @@ import type { PresentationData } from "./translators/registry.ts";
 import { translateTable } from "./translators/index.ts";
 
 export const MAX_SELECTED_TRACKS = 5;
+// RegularExpressions.GENOMIC_LOCATION in niagads/utils/regular_expressions.py.
+export const GENOMIC_LOCATION_PATTERN = String.raw`^(chr)?(?:MT|[1-9]|1[0-9]|2[0-2]|X|Y|M)[:\-](\d+)[\-:](\d+)$`;
 const trackIdSchema = z
     .string()
     .min(1)
     .refine((value) => value !== "." && value !== ".." && !/[\\/?#]/.test(value), "Invalid track path identifier");
 export const trackSelectionSchema = z
     .object({
+        region: z
+            .string()
+            .trim()
+            .regex(new RegExp(GENOMIC_LOCATION_PATTERN), "Enter a region as chrN:start-end.")
+            .refine((value) => {
+                const [, start, end] = value.split(/[:-]/).map(Number);
+                return Number.isSafeInteger(start) && start >= 1 && Number.isSafeInteger(end) && end >= start;
+            }, "Region coordinates must be positive integers with start less than or equal to end.")
+            .transform((value) => {
+                const [chromosome, start, end] = value.split(/[:-]/);
+                return `${chromosome}:${start}-${end}`;
+            }),
         track_ids: z
             .array(trackIdSchema)
             .min(1)
