@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: 24
       - name: update to latest npm for oidc support
-        run: npm install -g npm@latest
+        run: npm install -g npm@12.0.2
       - name: Check out PR head
         uses: actions/checkout@v6
         with:
