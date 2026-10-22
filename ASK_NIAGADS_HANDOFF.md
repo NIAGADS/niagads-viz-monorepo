@@ -1,5 +1,52 @@
 # ASK NIAGADS local Codex handoff
 
+## Annotation regression: optional interpretation — 2026-10-21
+
+Continue on the existing `codex/ask-stepwise-execution` branch. The paired backend
+removed the mandatory interpretation call and now uses one retrieval agent with
+optional native record_query_plan. Clear lookups can retrieve gene annotations
+and association/track evidence directly; complex requests may record a validated
+interpretation, including after identifier resolution. Invalid optional planning
+retains native errors and any already retrieved evidence.
+
+data-niagads-plan is optional and emitted only for valid recorded interpretations.
+The existing frontend already accepts results without a plan event and renders
+association evidence/counts and track metadata. No frontend code/schema/UI change
+is needed in this follow-up; README/handoff document the flow. Prior frontend
+checks were not repeated for documentation-only changes. Backend route regressions
+were added/updated but not run under its explicit-request test policy; backend
+static checks pass. Live OpenRouter/API/database validation remains unverified.
+The supplied malformed JSON confirms a pre-retrieval blocker, not its provider
+origin or token truncation. Existing region/table/filter/budget behavior remains.
+
+## Current task: incremental dependent execution — 2026-10-22
+
+Continue on `codex/ask-stepwise-execution`, created from updated `app/oa-api`
+82feb577. Paired Python branch has the same name, based on refactor/api 415ccad9.
+This supersedes historical branch pointers below. Both bases contain regional
+query work; no merging from obsolete feature branches is needed.
+
+The strict interpretation schema now matches Python's bounded goal, flat concepts,
+short constraints, unresolved scope and necessary clarification/evidence hints.
+Recursive Boolean expressions and complete tool plans are removed. Generated
+vocabulary no longer exports BooleanOperator. data-niagads-plan retains its event
+name and feedback availability; deploy both repos together. Disclosure wording
+calls it request interpretation; this does not add a plan UI to chat.
+
+Backend retains its existing PydanticAI loop and shared budgets, supports per-call
+gene/structure evidence selection and explicit material clarification outcomes.
+Frontend data envelope v4, dashboard adapters/downloads, regional tables (including
+one-record results), scalar ADSP filtering, retry/loading/error behavior and
+text-only follow-up history are unchanged. No paging UI or additional-page fetch.
+
+All three new contract regressions pass; frontend repository rules permit test
+execution. Node emits its existing module-type warning. App TypeScript, targeted
+ESLint, Prettier and diff checks pass. No browser/live model/API/database
+validation. Backend adds recorded-evidence/native-protocol regressions without
+running them; static checks do not establish live model interpretation quality.
+
+Next: explicitly authorized focused tests and local live model/API review.
+
 ## Current task: variants-by-region base merge — 2026-10-21
 
 Continue on feature/variants-by-region in both repos. This supersedes historical

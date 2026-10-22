@@ -18,18 +18,24 @@ Install the updated root lockfile and rebuild UI for the native ActionButton pro
 typing correction. Protocol v4 is unchanged. See ASK_CHAT_DASHBOARD.md and
 ASK_NIAGADS_HANDOFF.md at the repository root for continuation details.
 
-## Structured query plans
+## Compact request interpretation
 
-ASK now streams a separate `data-niagads-plan` part before the evidence response.
-The chat shows a runtime-validated JSON disclosure labelled as interpretation,
-not retrieved evidence. It preserves Boolean concepts, nullable location details,
-clarifications and deferred exclusions. Plans are never sent back as evidence;
-follow-ups keep text-only history and the backend replans each turn.
+`data-niagads-plan` is optional and carries a bounded goal, intent, flat concepts,
+short constraints, unresolved scope and necessary clarification/evidence hints. Recursive Boolean
+plans and tool sequences are no longer required. The backend's existing PydanticAI
+loop chooses each next action from returned evidence. Clear lookups retrieve
+directly; complex requests may record a typed interpretation within that loop,
+including after identifier resolution. No interpretation event is required before
+structured results can render. The strict client schema
+in `app/ask/planning.ts` matches Python's field/count bounds and generated enums;
+deploy both repositories together. Interpretation remains available in feedback;
+it is not retrieved evidence. Follow-ups submit only text history.
 
-This does not add multi-concept ranking or genomic data endpoints. Exclusions
-remain unsupported. Python owns the plan enums through the existing type exporter;
-`app/ask/planning.ts` mirrors the recursive contract. Synthetic planning tests
-were removed at the user's request; real model/API behavior remains unvalidated.
+Dashboard adapters, regional-variant tables (including one-record results), typed
+ADSP filters and downloads remain unchanged. No paging UI or additional-page
+retrieval is added. Unsupported capabilities remain explicit; metadata is not
+substituted for genomic data. Three focused interpretation-contract regressions
+pass; these protocol checks do not verify live model interpretation or grounding.
 
 ## ASK NIAGADS prototype
 

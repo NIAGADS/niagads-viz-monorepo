@@ -37,11 +37,6 @@ export const ConceptCategory = {
     OTHER: "other",
 } as const;
 
-export const BooleanOperator = {
-    AND: "and",
-    OR: "or",
-} as const;
-
 export const LocationKind = {
     GENE: "gene",
     SPAN: "span",
