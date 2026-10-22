@@ -1,14 +1,16 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { Button } from "@niagads/ui";
 import type { TableConfig, RowSelectionState } from "@niagads/table";
 import ComponentBoundary from "./ComponentBoundary";
+import ErrorAlert from "./ErrorAlert";
 import { useAskSession } from "./AskSessionProvider";
 import { errorMessage, fetchAsk } from "./errors";
 import {
     assembleTrackData,
+    GENOMIC_LOCATION_PATTERN,
     MAX_SELECTED_TRACKS,
     trackBatchSchema,
     trackSelectionSchema,
@@ -25,30 +27,29 @@ function FetchedTrackData({ batch, id }: { batch: TrackDataBatch; id: string }) 
             <h4>Data from selected tracks</h4>
             <p>Returned records from each track, independent of the track-list filters.</p>
             <ul>
-                {batch.tracks.map((track) => (
+                {successful.map((track) => (
                     <li key={track.track_id}>
                         <strong>{track.track_id}</strong>
                         {": "}
-                        {track.status === "error" ? (
-                            <span role="alert">
-                                {track.http_status ? `HTTP ${track.http_status}: ` : ""}
-                                {errorMessage(new Error(track.message))}
-                                {track.request_id ? ` Reference: ${track.request_id}.` : ""}
-                            </span>
-                        ) : (
-                            <span>{track.response.data.length} returned records.</span>
-                        )}
+                        <span>{track.response.data.length} returned records.</span>
                     </li>
                 ))}
             </ul>
+            {batch.tracks.map((track) => {
+                if (track.status !== "error") return null;
+                const error = new Error(track.message);
+                return (
+                    <ErrorAlert
+                        key={track.track_id}
+                        error={error}
+                        message={`${track.track_id}: ${track.http_status ? `HTTP ${track.http_status}: ` : ""}${errorMessage(error)}`}
+                    >
+                        {track.request_id && <p>Request reference: {track.request_id}.</p>}
+                    </ErrorAlert>
+                );
+            })}
             {successful.length > 0 && (
-                <ComponentBoundary
-                    fallback={
-                        <p role="alert">
-                            The combined table could not be displayed.
-                        </p>
-                    }
-                >
+                <ComponentBoundary fallback={<p>The combined table could not be displayed.</p>}>
                     <CombinedTrackTable batch={batch} id={id} />
                 </ComponentBoundary>
             )}
@@ -73,9 +74,11 @@ function CombinedTrackTable({ batch, id }: { batch: TrackDataBatch; id: string }
 }
 
 export default function TrackSelectionTable({ config }: { config: TableConfig }) {
+    const regionId = useId();
     const [selection, setSelection] = useState<RowSelectionState>({});
+    const [region, setRegion] = useState("");
     const [fetching, setFetching] = useState(false);
-    const [failure, setFailure] = useState<string | null>(null);
+    const [failure, setFailure] = useState<Error | null>(null);
     const { trackBatches, addTrackBatch } = useAskSession();
     const batches = trackBatches[config.id] ?? [];
     const controller = useRef<AbortController | null>(null);
@@ -93,25 +96,29 @@ export default function TrackSelectionTable({ config }: { config: TableConfig })
         },
     };
 
-    async function fetchSelected() {
+    async function fetchSelected(event: FormEvent) {
+        event.preventDefault();
         if (controller.current) return;
+        const parsed = trackSelectionSchema.safeParse({ track_ids: selectedTracks, region });
+        if (!parsed.success) {
+            setFailure(new Error(parsed.error.issues.map((issue) => issue.message).join(" ")));
+            return;
+        }
         const pending = new AbortController();
         controller.current = pending;
         setFetching(true);
         setFailure(null);
         try {
-            const selection = trackSelectionSchema.parse({ track_ids: selectedTracks });
             const response = await fetchAsk("/api/track-data", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(selection),
+                body: JSON.stringify(parsed.data),
                 signal: pending.signal,
             });
             const batch = trackBatchSchema.parse(await response.json());
             addTrackBatch(config.id, batch);
         } catch (error) {
-            if (!pending.signal.aborted)
-                setFailure(error instanceof Error ? errorMessage(error) : "Track data request failed");
+            if (!pending.signal.aborted) setFailure(error instanceof Error ? error : new Error(String(error)));
         } finally {
             if (!pending.signal.aborted) setFetching(false);
             if (controller.current === pending) controller.current = null;
@@ -120,6 +127,40 @@ export default function TrackSelectionTable({ config }: { config: TableConfig })
 
     return (
         <>
+            <form onSubmit={fetchSelected} className={styles.trackDataForm} aria-busy={fetching}>
+                <p>
+                    Select up to {MAX_SELECTED_TRACKS} tracks in the table below to retrieve track data in the specified
+                    region.
+                </p>
+                <div className={styles.trackDataControls}>
+                    <label htmlFor={regionId}>Region</label>
+                    <input
+                        id={regionId}
+                        name="region"
+                        type="text"
+                        required
+                        pattern={GENOMIC_LOCATION_PATTERN}
+                        title="Enter a genomic region as chrN:start-end, for example chr19:44900000-45900000."
+                        value={region}
+                        placeholder="chr19:44900000-45900000"
+                        aria-describedby={`${regionId}-help`}
+                        disabled={fetching}
+                        onChange={(event) => setRegion(event.target.value)}
+                    />
+                    <Button
+                        disabled={
+                            fetching ||
+                            !region.trim() ||
+                            selectedTracks.length === 0 ||
+                            selectedTracks.length > MAX_SELECTED_TRACKS
+                        }
+                    >
+                        {fetching ? "Fetching track data…" : "Fetch selected track data"}
+                    </Button>
+                </div>
+                <p id={`${regionId}-help`}>Enter a region as chrN:start-end (1-based, inclusive).</p>
+            </form>
+            {failure && <ErrorAlert error={failure} />}
             <div
                 className={styles.table}
                 role="region"
@@ -139,15 +180,6 @@ export default function TrackSelectionTable({ config }: { config: TableConfig })
                 {selectedTracks.length} of {MAX_SELECTED_TRACKS} tracks selected.{" "}
                 {fetching ? "Fetching track data…" : ""}
             </p>
-            <Button
-                disabled={fetching || selectedTracks.length === 0 || selectedTracks.length > MAX_SELECTED_TRACKS}
-                onClick={() => {
-                    void fetchSelected();
-                }}
-            >
-                Fetch selected track data
-            </Button>
-            {failure && <p role="alert">{failure}</p>}
             {batches.map(({ id, batch }) => (
                 <FetchedTrackData key={id} batch={batch} id={id} />
             ))}

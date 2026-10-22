@@ -2,6 +2,8 @@
 
 import { ActionButton, Button } from "@niagads/ui";
 import { useId, useRef, useState, type FormEvent } from "react";
+import ErrorAlert from "./ErrorAlert";
+import { fetchAsk } from "./errors";
 import styles from "./ask.module.css";
 
 export default function Feedback({ reference }: { reference: string }) {
@@ -10,21 +12,23 @@ export default function Feedback({ reference }: { reference: string }) {
     const [rating, setRating] = useState<0 | 1 | null>(null);
     const [comment, setComment] = useState("");
     const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+    const [failure, setFailure] = useState<Error | null>(null);
 
     async function submit(event: FormEvent) {
         event.preventDefault();
         if (rating === null || submitting.current || status === "sent") return;
         submitting.current = true;
         setStatus("sending");
+        setFailure(null);
         try {
-            const response = await fetch("/api/ask/feedback", {
+            await fetchAsk("/api/ask/feedback", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ reference, rating, comment: comment.trim() || null }),
             });
-            if (!response.ok) throw new Error("Feedback submission failed");
             setStatus("sent");
-        } catch {
+        } catch (error) {
+            setFailure(error instanceof Error ? error : new Error(String(error)));
             setStatus("error");
         } finally {
             submitting.current = false;
@@ -76,8 +80,8 @@ export default function Feedback({ reference }: { reference: string }) {
             )}
             <p role="status" aria-live="polite">
                 {status === "sent" && "Thank you for your feedback."}
-                {status === "error" && "Feedback could not be submitted. Please try again."}
             </p>
+            {failure && <ErrorAlert error={failure} />}
         </section>
     );
 }

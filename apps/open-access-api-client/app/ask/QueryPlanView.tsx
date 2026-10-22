@@ -1,4 +1,4 @@
-import { errorMessage } from "./errors";
+import ErrorAlert from "./ErrorAlert";
 import { parseQueryPlan, type QueryPlan } from "./planning";
 
 export default function QueryPlanView({ value }: { value: unknown }) {
@@ -6,7 +6,7 @@ export default function QueryPlanView({ value }: { value: unknown }) {
     try {
         plan = parseQueryPlan(value);
     } catch (error) {
-        return <p role="alert">Invalid query plan: {error instanceof Error ? errorMessage(error) : String(error)}</p>;
+        return <ErrorAlert error={error instanceof Error ? error : new Error(String(error))} />;
     }
     return (
         <details>

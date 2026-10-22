@@ -1,11 +1,14 @@
+import type { RegionalManhattanPlotProps } from "@niagads/charts";
 import type { TableConfig } from "@niagads/table";
 import type { PresentationIntent } from "../contracts.ts";
 import { fieldValue, tableRules, tableTranslator, type FieldSpec, type PresentationData } from "./registry.ts";
 import { translateBar, translateTable, type TranslatedBar } from "./index.ts";
+import { translateRegionalManhattan } from "./regional-manhattan.ts";
 
 type ResolvedPresentation =
     | { kind: "table"; config: TableConfig }
     | { kind: "bar"; config: TranslatedBar }
+    | { kind: "regional_manhattan"; config: RegionalManhattanPlotProps }
     | { kind: "unsupported"; message: string };
 
 function canonicalField(fields: readonly FieldSpec[], name: string | null): string | null {
@@ -48,6 +51,23 @@ export function resolvePresentation(
         if (intent.view === "table" || (intent.view === "auto" && !hasPlotPreference)) {
             return { kind: "table", config: translateTable(result) };
         }
+        const plotType = intent.plot_type?.trim().toLowerCase();
+        if (
+            [
+                "regional_manhattan",
+                "regional_manhattan_plot",
+                "regional manhattan",
+                "regional manhattan plot",
+                "regionalmanhattanplot",
+                "manhattan",
+            ].includes(plotType ?? "") ||
+            (!plotType &&
+                ["gene", "region"].includes(result.entity) &&
+                result.annotation === "associations" &&
+                result.content === "full")
+        ) {
+            return { kind: "regional_manhattan", config: translateRegionalManhattan(result, intent) };
+        }
         if (
             intent.plot_type &&
             !["bar", "bar_chart", "bar chart", "barchart"].includes(intent.plot_type.trim().toLowerCase())
@@ -61,7 +81,12 @@ export function resolvePresentation(
         if (!id) throw new Error("No plot adapter supports these records");
         const fields = tableRules[id].fields;
         const categories = fields.filter((f) => f.categorical).map((f) => f.id);
-        const requestedGroup = canonicalField(fields, intent.group_by);
+        if (Array.isArray(intent.group_by) && intent.group_by.length !== 1)
+            throw new Error("Bar plots support one grouping field");
+        const requestedGroup = canonicalField(
+            fields,
+            Array.isArray(intent.group_by) ? intent.group_by[0] : intent.group_by
+        );
         const requestedX = canonicalField(fields, intent.x);
         const requestedY = canonicalField(fields, intent.y);
         const groupBy =

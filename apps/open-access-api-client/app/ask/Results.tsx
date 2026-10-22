@@ -15,6 +15,9 @@ import RetrievedData from "./RetrievedData";
 
 const EvidenceTable = dynamic(() => import("@niagads/table"), { ssr: false });
 const SourceBar = dynamic(() => import("@niagads/charts").then((m) => m.BarChart), { ssr: false });
+const RegionalManhattanPlot = dynamic(() => import("@niagads/charts").then((m) => m.RegionalManhattanPlot), {
+    ssr: false,
+});
 
 function PanelView({
     result,
@@ -53,6 +56,14 @@ function PanelView({
                     <EvidenceTable {...config} />
                 </div>
             </div>
+        );
+    }
+    if (resolved.kind === "regional_manhattan") {
+        return (
+            <figure>
+                <figcaption>Regional associations from loaded records; not database totals.</figcaption>
+                <RegionalManhattanPlot {...resolved.config} />
+            </figure>
         );
     }
     const summary = resolved.config;
@@ -140,7 +151,7 @@ export default function Results({ value }: { value: unknown }) {
                                         {panels.length > 1 && <h4>{panel.title}</h4>}
                                         <ComponentBoundary
                                             fallback={
-                                                <p role="alert">
+                                                <p>
                                                     This presentation is incompatible with its data or could not be
                                                     loaded.
                                                 </p>

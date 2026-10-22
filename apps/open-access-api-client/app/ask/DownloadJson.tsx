@@ -2,10 +2,11 @@
 
 import { Button } from "@niagads/ui";
 import { useState } from "react";
+import ErrorAlert from "./ErrorAlert";
 
 /** Download the retrieved payload independently of any presentation adapter. */
 export default function DownloadJson({ value, filename }: { value: unknown; filename: string }) {
-    const [failure, setFailure] = useState<string | null>(null);
+    const [failure, setFailure] = useState<Error | null>(null);
     function download() {
         setFailure(null);
         try {
@@ -17,13 +18,13 @@ export default function DownloadJson({ value, filename }: { value: unknown; file
             link.click();
             setTimeout(() => URL.revokeObjectURL(url), 1000);
         } catch (error) {
-            setFailure(error instanceof Error ? error.message : "The JSON download failed");
+            setFailure(error instanceof Error ? error : new Error(String(error)));
         }
     }
     return (
         <>
             <Button onClick={download}>Download JSON</Button>
-            {failure && <p role="alert">{failure}</p>}
+            {failure && <ErrorAlert error={failure} />}
         </>
     );
 }

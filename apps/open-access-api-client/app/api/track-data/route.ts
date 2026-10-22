@@ -13,7 +13,11 @@ export async function POST(request: Request) {
         selection = trackSelectionSchema.parse(await request.json());
     } catch (error) {
         return Response.json(
-            { message: error instanceof Error ? error.message : "Invalid track selection" },
+            {
+                message: error instanceof Error ? error.message : String(error),
+                stack_trace: error instanceof Error ? error.stack : null,
+                request_id: requestId,
+            },
             { status: 422 }
         );
     }
@@ -37,12 +41,19 @@ export async function POST(request: Request) {
             let upstreamId: string | null = requestId;
             let httpStatus: number | null = null;
             try {
-                const target = `${base.replace(/\/$/, "")}/record/track/${encodeURIComponent(track_id)}/data`;
+                const target = new URL(`${base.replace(/\/$/, "")}/record/track/${encodeURIComponent(track_id)}/data`);
+                target.searchParams.set("loc", selection.region);
                 const upstream = await fetch(target, { headers, signal, cache: "no-store", redirect: "error" });
                 upstreamId = safeRequestId(upstream.headers.get("x-request-id")) ?? requestId;
                 httpStatus = upstream.status;
                 if (!upstream.ok)
-                    throw new Error((await upstream.text()) || `Track data request failed (HTTP ${upstream.status})`);
+                    return {
+                        track_id,
+                        status: "error",
+                        request_id: upstreamId,
+                        http_status: httpStatus,
+                        message: (await upstream.text()) || `Track data request failed (HTTP ${upstream.status})`,
+                    };
                 const response = trackResponseSchema.parse(await upstream.json());
                 validateRows({ rows: response.data }, "associations_table");
                 return { track_id, status: "ok", request_id: upstreamId, response };
@@ -52,7 +63,10 @@ export async function POST(request: Request) {
                     status: "error",
                     request_id: upstreamId,
                     http_status: httpStatus,
-                    message: error instanceof Error ? error.message : "Track data request failed",
+                    message: JSON.stringify({
+                        message: error instanceof Error ? error.message : String(error),
+                        stack_trace: error instanceof Error ? error.stack : null,
+                    }),
                 };
             }
         })
