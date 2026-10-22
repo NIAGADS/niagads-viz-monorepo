@@ -1,6 +1,6 @@
 import type { TableConfig } from "@niagads/table";
 import type { PresentationIntent } from "../contracts.ts";
-import { tableRules, tableTranslator, type FieldSpec, type PresentationData } from "./registry.ts";
+import { fieldValue, tableRules, tableTranslator, type FieldSpec, type PresentationData } from "./registry.ts";
 import { translateBar, translateTable, type TranslatedBar } from "./index.ts";
 
 type ResolvedPresentation =
@@ -20,6 +20,30 @@ export function resolvePresentation(
 ): ResolvedPresentation {
     try {
         if (intent.result_id !== result.id) throw new Error("Presentation intent references a different result");
+        if (intent.filters.length) {
+            const adapter = tableTranslator(result);
+            if (!adapter) throw new Error("No adapter supports filters for these records");
+            const filters = intent.filters.map((filter) => {
+                const field = tableRules[adapter].fields.find(
+                    (field) => field.id === filter.field || field.paths.includes(filter.field)
+                );
+                if (!field || field.projection !== "scalar")
+                    throw new Error(`Unsupported filter field: ${filter.field}`);
+                const expectedType = ["integer", "float"].includes(field.type)
+                    ? "number"
+                    : field.type === "boolean"
+                      ? "boolean"
+                      : "string";
+                if (typeof filter.value !== expectedType) throw new Error(`Invalid filter value for ${field.header}`);
+                return { field, value: filter.value };
+            });
+            result = {
+                ...result,
+                rows: result.rows.filter((row) =>
+                    filters.every(({ field, value }) => fieldValue(row, field) === value)
+                ),
+            };
+        }
         const hasPlotPreference = intent.plot_type || intent.group_by || intent.x || intent.y;
         if (intent.view === "table" || (intent.view === "auto" && !hasPlotPreference)) {
             return { kind: "table", config: translateTable(result) };

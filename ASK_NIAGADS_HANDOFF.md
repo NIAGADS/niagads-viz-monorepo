@@ -1,5 +1,21 @@
 # ASK NIAGADS local Codex handoff
 
+## Current task: variants-by-region base merge — 2026-10-21
+
+Continue on feature/variants-by-region in both repos. This supersedes historical
+branch pointers below. Frontend merged origin/app/oa-api at ef13dd26 without text
+conflicts, preserving regional-variant table adapters, typed equality filters and
+feature messaging. Base planner enums, token recovery, retry countdown and the
+brief final OpenRouter Alert without retry diagnostics are retained.
+
+13 existing client error/limit/filter checks pass. Stale local Common/Table build
+artifacts needed regeneration for getPvalueStyle/valueColumn; no package source,
+manifests or dependencies were changed. App TypeScript, targeted ESLint, Prettier
+and whitespace checks pass after regeneration.
+Backend merged origin/refactor/api separately and passed 62 offline ASK checks.
+No live API/database/model calls or browser validation were performed for this merge.
+
+
 ## Retry presentation correction — 2026-10-21
 
 Active retry waits use the existing loading spinner with the user's countdown

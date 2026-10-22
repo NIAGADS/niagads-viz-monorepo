@@ -8,9 +8,7 @@ export default function RetrievedData({ value, filename }: { value: unknown; fil
                 <span>Retrieved data and provenance</span>
                 <DownloadJson value={value} filename={filename} />
             </div>
-            <p>
-                Contains the retrieved records and reported page information, not necessarily the complete result set.
-            </p>
+            <p>Contains the original retrieved records.</p>
             <details>
                 <summary>Full retrieved records and provenance</summary>
                 <pre className={styles.raw}>{JSON.stringify(value, null, 2)}</pre>

@@ -31,7 +31,12 @@ const fields = {
 };
 
 export function isSingleRecord(result: ResultSet) {
-    return result.annotation === "report" && result.rows.length === 1 && result.entity in fields;
+    return (
+        result.annotation === "report" &&
+        result.rows.length === 1 &&
+        result.entity in fields &&
+        !("region" in result.parameters)
+    );
 }
 
 export default function RecordSummary({ result }: { result: ResultSet }) {
