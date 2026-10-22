@@ -1,6 +1,6 @@
 # this Dockerfile uses conditional targets to build production, development, and staging deployments
 
-FROM node:24.15-bookworm-slim AS base-builder
+FROM node:24.15-bookworm-slim AS build-tools
 
 ARG BUILD=production
 
@@ -20,29 +20,40 @@ RUN apt-get update \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/* 
 
-COPY . .
+RUN npm install -g npm@12.0.2
+
+FROM build-tools AS base-builder
+
+ARG APP_DIR
+
+COPY apps/${APP_DIR}/ .
 COPY --from=scripts use-canary.mjs /tmp/use-canary.mjs
 
 # 1. Tell Git to downgrade SSH requests back to HTTPS
-# 2. install npm 12.0.2
-# 3. substitute canary versions for @niagads packages as needed for staging 
-#    or development builds (depends on BUILD_ENV value)
-# 4. if not development, run production next build
+# 2. substitute canary versions for @niagads packages for staging builds
 
-RUN npm install -g npm@12.0.2 \
-    && node /tmp/use-canary.mjs \
+RUN node /tmp/use-canary.mjs \
     && npm install --package-lock=false
 
-FROM base-builder AS dev-builder
+FROM build-tools AS dev-builder
 
-COPY dev.build.env.local .env.local
+ARG APP_DIR
+
+COPY . .
+
+RUN npm install --package-lock=false \
+    && npm run build
+
+COPY apps/${APP_DIR}/dev.build.env.local apps/${APP_DIR}/.env.local
 
 # source files required to build source tree for next dev
 # no production build is required
 
 FROM base-builder AS prod-builder
 
-COPY prod.build.env.local .env.local
+ARG APP_DIR
+
+COPY apps/${APP_DIR}/prod.build.env.local .env.local
 
 RUN npm run build-app \
     && npm prune --omit=dev
@@ -62,9 +73,12 @@ WORKDIR /app
 
 FROM base-runner AS dev-runner
 
+ARG APP_DIR
+
 # need full code base to build dev source trees
 COPY --from=dev-builder --chown=node:node /app ./
-COPY --from=dev-builder --chown=node:node /app/.env.local ./.
+
+WORKDIR /app/apps/${APP_DIR}
 
 EXPOSE 3000 
 
