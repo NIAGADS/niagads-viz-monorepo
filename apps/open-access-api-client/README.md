@@ -20,10 +20,13 @@ ASK_NIAGADS_HANDOFF.md at the repository root for continuation details.
 
 ## Compact request interpretation
 
-`data-niagads-plan` carries a bounded goal, intent, flat concepts, short constraints,
-unresolved scope and necessary clarification/evidence hints. Recursive Boolean
+`data-niagads-plan` is optional and carries a bounded goal, intent, flat concepts,
+short constraints, unresolved scope and necessary clarification/evidence hints. Recursive Boolean
 plans and tool sequences are no longer required. The backend's existing PydanticAI
-loop chooses each next action from returned evidence. The strict client schema
+loop chooses each next action from returned evidence. Clear lookups retrieve
+directly; complex requests may record a typed interpretation within that loop,
+including after identifier resolution. No interpretation event is required before
+structured results can render. The strict client schema
 in `app/ask/planning.ts` matches Python's field/count bounds and generated enums;
 deploy both repositories together. Interpretation remains available in feedback;
 it is not retrieved evidence. Follow-ups submit only text history.

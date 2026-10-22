@@ -1,5 +1,24 @@
 # ASK NIAGADS local Codex handoff
 
+## Annotation regression: optional interpretation — 2026-10-21
+
+Continue on the existing `codex/ask-stepwise-execution` branch. The paired backend
+removed the mandatory interpretation call and now uses one retrieval agent with
+optional native record_query_plan. Clear lookups can retrieve gene annotations
+and association/track evidence directly; complex requests may record a validated
+interpretation, including after identifier resolution. Invalid optional planning
+retains native errors and any already retrieved evidence.
+
+data-niagads-plan is optional and emitted only for valid recorded interpretations.
+The existing frontend already accepts results without a plan event and renders
+association evidence/counts and track metadata. No frontend code/schema/UI change
+is needed in this follow-up; README/handoff document the flow. Prior frontend
+checks were not repeated for documentation-only changes. Backend route regressions
+were added/updated but not run under its explicit-request test policy; backend
+static checks pass. Live OpenRouter/API/database validation remains unverified.
+The supplied malformed JSON confirms a pre-retrieval blocker, not its provider
+origin or token truncation. Existing region/table/filter/budget behavior remains.
+
 ## Current task: incremental dependent execution — 2026-10-22
 
 Continue on `codex/ask-stepwise-execution`, created from updated `app/oa-api`
