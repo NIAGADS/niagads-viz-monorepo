@@ -25,7 +25,7 @@ export default function ModelStatusIndicator({ status }: { status: ModelStatus |
         status.state === "waiting"
             ? waitingMessages[Math.min(Math.max(status.attempt - 2, 0), waitingMessages.length - 1)]
             : status.state === "retrying"
-              ? `Percolating again (attempt ${status.attempt} of 5)…`
-              : "Percolating…";
+              ? `Still working on it... (attempt ${status.attempt} of 5)…`
+              : "Consulting the genome…";
     return <LoadingSpinner size="sm" message={message} />;
 }
