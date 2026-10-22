@@ -1,5 +1,33 @@
 # ASK NIAGADS local Codex handoff
 
+## Current task: incremental dependent execution — 2026-10-22
+
+Continue on `codex/ask-stepwise-execution`, created from updated `app/oa-api`
+82feb577. Paired Python branch has the same name, based on refactor/api 415ccad9.
+This supersedes historical branch pointers below. Both bases contain regional
+query work; no merging from obsolete feature branches is needed.
+
+The strict interpretation schema now matches Python's bounded goal, flat concepts,
+short constraints, unresolved scope and necessary clarification/evidence hints.
+Recursive Boolean expressions and complete tool plans are removed. Generated
+vocabulary no longer exports BooleanOperator. data-niagads-plan retains its event
+name and feedback availability; deploy both repos together. Disclosure wording
+calls it request interpretation; this does not add a plan UI to chat.
+
+Backend retains its existing PydanticAI loop and shared budgets, supports per-call
+gene/structure evidence selection and explicit material clarification outcomes.
+Frontend data envelope v4, dashboard adapters/downloads, regional tables (including
+one-record results), scalar ADSP filtering, retry/loading/error behavior and
+text-only follow-up history are unchanged. No paging UI or additional-page fetch.
+
+All three new contract regressions pass; frontend repository rules permit test
+execution. Node emits its existing module-type warning. App TypeScript, targeted
+ESLint, Prettier and diff checks pass. No browser/live model/API/database
+validation. Backend adds recorded-evidence/native-protocol regressions without
+running them; static checks do not establish live model interpretation quality.
+
+Next: explicitly authorized focused tests and local live model/API review.
+
 ## Current task: variants-by-region base merge — 2026-10-21
 
 Continue on feature/variants-by-region in both repos. This supersedes historical
