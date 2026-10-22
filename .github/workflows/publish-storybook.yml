@@ -16,8 +16,8 @@ jobs:
     steps:
       - uses: actions/setup-node@v4
         with:
-          node-version: 24.15.0
-      - run: npm install -g npm@12.0.2
+          node-version: 24
+      - run: npm install -g npm@latest
       - id: build-publish-storybook
         uses: bitovi/github-actions-storybook-to-github-pages@v1.0.3
         with:
