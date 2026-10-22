@@ -9,6 +9,15 @@ export const Entity = {
     ONTOLOGY_TERM: "term",
 } as const;
 
+export const GeneEvidence = {
+    FUNCTIONAL_ANNOTATION: "functional_annotation",
+    MEMBERSHIPS: "memberships",
+    XREFS: "xrefs",
+    PUBLICATIONS: "publications",
+    TRANSCRIPTS: "transcripts",
+    EXONS: "exons",
+} as const;
+
 export const QueryIntent = {
     DISCOVER_RESOURCES: "discover_resources",
     RETRIEVE_DATA: "retrieve_data",
