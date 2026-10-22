@@ -51,8 +51,7 @@ export function translateTable(result: PresentationData): TableConfig {
         };
         if (field.type === "pvalue") {
             column.styling = {
-                getStyle: (value) =>
-                    value != null && DECIMAL_PVALUE.test(String(value)) ? getPvalueStyle(value) : {},
+                getStyle: (value) => (value != null && DECIMAL_PVALUE.test(String(value)) ? getPvalueStyle(value) : {}),
             };
             column.filterOpts = {
                 filterType: "histogram",

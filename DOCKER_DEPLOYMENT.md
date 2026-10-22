@@ -96,6 +96,12 @@ docker run -d \
   <image>:<tag>
 ```
 
+# legacty note
+
+```sh
+docker run -d --name open-access-api-client --restart unless-stopped --network oa-network -p 8181:3000 --group-add 1002 -v /mnt/efs/trx/genomicsdb/logs/api/client:/var/log/app niagads-beta-ask:prototype
+```
+
 Use the image tag appropriate to the intended mode. `runtime.env` must be secured on the deployment host and must not be incorporated into the image. Use separate container names and host ports where environments coexist on one host. The default container naming convention is `<application>-client`.
 
 If `oa-network` does not already exist, create it before running the container:

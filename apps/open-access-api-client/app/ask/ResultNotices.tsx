@@ -9,17 +9,17 @@ export default function ResultNotices({ envelope }: { envelope: AskEnvelope }) {
                 envelope.status !== "token_limit" &&
                 !envelope.issues.length &&
                 !envelope.warnings.length && (
-                <Alert
-                    variant={envelope.status === "empty" || envelope.status === "clarification" ? "info" : "error"}
-                    message={
-                        envelope.status === "empty"
-                            ? "No matching records were returned."
-                            : envelope.status === "clarification"
-                              ? "More information is needed to complete this request."
-                              : "Part of this request could not be completed."
-                    }
-                />
-            )}
+                    <Alert
+                        variant={envelope.status === "empty" || envelope.status === "clarification" ? "info" : "error"}
+                        message={
+                            envelope.status === "empty"
+                                ? "No matching records were returned."
+                                : envelope.status === "clarification"
+                                  ? "More information is needed to complete this request."
+                                  : "Part of this request could not be completed."
+                        }
+                    />
+                )}
             {Array.from(new Map(envelope.issues.map((issue) => [JSON.stringify(issue), issue])).values())
                 .filter((issue) => issue.code !== "usage_limit")
                 .map((issue, i) => (
