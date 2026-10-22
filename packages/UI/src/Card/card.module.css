@@ -38,9 +38,22 @@ a.card {
     color: inherit;
     text-decoration: none;
 }
+.card-link:focus {
+    background-color: var(--hover-bg);
+    border-color: var(--primary-blue);
+}
+
 /* Hover */
 .with-hover:hover {
-    box-shadow: var(--shadow-md);
+    background-color: color-mix(in srgb, var(--primary-blue) 20%, var(--surface));
+    border-color: var(--primary-blue);
+    box-shadow: var(--shadow-lg);
+}
+
+.card-link:active {
+    background-color: var(--active-bg);
+    border-color: var(--primary-blue);
+    box-shadow: var(--shadow-sm);
 }
 
 /* Keyboard accessibility when card is clickable */
