@@ -285,6 +285,18 @@ npx lerna version --no-private
 npx lerna publish from-package
 ```
 
+#### Manual canary releases
+
+Use [manual-canary-release.sh](./scripts/manual-canary-release.sh) to publish a canary release from the current commit. From the repository root, with npm publishing credentials configured (`npm login`), run:
+
+```bash
+bash scripts/manual-canary-release.sh
+```
+
+Commit the changes you want to release first; the script uses the committed `HEAD` tree and excludes uncommitted changes. The local `main` branch must exist, and `.worktrees/oa-api-canary-3` must be available for a new worktree.
+
+The script creates a temporary commit with `main` as its parent, adds a detached worktree at `.worktrees/oa-api-canary`, installs dependencies with `npm ci`, builds the packages, and publishes with `lerna publish --canary --dist-tag canary`. Published packages use the npm `canary` tag.
+
 ## Troubleshooting Lerna/NX
 
 - "hot-reloads" not reflecting code changes
