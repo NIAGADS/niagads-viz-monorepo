@@ -268,10 +268,11 @@ const BooleanFilter = ({ column, referenceValues, filteredValues }: Omit<TextFil
 const NumericFilter = ({ column }: FilterProps) => {
     const naValue = column.columnDef.meta?.naValue || DEFAULT_NA_VALUE;
     const isPvalue = column.columnDef.meta!.type === "pvalue";
+    const transformPvalue = isPvalue && !column.columnDef.meta?.filterValueColumn;
     const title = column.columnDef.header!.toString();
 
     const referenceData = useMemo(() => {
-        const values = isPvalue
+        const values = transformPvalue
             ? (column.getAllValues(true, naValue) as number[]).map((v) => negLog10(v))
             : (column.getAllValues(true, naValue) as number[]);
 
@@ -285,7 +286,7 @@ const NumericFilter = ({ column }: FilterProps) => {
                       }
                     : undefined,
         };
-    }, [column, isPvalue, naValue]);
+    }, [column, transformPvalue, naValue]);
 
     if (!referenceData.range) {
         return <NoValidValuesMessage columnName={title} />;
@@ -310,7 +311,7 @@ const NumericFilter = ({ column }: FilterProps) => {
         [column, isPvalue]
     );
 
-    const filteredValues: number[] = isPvalue
+    const filteredValues: number[] = transformPvalue
         ? (column.getFilteredValues(true, naValue) as number[]).map((v) => negLog10(v))
         : (column.getFilteredValues(true, naValue) as number[]);
 
@@ -324,6 +325,7 @@ const NumericFilter = ({ column }: FilterProps) => {
                 overlayData={filteredValues}
                 numBins={50}
                 title={title}
+                label="−log10(p-value)"
                 max={50}
                 displayOpts={HISTOGRAM_DISPLAY_OPTS}
                 yAxisScale="log10"

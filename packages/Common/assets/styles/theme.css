@@ -74,7 +74,11 @@ body {
 /* Links */
 a {
     color: var(--secondary-blue);
-    /* text-decoration: none; */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }
 
 /* Focus management */

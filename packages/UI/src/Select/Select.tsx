@@ -51,11 +51,10 @@ export const Select = ({
             <div>
                 <select
                     name={name ? name : id}
-                    defaultValue={defaultValue}
                     id={id}
                     onChange={onChange}
                     className={`${styles.select} ${styles[variant]}`}
-                    value={value}
+                    {...(value !== undefined ? { value } : { defaultValue })}
                 >
                     <option key="default" value={defaultValue}>
                         {defaultValue || "Select..."}
