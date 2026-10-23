@@ -1,4 +1,4 @@
-export { getPvalueStyle } from "@niagads/common";
+export { getPvalueStyle } from "@niagads/table";
 
 export const getRelativePositionClassName = (value: any) => {
     // if (value === "in_gene") {

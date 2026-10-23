@@ -1,5 +1,15 @@
 # ASK NIAGADS local Codex handoff
 
+## P-value styling package correction — 2026-10-23
+
+Table cell significance styling belongs in Table. Moved getPvalueStyle from
+Common to packages/Table/src/Cells/styling.ts and exported it from @niagads/table.
+ASK table translators and Storybook examples now consume that Table export.
+Common retains the generic colorscale utility. Thresholds, colors and p-value
+handling are unchanged. Rebuild Common and Table before consuming their updated
+package exports. Tests were not run under the explicit-request policy.
+
+
 ## Annotation regression: optional interpretation — 2026-10-21
 
 Continue on the existing `codex/ask-stepwise-execution` branch. The paired backend

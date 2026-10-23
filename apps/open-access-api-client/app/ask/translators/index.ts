@@ -1,5 +1,5 @@
 import type { TableColumn, TableConfig, TableCell } from "@niagads/table";
-import { getPvalueStyle } from "@niagads/common";
+import { getPvalueStyle } from "@niagads/table";
 import {
     fieldValue,
     tableRules,
