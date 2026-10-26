@@ -1,5 +1,7 @@
 # Docker Deployment Guide
 
+> .legacy files temporary for deployment on older EC2
+
 ## Overview
 
 This repository uses a shared multi-stage Dockerfile and Docker Compose configuration to build and run its Next.js applications. Deployment mode is controlled by the `BUILD` value in the Compose environment file.
