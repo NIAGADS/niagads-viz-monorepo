@@ -5,7 +5,7 @@ This directory contains context for continuing ASK frontend work in
 
 ## Branches
 
-- Development base: `dev/ask-niagads`.
+- Development base: `feature/ask-niagads`.
 - Create feature branches from the updated development base, prefixed `ask-niagads`, e.g., `codex/ask-naigads-<...>`
 - Confirm the current branch and preserve local changes before editing.
 - Historical handoffs may name branches that have since been merged or deleted.
