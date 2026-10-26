@@ -54,6 +54,12 @@
 - Avoid repeated iterations over data structures when the work can be done in one pass or with an existing project utility.
 - Consider parallelization for iterations over large data.
 
+## Handoffs and Documentation
+
+For each application read developer-notes/`<app>`/README.md and follow its links to current handoff, checkpoint and applicable plans.
+
+For ASK or ASK NIAGADS work, first read developer-notes/ask/README.md and follow its links to the current handoff, checkpoint, and applicable plans.
+
 ## Additional Requirements
 
 - Always use javascript/react best practices when inserting new code.

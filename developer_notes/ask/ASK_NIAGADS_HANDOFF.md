@@ -9,7 +9,6 @@ Common retains the generic colorscale utility. Thresholds, colors and p-value
 handling are unchanged. Rebuild Common and Table before consuming their updated
 package exports. Tests were not run under the explicit-request policy.
 
-
 ## Annotation regression: optional interpretation — 2026-10-21
 
 Continue on the existing `codex/ask-stepwise-execution` branch. The paired backend
@@ -72,7 +71,6 @@ and whitespace checks pass after regeneration.
 Backend merged origin/refactor/api separately and passed 62 offline ASK checks.
 No live API/database/model calls or browser validation were performed for this merge.
 
-
 ## Retry presentation correction — 2026-10-21
 
 Active retry waits use the existing loading spinner with the user's countdown
@@ -80,7 +78,6 @@ messages (busy, high demand, still working), selected by attempt. Exhaustion sho
 a brief Alert identifying OpenRouter and suggesting trying again later. Retry
 diagnostics are not displayed; native server logs retain them.
 Other errors retain their existing alerts. Backend retry behavior is unchanged.
-
 
 ## Current branch — 2026-10-21
 
@@ -142,6 +139,7 @@ compact-working-context-review.md for run-local compaction and its sixteen
 recorded-data/protocol/SDK checks. Cross-turn evidence memory and real local
 API/OpenRouter validation remain deferred. Earlier task branches below are
 historical; do not resume them for this change.
+
 ## Error heading correction — 2026-10-21
 
 Raw stream/SDK diagnostics now use the short heading "An unexpected error occurred
@@ -162,7 +160,7 @@ has moved the API to the host. No browser/full-page data validation is claimed.
 
 ## Error reporting guidance — 2026-10-21
 
-ASK Chat error alerts now link help@niagads.org and the existing NIAGADS API
+ASK Chat error alerts now link <help@niagads.org> and the existing NIAGADS API
 GitHub issue tracker, instructing users to include error details and a request
 reference when present. The complete received error remains available in an
 expandable, wrapping/scrollable details block. FastAPI detail AND message are
@@ -271,7 +269,6 @@ found an explicit-axis mismatch, now fixed; its synthetic regression case was
 removed. Details are recorded in that plan.
 
 ## Prior dashboard checkpoint (v3; superseded)
-
 
 Work is on **codex/ask-dashboard-translators** in both repositories, based on
 Python **refactor/api at ef6d2ba1** and frontend **app/oa-api at c3962e5f**.
@@ -448,5 +445,5 @@ Live model/database results have not been verified. Preserve local changes and
 discuss significant changes before applying them. Follow the Python repository's
 explicit-request rule for tests; this handoff does not authorize a test run.
 
-See the [frontend run guide](apps/open-access-api-client/README.md) for setup,
+See the [frontend run guide](../../apps/open-access-api-client/README.md) for setup,
 transport contracts and mock browser-review instructions.
