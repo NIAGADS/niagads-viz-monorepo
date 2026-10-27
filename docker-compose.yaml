@@ -5,6 +5,7 @@
 #  - stdin/out is captured and piped to a <app_name>.log file.  for now one single mounted log dir for all apps, host target directory must 1) exist, 2) belong to webmaster group, 3) have g+rw permissions
 
 x-defaults: &defaults
+  platform: linux/amd64
   restart: unless-stopped
   volumes:
     - ${LOG_DIR}:/var/log/app
