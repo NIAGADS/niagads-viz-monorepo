@@ -22,7 +22,7 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-import { ColumnFilterType, DEFAULT_NA_VALUE, TableColumn, TableData, TableOptions, TableRow } from "./types";
+import { DEFAULT_NA_VALUE, TableColumn, TableData, TableOptions, TableRow } from "./types";
 import { PaginationControls, TableToolbar } from "./ControlElements";
 import React, { ReactNode, useCallback, useLayoutEffect, useMemo, useState } from "react";
 import { _get, toTitleCase } from "@niagads/common";
@@ -31,7 +31,6 @@ import { getCellValue, renderCell, resolveCell, validateCellType } from "./Cells
 import { globalFuzzyFilter, includesAnyFilter, neglog10Filter } from "./ControlElements/Columns/filterFunctions";
 
 import { ColumnFilterControls } from "./ControlElements/Columns/ColumnFilterControls";
-import { NUMERIC_CELL_TYPES } from "./ControlElements/Columns/Filters/FilterUI";
 import { RowSelectionControls } from "./ControlElements/RowSelectionControls";
 import { TableColumnHeader } from "./TableColumnHeader";
 import styles from "./styles/table.module.css";
@@ -120,7 +119,7 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
                     enableHiding: !col.required, // if required is true, enableHiding is false
                     meta: {
                         type: col.type,
-                        filterType: col.filterOpts?.filterType || __resolveFilterType(col.type),
+                        filterType: col.filterOpts?.filterType || undefined,
                         filterGroup: col.filterOpts?.filterGroup || "",
                         description: col.description,
                         naValue: col.valueDisplayOpts?.naValue || DEFAULT_NA_VALUE,
@@ -358,16 +357,6 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
     );
 };
 
-const __resolveFilterType = (cellType: CellType): ColumnFilterType => {
-    if (NUMERIC_CELL_TYPES.includes(cellType)) {
-        return "histogram";
-    }
-    if (cellType === "boolean") {
-        return "boolean";
-    }
-
-    return "select";
-};
 
 const __resolveSortingFn = (col: TableColumn): SortingFnOption<TableRow> => {
     if (col.sortingFn) {
@@ -399,6 +388,7 @@ const __resolveFilterFn = (col: TableColumn): FilterFnOption<TableRow> => {
     if (col.type === "float" || col.type === "integer") {
         return "inNumberRange"; // FIXME: not really implemented yet
     }
+
     if (col.type === "boolean") {
         return "equals";
     }
