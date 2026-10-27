@@ -13,8 +13,8 @@ if [[ !($DOCKER_SERVICES =~ $APP) ]]; then
     exit 1;
 fi
 
-VERSION=""
-echo "Using version: $VERSION"
+TAG="beta-v"
+echo "Using tag: $TAG"
 
 if [ -f "./.env" ]; then
     echo ".env already exists";
@@ -34,16 +34,22 @@ fi
 
 echo "Building image for $APP";
 docker compose build $APP;
+
 if [ $? -ne 0 ]; then
     echo "ERROR: building image for $APP failed!"
     exit 1
 fi
 
-$REPO="";
+echo "Tagging image";
+docker tag client-app-$APP:staging $ECR_REGISTRY/$APP-beta:$TAG
 
-echo "Tagging image for docker hup repo: $REPO";
-docker tag client-app-$APP:staging $REPO/niagads-beta-$APP:$version
 if [ $? -ne 0 ]; then
-    echo "ERROR: tagging image for $REPO failed!"
+    echo "ERROR: tagging image failed!"
     exit 1
 fi
+
+echo "Logging in to docker using aws";
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin  $ECR_REGISTRY
+
+echo "Pushing image to ECR";
+docker push $ECR_REGISTRY/$APP-beta:$TAG
