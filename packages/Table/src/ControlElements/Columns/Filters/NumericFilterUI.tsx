@@ -7,6 +7,7 @@ import { FilterColumn } from "./types";
 import { NoValidValuesMessage } from "./Messages";
 import styles from "./filter.module.css";
 
+export const NUMERIC_CELL_TYPES = ["float", "integer", "pvalue", "percentage_cell"];
 const HISTOGRAM_DISPLAY_OPTS = {
     width: "100%",
     aspectRatio: 0.6,

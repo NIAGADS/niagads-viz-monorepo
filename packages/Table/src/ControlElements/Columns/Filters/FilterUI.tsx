@@ -5,10 +5,10 @@ import React, { useMemo } from "react";
 import { BooleanFilter } from "./BooleanFilterUI";
 import { DEFAULT_NA_VALUE } from "../../../types";
 import { NoValidValuesMessage } from "./Messages";
-import { NumericFilter } from "./NumericFilterUI";
+import { NUMERIC_CELL_TYPES, NumericFilter } from "./NumericFilterUI";
 
 const MAX_FILTER_CATEGORIES = 7;
-const NUMERIC_CELL_TYPES = ["float", "integer", "pvalue", "percentage_cell"];
+
 
 
 /**
@@ -113,11 +113,11 @@ const Filter = ({ column }: FilterProps) => {
         return <BooleanFilter {...FilterProps} />;
     }
 
-    if (meta.filterType === "pie") {
+    if (meta.filterType && meta.filterType === "pie") {
         return <PieChartFilter {...FilterProps} />;
     }
 
-    if (meta.filterType === "multiselect") {
+    if (meta.filterType && meta.filterType === "multiselect") {
         return (
             <MultiSelectPillFilter {...FilterProps} />
         );
