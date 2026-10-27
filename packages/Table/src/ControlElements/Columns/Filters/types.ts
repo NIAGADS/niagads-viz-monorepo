@@ -12,5 +12,10 @@ export interface FilterColumn {
 export interface FilterProps extends FilterColumn {
     referenceValues: RowValueSummary;
     filteredValues: RowValueSummary;
+    showLabel?: boolean;
 }
 
+// topic filters may combine values across multiple columns
+export interface TopicFilterProps extends Omit<FilterProps, "column"> {
+    columns: Column<any, unknown>[];
+}

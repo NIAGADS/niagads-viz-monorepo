@@ -42,7 +42,7 @@ export interface TableOptions {
 export type TableRow = Record<string, TableCell | TableCell[]>;
 export type TableData = TableRow[];
 
-export type ColumnFilterType = "histogram" | "pie" | "select" | "multiselect" | "boolean";
+export type ColumnFilterType = "histogram" | "pie" | "select" | "multiselect" | "boolean" | "topics";
 
 export interface ColumnFilteringOpts {
     filterType?: ColumnFilterType; // defaults based on data type in column
