@@ -1,0 +1,108 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import { errorDetails, errorMessage, httpIssue } from "../app/ask/errors.ts";
+
+test("HTTP failures give appropriate actions without exposing server settings", () => {
+    assert.match(httpIssue(401).message, /Sign in/);
+    assert.match(httpIssue(403).message, /access/);
+    assert.match(httpIssue(429).message, /Wait/);
+    assert.match(httpIssue(413).message, /shorter/);
+    assert.doesNotMatch(httpIssue(501).message, /embedding|retry|shorter/i);
+    assert.doesNotMatch(httpIssue(503).message, /API_INTERNAL_URL|configuration|shorter/);
+});
+
+test("safe stream errors retain request references", () => {
+    const issue = httpIssue(504, "request-123");
+    assert.match(errorMessage(new Error(JSON.stringify(issue))), /request-123/);
+    assert.match(errorMessage(new Error(JSON.stringify(issue))), /time/);
+});
+
+test("plain errors retain their actual message", () => {
+    const message = "API retrieval failed: database unavailable. Reference: request-123.";
+    assert.equal(errorMessage(new Error(message)), message);
+    assert.equal(errorDetails(new Error(message)).response, message);
+});
+
+test("FastAPI runtime errors retain detail, reporting instructions and request reference", () => {
+    const payload = {
+        detail: "ASK configuration failed: ASK_MODEL is missing",
+        message: "Please submit a bug report at https://github.com/NIAGADS/niagads-api/issues.",
+        request_id: "request-123",
+    };
+    assert.equal(
+        errorMessage(new Error(JSON.stringify(payload))),
+        `${payload.detail}\n${payload.message} Request reference: request-123.`
+    );
+    assert.match(errorDetails(new Error(JSON.stringify(payload))).response, /ASK_MODEL is missing/);
+});
+
+test("FastAPI service errors retain administrator contact instructions", () => {
+    const payload = {
+        detail: "Database connection unavailable",
+        message: "Please email this error response to help@niagads.org with the subject NIAGADS API Systems Error.",
+        stack_trace: ["database connection trace"],
+        request_id: "request-db",
+    };
+    const message = errorMessage(new Error(JSON.stringify(payload)));
+
+    assert.match(message, /Database connection unavailable/);
+    assert.match(errorDetails(new Error(JSON.stringify(payload))).response, /Database connection unavailable/);
+    assert.match(message, /help@niagads.org/);
+    assert.match(message, /NIAGADS API Systems Error/);
+    assert.match(message, /Request reference: request-db/);
+});
+
+test("SDK validation errors retain the actual validation failure", () => {
+    const message =
+        'Type validation failed: Value: {"type":"data-niagads-result","id":null}. ' +
+        'Error message: [{"code":"invalid_union","message":"Invalid input"}]';
+    const error = new Error(message);
+
+    assert.equal(errorMessage(error), message);
+    assert.equal(errorDetails(error).response, message);
+});
+
+test("error details separate readable stack frames from formatted response metadata", () => {
+    const payload = {
+        detail: "Database connection unavailable",
+        request_id: "request-db",
+        stack_trace: ["frame one", "frame two"],
+    };
+    const details = errorDetails(new Error(JSON.stringify(payload)));
+
+    assert.equal(details.stackTrace, "frame one\nframe two");
+    assert.equal(details.response, JSON.stringify({ detail: payload.detail, request_id: payload.request_id }, null, 2));
+});
+
+test("local errors retain their own stack and HTTP payloads do not invent a backend trace", () => {
+    const message = "ASK NIAGADS could not be reached.";
+    const error = new Error(message);
+    assert.deepEqual(errorDetails(error), { response: message, stackTrace: error.stack });
+
+    const payload = httpIssue(502, "proxy-request");
+    assert.deepEqual(errorDetails(new Error(JSON.stringify(payload))), {
+        response: JSON.stringify(payload, null, 2),
+        stackTrace: null,
+    });
+});
+
+test("FastAPI 422 errors without message preserve validation fields and traceback", () => {
+    const payload = {
+        detail: [{ loc: ["query", "genome_build"], msg: "Field required", type: "missing" }],
+        stack_trace: ["validation frame one", "validation frame two"],
+        request_id: "track-request",
+    };
+    const error = new Error(JSON.stringify(payload));
+    assert.match(errorMessage(error), /genome_build/);
+    assert.match(errorMessage(error), /Field required/);
+    assert.doesNotMatch(errorMessage(error), /undefined/);
+    assert.match(errorMessage(error), /track-request/);
+    assert.equal(errorDetails(error).stackTrace, "validation frame one\nvalidation frame two");
+});
+
+test("detail-only HTTP errors retain the actual API message", () => {
+    assert.equal(
+        errorMessage(new Error(JSON.stringify({ detail: "Track is not available" }))),
+        "Track is not available"
+    );
+});

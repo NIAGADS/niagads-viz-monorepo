@@ -1,0 +1,12 @@
+.git
+.worktrees
+.codex
+.agents
+**/node_modules
+**/.next
+**/.nx
+**/dist
+**/storybook-static
+**/.env*
+**/runtime.env
+**/*.log

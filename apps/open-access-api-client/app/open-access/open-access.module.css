@@ -1,0 +1,250 @@
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3.5rem 1.5rem 4rem;
+}
+
+.intro {
+    padding-bottom: 3rem;
+    border-bottom: 3px solid var(--accent);
+}
+
+.intro h1 {
+    margin-bottom: 1rem;
+    color: var(--primary);
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+}
+
+.intro p {
+    max-width: 72ch;
+    margin-top: 1rem;
+    color: var(--text-secondary);
+}
+
+.intro .lead {
+    max-width: 42ch;
+    color: var(--primary-dark);
+    font-size: clamp(1.25rem, 2.5vw, 1.65rem);
+    line-height: 1.4;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    margin-top: 1.75rem;
+}
+
+.primaryLink {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.65rem 1.15rem;
+    border-radius: var(--border-radius);
+    background: var(--primary);
+    color: var(--text-inverse);
+    font-weight: 600;
+}
+
+.primaryLink:hover {
+    background: var(--primary-dark);
+}
+
+.textLink,
+.itemLink {
+    display: inline-block;
+    padding: 0.6rem 0;
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+}
+
+.textLink:hover,
+.itemLink:hover {
+    color: var(--accent);
+}
+
+.page a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+}
+
+.section {
+    margin-top: 3.5rem;
+}
+
+.sectionHeading {
+    max-width: 72ch;
+    margin-bottom: 1.5rem;
+}
+
+.sectionHeading h2 {
+    margin-bottom: 0.65rem;
+    color: var(--primary);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    line-height: 1.25;
+    text-wrap: balance;
+}
+
+.sectionHeading p {
+    color: var(--text-secondary);
+}
+
+.rollout {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+    list-style: none;
+}
+
+.rolloutItem {
+    --status-color: var(--primary);
+    --status-background: var(--primary-subtle);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius-lg);
+    background: var(--surface);
+}
+
+.rolloutItem[data-status="available"] {
+    --status-color: #166534;
+    --status-background: #f0fdf4;
+    border-color: #86bca0;
+}
+
+.rolloutItem[data-status="next"] {
+    --status-color: var(--accent);
+    --status-background: #fdf2f2;
+}
+
+.status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-bottom: 1rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--border-radius-sm);
+    background: var(--status-background);
+    color: var(--status-color);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.status::before {
+    width: 0.45rem;
+    height: 0.45rem;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    content: "";
+}
+
+.rolloutItem[data-status="available"] .status::before {
+    background: currentColor;
+}
+
+.rolloutItem h3 {
+    margin-bottom: 0.5rem;
+    color: var(--primary-dark);
+    font-size: 1.1rem;
+    line-height: 1.4;
+}
+
+.rolloutItem p {
+    margin-bottom: 1rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.itemLink {
+    margin-top: auto;
+    font-size: 0.85rem;
+}
+
+.resources {
+    list-style: none;
+}
+
+.resource {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    align-items: start;
+    gap: 2rem;
+    padding: 2rem 0;
+    border-top: 1px solid var(--border);
+    scroll-margin-top: calc(var(--header-height) + 1.5rem);
+}
+
+.resourceIdentity {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.logo {
+    max-width: 100%;
+    height: auto;
+}
+
+.partnerName {
+    color: var(--primary);
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.partnerLabel {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+}
+
+.resourceDescription h3 {
+    margin-bottom: 0.5rem;
+    color: var(--primary-dark);
+    font-size: 1.15rem;
+    line-height: 1.4;
+}
+
+.resourceDescription p {
+    max-width: 72ch;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+}
+
+@media (max-width: 1000px) {
+    .rollout {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .page {
+        padding: 2rem 1rem 3rem;
+    }
+
+    .intro {
+        padding-bottom: 2rem;
+    }
+
+    .section {
+        margin-top: 2.5rem;
+    }
+
+    .rollout,
+    .resource {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .resource {
+        gap: 1rem;
+        padding: 1.5rem 0;
+    }
+}

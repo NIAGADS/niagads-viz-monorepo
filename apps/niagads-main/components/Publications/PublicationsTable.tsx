@@ -1,8 +1,8 @@
 "use client";
 
 import { TableCell, TableColumn } from "@niagads/table";
-
 import Table from "@niagads/table";
+import styles from "./publications-table.module.css";
 
 export type PublicationRow = Record<string, TableCell | TableCell[]>;
 export type PublicationsTableData = PublicationRow[];
@@ -11,12 +11,18 @@ const columns: TableColumn[] = [
     { id: "title", header: "Title", type: "link", required: true, disableColumnFilter: true },
     { id: "authors", header: "Authors", type: "text", disableColumnFilter: true },
     {
+        id: "journal",
+        header: "Journal",
+        type: "text",
+        styling: { getClassName: () => styles["journal-name"] },
+        disableColumnFilter: true,
+    },
+    {
         id: "year",
         header: "Year",
         type: "integer",
         filterOpts: { filterType: "histogram", filterGroup: "Publication" },
     },
-    { id: "journal", header: "Journal", type: "text", disableColumnFilter: true },
     {
         id: "publicationType",
         header: "Publication type",
@@ -38,15 +44,17 @@ interface PublicationsTableProps {
 }
 
 export const PublicationsTable = ({ data, id = "niagads-publications" }: PublicationsTableProps) => (
-    <Table
-        id={id}
-        columns={columns}
-        data={data}
-        options={{
-            enableColumnFilters: false,
-            enableExport: true,
-            defaultColumns: ["title", "authors", "year", "journal", "links"],
-            filterGroupOrder: ["Publication"],
-        }}
-    />
+    <div className={styles["publications-table"]}>
+        <Table
+            id={id}
+            columns={columns}
+            data={data}
+            options={{
+                enableColumnFilters: false,
+                enableExport: true,
+                defaultColumns: ["title", "authors", "journal", "year", "links"],
+                filterGroupOrder: ["Publication"],
+            }}
+        />
+    </div>
 );

@@ -38,10 +38,9 @@ const __resolveFloatValue = (props: FloatCell): BasicType => {
     return displayText ? displayText : +__resolveValue(props);
 };
 
-//TODO: properly handle P Value values as numbers or handle them with neg_log10_pvalue
+// Preserve reported decimal strings, including values below floating-point range.
 const __resolvePValueValue = (props: PValueCell): BasicType => {
-    const displayText = _get("displayText", props);
-    return displayText ? displayText : +__resolveValue(props);
+    return __resolveValue(props);
 };
 
 // cell accessor function; gets the value; resolves nulls

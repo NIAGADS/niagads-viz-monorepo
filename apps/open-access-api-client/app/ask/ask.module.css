@@ -1,0 +1,349 @@
+.app {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem;
+}
+
+.app > * + * {
+    margin-top: 1.5rem;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 3px solid var(--accent);
+}
+
+.header h1 {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    line-height: 1.2;
+    color: var(--primary);
+}
+
+.eyebrow {
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.prototype {
+    color: var(--accent);
+    background: var(--surface);
+    border-color: var(--accent);
+}
+
+.notice {
+    margin: 1rem 0;
+    padding: 0.8rem 1rem;
+    background: var(--primary-subtle);
+    border-left: 3px solid var(--primary);
+}
+
+.examples h2 {
+    margin-bottom: 1rem;
+    font-size: 1.125rem;
+}
+
+.example {
+    min-width: 0;
+    text-align: left;
+    color: var(--primary);
+    font: inherit;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.dashboardAction {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.trackApiLinks a {
+    color: var(--primary-dark);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+}
+
+.app button,
+.app summary,
+.dashboard button,
+.dashboard summary {
+    min-height: 44px;
+}
+
+.app button:focus-visible,
+.app a:focus-visible,
+.app textarea:focus-visible,
+.app summary:focus-visible,
+.dashboard a:focus-visible,
+.dashboard button:focus-visible,
+.dashboard summary:focus-visible,
+.table:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+
+.message {
+    margin: 1rem 0;
+    overflow-wrap: anywhere;
+}
+
+.message h2 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary);
+}
+
+.prose {
+    overflow-wrap: anywhere;
+}
+
+p.prose {
+    white-space: pre-wrap;
+}
+
+.progress {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.panel {
+    margin: 1.25rem 0;
+    min-width: 0;
+}
+
+.panel h3 {
+    font-size: 1.125rem;
+}
+
+.table {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.tableContent {
+    min-width: 650px;
+    overflow-wrap: normal;
+}
+
+.chart {
+    height: 360px;
+    min-width: 0;
+}
+
+.sourceTable {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.sourceTable th,
+.sourceTable td {
+    text-align: left;
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.raw {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    max-height: 450px;
+    overflow: auto;
+    font-size: 0.8rem;
+}
+
+.composer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    background: var(--primary-subtle);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius-lg);
+}
+
+.composer label {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.composer textarea,
+.feedbackForm textarea,
+.trackDataForm input {
+    width: 100%;
+    resize: vertical;
+    padding: 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    background: var(--surface);
+    color: var(--text-primary);
+}
+
+.feedback {
+    margin-top: 1.25rem;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.feedback button[aria-pressed="true"] {
+    color: var(--primary);
+    background: var(--primary-subtle);
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.feedbackForm {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+    max-width: 40rem;
+}
+
+.trackDataForm {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 0.75rem 0 1rem;
+}
+
+.trackDataControls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.trackDataControls input {
+    flex: 1 1 16rem;
+    min-width: 0;
+    max-width: 26rem;
+}
+
+.trackDataForm p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.sessionNotice {
+    margin-top: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.app summary {
+    cursor: pointer;
+    padding: 0.5rem 0;
+}
+
+.srOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+}
+
+@media (max-width: 640px) {
+    .app {
+        padding: 1.5rem 1rem;
+    }
+
+    .composer {
+        padding: 1rem;
+    }
+
+    .chart {
+        height: 320px;
+    }
+}
+
+.dashboard {
+    width: 100%;
+    max-width: 1600px;
+    padding: 2rem 1.5rem;
+    margin: 0 auto;
+}
+
+.dashboard > * + *,
+.retrievedData > * + * {
+    margin-top: 1rem;
+}
+
+.recordCard {
+    margin: 1rem 0;
+}
+
+.recordFields > div {
+    display: grid;
+    grid-template-columns: minmax(7rem, 1fr) minmax(0, 3fr);
+    gap: 0.75rem;
+    margin: 0.5rem 0;
+}
+
+.recordFields dt {
+    font-weight: 600;
+}
+
+.recordFields dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.prose > * + * {
+    margin-top: 0.75rem;
+}
+
+.prose ul,
+.prose ol {
+    padding-left: 1.5rem;
+}
+
+.prose code {
+    background: var(--surface);
+    padding: 0.1rem 0.3rem;
+    border-radius: 0.25rem;
+}
+
+.prose pre {
+    overflow-x: auto;
+    padding: 0.75rem;
+    background: var(--surface);
+}
+
+.errorDetails {
+    max-height: 20rem;
+    overflow: auto;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+.prose a {
+    text-decoration: underline;
+}
+
+.retrievedData {
+    margin-top: 1rem;
+}
+
+@media (max-width: 600px) {
+    .dashboard {
+        padding: 1rem 0.75rem;
+    }
+
+    .recordFields > div {
+        grid-template-columns: 1fr;
+        gap: 0.15rem;
+    }
+}

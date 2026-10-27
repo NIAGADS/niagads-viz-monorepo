@@ -1,0 +1,142 @@
+.publications-table {
+    width: 100%;
+}
+.publications-table input[placeholder="Search"] {
+    width: 22.5rem;
+}
+.publications-table button:has(svg[class~="lucide-download"]) {
+    background-color: var(--site-surface);
+    color: var(--site-primary);
+    border: 1px solid var(--site-border-strong);
+    box-shadow: none;
+}
+
+.publications-table button:has(svg[class~="lucide-download"]):hover {
+    background-color: var(--site-surface-subtle);
+    border-color: var(--site-primary-light);
+}
+
+.publications-table tbody td:first-child > a {
+    font-weight: 600;
+    line-height: 1.5;
+}
+.journal-name {
+    font-style: italic;
+}
+.publications-table td:has(> div > a[href*="pubmed.ncbi.nlm.nih.gov"]) {
+    /* min-width: 5rem; */
+    white-space: nowrap;
+}
+.publications-table td:has(a[href*="pubmed.ncbi.nlm.nih.gov"]) > div {
+    display: inline-block;
+    margin-right: 0.325rem;
+    color: var(--gray-400);
+    white-space: nowrap;
+    font-size: 0;
+}
+
+.publications-table td:has(a[href*="pubmed.ncbi.nlm.nih.gov"]) > div > a {
+    font-size: 0.75rem;
+}
+
+@media (max-width: 1100px) {
+    .publications-table :global([class*="table-controls-container"]) {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        align-content: flex-start;
+        gap: 0.75rem 1rem;
+        padding: 1rem;
+    }
+
+    .publications-table :global([class*="table-toolbar-container"]) {
+        display: flex;
+        justify-content: flex-start;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        flex: 1 1 100%;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.75rem;
+        min-width: 0;
+    }
+
+    .publications-table :global([class*="pagination-control-container"]) {
+        display: flex;
+        flex: 0 0 auto;
+        flex-wrap: nowrap;
+        align-items: center;
+        margin-left: auto;
+        white-space: nowrap;
+    }
+
+    .publications-table :global([class*="select-wrapper"]) {
+        flex-shrink: 0;
+    }
+
+    .publications-table :global([class*="select-label"]) {
+        white-space: nowrap;
+    }
+}
+@media (max-width: 768px) {
+    .publications-table :global([class*="table-container"])::before {
+        content: "← Swipe horizontally to view more columns →";
+        display: block;
+        padding: 0.5rem 0 0.75rem;
+        font-size: 0.75rem;
+        color: var(--site-text-muted);
+    }
+    .publications-table :global([class*="pagination-control-container"]) {
+        width: 100%;
+        margin-left: 0;
+        justify-content: flex-start;
+        gap: 0.75rem;
+    }
+
+    .publications-table :global([class*="select-wrapper"]) {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .publications-table input[placeholder="Search"] {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .publications-table :global([class*="button-group"]) {
+        display: flex;
+        justify-content: flex-start;
+        width: auto;
+        gap: 0.75rem;
+    }
+    .publications-table :global([class*="pagination-control-container"]) > button {
+        flex: 0 0 auto;
+        width: 2.75rem;
+        min-width: 2.75rem;
+    }
+    .publications-table :global([class*="table-container"]) {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .publications-table :global([class*="table-container"]) > table {
+        min-width: 950px;
+    }
+}
+@media (max-width: 520px) {
+    .publications-table :global([class*="pagination-control-container"]) {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .publications-table :global([class*="pagination-control-container"]) :global([class*="select-wrapper"]) {
+        grid-column: 1 / -1;
+        justify-self: start;
+    }
+}

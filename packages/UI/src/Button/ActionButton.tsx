@@ -3,7 +3,7 @@ import React, { ReactNode } from "react";
 import { StylingProps } from "../types";
 import styles from "./action-button.module.css";
 
-export interface ActionButtonProps extends StylingProps, React.HTMLAttributes<HTMLButtonElement> {
+export interface ActionButtonProps extends StylingProps, React.ButtonHTMLAttributes<HTMLButtonElement> {
     children: ReactNode;
     icon?: ReactNode;
 }
