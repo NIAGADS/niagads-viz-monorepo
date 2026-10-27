@@ -357,7 +357,6 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
     );
 };
 
-
 const __resolveSortingFn = (col: TableColumn): SortingFnOption<TableRow> => {
     if (col.sortingFn) {
         return col.sortingFn;

@@ -1,14 +1,10 @@
-import { FilterProps, RowValueSummary } from "./types";
+import { FilterProps } from "./types";
 import { PieChart, PieChartDataRow } from "@niagads/charts";
 import React, { ReactNode, useCallback, useMemo } from "react";
 
 import { Badge } from "@niagads/ui";
 import { RichSelect } from "@niagads/ui/client";
 import styles from "./filter.module.css";
-
-interface MultiSelectPillFilterProps extends FilterProps {
-    showLabel?: boolean;
-}
 
 const _resolveTextFilterValue = (value: string | undefined, otherValues: string[]) => {
     if (value === undefined) {
@@ -21,7 +17,6 @@ const _resolveTextFilterValue = (value: string | undefined, otherValues: string[
 
     return [value];
 };
-
 
 export const PieChartFilter = ({ column, referenceValues, filteredValues }: FilterProps) => {
     const referenceChartData: PieChartDataRow[] = useMemo(
@@ -86,12 +81,7 @@ export const RichSelectFilter = ({ column, referenceValues, filteredValues }: Fi
     );
 };
 
-export const MultiSelectPillFilter = ({
-    column,
-    referenceValues,
-    filteredValues,
-    showLabel = true,
-}: MultiSelectPillFilterProps) => {
+export const MultiSelectPillFilter = ({ column, referenceValues, filteredValues, showLabel = true }: FilterProps) => {
     const otherValues = useMemo(() => referenceValues.otherValues, [column.id]);
     const resolveFilterValue = useCallback(
         (newFilterValues: string[]) => {

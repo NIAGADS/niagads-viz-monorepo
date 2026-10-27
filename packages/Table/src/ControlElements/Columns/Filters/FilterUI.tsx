@@ -1,4 +1,4 @@
-import { FilterProps, RowValueSummary } from "./types";
+import { FilterColumn, RowValueSummary } from "./types";
 import { MultiSelectPillFilter, PieChartFilter, RichSelectFilter } from "./TextFilterUI";
 import React, { useMemo } from "react";
 
@@ -8,8 +8,6 @@ import { NoValidValuesMessage } from "./Messages";
 import { NUMERIC_CELL_TYPES, NumericFilter } from "./NumericFilterUI";
 
 const MAX_FILTER_CATEGORIES = 7;
-
-
 
 /**
  * Sorts and organizes unique values for filter display, handling overflow by grouping into "Other"
@@ -59,9 +57,6 @@ const _organizeValueCounts = (valueCounts: Map<string, number>, naValue: string)
     return { counts: filteredValueCounts, otherValues: otherValues };
 };
 
-
-
-
 /**
  * Renders an appropriate filter UI component based on the column's data type and metadata.
  *
@@ -79,7 +74,7 @@ const _organizeValueCounts = (valueCounts: Map<string, number>, naValue: string)
  * @param props.column - The TanStack React Table column instance containing:
  * @returns A filter UI component appropriate for the column type
  */
-const Filter = ({ column }: FilterProps) => {
+const Filter = ({ column }: FilterColumn) => {
     const meta = column.columnDef.meta!;
     const naValue = meta.naValue || DEFAULT_NA_VALUE;
 
@@ -113,14 +108,14 @@ const Filter = ({ column }: FilterProps) => {
         return <BooleanFilter {...FilterProps} />;
     }
 
-    if (meta.filterType && meta.filterType === "pie") {
-        return <PieChartFilter {...FilterProps} />;
-    }
+    if (meta.filterType) {
+        if (meta.filterType === "pie") {
+            return <PieChartFilter {...FilterProps} />;
+        }
 
-    if (meta.filterType && meta.filterType === "multiselect") {
-        return (
-            <MultiSelectPillFilter {...FilterProps} />
-        );
+        if (meta.filterType === "multiselect" || meta.filterType === "topics") {
+            return <MultiSelectPillFilter {...FilterProps} />;
+        }
     }
 
     return <RichSelectFilter {...FilterProps} />;

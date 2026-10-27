@@ -13,7 +13,6 @@ const HISTOGRAM_DISPLAY_OPTS = {
     aspectRatio: 0.6,
 } as const;
 
-
 export const NumericFilter = ({ column }: FilterColumn) => {
     const naValue = column.columnDef.meta?.naValue || DEFAULT_NA_VALUE;
     const isPvalue = column.columnDef.meta!.type === "pvalue";

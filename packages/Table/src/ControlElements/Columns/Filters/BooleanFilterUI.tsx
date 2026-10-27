@@ -4,7 +4,7 @@ import { FilterProps, RowValueSummary } from "./types";
 import React from "react";
 import styles from "./filter.module.css";
 
-export const BooleanFilter = ({ column, referenceValues, filteredValues }:FilterProps) => {
+export const BooleanFilter = ({ column, referenceValues, filteredValues }: FilterProps) => {
     const meta = column.columnDef.meta!;
     const trueValue = meta.trueValue ? meta.trueValue.toString() : "true";
     const label = column.columnDef.header!.toString();

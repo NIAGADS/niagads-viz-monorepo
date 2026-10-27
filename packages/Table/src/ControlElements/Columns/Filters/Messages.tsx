@@ -6,4 +6,3 @@ export const NoValidValuesMessage = ({ columnName }: { columnName: string }) => 
         <p>Cannot filter on this column: all values are N/A.</p>
     </Alert>
 );
-
