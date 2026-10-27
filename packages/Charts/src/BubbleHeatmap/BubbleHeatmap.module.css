@@ -1,0 +1,118 @@
+.bubble-heatmap-wrapper {
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+.bubble-heatmap-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.bubble-heatmap-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.bubble-heatmap-container {
+    position: relative;
+    max-width: 100%;
+    min-width: 0;
+    font-family: sans-serif;
+    color: var(--viz-text, #1f2937);
+}
+
+.bubble-heatmap-container :global(.bubble-heatmap-grid-line) {
+    stroke: var(--viz-border, #d9dde3);
+    stroke-width: 1;
+}
+
+.bubble-heatmap-container :global(.bubble-heatmap-association) {
+    stroke: #ffffff;
+    stroke-width: 1.5;
+}
+
+.bubble-heatmap-container :global(.bubble-heatmap-association:hover),
+.bubble-heatmap-container :global(.bubble-heatmap-association:focus) {
+    stroke: var(--viz-text, #1f2937);
+    stroke-width: 2;
+    outline: none;
+}
+
+.bubble-heatmap-container :global(.bubble-heatmap-mark-label) {
+    fill: #ffffff;
+    font-size: 9px;
+    font-weight: 600;
+    text-anchor: middle;
+    pointer-events: none;
+}
+
+.bubble-heatmap-container :global(.bubble-heatmap-axis-label) {
+    fill: var(--viz-text, #1f2937);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.bubble-heatmap-container :global(.bubble-heatmap-axis-label-secondary) {
+    fill: var(--viz-muted, #687384);
+    font-size: 10px;
+}
+
+.bubble-heatmap-container :global(.bubble-heatmap-legend-axis text) {
+    fill: var(--viz-muted, #687384);
+    font-size: 11px;
+}
+
+.bubble-heatmap-container :global(.bubble-heatmap-legend-axis line) {
+    stroke: var(--viz-border, #c9ced6);
+}
+
+.bubble-heatmap-container :global(.bubble-heatmap-encoding-legend) {
+    fill: var(--viz-muted, #687384);
+    font-size: 12px;
+}
+
+.bubble-heatmap-container :global(.bubble-heatmap-encoding-key) {
+    fill: var(--viz-text, #1f2937);
+    font-weight: 700;
+}
+
+.bubble-heatmap-container :global(.bubble-heatmap-tooltip) {
+    position: absolute;
+    z-index: 10;
+    width: max-content;
+    max-width: 240px;
+    padding: 10px 12px;
+    border: 1px solid var(--viz-border, #c9ced6);
+    border-radius: 6px;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+    color: var(--viz-text, #1f2937);
+    font-size: 12px;
+    line-height: 1.4;
+    pointer-events: none;
+}
+
+.bubble-heatmap-container :global(.bubble-heatmap-tooltip-title) {
+    font-weight: 600;
+}
+
+.bubble-heatmap-container :global(.bubble-heatmap-tooltip-subtitle) {
+    margin-top: 2px;
+    color: var(--viz-muted, #687384);
+}
+
+.bubble-heatmap-container :global(.bubble-heatmap-tooltip-row) {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+.bubble-heatmap-container :global(.bubble-heatmap-tooltip-key) {
+    color: var(--viz-muted, #687384);
+}

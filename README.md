@@ -13,11 +13,12 @@ See indivdual application READMEs for deployment instructions.
 
 ### Node
 
-- Node >24, <25
+- Node >24.15, <25
+- npm 12.0.2
 
 The project is configured to work with [nvm](https://github.com/nvm-sh/nvm).  Once nvm is installed, run `nvm use` in the project root. If the required version of `Node` is not installed, it will give prompt you install the required version.  If it is installed, nvm, will switch to the expected Node version.
 
-> NOTE: `npm` is set to `engine-strict=true` and will raise an `Unsupported Engine` error if the Node version does not match the engine defined in the root `package.json`.
+> NOTE: `npm` is set to `engine-strict=true` and will raise an `Unsupported Engine` error if the Node or NPM version does not match the engine defined in the root `package.json`.
 
 ## Packages
 
@@ -67,7 +68,20 @@ Components wrapping a customized [locuszoom.js](https://statgen.github.io/locusz
 
 More information to be added later.
 
-See the [for developers section](#for-developers) for information on deploying each application in a development environment. Each application is dockerized for production deployment; see application-specific Dockerfile and/or docker-compose.yaml files.
+See the [for developers section](#for-developers) for information on deploying each application in a development environment. Each application is dockerized for production deployment.  See [docker deployment](./DOCKER_DEPLOYMENT.md) instructions for more information.
+
+### Application environment-file samples
+
+Applications provide separate environment-file samples for Docker and non-Docker use:
+
+| File | Purpose |
+| --- | --- |
+| `dev.build.env.local` | Docker build-time configuration for `dev` builds. **Also used by PR actions to test for broken dependencies**. These values are available while the application image is built and may be incorporated into the generated application output. |
+| `prod.build.env.local` | Docker build-time configuration for `staging` and `prod` builds. These values are available while the application image is built and may be incorporated into the generated application output. |
+| `sample.runtime.env` | Docker runtime configuration, including secrets. This file is supplied when the container is deployed and is not included in the image. |
+| `sample.env.local` | Complete configuration for a non-Docker deployment. It combines the build-time and runtime values required by the application and is copied to `.env.local`. |
+
+Use the Docker-specific samples when building and deploying an image. Use `sample.env.local` only when running the application outside Docker.
 
 ### Storybook
 
@@ -94,8 +108,6 @@ export const MyStory: StoryObj<typeof Component> = {
 ### niagads-api-client
 
 > temporarily moved to own repo until we can break tailwindcss dependendency (niagads-api)
-
-### track-collection-microservice
 
 ### igvbrowser (app)
 
@@ -272,6 +284,18 @@ npx lerna version --no-private
 ```bash
 npx lerna publish from-package
 ```
+
+#### Manual canary releases
+
+Use [manual-canary-release.sh](./scripts/manual-canary-release.sh) to publish a canary release from the current commit. From the repository root, with npm publishing credentials configured (`npm login`), run:
+
+```bash
+bash scripts/manual-canary-release.sh
+```
+
+Commit the changes you want to release first; the script uses the committed `HEAD` tree and excludes uncommitted changes. The local `main` branch must exist, and `.worktrees/oa-api-canary-3` must be available for a new worktree.
+
+The script creates a temporary commit with `main` as its parent, adds a detached worktree at `.worktrees/oa-api-canary`, installs dependencies with `npm ci`, builds the packages, and publishes with `lerna publish --canary --dist-tag canary`. Published packages use the npm `canary` tag.
 
 ## Troubleshooting Lerna/NX
 

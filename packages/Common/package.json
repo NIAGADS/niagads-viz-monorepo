@@ -1,8 +1,19 @@
 {
     "name": "@niagads/common",
     "version": "0.2.1",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/NIAGADS/niagads-viz-monorepo.git"
+    },
     "scripts": {
         "build": "rollup -c"
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+        },
+        "./assets/*": "./dist/assets/*"
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^28.0.2",
@@ -18,6 +29,10 @@
         "rollup-plugin-postcss": "^4.0.2"
     },
     "dependencies": {
+        "@fontsource-variable/geist-mono": "^5.2.6",
+        "@fontsource-variable/inter": "^5.0.0",
+        "@fontsource-variable/roboto-mono": "^5.0.0",
+        "@fontsource/lato": "^5.0.0",
         "tslib": "^2"
     },
     "main": "dist/index.js",

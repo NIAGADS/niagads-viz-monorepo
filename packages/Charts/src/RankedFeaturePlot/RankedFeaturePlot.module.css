@@ -1,0 +1,148 @@
+.ranked-feature-plot-wrapper {
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+.ranked-feature-plot-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.ranked-feature-plot-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.ranked-feature-plot-container {
+    position: relative;
+    max-width: 100%;
+    min-width: 0;
+    font-family: system-ui, sans-serif;
+}
+
+.ranked-feature-plot-container :global(.ranked-feature-plot-grid line) {
+    stroke: #edf0f3;
+    stroke-opacity: 0.75;
+}
+
+.ranked-feature-plot-container :global(.ranked-feature-plot-grid text) {
+    display: none;
+}
+
+.ranked-feature-plot-container :global(.ranked-feature-plot-highlight) {
+    fill: #eef2ff;
+}
+
+.ranked-feature-plot-container :global(.ranked-feature-plot-stem) {
+    stroke: #484848;
+    stroke-width: 2;
+    stroke-linecap: round;
+}
+
+.ranked-feature-plot-container :global(.ranked-feature-plot-point) {
+    fill: #2563eb;
+    stroke: #ffffff;
+    stroke-width: 2;
+    cursor: pointer;
+    transform-box: fill-box;
+    transform-origin: center;
+    transition:
+        filter 120ms ease,
+        transform 120ms ease;
+}
+
+.ranked-feature-plot-container :global(.ranked-feature-plot-point-active) {
+    filter: drop-shadow(0 0 4px rgb(37 99 235 / 75%));
+    transform: scale(1.2);
+    outline: none;
+}
+
+.ranked-feature-plot-container :global(.ranked-feature-plot-row-target) {
+    fill: transparent;
+    cursor: pointer;
+}
+
+.ranked-feature-plot-container :global(.ranked-feature-plot-row-target:focus) {
+    outline: none;
+}
+
+.ranked-feature-plot-container :global(.ranked-feature-plot-feature-label) {
+    fill: #111827;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.ranked-feature-plot-container :global(.ranked-feature-plot-value-label),
+.ranked-feature-plot-container :global(.ranked-feature-plot-note),
+.ranked-feature-plot-container :global(.ranked-feature-plot-axis text) {
+    fill: #6b7280;
+    font-size: 11px;
+}
+
+.ranked-feature-plot-container :global(.ranked-feature-plot-axis path),
+.ranked-feature-plot-container :global(.ranked-feature-plot-axis line) {
+    stroke: #9ca3af;
+}
+
+.ranked-feature-plot-container :global(.ranked-feature-plot-axis-title) {
+    fill: #111827;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.ranked-feature-plot-container :global(.ranked-feature-plot-tooltip) {
+    position: absolute;
+    z-index: 10;
+    width: max-content;
+    max-width: 260px;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: 0 4px 14px rgb(0 0 0 / 14%);
+    color: #111827;
+    font-size: 13px;
+    line-height: 1.45;
+    pointer-events: auto;
+}
+
+.ranked-feature-plot-container :global(.ranked-feature-plot-tooltip-title) {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.ranked-feature-plot-container :global(.ranked-feature-plot-tooltip-row) {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 3px 12px;
+}
+
+.ranked-feature-plot-container :global(.ranked-feature-plot-tooltip-key) {
+    color: #6b7280;
+}
+
+.ranked-feature-plot-container :global(.ranked-feature-plot-tooltip-record-link) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: #ffffff;
+    color: #315f9d;
+    line-height: 1;
+    text-decoration: none;
+}
+
+.ranked-feature-plot-container :global(.ranked-feature-plot-tooltip-record-link:hover),
+.ranked-feature-plot-container :global(.ranked-feature-plot-tooltip-record-link:focus-visible) {
+    border-color: #315f9d;
+    background: #eef2ff;
+}

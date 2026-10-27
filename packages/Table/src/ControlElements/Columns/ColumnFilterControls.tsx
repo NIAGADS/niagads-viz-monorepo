@@ -76,7 +76,7 @@ export const ColumnFilterControls = ({
     );
 
     const hasVisualFilters = visualFilterColumns.length > 0;
-    const hasAdditionalFilters = additionalFilterColumns.length > 0;
+    const hasAdditionalFilters = additionalFilterColumns.some((column) => new Set(column.getAllValues()).size > 1);
 
     return (
         <div className={styles["filter-controls-container"]}>

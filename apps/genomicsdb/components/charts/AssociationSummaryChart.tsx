@@ -18,10 +18,10 @@ const AssociationSummaryChart = ({ recordId, recordType }: AssociationSummaryCha
     ) : error ? (
         <div>Error loading chart</div>
     ) : (
-        <div className="flex" style={{ height: "100%", width: "100%" }}>
+        <div style={{ height: "100%", width: "100%", minWidth: "0" }}>
             <GeneticAssociationStackedBarChart
                 data={data}
-                displayOpts={{ width: 900, margin: { top: 18, right: 72, bottom: 18, left: 180 } }}
+                displayOpts={{ margin: { top: 18, right: 72, bottom: 18, left: 180 } }}
             />
         </div>
     );

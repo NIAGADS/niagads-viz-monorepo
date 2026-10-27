@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Download, Filter, Search } from "lucide-react";
-import { EnhancedSearch } from "../EnhancedSearch";
+
 import { Button } from "@niagads/ui";
+import { EnhancedSearch } from "../EnhancedSearch";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export function BrowseDatasetsPage() {
     const [selectedDatasets, setSelectedDatasets] = useState<Set<string>>(new Set());
@@ -66,7 +67,7 @@ export function BrowseDatasetsPage() {
     };
 
     return (
-        <div className="max-text-width">
+        <div className="content-section-centered">
             <div className="content-header">
                 <div>
                     <h1 className="content-title">Browse Datasets</h1>

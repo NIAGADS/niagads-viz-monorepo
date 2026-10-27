@@ -196,13 +196,13 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
     // Get dimensions from displayOpts or use defaults
     const width = displayOpts.width || 300;
     const aspectRatio = displayOpts.aspectRatio || 1;
-    const height = width * aspectRatio;
+    const height = (width as number) * aspectRatio;
 
     // Use specified dimensions
     const svgWidth = width;
     const svgHeight = height;
 
-    const innerWidth = svgWidth - margin.left - margin.right;
+    const innerWidth = (svgWidth as number) - margin.left - margin.right;
     const innerHeight = svgHeight - margin.top - margin.bottom;
 
     // Radius is limited by the smaller dimension
@@ -220,7 +220,7 @@ export function pieChart(container: HTMLElement, data: PieChartDataPoint[], opti
         .attr("preserveAspectRatio", "xMidYMid meet");
 
     // Create main group
-    const g = svg.append("g").attr("transform", `translate(${svgWidth / 2},${svgHeight / 2})`);
+    const g = svg.append("g").attr("transform", `translate(${(svgWidth as number) / 2},${svgHeight / 2})`);
 
     // Create pie generator
     const total = d3.sum(data, (d) => d.value);

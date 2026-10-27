@@ -1,0 +1,16 @@
+@import "../styles/niagads/styles.css";
+@import "./hover.css";
+
+body {
+    margin: 0;
+    background: var(--gray-50);
+}
+a {
+    color: var(--primary-blue);
+}
+a:hover {
+    color: var(--secondary-blue);
+}
+table {
+    border-collapse: collapse;
+}

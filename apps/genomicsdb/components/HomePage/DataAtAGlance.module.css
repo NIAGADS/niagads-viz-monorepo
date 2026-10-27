@@ -1,0 +1,53 @@
+/* DataAtAGlance.module.css */
+
+.data-at-a-glance {
+    height: 100%;
+}
+
+.header {
+    margin-bottom: 1.5rem;
+}
+
+.kicker {
+    margin: 0 0 0.5rem;
+    color: var(--yellow);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.header h2 {
+    margin: 0;
+    font-size: 1.75rem;
+    letter-spacing: -0.03em;
+}
+
+.glance-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.glance-item {
+    padding: 1.25rem;
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.glance-item strong {
+    display: block;
+    margin-bottom: 0.35rem;
+
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.1;
+
+    color: var(--text-primary);
+}
+
+.glance-item span {
+    color: var(--text-secondary);
+    line-height: 1.5;
+}

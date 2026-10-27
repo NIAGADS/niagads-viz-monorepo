@@ -1,5 +1,9 @@
 {
     "name": "@niagads/gosling",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/NIAGADS/niagads-viz-monorepo.git"
+    },
     "devDependencies": {
         "react": "^18.2.0",
         "react-error-boundary": "^4.0.13"

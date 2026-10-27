@@ -1,6 +1,6 @@
 /* ── SIDEBAR ── */
 .sidebar {
-    width: var(--sidebar-w, 240px);
+    width: var(--sidebar-width, 240px);
     flex-shrink: 0;
     background: var(--surface);
     border-right: 1px solid var(--border);

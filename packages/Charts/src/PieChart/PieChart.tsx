@@ -79,7 +79,7 @@ const PieChart = ({
     const [selectedId, setSelectedId] = useState<string | undefined>();
 
     const chartWidth = displayOpts?.width || 300;
-    const chartHeight = chartWidth * (displayOpts?.aspectRatio || 1);
+    const chartHeight = (chartWidth as number) * (displayOpts?.aspectRatio || 1);
 
     const updatedDisplayOpts = {
         ...displayOpts,

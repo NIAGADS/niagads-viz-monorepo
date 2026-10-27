@@ -2,7 +2,7 @@ import { EntityRecord, RecordType } from "@/lib/types";
 import { ExternalLink, Minus } from "lucide-react";
 import React, { ReactNode } from "react";
 
-import { InlineIcon } from "@niagads/ui";
+import { CardGrid, InlineIcon } from "@niagads/ui";
 import badgeStyles from "./record-type.module.css";
 import styles from "./overview.module.css";
 
@@ -12,37 +12,48 @@ export interface RecordOverviewProps {
 
 export const RecordOverview = ({ children }: { children: ReactNode }) => {
     return (
-        <div id="overview" className={styles.overviewGrid}>
-            {children}
+        <div id="overview" className={styles["record-overview"]}>
+            <div className={styles["section-heading"]}>Overview</div>
+            <CardGrid className={[styles["card-grid"], styles["overview-grid"]].join(" ")}>{children}</CardGrid>
         </div>
     );
 };
 
-export const renderRecordTitle = (
-    displayId: string,
+const EXTERNAL_RESOURCE_LABELS: Partial<Record<RecordType, string>> = {
+    gene: "Ensembl",
+    variant: "dbSNP",
+    region: "Genome Browser",
+    structural_variant: "External resource",
+    track: "External resource",
+};
+
+export const renderRecordTitle = (displayId: string, recordType: RecordType) => {
+    return <span className={`${badgeStyles.recordTypeBadge} ${badgeStyles[recordType]}`}>{displayId}</span>;
+};
+
+export const renderExternalIdentifierLink = (
     externalId: string | null,
     externalUrl: string | null,
     recordType: RecordType
 ) => {
-    // TODO: title for the link indicating which external resource (depending on record type) this will take you to
-    return (
-        <div className={styles.title}>
-            <span className={`${badgeStyles.recordTypeBadge} ${badgeStyles[recordType]}`}>{displayId}</span>
+    if (!externalId || !externalUrl) {
+        return null;
+    }
 
-            {externalId && <Minus size={12} className={styles.minusIcon} />}
-            {externalId && (
-                <a
-                    className={`${styles.externalIdentifier} ${styles.externalIdentifierText}`}
-                    href={`${externalUrl}${externalId}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <InlineIcon icon={<ExternalLink size={18} />} iconPosition="end">
-                        {" "}
-                        {externalId}
-                    </InlineIcon>
-                </a>
-            )}
-        </div>
+    const resourceLabel = EXTERNAL_RESOURCE_LABELS[recordType] ?? "external resource";
+
+    return (
+        <a
+            className={`${styles.externalIdentifier} ${styles.externalIdentifierText}`}
+            href={`${externalUrl}${externalId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={`View ${externalId} in ${resourceLabel}`}
+            aria-label={`View ${externalId} in ${resourceLabel}`}
+        >
+            <InlineIcon icon={<ExternalLink size={14} />} iconPosition="end">
+                {externalId}
+            </InlineIcon>
+        </a>
     );
 };

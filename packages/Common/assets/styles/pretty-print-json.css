@@ -1,9 +1,9 @@
 .json {
-    margin: 0.75rem; /* Tailwind m-3 */
+    margin: 0.75rem;
 }
 
 .string {
-    color: #065f46; /* Tailwind text-green-800 */
+    color: #065f46;
 }
 
 .number {
@@ -15,33 +15,9 @@
 }
 
 .null {
-    color: #374151; /* Tailwind text-gray-700 */
+    color: #374151;
 }
 
 .key {
-    color: #b45309; /* Tailwind text-yellow-700 */
+    color: #b45309;
 }
-
-/* .json {
-    @apply m-3
-}
-
-.string {
-    @apply text-green-800
-}
-
-.number {
-    color: darkorange;
-}
-
-.boolean {
-    color: blue;
-}
-
-.null {
-    @apply text-gray-700
-}
-
-.key {
-    @apply text-yellow-700
-} */

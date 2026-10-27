@@ -1,13 +1,12 @@
-import type { Metadata } from "next";
-import type React from "react";
-import { Inter, Lato, Roboto_Mono } from "next/font/google";
-import { MainLayout } from "@/components/MainLayout";
-import { LoadingProvider } from "@/components/providers/LoadingProvider";
-import { SessionProvider } from "@/components/providers/SessionProvider";
-import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]/authConfig";
-
 import "./globals.css";
+
+import { LoadingProvider, SessionProvider } from "@/components/providers";
+
+import { APP_METADATA } from "@/data/metadata";
+import { MainLayout } from "@/components/MainLayout";
+import type React from "react";
+import { authOptions } from "./api/auth/[...nextauth]/authConfig";
+import { getServerSession } from "next-auth";
 
 // Viewport (Next.js handles meta injection)
 export const viewport = {
@@ -15,41 +14,14 @@ export const viewport = {
     initialScale: 1,
 };
 
-// Fonts
-const inter = Inter({
-    subsets: ["latin"],
-    display: "swap",
-    variable: "--font-inter",
-});
-
-const robotoMono = Roboto_Mono({
-    subsets: ["latin"],
-    display: "swap",
-    variable: "--font-roboto-mono",
-});
-
-const lato = Lato({
-    subsets: ["latin"],
-    display: "swap",
-    variable: "--font-source-sans",
-    weight: ["300", "400", "700"],
-});
-
-// Metadata
-export const metadata: Metadata = {
-    title: "NIAGADS GenomicsDB",
-    description: "An interactive knowledge base for Alzheimer's disease (AD) genetics.",
-    // SEO metadata
-    keywords: "genomics, alzheimer's, genetics, database, NIAGADS",
-    authors: [{ name: "NIAGADS Team" }],
-};
+export const metadata = APP_METADATA;
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
     const session = await getServerSession(authOptions);
 
     return (
-        <html lang="en" className={`${inter.variable} ${robotoMono.variable} ${lato.variable}`}>
-            <body className={inter.className}>
+        <html lang="en">
+            <body>
                 <LoadingProvider>
                     <SessionProvider session={session}>
                         <MainLayout>{children}</MainLayout>

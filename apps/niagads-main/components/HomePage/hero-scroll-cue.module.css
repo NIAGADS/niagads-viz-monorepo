@@ -1,0 +1,30 @@
+.hero-scroll-cue {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+}
+
+.hero-scroll-label {
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.hero-scroll-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-blue);
+    text-decoration: none;
+    transition:
+        transform var(--transition-fast),
+        color var(--transition-fast);
+}
+
+.hero-scroll-button:hover {
+    color: var(--secondary-blue);
+    transform: translateY(2px);
+}

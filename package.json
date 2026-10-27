@@ -5,11 +5,12 @@
     "scripts": {
         "watch": "npx lerna watch -- lerna run build --scope=\\$LERNA_PACKAGE_NAME",
         "storybook": "concurrently \"npm run watch\" \"npx lerna run storybook\"",
-        "igvbrowser": "concurrently \"npm run watch\" \"npx lerna run igvbrowser\"",
+        "genome-browser": "concurrently \"npm run watch\" \"npx lerna run genome-browser\"",
         "genomicsdb": "concurrently \"npm run watch\" \"npx lerna run genomicsdb\"",
-        "genomicsdb-debug": "concurrently \"npm run watch\" \"npx lerna run genomicsdb-debug\"",
-        "genomicsdb-prod": "npx lerna run genomicsdb-prod",
-        "genomicsdb-build": "npx lerna run genomicsdb-build",
+        "genomicsdb-build": "npx lerna run build-genomicsdb",
+        "niagads-main": "concurrently \"npm run watch\" \"npx lerna run niagads-main\"",
+        "open-access-api-client": "concurrently \"npm run watch\" \"npx lerna run open-access-api-client\"",
+        "adsp": "concurrently \"npm run watch\" \"npx lerna run adsp\"",
         "ui-playground": "concurrently \"npm run watch\" \"npx lerna run ui-playground\"",
         "lint": "npx prettier . --write",
         "clean-dist": "find ./packages -name 'dist' -type d -prune -exec rm -rf '{}' +",
@@ -25,17 +26,31 @@
         "packages/Table",
         "packages/Charts",
         "packages/UI",
+        "apps/adsp",
         "apps/storybook",
         "apps/genomicsdb",
         "apps/igvbrowser",
+        "apps/niagads-main",
+        "apps/open-access-api-client",
         "apps/ui-playground"
     ],
     "devDependencies": {
         "concurrently": "^9.1.2",
-        "lerna": "^8.1.9",
+        "lerna": "^10.0.0",
         "prettier": "^3.5.3"
     },
     "engines": {
-        "node": ">=24.0.0 <25.0.0"
+        "node": ">=24.15.0 <25.0.0",
+        "npm": ">=12.0.2 <13.0.0"
+    },
+    "allowScripts": {
+        "es5-ext": true,
+        "nx": true,
+        "esbuild": true,
+        "unrs-resolver": true,
+        "sharp": true,
+        "vue-demi": true,
+        "NIAGADS/igv.js": true,
+        "NIAGADS/export-from-json": true
     }
 }
