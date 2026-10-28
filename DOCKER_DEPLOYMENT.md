@@ -1,5 +1,7 @@
 # Docker Deployment Guide
 
+> .legacy files temporary for deployment on older EC2
+
 ## Overview
 
 This repository uses a shared multi-stage Dockerfile and Docker Compose configuration to build and run its Next.js applications. Deployment mode is controlled by the `BUILD` value in the Compose environment file.
@@ -56,6 +58,30 @@ docker compose up -d <service>
 
 The Compose build target is derived from the deployment mode. Development selects the development runner; staging and production select production-style runners.
 
+## Publishing a pre-built image
+
+Login to docker hub
+
+```bash
+docker login -u <username>
+```
+
+Publish
+
+First tag:
+
+```bash
+docker tag <local_image_name>:<current_tag> <YOUR_DOCKERHUB_USERNAME>/<repository_name>:<new_tag>
+```
+
+e.g., docker tag client-app-adsp-data:staging fossilfriend/niagads-beta-adsp-data:beta-v1
+
+and then push
+
+```bash
+docker push <YOUR_DOCKERHUB_USERNAME>/<repository_name>:<new_tag>
+```
+
 ## Deploying a pre-built image
 
 Pre-built images can be run directly on a deployment host. Supply the runtime configuration, host log volume, network, webmaster group id, and published port at container creation time:
@@ -72,6 +98,12 @@ docker run -d \
   <image>:<tag>
 ```
 
+# legacty note
+
+```sh
+docker run -d --name open-access-api-client --restart unless-stopped --network oa-network -p 8181:3000 --group-add 1002 -v /mnt/efs/trx/genomicsdb/logs/api/client:/var/log/app niagads-beta-ask:prototype
+```
+
 Use the image tag appropriate to the intended mode. `runtime.env` must be secured on the deployment host and must not be incorporated into the image. Use separate container names and host ports where environments coexist on one host. The default container naming convention is `<application>-client`.
 
 If `oa-network` does not already exist, create it before running the container:
@@ -79,6 +111,12 @@ If `oa-network` does not already exist, create it before running the container:
 ```sh
 docker network create oa-network
 ```
+
+Example:
+
+```bash
+ docker run -d --name adsp-data-client --restart unless-stopped --network oa-network -p 3003:3000 --group-add 1004 -v /mnt/www/logs:/var/log/app fossilfriend/niagads-beta-adsp-data:beta-v1
+ ```
 
 ## Logging
 

@@ -1,11 +1,11 @@
 import { FilterColumn, RowValueSummary } from "./types";
 import { MultiSelectPillFilter, PieChartFilter, RichSelectFilter } from "./TextFilterUI";
+import { NUMERIC_CELL_TYPES, NumericFilter } from "./NumericFilterUI";
 import React, { useMemo } from "react";
 
 import { BooleanFilter } from "./BooleanFilterUI";
 import { DEFAULT_NA_VALUE } from "../../../types";
 import { NoValidValuesMessage } from "./Messages";
-import { NUMERIC_CELL_TYPES, NumericFilter } from "./NumericFilterUI";
 
 const MAX_FILTER_CATEGORIES = 7;
 

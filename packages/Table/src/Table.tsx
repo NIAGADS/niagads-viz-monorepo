@@ -8,6 +8,7 @@ import {
     Table as ReactTable,
     TableOptions as ReactTableOptions,
     RowSelectionState,
+    Row,
     SortingFnOption,
     SortingState,
     Updater,
@@ -34,6 +35,7 @@ import { ColumnFilterControls } from "./ControlElements/Columns/ColumnFilterCont
 import { RowSelectionControls } from "./ControlElements/RowSelectionControls";
 import { TableColumnHeader } from "./TableColumnHeader";
 import styles from "./styles/table.module.css";
+import { limitRowSelection } from "./utils/selection";
 
 export interface TableProps {
     id: string;
@@ -56,13 +58,20 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
     const [showColumnFilters, setShowColumnFilters] = useState<boolean | null>(null);
 
     const enableRowSelect = !!options?.enableRowSelect;
+    const maxSelectedRows = options?.rowSelectOpts?.maxSelectedRows;
+    if (maxSelectedRows !== undefined && (!Number.isInteger(maxSelectedRows) || maxSelectedRows < 1)) {
+        throw new Error("maxSelectedRows must be a positive integer");
+    }
+    const selectedState = __resolveRowSelectionState(rowSelection);
+    const selectedCount = Object.values(selectedState).filter(Boolean).length;
 
     const handleRowSelectionChange = useCallback(
         (updater: Updater<RowSelectionState>) => {
             const next = typeof updater === "function" ? updater(__resolveRowSelectionState(rowSelection)) : updater;
-            onRowSelectionChange && onRowSelectionChange(next);
+            const limited = limitRowSelection(selectedState, next, maxSelectedRows);
+            if (limited !== selectedState) onRowSelectionChange?.(limited);
         },
-        [rowSelection, onRowSelectionChange]
+        [rowSelection, onRowSelectionChange, maxSelectedRows, selectedState]
     );
 
     // Translate GenericColumns provided by user into React Table ColumnDefs
@@ -121,6 +130,7 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
                         type: col.type,
                         filterType: col.filterOpts?.filterType || undefined,
                         filterGroup: col.filterOpts?.filterGroup || "",
+                        filterValueColumn: col.filterOpts?.valueColumn,
                         description: col.description,
                         naValue: col.valueDisplayOpts?.naValue || DEFAULT_NA_VALUE,
                         trueValue: col.valueDisplayOpts?.trueValue || "true",
@@ -130,7 +140,13 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
             );
         });
         return columnDefs;
-    }, [columns]);
+    }, [
+        columns,
+        enableRowSelect,
+        options?.rowSelectOpts?.enableMultiSelect,
+        options?.rowSelectOpts?.header,
+        options?.rowSelectOpts?.description,
+    ]);
 
     const resolvedData = useMemo<TableData>(() => {
         const tableData: TableData = [];
@@ -180,7 +196,7 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
         onGlobalFilterChange: setGlobalFilter,
         state: {
             sorting,
-            rowSelection: __resolveRowSelectionState(rowSelection),
+            rowSelection: selectedState,
             globalFilter,
             columnFilters,
             columnVisibility,
@@ -204,7 +220,7 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
                     column.getAllValues = (filterNulls: boolean = false, naValue: string = DEFAULT_NA_VALUE) => {
                         let values: any[] = [];
                         table.getCoreRowModel().flatRows.forEach((row) => {
-                            const value = row.getValue(column.id);
+                            const value = row.getValue(column.columnDef.meta?.filterValueColumn ?? column.id);
                             if (typeof value === "string") {
                                 // check for string lists
                                 const splitValues: string[] = value.includes("//") ? value.split(" // ") : [value];
@@ -222,7 +238,7 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
                     column.getFilteredValues = (filterNulls: boolean = false, naValue: string = DEFAULT_NA_VALUE) => {
                         let values: any[] = [];
                         table.getFilteredRowModel().flatRows.forEach((row) => {
-                            const value = row.getValue(column.id);
+                            const value = row.getValue(column.columnDef.meta?.filterValueColumn ?? column.id);
                             if (typeof value === "string") {
                                 // check for string lists
                                 const splitValues: string[] = value.includes("//") ? value.split(" // ") : [value];
@@ -256,6 +272,11 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
     if (enableRowSelect) {
         Object.assign(reactTableOptions, {
             enableMultiRowSelection: !!options?.rowSelectOpts?.enableMultiSelect,
+            enableRowSelection: (row: Row<TableRow>) =>
+                !options?.rowSelectOpts?.enableMultiSelect ||
+                maxSelectedRows === undefined ||
+                !!selectedState[row.id] ||
+                selectedCount < maxSelectedRows,
             onRowSelectionChange: handleRowSelectionChange, //hoist up the row selection state to your own scope
         });
 

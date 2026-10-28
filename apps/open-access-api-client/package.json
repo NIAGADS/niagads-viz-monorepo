@@ -1,0 +1,38 @@
+{
+    "name": "open-access-api-client",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "open-access-api-client": "next dev",
+        "build-open-access-api-client": "next build",
+        "start-open-access-api-client": "next start",
+        "build-app": "next build",
+        "start-app": "next start",
+        "start-dev-app": "next dev",
+        "lint": "eslint .",
+        "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {
+        "@ai-sdk/react": "^4.0.147",
+        "@niagads/charts": "^0.2.1",
+        "@niagads/common": "^0.2.1",
+        "@niagads/table": "^0.2.1",
+        "@niagads/ui": "^0.2.1",
+        "@scalar/api-reference-react": "^0.9.81",
+        "ai": "^7.0.143",
+        "next": "16.3.1",
+        "react": "19.2.8",
+        "react-dom": "19.2.8",
+        "react-markdown": "10.1.0",
+        "remark-gfm": "4.0.1",
+        "zod": "^4.6.7"
+    },
+    "devDependencies": {
+        "@types/node": "^20",
+        "@types/react": "^19",
+        "@types/react-dom": "^19",
+        "eslint": "^9",
+        "eslint-config-next": "16.3.1",
+        "typescript": "^5"
+    }
+}

@@ -1,6 +1,6 @@
 # TODO:: heartbeat, server side log rollover, adjust package jsons to make sure they have start/build
 # Developer notes: 
-#  - Dockerfile path is resolved from context, which is why the path walks up two directories
+#  - Builds use the repository root so development can install local workspace packages
 #  - WEBMASTER_GID is provided using `group_add` so that the `node` user in the container will be assigned to that group and logs will be rw by the group on the host
 #  - stdin/out is captured and piped to a <app_name>.log file.  for now one single mounted log dir for all apps, host target directory must 1) exist, 2) belong to webmaster group, 3) have g+rw permissions
 
@@ -12,7 +12,8 @@ x-defaults: &defaults
     - "${WEBMASTER_GID}"
 
 x-build-defaults: &build-defaults
-  dockerfile: ../../next.Dockerfile
+  context: .
+  dockerfile: next.Dockerfile
   additional_contexts:
     scripts: ./scripts/docker
   target: ${BUILD}-runner
@@ -36,7 +37,7 @@ services:
       args:
         <<: *build-arg-defaults
         APP_NAME: genomicsdb
-      context: ./apps/genomicsdb/
+        APP_DIR: genomicsdb
     ports:
       - "${GENOMICSDB_CLIENT_PORT}:3000"
 
@@ -49,7 +50,7 @@ services:
       args:
         <<: *build-arg-defaults
         APP_NAME: niagads-main
-      context: ./apps/niagads-main/
+        APP_DIR: niagads-main
     ports:
       - "${NIAGADS_MAIN_CLIENT_PORT}:3000"
 
@@ -64,6 +65,32 @@ services:
       args:
         <<: *build-arg-defaults
         APP_NAME: genome-browser
-      context: ./apps/igvbrowser
+        APP_DIR: igvbrowser
     ports:
       - "${IGVBROWSER_CLIENT_PORT}:3000"
+
+  adsp-data:
+    <<: *defaults
+    container_name: adsp-data-client
+    image: client-app-adsp-data:${BUILD}
+    build:
+      <<: *build-defaults
+      args:
+        <<: *build-arg-defaults
+        APP_NAME: adsp-data
+        APP_DIR: adsp
+    ports:
+      - "${ADSPDATA_CLIENT_PORT}:3000"
+
+  open-access-api-client:
+    <<: *defaults
+    container_name: open-access-api-client
+    image: client-app-open-access-api:${BUILD}
+    build:
+      <<: *build-defaults
+      args:
+        <<: *build-arg-defaults
+        APP_NAME: open-access-api
+        APP_DIR: open-access-api-client
+    ports:
+      - "${OPEN_ACCESS_API_CLIENT_PORT}:3000"

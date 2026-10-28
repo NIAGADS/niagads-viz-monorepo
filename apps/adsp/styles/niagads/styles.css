@@ -1,0 +1,10 @@
+/* ============================================================
+   NIAGADS Design System — global entry point.
+   Consumers link THIS one file. Import lines only.
+   ============================================================ */
+
+@import "./tokens/fonts.css";
+@import "./tokens/colors.css";
+@import "./tokens/typography.css";
+@import "./tokens/spacing.css";
+@import "./tokens/base.css";
