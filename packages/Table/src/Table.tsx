@@ -1,14 +1,13 @@
 import { Alert, Checkbox, RadioButton } from "@niagads/ui";
-import { Cell, CellType, TableCell } from "./Cells/types";
+import { Cell, TableCell } from "./Cells/types";
 import {
     ColumnDef,
     ColumnFiltersState,
     FilterFnOption,
-    HeaderGroup,
     Table as ReactTable,
     TableOptions as ReactTableOptions,
-    RowSelectionState,
     Row,
+    RowSelectionState,
     SortingFnOption,
     SortingState,
     Updater,
@@ -23,19 +22,24 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
+import {
+    ColumnFilterControls,
+    booleanSort,
+    globalFuzzyFilter,
+    includesAnyFilter,
+    neglog10Filter,
+    scientificNotationSort,
+} from "./ControlElements/Columns/ColumnFilters";
 import { DEFAULT_NA_VALUE, TableColumn, TableData, TableOptions, TableRow } from "./types";
 import { PaginationControls, TableToolbar } from "./ControlElements";
 import React, { ReactNode, useCallback, useLayoutEffect, useMemo, useState } from "react";
 import { _get, toTitleCase } from "@niagads/common";
-import { booleanSort, scientificNotationSort } from "./ControlElements/Columns/sortingFunctions";
 import { getCellValue, renderCell, resolveCell, validateCellType } from "./Cells/utils";
-import { globalFuzzyFilter, includesAnyFilter, neglog10Filter } from "./ControlElements/Columns/filterFunctions";
+import { isValidUniqueKey, limitRowSelection, resolveRowSelectionState } from "./utils/rowSelection";
 
-import { ColumnFilterControls } from "./ControlElements/Columns/ColumnFilterControls";
 import { RowSelectionControls } from "./ControlElements/RowSelectionControls";
-import { TableColumnHeader } from "./TableColumnHeader";
+import TableHeader from "./TableHeader";
 import styles from "./styles/table.module.css";
-import { limitRowSelection } from "./utils/selection";
 
 export interface TableProps {
     id: string;
@@ -52,7 +56,7 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
     const [globalFilter, setGlobalFilter] = useState("");
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
-        __setInitialColumnVisibility(options?.defaultColumns, columns)
+        _setInitialColumnVisibility(options?.defaultColumns, columns)
     );
     const [showOnlySelected, setShowOnlySelected] = useState(false);
     const [showColumnFilters, setShowColumnFilters] = useState<boolean | null>(null);
@@ -62,12 +66,12 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
     if (maxSelectedRows !== undefined && (!Number.isInteger(maxSelectedRows) || maxSelectedRows < 1)) {
         throw new Error("maxSelectedRows must be a positive integer");
     }
-    const selectedState = __resolveRowSelectionState(rowSelection);
+    const selectedState = resolveRowSelectionState(rowSelection);
     const selectedCount = Object.values(selectedState).filter(Boolean).length;
 
     const handleRowSelectionChange = useCallback(
         (updater: Updater<RowSelectionState>) => {
-            const next = typeof updater === "function" ? updater(__resolveRowSelectionState(rowSelection)) : updater;
+            const next = typeof updater === "function" ? updater(resolveRowSelectionState(rowSelection)) : updater;
             const limited = limitRowSelection(selectedState, next, maxSelectedRows);
             if (limited !== selectedState) onRowSelectionChange?.(limited);
         },
@@ -166,7 +170,7 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
 
                 const tableRow: TableRow = {};
                 for (const [columnId, value] of Object.entries(row)) {
-                    const currentColumn = __getColumn(columnId, columns);
+                    const currentColumn = _getColumn(columnId, columns);
                     if (currentColumn === undefined) {
                         throw new Error("Invalid column name found in table data definition `" + columnId + "`");
                     }
@@ -282,7 +286,7 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
 
         const uniqueKey = options?.rowSelectOpts?.rowUniqueKey;
         if (!!uniqueKey) {
-            if (__isValidUniqueKey(resolvedData, uniqueKey)) {
+            if (isValidUniqueKey(resolvedData, uniqueKey)) {
                 Object.assign(reactTableOptions, {
                     getRowId: (row: TableRow) => getCellValue(row[uniqueKey as keyof typeof row] as Cell),
                 });
@@ -348,7 +352,7 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
             <div className={styles["table-container"]}>
                 {rowModel.rows.length > 0 ? (
                     <table className={`${styles["table-layout"]} ${styles["table-border"]} ${styles["table-text"]}`}>
-                        {__renderTableHeader(table.getHeaderGroups())}
+                        <TableHeader headerGroups={table.getHeaderGroups()} />
                         <tbody>
                             {rowModel.rows.map((row) => (
                                 <tr key={row.id} className={styles["table-dtr"]}>
@@ -433,43 +437,7 @@ const __resolveCell = (userCell: TableCell | TableCell[], column: TableColumn, r
 // NOTE: according to documentation https://tanstack.com/table/latest/docs/guide/column-visibility#column-visibility-state
 // the HeaderGroup API will take column visibility into account
 
-// render the table header
-const __renderTableHeader = (hGroups: HeaderGroup<TableRow>[]) => (
-    <thead>
-        {hGroups.map((headerGroup: HeaderGroup<TableRow>) => (
-            <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                    return <TableColumnHeader key={header.id} header={header} />;
-                })}
-            </tr>
-        ))}
-    </thead>
-);
-
-// checks to see if a field contains a unique value for each row in the table
-// allowing it to be used as a valid "primary key" or row_id for row selection
-const __isValidUniqueKey = (data: TableData, columnId: string) => {
-    const values = data.map((row) => getCellValue(row[columnId as keyof typeof row] as Cell));
-    return Array.from(new Set(values)).length == data.length;
-};
-
-// builds data structure to initialize row selection state
-const __resolveRowSelectionState = (state: RowSelectionState | string[] | undefined): RowSelectionState => {
-    if (state) {
-        if (Array.isArray(state)) {
-            if (state.length > 0) {
-                return Object.fromEntries(state.map((rowId) => [rowId, true])) as RowSelectionState;
-            }
-            return {} as RowSelectionState;
-        }
-        return state as RowSelectionState;
-    }
-
-    return {};
-};
-
-// builds data structure to initialize row selection state
-const __setInitialColumnVisibility = (defaultColumns: string[] | undefined, columns: TableColumn[]) => {
+const _setInitialColumnVisibility = (defaultColumns: string[] | undefined, columns: TableColumn[]) => {
     const visibility: VisibilityState = {};
     if (defaultColumns) {
         columns.forEach((col) => {
@@ -479,11 +447,11 @@ const __setInitialColumnVisibility = (defaultColumns: string[] | undefined, colu
     return visibility;
 };
 
-export const __getColumn = (columnId: string, columns: TableColumn[]) => {
+const _getColumn = (columnId: string, columns: TableColumn[]) => {
     return columns.find((col) => col.id === columnId);
 };
 
-/* custom getFacetedUniqueValues
+/* overload for `getFacetedUniqueValues`
  ** handles lists (delimited by //)
  ** counts nulls and n/a (b/c tanstack-tables counts undefined as n/a, not null)
  */
