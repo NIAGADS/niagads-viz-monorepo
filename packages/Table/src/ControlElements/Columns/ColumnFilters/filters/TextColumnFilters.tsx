@@ -1,10 +1,11 @@
-import { FilterProps } from "./types";
 import { PieChart, PieChartDataRow } from "@niagads/charts";
 import React, { ReactNode, useCallback, useMemo } from "react";
 
 import { Badge } from "@niagads/ui";
+import { Column } from "@tanstack/react-table";
+import { FilterProps } from "./types";
 import { RichSelect } from "@niagads/ui/client";
-import styles from "./filter.module.css";
+import styles from "./column-filter.module.css";
 
 const _resolveTextFilterValue = (value: string | undefined, otherValues: string[]) => {
     if (value === undefined) {
@@ -152,3 +153,8 @@ export const MultiSelectPillFilter = ({ column, referenceValues, filteredValues,
         </div>
     );
 };
+
+// topic filters may combine values across multiple columns
+export interface TopicFilterProps extends Omit<FilterProps, "column"> {
+    columns: Column<any, unknown>[];
+}

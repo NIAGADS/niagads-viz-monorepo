@@ -2,10 +2,10 @@ import { Range, negLog10 } from "@niagads/common";
 import { RangeSelectHistogram, ThresholdSelectHistogram } from "@niagads/charts";
 import React, { useCallback, useMemo } from "react";
 
-import { DEFAULT_NA_VALUE } from "../../../types";
+import { DEFAULT_NA_VALUE } from "../../../../types";
 import { FilterColumn } from "./types";
-import { NoValidValuesMessage } from "./Messages";
-import styles from "./filter.module.css";
+import { NoValidValueAlert } from "./NoValidValueAlert";
+import styles from "./column-filter.module.css";
 
 export const NUMERIC_CELL_TYPES = ["float", "integer", "pvalue", "percentage_cell"];
 const HISTOGRAM_DISPLAY_OPTS = {
@@ -36,7 +36,7 @@ export const NumericFilter = ({ column }: FilterColumn) => {
     }, [column, isPvalue, naValue]);
 
     if (!referenceData.range) {
-        return <NoValidValuesMessage columnName={title} />;
+        return <NoValidValueAlert columnName={title} />;
     }
 
     let filterValue: Range | number | undefined = column.getFilterValue() as Range | number | undefined;

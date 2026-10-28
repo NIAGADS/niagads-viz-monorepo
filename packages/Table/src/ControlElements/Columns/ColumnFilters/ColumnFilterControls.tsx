@@ -1,9 +1,9 @@
 import { Button, FilterChip, FilterChipBar, InlineIcon, StylingProps } from "@niagads/ui";
 import { Column, ColumnFilter, ColumnFiltersState } from "@tanstack/react-table";
 import React, { useEffect, useMemo, useState } from "react";
-import FilterComponent from "./Filters/FilterUI";
-import { TrashIcon } from "lucide-react";
 
+import FilterComponent from "./filters/ColumnFilter";
+import { TrashIcon } from "lucide-react";
 import styles from "./ColumnFilterControls.module.css";
 
 interface ColumnFilterControlsProps {

@@ -2,7 +2,7 @@ import { Badge, Checkbox } from "@niagads/ui";
 import { FilterProps, RowValueSummary } from "./types";
 
 import React from "react";
-import styles from "./filter.module.css";
+import styles from "./column-filter.module.css";
 
 export const BooleanFilter = ({ column, referenceValues, filteredValues }: FilterProps) => {
     const meta = column.columnDef.meta!;

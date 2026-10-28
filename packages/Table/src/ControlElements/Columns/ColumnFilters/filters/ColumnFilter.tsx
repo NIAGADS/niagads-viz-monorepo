@@ -1,11 +1,16 @@
+import {
+    BooleanFilter,
+    MultiSelectPillFilter,
+    NUMERIC_CELL_TYPES,
+    NoValidValueAlert,
+    NumericFilter,
+    PieChartFilter,
+    RichSelectFilter,
+} from ".";
 import { FilterColumn, RowValueSummary } from "./types";
-import { MultiSelectPillFilter, PieChartFilter, RichSelectFilter } from "./TextFilterUI";
-import { NUMERIC_CELL_TYPES, NumericFilter } from "./NumericFilterUI";
 import React, { useMemo } from "react";
 
-import { BooleanFilter } from "./BooleanFilterUI";
-import { DEFAULT_NA_VALUE } from "../../../types";
-import { NoValidValuesMessage } from "./Messages";
+import { DEFAULT_NA_VALUE } from "../../../../types";
 
 const MAX_FILTER_CATEGORIES = 7;
 
@@ -74,7 +79,7 @@ const _organizeValueCounts = (valueCounts: Map<string, number>, naValue: string)
  * @param props.column - The TanStack React Table column instance containing:
  * @returns A filter UI component appropriate for the column type
  */
-const Filter = ({ column }: FilterColumn) => {
+const ColumnFilter = ({ column }: FilterColumn) => {
     const meta = column.columnDef.meta!;
     const naValue = meta.naValue || DEFAULT_NA_VALUE;
 
@@ -88,7 +93,7 @@ const Filter = ({ column }: FilterColumn) => {
 
     // return No Valid Values if every value in the unfiltered column is NA
     if (naCount && valueCounts.size === 1) {
-        return <NoValidValuesMessage columnName={column.columnDef.header!.toString()} />;
+        return <NoValidValueAlert columnName={column.columnDef.header!.toString()} />;
     }
 
     // otherwise, sort and consolidate the value map
@@ -121,4 +126,4 @@ const Filter = ({ column }: FilterColumn) => {
     return <RichSelectFilter {...FilterProps} />;
 };
 
-export default Filter;
+export default ColumnFilter;
