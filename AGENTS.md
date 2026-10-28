@@ -10,6 +10,7 @@
 - Run targeted checks first. Repeat checks only after relevant changes
   or when investigating a failure.
 - Keep progress updates and final reports concise.
+- Do not run application or package builds unless explicitly requested.
 
 ### Usage limits and pausing
 
