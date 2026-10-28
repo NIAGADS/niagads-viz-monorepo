@@ -3,12 +3,10 @@ import { Cell, TableCell } from "./Cells/types";
 import {
     ColumnDef,
     ColumnFiltersState,
-    FilterFnOption,
     Table as ReactTable,
     TableOptions as ReactTableOptions,
     Row,
     RowSelectionState,
-    SortingFnOption,
     SortingState,
     Updater,
     VisibilityState,
@@ -36,6 +34,7 @@ import React, { ReactNode, useCallback, useLayoutEffect, useMemo, useState } fro
 import { _get, toTitleCase } from "@niagads/common";
 import { getCellValue, renderCell, resolveCell, validateCellType } from "./Cells/utils";
 import { isValidUniqueKey, limitRowSelection, resolveRowSelectionState } from "./utils/rowSelection";
+import { resolveFilterFn, resolveSortingFn } from "./utils/columnDefs";
 
 import { RowSelectionControls } from "./ControlElements/RowSelectionControls";
 import TableHeader from "./TableHeader";
@@ -127,8 +126,8 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
                     enableColumnFilter: !col.disableColumnFilter,
                     enableGlobalFilter: !col.disableGlobalFilter,
                     enableSorting: !col.disableSorting,
-                    sortingFn: __resolveSortingFn(col),
-                    filterFn: __resolveFilterFn(col),
+                    sortingFn: resolveSortingFn(col),
+                    filterFn: resolveFilterFn(col),
                     enableHiding: !col.required, // if required is true, enableHiding is false
                     meta: {
                         type: col.type,
@@ -174,7 +173,7 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
                     if (currentColumn === undefined) {
                         throw new Error("Invalid column name found in table data definition `" + columnId + "`");
                     }
-                    tableRow[columnId] = __resolveCell(value, currentColumn, index);
+                    tableRow[columnId] = _resolveCell(value, currentColumn, index);
                 }
                 tableData.push(tableRow);
             });
@@ -382,48 +381,8 @@ const Table = ({ id, columns, data, options, rowSelection, onRowSelectionChange 
     );
 };
 
-const __resolveSortingFn = (col: TableColumn): SortingFnOption<TableRow> => {
-    if (col.sortingFn) {
-        return col.sortingFn;
-    }
-
-    if (col.type === "boolean") {
-        return "boolean";
-    }
-    if (col.type === "float") {
-        return "scientific";
-    }
-    return "alphanumeric";
-};
-
-const __resolveFilterFn = (col: TableColumn): FilterFnOption<TableRow> => {
-    if (col.filterOpts?.filterType === "multiselect") {
-        return "includesAny"; // multiselect & text lists
-    }
-
-    if (col.filterOpts?.filterFn) {
-        return col.filterOpts.filterFn;
-    }
-
-    if (col.type === "pvalue") {
-        return "pvalue";
-    }
-
-    if (col.type === "float" || col.type === "integer") {
-        return "inNumberRange"; // FIXME: not really implemented yet
-    }
-
-    if (col.type === "boolean") {
-        return "equals";
-    }
-
-    // text field filtering; handles text lists, other grouping
-    return "includesAny";
-};
-
-// wrapper to catch any errors thrown during cell type and properties validation so that
-// user can more easily identify the problematic table cell by row/column
-const __resolveCell = (userCell: TableCell | TableCell[], column: TableColumn, rowId: number) => {
+/* wrapper to catch any errors thrown during cell type and properties validation */
+const _resolveCell = (userCell: TableCell | TableCell[], column: TableColumn, rowId: number) => {
     try {
         return resolveCell(userCell, column, rowId);
     } catch (e: any) {
@@ -433,30 +392,22 @@ const __resolveCell = (userCell: TableCell | TableCell[], column: TableColumn, r
     }
 };
 
-// TODO: (maybe?) catch hidden to skip during rendering
-// NOTE: according to documentation https://tanstack.com/table/latest/docs/guide/column-visibility#column-visibility-state
-// the HeaderGroup API will take column visibility into account
-
-const _setInitialColumnVisibility = (defaultColumns: string[] | undefined, columns: TableColumn[]) => {
-    const visibility: VisibilityState = {};
-    if (defaultColumns) {
-        columns.forEach((col) => {
-            visibility[col.id] = defaultColumns.includes(col.id);
-        });
-    }
-    return visibility;
-};
+/* set initial column visibility based on `defaultColumns` in opts*/
+const _setInitialColumnVisibility = (defaultColumns: string[] | undefined, columns: TableColumn[]) =>
+    defaultColumns ? Object.fromEntries(columns.map(({ id }) => [id, defaultColumns.includes(id)])) : {};
 
 const _getColumn = (columnId: string, columns: TableColumn[]) => {
     return columns.find((col) => col.id === columnId);
 };
 
-/* overload for `getFacetedUniqueValues`
- ** handles lists (delimited by //)
- ** counts nulls and n/a (b/c tanstack-tables counts undefined as n/a, not null)
- */
+/* overload for tan-stack/tables `getFacetedUniqueValues`
+Adds: 
+ - handling of lists of strings (values delimited by //)
+ - inclusion of nulls and n/a (b/c tanstack-tables counts undefined as n/a, not null)
+
+Usage : column.getFacetedUniqueValues()
+*/
 const getFacetedUniqueValues = (table: ReactTable<TableRow>, columnId: string): (() => Map<any, number>) => {
-    // The returned function is what actually gets called by column.getFacetedUniqueValues()
     return () => {
         const uniqueValueMap = new Map<any, number>();
 
