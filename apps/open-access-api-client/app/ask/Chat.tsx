@@ -1,15 +1,16 @@
 "use client";
 
-import { ActionButton, Alert, Badge, Button, Card, CardBody, CardHeader, CardGrid } from "@niagads/ui";
-import type { FormEvent } from "react";
-import Feedback from "./Feedback";
-import ErrorAlert from "./ErrorAlert";
-import { useAskSession } from "./AskSessionProvider";
+import { ActionButton, Alert, Badge, Button, Card, CardBody, CardGrid, CardHeader } from "@niagads/ui";
+
 import ChatResult from "./ChatResult";
+import ErrorAlert from "./ErrorAlert";
+import Feedback from "./Feedback";
+import type { FormEvent } from "react";
+import { MODEL_BUSY_MESSAGE } from "./model-status";
 import MarkdownSummary from "./MarkdownSummary";
 import ModelStatusIndicator from "./ModelStatusIndicator";
-import { MODEL_BUSY_MESSAGE } from "./model-status";
 import styles from "./ask.module.css";
+import { useAskSession } from "./AskSessionProvider";
 
 export default function Chat() {
     const { messages, status, error, stop, input, setInput, ask, newSession, dashboardId, modelStatus, retry } =
@@ -153,7 +154,7 @@ export default function Chat() {
                     <p>
                         Please contact <a href="mailto:help@niagads.org">help@niagads.org</a> or{" "}
                         <a
-                            href="https://github.com/NIAGADS/niagads-api/issues"
+                            href="https://github.com/NIAGADS/open-access-client/issues"
                             target="_blank"
                             rel="noopener noreferrer"
                         >
