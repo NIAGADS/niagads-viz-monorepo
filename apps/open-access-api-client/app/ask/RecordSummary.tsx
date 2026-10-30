@@ -10,6 +10,7 @@ const fields = {
         gene_type: "Gene type",
         location: "Location",
         synonyms: "Aliases",
+        associated_with_known_ad_locus: "Known AD locus",
     },
     variant: {
         id: "Variant ID",
