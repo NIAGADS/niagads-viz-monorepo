@@ -2,7 +2,7 @@
 
 Internal developer instructions for the `open-access-client` monorepo, including workspace setup, application development, builds, package management, releases, and troubleshooting.
 
-For project and package information, see [README.md](./README.md). For component documentation, see [Storybook](https://niagads.github.io/open-access-client/). For production deployment, see [DOCKER_DEPLOYMENT.md](./DOCKER_DEPLOYMENT.md).
+For project and package information, see [README.md](./README.md). For component documentation, see our [Storybook](https://niagads.github.io/open-access-client/). For production deployment, see [DOCKER_DEPLOYMENT.md](./DOCKER_DEPLOYMENT.md).
 
 ## Prerequisites
 

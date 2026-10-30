@@ -1,308 +1,91 @@
-# NIAGADS Front-End Visualization Monorepo
+# NIAGADS Open Access Client
 
-This project **will** contain React component libraries, JavaScript visualization tools, and front-end microservices powering the NIAGADS Alzheimer's Genomics Database and related NIAGADS Open Access resources.
+Frontend applications, reusable genomic visualization components, UI libraries, and utilities for the [NIAGADS Open Access](https://www.niagads.org/) platform.
 
-> **WARNING: for third-party developers. This toolkit is still under development and not ready or recommended for general usage**
+This monorepo contains React applications and TypeScript/JavaScript libraries used to explore, visualize, and interpret Alzheimer's disease and related dementias (AD/ADRD) genomic data. Published components can also be incorporated into independent research applications.
+
+> **Development status:** The project is under active development. Published packages are available, but interfaces and APIs may change. Third-party developers should evaluate package stability before adopting them in production.
 
 ## Documentation
 
-See project [storybook](https://niagads.github.io/niagads-viz-monorepo/) for UI library documentation and usage examples.
-See indivdual application READMEs for deployment instructions.
+- **[Component Storybook](https://niagads.github.io/open-access-client/)**: Interactive documentation and examples for UI and visualization components.
+- **[NIAGADS Open Access API](https://api.niagads.org/api/openapi)**: API specification and available operations.
+- **[Published `@niagads` packages](https://www.npmjs.com/search?q=%40niagads)**: Packages available on npm.
 
-## Requirements
-
-### Node
-
-- Node >24.15, <25
-- npm 12.0.2
-
-The project is configured to work with [nvm](https://github.com/nvm-sh/nvm).  Once nvm is installed, run `nvm use` in the project root. If the required version of `Node` is not installed, it will give prompt you install the required version.  If it is installed, nvm, will switch to the expected Node version.
-
-> NOTE: `npm` is set to `engine-strict=true` and will raise an `Unsupported Engine` error if the Node or NPM version does not match the engine defined in the root `package.json`.
+See individual application READMEs for application-specific information.
 
 ## Packages
-
-Components and Component Libraries.
 
 ### Published
 
 #### Common
 
-Common configurations and utility functions used in components and microservices.
+Shared configurations and utility functions used by components and applications.
 
 ```bash
-npm i @niagads/common
+npm install @niagads/common
 ```
 
 #### UI
 
-Component library of UI elements (e.g., buttons, dropdowns, alert boxes, etc.) and page layout templates. See the project [storybook](https://niagads.github.io/niagads-viz-monorepo/) for documentation.
+Reusable UI elements, including buttons, dropdowns, alert boxes, and page layout templates. See [Storybook](https://niagads.github.io/open-access-client/) for examples.
 
 ```bash
-npm i @niagads/ui
+npm install @niagads/ui
 ```
 
 #### Table
 
-Dynamic table component. See project [storybook](https://niagads.github.io/niagads-viz-monorepo/) for documentation and usage examples.
+Interactive table components for displaying and filtering data. See [Storybook](https://niagads.github.io/open-access-client/) for documentation and usage examples.
 
 #### IGVBrowser
 
-Components wrapping a customized [igv.js](igv.js) genome browser that pull data directly from files hosted on FILER or through data adapters that query the NIAGADS Open Access API. Also includes customized track selectors and filtering using the `@niagads/table` component.
+Components wrapping a customized [igv.js](https://igv.org/doc/igvjs/) genome browser. Tracks can be loaded from FILER-hosted files or through data adapters querying the NIAGADS Open Access API. Includes customized track selectors and filtering built with `@niagads/table`.
 
 ```bash
-npm i @niagads/igvbrowser
+npm install @niagads/igvbrowser
 ```
 
 ### Under development
 
 #### Gosling
 
-Components wrapping [gosling.js](https://gosling-lang.org/) genomics visualizations that pull data directly from files hosted on FILER or through data adapters that query the NIAGADS Open Access API.
+Components wrapping [Gosling](https://gosling-lang.org/) genomic visualizations, using FILER-hosted data or NIAGADS Open Access API adapters.
 
 #### LocusZoom
 
-Components wrapping a customized [locuszoom.js](https://statgen.github.io/locuszoom/) visualization that retrieve summary statistics data via custom data adapters that retrieve summary statistics and linkage calculated from ADSP samples using NIAGADS Open Access API.
+Components wrapping customized [LocusZoom](https://statgen.github.io/locuszoom/) visualizations for association summary statistics and linkage disequilibrium data retrieved through NIAGADS Open Access API adapters.
 
 ## Applications
 
-More information to be added later.
+The monorepo includes complete frontend applications built with its shared components, visualizations, and utilities. See each application's README for additional details.
 
-See the [for developers section](#for-developers) for information on deploying each application in a development environment. Each application is dockerized for production deployment.  See [docker deployment](./DOCKER_DEPLOYMENT.md) instructions for more information.
+### niagads-main
 
-### Application environment-file samples
+The main NIAGADS website and landing page. **Under development.**
 
-Applications provide separate environment-file samples for Docker and non-Docker use:
+### genomicsdb
 
-| File | Purpose |
-| --- | --- |
-| `dev.build.env.local` | Docker build-time configuration for `dev` builds. **Also used by PR actions to test for broken dependencies**. These values are available while the application image is built and may be incorporated into the generated application output. |
-| `prod.build.env.local` | Docker build-time configuration for `staging` and `prod` builds. These values are available while the application image is built and may be incorporated into the generated application output. |
-| `sample.runtime.env` | Docker runtime configuration, including secrets. This file is supplied when the container is deployed and is not included in the image. |
-| `sample.env.local` | Complete configuration for a non-Docker deployment. It combines the build-time and runtime values required by the application and is copied to `.env.local`. |
+The Alzheimer's GenomicsDB application for exploring AD/ADRD genomic data, variants, associations, and annotations. **Under development.**
 
-Use the Docker-specific samples when building and deploying an image. Use `sample.env.local` only when running the application outside Docker.
+### open-access-api-client
 
-### Storybook
+The Open Access API client application, including ASK NIAGADS for natural-language querying of genomic evidence.
 
-While developing, you can use the storybook app to see and test your changes in real time. Production storybook is available on github.io.
+### igv-browser
 
-The following command will run storybook and automatically build packages as you change them, after following developer's instructions below to initialize your `lerna`/`nx` workspace.
+A standalone IGV-based genome browser application. **Under development; currently broken and under revision.**
 
-```bash
-npm run storybook
-```
+## Development and Contributing
 
-> **DEVELOPERS NOTE**: to "hide" a story from the published storybook, add the 'dev' tag to your story defintion.  For example:
+Internal contributors should see [CONTRIBUTING.md](./CONTRIBUTING.md) for environment setup, local development, builds, Storybook, package management, releases, and troubleshooting.
 
-```javascript
-export const MyStory: StoryObj<typeof Component> = {
-    args: {
-        ...
-    },
-    render: (args) => <Component {...args} />,
-    tags: ["dev"], // hide in production
-};
-```
+See [Docker deployment instructions](./DOCKER_DEPLOYMENT.md) for application deployment.
 
-### niagads-api-client
+## Related Resources
 
-> temporarily moved to own repo until we can break tailwindcss dependendency (niagads-api)
-
-### igvbrowser (app)
-
-Standalone, configurable IGV-based Genome Browser Application.  See <https://github.com/NIAGADS/igvbrowser-microservice> for more information.
-
-## For Developers
-
-### Initialize your workspace
-
-The monorepo is managed using [Lerna](https://lerna.js.org/) and [nx](https://nx.dev/nx-api/node)
-
-After cloning (or forking) the repo & checking out your development branch, run the following to install third-part dependencies:
-
-```bash
-cd niagads-viz-monorepo
-npm install
-```
-
-### Building packages
-
-You can build all packages by running the following command:
-
-```bash
-npx lerna run build --concurrency 1
-```
-
-or in short-hand:
-
-```bash
-npm run build
-```
-
-> **Note**: The `--concurrency 1` flag is not required, but stops the lerna command from trying to build each package in parallel, avoiding race conditions and build failures when a dependent package builds faster than a dependency. This sort of race condition can occur randomly.
-
-> **Note**: `npx` should come with `npm` 5.2+, but sometimes it does not get installed if you use `nvm` to manage node versions.  
-> If you get a message that `npx` is not found, install globally with the following command: `npm i -g npx`. Depending on your system setup, you may need to use `sudo`.
-
-### Run an app
-
-Applications are configured to run under watch conditions so they can be hot-reloaded when dependent code changes.
-
-#### Run Storybook
-
-To ensure that storybook starts with `nx` watch, please run as follows:
-
-```bash
-npm run storybook
-```
-
-> **Note:** if you get a message that `nx` is not found, install globally with the following command: `npm i -g nx`. Depending on your system setup, you may need to use `sudo`.
-
-#### Run Application
-
-see README in the relevant application directory.
-
-### Lerna package and application management
-
-### Running lerna commands
-
-All lerna commands should be run using `npx` as follows:
-
-```bash
-npx lerna <cmd> <options>
-```
-
-A full list of `lerna` commands is found here: <https://lerna.js.org/docs/api-reference/commands>
-
-You can scope to a specific package using the `--scope` option, e.g.
-
-```bash
-npx lerna run build --scope=<package>
-```
-
-For example to just build the UI component library:
-
-```bash
-npx lerna run build --scope=@niagads/ui
-```
-
-Or ignore a package with the `--ignore` option, e.g.,
-
-```bash
-npx lerna run build --ignore=@niagads/ui
-```
-
-A full list of available options is found here: <https://lerna.js.org/docs/api-reference/commands#options>
-
-### Running other commands
-
-You can run any npm command for any package or application using lerna.
-For example if a package called `foo` had a script called `bar` defined in
-its package.json, you could run it using the following command:
-
-```bash
-npx lerna run bar
-```
-
-This will run the command `bar` for all packages that have it defined.
-If you want to only run it for the package `foo` you can use the `--scope` argument
-
-```bash
-npx lerna run bar --scope=foo
-```
-
-### Publishing
-
-Packages are published to the NIAGADS organization. GitHub actions will be added to automate the publication process upon PR approval.  In the meantime, to publish manually:
-
-- login to npm
-
-```bash
-npm login
-```
-
-> on WSL2 add `--auth-type=legacy` option
-
-- check login status with `npm whoami`
-
-#### Initial release
-
-- in `package.json`
-  - manually set version
-  - add the following:
-
-```json
- "publishConfig": {
-       "access": "public"
-   }
-```
-
-- remove `"private":"true" when present
-
-- run the build to generate dist files
-- and then use `lerna publish` to make the initial commit
-
-```bash
-npx lerna run build --concurrency 1
-npx lerna publish <initial_version>
-```
-
-#### Subsequent releases
-
-For subsequent releases, you can run a script to handle all steps required for building and releasing packages.
-
-```bash
-./scripts/release.sh
-```
-
-Alternatively, you can do the release manually by running each command in that script.
-
-Below is an overview of each step in the script:
-
-- Create and publish (push) a temporary git branch for the release
-
-```bash
-git checkout -b release/<mm-dd-yyyy>
-git push --set-upstream origin release/<mm-dd-yyyy>
-```
-
-- Clean up all old `dist` folders and rebuild the packages using our npm script
-
-```bash
-npm run build-fresh
-```
-
-- Increment the versions using lerna
-
-```bash
-npx lerna version --no-private
-```
-
-- Publish the packages
-
-```bash
-npx lerna publish from-package
-```
-
-#### Manual canary releases
-
-Use [manual-canary-release.sh](./scripts/manual-canary-release.sh) to publish a canary release from the current commit. From the repository root, with npm publishing credentials configured (`npm login`), run:
-
-```bash
-bash scripts/manual-canary-release.sh
-```
-
-Commit the changes you want to release first; the script uses the committed `HEAD` tree and excludes uncommitted changes. The local `main` branch must exist, and `.worktrees/oa-api-canary-3` must be available for a new worktree.
-
-The script creates a temporary commit with `main` as its parent, adds a detached worktree at `.worktrees/oa-api-canary`, installs dependencies with `npm ci`, builds the packages, and publishes with `lerna publish --canary --dist-tag canary`. Published packages use the npm `canary` tag.
-
-## Troubleshooting Lerna/NX
-
-- "hot-reloads" not reflecting code changes
-
-Sometimes the `watch` fails. Stop or kill the running application and then manually run the `lerna build` command to rebuild all packages.
-
-- nx causing "Daemon is not running" error
-
-Try removing `.nx/workspace-data/d/disabled` (<https://github.com/lerna/lerna/issues/4054#issuecomment-2378029441>)
+- [NIAGADS](https://www.niagads.org/)
+- [Open Access API](https://api.niagads.org/api/openapi)
+- [Open Access Client Storybook](https://niagads.github.io/open-access-client/)
+- [NIAGADS npm packages](https://www.npmjs.com/search?q=%40niagads)
+- [NIAGADS GitHub organization](https://github.com/NIAGADS)
