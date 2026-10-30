@@ -28,7 +28,7 @@ export async function POST(request: Request) {
             body.set(chunk, offset);
             offset += chunk.byteLength;
         }
-        const upstream = await fetch(`${process.env.API_INTERNAL_URL}/ask`, {
+        const upstream = await fetch(`${process.env.API_INTERNAL_URL!.replace(/\/$/, "")}/ask`, {
             method: "POST",
             body,
             headers: { "Content-Type": "application/json" },
