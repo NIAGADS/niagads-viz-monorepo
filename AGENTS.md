@@ -4,6 +4,7 @@
 
 - Keep work within the requested scope. Avoid repeated file reads,
   broad searches, redundant checks, and verbose tool output.
+- For a specific directed edit, make only that edit; do not add test files or unrelated work.
 - Read only relevant files and sections. Reuse information already
   gathered unless changes require another read.
 - Do not launch subagents unless explicitly requested.
