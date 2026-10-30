@@ -4,12 +4,14 @@
 
 - Keep work within the requested scope. Avoid repeated file reads,
   broad searches, redundant checks, and verbose tool output.
+- For a specific directed edit, make only that edit; do not add test files or unrelated work.
 - Read only relevant files and sections. Reuse information already
   gathered unless changes require another read.
 - Do not launch subagents unless explicitly requested.
 - Run targeted checks first. Repeat checks only after relevant changes
   or when investigating a failure.
 - Keep progress updates and final reports concise.
+- Do not run application or package builds unless explicitly requested.
 
 ### Usage limits and pausing
 

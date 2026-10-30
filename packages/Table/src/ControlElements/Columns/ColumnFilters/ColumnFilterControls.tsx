@@ -1,9 +1,9 @@
 import { Button, FilterChip, FilterChipBar, InlineIcon, StylingProps } from "@niagads/ui";
 import { Column, ColumnFilter, ColumnFiltersState } from "@tanstack/react-table";
 import React, { useEffect, useMemo, useState } from "react";
-import FilterComponent from "./Filters/FilterUI";
-import { TrashIcon } from "lucide-react";
 
+import FilterComponent from "./filters/ColumnFilter";
+import { TrashIcon } from "lucide-react";
 import styles from "./ColumnFilterControls.module.css";
 
 interface ColumnFilterControlsProps {
@@ -25,38 +25,40 @@ export const ColumnFilterControls = ({
 }: ColumnFilterControlsProps) => {
     const [showAtAGlanceFilters, setShowAtAGlanceFilters] = useState(true);
     const [showAdditionalFilters, setShowAdditionalFilters] = useState(false);
+    const [showTopicFilter, setShowTopicFilter] = useState(true);
 
-    const visualFilterColumns = useMemo(
-        () =>
-            filterableColumns
-                .filter(
-                    (column) =>
-                        column.columnDef.meta?.filterType === "histogram" || column.columnDef.meta?.filterType === "pie"
-                )
-                .sort((a, b) => {
-                    if (a.columnDef.meta?.filterType === "histogram" && b.columnDef.meta?.filterType === "pie") {
-                        return -1;
-                    }
+    const { visualFilterColumns, additionalFilterColumns, topicFilterColumns } = useMemo(() => {
+        const columns = {
+            visualFilterColumns: [] as Column<any, unknown>[],
+            additionalFilterColumns: [] as Column<any, unknown>[],
+            topicFilterColumns: [] as Column<any, unknown>[],
+        };
 
-                    if (a.columnDef.meta?.filterType === "pie" && b.columnDef.meta?.filterType === "histogram") {
-                        return 1;
-                    }
+        for (const column of filterableColumns) {
+            switch (column.columnDef.meta?.filterType) {
+                case "histogram":
+                case "pie":
+                    columns.visualFilterColumns.push(column);
+                    break;
+                case "boolean":
+                case "select":
+                case "multiselect":
+                    columns.additionalFilterColumns.push(column);
+                    break;
+                case "topics":
+                    columns.topicFilterColumns.push(column);
+                    break;
+            }
+        }
 
-                    return 0;
-                }),
-        [filterableColumns]
-    );
+        // Only histogram and pie columns reach this array;
+        // false (0) sorts histograms before true (1) for pies.
+        columns.visualFilterColumns.sort(
+            (a, b) => Number(a.columnDef.meta?.filterType === "pie") - Number(b.columnDef.meta?.filterType === "pie")
+        );
 
-    const additionalFilterColumns = useMemo(
-        () =>
-            filterableColumns.filter(
-                (column) =>
-                    column.columnDef.meta?.filterType === "boolean" ||
-                    column.columnDef.meta?.filterType === "select" ||
-                    column.columnDef.meta?.filterType === "multiselect"
-            ),
-        [filterableColumns]
-    );
+        return columns;
+    }, [filterableColumns]);
 
     const columnFilterGroups = useMemo(
         () =>
@@ -76,7 +78,10 @@ export const ColumnFilterControls = ({
     );
 
     const hasVisualFilters = visualFilterColumns.length > 0;
-    const hasAdditionalFilters = additionalFilterColumns.some((column) => new Set(column.getAllValues()).size > 1);
+    const hasAdditionalFilters = useMemo(
+        () => additionalFilterColumns.some((column) => new Set(column.getAllValues()).size > 1),
+        [additionalFilterColumns]
+    );
 
     return (
         <div className={styles["filter-controls-container"]}>

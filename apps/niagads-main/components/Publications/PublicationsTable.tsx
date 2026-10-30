@@ -21,20 +21,20 @@ const columns: TableColumn[] = [
         id: "year",
         header: "Year",
         type: "integer",
-        filterOpts: { filterType: "histogram", filterGroup: "Publication" },
+        filterOpts: { filterType: "histogram" },
     },
     {
         id: "publicationType",
         header: "Publication type",
         type: "text",
-        filterOpts: { filterType: "multiselect", filterGroup: "Publication" },
+        disableColumnFilter: true,
     },
     { id: "links", header: "Links", type: "link", disableColumnFilter: true, disableSorting: true },
     { id: "abstract", header: "Abstract", type: "text", disableColumnFilter: true },
     { id: "pmid", header: "PMID", type: "text", disableColumnFilter: true },
     { id: "doi", header: "DOI", type: "text", disableColumnFilter: true },
     { id: "pmcid", header: "PMCID", type: "text", disableColumnFilter: true },
-    { id: "meshTerms", header: "MeSH terms", type: "text", disableColumnFilter: true },
+    { id: "meshTerms", header: "MeSH terms", type: "text", filterOpts: { filterType: "topics" } },
     { id: "grants", header: "Grants", type: "text", disableColumnFilter: true },
 ];
 
